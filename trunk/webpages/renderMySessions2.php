@@ -20,7 +20,7 @@ EOD;
                 echo "<P class=\"errmsg\">Database not updated.<BR>".$message."</P>";
                 }
             elseif ($message!="") {
-                echo "<P>".$message."</P>";
+                echo "<P class=\"regmsg\">".$message."</P>";
                 }
 ?>
     <FORM name="addform" method=POST action="my_sessions2.php">
