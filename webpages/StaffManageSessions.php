@@ -9,8 +9,6 @@
   staff_header($title);
 ?>
 
-<H1>Staff - Manage Sessions </H1>
-
 <p>
 On this page you will find the online tools for managing Panels, Events, Films, Anime, and Videos.  (which is why we refer to them with the target neutral term sessions. </p>
 <hr>

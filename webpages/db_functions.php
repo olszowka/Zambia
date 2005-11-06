@@ -5,7 +5,7 @@ function prepare_db() {
     global $link;
     $link = mysql_connect('localhost','olszowka','');
     if ($link===false) return (false);
-    return (mysql_select_db('trgprod',$link));
+    return (mysql_select_db('trgdev',$link));
     }
 
 function isStaff($badgeid) {

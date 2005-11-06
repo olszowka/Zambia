@@ -133,6 +133,14 @@ A.logout:hover {
     font-weight: 800;
     }
     
+DD {
+    margin-left: 4em
+    }
+
+DT {
+    margin-left: .5em
+    }
+
 TABLE.header {
     border-collapse: collapse;
     margin-left: 0px;
@@ -166,7 +174,9 @@ TABLE {
     }
     
 TH {
-    background-color: #C0E4FF
+    background-color: #C0E4FF;
+    padding-left: 0.2em;
+    padding-right: 0.2em
     }
 
 P.errmsg {
@@ -481,6 +491,10 @@ select.yesno {
 .submit {
      }
      
+TD {
+     padding-left: 0.2em
+     }
+
 TD#sessidtcell {
      vertical-align:top;
      padding-right: 0.5em
