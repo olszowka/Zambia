@@ -50,4 +50,5 @@
 <?php } ?>
   </table>
 
+<H2 class="head"><?php echo $title ?></H2>
 <?php } ?>
