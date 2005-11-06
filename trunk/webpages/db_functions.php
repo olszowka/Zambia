@@ -9,7 +9,28 @@ function prepare_db() {
     }
 
 function isStaff($badgeid) {
-    return (array_search($badgeid,array("00001","40099","38322","92972","53159")));
+    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694")));
+
+//  Don't add folk to the above until thier password has changed  aka
+//    select badgeid from Participants 
+//      where password!='4cb9c8a8048fd02294477fcb1a41191a';
+//40099 - Tracy
+//38322 - Jack
+//92972 - Heather
+//53159 - Peter O
+//27051 - Persis
+//4694 - Rachel Silber
+//4398 - Ellen Kranzer
+//4440 - Ben Levy
+//40439 - Joel Lord
+//5833 - Phi
+//4321 - Joel Herda
+//4516 - Elka
+//27066 - David D'Antonio
+//4782 - Patricia Vandenberg (dda's assistant div head)
+//4698 - Patty Silva (Film head)
+//52045 - Scott Dorsey (35mm)
+
     }
 
 // Function populate_select_from_table(...)
@@ -113,18 +134,18 @@ function update_session() {
     $query.="typeid=".$session["type"].", ";
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link)."\", ";
     $query.="title=\"".mysql_real_escape_string($session["title"],$link)."\", ";
-    $query.="shortprecis=\"".mysql_real_escape_string($session["shortpre"],$link)."\", ";
-    $query.="longprecis=\"".mysql_real_escape_string($session["longpre"],$link)."\", ";
+    $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link)."\", ";
+    $query.="persppartinfo=\"".mysql_real_escape_string($session["persppartinfo"],$link)."\", ";
     $query.="duration=\"".mysql_real_escape_string($session["duration"],$link)."\", ";
     $query.="estatten=".$session["atten"].", ";
     $query.="kidscatid=".$session["kids"].", ";
     $query.="signupreq=".($session["signup"]?"1":"0").", ";
     $query.="invitedguest=".($session["invguest"]?"1":"0").", ";
     $query.="roomsetid=".$session["roomset"].", ";
-    $query.="materials=\"".mysql_real_escape_string($session["materials"],$link)."\", ";
+    $query.="notesforpart=\"".mysql_real_escape_string($session["notesforpart"],$link)."\", ";
     $query.="servicenotes=\"".mysql_real_escape_string($session["servnotes"],$link)."\", ";
     $query.="statusid=".$session["status"].", ";
-    $query.="notes=\"".mysql_real_escape_string($session["notes"],$link)."\" ";
+    $query.="notesforprog=\"".mysql_real_escape_string($session["notesforprog"],$link)."\" ";
     $query.=" WHERE sessionid=".$session["sessionid"];
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
@@ -174,17 +195,17 @@ function insert_session() {
     $query.=$session["type"].',';
     $query.='"'.mysql_real_escape_string($session["pubno"],$link).'",';
     $query.='"'.mysql_real_escape_string($session["title"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["shortpre"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["longpre"],$link).'",';
+    $query.='"'.mysql_real_escape_string($session["pocketprogtext"],$link).'",';
+    $query.='"'.mysql_real_escape_string($session["persppartinfo"],$link).'",';
     $query.='"'.mysql_real_escape_string($session["duration"],$link).'",';
     $query.=$session["atten"].',';
     $query.=$session["kids"].',';
     if ($session["signup"]) {$query.="1,";} else {$query.="0,";}
     $query.=$session["roomset"].',';
-    $query.='"'.mysql_real_escape_string($session["materials"],$link).'",';
+    $query.='"'.mysql_real_escape_string($session["notesforpart"],$link).'",';
     $query.='"'.mysql_real_escape_string($session["servnotes"],$link).'",';
     $query.='"'.mysql_real_escape_string($session["status"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["notes"],$link).'",';
+    $query.='"'.mysql_real_escape_string($session["notesforprog"],$link).'",';
     $query.='0,'; // warnings db field not editable by form
     if ($session["invguest"]) {$query.="1)";} else {$query.="0)";}
     $result = mysql_query($query,$link);
@@ -231,17 +252,17 @@ function retrieve_session_from_db($sessionid) {
     $session["type"]=$sessionarray[2];
     $session["pubno"]=$sessionarray[3];
     $session["title"]=$sessionarray[4];
-    $session["shortpre"]=$sessionarray[5];
-    $session["longpre"]=$sessionarray[6];
+    $session["pocketprogtext"]=$sessionarray[5];
+    $session["persppartinfo"]=$sessionarray[6];
     $session["duration"]=$sessionarray[7];
     $session["atten"]=$sessionarray[8];
     $session["kids"]=$sessionarray[9];
     $session["signup"]=$sessionarray[10];
     $session["roomset"]=$sessionarray[11];
-    $session["materials"]=$sessionarray[12];
+    $session["notesforpart"]=$sessionarray[12];
     $session["servnotes"]=$sessionarray[13];
     $session["status"]=$sessionarray[14];
-    $session["notes"]=$sessionarray[15];
+    $session["notesforprog"]=$sessionarray[15];
     $session["invguest"]=$sessionarray[17];
     $result=mysql_query("SELECT featureid FROM SessionHasFeature where sessionid=".$sessionid,$link);
     if (!$result) {
@@ -356,7 +377,7 @@ function retrieve_participant_from_db($badgeid) {
         return (-2);
         }
     $participantarray=mysql_fetch_array($result, MYSQL_NUM);
-    $participant["password"]="";
+    $participant["password"]=$participantarray[1];
     $participant["bestway"]=$participantarray[2];
     $participant["interested"]=$participantarray[3];
     $participant["bio"]=$participantarray[4];
@@ -382,6 +403,7 @@ function getCongoData($badgeid) {
         $message_error=$message2."<BR>No further execution possible.";
         return(-1);
         };
+    $participant["password"]="";
     $congoarray=mysql_fetch_array($result, MYSQL_NUM);
     $congoinfo["firstname"]=$congoarray[1];
     $congoinfo["lastname"]=$congoarray[2];

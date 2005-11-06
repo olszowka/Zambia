@@ -1,15 +1,4 @@
 <?php
-            if ($partAvail["availstartday_4"]>0) {
-                $starttime=(($partAvail["availstartday_4"]-1)*24+$partAvail["availstarttime_4"]-1).":00:00";
-                $endtime=(($partAvail["availendday_4"]-1)*24+$partAvail["availendtime_4"]-1).":00:00";
-                $query = "INSERT INTO ParticipantAvailabilityTimes VALUES (";
-                $query .="\"".$badgeid."\",4,\"".$starttime."\",\"".$endtime."\")";
-                if (!mysql_query($query,$link)) {
-                    $message=$query."<BR>Error updating database.  Database not updated.";
-                    RenderError($title,$message);
-                    exit();
-                    }
-                }
 // Function get_session_interests_from_post()
 // Reads the data posted by the browser form and populates
 // the $partavail global variable with it.  Returns
@@ -23,7 +12,7 @@ function get_session_interests_from_post() {
         $sessInts[$i]["sessionid"]=$_POST["sessionid".$i];
         $sessInts[$i]["rank"]=$_POST["rank".$i];
         $sessInts[$i]["delete"]=(isset($_POST["delete".$i]))?true:false;
-        $sessInts[$i]["comments"]=$_POST["comments".$i];
+        $sessInts[$i]["comments"]=stripslashes($_POST["comments".$i]);
         $sessInts[$i]["mod"]=(isset($_POST["mod".$i]))?true:false;
         $i++;
         }

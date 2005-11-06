@@ -86,7 +86,7 @@ EOD;
 
         </TABLE>    
         <DIV class="submit">
-            <DIV id="submit"><BUTTON type="submit" name="submit" >Save</BUTTON></DIV>
+            <DIV id="submit"><BUTTON class="SubmitButton" type="submit" name="submit" >Save</BUTTON></DIV>
             </DIV>
       </FORM>
 <?php } ?>

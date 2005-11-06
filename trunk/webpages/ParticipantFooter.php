@@ -4,7 +4,7 @@
 
 <hr>
 <p> 
-If you would like assistance using this tool or you would like to communicate an idea that you cannot fit into this form, please contact <a href="mailto: program@arisia.org"> program@arisia.org </a>.
+If you need help or to tell us something that doesn't fit here, please email <a href="mailto: program@arisia.org">program@arisia.org</a>.
 </body>
 </html>
 

@@ -19,7 +19,7 @@
             <H3>Add Session to my List</H3>
             <SPAN>Session ID</SPAN>
             <SPAN><Input type="text" name="sessionid" size=10></SPAN>
-            <DIV><BUTTON type="submit" name="add" id="add">Add</BUTTON></DIV>
+            <DIV><BUTTON class="SubmitButton" type="submit" name="add" id="add">Add</BUTTON></DIV>
             </DIV>
         </FORM>
     <HR>

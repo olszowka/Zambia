@@ -1,10 +1,8 @@
 <?php
    global $participant,$message_error,$message2,$congoinfo;
    $title="Welcome";
-   require_once('db_functions.php');
    require_once('ParticipantHeader.php');
    require_once('ParticipantFooter.php');
-   require_once('PartCommonCode.php');
    participant_header($title);
 ?>
 
@@ -14,18 +12,37 @@
 <?php if ($message!="") { ?>
 	<P class="regmsg"><?php echo $message; ?></P>
 	<?php } ?>
-
+<?php
+    $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
+    $chint=($participant["interested"]==0);
+?>
 <P> Welcome to the Program Participant Pages! 
-<p>Using the tabs above, please take this opportunity to: 
 <ol>
-<!-- ?php if (your encrypted password is 4cb9c8a8048fd02294477fcb1a41191a -->
-  <li> First, please change your password </li>
-    <ul>
-      <li> You'll find a box for this on "My Contact Info". </li>
+  <li> First, please indicate whether you will partipate in Arisia'06 and change your password.
+<FORM class="nomargin" name="pwform" method=POST action="submitWelcome.php">
+  <div id="update_section">
+    <ul><li><label for="interested" class="padbot0p5">I am interested and able to participate in programming for Arisia '06&nbsp;</label>
+      <?php $int=$participant['interested']; ?>
+      <SELECT name=interested class="yesno">
+            <OPTION value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp;</OPTION>
+            <OPTION value=1 <?php if ($int==1) {echo "selected";} ?> >Yes</OPTION>
+            <OPTION value=2 <?php if ($int==2) {echo "selected";} ?> >No</OPTION></SELECT>
+<?php if ($chpw) { ?>
+    <li>Your password is still set to the default value.<table><tr><td>
+      Change Password</td>
+      <td><INPUT type="password" size="10" name="password"></td></tr>
+      <tr><td>Confirm New Password&nbsp;</td>
+      <td><INPUT type="password" size="10" name="cpassword"></td></tr></table>
+<?php } else { ?>
+    <li> Thank you for changing your password. For future changes, use the "My Profile" tab.
+<?php } ?>
     </ul>
-  </li>
-<!-- end of if -->
-  <li> Use the "My Contact Info" tab to:
+    <DIV class="submit">
+        <DIV id="submit"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
+      </DIV>
+    </DIV>
+  </FORM>
+  <li> Use the "My Profile" tab to:
     <ul>
       <li> Check your contact information. </li>
       <li> Indicate whether you will be participating in Arisia'06. </li>

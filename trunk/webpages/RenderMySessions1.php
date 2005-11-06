@@ -43,9 +43,7 @@
     echo "        <INPUT type=\"hidden\" name=\"maxrow\" value=\"".($i-1)."\">\n";
 ?>
         </TABLE>
-        <DIV class="submit">
-            <DIV id="submit"><BUTTON type="submit" name="save" >Save</BUTTON></DIV>
-            </DIV>
+        <DIV class="SubmitButton"><BUTTON type="submit" name="save" >Save</BUTTON></DIV>
       </FORM>
 <?php
     }

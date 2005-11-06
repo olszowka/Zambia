@@ -15,22 +15,22 @@ function renderMyInterests ($title, $error, $message) {
     <INPUT type=hidden name="rolerows" value= <?php echo "\"".$rolerows."\""; ?> >
     <H3>My Interests</H3>
     <DIV>
-        <DIV><LABEL for="yespanels">Panels I'd like to be on:</LABEL></DIV>
+        <DIV><LABEL for="yespanels"><p>New Panel Ideas (Please check the "Seach Panels" tab first): </p></LABEL></DIV>
         <DIV><TEXTAREA name="yespanels" rows=5 cols=72><?php echo htmlspecialchars($yespanels,ENT_COMPAT); ?></TEXTAREA>
             </DIV>
         </DIV>    
     <DIV>
-        <DIV><LABEL for="yespanels">Panels I don't want to be on:</LABEL></DIV>
+        <DIV><LABEL for="yespanels"><p>Panel types I am not interested in participating in:</p></LABEL></DIV>
         <DIV><TEXTAREA name="nopanels" rows=5 cols=72><?php echo htmlspecialchars($nopanels,ENT_COMPAT); ?></TEXTAREA>
             </DIV>
         </DIV>    
     <DIV>
-        <DIV><LABEL for="yespanels">People with whom I'd like to be on a panel:</LABEL></DIV>
+        <DIV><LABEL for="yespanels"><p>People with whom I'd like to be on a panel:</p></LABEL></DIV>
         <DIV><TEXTAREA name="yespeople" rows=5 cols=72><?php echo htmlspecialchars($yespeople,ENT_COMPAT); ?></TEXTAREA>
             </DIV>
         </DIV>    
     <DIV>
-        <DIV><LABEL for="yespanels">People with whom I'd rather not be on a panel:</LABEL></DIV>
+        <DIV><LABEL for="yespanels"><p>People with whom I'd rather not be on a panel:</p></LABEL></DIV>
         <DIV><TEXTAREA name="nopeople" rows=5 cols=72><?php echo htmlspecialchars($nopeople,ENT_COMPAT); ?></TEXTAREA>
             </DIV>
         </DIV>
@@ -82,16 +82,16 @@ function renderMyInterests ($title, $error, $message) {
     echo "                <INPUT type=hidden name=\"rolename0\" value=\"".$rolearray[0]["rolename"]."\">\n";
     echo "                <INPUT type=hidden name=\"diddorole0\" value=\"";
     echo ((isset($rolearray[0]["badgeid"]))?1:0)."\">\n";
-    echo "                <LABEL for=\"willdorole0\">".$rolearray[0]["rolename"]."</LABEL>\n";
+    echo "                <LABEL for=\"willdorole0\">".$rolearray[0]["rolename"]."  (Please describe below.) </LABEL>\n";
     echo "                </DIV><!-- end table cell -->\n";
     echo "                <DIV class=\"tab-cell\">&nbsp;</DIV>\n";
     echo "            </DIV><!-- end table row -->\n";
     echo "        </DIV><!-- end table -->\n";
 ?>
-    <P>Description in case you checked Other</P>
+    <P>Description for "Other":</P>
     <TEXTAREA name="otherroles" rows=5 cols=72><?php echo htmlspecialchars($otherroles,ENT_COMPAT); ?></TEXTAREA>
     <DIV class="submit">
-        <DIV id="submit"><BUTTON type="submit" name="submit" >Save</BUTTON></DIV>
+        <DIV id="submit"><BUTTON class="SubmitButton" type="submit" name="submit" >Save</BUTTON></DIV>
         </DIV>
-      </FORM>
+  </FORM>
 <?php } ?>

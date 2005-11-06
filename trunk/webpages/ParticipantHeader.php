@@ -8,7 +8,7 @@
 <html xmlns="http://www.w3.org/TR/xhtml1/transitional">
 <head>
   <title>Zambia -- <?php echo $title ?></title>
-  <link rel="stylesheet" href="participantSection.css" type="text/css">
+  <link rel="stylesheet" href="ParticipantSection.css" type="text/css">
   <meta name="keywords" content="Questionnaire">
   <meta name="description" content="Form to request information from potential program participants">
   <script language="JavaScript" type="text/JavaScript">
@@ -38,7 +38,7 @@ function MM_swapImage() { //v3.0
 //-->
   </script>
 </head>
-<body onload="MM_preloadImages('images/my_contact-active.png','images/my_availability-active.png',
+<body onload="MM_preloadImages('images/my_profile-active.png','images/my_availability-active.png',
     'images/search_panels-active.png','images/staff_pages-active.png','images/welcome-active.png',
     'images/my_general_interests-active.png','images/my_suggestions-active.png)">
 <H1 class="head">Zambia&ndash;The Arisia Scheduling Tool</H1> 
@@ -48,12 +48,12 @@ function MM_swapImage() { //v3.0
 <!--    <td background="images/grey-bg.gif"> -->
   <table class="header">
     <tr>
-      <td class="head"><a href="renderWelcome.php" onmouseout="MM_swapImgRestore()"
+      <td class="head"><a href="welcome.php" onmouseout="MM_swapImgRestore()"
           onmouseover="MM_swapImage('welcome','','images/welcome-active.png',1)">
           <img src="images/welcome.png" name="welcome" alt="Welcome"></a></td>
       <td class="head"><a href="my_contact.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('my_contact','','images/my_contact-active.png',1)">
-          <img src="images/my_contact.png" name="my_contact" alt="My Contact Info"></a></td>
+          onmouseover="MM_swapImage('my_profile','','images/my_profile-active.png',1)">
+          <img src="images/my_profile.png" name="my_profile" alt="My Profile"></a></td>
       <td class="head"><a href="my_sched_constr.php" onmouseout="MM_swapImgRestore()"
           onmouseover="MM_swapImage('my_availability','','images/my_availability-active.png',1)">
           <img src="images/my_availability.png" name="my_availability" alt="My Availability"></a></td>

@@ -13,17 +13,20 @@
   <?php javascript_for_edit_session(); javascript_pretty_buttons(); ?>
 
 </head>
-<body leftmargin="0" topmargin="0" onload="MM_preloadImages('images/my_contact-active.png','images/my_constraint-active.png','images/search_sessions-active.png','images/my_session_interests-active.png')" marginheight="0" marginwidth="0">
+<body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0"><!--onload="MM_preloadImages('images/my_contact-active.png','images/my_constraint-active.png','images/search_sessions-active.png','images/my_session_interests-active.png')"-->
 <H1 class="head">Zambia&ndash;The Arisia Scheduling Tool</H1>
 <hr>
 
 <?php if (isset($_SESSION["badgeid"])) { ?>
-  <table id="header">
+  <table class="header">
     <tr>
       <!--<td id="head"><a href="my_contact.php" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('my_contact','','images/my_contact-active.png',1)"><img src="images/my_contact.png" name="my_contact" border="0" height="14" width="122" alt="My Contact Info"></a></td> -->
-      <td id="head"><a href="renderWelcome.php">Particiapnt View</a></td>
-      <td id="head"><a href="StaffManageSessions.php">Manage Sessions</a></td>
+      <td class="head"><a href="welcome.php">Participant View</a></td>
+      <td class="head"><a href="ReportParts.php">Participant Activity Reports</a></td>
+      <td class="head"><a href="StaffManageSessions.php">Manage Sessions</a></td>
     </tr>
+  </table>
+<table class="header">
   <tr>
     <td style="height:5px">
       </td>
@@ -32,7 +35,7 @@
     <td>
       <table width="100%">
         <tr>
-          <td width="425">&nbsp;----STAFF----STAFF----STAFF---
+          <td width="425">&nbsp;
             </td>
           <td class="Welcome">Welcome <?php echo $_SESSION["badgename"]; ?>
             </td>
