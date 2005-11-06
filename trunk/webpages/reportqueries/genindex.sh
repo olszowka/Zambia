@@ -7,6 +7,7 @@ DEST="../ReportIndex.php"
 
 
 cat genreportheader.php | sed "s/REPORT_TITLE/Available Reports/" | \
+                          sed "s/REPORT_DATE/`date`/" | \
                           sed "s/REPORT_DESCRIPTION//" > $DEST
 
 echo '<DL>' >> $DEST
