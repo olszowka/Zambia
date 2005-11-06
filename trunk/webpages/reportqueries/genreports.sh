@@ -9,6 +9,7 @@ for x in ${SRCDIR}/*query ; do
   eval `cat $x`
 
   cat genreportheader.php | sed "s/REPORT_TITLE/$TITLE/" | \
+                            sed "s/REPORT_DATE/`date`/" | \
                             sed "s/REPORT_DESCRIPTION/$DESCRIPTION/" > $DESTDIR/${name}report.php
 
   echo $QUERY | mysql -u olszowka -H trgprod >> $DESTDIR/${name}report.php
