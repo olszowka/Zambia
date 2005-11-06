@@ -2,7 +2,7 @@
     require ('db_functions.php');
     require ('data_functions.php');
     require ('RenderEditCreateSession.php');
-    prepare_db();
+    require ('StaffCommonCode.php');
     $message_error="";
     $message_warn="";
     set_session_defaults();

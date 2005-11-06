@@ -9,7 +9,7 @@
         exit();
         };
     $badgeid = $_POST[badgeid];
-    $password = $_POST[passwd];
+    $password = stripslashes($_POST[passwd]);
     $result=mysql_query("Select password from Participants where badgeid='".$badgeid."'",$link);
     if (!$result) {
     	$message="Incorrect badgeid or password.";
@@ -37,6 +37,11 @@
 		}
     $_SESSION['badgeid']=$badgeid;
     $_SESSION['password']=$dbpassword;
-    require_once ('renderWelcome.php');
+    if (retrieve_participant_from_db($badgeid)==0) {
+        require ('renderWelcome.php');
+        exit();
+        }
+    $message_error=$message2."<BR>Error retrieving data from DB.  No further execution possible.";
+    RenderError($title,$message_error);
     exit();
 ?>

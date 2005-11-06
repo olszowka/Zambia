@@ -20,10 +20,11 @@ participant_header($title);
 <FORM name="constrform" method=POST action="SubmitMySchedConstr.php">
 
     <H2>Number of program items I'm willing to participate in:</H2>
-<p> Please indicate the number of panels you are willing to be on each day and let us know the 
-total you are interested in as well.  Please note that the tool limits you to 10 or fewer in 
-each slot.  There is no need for the numbers to add up. We'll use this for guidance when assigning
-and scheduling panels. </p>
+<p> Please indicate the maximum number of panels you are willing to be on.  
+You may indicate a total for each day as well as an overall maximum for the whole con. 
+Please note that the tool limits you to 10 or fewer in each box.  
+There is no need for the numbers to add up. 
+We'll use this for guidance when assigning and scheduling panels. </p>
 <table>
     <tr>
         <td>Friday </td>
@@ -49,10 +50,10 @@ and scheduling panels. </p>
 
 <!-- SCHEDULE availability times -->
 <H2>Times I Am Available</H2>
-<p> For each day you will be in attendance at Arisia, please indicate the times when 
+<p> For each day you will be attending Arisia, please indicate the times when 
 you will be available as a program panelist.  Entering a single time for the whole 
-con is fine.  Splitting a day into multiple time slots is fine.  Keep in mind we will 
-be using this for scheduling your panels.</p>
+con is fine.  Splitting a day into multiple time slots also is fine.  Keep in mind we will 
+be using this as guidance when scheduling your panels.</p>
 
 <table>
   <tr> <!-- row one -->
@@ -289,7 +290,7 @@ be using this for scheduling your panels.</p>
 <hr>
 
 <DIV id=conflict>
-    <DIV class=sectionheader>Please do not schedule me to conflict with:</DIV>
+    <DIV class=sectionheader>Please don't schedule me for a panel that conflicts with:</DIV>
 
     <DIV class=entries>
     <TEXTAREA name=preventconflict rows=3 cols=72><?php
@@ -297,6 +298,11 @@ be using this for scheduling your panels.</p>
         </DIV>
     </DIV>
 
+<p>
+    We are looking for a rough count of children attending FastTrack (programming for children ages 6-13).  Please indicate how many children will be attending with you:
+    
+     <INPUT id=kids size=2 name=numkidsfasttrack value="<?php echo $partAvail["numkidsfasttrack"]; ?>" >
+</p>
 
 <DIV id=otherconstraints>
     <DIV class=sectionheader>Other constraints or conflicts that we should know about?</DIV>
@@ -306,12 +312,8 @@ be using this for scheduling your panels.</p>
         </DIV>
     </DIV>
 
-<p> We are looking for a rough count of children attending FastTrack (programming for children ages 6-13).  Please indicate how many children will be attending with you:
-        <INPUT id=kids size=2 name=numkidsfasttrack value="<?php echo $partAvail["numkidsfasttrack"]; ?>" >
-        </p>
-
 <DIV class="submit">
-    <DIV id="submit"><BUTTON type=submit value="Save">Save</BUTTON></DIV>
+    <DIV id="submit"><BUTTON class="SubmitButton" type=submit value="Save">Save</BUTTON></DIV>
     </DIV>
 </FORM>
 </DIV>
