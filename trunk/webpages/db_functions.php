@@ -5,25 +5,28 @@ function prepare_db() {
     global $link;
     $link = mysql_connect('localhost','olszowka','');
     if ($link===false) return (false);
-    return (mysql_select_db('trgdev',$link));
+    return (mysql_select_db('trgprod',$link));
     }
 
 function isStaff($badgeid) {
-    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694")));
+    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4400","40439","5833")));
 
 //  Don't add folk to the above until thier password has changed  aka
 //    select badgeid from Participants 
 //      where password!='4cb9c8a8048fd02294477fcb1a41191a';
+// done:
 //40099 - Tracy
 //38322 - Jack
 //92972 - Heather
 //53159 - Peter O
 //27051 - Persis
 //4694 - Rachel Silber
-//4398 - Ellen Kranzer
+//9563 - Skip Morris
 //4440 - Ben Levy
 //40439 - Joel Lord
 //5833 - Phi
+// need changing:
+//4398 - Ellen Kranzer
 //4321 - Joel Herda
 //4516 - Elka
 //27066 - David D'Antonio
