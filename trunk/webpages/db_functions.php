@@ -9,7 +9,7 @@ function prepare_db() {
     }
 
 function isStaff($badgeid) {
-    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4400","40439","5833")));
+    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4400","40439","5833","4398")));
 
 //  Don't add folk to the above until thier password has changed  aka
 //    select badgeid from Participants 
@@ -25,8 +25,8 @@ function isStaff($badgeid) {
 //4440 - Ben Levy
 //40439 - Joel Lord
 //5833 - Phi
-// need changing:
 //4398 - Ellen Kranzer
+// need changing:
 //4321 - Joel Herda
 //4516 - Elka
 //27066 - David D'Antonio
