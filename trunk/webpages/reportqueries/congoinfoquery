@@ -1,0 +1,3 @@
+TITLE='Congo Info (all info)'
+DESCRIPTION='Shows the information retreived from Congo'
+QUERY='select badgename, badgeid, lastname, firstname,  phone, email, postaddress from CongoDump where badgeid is not NULL order by badgename;'

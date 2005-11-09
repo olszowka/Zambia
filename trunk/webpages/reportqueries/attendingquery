@@ -1,0 +1,3 @@
+TITLE='Attending Query (all info)'
+DESCRIPTION='Shows who has responding and if they are attending'
+QUERY='select badgename, Participants.badgeid,  interested, bestway from CongoDump, Participants where CongoDump.badgeid=Participants.badgeid order by badgename;'
