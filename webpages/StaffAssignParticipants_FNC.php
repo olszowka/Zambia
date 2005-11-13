@@ -8,8 +8,8 @@ function SubmitAssignParticipants() {
     $selsessionid=$_POST["selsess"];
     for ($i=0; $i<$numrows; $i++) {
         $badgeid=$_POST["row$i"];
-        $isasgn=isset($_POST["asgn$badgeid"]);
         $ismod=($moderator==$badgeid);
+        $isasgn=(isset($_POST["asgn$badgeid"]) or $ismod);
         $wasasgn=($_POST["wasasgn$badgeid"]==1);
         $wasmod=($wasmodid==$badgeid);
 //echo "i: $i | isasgn: $isasgn | wasasgn: $wasasgn | ismod: $ismod | wasmod: $wasmod <BR>\n";        
