@@ -108,8 +108,6 @@ participant_header($title);
         <DIV class="label"><LABEL class="label" for="bio">Please enter a biography (500 characters or fewer):</LABEL></DIV>
             <DIV><TEXTAREA rows=5 cols=72 name="bio"><?php echo htmlspecialchars($participant["bio"],ENT_COMPAT); ?></TEXTAREA></DIV>
             </DIV>
-    <DIV class="submit">
-        <DIV id="submit"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
-    </DIV>
+        <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
     </form>
 <?php participant_footer() ?>

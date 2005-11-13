@@ -1,120 +1,116 @@
 /* . are classes */
 /* # are ids and must be unique in a page*/
 * {
-     margin: 0;
-     padding: 0;
-     font-family: Arial;
-     font-size: 1em;
-     }
+    margin: 0;
+    padding: 0;
+    font-family: Arial;
+    font-size: 1em;
+    }
 
 BODY {
-     font-family: Verdana, Arial;
-     font-size: 1em;
-     margin-top: 35px;
-     }
+    font-family: Verdana, Arial;
+    font-size: 1em;
+    margin-top: 35px;
+    }
 
 P {
-     margin: 10px;
-}
+    margin: 10px;
+    }
 
 FORM {
-  margin-left: 1em;
-}
+    margin-left: 1em;
+    }
 
 FORM.nomargin {
     margin-left: 0
     }
 
 .sectionheader {
-     margin: 10px;
-}
+    margin: 10px;
+    }
 
 #error {
-     FONT-WEIGHT: bold; color: #E02020
-     }
+    FONT-WEIGHT: bold; color: #E02020
+    }
 
 hr {
-     height: 0.1em;
-     background-color: #252588;
-     }
+    height: 0.1em;
+    background-color: #252588;
+    }
 
 A {
-     font-weight: normal;
-     color: #2775AF;
-     text-decoration : none;
-     }
+    font-weight: normal;
+    color: #2775AF;
+    text-decoration : none;
+    }
 
 A:hover {
-     font-weight: normal;
-     color: #00804F;
-     text-decoration : none;
-     }
+    font-weight: normal;
+    color: #00804F;
+    text-decoration : none;
+    }
 
 H1, H2, H3 {
     text-align: center
     }
 
 H1.head {
-     font-family: Verdana;
-     font-size: 150%;
-     padding-bottom: 0.5em;
-     }
+    font-family: Verdana;
+    font-size: 150%;
+    padding-bottom: 0.5em;
+    }
 
 H2.head {
-     font-family: Verdana;
-     font-size: 125%;
-     padding-bottom: 0.5em;
-     margin-left: 2em;
-     text-decoration: underline;
-     }
+    font-family: Verdana;
+    font-size: 125%;
+    padding-bottom: 0.5em;
+    margin-left: 2em;
+    text-decoration: underline;
+    }
 
 H4 {
-     margin-left: 5em;
-     margin-right: 5em
-     }
+    margin-left: 5em;
+    margin-right: 5em
+    }
 
 .Welcome {
-     font-weight: bold;
-     font-size: 80%;
-     color: black;
-     text-decoration: none;
-     text-align: right;
-     padding-right: 2em;
-     }
+    font-weight: bold;
+    font-size: 80%;
+    color: black;
+    text-decoration: none;
+    text-align: right;
+    padding-right: 2em;
+    }
 
 .TopmenuText {
-     font-family: Arial;
-     font-weight: bold;
-     color: white;
-     text-decoration : none;
-     }
-
-A.TopmenuLink
-{
     font-family: Arial;
     font-weight: bold;
     color: white;
     text-decoration : none;
-}
+    }
 
-A.TopmenuLink:HOVER
-{
+A.TopmenuLink {
+    font-family: Arial;
+    font-weight: bold;
+    color: white;
+    text-decoration : none;
+    }
+
+A.TopmenuLink:HOVER {
     font-family: Arial;
     font-weight: bold;
     color: yellow;
     text-decoration : none;
-}
+    }
 
-A.TopmenuLink-Active
-{
+A.TopmenuLink-Active {
     font-family: Arial;
     font-weight: bold;
     color: yellow;
     text-decoration : none;
-}
+    }
 
-A.TopmenuLink-Active:HOVER
-{
+A.TopmenuLink-Active:HOVER {
     font-family: Arial;
     font-weight: bold;
     color: white;
@@ -125,7 +121,7 @@ A.logout:link, A.logout:visited {
     background-color: #800040;
     color: #E8E473;
     font-weight: 800;
-  }
+    }
 
 A.logout:hover {
     background-color: #F00028;
@@ -153,15 +149,15 @@ TABLE.header {
     }
 
 TABLE.login {
-   text-align: center;
-   border: 1px;
-   padding: 10px;
-   margin: 10px;
-   }
+    text-align: center;
+    border: 1px;
+    padding: 10px;
+    margin: 10px;
+    }
 
 TR {
-   padding: 5px;
-   }
+    padding: 5px;
+    }
 
 img {
     border: 0px;
@@ -240,7 +236,7 @@ P.regmsg {
     text-decoration : none;
     display: table-cell;
     padding-left: 3em;
-}
+    }
 
 .congo_data .value2 {
     font-family: Arial;
@@ -249,7 +245,7 @@ P.regmsg {
     text-decoration : none;
     display: table-cell;
     padding-left: 3em;
-}
+    }
 
 .note {
      margin-left: 3em;
@@ -257,16 +253,15 @@ P.regmsg {
      }
 
 .congo-note {
-	font-size: 120%;
-	max-width: 35em;
-}
-select, input
-{
+    font-size: 120%;
+    max-width: 35em;
+    }
+
+select, input {
     font-weight: bold;
     background-color: #FFFFFF;
     color: #003278;
-
-}
+    }
 
 select.yesno {
     width: 4em
@@ -292,29 +287,44 @@ select.yesno {
     display: table-cell;
     }
 
-.tcell {padding: 3px; display: table-cell;}
-.trow {display: table-row;}
+.tcell {
+    padding: 3px;
+    display: table-cell;
+    }
+    
+.trow {
+    display: table-row;
+    }
 
 
-.tab {display: table;}
+.tab {
+    display: table
+    }
 
-.tab-row {display:table-row}
+.tab-row {
+    display:table-row
+    }
 
-.tab-col {display:table-column}
+.tab-col {
+    display:table-column
+    }
 
-.tab-cell {display:table-cell; padding-left: 1.5em}
+.tab-cell {
+    display:table-cell;
+    padding-left: 1.5em
+    }
 
 #contact {
-  border: solid black 2px;
-  width: 35em;
-}
+    border: solid black 2px;
+    width: 35em;
+    }
 
 .last {
   display: block;
-}
+    }
 
 .label {
-}
+    }
 
 .small {
     font-size: 80%;
@@ -413,184 +423,220 @@ select.yesno {
 
 
 #update_section {
-     display: table;
-     }
+    display: table;
+    }
 
 #bestway {
-     display: table-row;
-     top: 1em;
-     left: 1.25em;
-     width: 27em;
-     margin: 3em;
-     /* border: solid #eeeeee 2px; */
-     }
+    display: table-row;
+    top: 1em;
+    left: 1.25em;
+    width: 27em;
+    margin: 3em;
+    /* border: solid #eeeeee 2px; */
+    }
 
 #bwbuttons {
-     display: table-cell;
-     }
+    display: table-cell;
+    }
 
 #bwemail, #bwpmail, #bwphone {
-     display: inline;
-     width: 100%;
-     }
+    display: inline;
+    width: 100%;
+    }
 
 .my_contact {
-     font-size: 60%;
-     }
+    font-size: 60%;
+    }
 
 #bestway input[type="radio"]{
-     font-size: 60%;
-     }
+    font-size: 60%;
+    }
 
 #bestway label {
-     display: inline;
-     position: static;
-     text-align: left;
-     height: 1em;
-     font-family: Arial;
-     font-weight: bold;
-     color: #004080;
-     text-decoration : none;
-     }
+    display: inline;
+    position: static;
+    text-align: left;
+    height: 1em;
+    font-family: Arial;
+    font-weight: bold;
+    color: #004080;
+    text-decoration : none;
+    }
 
 .divlistbox {
-     display: table-row;
-     }
+    display: table-row;
+    }
 
 .padbot0p5 {
-     padding-bottom: .5em;
-     }
+    padding-bottom: .5em;
+    }
 
 .spanvalcb {
-     display: table-cell;
-     }
+    display: table-cell;
+    }
 
 .radiohead {
-     font-family: Verdana;
-     font-weight: normal;
-     color: black;
-     text-decoration : none;
-     /*display: table-cell;
-     text-align: "&nbsp;";*/
-     padding-left: 3em;
-     }
+    font-family: Verdana;
+    font-weight: normal;
+    color: black;
+    text-decoration : none;
+    /*display: table-cell;
+    text-align: "&nbsp;";*/
+    padding-left: 3em;
+    }
 
 .password {
-     display: table-row;
-     }
+    display: table-row;
+    }
 
 .password .value {
-     display: table-cell;
-     }
+    display: table-cell;
+    }
 
 #submit {
-     position: absolute;
-     right: 10em; 
-     }
+    position: absolute;
+    right: 10em; 
+    }
      
 .submit {
-     }
+    }
      
 TD {
-     padding-left: 0.2em
-     }
+    padding-left: 0.2em
+    }
 
 TD#sessidtcell {
-     vertical-align:top;
-     padding-right: 0.5em
-     }
+    vertical-align:top;
+    padding-right: 0.5em
+    }
      
 TD#smallspacer {
-     font-size: 50%
-     }
+    font-size: 50%
+    }
      
 #intCmnt {
     height: 2.4em
     }
 
 TD.head {
-   background: #808080;
-   }
+    background: #808080;
+    }
 
 .bb {
     display: block; 
     }
+
 .features {
     display: block; 
     border: 1px solid black; 
     }
+
 .services {
     display: block; 
     border: 1px solid black; 
     }
+
 .b5 {
     border: 1px solid black; 
     display: table-row; 
     }
+
 .b5_a {
     display: table-cell; 
     vertical-align: top;
     }
-.b5_b {
+.
+b5_b {
     display: table-cell; 
     vertical-align: top;
     }
+
 .ib {
     display: table-cell; 
     padding: 2px;
     }
+
 .select_set {
     display: table-row; 
     padding: 2px;
     }
+
 .select_r {
     display: table-cell; 
     width: 15em;
     padding: 2px;
     }
+
 .select_l {
     display: table-cell; 
     width: 15em;
     padding: 2px;
     }
+
 .textwithlabel {
     display: table-row; 
     }
+
 .textlabel {
     display: table-cell; 
     width: 7em ;
     vertical-align: top;
     text-align: right;
     }
+
 .textlabelarea {
     display: table-cell; 
     height: 6.4em;
     }
 
+
 .titledtextarea {
-  margin: 1em;
-}
+    margin: 1em;
+    }
 
 .titledtextarea > label {
-  font-weight: bold;
-  display: block;
-}
+    font-weight: bold;
+    display: block;
+    }
 
 .titledtextarea > textarea {
-  display: block;
-}
+    display: block;
+    }
 
 .titlelabelarea {
     display: table-cell; 
     height: 1.2em;
     }
+    
 BUTTON {
-    display: block;
+    background-color: #C0C0C0;
+    padding: 0.5 em
     }
+    
 .SubmitButton {
-    position: absolute;
-    right: 20px;
+    background-color: #C0C0C0;
     }
+    
+.SubmitDiv {
+    text-align: right;
+    margin-right: 5em
+    }
+    
 OL, UL {
-   margin-left: 3em;
-   }
+    margin-left: 3em;
+    }
+
+.lrmargin {
+    margin-left: 2em;
+    margin-right: 2em
+    }
+   
+.lrpad {
+    padding-left: 1em;
+    padding-right: 1em
+    }
+   
+.inln {
+    display: inline
+    }
+   

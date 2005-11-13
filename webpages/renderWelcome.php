@@ -38,7 +38,7 @@
 <?php } ?>
     </ul>
     <DIV class="submit">
-        <DIV id="submit"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
+        <DIV id="submit" ><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
       </DIV>
     </DIV>
   </FORM>
