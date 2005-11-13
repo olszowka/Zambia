@@ -13,6 +13,8 @@ On this page you will find the online tools for managing Participants.</p>
 <DL>
    <DT><A HREF="InviteParticipants.php">Invite a participant to a session</A></DT>
    <DD>Use this tool to put sessions marked "invited guests only" on a participant's interest list.</DD>
+   <DT><A HREF="AssignParticipants.php">Assign participants to a session</A></DT>
+   <DD>Use this tool to assign participants to a session and select moderator.</DD>
 </DL>
 
 <?php staff_footer(); ?>
