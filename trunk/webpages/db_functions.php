@@ -1,11 +1,13 @@
 <?php
 // Function prepare_db()
 // Opens database channel
+include ('db_name.php');
+
 function prepare_db() {
     global $link;
-    $link = mysql_connect('localhost','olszowka','');
+    $link = mysql_connect(DBHOSTNAME,DBUSERID,DBPASSWORD);
     if ($link===false) return (false);
-    return (mysql_select_db('trgdev',$link));
+    return (mysql_select_db(DBDB,$link));
     }
 
 function isStaff($badgeid) {
