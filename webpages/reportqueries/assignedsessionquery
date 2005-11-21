@@ -1,0 +1,4 @@
+TITLE='Assigned Session Query'
+DESCRIPTION='Shows who has been assigned to each session.'
+QUERY='select badgename, Sessions.sessionid as SessionId, title, moderator from ParticipantOnSession, Sessions, CongoDump where ParticipantOnSession.badgeid=CongoDump.badgeid and ParticipantOnSession.sessionid=Sessions.sessionid;'
+
