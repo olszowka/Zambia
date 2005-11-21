@@ -1,0 +1,1 @@
+<?php staff_footer(); ?>
