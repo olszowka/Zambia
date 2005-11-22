@@ -260,12 +260,28 @@ function validate_participant_availability() {
     }
 
 // Function parse_mysql_time($time)
-// Takes the string $time and return array of "day" and "hour"
+// Takes the string $time and return array of "day" and "hour" and "minute"
 //
-function parse_mysql_time($time){
+function parse_mysql_time($time) {
     $h=0+substr($time,0,2);
     $result['hour']=fmod($h,24);
     $result['day']=intval($h/24);
+    $result['minute']=substr($time,3,2);
     return($result);
     }
+
+// Function time_description($time)
+// Takes the string $time and return string describing time
+//
+function time_description($time) {
+    $days=array("Fri","Sat","Sun");
+    $atime=parse_mysql_time($time);
+    $result="";
+    $result.=$days[$atime["day"]]." ";
+    $hour=fmod($atime["hour"],12);
+    $result.=(($hour==0)?12:$hour).":".$atime["minute"]." ";
+    $result.=($atime["hour"]>=12)?"PM":"AM";
+    return($result);
+    }
+    
 ?>
