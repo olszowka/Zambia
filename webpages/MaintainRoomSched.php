@@ -1,4 +1,5 @@
 <?php
+define ("newroomslots",5); // number of rows at bottom of page for new schedule entries
 $title="Maintain Room Schedule";
 require_once('db_functions.php');
 require_once('data_functions.php');
@@ -97,7 +98,8 @@ echo "      </TABLE>\n";
 
 echo "<HR>\n";
 $query = <<<EOD
-SELECT SC.scheduleid, SC.starttime, SC.sessionid, T.trackname, S.title FROM Schedule SC join Sessions S on SC.sessionid = S.sessionid
+SELECT SC.scheduleid, SC.starttime, S.duration, SC.sessionid, T.trackname, S.title 
+FROM Schedule SC join Sessions S on SC.sessionid = S.sessionid 
 join Tracks T on S.trackid = T.trackid WHERE SC.roomid=$selroomid ORDER BY SC.starttime
 EOD;
 if (!$result=mysql_query($query,$link)) {
@@ -113,17 +115,27 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
 $numrows=$i;
 echo "<FORM name=\"rmschdform\" method=POST action=\"MaintainRoomSched.php\">\n";
 echo "<TABLE>\n";
+echo "   <TR>\n";
+echo "      <TH>Delete</TH>\n";
+echo "      <TH>Start Time</TH>\n";
+echo "      <TH>Duration</TH>\n";
+echo "      <TH>Track</TH>\n";
+echo "      <TH>Session ID</TH>\n";
+echo "      <TH>Title</TH>\n";
+echo "      </TR>\n";
 for ($i=0;$i<$numrows;$i++) {
     echo "   <TR>\n";
     echo "      <TD class=\"vatop\"><INPUT type=\"checkbox\" name=\"del$i\" value=\"1\"></TD>\n";
-    echo "      <TD class=\"vatop lrpad\">Delete";
     echo "<INPUT type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["scheduleid"]."\"></TD>\n";
     echo "      <TD class=\"vatop lrpad\">".time_description($bigarray[$i]["starttime"])."</TD>\n";
+    echo "      <TD class=\"vatop lrpad\">".$bigarray[$i]["duration"]."</TD>\n";
     echo "      <TD class=\"vatop lrpad\">".$bigarray[$i]["trackname"]."</TD>\n";
     echo "      <TD class=\"vatop lrpad\">".$bigarray[$i]["sessionid"]."</TD>\n";
     echo "      <TD class=\"vatop lrpad\">".$bigarray[$i]["title"]."</TD>\n";
     echo "      </TR>\n";
     }
+echo "   </TABLE>\n";
+echo "<TABLE>\n";
 $query = <<<EOD
 SELECT S.sessionid, T.trackname, S.title, SC.roomid FROM Tracks AS T join Sessions AS S ON T.trackid = S.trackid
 LEFT JOIN Schedule AS SC ON S.sessionid = SC.sessionid where S.statusid = 2 HAVING SC.roomid IS NULL ORDER BY T.trackname,
@@ -140,35 +152,33 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     $i++;
     }
 $numsessions=$i;
-for ($i=1;$i<=5;$i++) {
+for ($i=1;$i<=newroomslots;$i++) {
     echo "   <TR>\n";
-	echo "      <TD>&nbsp;</TD>\n";
-	echo "      <TD>&nbsp;</TD>\n";
-	echo "      <TD><Select name=\"day$i\"><Option value=0 selected>Day</Option><Option value=1>Fri</Option>";
-	echo "<Option value=2>Sat</Option><Option value=3>Sun</Option></Select>&nbsp;\n";
-	echo "          <Select name=\"hour$i\"><Option value=\"unset\" selected>Hour</Option><Option value=0>12</Option>";
-	for ($j=1;$j<=11;$j++) {
-		echo "<Option value=$j>$j</Option>";
-		}
-	echo "</select>\n";
-	echo "          <Select name=\"min$i\"><Option value=\"unset\" selected>Min</Option><Option value=0>00</Option>";
-	echo "<Option value=5>05</Option>";
-	for ($j=10;$j<=55;$j+=5) {
-		echo "<Option value=$j>$j</Option>";
-		}
-	echo "</select>\n";
-	echo "          <Select name=\"ampm$i\"><Option value=0 selected>AM</Option><Option value=1>PM</Option>";
-	echo "</select>\n";
-	echo "          </TD>";
-	echo "      <TD colspan=3><Select name=\"sess$i\"><Option value=\"unset\" selected>Select Session</Option>\n";
-	for ($j=0;$j<$numsessions;$j++) {
-		echo "          <Option value=\"".$bigarray[$j]["sessionid"]."\">".$bigarray[$j]["trackname"]." - ";
-		echo $bigarray[$j]["sessionid"]." - ".$bigarray[$j]["title"]."</option>\n";
-		}
-	echo "</select>\n";
-	echo "          </TD>\n";
-	echo "       </TR>\n";
-	}
+    echo "      <TD><Select name=\"day$i\"><Option value=0 selected>Day</Option><Option value=1>Fri</Option>";
+    echo "<Option value=2>Sat</Option><Option value=3>Sun</Option></Select>&nbsp;\n";
+    echo "          <Select name=\"hour$i\"><Option value=\"unset\" selected>Hour</Option><Option value=0>12</Option>";
+    for ($j=1;$j<=11;$j++) {
+        echo "<Option value=$j>$j</Option>";
+        }
+    echo "</select>\n";
+    echo "          <Select name=\"min$i\"><Option value=\"unset\" selected>Min</Option><Option value=0>00</Option>";
+    echo "<Option value=5>05</Option>";
+    for ($j=10;$j<=55;$j+=5) {
+        echo "<Option value=$j>$j</Option>";
+        }
+    echo "</select>\n";
+    echo "          <Select name=\"ampm$i\"><Option value=0 selected>AM</Option><Option value=1>PM</Option>";
+    echo "</select>\n";
+    echo "          </TD>";
+    echo "      <TD><Select name=\"sess$i\"><Option value=\"unset\" selected>Select Session</Option>\n";
+    for ($j=0;$j<$numsessions;$j++) {
+        echo "          <Option value=\"".$bigarray[$j]["sessionid"]."\">".$bigarray[$j]["trackname"]." - ";
+        echo $bigarray[$j]["sessionid"]." - ".$bigarray[$j]["title"]."</option>\n";
+        }
+    echo "</select>\n";
+    echo "          </TD>\n";
+    echo "       </TR>\n";
+    }
 echo "</TABLE>";
 echo "<INPUT type=\"hidden\" name=\"selroom\" value=\"$selroomid\">\n";
 echo "<INPUT type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
