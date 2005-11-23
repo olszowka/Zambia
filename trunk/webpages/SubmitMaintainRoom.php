@@ -14,7 +14,7 @@ function SubmitMaintainRoom() {
     if (!$schedentries=="") {
         $schedentries=substr($schedentries,0,strlen($schedentries)-1); // remove trailing comma
 //        echo $schedentries."<BR>\n";
-        $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=1 WHERE S.sessionid=SC.sessionid AND ";
+        $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=2 WHERE S.sessionid=SC.sessionid AND ";
         $query.="SC.scheduleid IN ($schedentries)";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
@@ -30,7 +30,7 @@ function SubmitMaintainRoom() {
             exit();
             }
         $rows=mysql_affected_rows($link);
-        echo "<P class=\"regmsg\">$rows session".($rows>1?"s":"")." unscheduled.\n";
+        echo "<P class=\"regmsg\">$rows session".($rows>1?"s":"")." removed from schedule.\n";
         }
     $rows=0;
     $warn=0;
@@ -45,6 +45,13 @@ function SubmitMaintainRoom() {
         $time=(($_POST["day$i"]-1)*24+$_POST["ampm$i"]*12+$_POST["hour$i"]).":".$_POST["min$i"];
         $sessionid=$_POST["sess$i"];
         $query="INSERT INTO Schedule SET sessionid=$sessionid, roomid=$selroomid, starttime=\"$time\"";
+        if (!mysql_query($query,$link)) {
+            $message=$query."<BR>Error updating database.<BR>";
+            echo "<P class=\"errmsg\">".$message."\n";
+            staff_footer();
+            exit();
+            }
+        $query="UPDATE Sessions SET statusid=3 WHERE sessionid=$sessionid";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
             echo "<P class=\"errmsg\">".$message."\n";
