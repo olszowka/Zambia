@@ -164,7 +164,7 @@ echo "<H4>Add To Room Schedule</H4>\n";
 echo "<TABLE>\n";
 $query = <<<EOD
 SELECT S.sessionid, T.trackname, S.title, SC.roomid FROM Tracks AS T join Sessions AS S ON T.trackid = S.trackid
-LEFT JOIN Schedule AS SC ON S.sessionid = SC.sessionid where S.statusid = 2 HAVING SC.roomid IS NULL ORDER BY T.trackname,
+LEFT JOIN Schedule AS SC ON S.sessionid = SC.sessionid where S.statusid = 7 or S.statusid = 3 HAVING SC.roomid IS NULL ORDER BY T.trackname,
 S.title
 EOD;
 if (!$result=mysql_query($query,$link)) {
