@@ -14,7 +14,7 @@ function SubmitMaintainRoom() {
     if (!$schedentries=="") {
         $schedentries=substr($schedentries,0,strlen($schedentries)-1); // remove trailing comma
 //        echo $schedentries."<BR>\n";
-        $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=2 WHERE S.sessionid=SC.sessionid AND ";
+        $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=7 WHERE S.sessionid=SC.sessionid AND ";
         $query.="SC.scheduleid IN ($schedentries)";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";

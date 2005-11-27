@@ -36,7 +36,7 @@ if (!$Presult=mysql_query($query,$link)) {
     exit();
     }
 $query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S, Tracks AS T WHERE ";
-$query.="S.trackid = T.trackid AND S.invitedguest=1 AND S.statusid=2 ORDER BY T.trackname, ";
+$query.="S.trackid = T.trackid AND S.statusid=2 ORDER BY T.trackname, ";
 $query.="S.sessionid, S.title";
 if (!$Sresult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
