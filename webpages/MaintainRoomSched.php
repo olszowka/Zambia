@@ -20,7 +20,7 @@ if (isset($_POST["selroom"])) {
     else {
         $selroomid=0;
         }
-$query="SELECT roomid, roomname FROM Rooms ORDER BY display_order";
+$query="SELECT roomid, roomname, function FROM Rooms ORDER BY display_order";
 if (!$Rresult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";
@@ -31,9 +31,9 @@ echo "<FORM name=\"selroomform\" method=POST action=\"MaintainRoomSched.php\">\n
 echo "<DIV><LABEL for=\"selroom\">Select Room</LABEL>\n";
 echo "<SELECT name=\"selroom\">\n";
 echo "     <OPTION value=0 ".(($selroomid==0)?"selected":"").">Select Room</OPTION>\n";
-while (list($roomid,$roomname)= mysql_fetch_array($Rresult, MYSQL_NUM)) {
+while (list($roomid,$roomname, $rmfunct)= mysql_fetch_array($Rresult, MYSQL_NUM)) {
     echo "     <OPTION value=\"".$roomid."\" ".(($selroomid==$roomid)?"selected":"");
-    echo ">".htmlspecialchars($roomname)."</OPTION>\n";
+    echo ">".htmlspecialchars($roomname)." (".htmlspecialchars($rmfunct).")</OPTION>\n";
     }
 echo "</SELECT></DIV>\n";
 echo "<P>&nbsp;\n";
