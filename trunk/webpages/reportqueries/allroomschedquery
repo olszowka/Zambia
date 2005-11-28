@@ -1,0 +1,3 @@
+TITLE='Full Room Schedule'
+DESCRIPTION='Lists all Sessions Scheduled in all Rooms.'
+QUERY="Select R.roomname, S.title, DATE_FORMAT(ADDTIME('2006-01-13 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time' from Rooms R, Sessions S, Schedule SCH where SCH.roomid = R.roomid and SCH.sessionid = S.sessionid order by R.roomname, SCH.starttime"
