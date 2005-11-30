@@ -502,7 +502,8 @@ select.yesno {
     }
      
 TD {
-    padding-left: 0.2em
+    padding-left: 0.2em;
+    padding-right: 0.2em
     }
 
 TD#sessidtcell {
