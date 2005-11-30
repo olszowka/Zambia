@@ -1,3 +1,3 @@
 TITLE='Schedule of Sessions '
 DESCRIPTION='What is the schedule?'
-QUERY='select roomname, function, starttime, duration, title from Rooms, Sessions, Schedule where Rooms.roomid=Schedule.roomid and Schedule.sessionid=Sessions.sessionid order by roomname,starttime;'
+QUERY="select roomname, function, DATE_FORMAT(ADDTIME('2006-01-13 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', duration, title from Rooms, Sessions, Schedule where Rooms.roomid=Schedule.roomid and Schedule.sessionid=Sessions.sessionid order by roomname,starttime;"
