@@ -13,7 +13,7 @@
         exit ();
         }
    $query = <<<EOD
-SELECT sessionid, trackname, title, duration, estatten, statusname
+SELECT sessionid, trackname, title, LEFT(duration,5), estatten, statusname
     from Sessions, Tracks, SessionStatuses where
     Sessions.trackid=Tracks.trackid and
     Sessions.statusid=SessionStatuses.statusid
