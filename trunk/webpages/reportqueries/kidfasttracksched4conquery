@@ -1,0 +1,3 @@
+TITLE='FastTrack Schedule (for con)'
+DESCRIPTION='What is happening in FastTrack - The At-Con Version'
+QUERY="Select DATE_FORMAT(ADDTIME('2006-01-13 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time',  R.roomname, S.title, group_concat(' ',firstname,' ',lastname) as 'Participants' from Rooms R, Sessions S, Schedule SCH, CongoDump C, ParticipantOnSession POS where SCH.roomid = R.roomid and SCH.sessionid = S.sessionid and C.badgeid=POS.badgeid and POS.sessionid=SCH.sessionid and S.trackid=10 group by SCH.sessionid order by SCH.starttime;"
