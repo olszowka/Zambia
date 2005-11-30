@@ -1,6 +1,3 @@
 TITLE='Duplicate Session Query'
 DESCRIPTION='Lists all sessions scheduled more than once.'
-QUERY='select S.sessionid, S.title, R.roomname, SCH.starttime from
-Sessions S, Rooms R, Schedule SCH, 
-(select sessionid, count(*) as mycount from Schedule group by sessionid having mycount>1) X
-where S.sessionid=X.sessionid and S.sessionid=SCH.sessionid and R.roomid = SCH.roomid order by S.sessionid;'
+QUERY='select S.sessionid, S.title, R.roomname, SCH.starttime from Sessions S, Rooms R, Schedule SCH, (select sessionid, count(*) as mycount from Schedule group by sessionid having mycount>1) X where S.sessionid=X.sessionid and S.sessionid=SCH.sessionid and R.roomid = SCH.roomid order by S.sessionid;'

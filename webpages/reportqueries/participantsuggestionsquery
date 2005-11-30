@@ -1,0 +1,3 @@
+TITLE='Participant Suggestions'
+DESCRIPTION='What is did each participant suggest?'
+QUERY='select C.badgeid, badgename, paneltopics, otherideas, suggestedguests from  ParticipantSuggestions as PS , CongoDump as C where C.badgeid=PS.badgeid;'
