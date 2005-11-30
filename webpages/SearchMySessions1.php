@@ -15,7 +15,7 @@ Select S2.sessionid, S2.trackname, S2.title, S2.duration, S2.pocketprogtext,
     ( Select S.sessionid, T.trackname, S.title, S.duration, 
       S.pocketprogtext, S.persppartinfo from Sessions S, Tracks AS T
       where S.trackid = T.trackid and T.selfselect=1 and S.invitedguest=0 
-      and S.statusid=2
+      and (S.statusid=2 or S.statusid=7 or S.statusid=3)
 EOD;
     if ($trackid!=0) {
         $query.=" and S.trackid=".$trackid;
