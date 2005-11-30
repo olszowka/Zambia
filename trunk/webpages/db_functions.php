@@ -11,7 +11,7 @@ function prepare_db() {
     }
 
 function isStaff($badgeid) {
-    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4400","40439","5833","4398","4398","27066")));
+    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4400","40439","5833","4398","4398","4516","27066")));
 
 //  Don't add folk to the above until thier password has changed  aka
 //    select badgeid from Participants 
