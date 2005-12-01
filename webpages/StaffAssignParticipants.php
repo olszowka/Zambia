@@ -19,8 +19,7 @@ if (isset($_POST["selsess"])) {
         $selsessionid=0;
         }
 $query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S, Tracks AS T WHERE ";
-$query.="S.trackid = T.trackid AND (S.statusid=2 or S.statusid=3 or S.statusid=7) ORDER BY T.trackname, S.sessionid,";
-$query.="S.sessionid, S.title";
+$query.="S.trackid = T.trackid AND (S.statusid in (2,3,7)) ORDER BY T.trackname, S.sessionid";
 if (!$Sresult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";
