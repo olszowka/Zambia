@@ -1,0 +1,3 @@
+TITLE='Session Interest by participant (all info)'
+DESCRIPTION='Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report.  (All data included including for invited sessions.) order by participant'
+QUERY='select T.trackname as "Track", S.sessionid as "Session ID", title as "Title", badgename as "BadgeName",lastname, firstname,C.badgeid as "BadgeID", I.rank as "Rank", I.willmoderate as "Mod?", I.comments as "Comments" from CongoDump as C, Participants as P, ParticipantSessionInterest as I, Sessions as S, Tracks as T where C.badgeid=P.badgeid and P.badgeid=I.badgeid and S.sessionid=I.sessionid and T.trackid=S.trackid order by C.badgeid;'
