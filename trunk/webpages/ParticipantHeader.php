@@ -40,7 +40,7 @@ function MM_swapImage() { //v3.0
 </head>
 <body onload="MM_preloadImages('images/my_profile-active.png','images/my_availability-active.png',
     'images/search_panels-active.png','images/staff_pages-active.png','images/welcome-active.png',
-    'images/my_general_interests-active.png','images/my_suggestions-active.png)">
+    'images/my_general_interests-active.png','images/my_suggestions-active.png')">
 <H1 class="head">Zambia&ndash;The Arisia Scheduling Tool</H1> 
 <hr>
 
