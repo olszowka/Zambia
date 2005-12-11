@@ -11,7 +11,7 @@ function prepare_db() {
     }
 
 function isStaff($badgeid) {
-    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4400","40439","5833","4398","4398","4516","27066")));
+    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4400","40439","5833","4398","4398","4516","27066","26912","20027","4720")));
 
 //  Don't add folk to the above until thier password has changed  aka
 //    select badgeid from Participants 
@@ -30,6 +30,9 @@ function isStaff($badgeid) {
 //4398 - Ellen Kranzer
 //4516 - Elka
 //27066 - David D'Antonio
+//20027 - Merv
+//26912 - Jesse
+//4720 - Mike
 // need changing:
 //4321 - Joel Herda
 //4782 - Patricia Vandenberg (dda's assistant div head)
