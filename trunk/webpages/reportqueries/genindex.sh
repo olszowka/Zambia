@@ -11,6 +11,8 @@ cat genreportheader.php | sed "s/REPORT_TITLE/Available Reports/" | \
                           sed "s/REPORT_DESCRIPTION//" > $DEST
 
 echo '<DL>' >> $DEST
+echo '<dt> <a href="wholegridreport.php"> The Whole Grid </a></dt>' >> $DEST
+echo '<dd> The Grid </dd>' >> $DEST
 
 for x in ${SRCDIR}/*query ; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
