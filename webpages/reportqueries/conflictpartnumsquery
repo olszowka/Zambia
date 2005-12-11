@@ -1,3 +1,3 @@
-TITLE='Check Participant Availability Limits'
+TITLE='Conflict Report - Participant Number of Sessions'
 DESCRIPTION='Compare number of sessions participants requested with the number of which they were assigned'
 QUERY="select PA.badgeid, badgename, fridaymaxprog as 'Fri Reqd.', frisched as 'Fri Asgnd.', saturdaymaxprog as 'Sat Reqd.', satsched as 'Sat Asgnd.', sundaymaxprog as 'Sun Reqd.', sunsched as 'Sun Asgnd.',maxprog as 'Total Reqd.', totsched as 'Total Asgnd.' from ParticipantAvailability PA, CongoDump CD, (select badgeid, sum(if(starttime<'24:00:00',1,0)) as frisched, sum(if((starttime>='24:00:00' && starttime<='48:00:00'),1,0)) as satsched, sum(if(starttime>='48:00:00',1,0)) as sunsched, count(*) as totsched from (select POS.badgeid, POS.sessionid, SCH.starttime from ParticipantOnSession POS, Schedule SCH where POS.sessionid=SCH.sessionid) as FOO group by badgeid) as BAR where PA.badgeid = CD.badgeid and PA.badgeid = BAR.badgeid order by badgeid;"
