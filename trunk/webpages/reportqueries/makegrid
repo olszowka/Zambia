@@ -1,0 +1,3 @@
+set group_concat_max_len = 2500;
+Select Group_Concat(distinct concat('group_concat(if(roomid=\'',R.roomid,'\',Concat(sessionid,\' \',title,\' (\',left(duration,5),\')\'),\'\') separator \'\') as \'',roomname,'\'')) from Schedule SCH, Rooms R where SCH.roomid=R.roomid;
+
