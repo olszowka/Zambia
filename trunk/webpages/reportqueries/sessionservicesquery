@@ -1,3 +1,0 @@
-TITLE='Session Services'
-DESCRIPTION='Which Session needs which Services?'
-QUERY='select Sessions.sessionid, title, servicename from SessionHasService, Services, Sessions where Sessions.sessionid=SessionHasService.sessionid and SessionHasService.serviceid=Services.serviceid order by sessionid;'
