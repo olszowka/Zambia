@@ -1,0 +1,3 @@
+TITLE='Fasttrack Grid'
+DESCRIPTION='Display Fast Track schedule with rooms on horizontal axis and time on vertical.'
+QUERY="select DATE_FORMAT(ADDTIME('2006-01-13 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', group_concat(if(roomid='12',Concat(sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Emerson',group_concat(if(roomid='14',Concat(sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Gloucester',group_concat(if(roomid='15',Concat(sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Holmes' from (SELECT S.sessionid, SCH.roomid, starttime, duration, title from Schedule SCH, Sessions S, Rooms R where S.sessionid = SCH.sessionid and SCH.roomid=R.roomid and R.function like '%ast%rack%')as Z group by starttime;"
