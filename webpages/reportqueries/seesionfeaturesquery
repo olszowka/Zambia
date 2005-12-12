@@ -1,3 +1,0 @@
-TITLE='Session Features'
-DESCRIPTION='Which Session needs which Feature?'
-QUERY='select Sessions.sessionid, title, featurename from SessionHasFeature, Features, Sessions where Sessions.sessionid=SessionHasFeature.sessionid and SessionHasFeature.featureid=Features.featureid order by sessionid;'
