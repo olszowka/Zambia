@@ -7,6 +7,7 @@ DESTDIR=".."
 for x in ${SRCDIR}/*query ; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
   eval `cat $x`
+  echo $x
 
   cat genreportheader.php | sed "s/REPORT_TITLE/$TITLE/" | \
                             sed "s/REPORT_DATE/`date`/" | \
