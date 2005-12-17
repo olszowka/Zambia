@@ -21,7 +21,7 @@
         }
       else {    
         $query="SELECT sessionid FROM (SELECT sessionid, trackid FROM Sessions where sessionid=";
-        $query.=$sessionid." and invitedguest=0 and statusid=2) AS S join ";
+        $query.=$sessionid." and invitedguest=0 and statusid in (2,3,7)) AS S join ";
         $query.="(SELECT trackid FROM Tracks where selfselect=1) AS T on S.trackid = T.trackid";
         if (!$result=mysql_query($query,$link)) {
           $message=$query."<BR>Error querying database.<BR>";
