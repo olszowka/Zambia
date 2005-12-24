@@ -283,5 +283,36 @@ function time_description($time) {
     $result.=($atime["hour"]>=12)?"PM":"AM";
     return($result);
     }
+
+// Function fix_slashes($arg)
+// Takes the string $arg and removes multiple slashes, 
+// slash-quote and slash-double quote.
+function fix_slashes($arg) {    
+    while (($pos=strpos($arg,"\\\\"))!==false) {
+        if ($pos==0) {
+                $arg=substr($arg,1);
+                }
+            else {
+                $arg=substr($arg,0,$pos).substr($arg,$pos+1);
+                }
+        }
+    while (($pos=strpos($arg,"\\'"))!==false) {
+        if ($pos==0) {
+                $arg=substr($arg,1);
+                }
+            else {
+                $arg=substr($arg,0,$pos).substr($arg,$pos+1);
+                }
+        }
+    while (($pos=strpos($arg,"\\\""))!==false) {
+        if ($pos==0) {
+                $arg=substr($arg,1);
+                }
+            else {
+                $arg=substr($arg,0,$pos).substr($arg,$pos+1);
+                }
+        }
+    return $arg;
+    }
     
 ?>
