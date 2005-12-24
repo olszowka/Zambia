@@ -40,38 +40,47 @@ function MM_swapImage() { //v3.0
 </head>
 <body onload="MM_preloadImages('images/my_profile-active.png','images/my_availability-active.png',
     'images/search_panels-active.png','images/staff_pages-active.png','images/welcome-active.png',
-    'images/my_general_interests-active.png','images/my_suggestions-active.png')">
+    'images/my_general_interests-active.png','images/my_suggestions-active.png',
+    'images/my_schedule-active.png')">
 <H1 class="head">Zambia&ndash;The Arisia Scheduling Tool</H1> 
 <hr>
 
 <?php if (isset($_SESSION["badgeid"])) { ?>
 <!--    <td background="images/grey-bg.gif"> -->
   <table class="header">
+    <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
     <tr>
-      <td class="head"><a href="welcome.php" onmouseout="MM_swapImgRestore()"
+      <td class="head border0020" colspan=2><a href="welcome.php" onmouseout="MM_swapImgRestore()"
           onmouseover="MM_swapImage('welcome','','images/welcome-active.png',1)">
           <img src="images/welcome.png" name="welcome" alt="Welcome"></a></td>
-      <td class="head"><a href="my_contact.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('my_profile','','images/my_profile-active.png',1)">
-          <img src="images/my_profile.png" name="my_profile" alt="My Profile"></a></td>
-      <td class="head"><a href="my_sched_constr.php" onmouseout="MM_swapImgRestore()"
+      <td class="head border0020" colspan=2><a href="my_sched_constr.php" onmouseout="MM_swapImgRestore()"
           onmouseover="MM_swapImage('my_availability','','images/my_availability-active.png',1)">
           <img src="images/my_availability.png" name="my_availability" alt="My Availability"></a></td>
-      <td class="head"><a href="my_sessions1.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('search_panels','','images/search_panels-active.png',1)">
-          <img src="images/search_panels.png" name="search_panels" alt="Search Panels"></a></td>
-      <td class="head"><a href="my_sessions2.php" onmouseout="MM_swapImgRestore()"
+      <td class="head border0020" colspan=2><a href="my_sessions2.php" onmouseout="MM_swapImgRestore()"
           onmouseover="MM_swapImage('my_panel_interests','','images/my_panel_interests-active.png',1)">
           <img src="images/my_panel_interests.png" name="my_panel_interests" alt="My Panel Interests"></a></td>
-      <td class="head"><a href="my_suggestions.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('my_suggestions','','images/my_suggestions-active.png',1)">
-          <img src="images/my_suggestions.png" name="my_suggestions" alt="My Suggestions"></a></td>
-      <td class="head"><a href="my_interests.php" onmouseout="MM_swapImgRestore()"
+      <td class="head border0020" colspan=2><a href="my_interests.php" onmouseout="MM_swapImgRestore()"
           onmouseover="MM_swapImage('my_general_interests','','images/my_general_interests-active.png',1)">
           <img src="images/my_general_interests.png" name="my_general_interests" alt="My General Interests"></a></td>
-<?php if (isStaff($badgeid)) { 
-      echo "<td id=\"head\"><a href=\"StaffPage.php\" onmouseout=\"MM_swapImgRestore()\" onmouseover=\"MM_swapImage('staff_pages','','images/staff_pages-active.png',1)\"><img src=\"images/staff_pages.png\" name=\"staff_pages\" alt=\"Staff Pages\"></a></td>";
-} ?>
+<?php if (isStaff($badgeid)) { ?> 
+      <td class="head border0020" colspan=2><a href="StaffPage.php" onmouseout="MM_swapImgRestore()"
+          onmouseover="MM_swapImage('staff_pages','','images/staff_pages-active.png',1)">
+          <img src="images/staff_pages.png" name="staff_pages" alt="Staff Pages"></a></td>
+<?php } else { echo "<td class=\"head border0020 smallspacer\" colspan=2>&nbsp;</td>"; } ?>
+      </tr><tr><td class="head border0020 smallspacer">&nbsp;</td>
+      <td class="head border0020" colspan=2><a href="my_contact.php" onmouseout="MM_swapImgRestore()"
+          onmouseover="MM_swapImage('my_profile','','images/my_profile-active.png',1)">
+          <img src="images/my_profile.png" name="my_profile" alt="My Profile"></a></td>
+      <td class="head border0020" colspan=2><a href="my_sessions1.php" onmouseout="MM_swapImgRestore()"
+          onmouseover="MM_swapImage('search_panels','','images/search_panels-active.png',1)">
+          <img src="images/search_panels.png" name="search_panels" alt="Search Panels"></a></td>
+      <td class="head border0020" colspan=2><a href="my_suggestions.php" onmouseout="MM_swapImgRestore()"
+          onmouseover="MM_swapImage('my_suggestions','','images/my_suggestions-active.png',1)">
+          <img src="images/my_suggestions.png" name="my_suggestions" alt="My Suggestions"></a></td>
+      <td class="head border0020" colspan=2><a href="MySchedule.php" onmouseout="MM_swapImgRestore()"
+          onmouseover="MM_swapImage('my_schedule','','images/my_schedule-active.png',1)">
+          <img src="images/my_schedule.png" name="my_schedule" alt="My Schedule"></a></td>
+      <td class="head border0020 smallspacer">&nbsp;</td>
           </tr>
         </table>
       </td>
