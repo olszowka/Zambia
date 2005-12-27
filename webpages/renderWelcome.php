@@ -16,7 +16,12 @@
     $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
     $chint=($participant["interested"]==0);
 ?>
-<P> Welcome to the Program Participant Pages! 
+<P> Welcome back! 
+<ol>
+  <li> A new webpage containing your schedule has been added.  You'll find it under "My Schedule".   
+  <li> The best way to reach us is to send email to <a href="mailto: program@arisia.org">program@arisia.orgi</a>.
+</ol>
+<P> For first time users: 
 <ol>
   <li> First, please indicate whether you will partipate in Arisia'06 and change your password.
 <FORM class="nomargin" name="pwform" method=POST action="submitWelcome.php">
