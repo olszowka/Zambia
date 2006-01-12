@@ -11,6 +11,8 @@
 On this page you will find the online tools for managing Participants.</p>
 <hr>
 <DL>
+   <DT><A HREF="AdminParticipants.php">Administer participants</A></DT>
+   <DD>Use this tool to modify a participant's "interested" flag, change his password, or delete him from all sessions.</DD>
    <DT><A HREF="InviteParticipants.php">Invite a participant to a session</A></DT>
    <DD>Use this tool to put sessions marked "invited guests only" on a participant's interest list.</DD>
    <DT><A HREF="AssignParticipants.php">Assign participants to a session</A></DT>
