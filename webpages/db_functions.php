@@ -11,7 +11,7 @@ function prepare_db() {
     }
 
 function isStaff($badgeid) {
-    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4440","40439","5833","4398","4398","4516","27066","26912","20027","4720","9951","6622","93178","6623","39818","6499","40370","4558")));
+    return (array_search($badgeid,array("qwerty","00001","40099","38322","92972","53159","27051","4694","9563","4440","40439","5833","4398","4398","4516","27066","26912","20027","4720","9951","6622","93178","6623","39818","6499","40370","4558","4321","52045","4680","92696","4515")));
 
 //  Don't add folk to the above until thier password has changed  aka
 //    select badgeid from Participants 
@@ -41,12 +41,15 @@ function isStaff($badgeid) {
 //6499 - Lisa Hertel
 //40370 - Michael Tool (anime)
 //4558 - Lance Oszko (video)
-// need changing:
 //4321 - Joel Herda
-//4782 - Patricia Vandenberg (dda's assistant div head)
-//4698 - Patty Silva (Film head)
 //52045 - Scott Dorsey (35mm)
 //4680 - Paul Selkirk (pubs)
+//92696 - Rick (tech)
+//4515 - Topper (pubs)
+// need changing:
+//4782 - Patricia Vandenberg (dda's assistant div head)
+//4698 - Patty Silva (Film head)
+//28386 - Jason Schneiderman (gaming)
 
     }
 
