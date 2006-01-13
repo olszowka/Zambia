@@ -1,3 +1,3 @@
-TITLE='Event Grid'
-DESCRIPTION='Display event schedule with rooms on horizontal axis and time on vertical.'
+TITLE='Tech Grid'
+DESCRIPTION='Working on this for Joel.  Joel, I havenot forgotten you.. I just need to eat before finishing this.'
 QUERY="select DATE_FORMAT(ADDTIME('2006-01-13 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', group_concat(if(roomid='27',Concat(trackname,' ',sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Imperial Ballroom',group_concat(if(roomid='36',Concat(trackname,' ',sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Stanbro' from (SELECT trackname,' ',S.sessionid, SCH.roomid, starttime, duration, title from Schedule SCH, Sessions S, Rooms R, Tracks T where T.trackid=S.trackid and T.trackname != 'Do Not Print' and S.sessionid = SCH.sessionid and SCH.roomid=R.roomid and R.function like '%ent%')as Z group by starttime;"

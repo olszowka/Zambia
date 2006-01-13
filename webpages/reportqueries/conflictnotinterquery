@@ -1,0 +1,3 @@
+TITLE='Conflict Report - people on panels they are not interested in'
+DESCRIPTION='The only way this can happen is if someone removes thier interested flag after we assign them to a panel. '
+QUERY="select POS.badgeid, C.badgename, POS.sessionid from CongoDump C, ParticipantOnSession POS left join ParticipantSessionInterest PSI on POS.badgeid=PSI.badgeid and POS.sessionid=PSI.sessionid where C.badgeid=POS.badgeid and PSI.sessionid is NULL;"
