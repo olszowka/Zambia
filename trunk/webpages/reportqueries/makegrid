@@ -3,4 +3,8 @@ Select Group_Concat(distinct concat('group_concat(if(roomid=\'',R.roomid,'\',Con
 Select Group_Concat(distinct concat('group_concat(if(roomid=\'',R.roomid,'\',Concat(trackname,\' \',sessionid,\' \',title,\' (\',left(duration,5),\')\'),\'\') separator \'\') as \'',roomname,'\'')) ' ' from Schedule SCH, Rooms R where SCH.roomid=R.roomid and function like '%rogram%';
 Select Group_Concat(distinct concat('group_concat(if(roomid=\'',R.roomid,'\',Concat(trackname,\' \',sessionid,\' \',title,\' (\',left(duration,5),\')\'),\'\') separator \'\') as \'',roomname,'\'')) from Schedule SCH, Rooms R where SCH.roomid=R.roomid and function like '%ent%';
 Select Group_Concat(distinct concat('group_concat(if(roomid=\'',R.roomid,'\',Concat(trackname,\' \',sessionid,\' \',title,\' (\',left(duration,5),\')\'),\'\') separator \'\') as \'',roomname,'\'')) from Schedule SCH, Rooms R where SCH.roomid=R.roomid and function like '%ast%rack%';
+Select Group_Concat(distinct concat('group_concat(if(roomid=\'',R.roomid,'\',Concat(trackname,\' \',sessionid,\' \',title,\' (\',left(duration,5),\')\'),\'\') separator \'\') as \'',roomname,'\'')) from Schedule SCH, Rooms R where SCH.roomid=R.roomid and function like '%Gam%';
+
+#tech
+Select Group_Concat(distinct concat('group_concat(if(roomid=\'',R.roomid,'\',Concat(trackname,\' \',sessionid,\' \',title,\' (\',left(duration,5),\')\',roomid,\' \'),\'\') separator \'\') as \'',roomname,'\'')) from Schedule SCH, Rooms R where SCH.roomid=R.roomid and function like '%ent%';
 

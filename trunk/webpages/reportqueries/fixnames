@@ -1,0 +1,214 @@
+update CongoDump set firstname = 'firstname', lastname = 'lastname' where badgeid = 'badgeid';
+
+update CongoDump set firstname = 'Martha', lastname = 'Adams' where badgeid = '4025';
+
+update CongoDump set firstname = 'Howard', lastname = 'Beatman' where badgeid = '4060';
+
+update CongoDump set firstname = 'Katy', lastname = 'Bishop' where badgeid = '4071';
+
+update CongoDump set firstname = 'Tina', lastname = 'Connell' where badgeid = '4148';
+
+update CongoDump set firstname = 'Regis', lastname = 'Donovan' where badgeid = '4186';
+
+update CongoDump set firstname = 'Donna', lastname = 'Dube' where badgeid = '4191';
+
+update CongoDump set firstname = 'Becky', lastname = 'Feld' where badgeid = '4218';
+
+update CongoDump set firstname = 'jan howard', lastname = 'finder' where badgeid = '4223';
+
+update CongoDump set firstname = 'Dina', lastname = 'Flockhart' where badgeid = '4230';
+
+update CongoDump set firstname = 'Scott E', lastname = 'Green' where badgeid = '4294';
+
+update CongoDump set firstname = 'Michael', lastname = 'Horne' where badgeid = '4338';
+
+update CongoDump set firstname = 'David', lastname = 'Irish' where badgeid = '4358';
+
+update CongoDump set firstname = 'Muriel', lastname = 'Kanter' where badgeid = '4376';
+
+update CongoDump set firstname = 'Alexx', lastname = 'Kay' where badgeid = '4382';
+
+update CongoDump set firstname = 'Terry', lastname = 'Kepner' where badgeid = '4388';
+
+update CongoDump set firstname = 'Daniel M', lastname = 'Kimmel' where badgeid = '4390';
+
+update CongoDump set firstname = 'Johnna', lastname = 'Klukas' where badgeid = '4392';
+
+update CongoDump set firstname = 'Joe', lastname = 'Lazzaro' where badgeid = '4422';
+
+update CongoDump set firstname = 'Sheila', lastname = 'Oranch' where badgeid = '4554';
+
+update CongoDump set firstname = 'Joe', lastname = 'Ross' where badgeid = '4644';
+
+update CongoDump set firstname = 'Charles', lastname = 'Ryan' where badgeid = '4651';
+
+update CongoDump set firstname = 'Rachel', lastname = 'Silber' where badgeid = '4694';
+
+update CongoDump set firstname = 'Patty', lastname = 'Silva' where badgeid = '4698';
+
+update CongoDump set firstname = 'David A', lastname = 'Smith' where badgeid = '4702';
+
+update CongoDump set firstname = 'Virginia', lastname = 'Taylor' where badgeid = '4747';
+
+update CongoDump set firstname = 'Mercy E', lastname = 'Van Vlack' where badgeid = '4781';
+
+update CongoDump set firstname = 'Pat', lastname = 'Vandenberg' where badgeid = '4782';
+
+update CongoDump set firstname = 'Vicki', lastname = 'Warren' where badgeid = '4797';
+
+update CongoDump set firstname = 'Ken', lastname = 'Warren' where badgeid = '4798';
+
+update CongoDump set firstname = 'Alan', lastname = 'Wexelblat' where badgeid = '4804';
+
+update CongoDump set firstname = 'Deb', lastname = 'Wunder' where badgeid = '4827';
+
+update CongoDump set firstname = 'Tom', lastname = 'Kidd' where badgeid = '5423';
+
+update CongoDump set firstname = 'Cathy', lastname = 'Raymond' where badgeid = '5659';
+
+update CongoDump set firstname = 'Steve', lastname = 'Patten' where badgeid = '5681';
+
+update CongoDump set firstname = 'Lucy Cohen', lastname = 'Schmeidler' where badgeid = '5815';
+
+update CongoDump set firstname = 'Melissa', lastname = 'Scott' where badgeid = '5820';
+
+update CongoDump set firstname = 'Michael', lastname = 'Sharrow' where badgeid = '5828';
+
+update CongoDump set firstname = 'phi', lastname = '' where badgeid = '5833';
+
+update CongoDump set firstname = 'Mark', lastname = 'Mandel' where badgeid = '6799';
+
+update CongoDump set firstname = 'Barbara', lastname = 'Pugliese' where badgeid = '7042';
+
+update CongoDump set firstname = 'Angela', lastname = 'Bowen' where badgeid = '7096';
+
+update CongoDump set firstname = 'Will', lastname = 'Turano' where badgeid = '7180';
+
+update CongoDump set firstname = 'Mark', lastname = 'Millman' where badgeid = '9014';
+
+update CongoDump set firstname = 'Lis', lastname = 'Carey' where badgeid = '9774';
+
+update CongoDump set firstname = 'Janet', lastname = 'Max Stickle' where badgeid = '9951';
+
+update CongoDump set firstname = 'Thomas A', lastname = 'Endry' where badgeid = '10982';
+
+update CongoDump set firstname = 'P. M.', lastname = 'Griffin' where badgeid = '11374';
+
+update CongoDump set firstname = 'Tom', lastname = 'Restivo' where badgeid = '12988';
+
+update CongoDump set firstname = '*Hobbit*', lastname = '' where badgeid = '13745';
+
+update CongoDump set firstname = 'Claudia', lastname = 'Mastroianni' where badgeid = '14105';
+
+update CongoDump set firstname = 'Pete', lastname = 'Chvany' where badgeid = '14148';
+
+update CongoDump set firstname = 'Gunther', lastname = 'Anderson' where badgeid = '14250';
+
+update CongoDump set firstname = 'Tom', lastname = 'Murphy' where badgeid = '20027';
+
+update CongoDump set firstname = 'Tom', lastname = 'Easton' where badgeid = '20081';
+
+update CongoDump set firstname = 'Robin', lastname = 'Holly' where badgeid = '20122';
+
+update CongoDump set firstname = 'Daniel', lastname = 'Abraham' where badgeid = '20210';
+
+update CongoDump set firstname = 'Laura', lastname = 'Packer' where badgeid = '20228';
+
+update CongoDump set firstname = 'Karen', lastname = 'Purcell' where badgeid = '24322';
+
+update CongoDump set firstname = 'Stephen', lastname = 'Wilk' where badgeid = '25094';
+
+update CongoDump set firstname = 'Cat', lastname = 'Dancer' where badgeid = '26798';
+
+update CongoDump set firstname = 'Daniel M.', lastname = 'Abraham' where badgeid = '26838';
+
+update CongoDump set firstname = 'Ed', lastname = 'Stauff' where badgeid = '26869';
+
+update CongoDump set firstname = 'Elaine', lastname = 'Brennan' where badgeid = '26877';
+
+update CongoDump set firstname = 'pygment', lastname = '' where badgeid = '26917';
+
+update CongoDump set firstname = 'Jeanette', lastname = 'Healy' where badgeid = '26926';
+
+update CongoDump set firstname = 'Brian', lastname = 'Healy' where badgeid = '26927';
+
+update CongoDump set firstname = 'Barb', lastname = 'Schofield' where badgeid = '26994';
+
+update CongoDump set firstname = 'Persis', lastname = 'Thorndike' where badgeid = '27051';
+
+update CongoDump set firstname = 'Misty', lastname = 'Pendragon' where badgeid = '27209';
+
+update CongoDump set firstname = 'JoAnn', lastname = 'Cox' where badgeid = '27246';
+
+update CongoDump set firstname = 'Richard', lastname = 'Staats' where badgeid = '27578';
+
+update CongoDump set firstname = 'Cindy', lastname = 'Shettle' where badgeid = '27613';
+
+update CongoDump set firstname = 'Kiralee', lastname = 'McCauley' where badgeid = '27615';
+
+update CongoDump set firstname = 'Bob', lastname = 'Devney Jr' where badgeid = '27656';
+
+update CongoDump set firstname = 'Andy', lastname = 'Shein' where badgeid = '27922';
+
+update CongoDump set firstname = 'Andrew', lastname = 'Phillips' where badgeid = '28070';
+
+update CongoDump set firstname = 'Jenn', lastname = 'Koerber' where badgeid = '28137';
+
+update CongoDump set firstname = 'Bill', lastname = 'Yerazunis' where badgeid = '28192';
+
+update CongoDump set firstname = 'Judith', lastname = 'Bemis' where badgeid = '28284';
+
+update CongoDump set firstname = 'Nancy', lastname = 'Frey' where badgeid = '28371';
+
+update CongoDump set firstname = 'James', lastname = 'Henderson Jr' where badgeid = '37823';
+
+update CongoDump set firstname = 'Frank', lastname = 'Hunt' where badgeid = '38031';
+
+update CongoDump set firstname = 'Alicia', lastname = 'Goranson' where badgeid = '38690';
+
+update CongoDump set firstname = 'Kestrell', lastname = '' where badgeid = '38691';
+
+update CongoDump set firstname = 'Tom', lastname = 'Amoroso' where badgeid = '38866';
+
+update CongoDump set firstname = 'Terri', lastname = 'Osborne' where badgeid = '39214';
+
+update CongoDump set firstname = 'Ande', lastname = 'Lyon' where badgeid = '39336';
+
+update CongoDump set firstname = 'Betsy', lastname = 'Costikyan' where badgeid = '39362';
+
+update CongoDump set firstname = 'Beth', lastname = 'Kelly' where badgeid = '39532';
+
+update CongoDump set firstname = 'Cera', lastname = 'Crowley' where badgeid = '39614';
+
+update CongoDump set firstname = 'Colette', lastname = 'Fozard' where badgeid = '39799';
+
+update CongoDump set firstname = 'September L', lastname = 'Isdell' where badgeid = '39818';
+
+update CongoDump set firstname = 'Pete', lastname = 'Thomas' where badgeid = '39961';
+
+update CongoDump set firstname = 'Pam', lastname = 'Ochs' where badgeid = '39962';
+
+update CongoDump set firstname = 'Rose', lastname = 'Fox' where badgeid = '40435';
+
+update CongoDump set firstname = 'Matt', lastname = 'Chmielewski' where badgeid = '52173';
+
+update CongoDump set firstname = 'Bob', lastname = 'Greenberger' where badgeid = '52234';
+
+update CongoDump set firstname = 'Charlie', lastname = 'Anders' where badgeid = '53044';
+
+update CongoDump set firstname = 'Darklady', lastname = '' where badgeid = '53064';
+
+update CongoDump set firstname = 'Tricia', lastname = 'Parcells' where badgeid = '53217';
+
+update CongoDump set firstname = 'Bey', lastname = '' where badgeid = '53324';
+
+update CongoDump set firstname = 'Lori', lastname = 'Del Genis' where badgeid = '92659';
+
+update CongoDump set firstname = 'Jeff', lastname = 'Warner' where badgeid = '93452';
+
+update CongoDump set firstname = 'Shadesong', lastname = '' where badgeid = '93488';
+
+update CongoDump set firstname = 'Wednesday', lastname = 'White' where badgeid = '93897';
+
+
+
