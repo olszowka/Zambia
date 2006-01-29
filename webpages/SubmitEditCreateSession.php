@@ -37,7 +37,7 @@
     $id=insert_session();
     if (!$id) {
         $message_warn=""; // warning message
-        $message_error="Unknown error creating record.  Database not updated successfully.";
+        $message_error=$query."\nUnknown error creating record.  Database not updated successfully.";
         RenderEditCreateSession($action,$session,$message_warn,$message_error);
         exit();
         }
