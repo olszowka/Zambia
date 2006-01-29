@@ -209,25 +209,26 @@ function get_next_session_id() {
 // the tables Sessions, SessionHasFeature, and SessionHasService.
 //
 function insert_session() {
-    global $session, $link;
-    $query="INSERT into Sessions values(Default,";
-    $query.=$session["track"].',';
-    $query.=$session["type"].',';
-    $query.='"'.mysql_real_escape_string($session["pubno"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["title"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["pocketprogtext"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["persppartinfo"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["duration"],$link).'",';
-    $query.=$session["atten"].',';
-    $query.=$session["kids"].',';
+    global $session, $link, $query;
+    $query="INSERT into Sessions set ";
+    $query.="trackid=".$session["track"].',';
+    $query.="typeid=".$session["type"].',';
+    $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link).'",';
+    $query.="title=\"".mysql_real_escape_string($session["title"],$link).'",';
+    $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link).'",';
+    $query.="persppartinfo=\"".mysql_real_escape_string($session["persppartinfo"],$link).'",';
+    $query.="duration=\"".mysql_real_escape_string($session["duration"],$link).'",';
+    $query.="estatten=".$session["atten"].',';
+    $query.="kidscatid=".$session["kids"].',';
+    $query.="signupreq=";
     if ($session["signup"]) {$query.="1,";} else {$query.="0,";}
-    $query.=$session["roomset"].',';
-    $query.='"'.mysql_real_escape_string($session["notesforpart"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["servnotes"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["status"],$link).'",';
-    $query.='"'.mysql_real_escape_string($session["notesforprog"],$link).'",';
-    $query.='0,'; // warnings db field not editable by form
-    if ($session["invguest"]) {$query.="1)";} else {$query.="0)";}
+    $query.="roomsetid=".$session["roomset"].',';
+    $query.="notesforpart=\"".mysql_real_escape_string($session["notesforpart"],$link).'",';
+    $query.="servicenotes=\"".mysql_real_escape_string($session["servnotes"],$link).'",';
+    $query.="statusid=".$session["status"].',';
+    $query.="notesforprog=\"".mysql_real_escape_string($session["notesforprog"],$link).'",';
+    $query.="warnings=0,invitedguest="; // warnings db field not editable by form
+    if ($session["invguest"]) {$query.="1";} else {$query.="0";}
     $result = mysql_query($query,$link);
     if (!$result)
         return $result;
