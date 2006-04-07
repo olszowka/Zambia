@@ -1,0 +1,112 @@
+Comments: 
+  - This is a rough draft based on notes taken during an install.
+  - You really want to read this whole file before doing anything.
+  - Thanks for being our guinea pig and testing this out.
+  - If you want to help revise this document, speak up! 
+
+0 - Prep work
+
+You need a server with: 
+  - apache
+  - php
+  - mysql
+Please test them and make sure they work.  
+
+You need to decide on: 
+  - database name          (zambiademo is used here in)
+  - database user name     (zambiademo is used here in)
+  - database user password (4fandom is used here in)
+  - web install location   (/home/trg/public_html/zambiademo is used here in)
+
+1 -  Create a database and a user
+
+You need to have root access to the mysql instance to do this.   
+If you don't please ask the person who does to do these 2 steps. 
+
+    mysql -u root -p
+
+    mysql> create database zambiademo;
+    Query OK, 1 row affected (0.00 sec)
+
+    mysql> grant all on zambiademo.* to 'zambiademo'@'localhost' 
+    identified by '4fandom'; 
+    Query OK, 0 rows affected (0.07 sec)
+
+Splitting the privledge model to have an admin and a web user is 
+on the list.  It should be fairly simple to accomplish. 
+If you want to contribute this, please let us know. 
+
+2 -  Setting up the database 
+
+You'll need the account and the database created in step 1. 
+
+    mysql -u zambiademo -p
+
+    mysql> use zambiademo
+    Database changed
+
+    mysql> \. EmptyDbase.dump;
+    Query OK ...   (snipped for sanity)
+
+Now you have an empty database that is ready for use with Zambia
+
+3 - Setting up the webpages 
+
+Checking out the html and php code. 
+
+   cd /home/trg/public_html
+   cvs co -d zambiademo Zambia/webpages
+
+You probably want to talk with us first and find out what revision 
+is currently recommented.  The above will give you the head of the 
+development tree, which is what developers want.  
+
+4 - Tweak the code to use your database
+
+You want to edit db_name.php  (how should be clear). 
+
+The reports are currently a hack.  You need to edit 2 files in the 
+reportqueries directory: gencsv.sh and genreports.sh
+(This WILL go away.  In the meanwhile "grep zambiademo" is your friend.)
+
+5 - Run the reports
+
+    cd reportqueries
+   ./genreports.sh
+   ./genindex.sh
+   ./gencsv.sh
+
+These need to be run for the reports to update.   You might run them 
+by hand or you can run them from cron.  Your choice.   
+(I said the reports were a hack, right? )
+
+Here is a fun line for you: 
+3,17,38,48 * * * * (cd /home/trg/public_html/zambiademo/reportqueries ; ./genreports.sh ; ./genindex.sh ; ./gencsv.sh ) 1>/dev/null
+
+6 -  Check it all out
+
+http://zydeco.netbusters.com/~trg/zambiademo 
+
+or whatever your URL is... 
+
+Ah, an account for in zambia so you can log in.  That would be useful.  
+Currently we are set up to take a feed from Congo.  There is a script 
+to run on the Congo server to extract the needed information so it can
+be loaded.   This script is named export_program_participants.sql
+It generates sql that can be in turn loaded into zambia. 
+
+However, that can be completely avoided.   
+
+7 - backups are a good thing 
+
+If you are changing php and html files, you'll need to talk to us about 
+access to cvs check your changes into cvs.   
+
+If you care about dbase content, see backup_mysql and clean_backups in the 
+scripts directory.  You'll want to run them or something similar.   
+
+8 - Reaching us
+
+We have a mailing list: zambia@arisia.org 
+
+   Have Fun!   -- trg  
