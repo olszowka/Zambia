@@ -1,11 +1,13 @@
 #!/bin/sh
 
-DATABASE="olszowkadev"
+DATABASE="zambiademo"
+DBUSERNAME="zambiademo"
+DBPASSWORD="4fandom"
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
 
-mysql -u olszowka -H $DATABASE -e '\. fixnames'
+#mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD -e '\. fixnames'
 
 for x in ${SRCDIR}/*query ; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
@@ -16,7 +18,7 @@ for x in ${SRCDIR}/*query ; do
                             sed "s/REPORT_DATE/`date`/" | \
                             sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" > $DESTDIR/${name}report.php
 
-  echo $QUERY | mysql -u olszowka -H $DATABASE >> $DESTDIR/${name}report.php
+  echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD >> $DESTDIR/${name}report.php
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   

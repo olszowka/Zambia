@@ -1,6 +1,6 @@
 <?php
 define("DBHOSTNAME","localhost");
-define("DBUSERID","olszowka");
-define("DBPASSWORD","");
-define("DBDB","trgprod");
+define("DBUSERID","zambiademo");
+define("DBPASSWORD","4fandom");
+define("DBDB","zambiademo");
 ?>
