@@ -92,11 +92,11 @@ or whatever your URL is...
 Ah, an account for in zambia so you can log in.  That would be useful.  
 Currently we are set up to take a feed from Congo.  There is a script 
 to run on the Congo server to extract the needed information so it can
-be loaded.   This script is named export_program_participants.sql
+be loaded.   This script is named export_program_participants_congo.sql
 It generates sql that can be in turn loaded into zambia. 
 
-However, that can be completely avoided.   Ummm... gosh... huh.   
-This requires thought. 
+However, that can be completely avoided by simply... Ummm... gosh... huh.   
+This requires thought or a memory at a minimum. 
 
 7 - Backups are a good thing 
 
