@@ -1,5 +1,8 @@
 #!/bin/sh
 
+DATABASE="zambiademo"
+DBUSERNAME="zambiademo"
+DBPASSWORD="4fandom"
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
@@ -9,7 +12,7 @@ for x in ${SRCDIR}/4*query ; do
   eval `cat $x`
   echo $x
 
-  echo $QUERY | mysql -u olszowka -H trgprod | \
+  echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD | \
      sed 's%MAKEMEACOMMA ,%</TD><TD>%g' |\
      sed 's%MAKEMEACOMMA </TD>%</TD>%g' |\
      sed 's%<TD>MAKEMEACOMMA%<TD>%g' |\
