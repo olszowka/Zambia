@@ -1,0 +1,26 @@
+@import "Common.css";
+
+BODY {
+     background-image: url("images/partheadbg.png");
+     background-repeat: repeat-x;
+     }
+
+H1.head {
+     color: #002985;
+     }
+
+TD.head2 {
+     background-color: #808080;
+     background-image: url("images/tab.png");
+     background-repeat: no-repeat;
+     background-attachment: scroll;
+     background-position: center;
+     font-size: 80%;
+     text-align: center
+     }
+
+A.head3 {
+     font-size: inherit;
+     text-align: inherit;
+     color: white
+     }

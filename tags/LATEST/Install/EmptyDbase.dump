@@ -1,0 +1,669 @@
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: zambiademo
+-- ------------------------------------------------------
+-- Server version	4.1.12-standard
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `CongoDump`
+--
+
+DROP TABLE IF EXISTS `CongoDump`;
+CREATE TABLE `CongoDump` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `firstname` varchar(30) default NULL,
+  `lastname` varchar(40) default NULL,
+  `badgename` varchar(51) default NULL,
+  `phone` varchar(100) default NULL,
+  `email` varchar(100) default NULL,
+  `postaddress` varchar(100) default NULL,
+  `regtype` varchar(40) default NULL,
+  PRIMARY KEY  (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `CongoDump`
+--
+
+
+/*!40000 ALTER TABLE `CongoDump` DISABLE KEYS */;
+LOCK TABLES `CongoDump` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `CongoDump` ENABLE KEYS */;
+
+--
+-- Table structure for table `Features`
+--
+
+DROP TABLE IF EXISTS `Features`;
+CREATE TABLE `Features` (
+  `featureid` int(11) NOT NULL auto_increment,
+  `featurename` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`featureid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Features`
+--
+
+
+/*!40000 ALTER TABLE `Features` DISABLE KEYS */;
+LOCK TABLES `Features` WRITE;
+INSERT INTO `Features` VALUES (1,'Power (110)',6),(2,'Power (special)',7),(3,'Internet',4),(4,'Cable TV',1),(5,'Fridge',3),(6,'Running Water',8),(7,'Window',12),(8,'Sound Isolation',10),(9,'Fixed Table',2),(10,'Mirror',5),(11,'Toilet',11),(12,'Shower/Bath',9);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Features` ENABLE KEYS */;
+
+--
+-- Table structure for table `KidsCategories`
+--
+
+DROP TABLE IF EXISTS `KidsCategories`;
+CREATE TABLE `KidsCategories` (
+  `kidscatid` int(11) NOT NULL auto_increment,
+  `kidscatname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`kidscatid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `KidsCategories`
+--
+
+
+/*!40000 ALTER TABLE `KidsCategories` DISABLE KEYS */;
+LOCK TABLES `KidsCategories` WRITE;
+INSERT INTO `KidsCategories` VALUES (1,'Targeted',1),(2,'Welcome',2),(3,'Only w/ Parent',3),(4,'Not Allowed',4);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `KidsCategories` ENABLE KEYS */;
+
+--
+-- Table structure for table `ParticipantAvailability`
+--
+
+DROP TABLE IF EXISTS `ParticipantAvailability`;
+CREATE TABLE `ParticipantAvailability` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `fridaymaxprog` int(11) default NULL,
+  `saturdaymaxprog` int(11) default NULL,
+  `sundaymaxprog` int(11) default NULL,
+  `maxprog` int(11) default NULL,
+  `preventconflict` varchar(255) default NULL,
+  `otherconstraints` varchar(255) default NULL,
+  `numkidsfasttrack` int(11) default NULL,
+  PRIMARY KEY  (`badgeid`),
+  CONSTRAINT `ParticipantAvailability_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ParticipantAvailability`
+--
+
+
+/*!40000 ALTER TABLE `ParticipantAvailability` DISABLE KEYS */;
+LOCK TABLES `ParticipantAvailability` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ParticipantAvailability` ENABLE KEYS */;
+
+--
+-- Table structure for table `ParticipantAvailabilityTimes`
+--
+
+DROP TABLE IF EXISTS `ParticipantAvailabilityTimes`;
+CREATE TABLE `ParticipantAvailabilityTimes` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `availabilitynum` int(11) NOT NULL default '0',
+  `starttime` time default NULL,
+  `endtime` time default NULL,
+  PRIMARY KEY  (`badgeid`,`availabilitynum`),
+  CONSTRAINT `ParticipantAvailabilityTimes_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ParticipantAvailabilityTimes`
+--
+
+
+/*!40000 ALTER TABLE `ParticipantAvailabilityTimes` DISABLE KEYS */;
+LOCK TABLES `ParticipantAvailabilityTimes` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ParticipantAvailabilityTimes` ENABLE KEYS */;
+
+--
+-- Table structure for table `ParticipantHasRole`
+--
+
+DROP TABLE IF EXISTS `ParticipantHasRole`;
+CREATE TABLE `ParticipantHasRole` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `roleid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`badgeid`,`roleid`),
+  KEY `roleid` (`roleid`),
+  CONSTRAINT `ParticipantHasRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantHasRole_ibfk_2` FOREIGN KEY (`roleid`) REFERENCES `Roles` (`roleid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ParticipantHasRole`
+--
+
+
+/*!40000 ALTER TABLE `ParticipantHasRole` DISABLE KEYS */;
+LOCK TABLES `ParticipantHasRole` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ParticipantHasRole` ENABLE KEYS */;
+
+--
+-- Table structure for table `ParticipantInterests`
+--
+
+DROP TABLE IF EXISTS `ParticipantInterests`;
+CREATE TABLE `ParticipantInterests` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `yespanels` text,
+  `nopanels` text,
+  `yespeople` text,
+  `nopeople` text,
+  `otherroles` text,
+  PRIMARY KEY  (`badgeid`),
+  CONSTRAINT `ParticipantInterests_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ParticipantInterests`
+--
+
+
+/*!40000 ALTER TABLE `ParticipantInterests` DISABLE KEYS */;
+LOCK TABLES `ParticipantInterests` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ParticipantInterests` ENABLE KEYS */;
+
+--
+-- Table structure for table `ParticipantOnSession`
+--
+
+DROP TABLE IF EXISTS `ParticipantOnSession`;
+CREATE TABLE `ParticipantOnSession` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `sessionid` int(11) NOT NULL default '0',
+  `moderator` tinyint(4) default '0',
+  `ts` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`badgeid`,`sessionid`),
+  KEY `sessionid` (`sessionid`),
+  CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ParticipantOnSession`
+--
+
+
+/*!40000 ALTER TABLE `ParticipantOnSession` DISABLE KEYS */;
+LOCK TABLES `ParticipantOnSession` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ParticipantOnSession` ENABLE KEYS */;
+
+--
+-- Table structure for table `ParticipantSessionInterest`
+--
+
+DROP TABLE IF EXISTS `ParticipantSessionInterest`;
+CREATE TABLE `ParticipantSessionInterest` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `sessionid` int(11) NOT NULL default '0',
+  `rank` int(11) default NULL,
+  `willmoderate` tinyint(1) default NULL,
+  `comments` text,
+  PRIMARY KEY  (`badgeid`,`sessionid`),
+  KEY `sessionid` (`sessionid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_3` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_4` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ParticipantSessionInterest`
+--
+
+
+/*!40000 ALTER TABLE `ParticipantSessionInterest` DISABLE KEYS */;
+LOCK TABLES `ParticipantSessionInterest` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ParticipantSessionInterest` ENABLE KEYS */;
+
+--
+-- Table structure for table `ParticipantSuggestions`
+--
+
+DROP TABLE IF EXISTS `ParticipantSuggestions`;
+CREATE TABLE `ParticipantSuggestions` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `paneltopics` text,
+  `otherideas` text,
+  `suggestedguests` text,
+  PRIMARY KEY  (`badgeid`),
+  CONSTRAINT `ParticipantSuggestions_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ParticipantSuggestions`
+--
+
+
+/*!40000 ALTER TABLE `ParticipantSuggestions` DISABLE KEYS */;
+LOCK TABLES `ParticipantSuggestions` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ParticipantSuggestions` ENABLE KEYS */;
+
+--
+-- Table structure for table `Participants`
+--
+
+DROP TABLE IF EXISTS `Participants`;
+CREATE TABLE `Participants` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `password` varchar(32) default NULL,
+  `bestway` varchar(12) default NULL,
+  `interested` tinyint(1) default NULL,
+  `bio` text,
+  PRIMARY KEY  (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Participants`
+--
+
+
+/*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
+LOCK TABLES `Participants` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
+
+--
+-- Table structure for table `RegTypes`
+--
+
+DROP TABLE IF EXISTS `RegTypes`;
+CREATE TABLE `RegTypes` (
+  `regtype` varchar(40) NOT NULL default '',
+  `message` varchar(100) default NULL,
+  PRIMARY KEY  (`regtype`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `RegTypes`
+--
+
+
+/*!40000 ALTER TABLE `RegTypes` DISABLE KEYS */;
+LOCK TABLES `RegTypes` WRITE;
+INSERT INTO `RegTypes` VALUES ('Adult-RolloverC','Registered and Comp\'ed'),('Adult-YearAhead','Registered'),('AdultFull','Registered'),('AdultFull-Comp','Registered and Comp\'ed'),('AdultFull-Pre-1','Registered'),('AdultFull-Pre-2','Registered'),('ProgramComp','Registered and Comp\'ed'),('Promotional','Registered'),('Student','Registered');
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `RegTypes` ENABLE KEYS */;
+
+--
+-- Table structure for table `Roles`
+--
+
+DROP TABLE IF EXISTS `Roles`;
+CREATE TABLE `Roles` (
+  `roleid` int(11) NOT NULL auto_increment,
+  `rolename` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`roleid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Roles`
+--
+
+
+/*!40000 ALTER TABLE `Roles` DISABLE KEYS */;
+LOCK TABLES `Roles` WRITE;
+INSERT INTO `Roles` VALUES (1,'Other',-1),(2,'Reading my own works',3),(3,'Autographing',4),(4,'Reading others works',5),(5,'Performing',6),(6,'Running workshops',7),(7,'Leading discussions',8),(8,'Running games',9),(9,'Working with children',10),(10,'Panel Moderator',2),(11,'Improv',11),(12,'Storytelling',12);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Roles` ENABLE KEYS */;
+
+--
+-- Table structure for table `RoomHasSet`
+--
+
+DROP TABLE IF EXISTS `RoomHasSet`;
+CREATE TABLE `RoomHasSet` (
+  `roomid` int(11) NOT NULL default '0',
+  `roomsetid` int(11) NOT NULL default '0',
+  `capacity` int(11) default NULL,
+  PRIMARY KEY  (`roomid`,`roomsetid`),
+  KEY `roomsetid` (`roomsetid`),
+  CONSTRAINT `RoomHasSet_ibfk_1` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`),
+  CONSTRAINT `RoomHasSet_ibfk_2` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `RoomHasSet`
+--
+
+
+/*!40000 ALTER TABLE `RoomHasSet` DISABLE KEYS */;
+LOCK TABLES `RoomHasSet` WRITE;
+INSERT INTO `RoomHasSet` VALUES (2,10,20),(3,2,20),(3,3,24),(3,5,40),(3,10,26),(4,2,50),(4,3,48),(4,5,89),(4,10,40),(5,10,10),(6,10,10),(7,2,20),(7,3,21),(7,5,50),(7,10,22),(8,2,50),(8,3,47),(8,5,91),(8,10,34),(9,2,20),(9,3,21),(9,5,50),(9,10,22),(10,2,20),(10,3,23),(10,5,45),(10,10,22),(11,2,10),(11,3,6),(11,5,14),(11,10,10),(12,2,20),(12,3,12),(12,5,38),(12,10,16),(13,2,30),(13,3,30),(13,5,63),(13,10,28),(14,2,20),(14,3,15),(14,5,44),(14,10,22),(15,2,10),(15,3,9),(15,5,32),(15,10,16),(16,2,20),(16,3,24),(16,5,49),(16,10,22),(17,2,10),(17,3,9),(17,5,20),(17,10,10),(18,2,40),(18,3,27),(18,5,65),(18,10,40),(19,3,18),(19,5,30),(19,10,16),(20,10,8),(21,2,30),(21,3,32),(21,5,80),(21,10,34),(22,2,20),(22,3,24),(22,5,55),(22,10,28),(23,10,8),(24,2,60),(24,3,60),(24,5,115),(24,10,58),(25,2,60),(25,3,60),(25,5,108),(25,10,54),(26,2,20),(26,3,23),(26,5,47),(26,10,22);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `RoomHasSet` ENABLE KEYS */;
+
+--
+-- Table structure for table `RoomSets`
+--
+
+DROP TABLE IF EXISTS `RoomSets`;
+CREATE TABLE `RoomSets` (
+  `roomsetid` int(11) NOT NULL auto_increment,
+  `roomsetname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`roomsetid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `RoomSets`
+--
+
+
+/*!40000 ALTER TABLE `RoomSets` DISABLE KEYS */;
+LOCK TABLES `RoomSets` WRITE;
+INSERT INTO `RoomSets` VALUES (1,'Theater seating w/ Head Table w/ 5 chairs & water',15),(2,'Round Table',17),(3,'Classroom',11),(5,'Theater',21),(6,'Self Service',19),(7,'Dance + Chairs',3),(8,'Dance + Tables',5),(9,'Circle of Chairs',1),(10,'Board Seating',30),(11,'Risers + Chairs',7),(12,'Special',40),(13,'On TV',1);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `RoomSets` ENABLE KEYS */;
+
+--
+-- Table structure for table `Rooms`
+--
+
+DROP TABLE IF EXISTS `Rooms`;
+CREATE TABLE `Rooms` (
+  `roomid` int(11) NOT NULL auto_increment,
+  `roomname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  `height` varchar(100) default NULL,
+  `dimensions` varchar(100) default NULL,
+  `area` varchar(100) default NULL,
+  `function` varchar(100) default NULL,
+  `floor` varchar(50) default NULL,
+  `notes` text,
+  `opentime1` time default NULL,
+  `closetime1` time default NULL,
+  `opentime2` time default NULL,
+  `closetime2` time default NULL,
+  `opentime3` time default NULL,
+  `closetime3` time default NULL,
+  PRIMARY KEY  (`roomid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Rooms`
+--
+
+
+/*!40000 ALTER TABLE `Rooms` DISABLE KEYS */;
+LOCK TABLES `Rooms` WRITE;
+INSERT INTO `Rooms` VALUES (2,'Alcott',NULL,'8 ft 5in','23 x 34','654','Open Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'Back Bay',NULL,'8 ft 7in','15 x 32','484','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,'Beacon Hill',NULL,'8 ft 7in','23 x 43','850','Open Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'Board Room',NULL,'8 ft 3in','20 x 23','396','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'Brandeis',NULL,'8 ft 6in','13 x 35','446','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,'Cabot',NULL,'8 ft 6in','19 x 29','515','Scheduled Gaming / LARP Control','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,'Cambridge',NULL,'8 ft 6in','23 x 44','892','LARP','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,'Charles River',NULL,'8 ft 6in','19 x 29','515','Game Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,'Constitution',NULL,'8 ft 5in','15 x 33','446','Main Program (free form seeting)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,'Copley',NULL,'8 ft 6in','12 x 16','232','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,'Emerson',NULL,'8 ft 3in','19 x 26','398','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,'Franklin',NULL,'8 ft 6in','18 x 48','727','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(14,'Gloucester',NULL,'8 ft 6in','19 x 33','471','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(15,'Holmes',NULL,'8 ft 6in','15 x 25','334','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(16,'Lexington',NULL,'7 ft 3in','15 x 30','461','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(17,'Longfellow',NULL,'8 ft 6in','14 x 22','284','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(18,'St. James',NULL,'8 ft 6in','15 x 48','767','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(19,'Garden Suite',NULL,'0','0','0','Con Suite','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,'Statler',NULL,'8 ft 5in','13 x 21','292','Sign Shop','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,'Stuart',NULL,'8 ft 7in','13 x 40','731','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(22,'Thoreau',NULL,'8 ft 7in','16 x 33','557','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(23,'Tremont',NULL,'8 ft 6in','18 x 23','392','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(24,'White Hill',NULL,'8 ft 6in','15 x 68','1,203','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(25,'Whittier',NULL,'8 ft 6in','22 x 65','1,215','Main Program (w/ A/V)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(26,'Winthrop',NULL,'8 ft 4in','23 x 26','498','Main Program (w/ A/V)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,'Imperial Ballroom',NULL,'30 ft 4in','116 x 73','8,516','Main Tent','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(28,'Plaza Ballroom',NULL,'21 ft 5in','64 x 73','4,699','Dealers','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(29,'Georgian',NULL,'13 ft 10in','82 x 49','4,021','Art Show','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(30,'Arlington',NULL,'10 ft 7in','42 x 33','1,402','Art Show','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(31,'Berkeley',NULL,'10 ft 7in','22 x 33','748','Anime','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(32,'Clarendon',NULL,'10 ft 7in','22 x 33','732','Video','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(33,'Dartmouth/Exeter',NULL,'11 ft 11in','44 x 15','639','Ops/Security','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(34,'Fairfield',NULL,'12 ft 0in','23 x 15','326','Gopher Hole','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(35,'Hancock',NULL,'11 ft 9in','41 x 14','588','Main Program (w/ A/V)','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(36,'Stanbro',NULL,'8 ft 11in','56 x 50','2,904','Small Tent / Masquerade green room','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(37,'Terrace',NULL,'10 ft 5 in','65 x 82','5,330','Films','basement',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(38,'TV 55',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(39,'TV 56',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Rooms` ENABLE KEYS */;
+
+--
+-- Table structure for table `Schedule`
+--
+
+DROP TABLE IF EXISTS `Schedule`;
+CREATE TABLE `Schedule` (
+  `scheduleid` int(11) NOT NULL auto_increment,
+  `sessionid` int(11) NOT NULL default '0',
+  `roomid` int(11) NOT NULL default '0',
+  `starttime` time NOT NULL default '00:00:00',
+  PRIMARY KEY  (`scheduleid`),
+  KEY `sessionid` (`sessionid`),
+  KEY `roomid` (`roomid`),
+  CONSTRAINT `Schedule_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `Schedule_ibfk_2` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Schedule`
+--
+
+
+/*!40000 ALTER TABLE `Schedule` DISABLE KEYS */;
+LOCK TABLES `Schedule` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Schedule` ENABLE KEYS */;
+
+--
+-- Table structure for table `Services`
+--
+
+DROP TABLE IF EXISTS `Services`;
+CREATE TABLE `Services` (
+  `serviceid` int(11) NOT NULL auto_increment,
+  `servicename` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`serviceid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Services`
+--
+
+
+/*!40000 ALTER TABLE `Services` DISABLE KEYS */;
+LOCK TABLES `Services` WRITE;
+INSERT INTO `Services` VALUES (1,'DVD Player',3),(2,'VHS Tape Player',21),(3,'Projector (Computer)',9),(4,'CD Player',1),(5,'Sound',17),(6,'TV',19),(7,'Projector (Video)',10),(8,'Food',5),(9,'Flip Chart',4),(10,'Gopher',6),(11,'Lights',7),(12,'Power Strips',8),(13,'Slide Carousel',12),(14,'Risers',11);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Services` ENABLE KEYS */;
+
+--
+-- Table structure for table `SessionHasFeature`
+--
+
+DROP TABLE IF EXISTS `SessionHasFeature`;
+CREATE TABLE `SessionHasFeature` (
+  `sessionid` int(11) NOT NULL default '0',
+  `featureid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sessionid`,`featureid`),
+  KEY `featureid` (`featureid`),
+  CONSTRAINT `SessionHasFeature_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionHasFeature_ibfk_2` FOREIGN KEY (`featureid`) REFERENCES `Features` (`featureid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `SessionHasFeature`
+--
+
+
+/*!40000 ALTER TABLE `SessionHasFeature` DISABLE KEYS */;
+LOCK TABLES `SessionHasFeature` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `SessionHasFeature` ENABLE KEYS */;
+
+--
+-- Table structure for table `SessionHasService`
+--
+
+DROP TABLE IF EXISTS `SessionHasService`;
+CREATE TABLE `SessionHasService` (
+  `sessionid` int(11) NOT NULL default '0',
+  `serviceid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sessionid`,`serviceid`),
+  KEY `serviceid` (`serviceid`),
+  CONSTRAINT `SessionHasService_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionHasService_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `Services` (`serviceid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `SessionHasService`
+--
+
+
+/*!40000 ALTER TABLE `SessionHasService` DISABLE KEYS */;
+LOCK TABLES `SessionHasService` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `SessionHasService` ENABLE KEYS */;
+
+--
+-- Table structure for table `SessionStatuses`
+--
+
+DROP TABLE IF EXISTS `SessionStatuses`;
+CREATE TABLE `SessionStatuses` (
+  `statusid` int(11) NOT NULL auto_increment,
+  `statusname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`statusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `SessionStatuses`
+--
+
+
+/*!40000 ALTER TABLE `SessionStatuses` DISABLE KEYS */;
+LOCK TABLES `SessionStatuses` WRITE;
+INSERT INTO `SessionStatuses` VALUES (1,'Brainstorm',4),(2,'Vetted',6),(3,'Scheduled',14),(4,'Dropped',18),(5,'Cancelled',20),(6,'Edit Me',1),(7,'Assigned',10);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `SessionStatuses` ENABLE KEYS */;
+
+--
+-- Table structure for table `Sessions`
+--
+
+DROP TABLE IF EXISTS `Sessions`;
+CREATE TABLE `Sessions` (
+  `sessionid` int(11) NOT NULL auto_increment,
+  `trackid` int(11) default NULL,
+  `typeid` int(11) default NULL,
+  `pubsno` varchar(50) default NULL,
+  `title` varchar(100) default NULL,
+  `pocketprogtext` text,
+  `persppartinfo` text,
+  `duration` time default NULL,
+  `estatten` int(11) default NULL,
+  `kidscatid` int(11) default NULL,
+  `signupreq` tinyint(1) default NULL,
+  `roomsetid` int(11) default NULL,
+  `notesforpart` text,
+  `servicenotes` text,
+  `statusid` int(11) default NULL,
+  `notesforprog` text,
+  `warnings` tinyint(1) default NULL,
+  `invitedguest` tinyint(1) default '0',
+  `ts` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`sessionid`),
+  KEY `trackid` (`trackid`),
+  KEY `typeid` (`typeid`),
+  KEY `kidscatid` (`kidscatid`),
+  KEY `roomsetid` (`roomsetid`),
+  KEY `statusid` (`statusid`),
+  CONSTRAINT `Sessions_ibfk_1` FOREIGN KEY (`trackid`) REFERENCES `Tracks` (`trackid`),
+  CONSTRAINT `Sessions_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `Types` (`typeid`),
+  CONSTRAINT `Sessions_ibfk_3` FOREIGN KEY (`kidscatid`) REFERENCES `KidsCategories` (`kidscatid`),
+  CONSTRAINT `Sessions_ibfk_4` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`),
+  CONSTRAINT `Sessions_ibfk_5` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Sessions`
+--
+
+
+/*!40000 ALTER TABLE `Sessions` DISABLE KEYS */;
+LOCK TABLES `Sessions` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
+
+--
+-- Table structure for table `Times`
+--
+
+DROP TABLE IF EXISTS `Times`;
+CREATE TABLE `Times` (
+  `timeindex` int(11) NOT NULL default '0',
+  `timetext` char(10) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`timeindex`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Times`
+--
+
+
+/*!40000 ALTER TABLE `Times` DISABLE KEYS */;
+LOCK TABLES `Times` WRITE;
+INSERT INTO `Times` VALUES (1,'00:00a',1),(2,'1:00a',2),(3,'2:00a',3),(4,'3:00a',4),(5,'4:00a',5),(6,'5:00a',6),(7,'6:00a',7),(8,'7:00a',8),(9,'8:00a',9),(10,'9:00a',10),(11,'10:00a',11),(12,'11:00a',12),(13,'noon',13),(14,'1:00p',14),(15,'2:00p',15),(16,'3:00p',16),(17,'4:00p',17),(18,'5:00p',18),(19,'6:00p',19),(20,'7:00p',20),(21,'8:00p',21),(22,'9:00p',22),(23,'10:00p',23),(24,'11:00p',24);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Times` ENABLE KEYS */;
+
+--
+-- Table structure for table `Tracks`
+--
+
+DROP TABLE IF EXISTS `Tracks`;
+CREATE TABLE `Tracks` (
+  `trackid` int(11) NOT NULL auto_increment,
+  `trackname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  `selfselect` tinyint(1) default NULL,
+  PRIMARY KEY  (`trackid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Tracks`
+--
+
+
+/*!40000 ALTER TABLE `Tracks` DISABLE KEYS */;
+LOCK TABLES `Tracks` WRITE;
+INSERT INTO `Tracks` VALUES (1,'Anime',1,0),(2,'Art Prog.',2,1),(4,'Comics',3,1),(5,'ConSuite',4,1),(6,'Costuming',5,1),(7,'Events',6,1),(9,'Fan Interest',7,1),(10,'FastTrack',8,1),(11,'Filk',9,1),(12,'Film',10,0),(13,'Gaming Prog.',11,1),(14,'LARP',12,1),(15,'Media Prog.',14,1),(16,'Literature',13,1),(17,'Video',17,0),(18,'Science',15,1),(19,'Space Exploration',16,1),(20,'Arisia TV',2,0),(21,'Gaming',11,0),(22,'Do Not Print',20,0),(24,'Art Show',2,0),(25,'Reading',16,0);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Tracks` ENABLE KEYS */;
+
+--
+-- Table structure for table `Types`
+--
+
+DROP TABLE IF EXISTS `Types`;
+CREATE TABLE `Types` (
+  `typeid` int(11) NOT NULL auto_increment,
+  `typename` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`typeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Types`
+--
+
+
+/*!40000 ALTER TABLE `Types` DISABLE KEYS */;
+LOCK TABLES `Types` WRITE;
+INSERT INTO `Types` VALUES (1,'Panel',1),(2,'Workshop',2),(3,'Special',3),(4,'Lecture',4),(5,'Meeting',5),(6,'Large Tent',6),(7,'Small Tent',9),(8,'Reading',7),(9,'Group Reading',8),(10,'TV - Live Event',10),(11,'TV - Previous Event',11),(12,'Movie',12),(13,'TV Show',13),(14,'Open Gaming',30),(15,'Scheduled Game',30),(16,'TV - Movie',11);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `Types` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
