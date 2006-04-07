@@ -55,11 +55,11 @@ Now you have an empty database that is ready for use with Zambia
 Checking out the html and php code. 
 
    cd /home/trg/public_html
-   cvs co -d zambiademo Zambia/webpages
+   cvs co -d zambiademo -r LATEST Zambia/webpages
 
-You probably want to talk with us first and find out what revision 
-is currently recommented.  The above will give you the head of the 
-development tree, which is what developers want.  
+You probably want to talk with us first and find out what revision is 
+currently recommented.  LATEST should give you a generally functioning 
+version.  If you are helping develop you'll want the head of the tree. 
 
 4 - Tweak the code to use your database
 
@@ -95,9 +95,10 @@ to run on the Congo server to extract the needed information so it can
 be loaded.   This script is named export_program_participants.sql
 It generates sql that can be in turn loaded into zambia. 
 
-However, that can be completely avoided.   
+However, that can be completely avoided.   Ummm... gosh... huh.   
+This requires thought. 
 
-7 - backups are a good thing 
+7 - Backups are a good thing 
 
 If you are changing php and html files, you'll need to talk to us about 
 access to cvs check your changes into cvs.   
