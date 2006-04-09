@@ -1,0 +1,25 @@
+#!/bin/sh
+# this script takes a file in the below format 
+# and generate the mysql to load into zambia: 
+# badgeid|badgename|firstname|lastname|phone|email|postaddress|regtype
+
+DATAFILE='foo'
+
+INITIALUSERPASSWD='4cb9c8a8048fd02294477fcb1a41191a'  # aka 'changeme'
+# if you want to replace this, you'll need to md5 the string. 
+# note that there is a web tool for staff to reset passwords.
+
+IFS='|'
+cat foo | while read badgeid badgename firstname lastname phone email postaddress regtype  
+do 
+  echo "insert into CongoDump set badgeid=\"$badgeid\";"
+  echo "update CongoDump set lastname=\"$lastname\", firstname=\"$firstname\", phone=\"$phone\", email=\"$email\", postaddress=\"$postaddress\", regtype=\"$regtype\" where badgeid=\"$badgeid\";"
+  echo "insert into Participants set badgeid=\"$badgeid\", password=\"$INITIALUSERPASSWD\";"
+  echo "insert into ParticipantAvailability set badgeid=\"$badgeid\";"
+done
+
+exit 
+# ok, the following 2 lines can be put directly into 
+#the DATAFILE and they will work. 
+1|staff1|First|Staff|781-555-1212|someone@somewhere.com|123 First Street\\\\Arlington, MA 02474|
+2|part1|First|Participant|617-555-1212|someoneelse@somewhereelse.com|123 Fifth Street\\\\Boston, MA 02100|
