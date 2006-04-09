@@ -29,8 +29,14 @@ If you don't please ask the person who does to do these 2 steps.
     Query OK, 1 row affected (0.00 sec)
 
     mysql> grant all on zambiademo.* to 'zambiademo'@'localhost' 
-    identified by '4fandom'; 
+           identified by '4fandom'; 
     Query OK, 0 rows affected (0.07 sec)
+
+    mysql> grant lock tables on zambiademo.* to 'zambiademo'@'localhost' ;
+    Query OK, 0 rows affected (0.00 sec)
+
+    mysql> flush privileges;
+    Query OK, 0 rows affected (0.31 sec)
 
 Splitting the privledge model to have an admin and a web user is 
 on the list.  It should be fairly simple to accomplish. 
@@ -45,7 +51,7 @@ You'll need the account and the database created in step 1.
     mysql> use zambiademo
     Database changed
 
-    mysql> \. EmptyDbase.dump;
+    mysql> \. EmptyDbase.dump
     Query OK ...   (snipped for sanity)
 
 Now you have an empty database that is ready for use with Zambia
@@ -95,8 +101,8 @@ to run on the Congo server to extract the needed information so it can
 be loaded.   This script is named export_program_participants_congo.sql
 It generates sql that can be in turn loaded into zambia. 
 
-However, that can be completely avoided by simply... Ummm... gosh... huh.   
-This requires thought or a memory at a minimum. 
+However, that can be completely avoided by using add_zambia_user in the 
+scripts directory.   It comes with a sample way to add 2 accounts. 
 
 7 - Backups are a good thing 
 
@@ -106,7 +112,13 @@ access to cvs check your changes into cvs.
 If you care about dbase content, see backup_mysql and clean_backups in the 
 scripts directory.  You'll want to run them or something similar.   
 
-8 - Reaching us
+8 - Being reachable 
+
+You probably want to list a valid contact address in the footer of the 
+webpages.    See the files ParticipantFooter.php and StaffFooter.php 
+in the main webpages directory. 
+
+9 - Reaching us
 
 We have a mailing list: zambia@arisia.org 
 
