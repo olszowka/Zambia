@@ -3,6 +3,7 @@
 DATABASE="zambiademo"
 DBUSERNAME="zambiademo"
 DBPASSWORD="4fandom"
+
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
