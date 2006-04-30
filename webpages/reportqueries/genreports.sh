@@ -19,7 +19,7 @@ for x in ${SRCDIR}/*query ; do
                             sed "s/REPORT_DATE/`date`/" | \
                             sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" > $DESTDIR/${name}report.php
 
-  echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD >> $DESTDIR/${name}report.php
+  echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   
