@@ -21,27 +21,27 @@ participant_header($title);
 
     <H2>Number of program items I'm willing to participate in:</H2>
 <p> Please indicate the maximum number of panels you are willing to be on.  
-You may indicate a total for each day as well as an overall maximum for the whole con. 
-Please note that the tool limits you to 10 or fewer in each box.  
-There is no need for the numbers to add up. 
-We'll use this for guidance when assigning and scheduling panels. </p>
+You may indicate a total for each day as well as an overall maximum for 
+the whole con.  Please note that the tool limits you to 10 or fewer in 
+each box.  There is no need for the numbers to add up.  We'll use this 
+for guidance when assigning and scheduling panels. </p>
 <table>
     <tr>
-        <td>Friday </td>
+        <td>Preferred Total Number of Panels</td>
+        <td>
+           <INPUT d=maxprog size=3 name=maxprog value="<?php echo $partAvail["maxprog"]?>">
+        </td>
+        <td>Friday Maximum</td>
         <td>
            <INPUT id=fridaymaxprog size=3 name=fridaymaxprog value="<?php echo $partAvail["fridaymaxprog"]?>">
         </td>
-        <td>Saturday </td>
+        <td>Saturday Maximum</td>
         <td>
            <INPUT  id=saturdaymaxprog size=3 name=saturdaymaxprog value="<?php echo $partAvail["saturdaymaxprog"]?>">
         </td>
-        <td>Sunday </td>
+        <td>Sunday Maximum</td>
         <td>
            <INPUT id=sundaymaxprog size=3 name=sundaymaxprog value="<?php echo $partAvail["sundaymaxprog"]?>">
-        </td>
-        <td>Total </td>
-        <td>
-           <INPUT d=maxprog size=3 name=maxprog value="<?php echo $partAvail["maxprog"]?>">
         </td>
     </tr>
 </table>
@@ -51,10 +51,10 @@ We'll use this for guidance when assigning and scheduling panels. </p>
 <!-- SCHEDULE availability times -->
 <H2>Times I Am Available</H2>
 <p> For each day you will be attending <?php echo CON_NAME; ?>, please 
-indicate the times when 
-you will be available as a program panelist.  Entering a single time for the whole 
-con is fine.  Splitting a day into multiple time slots also is fine.  Keep in mind we will 
-be using this as guidance when scheduling your panels.</p>
+indicate the times when you will be available as a program panelist.  
+Entering a single time for the whole con is fine.  Splitting a day into 
+multiple time slots also is fine.  Keep in mind we will be using this as 
+guidance when scheduling your panels.</p>
 
 <table>
   <tr> <!-- row one -->
