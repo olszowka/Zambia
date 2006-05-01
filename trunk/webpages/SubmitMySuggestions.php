@@ -21,10 +21,10 @@
     $message="Database updated successfully."; 
     $error=false;
     if ($newrow) {
-            $query="INSERT INTO ParticipantSuggestions VALUES(\"".$badgeid;
-            $query.="\",\"".mysql_real_escape_string($paneltopics,$link);
-            $query.="\",\"".mysql_real_escape_string($otherideas,$link);
-            $query.="\",\"".mysql_real_escape_string($suggestedguests,$link)."\")";
+            $query="INSERT INTO ParticipantSuggestions set badgeid=\"".$badgeid;
+            $query.="\",paneltopics=\"".mysql_real_escape_string($paneltopics,$link);
+            $query.="\",otherideas=\"".mysql_real_escape_string($otherideas,$link);
+            $query.="\",suggestedguests=\"".mysql_real_escape_string($suggestedguests,$link)."\"";
             if (!mysql_query($query,$link)):
                     $message=$query."<BR>Error inserting into database.  Database not updated.";
                     $error=true;

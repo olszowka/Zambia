@@ -47,15 +47,15 @@
                 RenderError($title,$message);
                 exit();
                 }
-            $query = "INSERT INTO ParticipantAvailability VALUES (";
-            $query .="\"".$badgeid."\", ";
-            $query .=$partAvail["fridaymaxprog"].", ";
-            $query .=$partAvail["saturdaymaxprog"].", ";
-            $query .=$partAvail["sundaymaxprog"].", ";
-            $query .=$partAvail["maxprog"].", ";
-            $query .="\"".mysql_real_escape_string($partAvail["preventconflict"],$link)."\", ";
-            $query .="\"".mysql_real_escape_string($partAvail["otherconstraints"],$link)."\", ";
-            $query .=$partAvail["numkidsfasttrack"].")";
+            $query = "INSERT INTO ParticipantAvailability set ";
+            $query .="badgeid=\"".$badgeid."\", fridaymaxprog=";
+            $query .=$partAvail["fridaymaxprog"].", saturdaymaxprog=";
+            $query .=$partAvail["saturdaymaxprog"].", sundaymaxprog=";
+            $query .=$partAvail["sundaymaxprog"].", maxprog=";
+            $query .=$partAvail["maxprog"].", preventconflict=";
+            $query .="\"".mysql_real_escape_string($partAvail["preventconflict"],$link)."\", otherconstraints=";
+            $query .="\"".mysql_real_escape_string($partAvail["otherconstraints"],$link)."\", numkidsfasttrack=";
+            $query .=$partAvail["numkidsfasttrack"];
             if (!mysql_query($query,$link)) {
                 $message=$query."<BR>Error updating database.  Database not updated.";
                 RenderError($title,$message);
@@ -71,8 +71,8 @@
             if ($partAvail["availstartday_1"]>0) {
                 $starttime=(($partAvail["availstartday_1"]-1)*24+$partAvail["availstarttime_1"]-1).":00:00";
                 $endtime=(($partAvail["availendday_1"]-1)*24+$partAvail["availendtime_1"]-1).":00:00";
-                $query = "INSERT INTO ParticipantAvailabilityTimes VALUES (";
-                $query .="\"".$badgeid."\",1,\"".$starttime."\",\"".$endtime."\")";
+                $query = "INSERT INTO ParticipantAvailabilityTimes set ";
+                $query .="badgeid=\"".$badgeid."\",availabilitynum=1,starttime=\"".$starttime."\",endtime=\"".$endtime."\"";
                 if (!mysql_query($query,$link)) {
                     $message=$query."<BR>Error updating database.  Database not updated.";
                     RenderError($title,$message);
@@ -82,8 +82,8 @@
             if ($partAvail["availstartday_2"]>0) {
                 $starttime=(($partAvail["availstartday_2"]-1)*24+$partAvail["availstarttime_2"]-1).":00:00";
                 $endtime=(($partAvail["availendday_2"]-1)*24+$partAvail["availendtime_2"]-1).":00:00";
-                $query = "INSERT INTO ParticipantAvailabilityTimes VALUES (";
-                $query .="\"".$badgeid."\",2,\"".$starttime."\",\"".$endtime."\")";
+                $query = "INSERT INTO ParticipantAvailabilityTimes set ";
+                $query .="badgeid=\"".$badgeid."\",availabilitynum=2,starttime=\"".$starttime."\",endtime=\"".$endtime."\"";
                 if (!mysql_query($query,$link)) {
                     $message=$query."<BR>Error updating database.  Database not updated.";
                     RenderError($title,$message);
@@ -93,8 +93,8 @@
             if ($partAvail["availstartday_3"]>0) {
                 $starttime=(($partAvail["availstartday_3"]-1)*24+$partAvail["availstarttime_3"]-1).":00:00";
                 $endtime=(($partAvail["availendday_3"]-1)*24+$partAvail["availendtime_3"]-1).":00:00";
-                $query = "INSERT INTO ParticipantAvailabilityTimes VALUES (";
-                $query .="\"".$badgeid."\",3,\"".$starttime."\",\"".$endtime."\")";
+                $query = "INSERT INTO ParticipantAvailabilityTimes set ";
+                $query .="badgeid=\"".$badgeid."\",availabilitynum=3,starttime=\"".$starttime."\",endtime=\"".$endtime."\"";
                 if (!mysql_query($query,$link)) {
                     $message=$query."<BR>Error updating database.  Database not updated.";
                     RenderError($title,$message);
@@ -104,8 +104,8 @@
             if ($partAvail["availstartday_4"]>0) {
                 $starttime=(($partAvail["availstartday_4"]-1)*24+$partAvail["availstarttime_4"]-1).":00:00";
                 $endtime=(($partAvail["availendday_4"]-1)*24+$partAvail["availendtime_4"]-1).":00:00";
-                $query = "INSERT INTO ParticipantAvailabilityTimes VALUES (";
-                $query .="\"".$badgeid."\",4,\"".$starttime."\",\"".$endtime."\")";
+                $query = "INSERT INTO ParticipantAvailabilityTimes set ";
+                $query .="badgeid=\"".$badgeid."\",availabilitynum=4,starttime=\"".$starttime."\",endtime=\"".$endtime."\"";
                 if (!mysql_query($query,$link)) {
                     $message=$query."<BR>Error updating database.  Database not updated.";
                     RenderError($title,$message);
@@ -115,8 +115,8 @@
             if ($partAvail["availstartday_5"]>0) {
                 $starttime=(($partAvail["availstartday_5"]-1)*24+$partAvail["availstarttime_5"]-1).":00:00";
                 $endtime=(($partAvail["availendday_5"]-1)*24+$partAvail["availendtime_5"]-1).":00:00";
-                $query = "INSERT INTO ParticipantAvailabilityTimes VALUES (";
-                $query .="\"".$badgeid."\",5,\"".$starttime."\",\"".$endtime."\")";
+                $query = "INSERT INTO ParticipantAvailabilityTimes set ";
+                $query .="badgeid=\"".$badgeid."\",availabilitynum=5,starttime=\"".$starttime."\",endtime=\"".$endtime."\"";
                 if (!mysql_query($query,$link)) {
                     $message=$query."<BR>Error updating database.  Database not updated.";
                     RenderError($title,$message);
@@ -126,8 +126,8 @@
             if ($partAvail["availstartday_6"]>0) {
                 $starttime=(($partAvail["availstartday_6"]-1)*24+$partAvail["availstarttime_6"]-1).":00:00";
                 $endtime=(($partAvail["availendday_6"]-1)*24+$partAvail["availendtime_6"]-1).":00:00";
-                $query = "INSERT INTO ParticipantAvailabilityTimes VALUES (";
-                $query .="\"".$badgeid."\",6,\"".$starttime."\",\"".$endtime."\")";
+                $query = "INSERT INTO ParticipantAvailabilityTimes set ";
+                $query .="badgeid=\"".$badgeid."\",availabilitynum=6,starttime=\"".$starttime."\",endtime=\"".$endtime."\"";
                 if (!mysql_query($query,$link)) {
                     $message=$query."<BR>Error updating database.  Database not updated.";
                     RenderError($title,$message);

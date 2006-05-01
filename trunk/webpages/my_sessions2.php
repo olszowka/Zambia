@@ -45,12 +45,14 @@
          }
        }
        if (!$error) {
-         $query="INSERT INTO ParticipantSessionInterest VALUES(\"";
-         $query.=$badgeid."\",".$sessionid.",null,null,null)";
+
+         $query="INSERT INTO ParticipantSessionInterest set badgeid=\"".$badgeid."\", sessionid=".$sessionid;
+
          if (!$result=mysql_query($query,$link)) {
            $message=$query."<BR>Error inserting into database.<BR>";
            RenderError($title,$message);
            exit();
+
          }
        }
      }

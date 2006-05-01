@@ -23,12 +23,12 @@
         $rolearray[$i]["diddorole"]=$_POST["diddorole".$i];
         }
     if ($newrow) {
-            $query="INSERT INTO ParticipantInterests values(\"".$badgeid;
-            $query.="\",\"".mysql_real_escape_string($yespanels,$link);
-            $query.="\",\"".mysql_real_escape_string($nopanels,$link);
-            $query.="\",\"".mysql_real_escape_string($yespeople,$link);
-            $query.="\",\"".mysql_real_escape_string($nopeople,$link);
-            $query.="\",\"".mysql_real_escape_string($otherroles,$link)."\")";
+            $query="INSERT INTO ParticipantInterests set badgeid=\"".$badgeid;
+            $query.="\",yespanels=\"".mysql_real_escape_string($yespanels,$link);
+            $query.="\",nopanels=\"".mysql_real_escape_string($nopanels,$link);
+            $query.="\",yespeople=\"".mysql_real_escape_string($yespeople,$link);
+            $query.="\",nopeople=\"".mysql_real_escape_string($nopeople,$link);
+            $query.="\",otherroles=\"".mysql_real_escape_string($otherroles,$link)."\"";
             if (!mysql_query($query,$link)) {
                 $message=$query."<BR>Error inserting into database.  Database not updated.";
                 RenderError($title,$message);
@@ -51,7 +51,7 @@
             }
     for ($i=0; $i<$rolerows; $i++) {
         if (isset($rolearray[$i]["badgeid"])&&($rolearray[$i]["diddorole"]==0)) {
-            $query="INSERT INTO ParticipantHasRole VALUES (\"".$badgeid."\",".$rolearray[$i]["roleid"].")";
+            $query="INSERT INTO ParticipantHasRole set badgeid=\"".$badgeid."\", roleid=".$rolearray[$i]["roleid"]."";
             if (!mysql_query($query,$link)) {
                 $message=$query."<BR>Error inserting into database.  Database not updated.";
                 RenderError($title,$message);

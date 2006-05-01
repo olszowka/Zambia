@@ -65,9 +65,9 @@
         }
     for ($i=0;$i<=$max_si_row;$i++) {
         if ($sessInts[$i]["delete"]) { continue; }
-        $query="INSERT INTO ParticipantSessionInterest VALUES(\"".$badgeid."\",".$sessInts[$i]["sessionid"].",";
-        $query.=(($sessInts[$i]["rank"]!="")?$sessInts[$i]["rank"]:"null").",".(($sessInts[$i]["mod"])?1:0).",\"";
-        $query.=mysql_real_escape_string($sessInts[$i]["comments"],$link)."\")";
+
+        $query="INSERT INTO ParticipantSessionInterest set badgeid=\"".$badgeid."\", sessionid=".$sessInts[$i]["sessionid"].", rank=".(($sessInts[$i]["rank"]!="")?$sessInts[$i]["rank"]:"null").", willmoderate=".(($sessInts[$i]["mod"])?1:0).", comments=\"".mysql_real_escape_string($sessInts[$i]["comments"],$link)."\"";
+
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.  Database not updated.";
             RenderError($title,$message);
