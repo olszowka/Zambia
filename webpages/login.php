@@ -9,14 +9,13 @@ participant_header($title);
 
 ?>
 
-<H1> Login </H1>
 <?php
    if (isset($message)) {
       echo "<P class=\"errmsg\">".$message."</P>\n";
       }
    ?>
 <FORM name="loginform" method="POST" action="doLogin.php">
-  <table class="login">
+  <table class="login" align=center>
     <tr>
       <td>Badge ID:</td>
       <td><input type="text" name="badgeid" maxlength="40"> </td>
