@@ -2,7 +2,7 @@
     require_once ('db_functions.php');
     require_once ('RenderPrecis06.php');
     require_once ('StaffRenderError.php');
-    $title="Arisia - Precis '06";
+    $title=CON_NAME . " - Precis '06";
     if (prepare_db()===false) {
         $message="Error connecting to database.";
         StaffRenderError($title,$message);

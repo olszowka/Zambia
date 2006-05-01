@@ -14,7 +14,7 @@
 
 </head>
 <body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0"><!--onload="MM_preloadImages('images/my_contact-active.png','images/my_constraint-active.png','images/search_sessions-active.png','images/my_session_interests-active.png')"-->
-<H1 class="head">Zambia&ndash;The Arisia Scheduling Tool</H1>
+<H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>
 <hr>
 
 <?php if (isset($_SESSION["badgeid"])) { ?>

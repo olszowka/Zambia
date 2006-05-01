@@ -50,7 +50,8 @@ We'll use this for guidance when assigning and scheduling panels. </p>
 
 <!-- SCHEDULE availability times -->
 <H2>Times I Am Available</H2>
-<p> For each day you will be attending Arisia, please indicate the times when 
+<p> For each day you will be attending <?php echo CON_NAME; ?>, please 
+indicate the times when 
 you will be available as a program panelist.  Entering a single time for the whole 
 con is fine.  Splitting a day into multiple time slots also is fine.  Keep in mind we will 
 be using this as guidance when scheduling your panels.</p>

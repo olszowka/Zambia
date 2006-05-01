@@ -54,7 +54,8 @@ if (!$result=mysql_query($query,$link)) {
 list($interested)= mysql_fetch_array($result, MYSQL_NUM);
 ?>
 <FORM name="partadminform" method=POST action="AdminParticipants.php">
-<P>Participant is interested and available to participate in Arisia programming:
+<P>Participant is interested and available to participate in 
+<?php echo CON_NAME; ?> programming:
 <INPUT type="hidden" name="wasinterested" value="<?php echo $interested; ?>">
 <INPUT type="hidden" name="partid" value="<?php echo $selpartid; ?>">
 <SELECT name="interested" class="yesno">
