@@ -21,7 +21,8 @@ participant_header($title);
 <FORM name="partform" method=POST action="submitMyContact.php">
   <div id="update_section">
     <div class="divlistbox">
-      <span class="spanlabcb">I am interested and able to participate in programming for Arisia '06&nbsp;</span>
+      <span class="spanlabcb">I am interested and able to participate in 
+programming for <?php echo CON_NAME; ?>&nbsp;</span>
       <?php $int=$participant['interested']; ?>
       <span class="spanvalcb"><SELECT name=interested class="yesno">
             <OPTION value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp</OPTION>
@@ -99,7 +100,10 @@ participant_header($title);
       <span class="value"><?php echo $congoinfo["postaddress"]; ?></span>
       </div>
   </div>
-  <P class="congo-note">Please confirm your contact information.  If it is not correct, contact <A href="mailto:reg@arisia.org">registration</a> with your current information. This data is downloaded periodically from the registration database, and should be correct within a week.
+  <P class="congo-note">Please confirm your contact information.  If it is 
+not correct, contact <A href="mailto:<?php echo 
+REG_EMAIL; ?>">registration</a> with your 
+current information. This data is downloaded periodically from the registration database, and should be correct within a week.
 </div>
 
 

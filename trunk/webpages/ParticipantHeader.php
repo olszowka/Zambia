@@ -42,7 +42,7 @@ function MM_swapImage() { //v3.0
     'images/search_panels-active.png','images/staff_pages-active.png','images/welcome-active.png',
     'images/my_general_interests-active.png','images/my_suggestions-active.png',
     'images/my_schedule-active.png')">
-<H1 class="head">Zambia&ndash;The Arisia Scheduling Tool</H1> 
+<H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1> 
 <hr>
 
 <?php if (isset($_SESSION["badgeid"])) { ?>
