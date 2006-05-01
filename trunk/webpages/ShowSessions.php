@@ -3,7 +3,7 @@
   require_once ('data_functions.php');
   require_once ('RenderSearchSessionResults.php');
   session_start();
-  if ($_POST["track"]) {
+  if ($_POST["track"]or $_POST["status"]) {
     $status=$_POST["status"]; 
     $track=$_POST["track"]; 
     }
