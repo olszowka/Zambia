@@ -154,6 +154,8 @@ TABLE.login {
     border: 1px;
     padding: 10px;
     margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
     }
 
 TR {
