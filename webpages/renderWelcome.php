@@ -19,18 +19,14 @@
 <P> Welcome back! 
 <ol>
   <li> A new webpage containing your schedule has been added.  You'll find it under "My Schedule".   
-  <li> The best way to reach us is to send email to <a href="mailto: 
-<?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?></a>.
+  <li> The best way to reach us is to send email to <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?></a>.
 </ol>
 <P> For first time users: 
 <ol>
-  <li> First, please indicate whether you will partipate in <?php echo 
-CON_NAME; ?> and change your password.
+  <li> First, please indicate whether you will partipate in <?php echo CON_NAME; ?> and change your password.
 <FORM class="nomargin" name="pwform" method=POST action="submitWelcome.php">
   <div id="update_section">
-    <ul><li><label for="interested" class="padbot0p5">I am interested and 
-able to participate in programming for <?php echo CON_NAME; 
-?> &nbsp;</label>
+    <ul><li><label for="interested" class="padbot0p5">I am interested and able to participate in programming for <?php echo CON_NAME; ?> &nbsp;</label>
       <?php $int=$participant['interested']; ?>
       <SELECT name=interested class="yesno">
             <OPTION value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp;</OPTION>
@@ -84,8 +80,6 @@ CON_NAME; ?>. </li>
   </li>
 </ol>
 
-<p>Thank you for your time, and we look forward to see you at <?php echo 
-CON_NAME; ?>. 
-<p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo 
-PROGRAM_EMAIL; ?> </a> </P>
+<p>Thank you for your time, and we look forward to see you at <?php echo CON_NAME; ?>. 
+<p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </P>
 <?php participant_footer() ?>
