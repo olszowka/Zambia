@@ -200,7 +200,7 @@ function get_next_session_id() {
     $result=mysql_query("SELECT MAX(sessionid) FROM Sessions",$link);
     if (!$result) {return "";}
     list($maxid)=mysql_fetch_array($result, MYSQL_NUM);
-    if (!$maxid) {return "";}
+    if (!$maxid) {return "1";}
     return $maxid+1;
     }
 

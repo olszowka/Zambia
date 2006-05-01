@@ -33,7 +33,7 @@ EOD;
       <table>
     </FORM>
     <HR>
-<p> Please use the following scale when ranking your interest in the panels you have chosen:  <p>1 - Oooh! Oh! Pick Me!, 2- ..., 3 - I'd like to if I can, 4 - ..., 5 - Meh, I can take it or leave it. </p>
+<p> Please use the following scale when ranking your interest in the panels you have chosen:  <p>1 - Oooh! Oh! Pick Me!, 2-3 - I'd like to if I can, 4-5 - Meh, I can take it or leave it. </p>
 
     <H3>List of Sessions in Which I'm Interested in Participating</H3>
     <FORM name="sessionform" method=POST action="SubmitMySessions2.php">
