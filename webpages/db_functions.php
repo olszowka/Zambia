@@ -174,8 +174,8 @@ function update_session() {
     $id=$session["sessionid"];
     if ($session["featdest"]!="") {
         for ($i=0 ; $session["featdest"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasFeature values(".$id.',';
-            $query.=$session["featdest"][$i].')';
+            $query="INSERT into SessionHasFeature sessionid=".$id.", featureid=";
+            $query.=$session["featdest"][$i];
             if (!mysql_query($query,$link)) { return false; }
             }
         }
@@ -183,8 +183,8 @@ function update_session() {
     if (!mysql_query($query,$link)) { return false; }
     if ($session["servdest"]!="") {
         for ($i=0 ; $session["servdest"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasService values(".$id.',';
-            $query.=$session["servdest"][$i].')';
+            $query="INSERT into SessionHasService set sessionid=".$id.", serviceid=";
+            $query.=$session["servdest"][$i];
             if (!mysql_query($query,$link)) { return false; }
             }
         }
@@ -235,15 +235,15 @@ function insert_session() {
     $id = mysql_insert_id($link);
     if ($session["featdest"]!="") {
         for ($i=0 ; $session["featdest"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasFeature values(".$id.',';
-            $query.=$session["featdest"][$i].')';
+            $query="INSERT into SessionHasFeature set sessionid=".$id.", featureid=";
+            $query.=$session["featdest"][$i];
             $result = mysql_query($query,$link);
             }
         }
     if ($session["servdest"]!="") {
         for ($i=0 ; $session["servdest"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasService values(".$id.',';
-            $query.=$session["servdest"][$i].')';
+            $query="INSERT into SessionHasService sessionid=".$id.", serviceid=";
+            $query.=$session["servdest"][$i];
             $result = mysql_query($query,$link);
             }
         }

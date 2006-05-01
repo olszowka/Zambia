@@ -28,8 +28,7 @@
     $inscount=0;
     for ($i=0;$i<=$maxrow;$i++) {
         if (($_POST["checked".$i]==0)&&(isset($_POST["int".$i]))) {
-            $query="INSERT INTO ParticipantSessionInterest VALUES(\"".$badgeid."\",".$_POST["sessionid".$i];
-            $query.=",null,null,null)";
+            $query="INSERT INTO ParticipantSessionInterest set badgeid=".$badgeid.", sessionid=".$_POST["sessionid".$i];
             if (!mysql_query($query,$link)) {
                 $message=$query."<BR>Error updating database.  Database not updated.";
                 RenderError($title,$message);
