@@ -10,10 +10,10 @@
     $trackid=$_POST["track"];
     $titlesearch=stripslashes($_POST["title"]);
     $query = <<<EOD
-Select S2.sessionid, S2.trackname, S2.title, concat( if(left(s2.duration,2)=00, '', if(left(s2.duration,1)=0, concat(right(left(s2.duration,2),1),'hr '), concat(left(s2.duration,2),'hr '))), if(date_format(s2.duration,'%i')=00, '', if(left(date_format(s2.duration,'%i'),1)=0, concat(right(date_format(s2.duration,'%i'),1),'min'), concat(date_format(s2.duration,'%i'),'min')))) s2.duration ,
+Select S2.sessionid, S2.trackname, S2.title, (concat( if(left(s2.duration,2)=00, '', if(left(s2.duration,1)=0, concat(right(left(s2.duration,2),1),'hr '), concat(left(s2.duration,2),'hr '))), if(date_format(s2.duration,'%i')=00, '', if(left(date_format(s2.duration,'%i'),1)=0, concat(right(date_format(s2.duration,'%i'),1),'min'), concat(date_format(s2.duration,'%i'),'min'))))) s2.duration ,
  S2.pocketprogtext,
     S2.persppartinfo, PSI.badgeid from
-    ( Select S.sessionid, T.trackname, S.title, concat( if(left(s.duration,2)=00, '', if(left(s.duration,1)=0, concat(right(left(s.duration,2),1),'hr '), concat(left(s.duration,2),'hr '))), if(date_format(s.duration,'%i')=00, '', if(left(date_format(s.duration,'%i'),1)=0, concat(right(date_format(s.duration,'%i'),1),'min'), concat(date_format(s.duration,'%i'),'min')))) s.duration, 
+    ( Select S.sessionid, T.trackname, S.title, (concat( if(left(s.duration,2)=00, '', if(left(s.duration,1)=0, concat(right(left(s.duration,2),1),'hr '), concat(left(s.duration,2),'hr '))), if(date_format(s.duration,'%i')=00, '', if(left(date_format(s.duration,'%i'),1)=0, concat(right(date_format(s.duration,'%i'),1),'min'), concat(date_format(s.duration,'%i'),'min'))))) s.duration, 
       S.pocketprogtext, S.persppartinfo from Sessions S, Tracks AS T
       where S.trackid = T.trackid and T.selfselect=1 and S.invitedguest=0 
       and (S.statusid=2 or S.statusid=7 or S.statusid=3)
