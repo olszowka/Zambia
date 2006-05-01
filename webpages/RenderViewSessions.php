@@ -26,7 +26,7 @@
         echo "            <TD class=\"border1111\"><A HREF=\"EditSession.php?id=".$sessionid."\">".$sessionid."</A></TD>\n";
         echo "            <TD class=\"border1111\">".$trackname."</TD>\n";
         echo "            <TD class=\"border1111\">".htmlspecialchars($title,ENT_NOQUOTES)."</TD>\n";
-        echo "            <TD class=\"border1111\">".$duration." hr</TD>\n";
+        echo "            <TD class=\"border1111\">".$duration."</TD>\n";
         echo "            <TD class=\"border1111\">".$estatten."</TD>\n";
         echo "            <TD class=\"border1111\">".$statusname."</TD>\n";
         echo "<!--            <TD class=\"border1111\">&nbsp;</TD>\n";

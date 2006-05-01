@@ -27,7 +27,7 @@
 
         echo "            <TD class=\"border0000\"><b>".htmlspecialchars($title,ENT_NOQUOTES)."</TD>\n";
 
-        echo "            <TD class=\"border0000\"><b>".$duration." hr</TD>\n";
+        echo "            <TD class=\"border0000\"><b>".$duration."</TD>\n";
         echo "        </TR>\n";
         echo "        <TR>\n";
         echo "            <TD colspan=2 class=\"addbox\">Add this panel to my list:<INPUT type=\"checkbox\" name=\"int".$i."\" ";
