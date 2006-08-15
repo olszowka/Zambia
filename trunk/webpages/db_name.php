@@ -1,10 +1,12 @@
 <?php
 define("DBHOSTNAME","localhost");
-define("DBUSERID","zambiademo");
-define("DBPASSWORD","4fandom");
-define("DBDB","zambiademo");
-define("CON_NAME","A Con'07");
+define("DBUSERID","olszowka");
+define("DBPASSWORD","");
+define("DBDB","olszowkadev");
+define("CON_NAME","PeterCon");
 define("BRAINSTORM_EMAIL","brain@somewhere.net");
 define("PROGRAM_EMAIL","nobody@somewhere.net");
 define("REG_EMAIL","noone@somewhere.net");
+define("stripfancy_from","ÀÁÂÃÄÅÆÇÈÉÊË");
+define("stripfancy_to","AAAAAAECEEEE");
 ?>
