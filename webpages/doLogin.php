@@ -1,6 +1,7 @@
 <?php
     require ('db_functions.php');
     require ('ParticipantHeader.php');
+    // echo "Trying to connect to database.\n";
     if (prepare_db()===false) {
         require ('RenderErrorPart.php');
         $title="Submit Password";
@@ -8,6 +9,7 @@
         ErrorResponse($title,$message_error);
         exit();
         };
+    // echo "Connected to database.\n";
     $badgeid = $_POST[badgeid];
     $password = stripslashes($_POST[passwd]);
     $result=mysql_query("Select password from Participants where badgeid='".$badgeid."'",$link);
