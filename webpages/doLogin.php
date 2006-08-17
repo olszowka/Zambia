@@ -10,8 +10,8 @@
         exit();
         };
     // echo "Connected to database.\n";
-    $badgeid = $_POST[badgeid];
-    $password = stripslashes($_POST[passwd]);
+    $badgeid = $_POST['badgeid'];
+    $password = stripslashes($_POST['passwd']);
     $result=mysql_query("Select password from Participants where badgeid='".$badgeid."'",$link);
     if (!$result) {
     	$message="Incorrect badgeid or password.";

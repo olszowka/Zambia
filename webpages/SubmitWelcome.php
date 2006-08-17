@@ -4,9 +4,9 @@
     require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
-    $interested = $_POST[interested];
-    $password = $_POST[password];
-    $cpassword = $_POST[cpassword];
+    $interested = $_POST['interested'];
+    $password = $_POST['password'];
+    $cpassword = $_POST['cpassword'];
     if ($password=="" and $cpassword=="") {
             $update_password=false;
 	    }

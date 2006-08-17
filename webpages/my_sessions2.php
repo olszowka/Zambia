@@ -1,6 +1,7 @@
 <?php
-    global $participant,$message_error,$message2,$congoinfo;
+    global $participant,$message,$message_error,$message2,$congoinfo;
     $title="My Panel Interests";
+    $error=false;
     require ('db_functions.php'); //define database functions
     require_once('ParticipantFooter.php');
     require_once('renderMySessions2.php');
@@ -8,7 +9,6 @@
     require ('PartCommonCode.php'); // initialize db; check login;
     // set $badgeid from session
     if (isset($_POST["add"])) {  //  This page reached with "Add" Button
-      $error=false;
       $message="";
       $sessionid=$_POST["sessionid"];
       if (!is_numeric($sessionid)) {

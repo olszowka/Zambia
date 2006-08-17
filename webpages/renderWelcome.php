@@ -1,5 +1,5 @@
 <?php
-   global $participant,$message_error,$message2,$congoinfo;
+   global $participant,$message,$message_error,$message2,$congoinfo;
    $title="Welcome";
    require_once('ParticipantHeader.php');
    require_once('ParticipantFooter.php');
