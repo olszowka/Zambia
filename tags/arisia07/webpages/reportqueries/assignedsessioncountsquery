@@ -1,0 +1,3 @@
+TITLE='Assigned Session by Session (counts)'
+DESCRIPTION='How many people are assinged to each session?'
+QUERY='select trackname, Sessions.sessionid as SessionId, title, statusname, count(badgeid) as NumAssigned from ParticipantOnSession, Sessions, Tracks, SessionStatuses  where ParticipantOnSession.sessionid=Sessions.sessionid  and Tracks.trackid=Sessions.trackid  and Sessions.statusid=SessionStatuses.statusid  group by sessionid order by trackname, sessionid;'
