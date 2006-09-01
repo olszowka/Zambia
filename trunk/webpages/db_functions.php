@@ -318,7 +318,7 @@ function retrieve_session_from_db($sessionid) {
 /* check login script, included in db_connect.php. */
 
 function isLoggedIn($firsttime) {
-    global $link,$message2;
+    global $link,$message2,$permission_set;
     if ($firsttime) {
         session_start();
         $_SESSION['sessionstarted']=1;
@@ -366,17 +366,18 @@ function isLoggedIn($firsttime) {
 
 //compare:
 
-    if($_SESSION['password'] == $db_pass) {
-// valid password for username
-            return(true); // they have correct info
-            }           // in session variables.
-        else {
+    if($_SESSION['password'] != $db_pass) {
+// kill incorrect session variables.
             unset($_SESSION['badgeid']);
             unset($_SESSION['password']);
-// kill incorrect session variables.
-        $message2="Incorrect userid or password.";
-        return (false);
-        }
+            $message2="Incorrect userid or password.";
+            return (false);
+            }
+// valid password for username
+        else {
+            set_permission_set($_SESSION['badgeid');
+            return(true); // they have correct info
+            }           // in session variables.
     }
 
 
@@ -471,6 +472,37 @@ function retrieve_participantAvailability_from_db($badgeid) {
         }
     return (0);
     }
-
+// Function set_permission_set($badgeid)
+// Performs complicated join to get the set of permission atoms available to the user
+// Stores them in global variable $permission_set
+//
+function set_permission_set($badgeid) {
+    global $permission_set,$link;
+    
+    $permission_set="";
+    $result=mysql_query("Select badgeid,firstname,lastname,badgename,phone,email,postaddress from CongoDump where badgeid='".$badgeid."'",$link);
+    if (!$result) {
+        $message_error=mysql_error($link)."\n<BR>Database Error.<BR>No further execution possible.";
+        return(-1);
+        };
+    $rows=mysql_num_rows($result);
+    if ($rows!=1) {
+        $message_error=$rows." rows returned for badgeid when 1 expected.<BR>Database Error.<BR>No further execution possible.";
+        return(-1);
+        };
+    if (retrieve_participant_from_db($badgeid)!=0) {
+        $message_error=$message2."<BR>No further execution possible.";
+        return(-1);
+        };
+    $participant["password"]="";
+    $congoarray=mysql_fetch_array($result, MYSQL_NUM);
+    $congoinfo["firstname"]=$congoarray[1];
+    $congoinfo["lastname"]=$congoarray[2];
+    $congoinfo["badgename"]=$congoarray[3];
+    $congoinfo["phone"]=$congoarray[4];
+    $congoinfo["email"]=$congoarray[5];
+    $congoinfo["postaddress"]=$congoarray[6];
+    return();
+    }
 
 ?>
