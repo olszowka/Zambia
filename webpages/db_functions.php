@@ -11,46 +11,9 @@ function prepare_db() {
     }
 
 function isStaff($badgeid) {
-    return (array_search($badgeid,array("qwerty","00001")));
-
-//  Don't add folk to the above until thier password has changed  aka
-//    select badgeid from Participants 
-//      where password!='4cb9c8a8048fd02294477fcb1a41191a';
-// done:
-//40099 - Tracy
-//38322 - Jack
-//92972 - Heather
-//53159 - Peter O
-//27051 - Persis
-//4694 - Rachel Silber
-//9563 - Skip Morris
-//4440 - Ben Levy
-//40439 - Joel Lord
-//5833 - Phi
-//4398 - Ellen Kranzer
-//4516 - Elka
-//27066 - David D'Antonio
-//20027 - Merv
-//26912 - Jesse
-//4720 - Mike
-//9951 - Janet
-//6622 - Sarah (reg) wolfgrrl
-//93178 - Lisa (reg) Jasra
-//6623 - dbs
-//39818 - September 
-//6499 - Lisa Hertel
-//40370 - Michael Tool (anime)
-//4558 - Lance Oszko (video)
-//4321 - Joel Herda
-//52045 - Scott Dorsey (35mm)
-//4680 - Paul Selkirk (pubs)
-//92696 - Rick (tech)
-//4515 - Topper (pubs)
-// need changing:
-//4782 - Patricia Vandenberg (dda's assistant div head)
-//4698 - Patty Silva (Film head)
-//28386 - Jason Schneiderman (gaming)
-
+    global $permission_set;
+//    error_log("Zambia: ".print_r($permission_set,TRUE));
+    return (in_array("Staff",$permission_set));
     }
 
 // Function populate_select_from_table(...)
@@ -375,7 +338,10 @@ function isLoggedIn($firsttime) {
             }
 // valid password for username
         else {
-            set_permission_set($_SESSION['badgeid');
+            $i=set_permission_set($_SESSION['badgeid']);
+            if ($i!=0) {
+                error_log("Zambia: permission_set error $i\n");
+                }
             return(true); // they have correct info
             }           // in session variables.
     }
@@ -480,29 +446,29 @@ function set_permission_set($badgeid) {
     global $permission_set,$link;
     
     $permission_set="";
-    $result=mysql_query("Select badgeid,firstname,lastname,badgename,phone,email,postaddress from CongoDump where badgeid='".$badgeid."'",$link);
+    $query= <<<EOD
+    Select distinct permatomtag from PermissionAtoms as PA, Phases as PH,
+    PermissionRoles as PR, UserHasPermissionRole as UHPR, Permissions P where
+    ((UHPR.badgeid='$badgeid' and UHPR.permroleid = P.permroleid)
+        or P.badgeid='$badgeid' ) and
+    (P.phaseid is null or (P.phaseid = PH.phaseid and PH.current = TRUE)) and
+    P.permatomid = PA.permatomid
+EOD;
+    $result=mysql_query($query,$link);
     if (!$result) {
-        $message_error=mysql_error($link)."\n<BR>Database Error.<BR>No further execution possible.";
+        $message_error=$query." \n ".mysql_error($link)." \n <BR>Database Error.<BR>No further execution possible.";
+        error_log("Zambia: ".$message_error);
         return(-1);
         };
     $rows=mysql_num_rows($result);
-    if ($rows!=1) {
-        $message_error=$rows." rows returned for badgeid when 1 expected.<BR>Database Error.<BR>No further execution possible.";
-        return(-1);
+    if ($rows==0) {
+        return(0);
         };
-    if (retrieve_participant_from_db($badgeid)!=0) {
-        $message_error=$message2."<BR>No further execution possible.";
-        return(-1);
+    for ($i=0; $i<$rows; $i++) {
+        $onerow=mysql_fetch_array($result, MYSQL_BOTH);
+        $permission_set[]=$onerow[0];
         };
-    $participant["password"]="";
-    $congoarray=mysql_fetch_array($result, MYSQL_NUM);
-    $congoinfo["firstname"]=$congoarray[1];
-    $congoinfo["lastname"]=$congoarray[2];
-    $congoinfo["badgename"]=$congoarray[3];
-    $congoinfo["phone"]=$congoarray[4];
-    $congoinfo["email"]=$congoarray[5];
-    $congoinfo["postaddress"]=$congoarray[6];
-    return();
+    return(0);
     }
 
 ?>
