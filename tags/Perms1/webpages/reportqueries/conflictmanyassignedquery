@@ -1,0 +1,3 @@
+TITLE='Conflict Report - Sessions with over 5 people assigned'
+DESCRIPTION='Not all of these are actually conflict, you want to think about them'
+QUERY="select trackname, S.sessionid, title, count(badgeid) assigned from  Sessions S left join ParticipantOnSession POS on S.sessionid=POS.sessionid, Tracks T where T.trackid=S.trackid and S.statusid=3  group by sessionid having assigned>5 order by trackname, S.sessionid;"

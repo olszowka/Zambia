@@ -1,0 +1,3 @@
+TITLE='Participant Bio'
+DESCRIPTION='Show the badgeid, name and bio for each participant that is interested in programming'
+QUERY='select C.badgeid, C.lastname, C.firstname, C.badgename, P.bio from CongoDump C left join Participants P on P.badgeid=C.badgeid where P.interested=1;'

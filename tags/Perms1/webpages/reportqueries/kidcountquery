@@ -1,0 +1,4 @@
+TITLE='Participant Kid Count'
+DESCRIPTION='How many kids are expected in fasttrack'
+QUERY='select C.badgeid, badgename, lastname, firstname, numkidsfasttrack  from CongoDump C, ParticipantAvailability PA where C.badgeid=PA.badgeid;'
+
