@@ -1,5 +1,5 @@
 <?php
-   global $participant,$message,$message_error,$message2,$congoinfo;
+   global $participant,$message,$message_error,$message2,$congoinfo,$permission_set;
    $title="Welcome";
    require_once('ParticipantHeader.php');
    require_once('ParticipantFooter.php');
@@ -82,4 +82,4 @@ CON_NAME; ?>. </li>
 
 <p>Thank you for your time, and we look forward to see you at <?php echo CON_NAME; ?>. 
 <p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </P>
-<?php participant_footer() ?>
+<?php participant_footer(); ?>
