@@ -20,11 +20,6 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     staff_header($title);
     
     // still inside function RenderAddCreateSession
-    if ($action=="create") {
-      echo "<H1>Create New Session</H1>\n";
-    } else {
-      echo "<H1>Edit Session</H1>\n";
-    }
     if (strlen($message1)>0) {
       echo "<P id=\"message1\">".$message1."</P>\n";
     }
