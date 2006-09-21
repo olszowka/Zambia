@@ -9,7 +9,6 @@ participant_header($title);
 
 ?>
 
-<H1> Login </H1>
 <?php
    if (isset($message)) {
       echo "<P class=\"errmsg\">".$message."</P>\n";
