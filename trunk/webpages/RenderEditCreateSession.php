@@ -88,12 +88,19 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
           </DIV>
         </DIV> <!-- Block 3 is Pocket Program Text -->
 
-        <DIV class="textwithlabel"> <!-- Block 4 is Prospective Participant Info -->
+        <DIV class="textwithlabel"> <!-- Block 4 is Program Guide Description -->
+          <LABEL class="textlabel" for="progguiddesc">Program Guide Description:</LABEL>
+          <DIV class="ib">
+            <TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES); ?></TEXTAREA>
+          </DIV>
+        </DIV> <!-- Block 4 is Pocket Program Text -->
+
+        <DIV class="textwithlabel"> <!-- Block 5 is Prospective Participant Info -->
           <LABEL class="textlabel" for="persppartinfo">Prospective Participant Info:</LABEL>
           <DIV class="ib">
             <TEXTAREA class="textlabelarea" cols=70 name="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES); ?></TEXTAREA>
           </DIV>
-        </DIV> <!-- Block 4 is Prospective Participant Info -->
+        </DIV> <!-- Block 5 is Prospective Participant Info -->
       </DIV> 
 
       <hr> <!-- the horizontal rule give the browser a clue -->

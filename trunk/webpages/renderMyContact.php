@@ -9,6 +9,15 @@ if (isLoggedIn($firsttime)===false) {
 if (isset($bio)) {
     $participant["bio"]=$bio;
     }
+if (isset($pubsname)) {
+        $participant["pubsname"]=$pubsname;
+        }
+    else {
+        $pubsnameold=$participant["pubsname"];
+        if (strlen($participant["pubsname"])<1) {
+             $participant["pubsname"]=$congoinfo["badgename"];
+             }
+        }
 participant_header($title);
 ?>
 
@@ -30,6 +39,12 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
             <OPTION value=2 <?php if ($int==2) {echo "selected";} ?> >No</OPTION></SELECT>
           </span>
       </div>
+    <div class="password">
+      <span class="password2">Name for publications' use&nbsp;</span>
+      <span class="value"><INPUT type="text" size="20" name="pubsname"
+          value="<?php echo htmlspecialchars($participant["pubsname"],ENT_COMPAT); ?>"></span>
+      </div>
+
     <div id="bestway">
       <span class="radiohead">Best way to reach me&nbsp;</span>
       <div id="bwbuttons">
@@ -113,5 +128,6 @@ current information. This data is downloaded periodically from the registration 
             <DIV><TEXTAREA rows=5 cols=72 name="bio"><?php echo htmlspecialchars($participant["bio"],ENT_COMPAT); ?></TEXTAREA></DIV>
             </DIV>
         <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
+        <INPUT type="hidden" name="pubsnameold" value="<?php echo htmlspecialchars($pubsnameold,ENT_COMPAT); ?>">
     </form>
 <?php participant_footer() ?>

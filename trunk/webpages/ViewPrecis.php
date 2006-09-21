@@ -9,7 +9,7 @@
         exit ();
         }
    $query = <<<EOD
-SELECT sessionid, trackname, title, duration, estatten, pocketprogtext, persppartinfo
+SELECT sessionid, trackname, title, duration, estatten, progguiddesc, persppartinfo
   from Sessions, Tracks, SessionStatuses 
  where Sessions.trackid=Tracks.trackid  
    and SessionStatuses.statusid=Sessions.statusid  
