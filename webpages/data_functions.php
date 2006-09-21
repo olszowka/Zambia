@@ -84,6 +84,7 @@ function get_session_from_post() {
     $session["pubno"]=stripslashes($_POST["pubno"]);
     $session["title"]=stripslashes($_POST["title"]);
     $session["pocketprogtext"]=stripslashes($_POST["pocketprogtext"]);
+    $session["progguiddesc"]=stripslashes($_POST["progguiddesc"]);
     $session["persppartinfo"]=stripslashes($_POST["persppartinfo"]);
     $session["featdest"]=$_POST["featdest"];
     $session["servdest"]=$_POST["servdest"];
@@ -99,7 +100,7 @@ function get_session_from_post() {
     $session["notesforprog"]=stripslashes($_POST["notesforprog"]);
     }
 
-// Function get_session_from_post()
+// Function set_session_defaults() 
 // Populates the $session global variable with default data
 // for use when creating a new session.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -114,6 +115,7 @@ function set_session_defaults() {
     $session["title"]="";
     $session["pocketprogtext"]="";
     $session["persppartinfo"]="";
+    $session["progguiddes"]="";
     $session["featdest"]="";
     $session["servdest"]="";
     $session["duration"]="1:00 ";
@@ -164,8 +166,16 @@ function validate_session() {
         $messages.="A title is required.<BR>\n";
         $flag=false;
         }
-    if (strlen($session["pocketprogtext"])>400) {
-        $messages.="Pocket program text is ".strlen($session["pocketprogtext"])." characters long.  Please edit it to fewer than <B>400</B> characters.<BR>\n";
+    if (($i=strlen($session["title"]))>48) {
+        $messages.="Title is $i characters long.  Please edit it to <B>48</B> characters or fewer.<BR>\n";
+        $flag=false;
+        }
+    if (($i=strlen($session["pocketprogtext"]))>110) {
+        $messages.="Pocket program text is $i characters long.  Please edit it to <B>110</B> characters or fewer.<BR>\n";
+        $flag=false;
+        }
+    if (($i=strlen($session["progguiddesc"]))>500) {
+        $messages.="Program guide description is $i characters long.  Please edit it to <B>500</B> characters or fewer.<BR>\n";
         $flag=false;
         }
     if ($session["track"]==0) {
@@ -326,5 +336,23 @@ function fix_slashes($arg) {
         }
     return $arg;
     }
-    
+
+// Function isStaff($badgeid)
+// $badgeid is vestigial
+// returns true if user has staff permissions
+
+function isStaff($badgeid) {
+    global $permission_set;
+//    error_log("Zambia: ".print_r($permission_set,TRUE));
+    return (in_array("Staff",$permission_set));
+    }
+
+// Function may_I($permatomtag)
+// $permatomtag is a string which designates a permission atom
+// returns TRUE if user has this permission in the current phase(s)
+//
+function may_I($permatomtag) {
+    global $permission_set;
+    return (in_array($permatomtag,$permission_set));
+    }    
 ?>

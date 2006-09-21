@@ -1,6 +1,7 @@
 <?php
    global $participant,$message,$message_error,$message2,$congoinfo,$permission_set;
    $title="Welcome";
+   require_once('data_functions.php');
    require_once('ParticipantHeader.php');
    require_once('ParticipantFooter.php');
    participant_header($title);

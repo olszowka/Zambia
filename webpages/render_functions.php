@@ -30,14 +30,14 @@ BRAINSTORM_EMAIL; ?>"><?php echo BRAINSTORM_EMAIL; ?></a>.
         <TR><TD>&nbsp;</TD></TR>
 -->
 <?php
-    while (list($sessionid,$trackname,$title,$duration,$estatten,$pocketprogtext, $persppartinfo)= mysql_fetch_array($result, MYSQL_NUM)) {
+    while (list($sessionid,$trackname,$title,$duration,$estatten,$progguiddesc, $persppartinfo)= mysql_fetch_array($result, MYSQL_NUM)) {
         echo "        <TR>\n";
         echo "            <TD rowspan=3 class=\"border0000\" id=\"sessidtcell\"><b>".$sessionid."&nbsp;&nbsp;</TD>\n";
         echo "            <TD class=\"border0000\"><b>".$trackname."</TD>\n";
         echo "            <TD class=\"border0000\"><b>".htmlspecialchars($title,ENT_NOQUOTES)."</TD>\n";
         echo "            <TD class=\"border0000\"><b>".$duration." hr</TD>\n";
         echo "            </TR>\n";
-        echo "        <TR><TD colspan=3 class=\"border0010\">".htmlspecialchars($pocketprogtext,ENT_NOQUOTES)."</TD></TR>\n";
+        echo "        <TR><TD colspan=3 class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
         echo "        <TR><TD colspan=3 class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</TD></TR>\n";
         echo "        <TR><TD colspan=5 class=\"border0020\">&nbsp;</TD></TR>\n";
         echo "        <TR><TD colspan=5 class=\"border0000\">&nbsp;</TD></TR>\n";

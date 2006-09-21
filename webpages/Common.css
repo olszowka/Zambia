@@ -432,7 +432,7 @@ select.yesno {
 #bestway {
     display: table-row;
     top: 1em;
-    left: 1.25em;
+    left: 0;
     width: 27em;
     margin: 3em;
     /* border: solid #eeeeee 2px; */
@@ -479,13 +479,13 @@ select.yesno {
     }
 
 .radiohead {
-    font-family: Verdana;
+    /*font-family: Verdana;*/
     font-weight: normal;
     color: black;
     text-decoration : none;
     /*display: table-cell;
     text-align: "&nbsp;";*/
-    padding-left: 3em;
+    padding-left: 0;
     }
 
 .password {

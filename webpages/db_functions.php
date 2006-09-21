@@ -10,12 +10,6 @@ function prepare_db() {
     return (mysql_select_db(DBDB,$link));
     }
 
-function isStaff($badgeid) {
-    global $permission_set;
-//    error_log("Zambia: ".print_r($permission_set,TRUE));
-    return (in_array("Staff",$permission_set));
-    }
-
 // Function populate_select_from_table(...)
 // Reads parameters (see below) and a specified table from the db.
 // Outputs HTML of the "<OPTION>" values for a Select control.
@@ -118,6 +112,7 @@ function update_session() {
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link)."\", ";
     $query.="title=\"".mysql_real_escape_string($session["title"],$link)."\", ";
     $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link)."\", ";
+    $query.="progguiddesc=\"".mysql_real_escape_string($session["progguiddesc"],$link)."\", ";
     $query.="persppartinfo=\"".mysql_real_escape_string($session["persppartinfo"],$link)."\", ";
     $query.="duration=\"".mysql_real_escape_string($session["duration"],$link)."\", ";
     $query.="estatten=".$session["atten"].", ";
@@ -179,6 +174,7 @@ function insert_session() {
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link).'",';
     $query.="title=\"".mysql_real_escape_string($session["title"],$link).'",';
     $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link).'",';
+    $query.="progguiddesc=\"".mysql_real_escape_string($session["progguiddesc"],$link).'",';
     $query.="persppartinfo=\"".mysql_real_escape_string($session["persppartinfo"],$link).'",';
     $query.="duration=\"".mysql_real_escape_string($session["duration"],$link).'",';
     $query.="estatten=".$session["atten"].',';
@@ -237,6 +233,7 @@ function retrieve_session_from_db($sessionid) {
     $session["pubno"]=$sessionarray["pubsno"];
     $session["title"]=$sessionarray["title"];
     $session["pocketprogtext"]=$sessionarray["pocketprogtext"];
+    $session["progguiddesc"]=$sessionarray["progguiddesc"];
     $session["persppartinfo"]=$sessionarray["persppartinfo"];
     $session["duration"]=$sessionarray["duration"];
     $session["atten"]=$sessionarray["estatten"];
@@ -354,7 +351,7 @@ function isLoggedIn($firsttime) {
 function retrieve_participant_from_db($badgeid) {
     global $participant;
     global $link,$message2;
-    $result=mysql_query("SELECT * FROM Participants where badgeid=".$badgeid,$link);
+    $result=mysql_query("SELECT pubsname, password, bestway, interested, bio FROM Participants where badgeid=".$badgeid,$link);
     if (!$result) {
         $message2=mysql_error($link);
         return (-3);
@@ -364,11 +361,7 @@ function retrieve_participant_from_db($badgeid) {
         $message2=$rows;
         return (-2);
         }
-    $participantarray=mysql_fetch_array($result, MYSQL_NUM);
-    $participant["password"]=$participantarray[1];
-    $participant["bestway"]=$participantarray[2];
-    $participant["interested"]=$participantarray[3];
-    $participant["bio"]=$participantarray[4];
+    $participant=mysql_fetch_array($result, MYSQL_ASSOC);
     return (0);
     }
 // Function getCongoData()
@@ -392,13 +385,7 @@ function getCongoData($badgeid) {
         return(-1);
         };
     $participant["password"]="";
-    $congoarray=mysql_fetch_array($result, MYSQL_NUM);
-    $congoinfo["firstname"]=$congoarray[1];
-    $congoinfo["lastname"]=$congoarray[2];
-    $congoinfo["badgename"]=$congoarray[3];
-    $congoinfo["phone"]=$congoarray[4];
-    $congoinfo["email"]=$congoarray[5];
-    $congoinfo["postaddress"]=$congoarray[6];
+    $congoinfo=mysql_fetch_array($result, MYSQL_ASSOC);
     return(0);
     }
 // Function retrieve_participantAvailability_from_db()
