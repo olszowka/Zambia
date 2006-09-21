@@ -8,7 +8,6 @@
   staff_header($title);
 ?>
 
-<H1 align=center>Staff Top level view</H1>
 <P>This is the main staff page. </p>
 <p> Please note the tabs above.   One of them will take you to your participant view.  Another will allow you to manage Sessions.  Note that Sessions is the generic term we are using for all Events, Films, Panels, Anime, Video, etc. 
 <p> As Zambia continues to develop, we'll add more text here. 

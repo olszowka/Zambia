@@ -12,7 +12,6 @@ function renderMySuggestions ($title, $error, $message) {
 ?>
     <FORM name="addform" method=POST action="SubmitMySuggestions.php">
     <INPUT type=hidden name="newrow" value= <?php echo "\"".($newrow?1:0)."\""; ?> >
-    <H3>My Suggestions</H3>
     <DIV class="titledtextarea">
         <LABEL for="paneltopics">Program Topic Ideas:</LABEL>
         <TEXTAREA name="paneltopics" rows=6 cols=72><?php echo htmlspecialchars($paneltopics,ENT_COMPAT); ?></TEXTAREA>
