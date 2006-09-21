@@ -13,7 +13,6 @@ participant_header($title);
 
 ?>
 
-<H1 align="center">Logout Confirmation</H1>
 <P align="center">You have logged out from Zambia</P>
 <P align="center"><A HREF="login.php">Log in</A> again.</P>
 
