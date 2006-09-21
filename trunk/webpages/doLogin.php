@@ -1,5 +1,6 @@
 <?php
     require ('db_functions.php');
+    require ('data_functions.php');
     require ('ParticipantHeader.php');
     // echo "Trying to connect to database.\n";
     if (prepare_db()===false) {
@@ -39,6 +40,7 @@
 		}
     $_SESSION['badgeid']=$badgeid;
     $_SESSION['password']=$dbpassword;
+    set_permission_set($badgeid);
     if (retrieve_participant_from_db($badgeid)==0) {
         require ('renderWelcome.php');
         exit();
