@@ -39,12 +39,6 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
             <OPTION value=2 <?php if ($int==2) {echo "selected";} ?> >No</OPTION></SELECT>
           </span>
       </div>
-    <div class="password">
-      <span class="password2">Name for publications' use&nbsp;</span>
-      <span class="value"><INPUT type="text" size="20" name="pubsname"
-          value="<?php echo htmlspecialchars($participant["pubsname"],ENT_COMPAT); ?>"></span>
-      </div>
-
     <div id="bestway">
       <span class="radiohead">Best way to reach me&nbsp;</span>
       <div id="bwbuttons">
@@ -120,13 +114,15 @@ not correct, contact <A href="mailto:<?php echo
 REG_EMAIL; ?>">registration</a> with your 
 current information. This data is downloaded periodically from the registration database, and should be correct within a week.
 </div>
-
-
 <HR>
+<BR>
+      Your name as you wish to have it published&nbsp;&nbsp;
+      <INPUT type="text" size="20" name="pubsname"
+          value="<?php echo htmlspecialchars($participant["pubsname"],ENT_COMPAT); ?>"><BR>
 
-        <DIV class="label"><LABEL class="label" for="bio">Please enter a biography (500 characters or fewer):</LABEL></DIV>
-            <DIV><TEXTAREA rows=5 cols=72 name="bio"><?php echo htmlspecialchars($participant["bio"],ENT_COMPAT); ?></TEXTAREA></DIV>
-            </DIV>
+        <LABEL class="spanlabcb" for="bio">Your biography (500 characters or fewer):</LABEL><BR>
+         Note: Your biography will appear immediately following your name in the program.<BR>
+            <TEXTAREA rows=5 cols=72 name="bio"><?php echo htmlspecialchars($participant["bio"],ENT_COMPAT); ?></TEXTAREA>
         <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
         <INPUT type="hidden" name="pubsnameold" value="<?php echo htmlspecialchars($pubsnameold,ENT_COMPAT); ?>">
     </form>
