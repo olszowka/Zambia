@@ -109,6 +109,7 @@ function update_session() {
     $query="UPDATE Sessions set ";
     $query.="trackid=".$session["track"].", ";
     $query.="typeid=".$session["type"].", ";
+    $query.="pubstatusid=".$session["pubstatusid"].", ";
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link)."\", ";
     $query.="title=\"".mysql_real_escape_string($session["title"],$link)."\", ";
     $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link)."\", ";
@@ -175,6 +176,7 @@ function insert_session() {
     $query="INSERT into Sessions set ";
     $query.="trackid=".$session["track"].',';
     $query.="typeid=".$session["type"].',';
+    $query.="pubstatusid=".$session["pubstatusid"].',';
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link).'",';
     $query.="title=\"".mysql_real_escape_string($session["title"],$link).'",';
     $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link).'",';
@@ -234,6 +236,7 @@ function retrieve_session_from_db($sessionid) {
     $session["sessionid"]=$sessionarray["sessionid"];
     $session["track"]=$sessionarray["trackid"];
     $session["type"]=$sessionarray["typeid"];
+    $session["pubstatusid"]=$sessionarray["pubstatusid"];
     $session["pubno"]=$sessionarray["pubsno"];
     $session["title"]=$sessionarray["title"];
     $session["pocketprogtext"]=$sessionarray["pocketprogtext"];
