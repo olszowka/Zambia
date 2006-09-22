@@ -128,21 +128,25 @@ function update_session() {
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     $query="DELETE from SessionHasFeature where sessionid=".$session["sessionid"];
+    $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     $id=$session["sessionid"];
     if ($session["featdest"]!="") {
         for ($i=0 ; $session["featdest"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasFeature sessionid=".$id.", featureid=";
+            $query="INSERT into SessionHasFeature set sessionid=".$id.", featureid=";
             $query.=$session["featdest"][$i];
+            $message2=$query;
             if (!mysql_query($query,$link)) { return false; }
             }
         }
     $query="DELETE from SessionHasService where sessionid=".$session["sessionid"];
+    $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     if ($session["servdest"]!="") {
         for ($i=0 ; $session["servdest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasService set sessionid=".$id.", serviceid=";
             $query.=$session["servdest"][$i];
+            $message2=$query;
             if (!mysql_query($query,$link)) { return false; }
             }
         }
