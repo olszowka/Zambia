@@ -81,6 +81,7 @@ function get_session_from_post() {
     $session["sessionid"]=$_POST["sessionid"];
     $session["track"]=$_POST["track"];
     $session["type"]=$_POST["type"];
+    $session["pubstatusid"]=$_POST["pubstatusid"];
     $session["pubno"]=stripslashes($_POST["pubno"]);
     $session["title"]=stripslashes($_POST["title"]);
     $session["pocketprogtext"]=stripslashes($_POST["pocketprogtext"]);
@@ -111,6 +112,7 @@ function set_session_defaults() {
     //$session["sessionid"] set elsewhere
     $session["track"]=0; // prompt with "SELECT"
     $session["type"]=0; // prompt with "SELECT"
+    $session["pubstatusid"]=0; // prompt with "SELECT"
     $session["pubno"]="";
     $session["title"]="";
     $session["pocketprogtext"]="";
@@ -184,6 +186,10 @@ function validate_session() {
         }
     if ($session["type"]==0) {
         $messages.="Please select a type.<BR>\n";
+        $flag=false;
+        }
+    if ($session["pubstatusid"]==0) {
+        $messages.="Please select a publication status.<BR>\n";
         $flag=false;
         }
     if ($session["kids"]==0) {

@@ -58,10 +58,17 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <DIV class="ib">
           <DIV class="ib" for="pubno">Pub. No.:</DIV>
           <DIV class="ib"><?php
-            echo "<INPUT type=text size=\"6\" name=\"pubno\" value=\"";
+            echo "<INPUT type=text size=\"10\" name=\"pubno\" value=\"";
             echo htmlspecialchars($session["pubno"],ENT_COMPAT)."\">";
           ?></DIV>
         </DIV>
+        <DIV class="ib">
+          <DIV class="ib" for="pubstatusid">Pub. Status </DIV>
+          <DIV class="ib">
+            <SELECT name="pubstatusid"><?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT"); ?></SELECT>
+          </DIV>
+        </DIV>
+
       </DIV> <!-- Block 1 is Row 1 -->
 
       <HR> <!-- the horizontal rule give the browser a clue -->

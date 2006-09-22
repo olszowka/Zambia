@@ -2,7 +2,7 @@
 define("DBHOSTNAME","localhost");
 define("DBUSERID","olszowka");
 define("DBPASSWORD","");
-define("DBDB","olszowkatest");
+define("DBDB","olszowkadev");
 define("CON_NAME","PeterCon");
 define("BRAINSTORM_EMAIL","brain@somewhere.net");
 define("PROGRAM_EMAIL","nobody@somewhere.net");
