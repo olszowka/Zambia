@@ -109,6 +109,7 @@ function update_session() {
     $query="UPDATE Sessions set ";
     $query.="trackid=".$session["track"].", ";
     $query.="typeid=".$session["type"].", ";
+    $query.="divisionid=".$session["divisionid"].", ";
     $query.="pubstatusid=".$session["pubstatusid"].", ";
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link)."\", ";
     $query.="title=\"".mysql_real_escape_string($session["title"],$link)."\", ";
@@ -151,6 +152,18 @@ function update_session() {
             if (!mysql_query($query,$link)) { return false; }
             }
         }
+    $query="DELETE from SessionHasPubChar where sessionid=".$session["sessionid"];
+    $message2=$query;
+    if (!mysql_query($query,$link)) { return false; }
+    if ($session["pubchardest"]!="") {
+        for ($i=0 ; $session["pubchardest"][$i]!="" ; $i++ ) {
+            $query="INSERT into SessionHasPubChar set sessionid=".$id.", pubcharid=";
+            $query.=$session["pubchardest"][$i];
+            $message2=$query;
+            if (!mysql_query($query,$link)) { return false; }
+            }
+        }
+
     return true;
     }
 
@@ -176,6 +189,7 @@ function insert_session() {
     $query="INSERT into Sessions set ";
     $query.="trackid=".$session["track"].',';
     $query.="typeid=".$session["type"].',';
+    $query.="divisionid=".$session["divisionid"].',';
     $query.="pubstatusid=".$session["pubstatusid"].',';
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link).'",';
     $query.="title=\"".mysql_real_escape_string($session["title"],$link).'",';
@@ -212,6 +226,14 @@ function insert_session() {
             $result = mysql_query($query,$link);
             }
         }
+    if ($session["pubchardest"]!="") {
+        for ($i=0 ; $session["pubchardest"][$i]!="" ; $i++ ) {
+            $query="INSERT into SessionHasPubChar sessionid=".$id.", pubcharid=";
+            $query.=$session["pubchardest"][$i];
+            $result = mysql_query($query,$link);
+            }
+        }
+
     return $id;
     }
 
@@ -236,6 +258,7 @@ function retrieve_session_from_db($sessionid) {
     $session["sessionid"]=$sessionarray["sessionid"];
     $session["track"]=$sessionarray["trackid"];
     $session["type"]=$sessionarray["typeid"];
+    $session["divisionid"]=$sessionarray["divisionid"];
     $session["pubstatusid"]=$sessionarray["pubstatusid"];
     $session["pubno"]=$sessionarray["pubsno"];
     $session["title"]=$sessionarray["title"];
@@ -269,6 +292,15 @@ function retrieve_session_from_db($sessionid) {
     unset($session["servdest"]);
     while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
         $session["servdest"][]=$row[0];
+        }
+    $result=mysql_query("SELECT pubcharid FROM SessionHasPubChar where sessionid=".$sessionid,$link);
+    if (!$result) {
+        $message2=mysql_error($link);
+        return (-3);
+        }
+    unset($session["pubchardest"]);
+    while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
+        $session["pubchardest"][]=$row[0];
         }
     return (37);
     }
