@@ -26,50 +26,35 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     if (strlen($message2)>0) {
       echo "<P id=\"message2\">".$message2."</P>\n";
     }
+    //error_log("Zambia: ".print_r($session,TRUE));
   ?>
-   <DIV class="formbox">
-    <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
-      <DIV class="tab-row"> <!-- Block 1 is Row 1 -->
-
-        <DIV class="ib">
-          <DIV class="ib" for="sessionid">Session #:</DIV>
-          <DIV class="ib">
-            <?php // still inside function RenderAddCreateSession
-              echo "<INPUT type=\"text\" size=3 name=\"sessionid\" readonly value=\"";
-              echo htmlspecialchars($session["sessionid"],ENT_COMPAT)."\">\n";
-            ?>
-          </DIV>
-        </DIV>
-
-        <DIV class="ib">
-          <DIV class="ib" for="track">Track: </DIV>
-          <DIV class="ib">
-            <SELECT name="track"><?php populate_select_from_table("Tracks", $session["track"], "SELECT"); ?></SELECT>
-          </DIV>
-        </DIV>
-
-        <DIV class="ib">
-          <DIV class="ib" for="type">Type: </DIV>
-          <DIV class="ib">
-            <SELECT name="type"><?php populate_select_from_table("Types", $session["type"], "SELECT"); ?></SELECT>
-          </DIV>
-        </DIV>
-  
-        <DIV class="ib">
-          <DIV class="ib" for="pubno">Pub. No.:</DIV>
-          <DIV class="ib"><?php
-            echo "<INPUT type=text size=\"10\" name=\"pubno\" value=\"";
-            echo htmlspecialchars($session["pubno"],ENT_COMPAT)."\">";
-          ?></DIV>
-        </DIV>
-        <DIV class="ib">
-          <DIV class="ib" for="pubstatusid">Pub. Status </DIV>
-          <DIV class="ib">
-            <SELECT name="pubstatusid"><?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT"); ?></SELECT>
-          </DIV>
-        </DIV>
-
-      </DIV> <!-- Block 1 is Row 1 -->
+    <DIV class="formbox">
+        <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
+        <TABLE>
+            <TR>
+                <TD class="form1">Session #: <INPUT type="text" size=3 name="sessionid" readonly
+                    value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>"</TD>  
+                <TD class="form1">Track: <SELECT name="track">
+                    <?php populate_select_from_table("Tracks", $session["track"], "SELECT",FALSE); ?>
+                    </SELECT></TD>
+                <TD class="form1">Type: <SELECT name="type">
+                    <?php populate_select_from_table("Types", $session["type"], "SELECT",FALSE); ?>
+                    </SELECT></TD>
+                <TD class="form1">Division: <SELECT name="divisionid">
+                    <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT",FALSE); ?>
+                    </SELECT></TD>
+                </TR>
+            <TR>
+                <TD colspan=2 class="form1">Room Set: <SELECT name="roomset">
+                    <?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT",FALSE); ?>
+                    </SELECT></TD>
+                <TD class="form1">Pub. Status: <SELECT name="pubstatusid">
+                    <?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT",FALSE); ?>
+                    </SELECT></TD>
+                <TD class="form1">Pub. No.:<INPUT type="text" size=10 name="pubno" 
+                    value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT);?>"</TD>  
+                </TR>
+            </TABLE>
 
       <HR> <!-- the horizontal rule give the browser a clue -->
 
@@ -103,6 +88,32 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             <TEXTAREA class="textlabelarea" cols=70 name="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES); ?></TEXTAREA>
           </DIV>
         </DIV> <!-- Block 5 is Prospective Participant Info -->
+        
+        <DIV id="pubchar"> <!-- Publication Characteristics -->
+              <LABEL class="bb" style="text-align: center">Publication Characteristics</LABEL>
+              <DIV class="select_set">  <!-- lower box -->
+
+                <DIV class="ib">
+                  <LABEL class="bb" for="pubcharsrc">Possible Characteristics</LABEL>
+                  <SELECT class="select_l" id="pubcharsrc" name="pubcharsrc" size=6 multiple><?php populate_multisource_from_table("PubCharacteristics", $session["pubchardest"]); ?></SELECT>
+                </DIV>
+
+                <DIV class="ib" style="vertical-align: top">
+                  <LABEL class="bb">&nbsp;</LABEL>
+                  <BUTTON onclick="fadditems(document.sessform.pubcharsrc,document.sessform.pubchardest)" 
+                          name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
+                  <BUTTON onclick="fdropitems(document.sessform.pubcharsrc,document.sessform.pubchardest)" 
+                          name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
+                </DIV>
+
+                <DIV class="ib" >
+                  <LABEL class="bb" style="text-align: center" for="pubchardest[]">Selected Characteristics</LABEL>
+                  <SELECT class="select_r" id="pubchardest" name="pubchardest[]" size=6 multiple >
+                    <?php populate_multidest_from_table("PubCharacteristics", $session["pubchardest"]); ?>
+                  </SELECT>
+                </DIV>
+              </DIV> <!-- lower box -->
+            </DIV> <!-- Features -->        
       </DIV> 
 
       <hr> <!-- the horizontal rule give the browser a clue -->
@@ -135,11 +146,6 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
           <DIV class="bb">
             <LABEL class="ib" for="signup">Sign up Req.?</LABEL>
             <DIV class="ib"><input type="checkbox" value="signup" <?php if ($session["signup"]) {echo " checked ";} ?> name="signup"></DIV>
-          </DIV>
-
-          <DIV class="bb">
-            <LABEL class="ib" for="roomset">Room Set:</LABEL>
-            <DIV class="ib"> <SELECT name="roomset"> <?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT"); ?> </SELECT> </DIV>
           </DIV>
 
           <DIV class="bb">

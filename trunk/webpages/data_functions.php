@@ -81,12 +81,14 @@ function get_session_from_post() {
     $session["sessionid"]=$_POST["sessionid"];
     $session["track"]=$_POST["track"];
     $session["type"]=$_POST["type"];
+    $session["divisionid"]=$_POST["divisionid"];
     $session["pubstatusid"]=$_POST["pubstatusid"];
     $session["pubno"]=stripslashes($_POST["pubno"]);
     $session["title"]=stripslashes($_POST["title"]);
     $session["pocketprogtext"]=stripslashes($_POST["pocketprogtext"]);
     $session["progguiddesc"]=stripslashes($_POST["progguiddesc"]);
     $session["persppartinfo"]=stripslashes($_POST["persppartinfo"]);
+    $session["pubchardest"]=$_POST["pubchardest"];
     $session["featdest"]=$_POST["featdest"];
     $session["servdest"]=$_POST["servdest"];
     $session["duration"]=stripslashes($_POST["duration"]);
@@ -112,14 +114,16 @@ function set_session_defaults() {
     //$session["sessionid"] set elsewhere
     $session["track"]=0; // prompt with "SELECT"
     $session["type"]=0; // prompt with "SELECT"
+    $session["divisionid"]=0; // prompt with "SELECT"
     $session["pubstatusid"]=0; // prompt with "SELECT"
     $session["pubno"]="";
     $session["title"]="";
     $session["pocketprogtext"]="";
     $session["persppartinfo"]="";
-    $session["progguiddes"]="";
+    $session["progguiddesc"]="";
     $session["featdest"]="";
     $session["servdest"]="";
+    $session["pubchardest"]="";
     $session["duration"]="1:00 ";
     $session["atten"]=0;
     $session["kids"]=2; // "Kids Welcome"
@@ -186,6 +190,10 @@ function validate_session() {
         }
     if ($session["type"]==0) {
         $messages.="Please select a type.<BR>\n";
+        $flag=false;
+        }
+    if ($session["divisionid"]==0) {
+        $messages.="Please select a division.<BR>\n";
         $flag=false;
         }
     if ($session["pubstatusid"]==0) {

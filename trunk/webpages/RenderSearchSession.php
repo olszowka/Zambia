@@ -5,6 +5,7 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderSearchSession () {
+    $TRU=TRUE;
     // still inside function RenderSearchSession
 ?>
   <FORM method=POST action="ShowSessions.php">
@@ -13,13 +14,13 @@ function RenderSearchSession () {
         <td>Track: </td>
         <td>
           <SELECT name="track">
-            <?php $query = "SELECT trackid, trackname FROM Tracks ORDER BY display_order"; populate_select_from_query($query, '0', "ANY",false); ?>
+            <?php $query = "SELECT trackid, trackname FROM Tracks ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
           </SELECT>
         </td>
         <td>Status:</td>
         <td>
           <SELECT name="status">
-            <?php $query = "SELECT statusid, statusname FROM SessionStatuses ORDER BY display_order"; populate_select_from_query($query, '0', "ANY",false); ?>
+            <?php $query = "SELECT statusid, statusname FROM SessionStatuses ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
           </SELECT>
         </td>
       </tr>

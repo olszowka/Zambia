@@ -44,6 +44,9 @@ function mysubmit() {
     for ( i = 0 ; i < document.sessform.servdest.length ; i++ ) {
         document.sessform.servdest.options[i].selected=true;
         }
+    for ( i = 0 ; i < document.sessform.pubchardest.length ; i++ ) {
+        document.sessform.pubchardest.options[i].selected=true;
+        }
     }
 
 //  End -->
