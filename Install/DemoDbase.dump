@@ -1,6 +1,6 @@
 -- MySQL dump 10.9
 --
--- Host: localhost    Database: trgdev
+-- Host: localhost    Database: zambiademo
 -- ------------------------------------------------------
 -- Server version	4.1.15
 
@@ -37,6 +37,7 @@ CREATE TABLE `CongoDump` (
 
 /*!40000 ALTER TABLE `CongoDump` DISABLE KEYS */;
 LOCK TABLES `CongoDump` WRITE;
+INSERT INTO `CongoDump` VALUES ('1','First','Staff',NULL,'781-555-1212','someone@somewhere.com','123 First Street\\Arlington, MA 02474',''),('2','First','Participant',NULL,'617-555-1212','someoneelse@somewhereelse.com','123 Fifth Street\\Boston, MA 02100','');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `CongoDump` ENABLE KEYS */;
 
@@ -134,6 +135,7 @@ CREATE TABLE `ParticipantAvailability` (
 
 /*!40000 ALTER TABLE `ParticipantAvailability` DISABLE KEYS */;
 LOCK TABLES `ParticipantAvailability` WRITE;
+INSERT INTO `ParticipantAvailability` VALUES ('1',1,2,3,4,'my navel','not really',3),('2',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ParticipantAvailability` ENABLE KEYS */;
 
@@ -158,6 +160,7 @@ CREATE TABLE `ParticipantAvailabilityTimes` (
 
 /*!40000 ALTER TABLE `ParticipantAvailabilityTimes` DISABLE KEYS */;
 LOCK TABLES `ParticipantAvailabilityTimes` WRITE;
+INSERT INTO `ParticipantAvailabilityTimes` VALUES ('1',1,'26:00:00','47:00:00'),('1',6,'61:00:00','68:00:00');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ParticipantAvailabilityTimes` ENABLE KEYS */;
 
@@ -182,6 +185,7 @@ CREATE TABLE `ParticipantHasRole` (
 
 /*!40000 ALTER TABLE `ParticipantHasRole` DISABLE KEYS */;
 LOCK TABLES `ParticipantHasRole` WRITE;
+INSERT INTO `ParticipantHasRole` VALUES ('1',1),('1',5);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ParticipantHasRole` ENABLE KEYS */;
 
@@ -208,6 +212,7 @@ CREATE TABLE `ParticipantInterests` (
 
 /*!40000 ALTER TABLE `ParticipantInterests` DISABLE KEYS */;
 LOCK TABLES `ParticipantInterests` WRITE;
+INSERT INTO `ParticipantInterests` VALUES ('1','test ','of ','things','that','work');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ParticipantInterests` ENABLE KEYS */;
 
@@ -234,6 +239,7 @@ CREATE TABLE `ParticipantOnSession` (
 
 /*!40000 ALTER TABLE `ParticipantOnSession` DISABLE KEYS */;
 LOCK TABLES `ParticipantOnSession` WRITE;
+INSERT INTO `ParticipantOnSession` VALUES ('1',1,1,'2006-04-30 18:04:56');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ParticipantOnSession` ENABLE KEYS */;
 
@@ -263,6 +269,7 @@ CREATE TABLE `ParticipantSessionInterest` (
 
 /*!40000 ALTER TABLE `ParticipantSessionInterest` DISABLE KEYS */;
 LOCK TABLES `ParticipantSessionInterest` WRITE;
+INSERT INTO `ParticipantSessionInterest` VALUES ('1',1,3,1,'Fred is good');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ParticipantSessionInterest` ENABLE KEYS */;
 
@@ -287,6 +294,7 @@ CREATE TABLE `ParticipantSuggestions` (
 
 /*!40000 ALTER TABLE `ParticipantSuggestions` DISABLE KEYS */;
 LOCK TABLES `ParticipantSuggestions` WRITE;
+INSERT INTO `ParticipantSuggestions` VALUES ('1','this ','is ','a ');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ParticipantSuggestions` ENABLE KEYS */;
 
@@ -312,6 +320,7 @@ CREATE TABLE `Participants` (
 
 /*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
 LOCK TABLES `Participants` WRITE;
+INSERT INTO `Participants` VALUES ('1','fe01ce2a7fbac8fafaed7c982a04e229',NULL,1,NULL,NULL),('2','fe01ce2a7fbac8fafaed7c982a04e229','',1,'',NULL);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
 
@@ -618,6 +627,7 @@ CREATE TABLE `Schedule` (
 
 /*!40000 ALTER TABLE `Schedule` DISABLE KEYS */;
 LOCK TABLES `Schedule` WRITE;
+INSERT INTO `Schedule` VALUES (1,1,22,'20:00:00');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `Schedule` ENABLE KEYS */;
 
@@ -791,6 +801,7 @@ CREATE TABLE `Sessions` (
 
 /*!40000 ALTER TABLE `Sessions` DISABLE KEYS */;
 LOCK TABLES `Sessions` WRITE;
+INSERT INTO `Sessions` VALUES (1,9,1,1,2,'','Are Fans Interesting?','Who are these people at the Con and why do we care?\r\n',NULL,'Talk about people are cons and make fun of them.','01:00:00',20,2,0,1,'Don\'t come if you don\'t want to be made fun of.','',3,'',0,0,'2006-10-04 22:38:14'),(2,16,3,1,2,'','Book Signing - Jacqueline Carey','Guest of Honor Jacqueline Carey autographs her works including Kushiel\'s Avatar series and the Sundering duology. Books available for purchase at the signing session. No more than 3 autographs per person, please.',NULL,'','02:00:00',100,2,0,12,'Will JC attend a play party?','Will need credit card set up for book-seller table.',6,'Will need gopher for duration of signing',0,0,'2006-10-04 22:38:14'),(3,16,1,1,2,'','NaNoWriMo And You','The National Novel Writing Month project is in it\'s Umpteenth Year. Learn about NaNoWriMo from those who have completed it, and see if it\'s the key to completing your first (or next) novel in 30 days.',NULL,'This panel will be moderated by the new NaNoWriMo liason, and we\'re looking for panelists who have participated in NaNoWriMo before, whether they\'ve completed it or not.','01:00:00',30,2,0,3,'','',6,'',0,0,'2006-10-04 22:38:14'),(4,5,1,1,2,'','Coffee, Tea and Squee','Brewed Beverages and Fandom go hand in hand - Sample offerings from Dean\'s Beans and CooksShopHere and learn about the latest trends in coffee, tea and more. This panel will include sampling of beverages - Children with responsible adult present only.',NULL,'We\'ve got representatives from Dean\'s Beans and Cooks Shop Here (a NoHo tea shop) but are interested in other panelists who can provide similar non-alcoholic beverage samples. Please contact Jess Hartley at piconpanels@gmail.com if you think you can provide such.','01:00:00',0,3,0,12,'','',6,'',0,0,'2006-10-04 22:38:14'),(5,11,2,1,2,'','Midnight Filk','Open Mic Filk Session ',NULL,'We\'d like facilitators to keep things moving for this open mic, collaborative session.','01:00:00',0,2,0,9,'','',6,'',0,0,'2006-10-04 22:38:14');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
 
@@ -885,6 +896,7 @@ CREATE TABLE `UserHasPermissionRole` (
 
 /*!40000 ALTER TABLE `UserHasPermissionRole` DISABLE KEYS */;
 LOCK TABLES `UserHasPermissionRole` WRITE;
+INSERT INTO `UserHasPermissionRole` VALUES ('1',1),('1',2),('1',3),('2',3);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `UserHasPermissionRole` ENABLE KEYS */;
 

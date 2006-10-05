@@ -2,6 +2,7 @@
 -- it is used to build the script for building an empty dbase
 drop table save;
 drop table Roomtemp;
+truncate table UserHasPermissionRole;
 truncate table ParticipantAvailability;
 truncate table ParticipantAvailabilityTimes;
 truncate table ParticipantHasRole;
