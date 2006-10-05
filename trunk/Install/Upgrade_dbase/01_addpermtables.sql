@@ -114,14 +114,3 @@ CREATE TABLE `UserHasPermissionRole` (
   CONSTRAINT `UserHasPermissionRole_ibfk_2` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`),
   CONSTRAINT `UserHasPermissionRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
-
---
--- Dumping data for table `UserHasPermissionRole`
---
-
-
-/*!40000 ALTER TABLE `UserHasPermissionRole` DISABLE KEYS */;
-LOCK TABLES `UserHasPermissionRole` WRITE;
-INSERT INTO `UserHasPermissionRole` VALUES ('40099',1),('53159',1),('40099',2),('53159',2),('40099',3),('53159',3);
-UNLOCK TABLES;
-/*!40000 ALTER TABLE `UserHasPermissionRole` ENABLE KEYS */;
