@@ -69,7 +69,8 @@ version.  If you are helping develop you'll want the head of the tree.
 
 4 - Tweak the code to use your database
 
-You want to edit db_name.php  (how should be clear). 
+You want to edit copy db_name_sample.php to db_name.php  
+and edit it as needed.
 
 The reports are currently a hack.  You need to edit 2 files in the 
 reportqueries directory: gencsv.sh and genreports.sh
@@ -96,13 +97,18 @@ http://zydeco.netbusters.com/~trg/zambiademo
 or whatever your URL is... 
 
 Ah, an account for in zambia so you can log in.  That would be useful.  
-Currently we are set up to take a feed from Congo.  There is a script 
-to run on the Congo server to extract the needed information so it can
-be loaded.   This script is named export_program_participants_congo.sql
+Currently we are set up to take a feed from our registration system 
+(namely Congo).  There is a script to run on the Congo server to 
+extract the needed information so it can be loaded.   This script is 
+named export_program_participants_congo.sql
 It generates sql that can be in turn loaded into zambia. 
 
 However, that can be completely avoided by using add_zambia_user in the 
 scripts directory.   It comes with a sample way to add 2 accounts. 
+
+If you use a different system for registration, a way to export your 
+users out of it and add them into Zambia in an automated way should be 
+feasible. 
 
 7 - Backups are a good thing 
 
@@ -120,6 +126,6 @@ in the main webpages directory.
 
 9 - Reaching us
 
-We have a mailing list: zambia@arisia.org 
+We can be reached at zambia@arisia.org 
 
-   Have Fun!   -- trg  
+   Have Fun!   -- Peter & trg  

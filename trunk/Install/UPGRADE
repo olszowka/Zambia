@@ -1,0 +1,13 @@
+
+In the Upgrade_dbase directory you'll find a series of files starting 
+with a 2 digit number.  These are the database updates that need to be 
+completed when you pick up the latest cvs checkout.   Without them 
+certain functionality will not work.  
+
+These updates are already applied to EmptyDbase.dump and DemoDbase.dump
+01_addpermtables.sql
+02_pubstats.sql
+03_pubstat_constraints.sql
+04_divinfo.sql
+
+any further updates need to be applied
