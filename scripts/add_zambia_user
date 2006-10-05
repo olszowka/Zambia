@@ -9,6 +9,7 @@ INITIALUSERPASSWD='4cb9c8a8048fd02294477fcb1a41191a'  # aka 'changeme'
 # if you want to replace this, you'll need to md5 the string. 
 # note that there is a web tool for staff to reset passwords.
 
+
 IFS='|'
 cat foo | while read badgeid badgename firstname lastname phone email postaddress regtype  
 do 
@@ -16,6 +17,10 @@ do
   echo "update CongoDump set lastname=\"$lastname\", firstname=\"$firstname\", phone=\"$phone\", email=\"$email\", postaddress=\"$postaddress\", regtype=\"$regtype\" where badgeid=\"$badgeid\";"
   echo "insert into Participants set badgeid=\"$badgeid\", password=\"$INITIALUSERPASSWD\";"
   echo "insert into ParticipantAvailability set badgeid=\"$badgeid\";"
+
+# permroleid of 3 means participant, 1 means staff... 
+# you'll want to pick and choose
+  echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=3;"
 done
 
 exit 
