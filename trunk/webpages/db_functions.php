@@ -317,7 +317,7 @@ function retrieve_session_from_db($sessionid) {
 /* check login script, included in db_connect.php. */
 
 function isLoggedIn($firsttime) {
-    global $link,$message2,$permission_set;
+    global $link,$message2;
     if ($firsttime) {
         session_start();
         $_SESSION['sessionstarted']=1;
@@ -374,10 +374,11 @@ function isLoggedIn($firsttime) {
             }
 // valid password for username
         else {
-            $i=set_permission_set($_SESSION['badgeid']);
-            if ($i!=0) {
-                error_log("Zambia: permission_set error $i\n");
-                }
+//          $i=set_permission_set($_SESSION['badgeid']);
+//          should now be part of session variables
+//            if ($i!=0) {
+//                error_log("Zambia: permission_set error $i\n");
+//                }
             return(true); // they have correct info
             }           // in session variables.
     }
@@ -469,9 +470,10 @@ function retrieve_participantAvailability_from_db($badgeid) {
 // Stores them in global variable $permission_set
 //
 function set_permission_set($badgeid) {
-    global $permission_set,$link;
+    global $link;
     
-    $permission_set="";
+// First do simple permissions
+    $_SESSION['permission_set']="";
     $query= <<<EOD
     Select distinct permatomtag from PermissionAtoms as PA, Phases as PH,
     PermissionRoles as PR, UserHasPermissionRole as UHPR, Permissions P where
@@ -492,8 +494,33 @@ EOD;
         };
     for ($i=0; $i<$rows; $i++) {
         $onerow=mysql_fetch_array($result, MYSQL_BOTH);
-        $permission_set[]=$onerow[0];
+        $_SESSION['permission_set'][]=$onerow[0];
         };
+// Second, do <<specific>> permissions
+    $_SESSION['permission_set_specific']="";
+    $query= <<<EOD
+    Select distinct permatomtag, elementid from PermissionAtoms as PA, Phases as PH,
+    PermissionRoles as PR, UserHasPermissionRole as UHPR, Permissions P where
+    ((UHPR.badgeid='$badgeid' and UHPR.permroleid = P.permroleid)
+        or P.badgeid='$badgeid' ) and
+    (P.phaseid is null or (P.phaseid = PH.phaseid and PH.current = TRUE)) and
+    P.permatomid = PA.permatomid and
+    PA.elementid is not null
+EOD;
+    $result=mysql_query($query,$link);
+    if (!$result) {
+        $message_error=$query." \n ".mysql_error($link)." \n <BR>Database Error.<BR>No further execution possible.";
+        error_log("Zambia: ".$message_error);
+        return(-1);
+        };
+    $rows=mysql_num_rows($result);
+    if ($rows==0) {
+        return(0);
+        };
+    for ($i=0; $i<$rows; $i++) {
+        $_SESSION['permission_set_specific'][]=mysql_fetch_array($result, MYSQL_ASSOC);
+        };
+
     return(0);
     }
 
