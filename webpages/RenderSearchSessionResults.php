@@ -3,9 +3,9 @@
     global $link;
     global $result;
     require_once ('retrieve.php');
-    require_once ('RenderSessionReport.php');
+    require_once ('RenderPrecis.php');
     retrieve_select_from_db($track,$status);
-    RenderSessionReport();
+    RenderPrecis();
     exit();
     }
 ?>

@@ -20,7 +20,7 @@ On this page you will find the online tools for managing Panels, Events, Films, 
    <tr><td>A quick report broken down by status and then by track to give an idea of where we are. 
    <tr><td><A HREF="ViewAllSessions.php">View All Sessions</A>
    <tr><td>A tabular report on all sessions organized by track.  Key information on each session is visible from the top level and a link takes you down into the details for any session. 
-   <tr><td><A HREF="ViewPrecis06.php">Precis View</A>
+   <tr><td><A HREF="ViewPrecis.php">Precis View</A>
    <tr><td>Since the purpose of the Precis is to get participants to signup to be on various panels or to help with various events, this report contains sessions where that status is "brainstorm" or "vetted".  Note that sessions marked "invited guest only" are not included in the precis (regardless of status).
 </table>
 

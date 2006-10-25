@@ -356,9 +356,8 @@ function fix_slashes($arg) {
 // returns true if user has staff permissions
 
 function isStaff($badgeid) {
-    global $permission_set;
 //    error_log("Zambia: ".print_r($permission_set,TRUE));
-    return (in_array("Staff",$permission_set));
+    return (in_array("Staff",$_SESSION['permission_set']));
     }
 
 // Function may_I($permatomtag)
@@ -366,7 +365,6 @@ function isStaff($badgeid) {
 // returns TRUE if user has this permission in the current phase(s)
 //
 function may_I($permatomtag) {
-    global $permission_set;
-    return (in_array($permatomtag,$permission_set));
+    return (in_array($permatomtag,$_SESSION['permission_set']));
     }    
 ?>
