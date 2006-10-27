@@ -1,0 +1,3 @@
+TITLE='Session Notes'
+DESCRIPTION='Interesting info on a Session'
+QUERY="select S.sessionid, trackname, title, if (invitedguest,'yes','no') as 'Invited Guest?',  servicenotes as 'Hotel and Tech notes', notesforprog  as 'Notes for Programming' from Tracks T, Sessions S where T.trackid=S.trackid order by S.sessionid;"
