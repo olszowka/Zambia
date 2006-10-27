@@ -1,3 +1,3 @@
 TITLE='Participant Interests'
 DESCRIPTION='What is that participant interested in? '
-QUERY='select C.badgeid, badgename, yespanels, nopanels, yespeople, nopeople, otherroles from ParticipantInterests as PI, CongoDump as C where  C.badgeid=PI.badgeid;'
+QUERY='select C.badgeid, badgename, yespanels as "New Panel Ideas", nopanels as "Panel Not Interested", yespeople, nopeople, otherroles from ParticipantInterests as PI, CongoDump as C where  C.badgeid=PI.badgeid;'
