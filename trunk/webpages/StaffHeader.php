@@ -21,7 +21,7 @@
   <table class="header">
     <tr>
       <!--<td id="head"><a href="my_contact.php" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('my_contact','','images/my_contact-active.png',1)"><img src="images/my_contact.png" name="my_contact" border="0" height="14" width="122" alt="My Contact Info"></a></td> -->
-      <td class="head"><a href="ReportIndex.php">Available Reports</a></td>
+      <td class="head"><a href="StaffAvailableReports.php">Available Reports</a></td>
       <td class="head"><a href="StaffManageSessions.php">Manage Sessions</a></td>
       <td class="head"><a href="StaffManageParticipants.php">Manage Participants&amp; Schedule</a></td>
       <td class="head"><a href="welcome.php">Participant View</a></td>

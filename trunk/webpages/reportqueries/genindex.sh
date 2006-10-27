@@ -3,7 +3,7 @@
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
-DEST="../ReportIndex.php"
+DEST="../reportindex.php"
 
 
 cat genreportheader.php | sed "s/REPORT_TITLE/Available Reports/" | \
