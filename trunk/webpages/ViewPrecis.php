@@ -1,8 +1,8 @@
 <?php
     require_once ('db_functions.php');
-    require_once ('RenderPrecis06.php');
+    require_once ('RenderPrecis.php');
     require_once ('StaffRenderError.php');
-    $title=CON_NAME . " - Precis '06";
+    $title=CON_NAME . " - Precis";
     if (prepare_db()===false) {
         $message="Error connecting to database.";
         StaffRenderError($title,$message);
@@ -22,6 +22,6 @@ EOD;
         StaffRenderError($title,$message);
         exit ();
         }
-    RenderPrecis06();
+    RenderPrecis();
     exit();
 ?> 
