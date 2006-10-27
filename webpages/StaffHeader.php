@@ -1,6 +1,6 @@
 <?php
     function staff_header($title) {
-      require_once ("javascript.php");
+      require_once ("javascript_functions.php");
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/strict.dtd">
