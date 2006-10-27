@@ -3,6 +3,7 @@
     require ('data_functions.php');
     require_once('StaffCommonCode.php');
     require ('RenderEditCreateSession.php');
+    global $message2;
     $error=false;
     $message_error="";
     $id=$_GET["id"];
@@ -18,7 +19,7 @@
     prepare_db();
     $status=retrieve_session_from_db($id);
     if ($status==-3) {
-        $message_error.="Error retrieving record from database.";
+        $message_error.="Error retrieving record from database. ".$message2;
         $error=true;
         }
     if ($status==-2) {
