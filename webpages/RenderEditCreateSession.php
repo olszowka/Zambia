@@ -25,6 +25,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     }
     if (strlen($message2)>0) {
       echo "<P id=\"message2\">".$message2."</P>\n";
+      exit(); // If there is a message2, then there is a fatal error.
     }
     //error_log("Zambia: ".print_r($session,TRUE));
   ?>
