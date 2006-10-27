@@ -22,6 +22,7 @@
 </DL>
 <p> Reports that are of interest during Precis Creation </p>
 <dl>
+<DT> <a href="sessionnotesreport.php">Session Notes</a></DT><DD>Contains Session specific infomation including notes for programming, notes for hotel, if the session is invited guest.</DD>
 <dt>the next report link</dt>
 <dd>its description</dd>
 </dl>
