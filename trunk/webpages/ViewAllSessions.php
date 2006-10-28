@@ -1,7 +1,7 @@
 <?php
     require_once ('db_functions.php');
     require_once ('RenderViewSessions.php');
-    require_once ('StaffRenderError.php');
+    require_once ('render_functions.php');
     if ($session_started!=true) {
          session_start();
          }

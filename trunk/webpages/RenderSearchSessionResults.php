@@ -1,11 +1,21 @@
 <?php
     function RenderSearchSessionResults($track,$status) {
     global $link;
-    global $result;
+    global $result,$message2;
+    require_once ('StaffCommonCode.php');
+    require_once('StaffHeader.php');
+    require_once('StaffFooter.php');
     require_once ('retrieve.php');
-    require_once ('RenderPrecis.php');
-    retrieve_select_from_db($track,$status);
-    RenderPrecis();
-    exit();
+    require_once ('render_functions.php');
+    $title='Precis Search Results';
+    if (retrieve_select_from_db($track,$status)==0) {
+        staff_header($title);
+        $showlinks=true; // Show links to edit sessions
+        RenderPrecis($result,$showlinks);
+        staff_footer();
+        exit();
+        }
+    $message_error="Error retrieving from database. ".$message2;
+    StaffRenderError($title,$message_error); 
     }
 ?>
