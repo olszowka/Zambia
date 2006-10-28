@@ -29,7 +29,9 @@ function populate_select_from_table($table_name, $default_value, $option_0_text,
             echo "<OPTION value=0>".$option_0_text."</OPTION>\n";
             }            
     $result=mysql_query("Select * from ".$table_name." order by display_order",$link);
-    while (list($option_value,$option_name)= mysql_fetch_array($result, MYSQL_NUM)) {
+    while ($arow = mysql_fetch_array($result, MYSQL_NUM)) {
+        $option_value=$arow[0];
+        $option_name=$arow[1];
         echo "<OPTION value=".$option_value." ";
         if ($option_value==$default_value)
             echo "selected";
