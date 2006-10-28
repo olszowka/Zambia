@@ -27,14 +27,14 @@
             else {
                 $session_started=true;
                 if (isset($_SESSION['return_to_page'])) {
-						header("Location: ".$_SESSION['return_to_page']); /* Redirect browser */
-						}
-					else {
-						header("Location: ViewAllSessions.php"); /* Redirect browser */
-						}
-                    exit();
-                    }
+                        header("Location: ".$_SESSION['return_to_page']); /* Redirect browser */
+                        }
+                    else {
+                        header("Location: ViewAllSessions.php"); /* Redirect browser */
+                        }
+                exit();
                 }
+        }
     // action = create
     $id=insert_session();
     if (!$id) {
