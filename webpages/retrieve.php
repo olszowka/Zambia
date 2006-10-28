@@ -27,11 +27,6 @@ function retrieve_select_from_db($track,$status){
     $message2=mysql_error($link);
     return (-3);
     }
-
-  $rows=mysql_num_rows($result);
-  if ($rows!=1) {
-    $message2=$rows;
-    return (-2);
-    }
+    return(0);
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
     require_once ('db_functions.php');
     require_once ('RenderSessionCountReport.php');
-    require_once ('StaffRenderError.php');
+    require_once ('render_functions.php');
     $title="View Session Report";
     if (prepare_db()===false) {
         $message="Error connecting to database.";

@@ -10,6 +10,5 @@ echo "<P>Sorry.  This is a non-functional stubb.</P>";
 echo "<FORM name=\"emailform\" method=POST action=\"POSTStaffSendEmail2.php\">";
 echo "<DIV><LABEL for=\"selpart\">Select Participant</LABEL>\n";
 echo "<SELECT name=\"selpart\">\n";
-echo "Sorry.  This page is a non-functional stub.\n";
 echo "<P>&nbsp;";
 staff_footer(); ?>
