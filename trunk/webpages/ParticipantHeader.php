@@ -53,9 +53,17 @@ function MM_swapImage() { //v3.0
       <td class="head border0020" colspan=2><a href="welcome.php" onmouseout="MM_swapImgRestore()"
           onmouseover="MM_swapImage('welcome','','images/welcome-active.png',1)">
           <img src="images/welcome.png" name="welcome" alt="Welcome"></a></td>
-      <td class="head border0020" colspan=2><a href="my_sched_constr.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('my_availability','','images/my_availability-active.png',1)">
-          <img src="images/my_availability.png" name="my_availability" alt="My Availability"></a></td>
+<?php
+    echo "<td class=\"head border0020\" colspan=2>";
+    if (may_I('my_availability')) {
+            echo"<a href=\"my_sched_constr.php\" onmouseout=\"MM_swapImgRestore()\" ";
+            echo"onmouseover=\"MM_swapImage('my_availability','','images/my_availability-active.png',1)\">";
+            echo"<img src=\"images/my_availability.png\" name=\"my_availability\" alt=\"My Availability\"></a></td>";
+            }
+        else {
+            echo"<img src=\"images/my_availability-disabled.png\" name=\"my_availability\" alt=\"My Availability\"></td
+>";
+            } ?>
       <td class="head border0020" colspan=2><a href="my_sessions2.php" onmouseout="MM_swapImgRestore()"
           onmouseover="MM_swapImage('my_panel_interests','','images/my_panel_interests-active.png',1)">
           <img src="images/my_panel_interests.png" name="my_panel_interests" alt="My Panel Interests"></a></td>

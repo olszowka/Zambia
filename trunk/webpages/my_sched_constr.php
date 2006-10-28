@@ -7,10 +7,15 @@
     require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
+    if (!may_I('my_availability')) {
+        $message_error="You do not currently have permission to view this page.<BR>\n";
+        RenderError($title,$message_error);
+        exit();
+        }
     if (retrieve_participantAvailability_from_db($badgeid)!=0) {
-		RenderError($title,$message_error);
-		exit();
-		}
+        RenderError($title,$message_error);
+        exit();
+        }
     $i=0;
     while ($partAvail["availtimes"][$i]) {
     	$x=parse_mysql_time($partAvail["availtimes"][$i][2]);
