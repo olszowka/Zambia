@@ -6,6 +6,7 @@
     require_once ('render_functions.php');
     $title=CON_NAME . " - Precis";
     $showlinks=$_GET["showlinks"];
+    $_SESSION['return_to_page']="ViewPrecis.php?showlinks=$showlinks";
     if ($showlinks=="1") {
             $showlinks=true;
             }
