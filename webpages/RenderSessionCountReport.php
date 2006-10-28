@@ -8,7 +8,6 @@
       require_once('StaffCommonCode.php');
       staff_header($title);
 ?>
-    <H1>Session Count Report</H1>
     <TABLE>
         <COL><COL>
         <TR>
