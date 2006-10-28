@@ -5,6 +5,13 @@
     require_once('StaffFooter.php');
     require_once ('render_functions.php');
     $title=CON_NAME . " - Precis";
+    $showlinks=$_GET["showlinks"];
+    if ($showlinks=="1") {
+            $showlinks=true;
+            }
+       else {
+            $showlinks=false;
+            }
     if (prepare_db()===false) {
         $message="Error connecting to database.";
         StaffRenderError($title,$message);
@@ -33,7 +40,6 @@ EOD;
     staff_header($title);
     echo "<p> If you have any questions please contact ";
     echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> </p>\n";
-    $showlinks=true;
     RenderPrecis($result,$showlinks);
     staff_footer();
     exit();
