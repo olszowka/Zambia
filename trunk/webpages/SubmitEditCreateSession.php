@@ -3,6 +3,8 @@
     require_once ('data_functions.php');
     require_once ('RenderEditCreateSession.php');
     session_start();
+    $message_error="";
+    $message_warn="";
     $action=$_POST["action"]; // "create" or "edit"
     get_session_from_post(); // store in global $session array
     prepare_db();
@@ -10,7 +12,7 @@
         global $messages */
     if ($status==false) {
         $message_warn=$messages; // warning message
-        $message_error="The data you entered was incorrect.  Database not updated.";
+        $message_warn.="<BR>The data you entered was incorrect.  Database not updated.";
         RenderEditCreateSession($action,$session,$message_warn,$message_error);
         exit();
         }
@@ -18,7 +20,7 @@
         $status=update_session();
         if (!$status) {
                 $message_warn=$message2; // warning message
-                $message_error="Unknown error updating record.  Database not updated successfully.";
+                $message_warn.="<BR>Unknown error updating record.  Database not updated successfully.";
                 RenderEditCreateSession($action,$session,$message_warn,$message_error);
                 exit();
                 }
@@ -37,13 +39,13 @@
     $id=insert_session();
     if (!$id) {
         $message_warn=""; // warning message
-        $message_error=$query."\nUnknown error creating record.  Database not updated successfully.";
+        $message_warn.="<BR>".$query."\nUnknown error creating record.  Database not updated successfully.";
         RenderEditCreateSession($action,$session,$message_warn,$message_error);
         exit();
         }
     if ($id!=$session["sessionid"]) {
-            $message_error="Due to problem with database or concurrent editing, the session ";
-            $message_error.="created was actually id: ".$id.".";
+            $message_warn="Due to problem with database or concurrent editing, the session ";
+            $message_warn.="created was actually id: ".$id.".";
             }
         else {
             $message_error="";
