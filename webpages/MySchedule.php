@@ -6,6 +6,11 @@
     require_once('renderMySessions2.php');
     require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
+    if (!may_I('my_schedule')) {
+        $message_error="You do not currently have permission to view this page.<BR>\n";
+        RenderError($title,$message_error);
+        exit();
+        }
     // set $badgeid from session
     $query= <<<EOD
     SELECT POS.sessionid, trackname, title, roomname, pocketprogtext,
