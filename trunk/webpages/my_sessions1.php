@@ -41,7 +41,8 @@
   </tr>
 </table>
 
-<p>To select from all tracks, leave the select box set to ANY.  To search against all Titles, leave the Title Search box empty.  Please note that the title search does a simple text match based on a single string. Search results are ordered by track.  (Yes, leaving both selections blank results in seeing all items.)
+<P>On the following page, you can select panels for participation.  You must SAVE your changes before leaving the page or your selections will not be recorded.
+<P>Clicking Search without making any selections will display all panels.
 </FORM>
 </BODY>
 </HTML>
