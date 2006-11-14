@@ -2,6 +2,7 @@
     function RenderMySessions1($result) {
 ?>
   <FORM name="resform" method=POST action="SubmitMySessions1.php">
+<p> If you have selected any panels, please remember to SAVE before leaving the page. (Save button is at the bottom.) </p>
 <p> You will find below the results of your search.  We have included the session id, track, title, duration, a check box for you to indicate interest, followed by the description as it will appear in the pocket program and some additional information for you as a prospective panelist.  <hr>
     <TABLE>
         <COL><COL><COL><COL><COL><COL>
