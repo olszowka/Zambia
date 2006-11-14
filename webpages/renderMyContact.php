@@ -40,7 +40,7 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
           </span>
       </div>
     <div id="bestway">
-      <span class="radiohead">Best way to reach me&nbsp;</span>
+      <span class="spanlabcb">Preferred mode of contact&nbsp;</span>
       <div id="bwbuttons">
         <div id="bwemail">
           <input name="bestway" id="bwemailRB" value="Email" type="radio"
