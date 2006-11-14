@@ -3,7 +3,7 @@ function renderMySessions2 ($title, $error, $message, $badgeid) {
     global $link;
     $query= <<<EOD
     SELECT S.sessionid, T.trackname, S.title, S.duration, PSI.rank, PSI.willmoderate,
-    PSI.comments, S.pocketprogtext, S.persppartinfo from Sessions AS S, Tracks AS T, 
+    PSI.comments, S.progguiddesc, S.persppartinfo from Sessions AS S, Tracks AS T, 
     (Select sessionid, rank, willmoderate, comments from ParticipantSessionInterest
     where badgeid=
 EOD;
@@ -53,7 +53,7 @@ EOD;
 <?php
     $i=0;
     while (list($sessionid,$trackname,$title,$duration,$rank,$willmoderate,$comments,
-        $pocketprogtext, $persppartinfo)= mysql_fetch_array($result, MYSQL_NUM)) {
+        $progguiddesc, $persppartinfo)= mysql_fetch_array($result, MYSQL_NUM)) {
         echo "        <TR>\n";
         echo "            <TD rowspan=5 class=\"border0000 hilit\" id=\"sessidtcell\">".$sessionid."<INPUT type=\"hidden\" name=\"sessionid".$i."\" value=\"".$sessionid."\"></TD>\n";
         echo "            <TD class=\"border0000 hilit vatop\">".$trackname."</TD>\n";
@@ -69,7 +69,7 @@ EOD;
         echo "            <TD  class=\"border0000 usrinp\" colspan=4>My notes regarding this panel for Programming and other panel participants: <TEXTAREA height=5em cols=80 name=\"comments".$i."\" id=\"intCmnt\">".htmlspecialchars($comments,ENT_COMPAT)."</TEXTAREA></TD>\n";
         echo "        </TR>\n";
         echo "        <TR>\n";
-        echo "            <TD colspan=4 class=\"border0010\">".htmlspecialchars($pocketprogtext,ENT_NOQUOTES)."</TD>\n";
+        echo "            <TD colspan=4 class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD>\n";
         echo "        </TR>\n";
         echo "        <TR>\n";
         echo "            <TD colspan=4 class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</TD>\n";

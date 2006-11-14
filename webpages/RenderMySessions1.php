@@ -3,7 +3,7 @@
 ?>
   <FORM name="resform" method=POST action="SubmitMySessions1.php">
 <p> If you have selected any panels, please remember to SAVE before leaving the page. (Save button is at the bottom.) </p>
-<p> You will find below the results of your search.  We have included the session id, track, title, duration, a check box for you to indicate interest, followed by the description as it will appear in the pocket program and some additional information for you as a prospective panelist.  <hr>
+<p> You will find below the results of your search.  We have included the session id, track, title, duration, a check box for you to indicate interest, followed by the description as it will appear in the program guide and some additional information for you as a prospective panelist.  <hr>
     <TABLE>
         <COL><COL><COL><COL><COL><COL>
 <!--        <TR>
@@ -19,7 +19,7 @@
 -->
 <?php
     $i=0;
-    while (list($sessionid,$trackname,$title,$duration,$pocketprogtext, $persppartinfo, $rbadgeid)= mysql_fetch_array($result, MYSQL_NUM)) {
+    while (list($sessionid,$trackname,$title,$duration,$progguiddesc, $persppartinfo, $rbadgeid)= mysql_fetch_array($result, MYSQL_NUM)) {
         echo "        <TR>\n";
         echo "            <TD rowspan=4 class=\"border0000\" id=\"sessidtcell\"><b>".$sessionid."&nbsp;&nbsp;";
              echo "<INPUT type=hidden name=\"sessionid".$i."\" value=\"".$sessionid."\"></TD>\n";
@@ -35,7 +35,7 @@
              echo ((strlen($rbadgeid)>1)?"checked":"")."><INPUT type=hidden name=\"checked".$i."\" value=\"";
              echo ((strlen($rbadgeid)>1)?"1":"0")."\"></TD>\n";
         echo "        </TR>\n";
-        echo "        <TR><TD colspan=3 class=\"border0010\">".htmlspecialchars($pocketprogtext,ENT_NOQUOTES)."</TD></TR>\n";
+        echo "        <TR><TD colspan=3 class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
         echo "        <TR><TD colspan=4 class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</TD></TR>\n";
         echo "        <TR><TD colspan=6 class=\"border0020\">&nbsp;</TD></TR>\n";
         echo "        <TR><TD colspan=6 class=\"border0000\" id=\"smallspacer\">&nbsp;</TD></TR>\n";
