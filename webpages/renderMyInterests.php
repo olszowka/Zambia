@@ -13,9 +13,8 @@ function renderMyInterests ($title, $error, $message) {
     <FORM name="addform" method=POST action="SubmitMyInterests.php">
     <INPUT type=hidden name="newrow" value= <?php echo "\"".($newrow?1:0)."\""; ?> >
     <INPUT type=hidden name="rolerows" value= <?php echo "\"".$rolerows."\""; ?> >
-    <H3>My Interests</H3>
     <DIV>
-        <DIV><LABEL for="yespanels"><p>New Panel Ideas (Please check the "Seach Panels" tab first): </p></LABEL></DIV>
+        <DIV><LABEL for="yespanels"><p>New Panel Ideas: </p></LABEL></DIV>
         <DIV><TEXTAREA name="yespanels" rows=5 cols=72><?php echo htmlspecialchars($yespanels,ENT_COMPAT); ?></TEXTAREA>
             </DIV>
         </DIV>    
