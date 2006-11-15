@@ -9,24 +9,39 @@ function renderMySuggestions ($title, $error, $message) {
         elseif ($message!="") {
             echo "<P class=\"regmsg\">".$message."</P>";
             }
-?>
-    <FORM name="addform" method=POST action="SubmitMySuggestions.php">
-    <INPUT type=hidden name="newrow" value= <?php echo "\"".($newrow?1:0)."\""; ?> >
-    <DIV class="titledtextarea">
-        <LABEL for="paneltopics">Program Topic Ideas:</LABEL>
-        <TEXTAREA name="paneltopics" rows=6 cols=72><?php echo htmlspecialchars($paneltopics,ENT_COMPAT); ?></TEXTAREA>
-            
-        </DIV>    
-    <DIV class="titledtextarea">
-        <LABEL for="otherideas">Other Programming Ideas:</LABEL>
-        <TEXTAREA name="otherideas" rows=6 cols=72><?php echo htmlspecialchars($otherideas,ENT_COMPAT); ?></TEXTAREA>
-        </DIV>    
-    <DIV class="titledtextarea">
-        <LABEL for="suggestedguests">Suggested Guests (please provide addresses and other contact information if possible):</LABEL>
-        <TEXTAREA name="suggestedguests" rows=8 cols=72><?php echo htmlspecialchars($suggestedguests,ENT_COMPAT); ?></TEXTAREA>
-        </DIV>    
-    <DIV class="submit">
-        <DIV id="submit"><BUTTON class="SubmitButton" type="submit" name="submit">Save</BUTTON></DIV>
-        </DIV>
-    </FORM>
-<?php } ?>
+    if (!may_I('my_suggestions_write')) {
+        echo "<P>We're sorry, but we are unable to accept your suggestions at this time.\n";
+        }
+    echo "<FORM name=\"addform\" method=POST action=\"SubmitMySuggestions.php\">\n";
+    echo "<INPUT type=\"hidden\" name=\"newrow\" value= \"".($newrow?1:0)."\">\n";
+    echo "<DIV class=\"titledtextarea\">\n";
+    echo "    <LABEL for=\"paneltopics\">Program Topic Ideas:</LABEL>\n";
+    echo "    <TEXTAREA name=\"paneltopics\" rows=6 cols=72";
+    if (!may_I('my_suggestions_write')) {
+        echo " readonly";
+        }
+    echo ">".htmlspecialchars($paneltopics,ENT_COMPAT)."</TEXTAREA>\n";
+    echo "    </DIV>\n";
+    echo "<DIV class=\"titledtextarea\">\n";
+    echo "    <LABEL for=\"otherideas\">Other Programming Ideas:</LABEL>\n";
+    echo "    <TEXTAREA name=\"otherideas\" rows=6 cols=72";
+    if (!may_I('my_suggestions_write')) {
+        echo " readonly";
+        }
+    echo ">".htmlspecialchars($otherideas,ENT_COMPAT)."</TEXTAREA>\n";
+    echo "    </DIV>\n";    
+    echo "<DIV class=\"titledtextarea\">\n";
+    echo "    <LABEL for=\"suggestedguests\">Suggested Guests (please provide addresses and other contact information if possible):</LABEL>\n";
+    echo "    <TEXTAREA name=\"suggestedguests\" rows=8 cols=72";
+    if (!may_I('my_suggestions_write')) {
+        echo " readonly";
+        }
+    echo ">".htmlspecialchars($suggestedguests,ENT_COMPAT)."</TEXTAREA>\n";
+    echo "    </DIV>\n";
+    echo "<DIV class=\"submit\">\n";
+    if (may_I('my_suggestions_write')) {
+        echo "<DIV id=\"submit\"><BUTTON class=\"SubmitButton\" type=\"submit\" name=\"submit\">Save</BUTTON></DIV>\n";
+        }
+    echo "</DIV>\n";
+    echo "</FORM>\n";
+    } ?>
