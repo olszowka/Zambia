@@ -12,6 +12,12 @@
     $paneltopics=stripslashes($_POST["paneltopics"]);
     $otherideas=stripslashes($_POST["otherideas"]);
     $suggestedguests=stripslashes($_POST["suggestedguests"]);
+    if (!may_I('my_suggestions_write')) {
+        $message="Currently, you do not have write access to this page.\n";
+         $error=true;
+         renderMySuggestions($title, $error, $message);
+         exit(0);
+         }
     if (!validate_suggestions()) {
          $message.="<BR>Database not updated.\n";
          $error=true;

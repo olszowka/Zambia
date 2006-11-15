@@ -7,6 +7,11 @@
     require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
+    if (!may_I('my_gen_int_write')) {
+        $message="Currently, you do not have write access to this page.\n";
+        RenderError($title,$message);
+        exit();
+        }
     $rolerows=$_POST["rolerows"];
     $newrow=$_POST["newrow"];
     $yespanels=stripslashes($_POST["yespanels"]);
