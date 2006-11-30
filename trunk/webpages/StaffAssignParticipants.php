@@ -45,7 +45,7 @@ if ((!isset($_POST["selsess"])) or ($_POST["selsess"]==0)) {
     exit();
     }
 $query = <<<EOD
-SELECT title,pocketprogtext, persppartinfo, notesforpart, notesforprog FROM Sessions
+SELECT title, progguiddesc, persppartinfo, notesforpart, notesforprog FROM Sessions
 WHERE sessionid=$selsessionid
 EOD;
 if (!$result=mysql_query($query,$link)) {
@@ -55,9 +55,9 @@ if (!$result=mysql_query($query,$link)) {
     exit();
     }
 echo "<H2>$selsessionid - ".htmlspecialchars(mysql_result($result,0,"title"))."</H2>";    
-echo "<P>Pocket Program Text\n";
+echo "<P>Program Guide Text\n";
 echo "<P class=\"border1111 lrmargin lrpad\">";
-echo htmlspecialchars(mysql_result($result,0,"pocketprogtext"));
+echo htmlspecialchars(mysql_result($result,0,"progguiddesc"));
 echo "\n";
 echo "<P>Prospective Participant Info\n";
 echo "<P class=\"border1111 lrmargin lrpad\">";
