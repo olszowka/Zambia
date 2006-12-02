@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DATABASE="zambiademo"
-DBUSERNAME="zambiademo"
-DBPASSWORD="4fandom"
+DATABASE="arisia07_prod"
+DBUSERNAME="arisia07_prod"
+DBPASSWORD="4arisia"
 
 SRCDIR="."
 #DESTDIR="../reports"
@@ -17,6 +17,7 @@ for x in ${SRCDIR}/*query ; do
 
   cat genreportheader.php | sed "s/REPORT_TITLE/$TITLE/" | \
                             sed "s/REPORT_DATE/`date`/" | \
+                            sed "s/REPORT_LINK/${name}report.php/" | \
                             sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" > $DESTDIR/${name}report.php
 
   echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
