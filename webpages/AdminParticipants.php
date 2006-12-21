@@ -44,14 +44,14 @@ if ((!isset($_POST["partid"])) or ($_POST["partid"]==0)) {
     staff_footer();
     exit();
     }
-$query ="SELECT interested FROM Participants WHERE badgeid=$selpartid";
+$query ="SELECT interested, pubsname FROM Participants WHERE badgeid=$selpartid";
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";
     staff_footer();
     exit();
     }
-list($interested)= mysql_fetch_array($result, MYSQL_NUM);
+list($interested, $pubsname)= mysql_fetch_array($result, MYSQL_NUM);
 ?>
 <FORM name="partadminform" method=POST action="AdminParticipants.php">
 <P>Participant is interested and available to participate in 
@@ -70,6 +70,12 @@ list($interested)= mysql_fetch_array($result, MYSQL_NUM);
     <div class="password">
       <span class="password2">Confirm New Password&nbsp;</span>
       <span class="value"><INPUT type="password" size="10" name="cpassword"></span>
+      </div>
+    <div class="password">
+      <span class="password2">Name for Publications&nbsp;</span>
+      <span class="value"><INPUT type="text" size="30" name="pubsname" value="<?php
+    echo htmlspecialchars($pubsname)."\">\n";?>
+        </span>
       </div>
 <BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
 </FORM>
