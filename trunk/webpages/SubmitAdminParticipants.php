@@ -6,9 +6,10 @@ function SubmitAdminParticipants () {
     $password = $_POST["password"];
     $cpassword = $_POST["cpassword"];
     $partid = $_POST["partid"];
+    $pubsname = stripslashes($_POST["pubsname"]);
     if ($password=="" and $cpassword=="") {
             $update_password=false;
-	    }
+            }
         elseif ($password==$cpassword) {
             $update_password=true;
             }
@@ -17,17 +18,19 @@ function SubmitAdminParticipants () {
             echo "<P class=\"errmsg\">".$message."\n";
             return;
             }
-	$query = "UPDATE Participants SET ";
-	if ($update_password==true) {
-		$query=$query."password=\"".md5($password)."\", ";
-		}
-	$query.="interested=".$interested." ";
-	$query.="WHERE badgeid=\"$partid\"";                               //"
+    $query = "UPDATE Participants SET ";
+    if ($update_password==true) {
+        $query=$query."password=\"".md5($password)."\", ";
+        }
+    $query.="interested=".$interested.", ";
+    $query.="pubsname=\"".mysql_real_escape_string($pubsname)."\" ";
+    $query.="WHERE badgeid=\"$partid\"";                               //"
     if (!mysql_query($query,$link)) {
         $message=$query."<BR>Error updating database.  Database not updated.";
         echo "<P class=\"errmsg\">".$message."\n";
-	return;
-	}
+        return;
+        }
+    $message="Database updated successfully.<BR>";
     if ($wasinterested==1 and $interested==2) {
         $query="DELETE FROM ParticipantOnSession where badgeid = \"$partid\"";
         if (!mysql_query($query,$link)) {
@@ -35,9 +38,8 @@ function SubmitAdminParticipants () {
             echo "<P class=\"errmsg\">".$message."\n";
             return;
             }
+        $message.="Participant removed from ".mysql_affected_rows($link)." session(s).";
         }
-    $message="Database updated successfully.<BR>";
-    $message.="Participant removed from ".mysql_affected_rows($link)." session(s).";
     echo "<P class=\"regmsg\">".$message."\n";
     }
 ?>
