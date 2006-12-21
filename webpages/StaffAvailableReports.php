@@ -15,7 +15,9 @@ First cut at categorizing reports is underway.   The reports are starting to be 
 <table>
   <COL><COL>
    <tr><td><A HREF="StaffReportsForProgram.php">Reports for Program</A>
+   <tr><td><A HREF="StaffReportsForPublications.php">Reports for Publications</A>
    <tr><td><A HREF="StaffReportsForHotel.php">Reports for Hotel</A>
+   <tr><td><A HREF="StaffReportsForTech.php">Reports for Tech</A>
    <tr><td><A HREF="reportindex.php">All Reports</A>
 </table>
 <?php staff_footer(); ?>
