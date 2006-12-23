@@ -190,6 +190,11 @@ P.regmsg {
     text-align: center;
     }
 
+TEXTAREA.readonly {
+     background-color: lightgray;
+     color: #808080;
+     }
+
 #congo_section {
      display: table;
      padding: .5em;
