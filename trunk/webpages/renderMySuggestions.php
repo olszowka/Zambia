@@ -18,7 +18,7 @@ function renderMySuggestions ($title, $error, $message) {
     echo "    <LABEL for=\"paneltopics\">Program Topic Ideas:</LABEL>\n";
     echo "    <TEXTAREA name=\"paneltopics\" rows=6 cols=72";
     if (!may_I('my_suggestions_write')) {
-        echo " readonly";
+        echo " readonly style=\"color: grey\"";
         }
     echo ">".htmlspecialchars($paneltopics,ENT_COMPAT)."</TEXTAREA>\n";
     echo "    </DIV>\n";
@@ -26,7 +26,7 @@ function renderMySuggestions ($title, $error, $message) {
     echo "    <LABEL for=\"otherideas\">Other Programming Ideas:</LABEL>\n";
     echo "    <TEXTAREA name=\"otherideas\" rows=6 cols=72";
     if (!may_I('my_suggestions_write')) {
-        echo " readonly";
+        echo " readonly style=\"color: grey\"";
         }
     echo ">".htmlspecialchars($otherideas,ENT_COMPAT)."</TEXTAREA>\n";
     echo "    </DIV>\n";    
@@ -34,7 +34,7 @@ function renderMySuggestions ($title, $error, $message) {
     echo "    <LABEL for=\"suggestedguests\">Suggested Guests (please provide addresses and other contact information if possible):</LABEL>\n";
     echo "    <TEXTAREA name=\"suggestedguests\" rows=8 cols=72";
     if (!may_I('my_suggestions_write')) {
-        echo " readonly";
+        echo " readonly style=\"color: grey\"";
         }
     echo ">".htmlspecialchars($suggestedguests,ENT_COMPAT)."</TEXTAREA>\n";
     echo "    </DIV>\n";

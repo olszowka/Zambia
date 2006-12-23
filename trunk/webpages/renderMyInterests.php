@@ -19,7 +19,7 @@ function renderMyInterests ($title, $error, $message) {
     echo "    <DIV><LABEL for=\"yespanels\"><p>New Panel Ideas (Please check the \"Seach Panels\" tab first): </p></LABEL></DIV>\n";
     echo "    <DIV><TEXTAREA name=\"yespanels\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
-        echo " readonly";
+        echo " readonly style=\"color: grey\"";
         }
     echo ">".htmlspecialchars($yespanels,ENT_COMPAT)."</TEXTAREA>\n";
     echo "        </DIV>\n";
@@ -28,7 +28,7 @@ function renderMyInterests ($title, $error, $message) {
     echo "    <DIV><LABEL for=\"nopanels\"><p>Panel types I am not interested in participating in:</p></LABEL></DIV>\n";
     echo "    <DIV><TEXTAREA name=\"nopanels\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
-        echo " readonly";
+        echo " readonly style=\"color: grey\"";
         }
     echo ">".htmlspecialchars($nopanels,ENT_COMPAT)."</TEXTAREA>\n";
     echo "        </DIV>\n";
@@ -37,7 +37,7 @@ function renderMyInterests ($title, $error, $message) {
     echo "    <DIV><LABEL for=\"yespeople\"><p>People with whom I'd like to be on a panel:</p></LABEL></DIV>\n";
     echo "    <DIV><TEXTAREA name=\"yespeople\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
-        echo " readonly";
+        echo " readonly style=\"color: grey\"";
         }
     echo ">".htmlspecialchars($yespeople,ENT_COMPAT)."</TEXTAREA>\n";
     echo "        </DIV>\n";
@@ -46,7 +46,7 @@ function renderMyInterests ($title, $error, $message) {
     echo "    <DIV><LABEL for=\"nopeople\"><p>People with whom I'd rather not be on a panel:</p></LABEL></DIV>\n";
     echo "    <DIV><TEXTAREA name=\"nopeople\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
-        echo " readonly";
+        echo " readonly style=\"color: grey\"";
         }
     echo ">".htmlspecialchars($nopeople,ENT_COMPAT)."</TEXTAREA>\n";
     echo "        </DIV>\n";
@@ -114,7 +114,7 @@ function renderMyInterests ($title, $error, $message) {
     echo "<P>Description for \"Other\":</P>\n";
     echo "<TEXTAREA name=\"otherroles\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
-        echo " readonly";
+        echo " readonly style=\"color: grey\"";
         }
     echo ">".htmlspecialchars($otherroles,ENT_COMPAT)."</TEXTAREA>\n";
     echo "<DIV class=\"submit\">\n";
