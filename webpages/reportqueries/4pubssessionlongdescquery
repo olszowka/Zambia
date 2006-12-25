@@ -1,0 +1,3 @@
+TITLE='Pubs - Session Characteristics plus long description'
+DESCRIPTION='For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, program guide description'
+QUERY="select S.sessionid, trackname, typename, divisionname, pubstatusname, pubsno, pubcharname, kidscatname, title, progguiddesc from Tracks T, Types Ty, Divisions D, PubStatuses PS, KidsCategories K, Sessions S left join SessionHasPubChar SHPC on S.sessionid=SHPC.sessionid left join PubCharacteristics PC on SHPC.pubcharid=PC.pubcharid, Schedule SCH where S.trackid=T.trackid and S.typeid=Ty.typeid and S.divisionid=D.divisionid and S.pubstatusid=PS.pubstatusid and S.kidscatid=K.kidscatid and S.sessionid=SCH.sessionid;"
