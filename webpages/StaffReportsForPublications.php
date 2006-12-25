@@ -6,6 +6,17 @@
   require_once('StaffCommonCode.php');
   staff_header($title);
 ?>
+<p> Reports for Skip</p>
+<dl>
+<DT> <a href="4pubsbioreport.php">Pubs - Participant Bio and pubname</a></DT><DD>Show the badgeid, pubsname and bio for each participant that are on at least one scheduled session.</DD>
+<DT> <a href="4pubsbioreport.csv">Pubs - Participant Bio and pubname - csv</a></DT><DD>Show the badgeid, pubsname and bio for each participant that are on at least one scheduled session. in csv format</DD>
+<DT> <a href="4pubswhoisonwhichreport.php">Pubs - Who is on Which Session</a></DT><DD>Show the badgeid, pubsname and session info for each participant that are on at least one scheduled session.</DD>
+<DT> <a href="4pubswhoisonwhichreport.csv">Pubs - Who is on Which Session - csv</a></DT><DD>Show the badgeid, pubsname and session info for each participant that are on at least one scheduled session. in csv format</DD>
+<DT> <a href="4pubssessionlongdescreport.php">Pubs - Session Characteristics plus long description</a></DT><DD>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, program guide description</DD>
+<DT> <a href="4pubssessionlongdescreport.csv">Pubs - Session Characteristics plus long description - csv</a></DT><DD>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, program guide description in csv format</DD>
+<DT> <a href="4pubssessionshortdescreport.php">Pubs - Session Scheduling plus short description</a></DT><DD>For Scheduled items ONLY. Show sessionid, day, starttime, duration, roomname, code, shortdescription</DD>
+<DT> <a href="4pubssessionshortdescreport.csv">Pubs - Session Scheduling plus short description - csv</a></DT><DD>For Scheduled items ONLY. Show sessionid, day, starttime, duration, roomname, code, shortdescription in csv format</DD>
+</dl>
 <p> Web Publication </p>
 <dl>
 <DT> <a href="2prelimschedbriefreport.php">Preliminary Schedule</a></DT><DD>Below is the preliminary panel schedule. Please keep in mine that is it still changing as we recieve feedback from our panelists. If you have any comments please contact us a <a href="mailto: program@arisia.org">program@arisia.org</a></DD>
