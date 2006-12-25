@@ -25,5 +25,10 @@
 <DT> <a href="sessionnotesreport.php">Session Notes</a></DT><DD>Contains Session specific infomation including notes for programming, notes for hotel, if the session is invited guest.</DD>
 <dt>the next report link</dt>
 <dd>its description</dd>
+<p> Reports that are of interest during schedule creation </p>
+<DT> <a href="sessioninterestcountreport.php">Session Interest Report (counts)</a></DT><DD>For each session, show number of participants who have put it on their interest list. (Excludes invited guest sessions.)</DD>
+<DT> <a href="sessioninterestpartcountreport.php">Session Interest Counts by Participant</a></DT><DD>Just how many panels did each participant sign up for anyway?</DD>
+<DT> <a href="sessioninterestpartreport.php">Session Interest by participant (all info)</a></DT><DD>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report. (All data included including for invited sessions.) order by participant</DD>
+<DT> <a href="sessioninterestreport.php">Session Interest Report (all info)</a></DT><DD>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report. (All data included including for invited sessions.)</DD>
 </dl>
 <?php staff_footer(); ?>
