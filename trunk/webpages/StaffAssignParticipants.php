@@ -55,7 +55,6 @@ if (!$result=mysql_query($query,$link)) {
     exit();
     }
 echo "<H2>$selsessionid - ".htmlspecialchars(mysql_result($result,0,"title"))."</H2>";    
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
 echo "<P>Program Guide Text\n";
 echo "<P class=\"border1111 lrmargin lrpad\">";
 echo htmlspecialchars(mysql_result($result,0,"progguiddesc"));
@@ -106,6 +105,7 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     }
 $numrows=$i; 
 echo "<FORM name=\"selsesform\" method=POST action=\"StaffAssignParticipants.php\">\n";
+echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
 echo "<INPUT type=\"radio\" name=\"moderator\" value=\"0\"".(($modid==0)?"checked":"").">";
 echo "<LABEL for=\"moderator\">No Moderator Selected</LABEL>";
 echo "<TABLE>\n";
