@@ -4,7 +4,7 @@ require_once('db_functions.php');
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
-require_once('SubmitAssignParticipants.php');
+require_once('StaffAssignParticipants_FNC.php');
 
 staff_header($title);
 
@@ -26,7 +26,7 @@ if (!$Sresult=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
-echo "<FORM name=\"selsesform\" method=POST action=\"AssignParticipants.php\">\n";
+echo "<FORM name=\"selsesform\" method=POST action=\"StaffAssignParticipants.php\">\n";
 echo "<DIV><LABEL for=\"selsess\">Select Session</LABEL>\n";
 echo "<SELECT name=\"selsess\">\n";
 echo "     <OPTION value=0 ".(($selsessionid==0)?"selected":"").">Select Session</OPTION>\n";
@@ -37,9 +37,9 @@ while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM
     }
 echo "</SELECT></DIV>\n";
 echo "<P>&nbsp;\n";
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Submit</BUTTON></DIV>\n";
+echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Select Session</BUTTON></DIV>\n";
 echo "</FORM>\n";
-echo "<HR>\n";
+echo "<HR>&nbsp;<BR>\n";
 if ((!isset($_POST["selsess"])) or ($_POST["selsess"]==0)) {
     staff_footer();
     exit();
@@ -55,6 +55,7 @@ if (!$result=mysql_query($query,$link)) {
     exit();
     }
 echo "<H2>$selsessionid - ".htmlspecialchars(mysql_result($result,0,"title"))."</H2>";    
+echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
 echo "<P>Program Guide Text\n";
 echo "<P class=\"border1111 lrmargin lrpad\">";
 echo htmlspecialchars(mysql_result($result,0,"progguiddesc"));
@@ -86,6 +87,15 @@ if (!$result=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
+$query="SELECT C.lastname, C.firstname, C.badgename, C.badgeid FROM CongoDump AS C,";
+$query.=" Participants AS P WHERE C.badgeid=P.badgeid AND P.interested=1 AND";
+$query.=" C.badgeid not in (Select badgeid from ParticipantSessionInterest where";
+$query.=" sessionid=$selsessionid) ORDER BY C.lastname";
+if (!$Presult=mysql_query($query,$link)) {
+    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
+    RenderError($title,$message);
+    exit();
+    }
 $i=0;
 $modid=0;
 while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -95,7 +105,7 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     $i++;
     }
 $numrows=$i; 
-echo "<FORM name=\"selsesform\" method=POST action=\"AssignParticipants.php\">\n";
+echo "<FORM name=\"selsesform\" method=POST action=\"StaffAssignParticipants.php\">\n";
 echo "<INPUT type=\"radio\" name=\"moderator\" value=\"0\"".(($modid==0)?"checked":"").">";
 echo "<LABEL for=\"moderator\">No Moderator Selected</LABEL>";
 echo "<TABLE>\n";
@@ -127,8 +137,19 @@ echo "<INPUT type=\"hidden\" name=\"selsess\" value=\"$selsessionid\">\n";
 echo "<INPUT type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasmodid\" value=\"$modid\">\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
+echo "<HR>\n";
+echo "<DIV><LABEL for=\"asgnpart\">Assign participant not indicated as interested or invited.</LABEL><BR>\n";
+echo "<SELECT name=\"asgnpart\">\n";
+echo "     <OPTION value=0 selected>Assign Participant</OPTION>\n";
+while (list($lastname,$firstname,$badgename,$badgeid)= mysql_fetch_array($Presult, MYSQL_NUM)) {
+    echo "     <OPTION value=\"".$badgeid."\">".htmlspecialchars($lastname).", ";
+    echo htmlspecialchars($firstname)." (".htmlspecialchars($badgename).") - ";
+    echo htmlspecialchars($badgeid)."</OPTION>\n";
+    }
+echo "</SELECT></DIV>\n";
+echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BU
+TTON></DIV>\n";
+
 echo "</FORM>\n";
 staff_footer();
 ?>
-
-

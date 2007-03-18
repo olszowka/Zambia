@@ -2,6 +2,7 @@
 function SubmitAssignParticipants() {
     global $link;
 //    print_r($_POST);
+    $asgnpart=$_POST["asgnpart"];
     $numrows=$_POST["numrows"];
     $moderator=$_POST["moderator"];
     $wasmodid=$_POST["wasmodid"];
@@ -35,5 +36,28 @@ function SubmitAssignParticipants() {
             exit();
             }
         }
+    if ($asgnpart!=0) {
+        $query="INSERT INTO ParticipantSessionInterest SET badgeid=\"".$asgnpart."\", ";
+        $query.="sessionid=".$selsessionid;
+        $result=mysql_query($query,$link);
+        if (!$result) {
+            $message=$query."<BR>Error updating database.<BR>";
+            echo "<P class=\"errmsg\">".$message."\n";
+            staff_footer();
+            exit();
+            }
+        $query="INSERT INTO ParticipantOnSession set badgeid=\"$asgnpart\", ";
+        $query.="sessionid=$selsessionid, moderator=0;";
+        $result=mysql_query($query,$link);
+        error_log("Zambia query: $query\n");
+        if (!$result) {
+            $message=$query."<BR>Error updating database.<BR>";
+            echo "<P class=\"errmsg\">".$message."\n";
+            staff_footer();
+            exit();
+            }
+        }
     }
+
+
 ?>    
