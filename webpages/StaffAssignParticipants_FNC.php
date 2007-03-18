@@ -48,8 +48,8 @@ function SubmitAssignParticipants() {
             }
         $query="INSERT INTO ParticipantOnSession set badgeid=\"$asgnpart\", ";
         $query.="sessionid=$selsessionid, moderator=0;";
-//        $result=mysql_query($query,$link);
-        error_log("Zambia query: $query\n");
+        $result=mysql_query($query,$link);
+//        error_log("Zambia query: $query\n");
         if (!$result) {
             $message=$query."<BR>Error updating database.<BR>";
             echo "<P class=\"errmsg\">".$message."\n";
