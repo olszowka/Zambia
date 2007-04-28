@@ -2,12 +2,12 @@
     require ('db_functions.php');
     require ('data_functions.php');
     require ('ParticipantHeader.php');
+    require ('RenderErrorPart.php');
+    $title="Submit Password";
     // echo "Trying to connect to database.\n";
     if (prepare_db()===false) {
-        require ('RenderErrorPart.php');
-        $title="Submit Password";
         $message_error="Unable to connect to database.<BR>No further execution possible.";
-        ErrorResponse($title,$message_error);
+        RenderError($title,$message_error);
         exit();
         };
     // echo "Connected to database.\n";
@@ -41,8 +41,23 @@
     $_SESSION['badgeid']=$badgeid;
     $_SESSION['password']=$dbpassword;
     set_permission_set($badgeid);
+    //error_log("Zambia: Completed set_permission_set.\n");
+    $message2="";
     if (retrieve_participant_from_db($badgeid)==0) {
-        require ('renderWelcome.php');
+        if(may_I('Staff')) {
+            require ('StaffPage.php');
+            }
+        elseif (may_I('Participant')) {
+            require ('renderWelcome.php');
+            }
+        elseif (may_I('Brainstorm')) {
+            require ('renderBrainstormWelcome.php');
+            }
+        else {
+            $message_error="There is a problem with your userid's permission configuration:  It doesn't have ";
+            $message_error.="permission to access any welcome page.  Please contact Zambia staff.";
+            RenderError($title,$message_error);
+            }
         exit();
         }
     $message_error=$message2."<BR>Error retrieving data from DB.  No further execution possible.";

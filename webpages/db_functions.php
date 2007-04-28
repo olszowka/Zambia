@@ -393,14 +393,14 @@ function isLoggedIn($firsttime) {
 function retrieve_participant_from_db($badgeid) {
     global $participant;
     global $link,$message2;
-    $result=mysql_query("SELECT pubsname, password, bestway, interested, bio FROM Participants where badgeid=".$badgeid,$link);
+    $result=mysql_query("SELECT pubsname, password, bestway, interested, bio FROM Participants where badgeid='$badgeid'",$link);
     if (!$result) {
         $message2=mysql_error($link);
         return (-3);
         }
     $rows=mysql_num_rows($result);
     if ($rows!=1) {
-        $message2=$rows;
+        $message2="Participant rows retrieved: $rows ";
         return (-2);
         }
     $participant=mysql_fetch_array($result, MYSQL_ASSOC);
@@ -524,6 +524,17 @@ EOD;
         };
 
     return(0);
+    }
+
+//function db_error($title,$query,$staff)
+//Populates a bunch of messages to help diagnose a db error
+//If $staff is true, then StaffRenderError is used, otherwise...
+function db_error($title,$query,$staff) {
+    global $link;
+    $message="Database error.<BR>\n";
+    $message.=mysql_error($link)."<BR>\n";
+    $message.=$query."<BR>\n";
+    StaffRenderError($title,$message);
     }
 
 ?>
