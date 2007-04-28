@@ -1,5 +1,4 @@
 <?php
-	require_once('ParticipantHeader.php');
     function RenderError ($title, $message) {
 	participant_header($title);
 ?>
