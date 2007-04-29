@@ -13,8 +13,6 @@
         echo "       <TD rowspan=3 class=\"border0000\" id=\"sessidtcell\"><b>";
 if ($showlinks){
         echo "<A HREF=\"EditSession.php?id=".$sessionid."\">".$sessionid."</A>";
-} else {
-        echo $sessionid;
 }
         echo "&nbsp;&nbsp;</TD>\n";
         echo "       <TD class=\"border0000\"><b>".$trackname."</TD>\n";
@@ -29,14 +27,4 @@ if ($showlinks){
     echo "</TABLE>\n";
   }
 
-
-// StaffRenderError does X
-// Requires Y
-// Causes Z (may be nothing)
-    function StaffRenderError ($title, $message) {
-      require_once('StaffHeader.php');
-      staff_header($title);
-      echo "<P id=\"errmsg\">".$message."</P>\n";
-      staff_footer();
-      }
 ?>

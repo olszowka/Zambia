@@ -14,9 +14,20 @@
         exit();
         };
     $badgeid=$_SESSION['badgeid'];
-    if (!(isStaff($badgeid))) {
+    if (!(may_I("Staff"))) {
         $message="You are not authorized to access this page.";
         require ('login.php');
         exit();
         };
+
+// StaffRenderError does X
+// Requires Y
+// Causes Z (may be nothing)
+    function StaffRenderError ($title, $message) {
+      require_once('StaffHeader.php');
+      staff_header($title);
+      echo "<P id=\"errmsg\">".$message."</P>\n";
+      staff_footer();
+      }
+
 ?>

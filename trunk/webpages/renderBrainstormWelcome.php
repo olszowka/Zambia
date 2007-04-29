@@ -2,9 +2,10 @@
    global $participant,$message,$message_error,$message2,$congoinfo;
    $title="Welcome";
    require_once('data_functions.php');
-   require_once('ParticipantHeader.php');
-   require_once('ParticipantFooter.php');
-   participant_header($title);
+   require_once('BrainstormCommonCode.php');
+   require_once('BrainstormHeader.php');
+   require_once('BrainstormFooter.php');
+   brainstorm_header($title);
 ?>
 
 <?php if ($message_error!="") { ?>
@@ -39,4 +40,4 @@ everything will make it.   We do save good ideas for future conventions.
 <p> Thank you and we look forward to reading your suggestions.
 
 <p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </P>
-<?php participant_footer(); ?>
+<?php brainstorm_footer(); ?>

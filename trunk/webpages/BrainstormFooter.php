@@ -1,5 +1,5 @@
 <?php
-    function staff_footer() {
+    function brainstorm_footer() {
 ?>
 
 <hr>

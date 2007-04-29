@@ -1,9 +1,8 @@
 <?php
     require_once ('db_functions.php');
-    require_once('StaffCommonCode.php');
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
-    require_once ('render_functions.php');
+    require_once('BrainstormCommonCode.php');
+    require_once('BrainstormHeader.php');
+    require_once('BrainstormFooter.php');
     $title="Unreviewed Suggestions";
     $showlinks=$_GET["showlinks"];
     $_SESSION['return_to_page']="ViewPrecis.php?showlinks=$showlinks";
@@ -15,7 +14,7 @@
             }
     if (prepare_db()===false) {
         $message="Error connecting to database.";
-        StaffRenderError($title,$message);
+        BrainstormRenderError($title,$message);
         exit ();
         }
    $query = <<<EOD
@@ -35,13 +34,13 @@ SELECT sessionid, trackname, title,
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.";
-        StaffRenderError($title,$message);
+        BrainstormRenderError($title,$message);
         exit ();
         }
-    staff_header($title);
+    brainstorm_header($title);
     echo "<p> If an idea is on this page, there is a good chance we have not yet seen it.   So, please wear your Peril Sensitive Sunglasses while reading. We do.";
     RenderPrecis($result,$showlinks);
-    staff_footer();
+    brainstorm_footer();
     exit();
 ?> 
 
