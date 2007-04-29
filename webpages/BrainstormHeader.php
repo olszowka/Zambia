@@ -10,18 +10,16 @@
   <title>Zambia -- <?php echo $title ?></title>
   <link rel="stylesheet" href="BrainstormSection.css" type="text/css">
   <meta name="keywords" content="Questionnaire">
-  <meta name="description" content="Form to request information from potential program participants">
   <?php javascript_for_edit_session(); javascript_pretty_buttons(); ?>
 
 </head>
-<body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0"><!--onload="MM_preloadImages('images/my_contact-active.png','images/my_constraint-active.png','images/search_sessions-active.png','images/my_session_interests-active.png')"-->
+<body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
 <H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>
 <hr>
 
 <?php if (isset($_SESSION["badgeid"])) { ?>
   <table class="header">
     <tr>
-      <!--<td id="head"><a href="my_contact.php" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('my_contact','','images/my_contact-active.png',1)"><img src="images/my_contact.png" name="my_contact" border="0" height="14" width="122" alt="My Contact Info"></a></td> -->
       <td class="head"><a href="BrainstormWelcome.php">Welcome</a></td>
       <td class="head"><a href="BrainstormReportUnseen.php">New Suggestions</a></td>
       <td class="head"><a href="BrainstormReportVetted.php">In Progress Suggestions</a></td>
