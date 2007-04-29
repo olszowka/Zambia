@@ -1,6 +1,6 @@
 <?php
    global $participant,$message,$message_error,$message2,$congoinfo;
-   $title="Welcome";
+   $title="Brainstorm View";
    require_once('data_functions.php');
    require_once('BrainstormCommonCode.php');
    require_once('BrainstormHeader.php');
@@ -35,6 +35,7 @@ everything will make it.   We do save good ideas for future conventions.
 <li> See the <a href="BrainstormReportVetted.php">list of suggestions we are currently sorting through</a> (we have see these).
 <li> See the <a href="BrainstormReportAll.php">list of all suggestions</a> (we've seen some and not see others).
 <li> Email <?php echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> "?> to volunteer to help process these ideas. 
+<li> <a href="welcome.php">Return To Participant View</a>
 </ul>
 
 <p> Thank you and we look forward to reading your suggestions.

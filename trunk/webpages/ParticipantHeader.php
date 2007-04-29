@@ -99,9 +99,16 @@ function MM_swapImage() { //v3.0
             echo "<img src=\"images/search_panels-disabled.png\" name=\"search_panels\"";
             echo " alt=\"Search Panels (Inactive)\"></a></td>";
             } ?>
-      <td class="head border0020" colspan=2><a href="my_suggestions.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('my_suggestions','','images/my_suggestions-active.png',1)">
-          <img src="images/my_suggestions.png" name="my_suggestions" alt="My Suggestions"></a></td>
+<?php
+    echo "<td class=\"head border0020\" colspan=2>";
+    if (may_I('my_suggestions_write')) {
+            echo "<a href=\"BrainstormWelcome.php\" onmouseout=\"MM_swapImgRestore()\" ";
+            echo "onmouseover=\"MM_swapImage('suggest_session','','images/suggest_session-active.png',1)\">";
+            echo "<img src=\"images/suggest_session.png\" name=\"suggest_session\" alt=\"Suggest Session\"></a></td>";
+            }
+        else {
+            echo"<img src=\"images/suggest_session-disabled.png\" name=\"suggest_session\" alt=\"Suggest Session (Inactive)\"></a></td>";
+            } ?>
 <?php
     echo "<td class=\"head border0020\" colspan=2>";
     if (may_I('my_schedule')) {

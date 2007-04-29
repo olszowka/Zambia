@@ -28,6 +28,7 @@
       <td class="head"><a href="StaffManageSessions.php">Manage Sessions</a></td>
       <td class="head"><a href="StaffManageParticipants.php">Manage Participants &amp; Schedule</a></td>
       <td class="head"><a href="welcome.php">Participant View</a></td>
+      <td class="head"><a href="BrainstormWelcome.php">Brainstorm View</a></td>
     </tr>
   </table>
 <table class="header">

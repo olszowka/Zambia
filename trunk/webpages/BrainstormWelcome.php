@@ -1,6 +1,6 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
-    $title="Welcome";
+    $title="Brainstorm View";
     require ('db_functions.php'); 
     require ('BrainstormCommonCode.php'); 
     if (retrieve_participant_from_db($badgeid)==0) {

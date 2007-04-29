@@ -39,6 +39,7 @@ EOD;
         }
     brainstorm_header($title);
     echo "<p> If an idea is on this page, there is a good chance we have not yet seen it.   So, please wear your Peril Sensitive Sunglasses while reading. We do.";
+    echo "This list is sorted by Track and then Title." ;
     RenderPrecis($result,$showlinks);
     brainstorm_footer();
     exit();
