@@ -1,8 +1,7 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="Brainstorm View";
-    require ('db_functions.php'); 
-    require ('BrainstormCommonCode.php'); 
+    require_once ('BrainstormCommonCode.php'); 
     if (retrieve_participant_from_db($badgeid)==0) {
         require ('renderBrainstormWelcome.php');
         exit();

@@ -1,12 +1,9 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="Update Session Interests";
-    require ('db_functions.php'); //define database functions
-    require ('data_functions.php'); //define non database functions
-    require_once('ParticipantFooter.php');
+    require ('PartCommonCode.php');
+    require_once('ParticipantHeader.php');
     require_once('renderMySessions2.php');
-    require ('PartCommonCode.php'); // initialize db; check login;
-    //                                  set $badgeid from session
     $max_si_row=get_session_interests_from_post();
     $status=validate_session_interests($max_si_row); // $messages populated with error message.
     if ($status==false) {

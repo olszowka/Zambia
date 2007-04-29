@@ -1,7 +1,5 @@
 <?php
     $title="Update My Contact Info";
-    require ('db_functions.php');
-    require ('data_functions.php');
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     $interested = $_POST['interested'];

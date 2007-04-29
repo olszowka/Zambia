@@ -1,11 +1,9 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="Show Search Session Results";
-    require_once('ParticipantFooter.php');
-    require ('db_functions.php'); //define database functions
     require ('PartCommonCode.php'); // initialize db; check login;
-    //                                  set $badgeid from session
-
+    require_once('ParticipantHeader.php');
+    require_once('ParticipantFooter.php');
     $trackid=$_POST["track"];
     $titlesearch=stripslashes($_POST["title"]);
     $query = <<<EOD

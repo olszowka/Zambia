@@ -1,11 +1,9 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="Select Interested Sessions";
-    require ('db_functions.php'); //define database functions
-    require_once('ParticipantFooter.php');
+    require ('PartCommonCode.php'); //define database functions
+    require_once('ParticipantHeader.php');
     require_once('renderMySessions2.php');
-    require ('PartCommonCode.php'); // initialize db; check login;
-    //                                  set $badgeid from session
     $maxrow=$_POST["maxrow"];
     $delcount=0;
     $dellist="";

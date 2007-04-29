@@ -1,6 +1,4 @@
 <?php
-    require ('db_functions.php');
-    require ('data_functions.php');
     require_once('StaffCommonCode.php');
     require ('RenderEditCreateSession.php');
     global $message2;

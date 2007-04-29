@@ -1,10 +1,8 @@
 <?php
     $title="My Schedule";
-    require ('db_functions.php'); //define database functions
-    require ('data_functions.php');
-    require_once('ParticipantFooter.php');
-    require_once('renderMySessions2.php');
     require ('PartCommonCode.php'); // initialize db; check login;
+    require_once('ParticipantHeader.php');
+    require_once('renderMySessions2.php');
     if (!may_I('my_schedule')) {
         $message_error="You do not currently have permission to view this page.<BR>\n";
         RenderError($title,$message_error);
