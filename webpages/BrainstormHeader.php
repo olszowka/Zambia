@@ -22,10 +22,13 @@
 <?php if (isset($_SESSION['badgeid'])) { ?>
   <table class="header">
     <tr>
-      <td class="head"><a href="BrainstormWelcome.php">Welcome</a></td>
-      <td class="head"><a href="BrainstormReportUnseen.php">New Suggestions</a></td>
-      <td class="head"><a href="BrainstormReportVetted.php">In Progress Suggestions</a></td>
-      <td class="head"><a href="BrainstormReportAll.php">All Suggestions</a></td>
+      <td class="head"><a href="BrainstormWelcome.php">Welcome</a> </td>
+      <td class="head"><a href="BrainstormReportUnseen.php">New Suggestions Report</a></td>
+      <td class="head"><a href="BrainstormReportVetted.php">In Progress Suggestions Report</a></td>
+      <td class="head"><a href="BrainstormReportAll.php">All Suggestions Report</a></td>
+      <?php if(may_I('Participant')) { ?>
+         <td class="head"><a href="welcome.php">Return To Participant View</a></td>
+      <?php } ?>
     </tr>
   </table>
 <table class="header">

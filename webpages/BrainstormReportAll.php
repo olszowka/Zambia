@@ -42,6 +42,7 @@ EOD;
     echo "<p> We are in the process of sorting through these suggestions: combining duplicates; splitting big ones into pieces; checking general feasability; finding needed people to present; looking for an appropiate time and location; rewritting for clarity and proper english; and hoping to find a time machine so we can do it all. ";
     echo "<p> If you want to help, email us at ";
     echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> </p>\n";
+    echo "This list is sorted by Track and then Title." ;
     RenderPrecis($result,$showlinks);
     brainstorm_footer();
     exit();
