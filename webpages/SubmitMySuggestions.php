@@ -5,7 +5,6 @@
     require ('validation_functions.php'); //define functions to validate data entry
     require_once('ParticipantFooter.php');
     require_once('renderMySuggestions.php');
-    require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     $newrow=($_POST["newrow"]==1);

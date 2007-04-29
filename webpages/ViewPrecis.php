@@ -15,7 +15,7 @@
             }
     if (prepare_db()===false) {
         $message="Error connecting to database.";
-        StaffRenderError($title,$message);
+        RenderError($title,$message);
         exit ();
         }
    $query = <<<EOD
@@ -35,7 +35,7 @@ SELECT sessionid, trackname, title,
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.";
-        StaffRenderError($title,$message);
+        RenderError($title,$message);
         exit ();
         }
     staff_header($title);

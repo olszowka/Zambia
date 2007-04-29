@@ -4,7 +4,6 @@
     global $partAvail,$availability;
     require ('db_functions.php');
     require ('data_functions.php');
-    require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     get_participant_availability_from_post();

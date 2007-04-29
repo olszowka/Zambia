@@ -11,9 +11,9 @@
     while (list($sessionid,$trackname,$title,$duration,$estatten,$progguiddesc, $persppartinfo)= mysql_fetch_array($result, MYSQL_NUM)) {
         echo "    <TR>\n";
         echo "       <TD rowspan=3 class=\"border0000\" id=\"sessidtcell\"><b>";
-if ($showlinks){
-        echo "<A HREF=\"EditSession.php?id=".$sessionid."\">".$sessionid."</A>";
-}
+        if ($showlinks){
+            echo "<A HREF=\"EditSession.php?id=".$sessionid."\">".$sessionid."</A>";
+        }
         echo "&nbsp;&nbsp;</TD>\n";
         echo "       <TD class=\"border0000\"><b>".$trackname."</TD>\n";
         echo "          <TD class=\"border0000\"><b>".htmlspecialchars($title,ENT_NOQUOTES)."</TD>\n";
@@ -27,4 +27,33 @@ if ($showlinks){
     echo "</TABLE>\n";
   }
 
+  function RenderError($title,$message) {
+      if ($_SESSION['role'] == "Brainstorm") {
+	  BrainstormRenderError($title,$message);
+      }
+      elseif ($_SESSION['role'] == "Participant") {
+	  PartRenderError($title,$message);
+      }
+      elseif ($_SESSION['role'] == "Staff") {
+	  StaffRenderError($title,$message);
+      }
+      else {
+	  // do something generic here (though this might be way too generic)
+	  // better to output some error message reliably than none at all
+?>
+          <html>
+          <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+          <title>Zambia - <?php echo $title; ?></title>
+          </head>
+          <body>
+          <H1>Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>
+          <hr>
+          <p> An error occurred: </p>
+          <?php echo $message; ?>
+          </body>
+          </html>
+<?php
+      }
+  }
 ?>

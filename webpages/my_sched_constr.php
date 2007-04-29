@@ -4,7 +4,6 @@
     $title="My Availability";
     require ('data_functions.php'); //define database functions
     require ('db_functions.php'); //define database functions
-    require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     if (!may_I('my_availability')) {

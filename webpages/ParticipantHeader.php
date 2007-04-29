@@ -1,4 +1,5 @@
 <?php
+    $_SESSION['role'] = "Participant";
 
     function participant_header($title) {
     global $badgeid;
@@ -46,7 +47,7 @@ function MM_swapImage() { //v3.0
 <H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1> 
 <hr>
 
-<?php if (isset($_SESSION["badgeid"])) { ?>
+<?php if (isset($_SESSION['badgeid'])) { ?>
 <!--    <td background="images/grey-bg.gif"> -->
   <table class="header">
     <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
@@ -126,7 +127,7 @@ function MM_swapImage() { //v3.0
         <tr>
           <td width="425">&nbsp;
             </td>
-          <td class="Welcome">Welcome <?php echo $_SESSION["badgename"]; ?>
+          <td class="Welcome">Welcome <?php echo $_SESSION['badgename']; ?>
             </td>
           <td><A class="logout" HREF="logout.php">&nbsp;Logout&nbsp;</A>
             </td>

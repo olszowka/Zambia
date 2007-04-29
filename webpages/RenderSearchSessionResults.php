@@ -16,6 +16,6 @@
         exit();
         }
     $message_error="Error retrieving from database. ".$message2;
-    StaffRenderError($title,$message_error); 
+    RenderError($title,$message_error); 
     }
 ?>

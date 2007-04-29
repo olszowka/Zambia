@@ -5,7 +5,7 @@
     $title="View Session Report";
     if (prepare_db()===false) {
         $message="Error connecting to database.";
-        StaffRenderError($title,$message);
+        RenderError($title,$message);
         exit ();
         }
    $query = <<<EOD
@@ -124,7 +124,7 @@ UNION select " ", " ", " " from dual
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.";
-        StaffRenderError($title,$message);
+        RenderError($title,$message);
         exit ();
         }
     RenderSessionCountReport();

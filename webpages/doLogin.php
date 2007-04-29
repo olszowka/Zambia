@@ -1,8 +1,7 @@
-<?php
+	<?php
     require ('db_functions.php');
     require ('data_functions.php');
     require ('ParticipantHeader.php');
-    require ('RenderErrorPart.php');
     $title="Submit Password";
     // echo "Trying to connect to database.\n";
     if (prepare_db()===false) {

@@ -528,13 +528,13 @@ EOD;
 
 //function db_error($title,$query,$staff)
 //Populates a bunch of messages to help diagnose a db error
-//If $staff is true, then StaffRenderError is used, otherwise...
+
 function db_error($title,$query,$staff) {
     global $link;
     $message="Database error.<BR>\n";
     $message.=mysql_error($link)."<BR>\n";
     $message.=$query."<BR>\n";
-    StaffRenderError($title,$message);
+    RenderError($title,$message);
     }
 
 ?>
