@@ -36,21 +36,21 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <TD class="form1">Session #: <INPUT type="text" size=3 name="sessionid" readonly
                     value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>"</TD>  
                 <TD class="form1">Track: <SELECT name="track">
-                    <?php populate_select_from_table("Tracks", $session["track"], "SELECT",FALSE); ?>
+                    <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
                     </SELECT></TD>
                 <TD class="form1">Type: <SELECT name="type">
-                    <?php populate_select_from_table("Types", $session["type"], "SELECT",FALSE); ?>
+                    <?php populate_select_from_table("Types", $session["type"], "SELECT", FALSE); ?>
                     </SELECT></TD>
                 <TD class="form1">Division: <SELECT name="divisionid">
-                    <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT",FALSE); ?>
+                    <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
                     </SELECT></TD>
                 </TR>
             <TR>
                 <TD colspan=2 class="form1">Room Set: <SELECT name="roomset">
-                    <?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT",FALSE); ?>
+                    <?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
                     </SELECT></TD>
                 <TD class="form1">Pub. Status: <SELECT name="pubstatusid">
-                    <?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT",FALSE); ?>
+                    <?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT", FALSE); ?>
                     </SELECT></TD>
                 <TD class="form1">Pub. No.:<INPUT type="text" size=10 name="pubno" 
                     value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT);?>"</TD>  
@@ -135,7 +135,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
           <DIV class="bb">
             <LABEL class="ib" for="kids">Kid Category:</LABEL>
             <DIV class="ib">
-              <SELECT name="kids"><?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT"); ?></SELECT>
+              <SELECT name="kids"><?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT", FALSE); ?></SELECT>
             </DIV>
           </DIV>
 
@@ -152,7 +152,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
           <DIV class="bb">
             <LABEL class="ib" for="status">Status:</LABEL>
             <DIV class="ib">
-              <SELECT name="status"><?php populate_select_from_table("SessionStatuses", $session["status"], ""); ?></SELECT>
+              <SELECT name="status"><?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?></SELECT>
             </DIV>
           </DIV>
         </DIV> <!-- b5_a -->
