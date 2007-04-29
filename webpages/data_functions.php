@@ -115,7 +115,7 @@ function set_session_defaults() {
     $session["track"]=0; // prompt with "SELECT"
     $session["type"]=0; // prompt with "SELECT"
     $session["divisionid"]=0; // prompt with "SELECT"
-    $session["pubstatusid"]=0; // prompt with "SELECT"
+    $session["pubstatusid"]=0; // prompt with "SELECT" 
     $session["pubno"]="";
     $session["title"]="";
     $session["pocketprogtext"]="";
@@ -168,6 +168,10 @@ function validate_session() {
     global $session, $messages;
     $flag=true;
     $messages="";
+    if ($session["status"]==4) {  //don't validate "dropped"
+        return ($flag);
+        }
+    $brainstorm=($session["status"]==1 || $session["status"]==6); //less stringent criteria if brainstorm (editme)
     if (!strlen($session["title"])) {
         $messages.="A title is required.<BR>\n";
         $flag=false;
@@ -188,26 +192,43 @@ function validate_session() {
         $messages.="Please select a track.<BR>\n";
         $flag=false;
         }
-    if ($session["type"]==0) {
-        $messages.="Please select a type.<BR>\n";
-        $flag=false;
-        }
-    if ($session["divisionid"]==0) {
-        $messages.="Please select a division.<BR>\n";
-        $flag=false;
-        }
-    if ($session["pubstatusid"]==0) {
-        $messages.="Please select a publication status.<BR>\n";
-        $flag=false;
-        }
-    if ($session["kids"]==0) {
-        $messages.="Please select a kid category.<BR>\n";
-        $flag=false;
-        }
-    if ($session["roomset"]==0) {
-        $messages.="Please select a room set.<BR>\n";
-        $flag=false;
-        }
+    if ($brainstorm) { // less stringent criteria if brainstorm or editme
+                       // set some defaults if brainstorm or editme
+            if ($session["pubstatusid"]==0) { // default to "public" if not set
+                $session["pubstatusid"]=2;
+                }
+            if ($session["divisionid"]==0) { // default to "unspecified" if not set
+                $session["divisionid"]=6;
+                }
+            if ($session["type"]==0) { // default to "I do not know" if not set
+                $session["type"]=17;
+                }
+            if ($session["roomset"]==0) { // default to "Unspecified" if not set
+                $session["roomset"]=4;
+                }
+            }
+        else { // more stringent criteria if not brainstorm or editme
+            if ($session["pubstatusid"]==0) {
+                $messages.="Please select a publication status.<BR>\n";
+                $flag=false;
+                }
+            if ($session["type"]==0 || $session["type"]==17) { // don't allow "I do not know"
+                $messages.="Please select a type.<BR>\n";
+                $flag=false;
+                }
+            if ($session["divisionid"]==0 || $session["divisionid"]==6) { // don't allow "Unspecified"
+                $messages.="Please select a division.<BR>\n";
+                $flag=false;
+                }
+            if ($session["kids"]==0) {
+                $messages.="Please select a kid category.<BR>\n";
+                $flag=false;
+                }
+            if ($session["roomset"]==0 || $session["roomset"]==4) { // don't allow "Unspecified"
+                $messages.="Please select a room set.<BR>\n";
+                $flag=false;
+                }
+            }
     return ($flag);
     }
 

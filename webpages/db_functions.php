@@ -187,11 +187,13 @@ function get_next_session_id() {
 // the tables Sessions, SessionHasFeature, and SessionHasService.
 //
 function insert_session() {
-    global $session, $link, $query;
+    global $session, $link, $query, $message_error;
     $query="INSERT into Sessions set ";
     $query.="trackid=".$session["track"].',';
-    $query.="typeid=".$session["type"].',';
-    $query.="divisionid=".$session["divisionid"].',';
+    $temp=$session["type"];
+    $query.="typeid=".(($temp==0)?"null":$temp).", ";
+    $temp=$session["divisionid"];
+    $query.="divisionid=".(($temp==0)?"null":$temp).", ";
     $query.="pubstatusid=".$session["pubstatusid"].',';
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link).'",';
     $query.="title=\"".mysql_real_escape_string($session["title"],$link).'",';
@@ -203,7 +205,8 @@ function insert_session() {
     $query.="kidscatid=".$session["kids"].',';
     $query.="signupreq=";
     if ($session["signup"]) {$query.="1,";} else {$query.="0,";}
-    $query.="roomsetid=".$session["roomset"].',';
+    $temp=$session["roomset"];
+    $query.="roomsetid=".(($temp==0)?"null":$temp).", ";
     $query.="notesforpart=\"".mysql_real_escape_string($session["notesforpart"],$link).'",';
     $query.="servicenotes=\"".mysql_real_escape_string($session["servnotes"],$link).'",';
     $query.="statusid=".$session["status"].',';
@@ -211,8 +214,10 @@ function insert_session() {
     $query.="warnings=0,invitedguest="; // warnings db field not editable by form
     if ($session["invguest"]) {$query.="1";} else {$query.="0";}
     $result = mysql_query($query,$link);
-    if (!$result)
+    if (!$result) {
+        $message_error=mysql_error($link);
         return $result;
+        }
     $id = mysql_insert_id($link);
     if ($session["featdest"]!="") {
         for ($i=0 ; $session["featdest"][$i]!="" ; $i++ ) {
