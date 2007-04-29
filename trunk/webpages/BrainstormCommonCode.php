@@ -4,7 +4,7 @@
     session_start();
     if (prepare_db()===false) {
         $message_error="Unable to connect to database.<BR>No further execution possible.";
-        RenderError($message_error);
+        RenderError($title,$message_error);
         exit();
         };
     $firsttime=true;
@@ -19,6 +19,7 @@
         require ('login.php');
         exit();
         };
+
     function BrainstormRenderError ($title, $message) {
       require_once('BrainstormHeader.php');
       brainstorm_header($title);

@@ -1,10 +1,9 @@
 <?php
     require_once('data_functions.php');
-    require_once('RenderErrorPart.php');
     session_start();
     if (prepare_db()===false) {
         $message_error="Unable to connect to database.<BR>No further execution possible.";
-        RenderError($message_error);
+        RenderError($title, $message_error);
         exit();
         };
     $firsttime=true;
@@ -23,6 +22,7 @@
 // StaffRenderError does X
 // Requires Y
 // Causes Z (may be nothing)
+
     function StaffRenderError ($title, $message) {
       require_once('StaffHeader.php');
       staff_header($title);

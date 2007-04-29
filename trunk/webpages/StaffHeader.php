@@ -1,4 +1,6 @@
 <?php
+    $_SESSION['role'] = "Staff";
+
     function staff_header($title) {
       require_once ("javascript_functions.php");
 ?>
@@ -18,7 +20,7 @@
 <H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>
 <hr>
 
-<?php if (isset($_SESSION["badgeid"])) { ?>
+<?php if (isset($_SESSION['badgeid'])) { ?>
   <table class="header">
     <tr>
       <!--<td id="head"><a href="my_contact.php" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('my_contact','','images/my_contact-active.png',1)"><img src="images/my_contact.png" name="my_contact" border="0" height="14" width="122" alt="My Contact Info"></a></td> -->
@@ -39,7 +41,7 @@
         <tr>
           <td width="425">&nbsp;
             </td>
-          <td class="Welcome">Welcome <?php echo $_SESSION["badgename"]; ?>
+          <td class="Welcome">Welcome <?php echo $_SESSION['badgename']; ?>
             </td>
           <td><A class="logout" HREF="logout.php">&nbsp;Logout&nbsp;</A>
             </td>

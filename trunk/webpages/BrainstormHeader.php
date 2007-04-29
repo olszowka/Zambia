@@ -1,4 +1,6 @@
 <?php
+    $_SESSION['role'] = "Brainstorm";
+
     function brainstorm_header($title) {
       require_once ("javascript_functions.php");
 ?>
@@ -17,7 +19,7 @@
 <H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>
 <hr>
 
-<?php if (isset($_SESSION["badgeid"])) { ?>
+<?php if (isset($_SESSION['badgeid'])) { ?>
   <table class="header">
     <tr>
       <td class="head"><a href="BrainstormWelcome.php">Welcome</a></td>
@@ -37,7 +39,7 @@
         <tr>
           <td width="425">&nbsp;
             </td>
-          <td class="Welcome">Welcome <?php echo $_SESSION["badgename"]; ?>
+          <td class="Welcome">Welcome <?php echo $_SESSION['badgename']; ?>
             </td>
           <td><A class="logout" HREF="logout.php">&nbsp;Logout&nbsp;</A>
             </td>

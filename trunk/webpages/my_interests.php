@@ -4,7 +4,6 @@
     require ('db_functions.php'); //define database functions
     require_once('ParticipantFooter.php');
     require_once('renderMyInterests.php');
-    require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
     // set $badgeid from session
     $result=mysql_query("SELECT * FROM ParticipantInterests where badgeid=\"".$badgeid."\"",$link);

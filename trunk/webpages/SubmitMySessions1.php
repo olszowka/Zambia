@@ -4,7 +4,6 @@
     require ('db_functions.php'); //define database functions
     require_once('ParticipantFooter.php');
     require_once('renderMySessions2.php');
-    require ('RenderErrorPart.php');  // define function to report error
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     $maxrow=$_POST["maxrow"];
