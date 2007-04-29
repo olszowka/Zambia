@@ -1,5 +1,6 @@
 <?php
     require_once('data_functions.php');
+    require_once('validation_functions.php');
     session_start();
     if (prepare_db()===false) {
         $message_error="Unable to connect to database.<BR>No further execution possible.";

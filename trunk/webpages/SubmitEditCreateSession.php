@@ -1,6 +1,6 @@
 <?php
     require_once ('db_functions.php');
-    require_once ('data_functions.php');
+    require_once ('StaffCommonCode.php');
     require_once ('RenderEditCreateSession.php');
     session_start();
     $message_error="";
