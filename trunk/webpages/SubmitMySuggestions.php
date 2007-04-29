@@ -1,12 +1,8 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="My Suggestions";
-    require ('db_functions.php'); //define database functions
-    require ('validation_functions.php'); //define functions to validate data entry
-    require_once('ParticipantFooter.php');
+    require ('PartCommonCode.php');
     require_once('renderMySuggestions.php');
-    require ('PartCommonCode.php'); // initialize db; check login;
-    //                                  set $badgeid from session
     $newrow=($_POST["newrow"]==1);
     $paneltopics=stripslashes($_POST["paneltopics"]);
     $otherideas=stripslashes($_POST["otherideas"]);

@@ -2,13 +2,12 @@
     global $participant,$message,$message_error,$message2,$congoinfo;
     $title="My Panel Interests";
     $error=false;
-    require ('db_functions.php'); //define database functions
-    require_once('ParticipantFooter.php');
-    require_once('renderMySessions2.php');
     require ('PartCommonCode.php'); // initialize db; check login;
+    require_once ('ParticipantHeader.php'); // initialize db; check login;
+    require_once('renderMySessions2.php');
     if (!may_I('my_panel_interests')) {
         $message_error="You do not currently have permission to view this page.<BR>\n";
-        RenderError($title,$message_error);
+        RenderError("Error occurred",$message_error);
         exit();
         }
     // set $badgeid from session

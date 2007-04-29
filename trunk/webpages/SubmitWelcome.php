@@ -1,8 +1,6 @@
 <?php
     $title="Welcome";
-    require ('db_functions.php');
-    require ('PartCommonCode.php'); // initialize db; check login;
-    //                                  set $badgeid from session
+    require ('PartCommonCode.php');
     $interested = $_POST['interested'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];

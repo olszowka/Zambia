@@ -1,10 +1,8 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="My Suggestions";
-    require ('db_functions.php'); //define database functions
-    require_once('ParticipantFooter.php');
+    require ('PartCommonCode.php');
     require_once('renderMySuggestions.php');
-    require ('PartCommonCode.php'); // initialize db; check login;
     // set $badgeid from session
     $result=mysql_query("SELECT * FROM ParticipantSuggestions where badgeid=\"".$badgeid."\"",$link);
     if (!$result) {

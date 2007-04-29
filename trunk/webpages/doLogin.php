@@ -1,7 +1,6 @@
 	<?php
-    require ('db_functions.php');
-    require ('data_functions.php');
-    require ('ParticipantHeader.php');
+    require_once ('db_functions.php');
+    require_once ('data_functions.php');
     $title="Submit Password";
     // echo "Trying to connect to database.\n";
     if (prepare_db()===false) {

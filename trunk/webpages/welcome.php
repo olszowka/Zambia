@@ -1,9 +1,7 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="Welcome";
-    require ('db_functions.php'); //define database functions
-    require ('PartCommonCode.php'); // initialize db; check login;
-    //                                  set $badgeid from session
+    require ('PartCommonCode.php');
     if (retrieve_participant_from_db($badgeid)==0) {
         require ('renderWelcome.php');
         exit();

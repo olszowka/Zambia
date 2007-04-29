@@ -2,8 +2,6 @@
     global $participant,$message_error,$message2,$congoinfo;
     global $partAvail,$availability;
     $title="Search Panels";
-    require ('db_functions.php'); //define database functions
-    require ('data_functions.php'); //define database functions
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     if (!may_I('search_panels')) {

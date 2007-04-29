@@ -2,8 +2,6 @@
     $title="Update My Schedule Constraint Info";
     global $participant,$message_error,$message2,$congoinfo;
     global $partAvail,$availability;
-    require ('db_functions.php');
-    require ('data_functions.php');
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     get_participant_availability_from_post();

@@ -1,10 +1,9 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="My General Interests";
-    require ('db_functions.php'); //define database functions
-    require_once('ParticipantFooter.php');
-    require_once('renderMyInterests.php');
     require ('PartCommonCode.php'); // initialize db; check login;
+    require_once('ParticipantHeader.php');
+    require_once('renderMyInterests.php');
     // set $badgeid from session
     $result=mysql_query("SELECT * FROM ParticipantInterests where badgeid=\"".$badgeid."\"",$link);
     if (!$result) {

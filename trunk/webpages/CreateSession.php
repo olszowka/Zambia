@@ -1,8 +1,6 @@
 <?php
-    require ('db_functions.php');
-    require ('data_functions.php');
+    require_once ('StaffCommonCode.php');
     require ('RenderEditCreateSession.php');
-    require ('StaffCommonCode.php');
     $message_error="";
     $message_warn="";
     set_session_defaults();

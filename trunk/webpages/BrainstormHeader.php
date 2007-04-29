@@ -29,6 +29,9 @@
       <?php if(may_I('Participant')) { ?>
          <td class="head"><a href="welcome.php">Return To Participant View</a></td>
       <?php } ?>
+      <?php if(may_I('Participant')) { ?>
+         <td class="head"><a href="welcome.php">Return To Staff View</a></td>
+      <?php } ?>
     </tr>
   </table>
 <table class="header">
