@@ -1,0 +1,19 @@
+@import "Common.css";
+
+BODY {
+     background-image: url("images/brainstormheadbg.png");
+     background-repeat: repeat-x;
+     }
+
+H1.head {
+     color: #B08B59;
+     }
+
+TD.head {
+     background-color: white;
+     text-align: center
+     }
+
+TD.form1 {
+     text-align: left
+     }
