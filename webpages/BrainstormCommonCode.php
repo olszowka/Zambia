@@ -1,7 +1,7 @@
 <?php
     require_once('data_functions.php');
-    require_once('RenderErrorPart.php');
-    //session_start();
+    require_once('render_functions.php');
+    session_start();
     if (prepare_db()===false) {
         $message_error="Unable to connect to database.<BR>No further execution possible.";
         RenderError($message_error);
@@ -14,17 +14,15 @@
         exit();
         };
     $badgeid=$_SESSION['badgeid'];
-    if (!(may_I("Participant"))) {
+    if (!(may_I("Brainstorm"))) {
         $message="You are not authorized to access this page.";
         require ('login.php');
         exit();
         };
-
-    function PartRenderError ($title, $message) {
-      require_once('ParticipantHeader.php');
-      participant_header($title);
+    function BrainstormRenderError ($title, $message) {
+      require_once('BrainstormHeader.php');
+      brainstorm_header($title);
       echo "<P id=\"errmsg\">".$message."</P>\n";
-      participant_footer();
+      brainstorm_footer();
       }
-
 ?>

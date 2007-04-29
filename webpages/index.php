@@ -15,7 +15,7 @@ participant_header($title);
       }
    ?>
 <FORM name="loginform" method="POST" action="doLogin.php">
-  <table class="login">
+  <table class="login" align=center>
     <tr>
       <td>Badge ID:</td>
       <td><input type="text" name="badgeid" maxlength="40"> </td>
@@ -28,5 +28,6 @@ participant_header($title);
       <td colspan="2" align="center"> <input type="submit" name="submit" value="Login"> </td>
     </tr>
   </table>
+<p> <b>Brainstorm</b> users: if you want to submit ideas for panels, please enter "brainstorm" for your Badge ID and use the last name of the author of the Foundation series as your password (in all lowercase). </p>
 </form>
 <?php participant_footer(); ?>

@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DATABASE="arisia07_prod"
-DBUSERNAME="arisia07_prod"
-DBPASSWORD="4arisia"
+DATABASE="arisia_test"
+DBUSERNAME="arisia_test"
+DBPASSWORD="arisia12"
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."

@@ -10,7 +10,7 @@
     if ($showlinks=="1") {
             $showlinks=true;
             }
-       else {
+    elseif ($showlinks="0") {
             $showlinks=false;
             }
     if (prepare_db()===false) {
