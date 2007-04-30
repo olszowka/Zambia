@@ -6,8 +6,9 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function BrainstormRenderCreateSession ($action, $session, $message1, $message2) {
-    require_once("BrainstormHeader.php");
+    require_once("BrainstormCommonCode.php");
     require_once("BrainstormFooter.php");
+    $_SESSION['return_to_page']='BrainstormRenderCreateSession.php';
     $title="Brainstorm New Session";
     brainstorm_header($title);
     

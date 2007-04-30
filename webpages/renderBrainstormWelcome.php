@@ -1,10 +1,7 @@
 <?php
    global $participant,$message,$message_error,$message2,$congoinfo;
    $title="Brainstorm View";
-   require_once('data_functions.php');
    require_once('BrainstormCommonCode.php');
-   require_once('BrainstormHeader.php');
-   require_once('BrainstormFooter.php');
    brainstorm_header($title);
 ?>
 
@@ -30,7 +27,7 @@ everything will make it.   We do save good ideas for future conventions.
 <ul> 
 <li> Search for similar ideas or get inspiration.
 <li> Email <?php echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> "?> to suggest modifications on existing suggestion.
-<li> Enter a new suggestion 
+<li> <a href="BrainstormCreateSession.php">Enter a new suggestion. </a>
 <li> See the <a href="BrainstormReportUnseen.php"> list of suggestions that have been entered recently </a> (may not be fit for young eyes, we haven't see these yet). 
 <li> See the <a href="BrainstormReportVetted.php">list of suggestions we are currently sorting through</a> (we have see these).
 <li> See the <a href="BrainstormReportAll.php">list of all suggestions</a> (we've seen some and not see others).

@@ -1,6 +1,4 @@
 <?php
-    $_SESSION['role'] = "Brainstorm";
-
     function brainstorm_header($title) {
       require_once ("javascript_functions.php");
 ?>
