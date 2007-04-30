@@ -1,8 +1,9 @@
 <?php
-    require ('db_functions.php');
-    require ('data_functions.php');
-    require ('BrainstormRenderCreateSession.php');
     require ('BrainstormCommonCode.php');
+    require ('BrainstormRenderCreateSession.php');
+    global $email, $name, $badgeid;
+    get_name_and_email($name, $email);
+    // error_log("badgeid: $badgeid; name: $name; email: $email"); // for debugging only
     $message_error="";
     $message_warn="";
     set_session_defaults();
