@@ -1,13 +1,12 @@
 <?php
     // This function will output the page with the form to add or create a session
     // Variables
-    //     action: "create" or "edit"
+    //     action: "brainstorm"
     //     session: array with all data of record to edit or defaults for create
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function BrainstormRenderCreateSession ($action, $session, $message1, $message2) {
     require_once("BrainstormCommonCode.php");
-    require_once("BrainstormFooter.php");
     $_SESSION['return_to_page']='BrainstormRenderCreateSession.php';
     $title="Brainstorm New Session";
     brainstorm_header($title);
@@ -33,7 +32,7 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
         <INPUT type="hidden" name="atten" value="<?php echo htmlspecialchars($session["atten"],ENT_COMPAT);?>">
         <INPUT type="hidden" name="kids" value="<?php echo $session["kids"];?>">
         <INPUT type="hidden" name="status" value="<?php echo $session["status"];?>">
-        <INPUT type="hidden" name="action" value="create">
+        <INPUT type="hidden" name="action" value="brainstorm">
         <BUTTON type=reset value="reset">Reset</BUTTON>
         <BUTTON type=submit value="save" >Save</BUTTON>
         <TABLE>
@@ -64,6 +63,6 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
          </TABLE>
         <BUTTON type=reset value="reset">Reset</BUTTON>
         <BUTTON type=submit value="save" >Save</BUTTON>
-      </FORM
+      </FORM>
   </DIV>
 <?php brainstorm_footer(); } ?>
