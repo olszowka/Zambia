@@ -1,5 +1,4 @@
 <?php
-    $_SESSION['role'] = "Participant";
 
     function participant_header($title) {
     global $badgeid;

@@ -2,7 +2,6 @@
     require_once ('db_functions.php');
     require_once('BrainstormCommonCode.php');
     require_once('BrainstormHeader.php');
-    require_once('BrainstormFooter.php');
     $title="In Progress Suggestions";
     $showlinks=$_GET["showlinks"];
     $_SESSION['return_to_page']="ViewPrecis.php?showlinks=$showlinks";

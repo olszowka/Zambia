@@ -1,6 +1,4 @@
 <?php
-    $_SESSION['role'] = "Staff";
-
     function staff_header($title) {
       require_once ("javascript_functions.php");
 ?>
