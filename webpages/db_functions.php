@@ -10,6 +10,44 @@ function prepare_db() {
     return (mysql_select_db(DBDB,$link));
     }
 
+// Function get_name_and_email(&$name, &$email)
+// Gets name and email from db if they are available and not already set
+// returns FALSE if error condition encountered.  Error message in global $message_error
+function get_name_and_email(&$name, &$email) {
+    global $link, $message_error, $badgeid;
+    if (isset($name) && $name!='') {
+        //$name="foo"; //for debugging only
+	return(TRUE);
+        }
+    if (may_I('Staff') || may_I('Participant')) { //name and email should be found in db if either set
+        $query="SELECT pubsname from Participants where badgeid='$badgeid'";
+        //error_log($query); //for debugging only
+        $result=mysql_query($query,$link);
+        if (!$result) {
+            $message_error=$query."<BR> ";
+            $message_error.=mysql_error($link)."<BR> ";
+            $message_error.="Error reading from database. No further execution possible.<BR> ";
+            error_log($message_error);
+            return(FALSE);
+            }
+        $name=mysql_result($result, 0);
+        if ($name=='') {
+            $name=' '; //if name is null or '' in db, set to ' ' so it won't appear unpopulated in query above
+            }
+        $query="SELECT email from CongoDump where badgeid='$badgeid'";
+        $result=mysql_query($query,$link);
+        if (!$result) {
+            $message_error=$query."<BR> ";
+            $message_error.=mysql_error($link)."<BR> ";
+            $message_error.="Error reading from database. No further execution possible.<BR> ";
+            error_log($message_error);
+            return(FALSE);
+            }
+        $email=mysql_result($result, 0);
+        }
+    return(TRUE); //return TRUE even if didn't retrieve from db because there's nothing to be done
+    }
+
 // Function populate_select_from_table(...)
 // Reads parameters (see below) and a specified table from the db.
 // Outputs HTML of the "<OPTION>" values for a Select control.
