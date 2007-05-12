@@ -17,3 +17,16 @@ TD.head {
 TD.form1 {
      text-align: left
      }
+
+/* Just overridding the small number of settings needed
+to customize tabs for Participants */
+.usabletab {
+        background: #B08B59;
+}
+
+span.mousedovertab a:visited {
+        color: #B08B59;
+}
+span.mousedovertab a:link {
+        color: #B08B59;
+}

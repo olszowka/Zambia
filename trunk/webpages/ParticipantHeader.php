@@ -10,115 +10,40 @@
   <meta http-equiv="Content-Type" content="text/html; charset=latin-1">
   <title>Zambia -- <?php echo $title ?></title>
   <link rel="stylesheet" href="ParticipantSection.css" type="text/css">
-  <meta name="keywords" content="Questionnaire">
-  <meta name="description" content="Form to request information from potential program participants">
-  <script language="JavaScript" type="text/JavaScript">
-<!--
-function MM_swapImgRestore() { //v3.0
-  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
-}
-
-function MM_preloadImages() { //v3.0
-  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
-    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
-    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
-}
-
-function MM_findObj(n, d) { //v4.01
-  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
-    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
-  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
-  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
-  if(!x && d.getElementById) x=d.getElementById(n); return x;
-}
-
-function MM_swapImage() { //v3.0
-  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
-   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
-}
-//-->
-  </script>
 </head>
-<body onload="MM_preloadImages('images/my_profile-active.png','images/my_availability-active.png',
-    'images/search_panels-active.png','images/staff_pages-active.png','images/welcome-active.png',
-    'images/my_general_interests-active.png','images/my_suggestions-active.png',
-    'images/my_schedule-active.png')">
+<body>
 <H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1> 
 <hr>
 
 <?php if (isset($_SESSION['badgeid'])) { ?>
-<!--    <td background="images/grey-bg.gif"> -->
-  <table class="header">
-    <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
-    <tr>
-      <td class="head border0020" colspan=2><a href="welcome.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('welcome','','images/welcome-active.png',1)">
-          <img src="images/welcome.png" name="welcome" alt="Welcome"></a></td>
-<?php
-    echo "<td class=\"head border0020\" colspan=2>";
-    if (may_I('my_availability')) {
-            echo "<a href=\"my_sched_constr.php\" onmouseout=\"MM_swapImgRestore()\" ";
-            echo "onmouseover=\"MM_swapImage('my_availability','','images/my_availability-active.png',1)\">";
-            echo "<img src=\"images/my_availability.png\" name=\"my_availability\" alt=\"My Availability\"></a></td>";
-            }
-        else {
-            echo "<img src=\"images/my_availability-disabled.png\" name=\"my_availability\"";
-            echo " alt=\"My Availability (Inactive)\"></td>";
-            }
-    echo "<td class=\"head border0020\" colspan=2>";
-    if (may_I('my_panel_interests')) {
-            echo "<a href=\"my_sessions2.php\" onmouseout=\"MM_swapImgRestore()\" ";
-            echo "onmouseover=\"MM_swapImage('my_panel_interests','','images/my_panel_interests-active.png',1)\">";
-            echo "<img src=\"images/my_panel_interests.png\" name=\"my_panel_interests\" alt=\"My Panel Interests\"></a></td>";
-            }
-        else {
-            echo "<img src=\"images/my_panel_interests-disabled.png\" name=\"my_panel_interests\"";
-            echo " alt=\"My Panel Interests (Inactive)\"></td>";
-            } ?>
-      <td class="head border0020" colspan=2><a href="my_interests.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('my_general_interests','','images/my_general_interests-active.png',1)">
-          <img src="images/my_general_interests.png" name="my_general_interests" alt="My General Interests"></a></td>
-<?php if (isStaff($badgeid)) { ?> 
-      <td class="head border0020" colspan=2><a href="StaffPage.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('staff_pages','','images/staff_pages-active.png',1)">
-          <img src="images/staff_pages.png" name="staff_pages" alt="Staff Pages"></a></td>
-<?php } else { echo "<td class=\"head border0020 smallspacer\" colspan=2>&nbsp;</td>"; } ?>
-      </tr><tr><td class="head border0020 smallspacer">&nbsp;</td>
-      <td class="head border0020" colspan=2><a href="my_contact.php" onmouseout="MM_swapImgRestore()"
-          onmouseover="MM_swapImage('my_profile','','images/my_profile-active.png',1)">
-          <img src="images/my_profile.png" name="my_profile" alt="My Profile"></a></td>
-<?php
-    echo "<td class=\"head border0020\" colspan=2>";
-    if (may_I('search_panels')) {
-            echo "<a href=\"my_sessions1.php\" onmouseout=\"MM_swapImgRestore()\" ";
-            echo "onmouseover=\"MM_swapImage('search_panels','','images/search_panels-active.png',1)\">";
-            echo "<img src=\"images/search_panels.png\" name=\"search_panels\" alt=\"Search Panels\"></a></td>";
-            }
-        else {
-            echo "<img src=\"images/search_panels-disabled.png\" name=\"search_panels\"";
-            echo " alt=\"Search Panels (Inactive)\"></a></td>";
-            } ?>
-<?php
-    echo "<td class=\"head border0020\" colspan=2>";
-    if (may_I('my_suggestions_write')) {
-            echo "<a href=\"BrainstormWelcome.php\" onmouseout=\"MM_swapImgRestore()\" ";
-            echo "onmouseover=\"MM_swapImage('suggest_session','','images/suggest_session-active.png',1)\">";
-            echo "<img src=\"images/suggest_session.png\" name=\"suggest_session\" alt=\"Suggest Session\"></a></td>";
-            }
-        else {
-            echo"<img src=\"images/suggest_session-disabled.png\" name=\"suggest_session\" alt=\"Suggest Session (Inactive)\"></a></td>";
-            } ?>
-<?php
-    echo "<td class=\"head border0020\" colspan=2>";
-    if (may_I('my_schedule')) {
-            echo "<a href=\"MySchedule.php\" onmouseout=\"MM_swapImgRestore()\" ";
-            echo "onmouseover=\"MM_swapImage('my_schedule','','images/my_schedule-active.png',1)\">";
-            echo "<img src=\"images/my_schedule.png\" name=\"my_schedule\" alt=\"My Schedule\"></a></td>";
-            }
-        else {
-            echo"<img src=\"images/my_schedule-disabled.png\" name=\"my_schedule\" alt=\"My Schedule (Inactive)\"></a></td>";
-            } ?>
-      <td class="head border0020 smallspacer">&nbsp;</td>
+  <table class="tabhead">
+    <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
+    <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
+    <tr class="tabrow">
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("Welcome", 1, "welcome.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("My Availability",may_I('my_availability'),"my_sched_constr.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("My Panel Interests",may_I('my_panel_interests'),"my_sessions2.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+ 	 <!-- XXX this should have a may_I -->
+         <?php maketab("My General Interests",1,"my_interests.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php if (may_I('Staff')) { 
+                     maketab("Staff View",may_I('Staff'),"StaffPage.php"); 
+               }?></td>
+      </tr><tr><td class="tabblocks border0020 smallspacer">&nbsp;</td>
+      <td class="tabblocks border0020" colspan=2>
+ 	 <!-- XXX this should have a may_I -->
+         <?php maketab("My Profile",1,"my_contact.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("Search Panels",may_I('search_panels'),"my_sessions1.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("My Schedule",may_I('my_schedule'),"MySchedule.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("Suggest a Session",may_I('my_suggestions_write'),"BrainstormWelcome.php"); ?></td>
+      <td class="tabblocks border0020 smallspacer">&nbsp;</td>
           </tr>
         </table>
       </td>

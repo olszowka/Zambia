@@ -137,17 +137,6 @@ DT {
     margin-left: .5em
     }
 
-TABLE.header {
-    border-collapse: collapse;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: .3em;
-    margin-bottom: 0px;
-    width: 100%;
-    border: 0px;
-    padding: 0px;
-    }
-
 TABLE.login {
     align: center;
     text-align: center;
@@ -531,9 +520,6 @@ TD#smallspacer {
     height: 2.4em
     }
 
-TD.head {
-    background: #808080;
-    }
 
 .bb {
     display: block; 
@@ -652,4 +638,83 @@ OL, UL {
 .inln {
     display: inline
     }
-   
+
+/* Start of settings needed make the tabs work */   
+.usabletab {
+        background: #002985;
+        background-image: none;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+        height: 19px;
+}
+.mousedovertab {
+        background: white;
+        background-image: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+        height: 19px;
+}
+.unusabletab {
+        background: #606060;
+        background-image: none;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+        height: 19px;
+}
+/* definitions for the table at the top of the pages */
+TABLE.tabhead {
+    border-collapse: collapse;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: .3em;
+    margin-bottom: 0px;
+    width: 100%;
+    border: 0px;
+    padding: 0px;
+    }
+TR.tabrows {
+   margin-left: 0px;
+   margin-right: 0px;
+   margin-top: 0px;
+   margin-bottom: 0px;
+   border: 0px; 
+   padding: 0px;
+   }
+TD.tabblocks {
+    background: #808080;
+    color: white;
+    }
+TD.head {
+    background: #808080;
+    }
+/*
+ * these are used to override the browser's default decoration on
+ * links
+ */
+span.usabletab a:link {
+        color: white;
+        text-decoration: none;
+}
+span.usabletab a:visited {
+        color: white;
+        text-decoration: none;
+}
+span.mousedovertab a:link {
+        color: #002985;
+        text-decoration: none;
+}
+span.mousedovertab a:visited {
+        color: #002985;
+        text-decoration: none;
+}
+/*
+ * attributes of the images used to draw the borders of the tabs
+ */
+IMG.tabborder {
+        vertical-align:top; 
+        height: 14px; 
+        width: 10px;
+}
+/* End of settings needed make the tabs work */   

@@ -9,24 +9,24 @@
   <meta http-equiv="Content-Type" content="text/html; charset=latin-1">
   <title>Zambia -- <?php echo $title ?></title>
   <link rel="stylesheet" href="StaffSection.css" type="text/css">
-  <meta name="keywords" content="Questionnaire">
-  <meta name="description" content="Form to request information from potential program participants">
-  <?php javascript_for_edit_session(); javascript_pretty_buttons(); ?>
-
 </head>
-<body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0"><!--onload="MM_preloadImages('images/my_contact-active.png','images/my_constraint-active.png','images/search_sessions-active.png','images/my_session_interests-active.png')"-->
+<body>
 <H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>
 <hr>
 
 <?php if (isset($_SESSION['badgeid'])) { ?>
-  <table class="header">
-    <tr>
-      <!--<td id="head"><a href="my_contact.php" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('my_contact','','images/my_contact-active.png',1)"><img src="images/my_contact.png" name="my_contact" border="0" height="14" width="122" alt="My Contact Info"></a></td> -->
-      <td class="head"><a href="StaffAvailableReports.php">Available Reports</a></td>
-      <td class="head"><a href="StaffManageSessions.php">Manage Sessions</a></td>
-      <td class="head"><a href="StaffManageParticipants.php">Manage Participants &amp; Schedule</a></td>
-      <td class="head"><a href="welcome.php">Participant View</a></td>
-      <td class="head"><a href="BrainstormWelcome.php">Brainstorm View</a></td>
+  <table class="tabhead">
+    <tr class="tabrow">
+      <td class="tabblocks border0020">
+        <?php maketab("Available Reports",1,"StaffAvailableReports.php"); ?></td>
+      <td class="tabblocks border0020">
+        <?php maketab("Manage Sessions",1,"StaffManageSessions.php"); ?></td>
+      <td class="tabblocks border0020">
+        <?php maketab("Manage Participants &amp; Schedule",1,"StaffManageParticipants.php"); ?></td>
+      <td class="tabblocks border0020">
+        <?php maketab("Participant View",1,"welcome.php"); ?></td>
+      <td class="tabblocks border0020">
+        <?php maketab("Brainstorm View",1,"BrainstormWelcome.php"); ?></td>
     </tr>
   </table>
 <table class="header">
