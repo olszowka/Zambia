@@ -18,18 +18,33 @@
 <hr>
 
 <?php if (isset($_SESSION['badgeid'])) { ?>
-  <table class="header">
-    <tr>
-      <td class="head"><a href="BrainstormWelcome.php">Welcome</a> </td>
-      <td class="head"><a href="BrainstormReportUnseen.php">New Suggestions Report</a></td>
-      <td class="head"><a href="BrainstormReportVetted.php">In Progress Suggestions Report</a></td>
-      <td class="head"><a href="BrainstormReportAll.php">All Suggestions Report</a></td>
-      <?php if(may_I('Participant')) { ?>
-         <td class="head"><a href="welcome.php">Return To Participant View</a></td>
-      <?php } ?>
-      <?php if(may_I('Participant')) { ?>
-         <td class="head"><a href="welcome.php">Return To Staff View</a></td>
-      <?php } ?>
+  <table class="tabhead">
+    <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
+    <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
+    <tr class="tabrows">
+      <td class="tabblocks border0020" colspan=2><?php maketab("Welcome",1,"BrainstormWelcome.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2><?php maketab("Suggest a Session",1,"BrainstormCreateSession.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>&nbsp;</td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php if(may_I('Participant')) { 
+                  maketab("Participants View",may_I('Participant'),"welcome.php"); 
+               }?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php if(may_I('Staff')) { 
+                   maketab("Staff View",may_I('Staff'),"StaffPage.php");
+               }?></td>
+    </tr>
+    <tr class="tabrows">
+      <td class="tabblocks border0020" colspan=1>&nbsp;</td>
+      <td class="tabblocks border0020" colspan=2>
+	View Suggestions: 
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("New",1,"BrainstormReportUnseen.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("In Progress",1,"BrainstormReportVetted.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("All",1,"BrainstormReportAll.php"); ?></td>
+      <td class="tabblocks border0020" colspan=1>&nbsp;</td>
     </tr>
   </table>
 <table class="header">

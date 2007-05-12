@@ -9,11 +9,19 @@ H1.head {
      color: #106A22;
      }
 
-TD.head {
-     background-color: white;
-     text-align: center
-     }
-
 TD.form1 {
      text-align: left
      }
+
+/* Just overridding the small number of settings needed
+to customize tabs for Staff */
+.usabletab {
+        background: #106A22;
+}
+span.mousedovertab a:visited {
+        color: #106A22;
+}
+span.mousedovertab a:link {
+        color: #106A22;
+}
+
