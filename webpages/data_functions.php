@@ -97,7 +97,12 @@ function get_session_from_post() {
     $session["divisionid"]=$_POST["divisionid"];
     $session["pubstatusid"]=$_POST["pubstatusid"];
     $session["pubno"]=stripslashes($_POST["pubno"]);
-    $session["title"]=stripslashes($_POST["title"]);
+    if (isset($_POST["title"])) {
+            $session["title"]=stripslashes($_POST["title"]);
+            }
+        else {
+            $session["title"]="";
+            }
     $session["pocketprogtext"]=stripslashes($_POST["pocketprogtext"]);
     $session["progguiddesc"]=stripslashes($_POST["progguiddesc"]);
     $session["persppartinfo"]=stripslashes($_POST["persppartinfo"]);
