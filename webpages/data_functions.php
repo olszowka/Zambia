@@ -11,6 +11,19 @@ function stripfancy($input) {
     return(strtr($input,stripfancy_from,stripfancy_to));
     }
 //
+// Function get_nameemail_from_post($name, $email)
+// Reads the data posted by the browser form and populates
+// the variables from the arguments.  Also stores them in
+// SESSION variables.
+//
+function get_nameemail_from_post(&$name, &$email) {
+    $name=stripslashes($_POST['name']);
+    $email=stripslashes($_POST['email']);
+    $_SESSION['name']=$name;
+    $_SESSION['email']=$email;
+    return;
+    }
+//
 // Function get_session_interests_from_post()
 // Reads the data posted by the browser form and populates
 // the $partavail global variable with it.  Returns

@@ -9,7 +9,25 @@ function prepare_db() {
     if ($link===false) return (false);
     return (mysql_select_db(DBDB,$link));
     }
-
+// The table SessionEditHistory has a timestamp column which is automatically set to the
+// current timestamp by MySQL. 
+function record_session_history($sessionid, $badgeid, $name, $email, $editcode, $statusid) {
+    global $link, $message_error;
+    $query='';
+    $query.="INSERT INTO SessionEditHistory SET ";
+    $query.="sessionid=$sessionid, ";
+    $query.="badgeid='$badgeid', ";
+    $query.="name='$name', ";
+    $query.="email_address='$email', ";
+    $query.="sessioneditcode=$editcode, ";
+    $query.="statusid=$statusid";
+    $result = mysql_query($query,$link);
+    if (!$result) {
+        $message_error=$query."<BR>\n".mysql_error($link);
+        return $result;
+        }
+    return(true);
+    }
 // Function get_name_and_email(&$name, &$email)
 // Gets name and email from db if they are available and not already set
 // returns FALSE if error condition encountered.  Error message in global $message_error
@@ -18,6 +36,12 @@ function get_name_and_email(&$name, &$email) {
     if (isset($name) && $name!='') {
         //$name="foo"; //for debugging only
 	return(TRUE);
+        }
+    if (isset($_SESSION['name'])) {
+        $name=$_SESSION['name'];
+        $email=$_SESSION['email'];
+        //error_log("get_name_and_email found a name in the session variables.");
+        return(TRUE);
         }
     if (may_I('Staff') || may_I('Participant')) { //name and email should be found in db if either set
         $query="SELECT pubsname from Participants where badgeid='$badgeid'";
@@ -34,7 +58,7 @@ function get_name_and_email(&$name, &$email) {
         if ($name=='') {
             $name=' '; //if name is null or '' in db, set to ' ' so it won't appear unpopulated in query above
             }
-        $query="SELECT email from CongoDump where badgeid='$badgeid'";
+        $query="SELECT badgename,email from CongoDump where badgeid='$badgeid'";
         $result=mysql_query($query,$link);
         if (!$result) {
             $message_error=$query."<BR> ";
@@ -43,7 +67,10 @@ function get_name_and_email(&$name, &$email) {
             error_log($message_error);
             return(FALSE);
             }
-        $email=mysql_result($result, 0);
+        if ($name==' ') {
+            $name=mysql_result($result, 0, 0);
+            } // name will be ' ' if pubsname is null.  In that case use badgename.
+        $email=mysql_result($result, 0, 1);
         }
     return(TRUE); //return TRUE even if didn't retrieve from db because there's nothing to be done
     }

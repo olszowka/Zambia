@@ -6,6 +6,7 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateSession ($action, $session, $message1, $message2) {
+    global $name, $email;
     require_once("StaffHeader.php");
     require_once("StaffFooter.php");
     if ($action=="create") {
@@ -31,6 +32,8 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
   ?>
     <DIV class="formbox">
         <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
+            <INPUT type="hidden" name="name" value="<?php echo htmlspecialchars($name,ENT_COMPAT);?>">
+            <INPUT type="hidden" name="email" value="<?php echo htmlspecialchars($email,ENT_COMPAT);?>">
         <TABLE>
             <TR>
                 <TD class="form1">Session #: <INPUT type="text" size=3 name="sessionid" readonly
