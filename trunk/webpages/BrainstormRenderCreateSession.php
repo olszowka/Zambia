@@ -6,6 +6,7 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function BrainstormRenderCreateSession ($action, $session, $message1, $message2) {
+    global $name, $email;
     require_once("BrainstormCommonCode.php");
     $_SESSION['return_to_page']='BrainstormRenderCreateSession.php';
     $title="Brainstorm New Session";
@@ -37,7 +38,22 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
         <BUTTON type=submit value="save" >Save</BUTTON>
         <TABLE>
             <TR>
-                <TD class="form1">Track:<BR> <SELECT name="track">
+                <TD class="form1">
+                   <LABEL for="name">Your Name:</LABEL><BR>
+                   <INPUT TYPE="TEXT" NAME="name" 
+                   <?php if ($name!="")
+                            echo "value=\"$name\" "; ?>
+                       ></TD></TR>
+            <TR>
+                <TD class="form1">&nbsp;<BR>
+                   <LABEL for="email">Your email address:</LABEL><BR>
+                   <INPUT TYPE="TEXT" NAME="email" size="50"
+                   <?php if ($email!="")
+                            echo "value=\"$email\" "; ?>
+                       ></TD></TR> 
+            <TR>
+                <TD class="form1">&nbsp;<BR>
+                    <LABEL for="track">Track:</LABEL><BR> <SELECT name="track">
                     <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
                     </SELECT></TD>
                 </TR>

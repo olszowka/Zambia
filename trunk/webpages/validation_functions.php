@@ -26,7 +26,28 @@ function validate_session_interests($max_si_row) {
         }
     return ($flag);
     }
+function is_email($email){
+    $x = '\d\w!\#\$%&\'*+\-/=?\^_`{|}~';    //just for clarity
 
+    return count($email = explode('@', $email, 3)) == 2
+        && strlen($email[0]) < 65
+        && strlen($email[1]) < 256
+        && preg_match("#^[$x]+(\.?([$x]+\.)*[$x]+)?$#", $email[0])
+        && preg_match('#^(([a-z0-9]+-*)?[a-z0-9]+\.)+[a-z]{2,6}.?$#', $email[1]);
+}
+function validate_name_email($name, $email) {
+    global $messages;
+    $status=true;
+    if (strlen($name)<3) {
+        $status=false;
+        $messages.="Please enter a name of at least 3 characters.<BR>\n";
+        }
+    if (!(is_email($email))) {
+        $status=false;
+        $messages.="Please enter a valid email address.<BR>\n";
+        }
+    return ($status);
+    }
 // Function validate_session()
 // Reads global $session array and performs tests.
 // If a test fails, then the global $message is populated
@@ -36,7 +57,6 @@ function validate_session() {
     // may be incomplete!!
     global $session, $messages;
     $flag=true;
-    $messages="";
     if ($session["status"]==4) {  //don't validate "dropped"
         return ($flag);
         }

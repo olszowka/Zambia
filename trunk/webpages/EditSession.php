@@ -1,7 +1,8 @@
 <?php
     require_once('StaffCommonCode.php');
     require ('RenderEditCreateSession.php');
-    global $message2;
+    global $name, $email, $message2;
+    get_name_and_email($name,$email);
     $error=false;
     $message_error="";
     $id=$_GET["id"];
@@ -14,7 +15,6 @@
         $message_error.="The id parameter must be a valid row index.";
         $error=true;
         }
-    prepare_db();
     $status=retrieve_session_from_db($id);
     if ($status==-3) {
         $message_error.="Error retrieving record from database. ".$message2;
