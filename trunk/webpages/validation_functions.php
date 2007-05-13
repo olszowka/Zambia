@@ -57,26 +57,32 @@ function validate_session() {
     // may be incomplete!!
     global $session, $messages;
     $flag=true;
-    if ($session["status"]==4) {  //don't validate "dropped"
+    if ($session["status"]==4||$session["status"]==5) {  //don't validate "dropped" or "cancelled"
         return ($flag);
         }
     $brainstorm=($session["status"]==1 || $session["status"]==6); //less stringent criteria if brainstorm (editme)
-    if (!strlen($session["title"])) {
+/*    if (!strlen($session["title"])) {
+        $messages.="A valid title is required.<BR>\n";
+        $flag=false;
+        } */
+    $i=strlen($session["title"]);
+    if ($i<10||$i>48) {
+        $messages.="Title is $i characters long.  Please edit it to between <B>10</B> and <B>48</B> characters.<BR>\n";
+        $flag=false;
+        }
+/*    if (!strlen($session["progguiddesc"])) {
         $messages.="A title is required.<BR>\n";
         $flag=false;
-        }
-    if (($i=strlen($session["title"]))>48) {
-        $messages.="Title is $i characters long.  Please edit it to <B>48</B> characters or fewer.<BR>\n";
-        $flag=false;
-        }
+        } */
     if (($i=strlen($session["pocketprogtext"]))>110) {
         $messages.="Pocket program text is $i characters long.  Please edit it to <B>110</B> characters or fewer.<B
 R>\n";
         $flag=false;
         }
-    if (($i=strlen($session["progguiddesc"]))>500) {
-        $messages.="Program guide description is $i characters long.  Please edit it to <B>500</B> characters or fe
-wer.<BR>\n";
+    $i=strlen($session["progguiddesc"]);
+    if ($i<10||$i>500) {
+        $messages.="Program guide description is $i characters long.  Please edit it to between";
+        $messages.=" <B>10</B> and <B>500</B> characters long.<BR>\n";
         $flag=false;
         }
     if ($session["track"]==0) {
