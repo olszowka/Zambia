@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: trgdev
 -- ------------------------------------------------------
--- Server version	4.1.21
+-- Server version	4.1.22
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,7 +28,7 @@ CREATE TABLE `CongoDump` (
   `postaddress` varchar(100) default NULL,
   `regtype` varchar(40) default NULL,
   PRIMARY KEY  (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Contains user information from registration system.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `CongoDump`
@@ -49,7 +49,7 @@ CREATE TABLE `Divisions` (
   `divisionname` varchar(30) character set latin1 collate latin1_general_ci default NULL,
   `display_order` int(11) NOT NULL default '0',
   PRIMARY KEY  (`divisionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Configuration table.  A division is a property of a session.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Divisions`
@@ -57,7 +57,7 @@ CREATE TABLE `Divisions` (
 
 LOCK TABLES `Divisions` WRITE;
 /*!40000 ALTER TABLE `Divisions` DISABLE KEYS */;
-INSERT INTO `Divisions` VALUES (1,'Other',5),(2,'Programming',1),(3,'Events',2),(4,'Fixed Functions',3),(5,'Hotel',4);
+INSERT INTO `Divisions` VALUES (1,'Other',5),(2,'Programming',1),(3,'Events',2),(4,'Fixed Functions',3),(5,'Hotel',4),(6,'Unspecified',6);
 /*!40000 ALTER TABLE `Divisions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,7 +71,7 @@ CREATE TABLE `Features` (
   `featurename` varchar(50) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`featureid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Configuration table.  Rooms and Sessions have multiple featu';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Features`
@@ -93,7 +93,7 @@ CREATE TABLE `KidsCategories` (
   `kidscatname` varchar(50) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`kidscatid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Configuration Table.  A KidsCategory is a property of a sess';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `KidsCategories`
@@ -121,7 +121,7 @@ CREATE TABLE `ParticipantAvailability` (
   `numkidsfasttrack` int(11) default NULL,
   PRIMARY KEY  (`badgeid`),
   CONSTRAINT `ParticipantAvailability_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Participant information captured by Zambia';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ParticipantAvailability`
@@ -144,7 +144,7 @@ CREATE TABLE `ParticipantAvailabilityTimes` (
   `endtime` time default NULL,
   PRIMARY KEY  (`badgeid`,`availabilitynum`),
   CONSTRAINT `ParticipantAvailabilityTimes_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ParticipantAvailabilityTimes`
@@ -167,7 +167,7 @@ CREATE TABLE `ParticipantHasRole` (
   KEY `roleid` (`roleid`),
   CONSTRAINT `ParticipantHasRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantHasRole_ibfk_2` FOREIGN KEY (`roleid`) REFERENCES `Roles` (`roleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ParticipantHasRole`
@@ -192,7 +192,7 @@ CREATE TABLE `ParticipantInterests` (
   `otherroles` text,
   PRIMARY KEY  (`badgeid`),
   CONSTRAINT `ParticipantInterests_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ParticipantInterests`
@@ -217,7 +217,7 @@ CREATE TABLE `ParticipantOnSession` (
   KEY `sessionid` (`sessionid`),
   CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.  Set by staff.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ParticipantOnSession`
@@ -245,7 +245,7 @@ CREATE TABLE `ParticipantSessionInterest` (
   CONSTRAINT `ParticipantSessionInterest_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_3` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_4` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ParticipantSessionInterest`
@@ -268,7 +268,7 @@ CREATE TABLE `ParticipantSuggestions` (
   `suggestedguests` text,
   PRIMARY KEY  (`badgeid`),
   CONSTRAINT `ParticipantSuggestions_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ParticipantSuggestions`
@@ -292,7 +292,7 @@ CREATE TABLE `Participants` (
   `bio` text,
   `pubsname` varchar(50) character set latin1 collate latin1_general_ci default NULL,
   PRIMARY KEY  (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Participant info -- import process must create row';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Participants`
@@ -311,11 +311,12 @@ DROP TABLE IF EXISTS `PermissionAtoms`;
 CREATE TABLE `PermissionAtoms` (
   `permatomid` int(11) NOT NULL auto_increment,
   `permatomtag` varchar(20) NOT NULL default '',
+  `elementid` int(11) default NULL,
   `page` varchar(20) default NULL,
   `notes` text,
   PRIMARY KEY  (`permatomid`),
-  UNIQUE KEY `taginx` (`permatomtag`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Non configurable -- tied to code';
+  UNIQUE KEY `taginx` (`permatomtag`,`elementid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `PermissionAtoms`
@@ -323,7 +324,7 @@ CREATE TABLE `PermissionAtoms` (
 
 LOCK TABLES `PermissionAtoms` WRITE;
 /*!40000 ALTER TABLE `PermissionAtoms` DISABLE KEYS */;
-INSERT INTO `PermissionAtoms` VALUES (1,'Staff','renderWelcome','Enables staff menu link'),(2,'Administrator','many','Use to be determined'),(3,'Participant','many','Use to be determined'),(4,'EditBio','renderMyContact','Allow write to biography on my contact page');
+INSERT INTO `PermissionAtoms` VALUES (1,'Staff',NULL,'renderWelcome','Enables staff menu link'),(2,'Administrator',NULL,'many','Use to be determined'),(3,'Participant',NULL,'many','Use to be determined'),(4,'EditBio',NULL,'renderMyContact','Allow write to biography on my contact page'),(12,'my_availability',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(13,'search_panels',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(14,'my_panel_interests',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(15,'my_schedule',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(16,'my_suggestions_write',NULL,'MySuggestions','Enables write access to the form elements on the page MySuggestions.'),(17,'my_gen_int_write',NULL,'MyGeneralInterests','Enables write access to the form elements on the page My General Interests'),(18,'Brainstorm',NULL,'BrainstormWelcome','Use for special brainstorm user and pages.');
 /*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,7 +338,7 @@ CREATE TABLE `PermissionRoles` (
   `permrolename` varchar(100) default NULL,
   `notes` text,
   PRIMARY KEY  (`permroleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Configuration info.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `PermissionRoles`
@@ -345,7 +346,7 @@ CREATE TABLE `PermissionRoles` (
 
 LOCK TABLES `PermissionRoles` WRITE;
 /*!40000 ALTER TABLE `PermissionRoles` DISABLE KEYS */;
-INSERT INTO `PermissionRoles` VALUES (1,'Staff','Can access staff pages'),(2,'Administrator','Use to be determined'),(3,'Participant','Use to be determined');
+INSERT INTO `PermissionRoles` VALUES (1,'Staff','Can access staff pages'),(2,'Administrator','Use to be determined'),(3,'Participant','Use to be determined'),(5,'Brainstorm','Use for Brainstorm pages');
 /*!40000 ALTER TABLE `PermissionRoles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -367,7 +368,7 @@ CREATE TABLE `Permissions` (
   CONSTRAINT `Permissions_ibfk_1` FOREIGN KEY (`permatomid`) REFERENCES `PermissionAtoms` (`permatomid`),
   CONSTRAINT `Permissions_ibfk_2` FOREIGN KEY (`phaseid`) REFERENCES `Phases` (`phaseid`),
   CONSTRAINT `Permissions_ibfk_3` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Configuration info.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 4096 kB';
 
 --
 -- Dumping data for table `Permissions`
@@ -375,7 +376,7 @@ CREATE TABLE `Permissions` (
 
 LOCK TABLES `Permissions` WRITE;
 /*!40000 ALTER TABLE `Permissions` DISABLE KEYS */;
-INSERT INTO `Permissions` VALUES (1,1,NULL,1,NULL),(2,3,NULL,3,NULL),(3,4,1,3,NULL),(4,4,2,3,NULL);
+INSERT INTO `Permissions` VALUES (1,1,NULL,1,NULL),(2,3,NULL,3,NULL),(3,4,1,3,NULL),(4,4,2,3,NULL),(5,12,2,1,NULL),(6,12,2,3,NULL),(7,13,3,1,NULL),(8,13,3,3,NULL),(9,14,3,1,NULL),(10,14,3,3,NULL),(11,15,4,1,NULL),(12,15,4,3,NULL),(13,16,5,1,NULL),(14,16,5,3,NULL),(15,17,5,1,NULL),(16,17,5,3,NULL),(21,18,6,5,NULL);
 /*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -390,7 +391,7 @@ CREATE TABLE `Phases` (
   `current` tinyint(1) default '0',
   `notes` text,
   PRIMARY KEY  (`phaseid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='Configuration info.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Phases`
@@ -398,7 +399,7 @@ CREATE TABLE `Phases` (
 
 LOCK TABLES `Phases` WRITE;
 /*!40000 ALTER TABLE `Phases` DISABLE KEYS */;
-INSERT INTO `Phases` VALUES (1,'Survey',1,'My Suggestions and My Interests'),(2,'Availability',0,'My Availability and My Conflicts'),(3,'Brainstorm',0,'Staff creates sessions'),(4,'Choose Sessions',0,'Panelists indicate sessio n interests');
+INSERT INTO `Phases` VALUES (1,'Invitation',1,'Welcome, My Profile, My Suggestions and My General Interests'),(2,'Availability',1,'Add on My Availability'),(3,'Panel Sign Up',1,'Add on Search Panels and My Panel Interests'),(4,'Show Schedule',1,'Add on My Schedule'),(5,'Suggestions',0,'Allow write access to My Suggestions and My General Interests.'),(6,'Brainstorm',1,'Special brainstorm pages are accessible.');
 /*!40000 ALTER TABLE `Phases` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -464,7 +465,7 @@ CREATE TABLE `RegTypes` (
 
 LOCK TABLES `RegTypes` WRITE;
 /*!40000 ALTER TABLE `RegTypes` DISABLE KEYS */;
-INSERT INTO `RegTypes` VALUES ('Adult-RolloverC','Registered and Comp\'ed'),('Adult-YearAhead','Registered'),('AdultFull','Registered'),('AdultFull-Comp','Registered and Comp\'ed'),('AdultFull-Pre-1','Registered'),('AdultFull-Pre-2','Registered'),('ProgramComp','Registered and Comp\'ed'),('Promotional','Registered'),('Student','Registered');
+INSERT INTO `RegTypes` VALUES (' AdultFull-Comp |','Registered and Comp\'ed'),('Adult-Promo','Registered'),('Adult-Rollover','Registered'),('Adult-RolloverC','Registered and Comp\'ed'),('Adult-YearAhead','Registered'),('AdultFull','Registered'),('AdultFull-Comp','Registered and Comp\'ed'),('AdultFull-Pre-1','Registered'),('AdultFull-Pre-2','Registered'),('AdultFull-Pre1','Registered'),('AdultFull-Pre2','Registered'),('EarnedComp','Registered and Comp\'ed'),('ElfComp','Registered and Comp\'ed'),('EventComp-Full','Registered and Comp\'ed'),('GamingComp','Registered and Comp\'ed'),('ProgramComp','Registered and Comp\'ed'),('Promotional','Registered'),('Student','Registered'),('YearAhead','Registered');
 /*!40000 ALTER TABLE `RegTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -486,7 +487,7 @@ CREATE TABLE `Roles` (
 
 LOCK TABLES `Roles` WRITE;
 /*!40000 ALTER TABLE `Roles` DISABLE KEYS */;
-INSERT INTO `Roles` VALUES (1,'Other',-1),(2,'Reading my own works',3),(3,'Autographing',4),(4,'Reading others works',5),(5,'Performing',6),(6,'Running workshops',7),(7,'Leading discussions',8),(8,'Running games',9),(9,'Working with children',10),(10,'Panel Moderator',2),(11,'Improv',11),(12,'Storytelling',12);
+INSERT INTO `Roles` VALUES (1,'Other',-1),(2,'Reading my own works',3),(3,'Autographing',4),(4,'Reading others works',5),(5,'Performing',6),(6,'Running workshops',7),(7,'Leading discussions',8),(8,'Running games',9),(9,'Working with children',10),(10,'Panel Moderator',2),(11,'Improv',11),(12,'Storytelling',12),(13,'Join Arisia Volunteer Staff',13);
 /*!40000 ALTER TABLE `Roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -511,7 +512,7 @@ CREATE TABLE `RoomHasSet` (
 
 LOCK TABLES `RoomHasSet` WRITE;
 /*!40000 ALTER TABLE `RoomHasSet` DISABLE KEYS */;
-INSERT INTO `RoomHasSet` VALUES (2,10,20),(3,2,20),(3,3,24),(3,5,40),(3,10,26),(4,2,50),(4,3,48),(4,5,89),(4,10,40),(5,10,10),(6,10,10),(7,2,20),(7,3,21),(7,5,50),(7,10,22),(8,2,50),(8,3,47),(8,5,91),(8,10,34),(9,2,20),(9,3,21),(9,5,50),(9,10,22),(10,2,20),(10,3,23),(10,5,45),(10,10,22),(11,2,10),(11,3,6),(11,5,14),(11,10,10),(12,2,20),(12,3,12),(12,5,38),(12,10,16),(13,2,30),(13,3,30),(13,5,63),(13,10,28),(14,2,20),(14,3,15),(14,5,44),(14,10,22),(15,2,10),(15,3,9),(15,5,32),(15,10,16),(16,2,20),(16,3,24),(16,5,49),(16,10,22),(17,2,10),(17,3,9),(17,5,20),(17,10,10),(18,2,40),(18,3,27),(18,5,65),(18,10,40),(19,3,18),(19,5,30),(19,10,16),(20,10,8),(21,2,30),(21,3,32),(21,5,80),(21,10,34),(22,2,20),(22,3,24),(22,5,55),(22,10,28),(23,10,8),(24,2,60),(24,3,60),(24,5,115),(24,10,58),(25,2,60),(25,3,60),(25,5,108),(25,10,54),(26,2,20),(26,3,23),(26,5,47),(26,10,22);
+INSERT INTO `RoomHasSet` VALUES (1,3,0),(1,5,0),(1,10,0),(2,3,450),(2,5,900),(2,10,0),(3,3,80),(3,5,160),(3,10,36),(4,3,80),(4,5,160),(4,10,36),(5,3,64),(5,5,100),(5,10,48),(6,3,200),(6,5,400),(6,10,66),(7,3,0),(7,5,0),(7,10,0),(8,3,0),(8,5,0),(8,10,0),(9,3,0),(9,5,0),(9,10,0),(10,3,0),(10,5,0),(10,10,0),(11,3,54),(11,5,160),(11,10,0),(12,3,30),(12,5,60),(12,10,18),(13,3,25),(13,5,60),(13,10,18),(14,3,0),(14,5,0),(14,10,0),(15,3,60),(15,5,145),(15,10,48),(16,3,60),(16,5,145),(16,10,48),(17,3,30),(17,5,55),(17,10,24),(18,3,30),(18,5,55),(18,10,24),(19,3,54),(19,5,125),(19,10,36),(20,3,54),(20,5,125),(20,10,36),(21,3,54),(21,5,125),(21,10,36),(22,3,0),(22,5,0),(22,10,6),(23,3,0),(23,5,0),(23,10,16),(24,3,0),(24,5,0),(24,10,0),(25,3,0),(25,5,0),(25,10,12),(26,3,0),(26,5,0),(26,10,12),(27,3,0),(27,5,0),(27,10,0),(28,3,45),(28,5,70),(28,10,26),(29,3,16),(29,5,40),(29,10,16),(30,3,16),(30,5,40),(30,10,16),(31,3,30),(31,5,50),(31,10,24),(32,3,0),(32,5,0),(32,10,0),(33,3,15),(33,5,25),(33,10,15),(34,3,0),(34,5,0),(34,10,0),(35,3,0),(35,5,0),(35,10,0),(36,3,0),(36,5,0),(36,10,0);
 /*!40000 ALTER TABLE `RoomHasSet` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -533,7 +534,7 @@ CREATE TABLE `RoomSets` (
 
 LOCK TABLES `RoomSets` WRITE;
 /*!40000 ALTER TABLE `RoomSets` DISABLE KEYS */;
-INSERT INTO `RoomSets` VALUES (1,'Theater seating w/ Head Table w/ 5 chairs & water',15),(2,'Round Table',17),(3,'Classroom',11),(5,'Theater',21),(6,'Self Service',19),(7,'Dance + Chairs',3),(8,'Dance + Tables',5),(9,'Circle of Chairs',1),(10,'Board Seating',30),(11,'Risers + Chairs',7),(12,'Special',40),(13,'On TV',1);
+INSERT INTO `RoomSets` VALUES (1,'Theater seating w/ Head Table w/ 5 chairs & water',15),(2,'Round Table',17),(3,'Classroom',11),(4,'Unspecified',99),(5,'Theater',21),(6,'Self Service',19),(7,'Dance + Chairs',3),(8,'Dance + Tables',5),(9,'Circle of Chairs',1),(10,'Board Seating',30),(11,'Risers + Chairs',7),(12,'Special',40),(13,'On TV',1);
 /*!40000 ALTER TABLE `RoomSets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -567,7 +568,7 @@ CREATE TABLE `Rooms` (
 
 LOCK TABLES `Rooms` WRITE;
 /*!40000 ALTER TABLE `Rooms` DISABLE KEYS */;
-INSERT INTO `Rooms` VALUES (2,'Alcott',NULL,'8 ft 5in','23 x 34','654','Open Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'Back Bay',NULL,'8 ft 7in','15 x 32','484','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,'Beacon Hill',NULL,'8 ft 7in','23 x 43','850','Open Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'Board Room',NULL,'8 ft 3in','20 x 23','396','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'Brandeis',NULL,'8 ft 6in','13 x 35','446','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,'Cabot',NULL,'8 ft 6in','19 x 29','515','Scheduled Gaming / LARP Control','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,'Cambridge',NULL,'8 ft 6in','23 x 44','892','LARP','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,'Charles River',NULL,'8 ft 6in','19 x 29','515','Game Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,'Constitution',NULL,'8 ft 5in','15 x 33','446','Main Program (free form seeting)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,'Copley',NULL,'8 ft 6in','12 x 16','232','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,'Emerson',NULL,'8 ft 3in','19 x 26','398','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,'Franklin',NULL,'8 ft 6in','18 x 48','727','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(14,'Gloucester',NULL,'8 ft 6in','19 x 33','471','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(15,'Holmes',NULL,'8 ft 6in','15 x 25','334','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(16,'Lexington',NULL,'7 ft 3in','15 x 30','461','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(17,'Longfellow',NULL,'8 ft 6in','14 x 22','284','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(18,'St. James',NULL,'8 ft 6in','15 x 48','767','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(19,'Garden Suite',NULL,'0','0','0','Con Suite','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,'Statler',NULL,'8 ft 5in','13 x 21','292','Sign Shop','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,'Stuart',NULL,'8 ft 7in','13 x 40','731','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(22,'Thoreau',NULL,'8 ft 7in','16 x 33','557','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(23,'Tremont',NULL,'8 ft 6in','18 x 23','392','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(24,'White Hill',NULL,'8 ft 6in','15 x 68','1,203','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(25,'Whittier',NULL,'8 ft 6in','22 x 65','1,215','Main Program (w/ A/V)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(26,'Winthrop',NULL,'8 ft 4in','23 x 26','498','Main Program (w/ A/V)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,'Imperial Ballroom',NULL,'30 ft 4in','116 x 73','8,516','Main Tent','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(28,'Plaza Ballroom',NULL,'21 ft 5in','64 x 73','4,699','Dealers','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(29,'Georgian',NULL,'13 ft 10in','82 x 49','4,021','Art Show','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(30,'Arlington',NULL,'10 ft 7in','42 x 33','1,402','Art Show','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(31,'Berkeley',NULL,'10 ft 7in','22 x 33','748','Anime','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(32,'Clarendon',NULL,'10 ft 7in','22 x 33','732','Video','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(33,'Dartmouth/Exeter',NULL,'11 ft 11in','44 x 15','639','Ops/Security','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(34,'Fairfield',NULL,'12 ft 0in','23 x 15','326','Gopher Hole','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(35,'Hancock',NULL,'11 ft 9in','41 x 14','588','Main Program (w/ A/V)','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(36,'Stanbro',NULL,'8 ft 11in','56 x 50','2,904','Small Tent / Masquerade green room','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(37,'Terrace',NULL,'10 ft 5 in','65 x 82','5,330','Films','basement',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(38,'TV 55',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(39,'TV 56',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `Rooms` VALUES (1,'Staff Conference Room',300,'',' x','','Newsletter','basement',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'President\'s ABCD',1,'18\'','73\' x 96\'','7,008','Main Tent (Sat evening only)','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'President\'s A',3,'18\'','35\' x 37\'','1,295','Small Tent','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,'President\'s B',4,'18\'','38\' x 37\'','1,406','Films (Not Saturday Evening)','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'President\'s C',5,'18\'','73\' x 13\'','949','Prefunction (Not Saturday Evening)','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'President\'s D',6,'18\'','73\' x 46\'','3,358','Main Tent (Not Saturday evening)','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,'Prefunction A',19,'9\'','20\' x 25\'','500','Program/Prefunction','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,'Prefunction BC',20,'9\'','20\' x 27\'','540','Prefunction/Masquerade','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,'Prefunction D',21,'9\'','20\' x 13\'','260','Prefunction/Masquerade','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,'Courtyard Lobby',300,'',' x','','Registration/Fan Tables/Masquerade','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,'Paul Revere AB',29,'9\'','39\' x 34\'','1,188','Unknown','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,'Paul Revere A',30,'9\'','34\' x 20\'','615','Unknown','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,'Paul Revere B',31,'9\'','31\' x 18\'','573','Unknown','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(14,'Patriots\' Hall',40,'',' x','','Unknown','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(15,'Thomas Paine AB',50,'9\'','23\' x 50\'','1,150','Gaming','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(16,'William Dawes AB',60,'9\'','23\' x 50\'','1,150','Program','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(17,'William Dawes A',61,'9\'','23\' x 25\'','575','Program','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(18,'William Dawes B',62,'9\'','23\' x 25\'','575','Program','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(19,'Crispus Attucks',70,'9\'','23\' x 39\'','897','Program/Filk','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,'Haym Solomon',80,'9\'','23\' x 39\'','897','Anime/Video/Program','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,'Molly Pitcher',80,'9\'','23\' x 39\'','897','Video/Anime/Program','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(22,'Media Room',200,'9\'','16\' x 9\'5','144','Registration/Prog Ops','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(23,'Guest Room 201',200,'8\'','13\' x 28\'','364','Unknown','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(24,'Guest Room 202',200,'',' x','','Security','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(25,'Guest Room 203',200,'8\'','13\' x 26\'','338','Ops','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(26,'Guest Room 204',200,'8\'','13\' x 26\'','338','Program','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,'Guest Room 207',200,'',' x','','Volunteers','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(28,'Cambridge AB',90,'8\'','39\' x 23\'','897','Program/Parties','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(29,'Cambridge A',91,'8\'','20\' x 23\'','460','Program','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(30,'Cambridge B',92,'8\'','19\' x 23\'','437','Program','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(31,'Aquarium',100,'9-17\'','21\' x 31\'','651','Con Suite','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(32,'Crows\' Nest Alcove',100,'','Irregular x','400','CouchCon','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(33,'BU Suite (Regency Club)',100,'8\'','26\'6 x 16\'','547','Staff Den','10',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(34,'Empress',110,'','Multi-level x','3,262','Dealers','14',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(35,'Charles River Ballroom',110,'',' x','3,000','Art Show / Dead Dog','16',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(36,'Charles River Prefunction',110,'',' x','1,000','Program','16',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(40,'Fast Track 1',120,NULL,NULL,NULL,'Fast Track',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(41,'Fast Track 2',121,NULL,NULL,NULL,'Fast Track',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(42,'Fast Track 3',122,NULL,NULL,NULL,'Fast Track',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(43,'Zephyr Patio',101,NULL,NULL,NULL,NULL,'outside restaurant',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(44,'ArisiaTV',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `Rooms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -617,6 +618,60 @@ LOCK TABLES `Services` WRITE;
 /*!40000 ALTER TABLE `Services` DISABLE KEYS */;
 INSERT INTO `Services` VALUES (1,'DVD Player',3),(2,'VHS Tape Player',21),(3,'Projector (Computer)',9),(4,'CD Player',1),(5,'Sound',17),(6,'TV',19),(7,'Projector (Video)',10),(8,'Food',5),(9,'Flip Chart',4),(10,'Gopher',6),(11,'Lights',7),(12,'Power Strips',8),(13,'Slide Carousel',12),(14,'Risers',11);
 /*!40000 ALTER TABLE `Services` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionEditCodes`
+--
+
+DROP TABLE IF EXISTS `SessionEditCodes`;
+CREATE TABLE `SessionEditCodes` (
+  `sessioneditcode` int(11) NOT NULL auto_increment,
+  `description` varchar(40) default NULL,
+  `display_order` int(11) NOT NULL default '1',
+  PRIMARY KEY  (`sessioneditcode`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `SessionEditCodes`
+--
+
+LOCK TABLES `SessionEditCodes` WRITE;
+/*!40000 ALTER TABLE `SessionEditCodes` DISABLE KEYS */;
+INSERT INTO `SessionEditCodes` VALUES (1,'Created in brainstorm',1),(2,'Created in staff create session',2),(3,'Unknown edit',3);
+/*!40000 ALTER TABLE `SessionEditCodes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionEditHistory`
+--
+
+DROP TABLE IF EXISTS `SessionEditHistory`;
+CREATE TABLE `SessionEditHistory` (
+  `sessionid` int(11) NOT NULL default '0',
+  `badgeid` varchar(15) default NULL,
+  `name` varchar(40) default NULL,
+  `email_address` varchar(75) default NULL,
+  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `sessioneditcode` int(11) NOT NULL default '0',
+  `statusid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sessionid`,`timestamp`),
+  KEY `FK_SessionEditHistory` (`badgeid`),
+  KEY `FK_SessionEditCodes` (`sessioneditcode`),
+  KEY `FK_SessionEditHistory4` (`statusid`),
+  CONSTRAINT `SessionEditHistory_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionEditHistory_ibfk_2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `SessionEditHistory_ibfk_3` FOREIGN KEY (`sessioneditcode`) REFERENCES `SessionEditCodes` (`sessioneditcode`),
+  CONSTRAINT `SessionEditHistory_ibfk_4` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 8192 kB';
+
+--
+-- Dumping data for table `SessionEditHistory`
+--
+
+LOCK TABLES `SessionEditHistory` WRITE;
+/*!40000 ALTER TABLE `SessionEditHistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionEditHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -706,7 +761,7 @@ CREATE TABLE `SessionStatuses` (
 
 LOCK TABLES `SessionStatuses` WRITE;
 /*!40000 ALTER TABLE `SessionStatuses` DISABLE KEYS */;
-INSERT INTO `SessionStatuses` VALUES (1,'Brainstorm',4),(2,'Vetted',6),(3,'Scheduled',14),(4,'Dropped',18),(5,'Cancelled',20),(6,'Edit Me',1),(7,'Assigned',10);
+INSERT INTO `SessionStatuses` VALUES (1,'Brainstorm',4),(2,'Vetted',6),(3,'Scheduled',14),(4,'Dropped',18),(5,'Cancelled',20),(6,'Edit Me',1),(7,'Assigned',10),(8,'A06scheduled',100),(9,'A06notsched',101),(10,'duplicate',90),(11,'A07scheduled',102),(12,'A07notsched',102);
 /*!40000 ALTER TABLE `SessionStatuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -744,8 +799,8 @@ CREATE TABLE `Sessions` (
   KEY `kidscatid` (`kidscatid`),
   KEY `roomsetid` (`roomsetid`),
   KEY `statusid` (`statusid`),
-  KEY `Sessions_ibfk_6` (`pubstatusid`),
   KEY `Sessions_ibfk_7` (`divisionid`),
+  KEY `Sessions_ibfk_6` (`pubstatusid`),
   CONSTRAINT `Sessions_ibfk_1` FOREIGN KEY (`trackid`) REFERENCES `Tracks` (`trackid`),
   CONSTRAINT `Sessions_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `Types` (`typeid`),
   CONSTRAINT `Sessions_ibfk_3` FOREIGN KEY (`kidscatid`) REFERENCES `KidsCategories` (`kidscatid`),
@@ -805,7 +860,7 @@ CREATE TABLE `Tracks` (
 
 LOCK TABLES `Tracks` WRITE;
 /*!40000 ALTER TABLE `Tracks` DISABLE KEYS */;
-INSERT INTO `Tracks` VALUES (1,'Anime',1,0),(2,'Art Prog.',2,1),(4,'Comics',3,1),(5,'ConSuite',4,1),(6,'Costuming',5,1),(7,'Events',6,1),(9,'Fan Interest',7,1),(10,'FastTrack',8,1),(11,'Filk',9,1),(12,'Film',10,0),(13,'Gaming Prog.',11,1),(14,'LARP',12,1),(15,'Media Prog.',14,1),(16,'Literature',13,1),(17,'Video',17,0),(18,'Science',15,1),(19,'Space Exploration',16,1),(20,'Arisia TV',2,0),(21,'Gaming',11,0),(22,'Do Not Print',20,0),(24,'Art Show',2,0),(25,'Reading',16,0);
+INSERT INTO `Tracks` VALUES (1,'Anime',1,0),(2,'Art Prog.',2,1),(4,'Comics',3,1),(5,'ConSuite',4,1),(6,'Costuming',5,1),(7,'Events',6,1),(9,'Fan Interest',7,1),(10,'FastTrack',8,1),(11,'Filk',9,1),(12,'Film',10,0),(13,'Gaming Prog.',11,1),(14,'LARP',12,1),(15,'Media Prog.',14,1),(16,'Literature',13,1),(17,'Video',17,0),(18,'Science',15,1),(19,'Teen',16,1),(20,'Arisia TV',2,0),(21,'Gaming',11,0),(22,'Do Not Print',20,0),(24,'Art Show',2,0),(25,'Reading',16,0),(26,'Focus Topic',7,1),(27,'Geekery',6,1),(28,'Lifestyles',12,1),(29,'I do not know',700,0),(30,'Anime Prog.',1,1),(31,'New Items',600,1),(32,'Parties',500,0);
 /*!40000 ALTER TABLE `Tracks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -827,7 +882,7 @@ CREATE TABLE `Types` (
 
 LOCK TABLES `Types` WRITE;
 /*!40000 ALTER TABLE `Types` DISABLE KEYS */;
-INSERT INTO `Types` VALUES (1,'Panel',1),(2,'Workshop',2),(3,'Special',3),(4,'Lecture',4),(5,'Meeting',5),(6,'Large Tent',6),(7,'Small Tent',9),(8,'Reading',7),(9,'Group Reading',8),(10,'TV - Live Event',10),(11,'TV - Previous Event',11),(12,'Movie',12),(13,'TV Show',13),(14,'Open Gaming',30),(15,'Scheduled Game',30),(16,'TV - Movie',11);
+INSERT INTO `Types` VALUES (1,'Panel',1),(2,'Workshop',2),(4,'Lecture',4),(5,'Meeting',5),(8,'Reading',7),(9,'Group Reading',8),(10,'TV - Live Event',10),(11,'TV - Previous Event',11),(12,'Movie',12),(13,'TV Show',13),(14,'Open Gaming',30),(15,'Scheduled Game',30),(16,'TV - Movie',11),(17,'I do not know',700),(18,'Concert',4),(19,'Participatory Event',2),(20,'Drama',4);
 /*!40000 ALTER TABLE `Types` ENABLE KEYS */;
 UNLOCK TABLES;
 
