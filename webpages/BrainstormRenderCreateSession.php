@@ -22,6 +22,83 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
     }
     //error_log("Zambia: ".print_r($session,TRUE));
   ?>
+<script language="javascript" type="text/javascript">
+var phase1required=new Array("name", "email", "track", "title", "progguiddesc");
+var currentPhase, unhappyColour, happyColor;
+
+function colourCodeElements(phaseName, unhappyC, happyC) {
+var i, o;
+  	currentPhase = phaseName;
+  	unhappyColor = unhappyC;
+  	happyColor = happyC;
+  	eval('var requiredElements = ' + phaseName + 'required');
+  	if (requiredElements == null) return;
+  	for (i = 0; i < requiredElements.length; i++) {
+  		o = document.getElementById(requiredElements[i]);
+  		if (o != null) {
+			o.style.color = "red";
+  		}
+  	}
+}
+
+function checkSubmitButton() {
+var i, j, o, relatedO, controls;
+var enable = true;
+  
+  	eval('var requiredElements = ' + currentPhase + 'required');
+  	if (requiredElements == null) return;
+  	for (i = 0; i < requiredElements.length; i++) {
+  		controls = document.getElementsByName(requiredElements[i]);
+  		if (controls != null) {
+  			for (j = 0; j < controls.length; j++) {
+  				
+				o = controls[j];
+				relatedO = document.getElementById(requiredElements[i]);
+				switch (o.tagName) {
+				case "LABEL":
+					break;
+				case "SELECT":
+					if (o.options[o.selectedIndex].value == 0) {
+						enable = false;
+						relatedO.style.color = unhappyColor;
+					}
+					else {
+						relatedO.style.color = happyColor;
+					}
+					break;
+				case "TEXTAREA":
+					if (o.value == "") {
+						enable = false;
+						relatedO.style.color = unhappyColor;
+					}
+					else {
+						relatedO.style.color = happyColor;
+					}
+					break;
+				case "INPUT":
+					if (o.value == "") {
+						enable = false;
+						relatedO.style.color = unhappyColor;
+					}
+					else {
+						relatedO.style.color = happyColor;
+					}
+					break;
+				}
+			}
+  		}
+  	}
+	var saveButton = document.getElementById("sButtonTop");
+	if (saveButton != null) {
+		saveButton.disabled = !enable;
+	}	
+	var saveButton = document.getElementById("sButtonBottom");
+	if (saveButton != null) {
+		saveButton.disabled = !enable;
+	}	
+}
+</script>
+  
     <DIV class="formbox">
         <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
         <INPUT type="hidden" name="type" value="<?php echo $session["type"]; ?>">
@@ -34,40 +111,40 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
         <INPUT type="hidden" name="kids" value="<?php echo $session["kids"];?>">
         <INPUT type="hidden" name="status" value="<?php echo $session["status"];?>">
         <INPUT type="hidden" name="action" value="brainstorm">
-        <BUTTON type=reset value="reset">Reset</BUTTON>
-        <BUTTON type=submit value="save" >Save</BUTTON>
+        <INPUT type=reset value="Reset">&nbsp;
+        <INPUT type=submit ID="sButtonTop" value="Save">
         <TABLE>
             <TR>
                 <TD class="form1">
-                   <LABEL for="name">Your Name:</LABEL><BR>
-                   <INPUT TYPE="TEXT" NAME="name" 
+                   <LABEL for="name" ID="name">Your Name:</LABEL><BR>
+                   <INPUT TYPE="TEXT" NAME="name" onKeyPress="return checkSubmitButton();"
                    <?php if ($name!="")
                             echo "value=\"$name\" "; ?>
                        ></TD></TR>
             <TR>
                 <TD class="form1">&nbsp;<BR>
-                   <LABEL for="email">Your email address:</LABEL><BR>
-                   <INPUT TYPE="TEXT" NAME="email" size="50"
+                   <LABEL for="email" ID="email">Your email address:</LABEL><BR>
+                   <INPUT TYPE="TEXT" NAME="email" size="50" onKeyPress="return checkSubmitButton();"
                    <?php if ($email!="")
                             echo "value=\"$email\" "; ?>
                        ></TD></TR> 
             <TR>
                 <TD class="form1">&nbsp;<BR>
-                    <LABEL for="track">Track:</LABEL><BR> <SELECT name="track">
+                    <LABEL for="track" ID="track">Track:</LABEL><BR><SELECT name="track" onChange="return checkSubmitButton();">
                     <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
                     </SELECT></TD>
                 </TR>
             <TR>
                 <TD class="form1">&nbsp;<BR>
-          <LABEL for="title">Title: </LABEL><BR>
+          <LABEL for="title" ID="title">Title: </LABEL><BR>
             <?php echo "<INPUT type=text size=\"50\" name=\"title\" value=\"";
-            echo htmlspecialchars($session["title"],ENT_COMPAT)."\">"; ?>
+            echo htmlspecialchars($session["title"],ENT_COMPAT)."\" onKeyPress=\"return checkSubmitButton();\">"; ?>
                 </TD>
              </TR>
             <TR>
                 <TD class="form1">&nbsp;<BR>
-          <LABEL for="progguiddesc">Description:</LABEL><BR>
-            <TEXTAREA cols="70" rows="5" name="progguiddesc" ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES); ?></TEXTAREA>
+          <LABEL for="progguiddesc" id="progguiddesc">Description:</LABEL><BR>
+            <TEXTAREA cols="70" rows="5" name="progguiddesc" onKeyPress="return checkSubmitButton();"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES); ?></TEXTAREA>
                 </TD>
              </TR>
             <TR>
@@ -77,8 +154,12 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
                 </TD>
              </TR>
          </TABLE>
-        <BUTTON type=reset value="reset">Reset</BUTTON>
-        <BUTTON type=submit value="save" >Save</BUTTON>
+        <INPUT type=reset value="Reset">&nbsp;
+        <INPUT type=submit ID="sButtonBottom" value="Save">
       </FORM>
   </DIV>
+  <script language="javascript" type="text/javascript">
+  colourCodeElements("phase1", "red", "green");
+  checkSubmitButton();
+  </script>
 <?php brainstorm_footer(); } ?>
