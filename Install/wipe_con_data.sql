@@ -15,6 +15,8 @@ truncate table CongoDump;
 truncate table Schedule;
 truncate table SessionHasFeature;
 truncate table SessionHasService;
+truncate table SessionEditHistory;
+truncate table SessionHasPubChar;
 truncate table Sessions;
 -- you don't want to disable constraints. Really! 
 -- you want to run down the real problem instead  
