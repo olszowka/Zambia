@@ -18,6 +18,8 @@
   <table class="tabhead">
     <tr class="tabrow">
       <td class="tabblocks border0020">
+        <?php maketab("Staff Overview",1,"StaffPage.php"); ?></td>
+      <td class="tabblocks border0020">
         <?php maketab("Available Reports",1,"StaffAvailableReports.php"); ?></td>
       <td class="tabblocks border0020">
         <?php maketab("Manage Sessions",1,"StaffManageSessions.php"); ?></td>
