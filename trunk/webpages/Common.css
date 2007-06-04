@@ -46,7 +46,8 @@ A {
 
 A:hover {
     font-weight: normal;
-    color: #00804F;
+/*    color: #00804F; */
+    color: orange; 
     text-decoration : none;
     }
 
