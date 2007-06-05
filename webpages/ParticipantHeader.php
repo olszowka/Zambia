@@ -42,7 +42,7 @@
       <td class="tabblocks border0020" colspan=2>
          <?php maketab("My Schedule",may_I('my_schedule'),"MySchedule.php"); ?></td>
       <td class="tabblocks border0020" colspan=2>
-         <?php maketab("Suggest a Session",may_I('brianstorm'),"BrainstormWelcome.php"); ?></td>
+         <?php maketab("Suggest a Session",may_I('Brainstorm'),"BrainstormWelcome.php"); ?></td>
       <td class="tabblocks border0020 smallspacer">&nbsp;</td>
           </tr>
         </table>
