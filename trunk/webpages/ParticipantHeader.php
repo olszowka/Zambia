@@ -21,7 +21,7 @@
     <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
     <tr class="tabrow">
       <td class="tabblocks border0020" colspan=2>
-         <?php maketab("Welcome", 1, "welcome.php"); ?></td>
+         <?php maketab("Welcome", 1, "welcome.php"); ?> </td>
       <td class="tabblocks border0020" colspan=2>
          <?php maketab("My Availability",may_I('my_availability'),"my_sched_constr.php"); ?></td>
       <td class="tabblocks border0020" colspan=2>
