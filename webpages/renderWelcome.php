@@ -2,9 +2,7 @@
    global $participant,$message,$message_error,$message2,$congoinfo;
    //error_log("Zambia: Reached renderWelcome.php"); 
    $title="Participant View";
-   require_once('data_functions.php');
-   require_once('ParticipantHeader.php');
-   require_once('ParticipantFooter.php');
+   require_once('PartCommonCode.php');
    participant_header($title);
 ?>
 
