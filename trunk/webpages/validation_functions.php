@@ -152,6 +152,10 @@ function validate_participant_availability() {
         $messages="Numbers must be between 0 and 10.<BR>\n";
         $flag=false;
         }
+    if (!($partAvail["mondaymaxprog"]>=0 and $partAvail["mondaymaxprog"]<=10)) {
+        $messages="Numbers must be between 0 and 10.<BR>\n";
+        $flag=false;
+        }
     if (!($partAvail["maxprog"]>=0 and $partAvail["maxprog"]<=10)) {
         $messages="Numbers must be between 0 and 10.<BR>\n";
         $flag=false;
