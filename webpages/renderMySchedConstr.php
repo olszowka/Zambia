@@ -27,10 +27,12 @@ each box.  There is no need for the numbers to add up.  We'll use this
 for guidance when assigning and scheduling panels. </p>
 <table>
     <tr>
-        <td>Preferred Total Number of Panels</td>
-        <td>
+        <td colspan=3>Preferred Total Number of Panels</td>
+        <td colspan=5>
            <INPUT d=maxprog size=3 name=maxprog value="<?php echo $partAvail["maxprog"]?>">
         </td>
+    </tr>
+    <tr>
         <td>Friday Maximum</td>
         <td>
            <INPUT id=fridaymaxprog size=3 name=fridaymaxprog value="<?php echo $partAvail["fridaymaxprog"]?>">
@@ -42,6 +44,10 @@ for guidance when assigning and scheduling panels. </p>
         <td>Sunday Maximum</td>
         <td>
            <INPUT id=sundaymaxprog size=3 name=sundaymaxprog value="<?php echo $partAvail["sundaymaxprog"]?>">
+        </td>
+        <td>Monday Maximum</td>
+        <td>
+           <INPUT id=mondaymaxprog size=3 name=mondaymaxprog value="<?php echo $partAvail["mondaymaxprog"]?>">
         </td>
     </tr>
 </table>
@@ -72,6 +78,7 @@ guidance when scheduling your panels.</p>
         <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
         <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
         <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+        <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
       </SELECT>
     </td> 
     <td> 
@@ -90,6 +97,7 @@ guidance when scheduling your panels.</p>
         <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
         <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
         <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+        <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
       </SELECT>
     </td>
     <td>
@@ -109,6 +117,7 @@ guidance when scheduling your panels.</p>
           <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
           <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
           <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+          <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
         </SELECT>
     </td>
     <td>
@@ -127,6 +136,7 @@ guidance when scheduling your panels.</p>
             <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
             <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
             <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+            <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
          </SELECT>
     </td>
     <td>
@@ -146,6 +156,7 @@ guidance when scheduling your panels.</p>
           <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
           <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
           <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+          <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
         </SELECT>
     </td>
     <td>
@@ -164,6 +175,7 @@ guidance when scheduling your panels.</p>
             <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
             <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
             <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+            <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
             </SELECT>
     </td>
     <td>
@@ -183,6 +195,7 @@ guidance when scheduling your panels.</p>
           <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
           <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
           <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+          <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
         </SELECT>
     </td>
     <td>
@@ -201,6 +214,7 @@ guidance when scheduling your panels.</p>
         <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
         <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
         <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+        <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
       </SELECT>
     </td>
     <td>
@@ -220,6 +234,7 @@ guidance when scheduling your panels.</p>
           <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
           <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
           <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+          <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
         </SELECT>
     </td>
     <td>
@@ -238,6 +253,7 @@ guidance when scheduling your panels.</p>
         <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
         <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
         <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+        <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
       </SELECT>
     </td>
     <td>
@@ -257,6 +273,7 @@ guidance when scheduling your panels.</p>
           <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
           <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
           <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+          <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
         </SELECT>
     </td>
     <td>
@@ -275,6 +292,7 @@ guidance when scheduling your panels.</p>
         <OPTION value=1 <?php if ($dayindex==1) {echo"selected ";}?> >Friday</OPTION>
         <OPTION value=2 <?php if ($dayindex==2) {echo"selected ";}?> >Saturday</OPTION>
         <OPTION value=3 <?php if ($dayindex==3) {echo"selected ";}?> >Sunday</OPTION>
+        <OPTION value=4 <?php if ($dayindex==4) {echo"selected ";}?> >Monday</OPTION>
       </SELECT>
     </td>
     <td>

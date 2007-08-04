@@ -506,15 +506,20 @@ function getCongoData($badgeid) {
 //
 function retrieve_participantAvailability_from_db($badgeid) {
     global $partAvail;
-    global $link,$message2;
-    $result=mysql_query("SELECT * FROM ParticipantAvailability where badgeid=\"".$badgeid."\"",$link);
+    global $link,$message2,$message_error;
+    $query= <<<EOD
+Select badgeid, fridaymaxprog, saturdaymaxprog, sundaymaxprog, mondaymaxprog, maxprog,
+   preventconflict, otherconstraints, numkidsfasttrack FROM ParticipantAvailability
+EOD;
+    $query.=" where badgeid=\"$badgeid\"";
+    $result=mysql_query($query,$link);
     if (!$result) {
-        $message2=mysql_error($link);
+        $message_error=$query."<BR>\n".mysql_error($link);
         return (-3);
         }
     $rows=mysql_num_rows($result);
     if ($rows!=1) {
-        $message2=$rows;
+        $message_error=$query."<BR>\n returned $rows rows.";
         return (-2);
         }
     $partAvailarray=mysql_fetch_array($result, MYSQL_NUM);
@@ -522,13 +527,16 @@ function retrieve_participantAvailability_from_db($badgeid) {
     $partAvail["fridaymaxprog"]=$partAvailarray[1];
     $partAvail["saturdaymaxprog"]=$partAvailarray[2];
     $partAvail["sundaymaxprog"]=$partAvailarray[3];
-    $partAvail["maxprog"]=$partAvailarray[4];
-    $partAvail["preventconflict"]=$partAvailarray[5];
-    $partAvail["otherconstraints"]=$partAvailarray[6];
-    $partAvail["numkidsfasttrack"]=$partAvailarray[7];
-    $result=mysql_query("SELECT * FROM ParticipantAvailabilityTimes where badgeid=\"".$badgeid."\" order by starttime",$link);
+    $partAvail["mondaymaxprog"]=$partAvailarray[4];
+    $partAvail["maxprog"]=$partAvailarray[5];
+    $partAvail["preventconflict"]=$partAvailarray[6];
+    $partAvail["otherconstraints"]=$partAvailarray[7];
+    $partAvail["numkidsfasttrack"]=$partAvailarray[8];
+    $query="Select badgeid, availabilitynum, starttime, endtime FROM ParticipantAvailabilityTimes ";
+    $query.="where badgeid=\"$badgeid\" order by starttime";
+    $result=mysql_query($query,$link);
     if (!$result) {
-        $message2=mysql_error($link);
+        $message_error=mysql_error($link);
         return (-3);
         }
     unset($partAvail["availtimes"]);
@@ -555,6 +563,7 @@ function set_permission_set($badgeid) {
     P.permatomid = PA.permatomid
 EOD;
     $result=mysql_query($query,$link);
+//    error_log("set_permission_set query:  ".$query);
     if (!$result) {
         $message_error=$query." \n ".mysql_error($link)." \n <BR>Database Error.<BR>No further execution possible.";
         error_log("Zambia: ".$message_error);
