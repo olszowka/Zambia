@@ -48,7 +48,8 @@
             $query .="badgeid=\"".$badgeid."\", fridaymaxprog=";
             $query .=$partAvail["fridaymaxprog"].", saturdaymaxprog=";
             $query .=$partAvail["saturdaymaxprog"].", sundaymaxprog=";
-            $query .=$partAvail["sundaymaxprog"].", maxprog=";
+            $query .=$partAvail["sundaymaxprog"].", mondaymaxprog=";
+            $query .=$partAvail["mondaymaxprog"].", maxprog=";
             $query .=$partAvail["maxprog"].", preventconflict=";
             $query .="\"".mysql_real_escape_string($partAvail["preventconflict"],$link)."\", otherconstraints=";
             $query .="\"".mysql_real_escape_string($partAvail["otherconstraints"],$link)."\", numkidsfasttrack=";

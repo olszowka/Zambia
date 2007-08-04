@@ -51,10 +51,11 @@ function get_session_interests_from_post() {
 //
 function get_participant_availability_from_post() {
     global $partAvail;
-    // for 5 numeric fields--convert to 0 if blank
+    // for 6 numeric fields--convert to 0 if blank
     $partAvail["fridaymaxprog"]=($_POST["fridaymaxprog"]=="")?0:$_POST["fridaymaxprog"]+0;
     $partAvail["saturdaymaxprog"]=($_POST["saturdaymaxprog"]=="")?0:$_POST["saturdaymaxprog"]+0;
     $partAvail["sundaymaxprog"]=($_POST["sundaymaxprog"]=="")?0:$_POST["sundaymaxprog"]+0;
+    $partAvail["mondaymaxprog"]=($_POST["mondaymaxprog"]=="")?0:$_POST["mondaymaxprog"]+0;
     $partAvail["maxprog"]=($_POST["maxprog"]=="")?0:$_POST["maxprog"];
     $partAvail["availstartday_1"]=$_POST["availstartday_1"];
     $partAvail["availstartday_2"]=$_POST["availstartday_2"];
