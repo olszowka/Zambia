@@ -181,7 +181,7 @@ $numsessions=$i;
 for ($i=1;$i<=newroomslots;$i++) {
     echo "   <TR>\n";
     echo "      <TD><Select name=\"day$i\"><Option value=0 selected>Day&nbsp;</Option><Option value=1>Fri</Option>";
-    echo "<Option value=2>Sat</Option><Option value=3>Sun</Option></Select>&nbsp;\n";
+    echo "<Option value=2>Sat</Option><Option value=3>Sun</Option><Option value=4>Mon</Option></Select>&nbsp;\n";
     echo "          <Select name=\"hour$i\"><Option value=\"unset\" selected>Hour&nbsp;</Option><Option value=0>12</Option>";
     for ($j=1;$j<=11;$j++) {
         echo "<Option value=$j>$j</Option>";
