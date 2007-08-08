@@ -169,7 +169,7 @@ function parse_mysql_time($time) {
 // Takes the string $time and return string describing time
 //
 function time_description($time) {
-    $days=array("Fri","Sat","Sun");
+    $days=array("Fri","Sat","Sun","Mon");
     $atime=parse_mysql_time($time);
     $result="";
     $result.=$days[$atime["day"]]." ";
