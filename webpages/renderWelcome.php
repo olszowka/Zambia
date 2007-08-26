@@ -19,8 +19,14 @@
 
 <p><h3> Please check back often as more options will become available as we get closer to the convention. </h3>
 
-<P><br> For our returning and first time users: 
-<p> Your programming hosts this year are Jack Dietz and September Isdell.  The best way to reach us with your comments, questions, or suggestions is to email <A HREF="mailto:<?php echo PROGRAM_EMAIL."\">".PROGRAM_EMAIL ?></A>. 
+<P> Ahoy maties,
+
+<p> Welcome aboard the ship of Arisia Programing.
+
+<p>Your programming captain this year is Michael Whitehouse. He can best
+be reached either by running up the signal flags, or if you are over
+the horizon, by email to <A HREF="mailto:<?php echo PROGRAM_EMAIL."\">".PROGRAM_EMAIL ?></A>. 
+
 <p> First, please take a moment to indicate your ability and interest in partipating in <?php echo CON_NAME; ?> programming.
 <FORM class="nomargin" name="pwform" method=POST action="submitWelcome.php">
   <div id="update_section">
