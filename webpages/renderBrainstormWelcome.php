@@ -25,7 +25,7 @@ Please expect the suggestions you submit to evolve over time.
 physically possible with the space and time we have, so not 
 everything will make it.   We do save good ideas for future conventions. 
 <ul> 
-<li> Search for similar ideas or get inspiration.
+<li> <a href="BrainstormSearchSession.php">Search </a> for similar ideas or get inspiration.
 <li> Email <?php echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> "?> to suggest modifications on existing suggestion.
 <li> <a href="BrainstormCreateSession.php">Enter a new suggestion. </a>
 <li> See the list of <a href="BrainstormReportUnseen.php"> New </a> suggestions that have been entered recently (may not be fit for young eyes, we haven't see these yet). 
