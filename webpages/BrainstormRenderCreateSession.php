@@ -113,6 +113,7 @@ var enable = true;
         <INPUT type="hidden" name="action" value="brainstorm">
         <INPUT type=reset value="Reset">&nbsp;
         <INPUT type=submit ID="sButtonTop" value="Save">
+	<p>Note: items in red must be completed before you can save.</p>
         <TABLE>
             <TR>
                 <TD class="form1">
