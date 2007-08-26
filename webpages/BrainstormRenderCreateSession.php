@@ -117,7 +117,7 @@ var enable = true;
         <TABLE>
             <TR>
                 <TD class="form1">
-                   <LABEL for="name" ID="name">Your Name:</LABEL><BR>
+                   <LABEL for="name" ID="name">Your name:</LABEL><BR>
                    <INPUT TYPE="TEXT" NAME="name" onKeyPress="return checkSubmitButton();"
                    <?php if ($name!="")
                             echo "value=\"$name\" "; ?>
