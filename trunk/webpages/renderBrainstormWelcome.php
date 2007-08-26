@@ -28,11 +28,13 @@ everything will make it.   We do save good ideas for future conventions.
 <li> Search for similar ideas or get inspiration.
 <li> Email <?php echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> "?> to suggest modifications on existing suggestion.
 <li> <a href="BrainstormCreateSession.php">Enter a new suggestion. </a>
-<li> See the <a href="BrainstormReportUnseen.php"> list of suggestions that have been entered recently </a> (may not be fit for young eyes, we haven't see these yet). 
-<li> See the <a href="BrainstormReportVetted.php">list of suggestions we are currently sorting through</a> (we have see these).
-<li> See the <a href="BrainstormReportAll.php">list of all suggestions</a> (we've seen some and not see others).
+<li> See the list of <a href="BrainstormReportUnseen.php"> New </a> suggestions that have been entered recently (may not be fit for young eyes, we haven't see these yet). 
+<li> See the list of <a href="BrainstormReportVetted.php">In Progress </a>suggestions we are currently sorting through (we have see these).
+<li> See the list of <a href="BrainstormReportAll.php">All</a> suggestions (we've seen some and not see others).
 <li> Email <?php echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> "?> to volunteer to help process these ideas. 
-<li> <a href="welcome.php">Return To Participant View</a>
+<?php if(may_I('Participant')) {
+  echo '<li> <a href="welcome.php">Return To Participant View</a>';
+} ?>
 </ul>
 
 <p> Thank you and we look forward to reading your suggestions.
