@@ -44,7 +44,7 @@ any other needed information when moving the session to this status.
 <li>Dropped - No longer under consideration.   You should say why when you 
 move a session to this status. Most likely reason is "duplicate idea".
 <li> Cancelled - Pulled from the schedule fairly late in the process could 
-be sue to participant cancellation or scheduling problems, etc.  You should 
+be due to participant cancellation or scheduling problems, etc.  You should 
 still say why it was cancelled. 
 </ul>
 <p>For your reference there are several statuses pulled over from previous 
