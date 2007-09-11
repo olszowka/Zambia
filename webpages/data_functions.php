@@ -132,8 +132,8 @@ function set_session_defaults() {
     global $session;
     //$session["sessionid"] set elsewhere
     $session["track"]=0; // prompt with "SELECT"
-    $session["type"]=1; // default to "Panel"
-    $session["divisionid"]=2; // default to "Programming"
+    $session["type"]=0; // prompt with "SELECT"
+    $session["divisionid"]=0; // prompt with "SELECT"
     $session["pubstatusid"]=0; // prompt with "SELECT" 
     $session["pubno"]="";
     $session["title"]="";
@@ -147,7 +147,7 @@ function set_session_defaults() {
     $session["atten"]=0;
     $session["kids"]=2; // "Kids Welcome"
     $session["signup"]=false; // leave checkbox blank initially
-    $session["roomset"]=1; // default to "Theater seating w/ Head Table w/ 5 chairs & water"
+    $session["roomset"]=0; // prompt with "SELECT"
     $session["notesforpart"]="";
     $session["servnotes"]="";
     $session["status"]=6; // default to "Edit Me"
