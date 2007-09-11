@@ -1,11 +1,13 @@
 #!/bin/sh
 
-DATABASE="arisia_test"
-DBUSERNAME="arisia_test"
-DBPASSWORD="arisia12"
+DATABASE="bendev"
+DBUSERNAME="bendevweb"
+DBPASSWORD="7seven"
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
+
+umask 022 
 
 for x in ${SRCDIR}/4*query ; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`

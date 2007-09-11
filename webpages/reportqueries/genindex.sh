@@ -5,6 +5,7 @@ SRCDIR="."
 DESTDIR=".."
 DEST="../reportindex.php"
 
+umask 022
 
 cat genreportheader.php | sed "s/REPORT_TITLE/Available Reports/" | \
                           sed "s/REPORT_DATE/`date`/" | \
