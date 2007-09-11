@@ -1,12 +1,14 @@
 #!/bin/sh
 
-DATABASE="arisia_test"
-DBUSERNAME="arisia_test"
-DBPASSWORD="arisia12"
+DATABASE="bendev"
+DBUSERNAME="bendevweb"
+DBPASSWORD="7seven"
 
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
+
+umask 022
 
 #mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD -e '\. fixnames'
 
