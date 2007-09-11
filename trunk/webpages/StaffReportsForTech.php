@@ -1,5 +1,5 @@
 <?php
-  $title="Reports for Program";
+  $title="Reports for Tech";
   require_once('db_functions.php');
   require_once('StaffHeader.php');
   require_once('StaffFooter.php');
