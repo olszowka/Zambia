@@ -144,12 +144,12 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 
           <DIV class="bb">
             <LABEL class="ib" for="invguest">Invited Guests Only? </LABEL>
-            <DIV class="ib"> <input type="checkbox" value="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?> name="invguest"> </DIV>
+            <DIV class="ib"> <input type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?> name="invguest"> </DIV>
           </DIV>
 
           <DIV class="bb">
             <LABEL class="ib" for="signup">Sign up Req.?</LABEL>
-            <DIV class="ib"><input type="checkbox" value="signup" <?php if ($session["signup"]) {echo " checked ";} ?> name="signup"></DIV>
+            <DIV class="ib"><input type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?> name="signup"></DIV>
           </DIV>
 
           <DIV class="bb">
