@@ -56,7 +56,7 @@ function renderMyInterests ($title, $error, $message) {
     for ($i=1; $i<$rolerows; $i+=2) {
         echo "        <DIV class=\"tab-row\">\n";
         echo "            <DIV class=\"tab-cell\">\n";
-        echo "                <INPUT type=checkbox name=\"willdorole".$i."\" ";
+        echo "                <INPUT type=checkbox name=\"willdorole".$i."\" id=\"willdorole".$i."\"";
         if (isset($rolearray[$i]["badgeid"])) {
             echo "checked";
             }
