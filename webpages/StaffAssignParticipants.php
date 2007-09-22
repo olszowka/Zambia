@@ -106,7 +106,7 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
 $numrows=$i; 
 echo "<FORM name=\"selsesform\" method=POST action=\"StaffAssignParticipants.php\">\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
-echo "<INPUT type=\"radio\" name=\"moderator\" value=\"0\"".(($modid==0)?"checked":"").">";
+echo "<INPUT type=\"radio\" name=\"moderator\" id=\"moderator\" value=\"0\"".(($modid==0)?"checked":"").">";
 echo "<LABEL for=\"moderator\">No Moderator Selected</LABEL>";
 echo "<TABLE>\n";
 for ($i=0;$i<$numrows;$i++) {
@@ -124,7 +124,7 @@ for ($i=0;$i<$numrows;$i++) {
     echo "      <TD class=\"vatop\">".(($bigarray[$i]["willmoderate"]==1)?"Will moderate.":"Will not moderate.")."</TD>\n";
     echo "      </TR>\n";
     echo "   <TR>\n";
-    echo "      <TD class=\"vatop\"><INPUT type=\"radio\" name=\"moderator\" value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo "      <TD class=\"vatop\"><INPUT type=\"radio\" name=\"moderator\" id=\"moderator\"value=\"".$bigarray[$i]["badgeid"]."\" ";
     echo (($bigarray[$i]["moderator"])?"checked":"")."></TD>";
     echo "      <TD class=\"vatop lrpad\">Moderator</TD>";
     echo "      <TD colspan=4 class=\"border1111 lrpad\">".htmlspecialchars($bigarray[$i]["comments"]);
