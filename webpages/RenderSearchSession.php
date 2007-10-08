@@ -17,6 +17,12 @@ function RenderSearchSession () {
             <?php $query = "SELECT trackid, trackname FROM Tracks ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
           </SELECT>
         </td>
+        <td>Type:</td>
+        <td>
+          <SELECT name="type">
+            <?php $query = "SELECT typeid, typename FROM Types ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
+          </SELECT>
+        </td>
         <td>Status:</td>
         <td>
           <SELECT name="status">
@@ -24,7 +30,7 @@ function RenderSearchSession () {
           </SELECT>
         </td>
       </tr>
-      <tr><td colspan=4 align=right><BUTTON type=submit value="search">Search</BUTTON></td></tr>
+      <tr><td colspan=6 align=right><BUTTON type=submit value="search">Search</BUTTON></td></tr>
     </table>
   </FORM>
 <?php } ?>
