@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DATABASE="bendev"
-DBUSERNAME="bendevweb"
-DBPASSWORD="7seven"
+DATABASE="olszowkatest"
+DBUSERNAME="olszowka"
+DBPASSWORD="xyz65536#"
 
 SRCDIR="."
 #DESTDIR="../reports"
