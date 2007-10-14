@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DATABASE="olszowkatest"
-DBUSERNAME="olszowka"
-DBPASSWORD="xyz65536#"
+DATABASE=`cat ../db_name.php | awk -F'"' '/DBDB/ {print $4}'`
+DBUSERNAME=`cat ../db_name.php | awk -F'"' '/DBUSERID/ {print $4}'`
+DBPASSWORD=`cat ../db_name.php | awk -F'"' '/DBPASSWORD/ {print $4}'`
 
 SRCDIR="."
 #DESTDIR="../reports"
