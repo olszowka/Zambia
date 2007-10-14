@@ -1,9 +1,21 @@
 <?php
     function RenderMySessions1($result) {
+
+  echo '<FORM name="resform" method=POST action="SubmitMySessions1.php">';
+
+  if (may_I('my_panel_interests')) {
+    echo "<p> If you have selected any panels, please remember ";
+    echo "to SAVE before leaving the page. ";
+    echo "(Save button is at the bottom.) </p>";
+    echo "<p> You will find below the results of your search.  ";
+    echo "We have included the session id, track, title, duration, ";
+    echo "a check box for you to indicate interest, followed by ";
+    echo "the description as it will appear in the program guide ";
+    echo "and some additional information for you as a ";
+    echo "prospective panelist.";  
+  }
 ?>
-  <FORM name="resform" method=POST action="SubmitMySessions1.php">
-<p> If you have selected any panels, please remember to SAVE before leaving the page. (Save button is at the bottom.) </p>
-<p> You will find below the results of your search.  We have included the session id, track, title, duration, a check box for you to indicate interest, followed by the description as it will appear in the program guide and some additional information for you as a prospective panelist.  <hr>
+    <hr>
     <TABLE>
         <COL><COL><COL><COL><COL><COL>
 <!--        <TR>
@@ -30,11 +42,14 @@
 
         echo "            <TD class=\"border0000\"><b>".$duration."</TD>\n";
         echo "        </TR>\n";
+
+if (may_I('my_panel_interests')) {
         echo "        <TR>\n";
         echo "            <TD colspan=2 class=\"addbox\">Add this panel to my list:<INPUT type=\"checkbox\" name=\"int".$i."\" ";
              echo ((strlen($rbadgeid)>1)?"checked":"")."><INPUT type=hidden name=\"checked".$i."\" value=\"";
              echo ((strlen($rbadgeid)>1)?"1":"0")."\"></TD>\n";
         echo "        </TR>\n";
+}
         echo "        <TR><TD colspan=3 class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
         echo "        <TR><TD colspan=4 class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</TD></TR>\n";
         echo "        <TR><TD colspan=6 class=\"border0020\">&nbsp;</TD></TR>\n";
@@ -42,9 +57,11 @@
         $i++;
         }
     echo "        <INPUT type=\"hidden\" name=\"maxrow\" value=\"".($i-1)."\">\n";
+   echo "        </TABLE>";
+if (may_I('my_panel_interests')) {
+   echo '     <DIV class="SubmitButton"><BUTTON type="submit" name="save" >Save</BUTTON></DIV>';
+}
 ?>
-        </TABLE>
-        <DIV class="SubmitButton"><BUTTON type="submit" name="save" >Save</BUTTON></DIV>
       </FORM>
 <?php
     }
