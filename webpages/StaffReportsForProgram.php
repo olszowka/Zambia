@@ -15,6 +15,7 @@
 <p> Reports that are of interest during Brainstorming </p>
 <P>
 <DL>
+<DT> <a href="sessioneditreport.php">Session Edit History</a></DT><DD>Who last touched each session? </DD>
 <DT> <a href="participantinterestsreport.php">Participant Interests</a></DT><DD>What is that participant interested in? </DD>
 <DT> <a href="participantnumpanelreport.php">Participant # Panel and Constraints</a></DT><DD>How many panels does each person want to be on and the other constraints they indicated</DD>
 <DT> <a href="participantrolesreport.php">Participant Roles</a></DT><DD>What Roles is a participant willing to take?</DD>
