@@ -38,6 +38,10 @@ function is_email($email){
 function validate_name_email($name, $email) {
     global $messages;
     $status=true;
+// only perform test for brainstorm user
+    if (may_I("Staff") || may_I("Participant")) {
+        return ($status);
+        }
     if (strlen($name)<3) {
         $status=false;
         $messages.="Please enter a name of at least 3 characters.<BR>\n";
