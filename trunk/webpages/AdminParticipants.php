@@ -32,7 +32,7 @@ echo "<SELECT name=\"partid\">\n";
 echo "     <OPTION value=0 ".(($selpartid==0)?"selected":"").">Select Participant</OPTION>\n";
 while (list($partid,$lastname,$firstname,$badgename)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
     echo "     <OPTION value=\"".$partid."\" ".(($selpartid==$partid)?"selected":"");
-    echo ")>".htmlspecialchars($lastname).", ".htmlspecialchars($firstname);
+    echo ">".htmlspecialchars($lastname).", ".htmlspecialchars($firstname);
     echo " (".htmlspecialchars($badgename).") - ".$partid."</OPTION>\n";
     }
 echo "</SELECT></DIV>\n";
