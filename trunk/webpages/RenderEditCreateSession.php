@@ -73,9 +73,9 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         </DIV> <!-- Block 2 is Title -->
 
         <DIV class="textwithlabel"> <!-- Block 3 is Pocket Program Text -->
-          <LABEL class="textlabel" for="pocketprogtext">Pocket Program Text:</LABEL>
+          <LABEL class="textlabel" for="pocketprogtext">Pocket Program Text: (Not in use for Arisia'08)</LABEL>
           <DIV class="ib">
-            <TEXTAREA class="textlabelarea" cols=70 name="pocketprogtext" ><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES); ?></TEXTAREA>
+            <TEXTAREA class="textlabelarea" cols=70 name="pocketprogtext" readonly><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES); ?></TEXTAREA>
           </DIV>
         </DIV> <!-- Block 3 is Pocket Program Text -->
 
