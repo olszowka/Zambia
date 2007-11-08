@@ -40,7 +40,7 @@ EOD;
         }
     staff_header($title);
     echo "<p> If you have any questions please contact ";
-    echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> </p>\n";
+    echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> </p>\n";
     RenderPrecis($result,$showlinks);
     staff_footer();
     exit();
