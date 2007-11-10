@@ -41,11 +41,14 @@ any other needed information when moving the session to this status.
 
 <p> There are 2 other statuses that a session can have: 
 <ul>
-<li>Dropped - No longer under consideration.   You should say why when you 
-move a session to this status. Most likely reason is "duplicate idea".
-<li> Cancelled - Pulled from the schedule fairly late in the process could 
-be due to participant cancellation or scheduling problems, etc.  You should 
-still say why it was cancelled. 
+<li> Dropped - The bit bucket.   This idea is no longer under consideration. 
+Nor will it ever be again.  The most frequent reason for this is identical 
+data to another session.
+<li> Cancelled - Over all a good idea, but it isn't going to happen this 
+year.  Maybe it is too close to another idea, maybe it was dependent on 
+a particular person attenting, maybe there were scheduling complications. 
+You should probably still say why it was cancelled. 
+This is an category we can mine for ideas in future years. 
 </ul>
 <p>For your reference there are several statuses pulled over from previous 
 years.  They are here for your reference and in general should be mined for 
