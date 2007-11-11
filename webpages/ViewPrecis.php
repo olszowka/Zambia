@@ -19,15 +19,16 @@
         exit ();
         }
    $query = <<<EOD
-SELECT sessionid, trackname, title, 
+SELECT sessionid, trackname, typename, title, 
        concat( if(left(duration,2)=00, '', 
                if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))),
                if(date_format(duration,'%i')=00, '', 
                if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), 
                   concat(date_format(duration,'%i'),'min')))) Duration,
        estatten, progguiddesc, persppartinfo
-  from Sessions, Tracks, SessionStatuses 
+  from Sessions, Tracks, Types, SessionStatuses 
  where Sessions.trackid=Tracks.trackid  
+   and Sessions.typeid=Types.typeid  
    and SessionStatuses.statusid=Sessions.statusid  
    and SessionStatuses.statusname in ('Brainstorm','Vetted')
    and Sessions.invitedguest=0
