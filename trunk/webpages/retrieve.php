@@ -1,5 +1,5 @@
 <?php
-function retrieve_select_from_db($track,$status,$type){
+function retrieve_select_from_db($track,$status,$statusname,$type){
     global $result;
     global $link, $message2; 
     require_once('db_functions.php');
@@ -9,17 +9,23 @@ function retrieve_select_from_db($track,$status,$type){
 // The following three lines are for debugging only
 //    error_log("retrieve: trackid: $track");
 //    error_log("retrieve: statusid: $status");
+//    error_log("retrieve: statusname: $statusname");
 //    error_log("retrieve: typeid: $type");
 
     if (($track!=0) and ($track!="")) {
-         $query.=" AND Tracks.trackid=$track";
+         $query.=" AND Tracks.trackid in ($track)";
          }
 
     if (($status!=0) and ($status!='')) {
-         $query.=" AND SessionStatuses.statusid=$status";
+         $query.=" AND SessionStatuses.statusid in ($status)";
          }
+
+    if (($statusname!=0) and ($statusname!='')) {
+        $query.=" AND SessionStatuses.statusname in ($statusname)";
+       }
+
     if (($type!=0) and ($type!='')) {
-         $query.=" AND Sessions.typeid=$type";
+         $query.=" AND Sessions.typeid in ($type)";
          }
     prepare_db();
     $result=mysql_query($query,$link);
