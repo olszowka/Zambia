@@ -4,7 +4,7 @@ create table `Interested` (
   `interested` tinyint(1), 
   `interestedname` varchar(100), 
   primary key (`interested`)
-);
+) ENGINE=InnoDB;
 insert into Interested set interested=1, interestedname='Will attend';
 insert into Interested set interested=2, interestedname='Will not attend';
 insert into Interested set interested=0, interestedname='didnot say';
