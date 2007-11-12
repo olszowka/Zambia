@@ -20,7 +20,7 @@
 <p> Web Publication </p>
 <dl>
 <DT> <a href="2prelimschedbriefreport.php">Preliminary Schedule</a></DT><DD>Below is the preliminary panel schedule. Please keep in mine that is it still changing as we recieve feedback from our panelists. If you have any comments please contact us a <a href="mailto: program@arisia.org">program@arisia.org</a></DD>
-<DT> <a href="2finalschedbreifreport.php">Schedule for Arisia 2006 </a></DT><DD>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule. </a></DD>
+<DT> <a href="2finalschedbreifreport.php">Schedule for Arisia 2008 </a></DT><DD>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule. </a></DD>
 </dl>
 <p> Pocket Program</p>
 <DL>
