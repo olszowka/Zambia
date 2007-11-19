@@ -30,17 +30,17 @@
     Function maketab($text,$usable,$url) {
 	if ($usable) {
 		echo '<SPAN class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
-		echo '<IMG class="tabborder" SRC="images/leftCorner.gif">';
+		echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
 		echo '<A HREF="' . $url . '">' ;// XXX link needs to be quoted
 		echo $text;                     // XXX needs to be quoted
-		echo '<IMG class="tabborder" SRC="images/rightCorner.gif">';
+		echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
 		echo '</SPAN>';
 	    }
 	else {
 		echo '<SPAN class="unusabletab">';
-		echo '<IMG class="tabborder" SRC="images/leftCorner.gif">';
+		echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
 		echo $text;                     // XXX needs to be quoted
-		echo '<IMG class="tabborder" SRC="images/rightCorner.gif">';
+		echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
 		echo '</SPAN>';
 	    }
     }
