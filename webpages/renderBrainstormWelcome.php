@@ -28,9 +28,12 @@ everything will make it.   We do save good ideas for future conventions.
 <li> <a href="BrainstormSearchSession.php">Search </a> for similar ideas or get inspiration.
 <li> Email <?php echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> ";?> to suggest modifications on existing suggestion.
 <li> <a href="BrainstormCreateSession.php">Enter a new suggestion. </a>
-<li> See the list of <a href="BrainstormReportUnseen.php"> New </a> suggestions that have been entered recently (may not be fit for young eyes, we haven't see these yet). 
-<li> See the list of <a href="BrainstormReportVetted.php">In Progress </a>suggestions we are currently sorting through (we have see these).
 <li> See the list of <a href="BrainstormReportAll.php">All</a> suggestions (we've seen some and not see others).
+<li> See the list of <a href="BrainstormReportUnseen.php"> New </a> suggestions that have been entered recently (may not be fit for young eyes, we haven't see these yet). 
+<<<<<<< renderBrainstormWelcome.php
+<li> See the list of <a href="BrainstormReportReviewed.php">Reviewed </a>suggestions we are currently working through.
+<li> See the list of <a href="BrainstormReportLikely.php">Likely to Occur</a> suggestions we are currently matching participants to. 
+<li> See the list of <a href="BrainstormReportLikely.php">Scheduled</a> suggestions.  These are very likely to happen at con.
 <li> Email <?php echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> ";?> to volunteer to help process these ideas.
 <?php 
       if(may_I('Participant')) {

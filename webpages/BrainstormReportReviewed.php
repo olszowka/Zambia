@@ -2,8 +2,7 @@
     require_once ('db_functions.php');
     require_once('BrainstormCommonCode.php');
     require_once('BrainstormHeader.php');
-    require_once('BrainstormFooter.php');
-    $title="New (Unseen) Suggestions";
+    $title="Reviewed Suggestions";
     $showlinks=$_GET["showlinks"];
     $_SESSION['return_to_page']="ViewPrecis.php?showlinks=$showlinks";
     if ($showlinks=="1") {
@@ -28,7 +27,7 @@ SELECT sessionid, trackname, title,
   from Sessions, Tracks, SessionStatuses 
  where Sessions.trackid=Tracks.trackid  
    and SessionStatuses.statusid=Sessions.statusid  
-   and SessionStatuses.statusname in ('Edit Me')
+   and SessionStatuses.statusname in ('Brainstorm','Vetted','Assigned','Scheduled')
    and Sessions.invitedguest=0
  order by trackname, title
 EOD;
@@ -38,7 +37,10 @@ EOD;
         exit ();
         }
     brainstorm_header($title);
-    echo "<p> If an idea is on this page, there is a good chance we have not yet seen it.   So, please wear your Peril Sensitive Sunglasses while reading. We do.";
+    echo "<p> We've seen these.   They have varying degrees of merit.  We have or will sort through these suggestions: combining duplicates; splitting big ones into pieces; checking general feasability; finding needed people to present; looking for an appropiate time and location; rewritting for clarity and proper english; and hoping to find a time machine so we can do it all. ";
+    echo "<p> Note that ideas that we like and are pursuing further will stay on this list.  That is to make it easier to find the idea you suggested.";
+    echo "<p> If you want to help, email us at "; 
+    echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> </p>\n";
     echo "This list is sorted by Track and then Title." ;
     RenderPrecis($result,$showlinks);
     brainstorm_footer();
