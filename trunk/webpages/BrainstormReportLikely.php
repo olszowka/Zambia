@@ -2,7 +2,7 @@
     require_once ('db_functions.php');
     require_once('BrainstormCommonCode.php');
     require_once('BrainstormHeader.php');
-    $title="In Progress Suggestions";
+    $title="Likely to Occur Suggestions";
     $showlinks=$_GET["showlinks"];
     $_SESSION['return_to_page']="ViewPrecis.php?showlinks=$showlinks";
     if ($showlinks=="1") {
@@ -27,7 +27,7 @@ SELECT sessionid, trackname, title,
   from Sessions, Tracks, SessionStatuses 
  where Sessions.trackid=Tracks.trackid  
    and SessionStatuses.statusid=Sessions.statusid  
-   and SessionStatuses.statusname in ('Brainstorm','Vetted','Assigned','Scheduled')
+   and SessionStatuses.statusname in ('Vetted','Assigned','Scheduled')
    and Sessions.invitedguest=0
  order by trackname, title
 EOD;
@@ -37,7 +37,7 @@ EOD;
         exit ();
         }
     brainstorm_header($title);
-    echo "<p> We are in the process of sorting through these suggestions: combining duplicates; splitting big ones into pieces; checking general feasability; finding needed people to present; looking for an appropiate time and location; rewritting for clarity and proper english; and hoping to find a time machine so we can do it all. ";
+    echo "<p> These ideas have made the first cut.  We like them and would like to see them happen.   Now to just find all the right people... ";
     echo "<p> If you want to help, email us at "; 
     echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> </p>\n";
     echo "This list is sorted by Track and then Title." ;

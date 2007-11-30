@@ -26,6 +26,7 @@
       <td class="tabblocks border0020" colspan=2>
            <?php maketab("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormCreateSession.php"); ?></td>
       <td class="tabblocks border0020" colspan=2><?php maketab("Search Sessions",1,"BrainstormSearchSession.php"); ?></td>
+
       <td class="tabblocks border0020" colspan=2>
          <?php if(may_I('Participant')) { 
                   maketab("Participants View",may_I('Participant'),"welcome.php"); 
@@ -36,16 +37,20 @@
                }?></td>
     </tr>
     <tr class="tabrows">
-      <td class="tabblocks border0020" colspan=1>&nbsp;</td>
+      <td class="tabblocks border0020" colspan=10>
+         View sessions proposed to date:
+    </tr>
+    <tr class="tabrows">
       <td class="tabblocks border0020" colspan=2>
-	View Suggestions: 
+         <?php maketab("All Proposals",1,"BrainstormReportAll.php"); ?></td>
       <td class="tabblocks border0020" colspan=2>
-         <?php maketab("New",1,"BrainstormReportUnseen.php"); ?></td>
+         <?php maketab("New (Unseen)",1,"BrainstormReportUnseen.php"); ?></td>
       <td class="tabblocks border0020" colspan=2>
-         <?php maketab("In Progress",1,"BrainstormReportVetted.php"); ?></td>
+         <?php maketab("Reviewed",1,"BrainstormReportReviewed.php"); ?></td>
       <td class="tabblocks border0020" colspan=2>
-         <?php maketab("All",1,"BrainstormReportAll.php"); ?></td>
-      <td class="tabblocks border0020" colspan=1>&nbsp;</td>
+         <?php maketab("Likely to Occur",1,"BrainstormReportLikely.php");?></td>
+      <td class="tabblocks border0020" colspan=2>
+         <?php maketab("Scheduled",1,"BrainstormReportScheduled.php"); ?></td>
     </tr>
   </table>
 <table class="header">
