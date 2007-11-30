@@ -23,7 +23,8 @@
     <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
     <tr class="tabrows">
       <td class="tabblocks border0020" colspan=2><?php maketab("Welcome",1,"BrainstormWelcome.php"); ?></td>
-      <td class="tabblocks border0020" colspan=2><?php maketab("Suggest a Session",1,"BrainstormCreateSession.php"); ?></td>
+      <td class="tabblocks border0020" colspan=2>
+           <?php maketab("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormCreateSession.php"); ?></td>
       <td class="tabblocks border0020" colspan=2><?php maketab("Search Sessions",1,"BrainstormSearchSession.php"); ?></td>
       <td class="tabblocks border0020" colspan=2>
          <?php if(may_I('Participant')) { 

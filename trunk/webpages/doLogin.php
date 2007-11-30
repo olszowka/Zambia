@@ -1,6 +1,7 @@
-	<?php
+<?php
     require_once ('db_functions.php');
     require_once ('data_functions.php');
+    require_once ('error_functions.php');
     $title="Submit Password";
     // echo "Trying to connect to database.\n";
     if (prepare_db()===false) {
@@ -48,7 +49,7 @@
         elseif (may_I('Participant')) {
             require ('renderWelcome.php');
             }
-        elseif (may_I('Brainstorm')) {
+        elseif (may_I('public_login')) {
             require ('renderBrainstormWelcome.php');
             }
         else {
