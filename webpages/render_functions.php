@@ -28,32 +28,4 @@ function RenderPrecis($result,$showlinks) {
     }
     echo "</TABLE>\n";
 }
-
-function RenderError($title,$message) {
-    if ($_SESSION['role'] == "Brainstorm") {
-	    BrainstormRenderError($title,$message);
-	    } 
-    elseif ($_SESSION['role'] == "Participant") {
-	    PartRenderError($title,$message);
-	}
-    elseif ($_SESSION['role'] == "Staff") {
-	    StaffRenderError($title,$message);
-	}
-    else {
-	    // do something generic here (though this might be way too generic)
-	    // better to output some error message reliably than none at all
-	    echo "<html>";
-	    echo "<head>";
-	    echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
-	    echo "<title>Zambia -".$title."</title>";
-	    echo "</head>";
-	    echo "<body>";
-	    echo "<H1>Zambia&ndash;The".CON_NAME."Scheduling Tool</H1>";
-	    echo "<hr>";
-	    echo "<p> An error occurred: </p>";
-	    echo $message;
-	    echo "</body>";
-	    echo "</html>";
-	}
-}
 ?>

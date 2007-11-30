@@ -1,5 +1,6 @@
 <?php
     require_once('CommonCode.php');
+    require_once('error_functions.php');
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     $_SESSION['role'] = "Staff";
@@ -9,11 +10,4 @@
         require ('login.php');
         exit();
         };
-
-    function StaffRenderError ($title, $message) {
-      require_once('StaffHeader.php');
-      staff_header($title);
-      echo "<P id=\"errmsg\">".$message."</P>\n";
-      staff_footer();
-      }
 ?>
