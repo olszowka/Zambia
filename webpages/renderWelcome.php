@@ -60,26 +60,63 @@ the horizon, by email to <A HREF="mailto:<?php echo PROGRAM_EMAIL."\">".PROGRAM_
 CON_NAME; ?>. </li>
       <li> Enter a short bio for Arisia publications.</li>
     </ul>
+
+<?php if (may_I('search_panels')) { ?>
   <p> Use the "Search Panels" tab to:
     <ul>
       <li> See suggested topics for Arisia programming. </li>
       <li> Indicate panels you would like to participate on. </li>
     </ul>
+<?php } else { ?>
+  <p> The "Search Panels" tab is currently unavailable.  Check back later.
+<?php } ?>
+
+<?php if (may_I('my_panel_interests')) { ?>
   <p> Use the "My Panel Interests" tab to:
     <ul>
       <li> See what selections you have made for panels. </li>
       <li> Alter or give more information about your selections . </li>
       <li> Rank the preference of your selections . </li>
     </ul>
-  <p> Use the "My Suggestions" tab to:  
+<?php } else { ?>
+  <p> The "My Panel Interests" tab is currently unavailable.  Check back later.
+<?php } ?>
+
+<?php if (may_I('my_schedule')) { ?>
+  <p> Use the "My Schedule" tab to:
     <ul>
-      <li> Enter your suggestions for <?php echo CON_NAME; ?>. </li>
+      <li> See what you have been scheduled to do at con. 
+      <li> If there are issues, conflict or questions please email us at 
+<a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
     </ul>
+<?php } else { ?>
+  <p> The "My Schedule" tab is currently unavailable.  Check back later.
+<?php } ?>
+
+<?php if (may_I('my_gen_int_write')) { ?>
   <p> Use the "My General Interests" tab to:  
     <ul>
       <li> Describe the kinds of panels you are interested in.  </li>
       <li> Suggest the people you would like to work with.  </li>
     </ul>
+<?php } else { ?>
+  <p> Use the "My General Interests" tab to:  
+    <ul>
+      <li> See what you previously entered as your interests. 
+      <li> This is currently read only as con is approaching.  If you need to make a change here, please email us:  <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
+    </ul>
+<?php } ?>
+
+<?php if (may_I('Brainstorm')) { ?>
+  <p> Use the "Suggest a Session" tab to:  
+    <ul>
+      <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
+      <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner. 
+    </ul>
+<?php } else { ?>
+  <p> The "Suggest a Session" tab is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
+<?php } ?>
+
 </ol>
 
 <p>Thank you for your time, and we look forward to seeing you at <?php echo CON_NAME; ?>. 
