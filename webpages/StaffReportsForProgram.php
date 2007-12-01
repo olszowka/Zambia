@@ -32,4 +32,16 @@
 <DT> <a href="sessioninterestpartreport.php">Session Interest by participant (all info)</a></DT><DD>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report. (All data included including for invited sessions.) order by participant</DD>
 <DT> <a href="sessioninterestreport.php">Session Interest Report (all info)</a></DT><DD>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report. (All data included including for invited sessions.)</DD>
 </dl>
+<p> Schedules.   Take your pick.</p>
+<DT> <a href="1proggridreport.php">Programming Grid</a></DT><DD>Display Programming schedule with rooms on horizontal axis and time on vertical.</DD>
+<DT> <a href="allpartschedbyparttimereport.php">Full Participant Schedule by time </a></DT><DD>The schedule sorted by participant</DD>
+<DT> <a href="allroomschedreport.php">Full Room Schedule by room then time</a></DT><DD>Lists all Sessions Scheduled in all Rooms.</DD>
+<DT> <a href="allroomschedtimereport.php">Full Room Schedule by time then room</a></DT><DD>Lists all Sessions Scheduled in all Rooms.</DD>
+<DT> <a href="allroomschedtrackreport.php">Full Room Schedule by track then time</a></DT><DD>Lists all Sessions Scheduled in all Rooms.</DD>
+<DT> <a href="allroomschedtrackroomreport.php">Full Room Schedule by track then room then time</a></DT><DD>Lists all Sessions Scheduled in all Rooms.</DD>
+<DT> <a href="1wholegrid4staffreport.csv">Whole Grid - Staff view - csv</a></DT><DD>Display entire schedule with rooms on horizontal axis and time on vertical. (this includes items marked "Do Not Print" in csv format</DD>
+<DT> <a href="1wholegridreport.php">Whole Grid - for con</a></DT><DD>Display entire schedule with rooms on horizontal axis and time on vertical. This excludes any item marked "Do Not Print"</DD>
+<DT> <a href="2finalschedbreifdiffreport.php">Schedule for Arisia 2006 </a></DT><DD>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule. </a></DD>
+<DT> <a href="2finalschedbreifreport.php">Schedule for Arisia 2006 </a></DT><DD>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule. </a></DD>
+<DT> <a href="2prelimschedbriefreport.php">Preliminary Schedule</a></DT><DD>Below is the preliminary panel schedule. Please keep in mine that is it still changing as we recieve feedback from our panelists. If you have any comments please contact us a <a href="mailto: program@arisia.org">program@arisia.org</a></DD>
 <?php staff_footer(); ?>
