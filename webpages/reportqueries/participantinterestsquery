@@ -1,4 +1,10 @@
 TITLE='Participant Interests'
 DESCRIPTION='What is that participant interested in? '
 PROGWANTS=1
-QUERY='select C.badgeid, badgename, yespanels as "New Panel Ideas", nopanels as "Panel Not Interested", yespeople, nopeople, otherroles from ParticipantInterests as PI, CongoDump as C where  C.badgeid=PI.badgeid;'
+QUERY='
+	select P.badgeid, P.pubsname, yespanels as "New Panel Ideas", 
+	nopanels as "Panel Not Interested", 
+	yespeople, nopeople, otherroles 
+	from ParticipantInterests as PI, 
+	Participants as P
+	where P.badgeid=PI.badgeid;'
