@@ -1,3 +1,4 @@
 TITLE='Invited Guest Report'
 DESCRIPTION='For each invited guest session, list the participants who have been invited. (and have not deleted the invitation.) Shows "NULL" if no one has been invited.'
+PROGWANTS=1
 QUERY='SELECT T.trackname as Track, concat("<a href=EditSession.php?id=",S.sessionid,">",S.sessionid,"</a>") as "Session<BR>ID", S.title as "Title", PSI.badgeid as "BadgeId", P.pubsname as "Pubsname" FROM Sessions AS S JOIN Tracks AS T ON S.trackid=T.trackid LEFT JOIN ParticipantSessionInterest AS PSI ON S.sessionid=PSI.sessionid LEFT JOIN Participants as P on PSI.badgeid=P.badgeid WHERE T.selfselect=1 and S.invitedguest=1 and statusid=2 order by T.display_order, S.sessionid;'

@@ -1,3 +1,6 @@
 TITLE='Full Room Schedule by track then room then time'
 DESCRIPTION='Lists all Sessions Scheduled in all Rooms.'
+PROGWANTS=1
+EVENTSWANTS=1
+GOHWANTS=1
 QUERY="select roomname, function, DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', duration, trackname,S.sessionid, title, group_concat(' ',pubsname,' (',P.badgeid,')') as 'Participants' from Rooms R, Sessions S, Schedule SCH LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid LEFT JOIN Participants P ON POS.badgeid=P.badgeid LEFT JOIN Tracks T ON T.trackid=S.trackid where SCH.roomid = R.roomid and SCH.sessionid = S.sessionid group by SCH.sessionid order by T.trackname, R.roomname, SCH.starttime"

@@ -1,0 +1,24 @@
+TITLE='GoH Schedule'
+DESCRIPTION='The GoH schedules'
+GOHWANTS=1
+QUERY="
+select G.pubsname, 
+     concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
+     DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', 
+     concat(if(left(duration,2)=00, '', if(left(duration,1)=0, 
+       concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), 
+       if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, 
+       concat(right(date_format(duration,'%i'),1),'min'), 
+       concat(date_format(duration,'%i'),'min')))) duration,
+     trackname, 
+     concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid, 
+     concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') title
+from Rooms R, Sessions S, Participants G, Schedule SCH 
+     LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid 
+     LEFT JOIN Participants P ON POS.badgeid=P.badgeid 
+     LEFT JOIN Tracks T ON T.trackid=S.trackid 
+where SCH.roomid = R.roomid 
+  and SCH.sessionid = S.sessionid 
+  and G.badgeid in ('25028','38720','95091') 
+  and G.badgeid=POS.badgeid
+order by G.pubsname, SCH.starttime;"

@@ -1,3 +1,7 @@
 TITLE='Differential Assigned Session by Participant'
 DESCRIPTION='Recent changes to whom has been assigned to each session ordered by badgeid.'
+PROGWANTS=1
+EVENTSWANTS=1
+GOHWANTS=1
+PUBSWANTS=1
 QUERY='select CongoDump.badgeid, badgename, Sessions.sessionid as SessionId, title, moderator from ParticipantOnSession POS, Sessions, CongoDump where POS.badgeid=CongoDump.badgeid and POS.sessionid=Sessions.sessionid and POS.ts>"2008-01-18 23:00:00" order by cast(CongoDump.badgeid as unsigned); '

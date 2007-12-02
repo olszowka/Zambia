@@ -1,4 +1,5 @@
 TITLE='Participant Kid Count'
 DESCRIPTION='How many kids are expected in fasttrack'
+FASTTRACKWANTS=1
 QUERY='select P.badgeid, pubsname, numkidsfasttrack  from Participants P, ParticipantAvailability PA where P.badgeid=PA.badgeid;'
 
