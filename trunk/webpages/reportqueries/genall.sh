@@ -6,4 +6,3 @@
 . ./gencsv.sh  
 . ./genindex.sh  
 . ./genindices.sh  
-
