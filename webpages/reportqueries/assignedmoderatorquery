@@ -1,4 +1,6 @@
 TITLE='Assigned Moderator by Session'
 DESCRIPTION='Shows who has been assigned to moderate each session.'
+PROGWANTS=1
+EVENTSWANTS=1
 QUERY='select CongoDump.badgeid, badgename, trackname, Sessions.sessionid as SessionId, title, statusname from ParticipantOnSession, Sessions, CongoDump, Tracks, SessionStatuses where ParticipantOnSession.badgeid=CongoDump.badgeid and ParticipantOnSession.sessionid=Sessions.sessionid and Tracks.trackid=Sessions.trackid and Sessions.statusid=SessionStatuses.statusid and moderator=1 order by trackname, Sessions.sessionid;'
 

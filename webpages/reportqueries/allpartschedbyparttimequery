@@ -1,3 +1,4 @@
 TITLE='Full Participant Schedule by time '
 DESCRIPTION='The schedule sorted by participant'
+PROGWANTS=1
 QUERY="select roomname, function, DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', duration, trackname,S.sessionid, title, concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants' , moderator from Rooms R, Sessions S, Schedule SCH LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid LEFT JOIN Participants P ON POS.badgeid=P.badgeid LEFT JOIN Tracks T ON T.trackid=S.trackid where SCH.roomid = R.roomid and SCH.sessionid = S.sessionid order by cast(P.badgeid as unsigned), SCH.starttime;"

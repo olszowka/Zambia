@@ -1,3 +1,4 @@
 TITLE='Session Notes'
 DESCRIPTION='Interesting info on a Session for sessions whose status is one of EditMe, Brainstorm, Vetted, Assigned, or Scheduled'
+PROGWANTS=1
 QUERY="select concat('<a href=EditSession.php?id=',S.sessionid,'>',S.sessionid,'</a>') Sessionid, trackname, title, if (invitedguest,'yes','no') as 'Invited Guest?',  servicenotes as 'Hotel and Tech notes', notesforprog  as 'Notes for Programming' from Tracks T, Sessions S, SessionStatuses SS where T.trackid=S.trackid and SS.statusid=S.statusid and SS.statusname in ('EditMe', 'Brainstorm', 'Vetted', 'Assigned', 'Scheduled') and (invitedguest=1 or notesforprog is not NULL or servicenotes is not NULL ) order by S.sessionid;"

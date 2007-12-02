@@ -1,3 +1,5 @@
 TITLE='Report for Pubs'
 DESCRIPTION='Based off of Toppers spreadsheet'
+PUBSWANTS=1
+GENCSV=1
 QUERY="select  S.sessionid, DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a') as Day, DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%l:%i %p') as 'Time', concat( if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min')))) Duration , date_format(duration,'%I:%i') as hourmin, roomname, pubsno as CODE, trackname as TRACK, title, pocketprogtext as DESCR, group_concat(' ',pubsname, if (moderator=1,' (m)','')) as 'PARTIC' from Participants P, Rooms R, Sessions S, Schedule SCH LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid LEFT JOIN CongoDump C ON POS.badgeid=C.badgeid LEFT JOIN Tracks T ON T.trackid=S.trackid where P.badgeid=C.badgeid and SCH.roomid = R.roomid and SCH.sessionid = S.sessionid and trackname not in ('Do Not Print') group by SCH.sessionid order by SCH.starttime, R.roomname"

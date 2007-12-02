@@ -5,4 +5,5 @@
 . ./genreports.sh
 . ./gencsv.sh  
 . ./genindex.sh  
+. ./genindices.sh  
 

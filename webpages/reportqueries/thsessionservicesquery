@@ -1,3 +1,7 @@
 TITLE='Session Services'
 DESCRIPTION='Which Session needs which Services?'
+PROGWANTS=1
+EVENTSWANTS=1
+TECHWANTS=1
+HOTELWANTS=1
 QUERY="select roomname,DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', duration,trackname, X.sessionid, title, X.servicename from (select trackname, S.sessionid,title,duration,servicename from Tracks T, Sessions S, SessionHasService SF, Services F where T.trackid=S.trackid and S.sessionid=SF.sessionid and F.serviceid=SF.serviceid) X, Rooms R, Schedule SCH where X.sessionid=SCH.sessionid and SCH.roomid=R.roomid order by roomname, starttime;"

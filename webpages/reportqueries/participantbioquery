@@ -1,3 +1,5 @@
 TITLE='Participant Bio and pubname'
 DESCRIPTION='Show the badgeid, pubsname, and bio for each participant that is interested in programming'
+PROGWANTS=1
+PUBSWANTS=1
 QUERY='select P.badgeid, P.pubsname, P.bio from Participants P where P.interested=1;'

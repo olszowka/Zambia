@@ -1,3 +1,4 @@
 TITLE='Session Interest Report (counts)'
 DESCRIPTION='For each session, show number of participants who have put it on their interest list. (Excludes invited guest sessions.)'
+PROGWANTS=1
 QUERY='SELECT T.trackname as Track, S.sessionid as "Session<BR>ID", S.title as "Title", count(PSI.badgeid) as "Number<BR>of<BR>Participants" FROM Sessions AS S JOIN Tracks AS T ON S.trackid=T.trackid LEFT JOIN ParticipantSessionInterest AS PSI ON S.sessionid=PSI.sessionid WHERE T.selfselect=1 and statusid in (2,3,7) group by T.trackid, S.sessionid order by T.display_order, S.sessionid; '

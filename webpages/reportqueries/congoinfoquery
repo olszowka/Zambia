@@ -1,3 +1,5 @@
 TITLE='Congo Info (all info)'
 DESCRIPTION='Shows the information retreived from Congo'
+PROGWANTS=1
+EVENTSWANTS=1
 QUERY='select badgename, badgeid, regtype, lastname, firstname,  phone, email, postaddress from CongoDump where badgeid is not NULL order by badgename;'
