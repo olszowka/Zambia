@@ -8,6 +8,6 @@ QUERY='
     from CongoDump C, Participants P 
    where C.badgeid=P.badgeid 
      and P.badgeid is not NULL 
-order by pubsname;'
-     #and strcmp(C.badgename, P.pubsname)
-     #and C.badgename=P.pubsname
+order by pubsname
+     and strcmp(C.badgename, P.pubsname)
+     and C.badgename=P.pubsname;'
