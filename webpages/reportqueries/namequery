@@ -1,0 +1,11 @@
+TITLE='Name Report'
+DESCRIPTION='Maps badgeid, pubsname, badgename and first and last name together'
+PROGWANTS=1
+EVENTSWANTS=1
+REGWANTS=1
+QUERY='
+  select C.badgeid, P.pubsname, C.badgename, C.lastname, C.firstname 
+    from CongoDump C, Participants P 
+   where C.badgeid=P.badgeid 
+     and P.badgeid is not NULL 
+order by pubsname;'
