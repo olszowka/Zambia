@@ -1,3 +1,3 @@
 TITLE='Conflict Report - not attending people that are on panels'
 DESCRIPTION='if the interested field is set to 2, pull them off the panel.  IF the interested field is set otherwise, escalate to a div-head'
-QUERY="select C.badgeid, S.sessionid, P.interested from CongoDump C, Sessions S, Schedule SCH, Participants P, ParticipantOnSession POS where C.badgeid=P.badgeid and C.badgeid=POS.badgeid and SCH.sessionid=S.sessionid and SCH.sessionid=POS.sessionid and P.interested!=1;"
+QUERY="select P.badgeid, P.pubsname, S.sessionid, P.interested from Sessions S, Schedule SCH, Participants P, ParticipantOnSession POS where P.badgeid=POS.badgeid and SCH.sessionid=S.sessionid and SCH.sessionid=POS.sessionid and P.interested!=1;"
