@@ -16,7 +16,7 @@ if (isset($_POST["numrows"])) {
 if (isset($_POST["selsess"])) { // room was selected by this form
         $selsessionid=$_POST["selsess"];
         $topsectiononly=false;
-        unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
+        //unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
         }
     elseif (isset($_GET["selsess"])) { // room was select by external page such as a report
         $selsessionid=$_GET["selsess"];
