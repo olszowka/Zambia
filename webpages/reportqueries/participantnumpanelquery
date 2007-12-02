@@ -1,5 +1,11 @@
 TITLE='Participant # Panel and Constraints'
 DESCRIPTION='How many panels does each person want to be on and the other constraints they indicated'
 PROGWANTS=1
-QUERY='select C.badgeid, badgename, interested, fridaymaxprog,saturdaymaxprog, sundaymaxprog, maxprog, preventconflict, otherconstraints from CongoDump C, ParticipantAvailability PA, Participants where C.badgeid=PA.badgeid and Participants.badgeid=C.badgeid order by cast(C.badgeid as unsigned);'
+QUERY='
+	select P.badgeid, P.pubsname, interested, 
+	  fridaymaxprog, saturdaymaxprog, sundaymaxprog, maxprog, 
+	  preventconflict, otherconstraints 
+	from Participants P, ParticipantAvailability PA 
+	where P.badgeid=PA.badgeid 
+	order by cast(P.badgeid as unsigned);'
 
