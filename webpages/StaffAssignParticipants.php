@@ -8,16 +8,23 @@ require_once('StaffAssignParticipants_FNC.php');
 
 staff_header($title);
 
+$topsectiononly=true; // no room selected -- flag indicates to display only the top section of the page
 if (isset($_POST["numrows"])) {
     SubmitAssignParticipants();
     }
 
-if (isset($_POST["selsess"])) {
+if (isset($_POST["selsess"])) { // room was selected by this form
         $selsessionid=$_POST["selsess"];
+        $topsectiononly=false;
+        }
+    elseif (isset($_GET["selsess"])) { // room was select by external page such as a report
+        $selsessionid=$_GET["selsess"];
+        $topsectiononly=false;
         }
     else {
-        $selsessionid=0;
+        $selsessionid=0; // room was not yet selected.
         }
+
 $query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S, Tracks AS T WHERE ";
 $query.="S.trackid = T.trackid AND (S.statusid in (2,3,7)) ORDER BY T.trackname, S.sessionid";
 if (!$Sresult=mysql_query($query,$link)) {
@@ -40,7 +47,7 @@ echo "<P>&nbsp;\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Select Session</BUTTON></DIV>\n";
 echo "</FORM>\n";
 echo "<HR>&nbsp;<BR>\n";
-if ((!isset($_POST["selsess"])) or ($_POST["selsess"]==0)) {
+if ($topsectiononly) {
     staff_footer();
     exit();
     }
