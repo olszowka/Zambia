@@ -16,6 +16,7 @@ if (isset($_POST["numrows"])) {
 if (isset($_POST["selsess"])) { // room was selected by this form
         $selsessionid=$_POST["selsess"];
         $topsectiononly=false;
+        unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
         }
     elseif (isset($_GET["selsess"])) { // room was select by external page such as a report
         $selsessionid=$_GET["selsess"];
@@ -23,6 +24,7 @@ if (isset($_POST["selsess"])) { // room was selected by this form
         }
     else {
         $selsessionid=0; // room was not yet selected.
+        unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
         }
 
 $query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S, Tracks AS T WHERE ";
@@ -44,7 +46,11 @@ while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM
     }
 echo "</SELECT></DIV>\n";
 echo "<P>&nbsp;\n";
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Select Session</BUTTON></DIV>\n";
+echo "<DIV class=\"SubmitDiv\">";
+if (isset($_SESSION['return_to_page'])) {
+    echo "<A HREF=\"".$_SESSION['return_to_page']."\">Return to report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A>";
+    }
+echo "<BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Select Session</BUTTON></DIV>\n";
 echo "</FORM>\n";
 echo "<HR>&nbsp;<BR>\n";
 if ($topsectiononly) {
