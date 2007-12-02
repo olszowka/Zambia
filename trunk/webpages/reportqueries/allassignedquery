@@ -1,4 +1,4 @@
 TITLE='All Sessions that are assigned'
 DESCRIPTION='Who is assigned to what'
 PROGWANTS=1
-QUERY="select trackname, S.sessionid, title, duration, group_concat(' ',firstname,' ',lastname,' (',C.badgeid,')') as 'Participants' from Sessions S, CongoDump C, ParticipantOnSession POS, Tracks where C.badgeid=POS.badgeid and POS.sessionid=S.sessionid and Tracks.trackid=S.trackid group by S.sessionid order by trackname, S.sessionid;"
+QUERY="select trackname, S.sessionid, title, duration, group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants' from Sessions S, Participants P, ParticipantOnSession POS, Tracks where P.badgeid=POS.badgeid and POS.sessionid=S.sessionid and Tracks.trackid=S.trackid group by S.sessionid order by trackname, S.sessionid;"
