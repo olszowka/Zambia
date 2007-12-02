@@ -6,7 +6,7 @@ SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
 
-categories="GAMING PROG EVENTS GOH PUBS FASTTRACK TECH HOTEL"
+categories="GAMING PROG EVENTS GOH PUBS FASTTRACK TECH HOTEL CONFLICT REG"
 
 CVSONLY=0; GENCVS=0 ; DESCRIPTION="" ; QUERY="" ; TITLE="" # zero out before looping
 for i in $categories ; do 
@@ -15,7 +15,7 @@ for i in $categories ; do
 
    DEST="../report${i}.php"
    
-   cat genreportheader.php | sed "s/REPORT_TITLE/GoH Reports/" | \
+   cat genreportheader.php | sed "s/REPORT_TITLE/$i Reports/" | \
                              sed "s/REPORT_DATE/`date`/" | \
                              sed "s/REPORT_DESCRIPTION/For report changes email zambia@arisia.org./" > $DEST
 

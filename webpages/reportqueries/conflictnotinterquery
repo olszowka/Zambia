@@ -1,3 +1,4 @@
 TITLE='Conflict Report - people on panels they are not interested in'
 DESCRIPTION='The only way this can happen is if someone removes thier interested flag after we assign them to a panel. '
+CONFLICTWANTS=1
 QUERY="select POS.badgeid, P.pubsname, concat('<a href=StaffAssignParticipants.php?selsess=',POS.sessionid,'>', POS.sessionid,'</a>') as Sessionid from Participants P, ParticipantOnSession POS left join ParticipantSessionInterest PSI on POS.badgeid=PSI.badgeid and POS.sessionid=PSI.sessionid where P.badgeid=POS.badgeid and PSI.sessionid is NULL;"

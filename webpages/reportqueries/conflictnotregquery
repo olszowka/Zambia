@@ -1,3 +1,5 @@
 TITLE='Conflict Report - Not Registered'
 DESCRIPTION='These require some thought.  If they are on less than 3 panels (assigned), they did not earn a comp from programming this year.  If they are on 3 or more, reg needs to know to comp them. When we are more comfortable with this report, I can hide registered people.'
+CONFLICTWANTS=1
+REGWANTS=1
 QUERY="select P.badgeid, badgename, regtype, assigned  from Participants P, CongoDump C left join (select badgeid, count(sessionid) as assigned from ParticipantOnSession POS group by badgeid) X on P.badgeid=X.badgeid where C.badgeid=P.badgeid and interested!=2 order by cast(P.badgeid as unsigned);"

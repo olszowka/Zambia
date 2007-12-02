@@ -1,5 +1,6 @@
 TITLE='Conflict Report - Picky people '
 DESCRIPTION='Show who the picky people do not want to be on a panel with and who they are on panels with.'
+CONFLICTWANTS=1
 QUERY="
 Select 
   X.b as 'badgeid', 

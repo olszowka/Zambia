@@ -1,3 +1,4 @@
 TITLE='Conflict Report - Sessions with no moderator'
 DESCRIPTION='Panels need a moderator.  Events may not.  Think before you jump.  (This is limited to items in the schedule)'
+CONFLICTWANTS=1
 QUERY="select concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid, trackname, title from Tracks T, Sessions S, (select SCH.sessionid from Schedule SCH left join ParticipantOnSession POS on POS.moderator=1 and POS.sessionid=SCH.sessionid where POS.badgeid is NULL ) X where X.sessionid=S.sessionid and S.trackid=T.trackid order by trackname, sessionid;"
