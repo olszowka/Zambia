@@ -1,3 +1,26 @@
 TITLE='Conflict Report - Picky people '
 DESCRIPTION='Show who the picky people do not want to be on a panel with and who they are on panels with.'
-QUERY="Select X.b as 'badgeid', X.pn 'pubsname', X.no 'nopeople', X.tn 'track', concat('<a href=StaffAssignParticipants.php?selsess=',X.s,'>', X.s,'</a>') as Sessionid, X.sn 'sessionname', group_concat(' ',CP.pubsname,' (',CP.badgeid,')') 'others on this panel' from (select PI.badgeid as b, P.pubsname as pn,  S.sessionid as s, nopeople as no, title as sn, trackname as tn from ParticipantInterests PI, ParticipantOnSession PS , Sessions S, Participants P, Tracks T where T.trackid=S.trackid and S.sessionid=PS.sessionid and PS.badgeid=PI.badgeid and P.badgeid=PI.badgeid and (nopeople is not null and nopeople!='')) X, (select C2.badgeid,pubsname, firstname,lastname from CongoDump  C2, Participants P2 where C2.badgeid=P2.badgeid) as CP, ParticipantOnSession PSO where X.s=PSO.sessionid and CP.badgeid=PSO.badgeid group by X.s order by cast(X.b as unsigned);"
+QUERY="
+Select 
+  X.b as 'badgeid', 
+  X.pn 'pubsname', 
+  X.no 'nopeople', 
+  X.tn 'track', 
+  concat('<a href=StaffAssignParticipants.php?selsess=',X.s,'>', X.s,'</a>') 
+    as Sessionid, 
+  X.sn 'sessionname', 
+  group_concat(' ',P2.pubsname,' (',P2.badgeid,')') 'others on this panel' 
+from (select PI.badgeid as b, P.pubsname as pn,  
+             S.sessionid as s, nopeople as no, title as sn, trackname as tn 
+        from ParticipantInterests PI, ParticipantOnSession PS , 
+             Sessions S, Participants P, Tracks T 
+       where T.trackid=S.trackid 
+         and S.sessionid=PS.sessionid 
+         and PS.badgeid=PI.badgeid 
+         and P.badgeid=PI.badgeid 
+         and (nopeople is not null and nopeople!='')) X, 
+     Participants P2,
+     ParticipantOnSession PSO 
+where X.s=PSO.sessionid and P2.badgeid=PSO.badgeid 
+group by X.s 
+order by cast(X.b as unsigned);"
