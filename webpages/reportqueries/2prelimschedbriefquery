@@ -1,3 +1,3 @@
 TITLE='Preliminary Schedule'
 DESCRIPTION='Below is the preliminary panel schedule.  Please keep in mine that is it still changing as we recieve feedback from our panelists.  If you have any comments please contact us a <a href="mailto: program@arisia.org">program@arisia.org</a>'
-QUERY="select  DATE_FORMAT(ADDTIME('2006-01-13 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',  trackname,S.sessionid, title from Sessions S, Schedule SCH, Tracks T where  T.trackid=S.trackid and SCH.sessionid = S.sessionid  and trackname not in ('Video','Film','Anime') order by T.trackname, SCH.starttime"
+QUERY="select  DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',  trackname,S.sessionid, title from Sessions S, Schedule SCH, Tracks T where  T.trackid=S.trackid and SCH.sessionid = S.sessionid  and trackname not in ('Video','Film','Anime') order by T.trackname, SCH.starttime"
