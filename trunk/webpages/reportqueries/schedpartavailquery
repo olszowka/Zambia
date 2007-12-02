@@ -1,4 +1,13 @@
 TITLE='Participant availablity'
 DESCRIPTION='When they said they were available.'
 PROGWANTS=1
-QUERY="select C.badgeid, badgename, DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',endtime),'%a %l:%i %p') as 'End Time' from ParticipantAvailabilityTimes as PAT, CongoDump as C where PAT.badgeid=C.badgeid order by cast(C.badgeid as unsigned),starttime;"
+QUERY="
+	select P.badgeid, P.pubsname, 
+	DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') 
+	   as 'Start Time', 
+	DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',endtime),'%a %l:%i %p') 
+	   as 'End Time' 
+	from ParticipantAvailabilityTimes as PAT, 
+	Participants as P
+	where PAT.badgeid=P.badgeid 
+	order by cast(P.badgeid as unsigned),starttime;"
