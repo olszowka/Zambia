@@ -9,17 +9,24 @@ require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
 staff_header($title);
+$topsectiononly=true; // no room selected -- flag indicates to display only the top section of the page
 
 if (isset($_POST["numrows"])) {
     SubmitMaintainRoom();
     }
 
-if (isset($_POST["selroom"])) {
-        $selroomid=intval($_POST["selroom"]);
+if (isset($_POST["selroom"])) { // room was selected by this form
+        $selroomid=$_POST["selroom"];
+        $topsectiononly=false;
+        }
+    elseif (isset($_GET["selroom"])) { // room was select by external page such as a report
+        $selroomid=$_GET["selroom"];
+        $topsectiononly=false;
         }
     else {
-        $selroomid=0;
+        $selroomid=0; // room was not yet selected.
         }
+
 $query="SELECT roomid, roomname, function FROM Rooms ORDER BY display_order";
 if (!$Rresult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
@@ -40,7 +47,7 @@ echo "<P>&nbsp;\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Submit</BUTTON></DIV>\n";
 echo "</FORM>\n";
 echo "<HR>\n";
-if ($selroomid==0) {
+if ($topsectiononly) {
     staff_footer();
     exit();
     }
