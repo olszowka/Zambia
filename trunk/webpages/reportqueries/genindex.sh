@@ -27,7 +27,7 @@ for x in ${SRCDIR}/*query ; do
        echo '<DT> <a href="'${name}report.csv'">'$TITLE - csv'</a></DT><DD>'$DESCRIPTION in csv format'</DD>' >> $DEST
   fi
 
-  CVSONLY=0; GENCVS=0 ; DESCRIPTION="" ; QUERY="" ; TITLE="" # zero out before looping
+  CSVONLY=0; GENCSV=0 ; DESCRIPTION="" ; QUERY="" ; TITLE="" # zero out before looping
 done
 
   
