@@ -134,7 +134,7 @@ for ($i=0;$i<$numrows;$i++) {
     echo "      <TD class=\"vatop\">".$bigarray[$i]["badgeid"]."</TD>\n";
     echo "      <TD class=\"vatop\">".$bigarray[$i]["badgename"]."</TD>\n";
     echo "      <TD class=\"vatop\">Rank: ".$bigarray[$i]["rank"]."</TD>\n";
-    echo "      <TD class=\"vatop\">".(($bigarray[$i]["willmoderate"]==1)?"Will moderate.":"Will not moderate.")."</TD>\n";
+    echo "      <TD class=\"vatop\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
     echo "      </TR>\n";
     echo "   <TR>\n";
     echo "      <TD class=\"vatop\"><INPUT type=\"radio\" name=\"moderator\" id=\"moderator\"value=\"".$bigarray[$i]["badgeid"]."\" ";
