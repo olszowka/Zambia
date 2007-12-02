@@ -1,5 +1,5 @@
 concat("<a href=EditSession.php?id=",S.sessionid,">",S.sessionid,"</a>") Sessionid,
-concat('<a href=StaffAssignParticipants.php?selsess=',FOO.sessionid,'>', FOO.sessionid,'</a>') as Sessionid, 
+concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid, 
 concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname, 
 DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',FOO.starttime),'%a %l:%i %p') as 'Start Time', 
 DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',FOO.endtime),'%a %l:%i %p') as 'End Time',
