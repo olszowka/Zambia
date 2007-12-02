@@ -1,3 +1,3 @@
 TITLE='Session Interest Counts by Participant'
 DESCRIPTION='Just how many panels did each participant sign up for anyway?'
-QUERY='select C.badgeid, badgename, lastname, firstname, count(sessionid) as interested from CongoDump C, Participants P left join ParticipantSessionInterest PSI on P.badgeid=PSI.badgeid where C.badgeid=P.badgeid and P.interested=1 group by cast(C.badgeid as unsigned);'
+QUERY='select P.badgeid, P.pubsname, count(sessionid) as interested from Participants P left join ParticipantSessionInterest PSI on P.badgeid=PSI.badgeid where P.interested=1 group by cast(P.badgeid as unsigned);'
