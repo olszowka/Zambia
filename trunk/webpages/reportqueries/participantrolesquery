@@ -1,4 +1,9 @@
 TITLE='Participant Roles'
 DESCRIPTION='What Roles is a participant willing to take?'
 PROGWANTS=1
-QUERY='select C.badgeid, badgename, rolename from CongoDump C, ParticipantHasRole PR, Roles where C.badgeid=PR.badgeid and PR.roleid=Roles.roleid order by cast(C.badgeid as unsigned);'
+QUERY='
+	select P.badgeid, P.pubsname, rolename 
+	from Participants P, ParticipantHasRole PR, Roles 
+	where P.badgeid=PR.badgeid and PR.roleid=Roles.roleid 
+	order by cast(P.badgeid as unsigned);'
+
