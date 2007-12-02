@@ -3,6 +3,7 @@
 DATABASE=`cat ../db_name.php | awk -F'"' '/DBDB/ {print $4}'`
 DBUSERNAME=`cat ../db_name.php | awk -F'"' '/DBUSERID/ {print $4}'`
 DBPASSWORD=`cat ../db_name.php | awk -F'"' '/DBPASSWORD/ {print $4}'`
+CON_NAME=`cat ../db_name.php | awk -F'"' '/CON_NAME/ {print $4}'`
 
 SRCDIR="."
 #DESTDIR="../reports"
@@ -20,7 +21,8 @@ for x in ${SRCDIR}/*query ; do
   cat genreportheader.php | sed "s/REPORT_TITLE/$TITLE/" | \
                             sed "s/REPORT_DATE/`date`/" | \
                             sed "s/REPORT_LINK/${name}report.php/" | \
-                            sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" > $DESTDIR/${name}report.php
+                            sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" | \
+                            sed "s%CON_NAME%$CON_NAME%" > $DESTDIR/${name}report.php
 
   echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
 
