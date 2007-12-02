@@ -1,0 +1,13 @@
+TITLE='Name Report - Changes'
+DESCRIPTION="(in progress... try back in a bit). Do these folks want to update thier badgenames?   The pubsname and badgename don't match.   Report shows badgeid, pubsname, badgename, firstname and lastname. "
+PROGWANTS=1
+EVENTSWANTS=1
+REGWANTS=1
+QUERY='
+  select C.badgeid, P.pubsname, C.badgename, C.lastname, C.firstname 
+    from CongoDump C, Participants P 
+   where C.badgeid=P.badgeid 
+     and P.badgeid is not NULL 
+order by pubsname;'
+     #and strcmp(C.badgename, P.pubsname)
+     #and C.badgename=P.pubsname
