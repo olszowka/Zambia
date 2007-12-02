@@ -1,3 +1,3 @@
 TITLE='Session Tech and Hotel notes'
 DESCRIPTION='What notes are in on this panel for tech and hotel?'
-QUERY="select roomname,DATE_FORMAT(ADDTIME('2006-01-13 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', duration,trackname, S.sessionid, title, servicenotes from Tracks T, Sessions S, Rooms R, Schedule SCH where T.trackid=S.trackid and S.sessionid=SCH.sessionid and SCH.roomid=R.roomid and S.servicenotes!=' ' order by roomname, starttime;"
+QUERY="select roomname,DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', duration,trackname, S.sessionid, title, servicenotes from Tracks T, Sessions S, Rooms R, Schedule SCH where T.trackid=S.trackid and S.sessionid=SCH.sessionid and SCH.roomid=R.roomid and S.servicenotes!=' ' order by roomname, starttime;"
