@@ -18,6 +18,7 @@ First cut at categorizing reports is underway.   The reports are starting to be 
    <tr><td><A HREF="StaffReportsForPublications.php">Reports for Publications</A>
    <tr><td><A HREF="StaffReportsForHotel.php">Reports for Hotel</A>
    <tr><td><A HREF="StaffReportsForTech.php">Reports for Tech</A>
+   <tr><td><A HREF="reportgoh.php">Reports for GoH Liason</A>
    <tr><td><A HREF="reportconflict.php">Conflict Reports</A>
    <tr><td><A HREF="reportindex.php">All Reports</A>
 </table>
