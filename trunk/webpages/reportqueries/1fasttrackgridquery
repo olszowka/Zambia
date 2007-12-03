@@ -2,4 +2,8 @@ TITLE='Fasttrack Grid'
 DESCRIPTION='Display Fast Track schedule with rooms on horizontal axis and time on vertical.'
 FASTTRACKWANTS=1
 PROGWANTS=1
-QUERY="select DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', group_concat(if(roomid='34',Concat(trackname,' ',sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Empress ABC',group_concat(if(roomid='47',Concat(trackname,' ',sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Empress A',group_concat(if(roomid='48',Concat(trackname,' ',sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Empress B',group_concat(if(roomid='49',Concat(trackname,' ',sessionid,' ',title,' (',left(duration,5),')'),'') separator '') as 'Empress C' from (SELECT trackname,S.sessionid, SCH.roomid, starttime, duration, title from Tracks T, Schedule SCH, Sessions S, Rooms R where T.trackname != 'Do Not Print' and S.trackid=T.trackid and S.sessionid = SCH.sessionid and SCH.roomid=R.roomid and R.function like '%ast%rack%')as Z group by starttime;"
+prequery="set group_concat_max_len = 25000; Select Group_Concat(distinct RM.list) from (select roomname, concat('group_concat(if(roomid=\'',R.roomid,'\',Concat(trackname,\' \',sessionid,\' \',title,\' (\',left(duration,5),\')\'),\'\') separator \'\') as \'',roomname,'\'') as list from Rooms R where function like '%ast%rack%' order by display_order) RM;"
+q2=`mysql -u $DBUSERNAME $DATABASE -p$DBPASSWORD -N -s -e "$prequery"`
+q1="select DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', "
+q3="from (SELECT trackname,S.sessionid, SCH.roomid, starttime, duration, title from Tracks T, Schedule SCH, Sessions S, Rooms R where T.trackname != 'Do Not Print' and S.trackid=T.trackid and S.sessionid = SCH.sessionid and SCH.roomid=R.roomid and R.function like '%ast%rack%')as Z group by starttime;"
+QUERY="$q1 $q2 $q3"
