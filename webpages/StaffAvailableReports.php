@@ -18,8 +18,6 @@ First cut at categorizing reports is underway.   The reports are starting to be 
    <tr><td><A HREF="StaffReportsForPublications.php">Reports for Publications</A>
    <tr><td><A HREF="StaffReportsForHotel.php">Reports for Hotel</A>
    <tr><td><A HREF="StaffReportsForTech.php">Reports for Tech</A>
-   <tr><td><A HREF="reportgoh.php">Reports for GoH Liason</A>
-   <tr><td><A HREF="reportconflict.php">Conflict Reports</A>
    <tr><td><A HREF="reportindex.php">All Reports</A>
 </table>
 
@@ -29,6 +27,7 @@ his/her area tweaked, removed, etc.  email zambia@arisia.org and let us know.
 <table>
   <COL><COL>
    <tr><td><A HREF="reportindex.php">All Reports</A>
+   <tr><td><A HREF="reportCONFLICT.php">Conflict Reports</A>
    <tr><td><A HREF="reportEVENTS.php">Events Reports</A>
    <tr><td><A HREF="reportFASTTRACK.php">Fast Track Reports</A>
    <tr><td><A HREF="reportGAMING.php">Gaming Reports</A>
@@ -36,6 +35,7 @@ his/her area tweaked, removed, etc.  email zambia@arisia.org and let us know.
    <tr><td><A HREF="reportHOTEL.php">Hotel Reports</A>
    <tr><td><A HREF="reportPROG.php">Programming Reports</A>
    <tr><td><A HREF="reportPUBS.php">Publication Reports</A>
+   <tr><td><A HREF="reportREG.php">Registration Reports</A>
    <tr><td><A HREF="reportTECH.php">Tech Reports</A>
 </table>
 <?php staff_footer(); ?>
