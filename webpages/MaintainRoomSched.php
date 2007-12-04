@@ -167,7 +167,7 @@ for ($i=0;$i<$numrows;$i++) {
     echo "      <TD class=\"vatop lrpad border0010\">".time_description($bigarray[$i]["starttime"])."</TD>\n";
     echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["duration"]."</TD>\n";
     echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["trackname"]."</TD>\n";
-    echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["sessionid"]."</TD>\n";
+    echo "      <TD class=\"vatop lrpad border0010\"> <a href=EditSession.php?id=".$bigarray[$i]["sessionid"].">".$bigarray[$i]["sessionid"]."</TD>\n";
     echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["title"]."</TD>\n";
     echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["roomsetname"]."</TD>\n";
     echo "      </TR>\n";
