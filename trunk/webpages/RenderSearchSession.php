@@ -29,8 +29,17 @@ function RenderSearchSession () {
             <?php $query = "SELECT statusid, statusname FROM SessionStatuses ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
           </SELECT>
         </td>
+        <td>
+           Session ID:
+        </td>
+        <td>
+           <INPUT type="text" name="sessionid" size="10">
+        </td>
+        <td>
+           (Leave blank for any)
+        </td>
       </tr>
-      <tr><td colspan=6 align=right><BUTTON type=submit value="search">Search</BUTTON></td></tr>
+      <tr><td colspan=9 align=right><BUTTON type=submit value="search">Search</BUTTON></td></tr>
     </table>
   </FORM>
 <?php } ?>

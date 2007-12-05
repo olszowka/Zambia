@@ -18,7 +18,8 @@
    $type=0;
    $track=0;
    $status=0;
-    if (retrieve_select_from_db($track,$status,$statusname,$type)==0) {
+   $sessionid="";
+    if (retrieve_select_from_db($track,$status,$statusname,$type,$sessionid)==0) {
        staff_header($title);
        echo "<p> If you have any questions please contact ";
        echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> </p>\n";
