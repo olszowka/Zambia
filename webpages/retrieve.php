@@ -1,5 +1,5 @@
 <?php
-function retrieve_select_from_db($track,$status,$statusname,$type){
+function retrieve_select_from_db($track,$status,$statusname,$type,$sessionid){
     global $result;
     global $link, $message2; 
     require_once('db_functions.php');
@@ -26,6 +26,10 @@ function retrieve_select_from_db($track,$status,$statusname,$type){
 
     if (($type!=0) and ($type!='')) {
          $query.=" AND Sessions.typeid in ($type)";
+         }
+
+    if (($sessionid!=0) and ($sessionid!='')) {
+         $query.=" AND Sessions.sessionid = $sessionid";
          }
     prepare_db();
     $result=mysql_query($query,$link);
