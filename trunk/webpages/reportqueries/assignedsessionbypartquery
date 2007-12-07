@@ -2,4 +2,15 @@ TITLE='Assigned Session by Participant'
 DESCRIPTION='Shows who has been assigned to each session ordered by badgeid.'
 PROGWANTS=1
 EVENTSWANTS=1
-QUERY='select CongoDump.badgeid, badgename, Sessions.sessionid as SessionId, title, moderator from ParticipantOnSession, Sessions, CongoDump where ParticipantOnSession.badgeid=CongoDump.badgeid and ParticipantOnSession.sessionid=Sessions.sessionid order by cast(CongoDump.badgeid as unsigned); '
+QUERY="
+select P.badgeid, 
+       P.pubsname, 
+       Sessions.sessionid as SessionId, 
+       title, 
+       if ((moderator=1), 'Yes', ' ') as 'moderator'
+  from ParticipantOnSession, 
+       Sessions, 
+       Participants P
+ where ParticipantOnSession.badgeid=P.badgeid 
+   and ParticipantOnSession.sessionid=Sessions.sessionid 
+order by cast(P.badgeid as unsigned);"
