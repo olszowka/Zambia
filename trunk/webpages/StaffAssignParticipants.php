@@ -160,8 +160,7 @@ while (list($lastname,$firstname,$badgename,$badgeid)= mysql_fetch_array($Presul
     echo htmlspecialchars($badgeid)."</OPTION>\n";
     }
 echo "</SELECT></DIV>\n";
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BU
-TTON></DIV>\n";
+echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
 
 echo "</FORM>\n";
 staff_footer();
