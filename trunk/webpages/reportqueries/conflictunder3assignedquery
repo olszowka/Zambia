@@ -1,0 +1,18 @@
+TITLE='Conflict Report - Sessions with under 3 people assigned'
+DESCRIPTION='If these are panels, you are in trouble.  There are not enough panelists.'
+CONFLICTWANTS=1
+QUERY="
+  select trackname, 
+         concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', 
+                S.sessionid,'</a>') as Sessionid, 
+         title, 
+         count(badgeid) assigned 
+   from  Sessions S 
+         left join ParticipantOnSession POS 
+                on S.sessionid=POS.sessionid, 
+         Tracks T 
+   where T.trackid=S.trackid 
+     and S.statusid=3  
+group by sessionid 
+  having assigned<3 
+order by trackname, S.sessionid;"
