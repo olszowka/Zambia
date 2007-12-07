@@ -1,5 +1,21 @@
 TITLE='Conflict Report - Interested Participants that wont comp '
-DESCRIPTION='Comps are limited to participants on 3 or more panels.  These folks are on less than 3'
+DESCRIPTION='Comps are limited to participants on 3 or more panels.  These folks are on less than 3 scheduled panels.'
 CONFLICTWANTS=1
 REGWANTS=1
-QUERY="select P.badgeid, P.pubsname, count(sessionid) assigned from CongoDump C, Participants P left join ParticipantOnSession POS on P.badgeid=POS.badgeid where C.badgeid=P.badgeid and interested=1 and C.regtype is NULL group by P.badgeid having assigned < 3 order by cast(C.badgeid as unsigned);"
+QUERY="
+  select P.badgeid, 
+         P.pubsname, 
+         count(X.sessionid) assigned 
+    from CongoDump C, 
+         Participants P 
+         left join (select POS.badgeid, 
+                           POS.sessionid
+                      from ParticipantOnSession POS,
+                           Schedule S
+                     where S.sessionid=POS.sessionid) X
+                on P.badgeid=X.badgeid 
+   where C.badgeid=P.badgeid 
+     and interested=1 
+     and C.regtype is NULL 
+group by P.badgeid having assigned < 3 
+order by cast(C.badgeid as unsigned);"
