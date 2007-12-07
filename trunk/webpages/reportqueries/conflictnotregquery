@@ -4,9 +4,9 @@ CONFLICTWANTS=1
 REGWANTS=1
 QUERY="
   select P.badgeid, 
-         badgename, 
-         regtype, 
-         assigned
+         P.pubsname, 
+	 if ((regtype is NULL), ' ', regtype) as 'regtype', 
+	 if ((assigned is NULL), '0', assigned) as 'assigned'
     from Participants P, 
          CongoDump C 
          left join (  select POS.badgeid, 
