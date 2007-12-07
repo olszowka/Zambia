@@ -4,7 +4,7 @@ CONFLICTWANTS=1
 REGWANTS=1
 QUERY="
  select PA.badgeid, 
-        badgename, 
+        P.pubsname, 
         fridaymaxprog as 'Fri Reqd.', 
         frisched as 'Fri Asgnd.', 
         saturdaymaxprog as 'Sat Reqd.', 
