@@ -14,7 +14,6 @@ QUERY="
         maxprog as 'Total Reqd.', 
         totsched as 'Total Asgnd.' 
    from ParticipantAvailability PA,  
-        CongoDump CD,  
         Participants P 
         left join (  select badgeid, 
                             sum(if(starttime<'24:00:00',1,0)) as frisched, 
@@ -30,7 +29,6 @@ QUERY="
                               where POS.sessionid=SCH.sessionid) as FOO  
                     group by badgeid) as BAR 
                 on P.badgeid=BAR.badgeid 
-   where P.badgeid=CD.badgeid 
-      and PA.badgeid = CD.badgeid 
+   where PA.badgeid = P.badgeid 
       and P.interested=1 
 order by cast(PA.badgeid as unsigned);"
