@@ -45,7 +45,7 @@ while (list($roomid,$roomname, $rmfunct)= mysql_fetch_array($Rresult, MYSQL_NUM)
     echo ">".htmlspecialchars($roomname)." (".htmlspecialchars($rmfunct).")</OPTION>\n";
     }
 echo "</SELECT></DIV>\n";
-echo "<P>&nbsp;\n";
+echo "<br><P>For any session where you are rescheduling, please read the Notes for Programming Committee. \n";
 echo "<DIV class=\"SubmitDiv\">";
 if (isset($_SESSION['return_to_page'])) {
     echo "<A HREF=\"".$_SESSION['return_to_page']."\">Return to report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A>";
