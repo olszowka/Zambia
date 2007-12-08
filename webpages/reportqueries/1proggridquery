@@ -7,7 +7,7 @@ prequery="
   Select Group_Concat(distinct RM.list) 
     from (select 
 	  roomname,
-          concat('group_concat(if(roomid=\'', R.roomid,'\',Concat(sessionid,\' \',trackname,\' \',title,\'\ (\',left(duration,5),\')\'),\'\') separator \'\') as \'',roomname,'\'') as list 
+          concat('group_concat(if(roomid=\'', R.roomid,'\',Concat(sessionid,\' \',trackname,\' \',title,\'\ (\',left(duration,5),\')\'),\'\') separator \'\') as \'','<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a> ','\'') as list 
     from Rooms R 
    where function 
     like '%rogram%' 
