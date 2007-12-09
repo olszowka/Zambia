@@ -1,8 +1,34 @@
 TITLE='Whole Grid - Staff view'
-DESCRIPTION='Display entire schedule with rooms on horizontal axis and time on vertical. (this includes items marked "Do Not Print"'
+DESCRIPTION='Display entire schedule with rooms on horizontal axis and time on vertical. (this includes items marked "Do Not Print")\<BR \>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
 PUBSWANTS=1
-prequery="set group_concat_max_len = 25000; Select Group_Concat(distinct RM.list) from (select roomname, concat('group_concat(if(roomid=\'',R.roomid,'\',Concat(trackname,\' \',sessionid,\' \',title,\' (\',left(duration,5),\')\'),\'\') separator \'\') as \'',roomname,'\'') as list from Rooms R order by display_order) RM;"
+GOHWANTS=1
+PROGWANTS=1
+prequery="
+     set group_concat_max_len = 25000; 
+  Select Group_Concat(distinct RM.list) 
+    from (select roomname,
+          concat('group_concat(if(roomid=\'', R.roomid,'\',Concat(sessionid,\' \',trackname,\' \',title,\'\ (\',left(duration,5),\')\'),\'\') separator \'\') as \'','<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a> ','\'') as list 
+    from Rooms R 
+order by display_order) RM;"
+
 q2=`mysql -u $DBUSERNAME $DATABASE -p$DBPASSWORD -N -s -e "$prequery"`
+
 q1="select DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', "
-q3="from (SELECT trackname,S.sessionid, roomid, starttime, duration, title from Tracks T, Schedule SCH, Sessions S where T.trackname != 'Do Not Print' and T.trackid=S.trackid and S.sessionid = SCH.sessionid) as Z group by starttime;"
+
+q3="
+  from (
+        SELECT trackname, 
+               concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as sessionid,
+               SCH.roomid, 
+               starttime, 
+               duration, 
+               concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') as title
+          from Tracks T, 
+               Schedule SCH, 
+               Sessions S
+         where T.trackname != 'Do Not Print' 
+           and T.trackid=S.trackid 
+           and S.sessionid = SCH.sessionid) as Z 
+      group by starttime;"
+
 QUERY="$q1 $q2 $q3"

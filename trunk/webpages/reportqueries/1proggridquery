@@ -1,5 +1,5 @@
 TITLE='Programming Grid'
-DESCRIPTION='Display Programming schedule with rooms on horizontal axis and time on vertical.\<BR\>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
+DESCRIPTION='Display Programming schedule with rooms on horizontal axis and time on vertical.\<BR \>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
 GOHWANTS=1
 PROGWANTS=1
 prequery="
@@ -8,8 +8,7 @@ prequery="
     from (select roomname,
           concat('group_concat(if(roomid=\'', R.roomid,'\',Concat(sessionid,\' \',trackname,\' \',title,\'\ (\',left(duration,5),\')\'),\'\') separator \'\') as \'','<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a> ','\'') as list 
     from Rooms R 
-   where function 
-    like '%rogram%' 
+   where function like '%rogram%' 
 order by display_order) RM;"
 
 q2=`mysql -u $DBUSERNAME $DATABASE -p$DBPASSWORD -N -s -e "$prequery"`
