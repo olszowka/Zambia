@@ -29,7 +29,6 @@ from (
                Rooms R, 
                Tracks T 
          where T.trackid=S.trackid 
-           and T.trackname != 'Do Not Print' 
            and S.sessionid = SCH.sessionid 
            and SCH.roomid=R.roomid 
            and R.function like '%ent%') as Z 
