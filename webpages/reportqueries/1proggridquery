@@ -1,5 +1,6 @@
 TITLE='Programming Grid'
 DESCRIPTION='Display Programming schedule with rooms on horizontal axis and time on vertical.\<BR \>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
+GRIDSWANTS=1
 GOHWANTS=1
 PROGWANTS=1
 prequery="

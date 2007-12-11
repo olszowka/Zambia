@@ -1,5 +1,6 @@
 TITLE='Event Grid'
 DESCRIPTION='Display event schedule with rooms on horizontal axis and time on vertical.'
+GRIDSWANTS=1
 EVENTSWANTS=1
 prequery="
      set group_concat_max_len = 25000; 
