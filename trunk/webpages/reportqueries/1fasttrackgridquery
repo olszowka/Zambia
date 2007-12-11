@@ -1,5 +1,6 @@
 TITLE='Fasttrack Grid'
 DESCRIPTION='Display Fast Track schedule with rooms on horizontal axis and time on vertical.\<BR\>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
+GRIDSWANTS=1
 FASTTRACKWANTS=1
 PROGWANTS=1
 prequery="

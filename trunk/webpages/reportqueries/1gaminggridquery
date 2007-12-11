@@ -1,5 +1,6 @@
 TITLE='Gaming Grid'
 DESCRIPTION='Display Gaming schedule with rooms on horizontal axis and time on vertical.\<BR\>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
+GRIDSWANTS=1
 GAMINGWANTS=1
 prequery="
      set group_concat_max_len = 25000; 

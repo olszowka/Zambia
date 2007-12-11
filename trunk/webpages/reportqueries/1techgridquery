@@ -1,5 +1,6 @@
 TITLE='Tech Grid'
 DESCRIPTION='Not really sure what tech wants.  email us, please (zambia@arisia.org).\<BR \>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
+GRIDSWANTS=1
 TECHWANTS=1
 prequery="
      set group_concat_max_len = 25000; 

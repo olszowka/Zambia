@@ -37,5 +37,6 @@ his/her area tweaked, removed, etc.  email zambia@arisia.org and let us know.
    <tr><td><A HREF="reportPUBS.php">Publication Reports</A>
    <tr><td><A HREF="reportREG.php">Registration Reports</A>
    <tr><td><A HREF="reportTECH.php">Tech Reports</A>
+   <tr><td><A HREF="reportGRIDS.php">Grids</A>
 </table>
 <?php staff_footer(); ?>
