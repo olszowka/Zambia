@@ -1,5 +1,5 @@
 TITLE='Fasttrack Grid'
-DESCRIPTION='Display Fast Track schedule with rooms on horizontal axis and time on vertical.\<BR\>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
+DESCRIPTION='Display PUBLIC Fast Track schedule with rooms on horizontal axis and time on vertical.\<BR\>Click on the SessionID to add participants, the title to edit the session, or the room name to edit the schedule'
 GRIDSWANTS=1
 FASTTRACKWANTS=1
 PROGWANTS=1
@@ -29,7 +29,7 @@ q3="
                Schedule SCH, 
                Sessions S, 
                Rooms R 
-         where T.trackname != 'Do Not Print' 
+         where S.pubstatusid = 2
            and S.trackid=T.trackid 
            and S.sessionid = SCH.sessionid 
            and SCH.roomid=R.roomid 

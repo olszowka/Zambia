@@ -2,5 +2,27 @@ TITLE='Report for Ben and the palm'
 DESCRIPTION='StartTime Duration Room Track Title Participants'
 PUBSWANTS=1
 GENCSV=1
-QUERY="select 
-DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', concat('(',left(duration,5),')') Duration, roomname, trackname, title, if(group_concat(' ',pubsname) is NULL,'',group_concat(' ',pubsname)) as 'Participants' from Participants P, Rooms R, Sessions S, Schedule SCH LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid LEFT JOIN CongoDump C ON POS.badgeid=C.badgeid LEFT JOIN Tracks T ON T.trackid=S.trackid where P.badgeid=C.badgeid and SCH.roomid = R.roomid and SCH.sessionid = S.sessionid and trackname not in ('Do Not Print') group by SCH.sessionid order by SCH.starttime, R.roomname"
+QUERY="
+     select DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', 
+            concat('(',left(duration,5),')') Duration, 
+            roomname, 
+            trackname, 
+            title, 
+         if(group_concat(' ',pubsname) is NULL,'',group_concat(' ',pubsname)) as 'Participants' 
+       from Participants P, 
+            Rooms R, 
+            Sessions S, 
+            Schedule SCH 
+  LEFT JOIN ParticipantOnSession POS 
+         ON SCH.sessionid=POS.sessionid 
+  LEFT JOIN CongoDump C 
+         ON POS.badgeid=C.badgeid 
+  LEFT JOIN Tracks T 
+         ON T.trackid=S.trackid 
+      where P.badgeid=C.badgeid 
+        and SCH.roomid = R.roomid 
+        and SCH.sessionid = S.sessionid 
+	and S.pubstatusid = 2        
+   group by SCH.sessionid 
+   order by SCH.starttime, 
+            R.roomname"

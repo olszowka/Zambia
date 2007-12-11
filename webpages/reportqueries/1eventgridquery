@@ -1,5 +1,5 @@
 TITLE='Event Grid'
-DESCRIPTION='Display event schedule with rooms on horizontal axis and time on vertical.'
+DESCRIPTION='Display PUBLIC Event schedule with rooms on horizontal axis and time on vertical.'
 GRIDSWANTS=1
 EVENTSWANTS=1
 prequery="
@@ -29,8 +29,7 @@ q3="
                Sessions S, 
                Rooms R, 
                Tracks T 
-         where T.trackid=S.trackid 
-           and T.trackname != 'Do Not Print' 
+         where S.pubstatusid = 2
            and S.sessionid = SCH.sessionid 
            and SCH.roomid=R.roomid 
            and R.function like '%ent%') as Z 
