@@ -1,5 +1,21 @@
 TITLE='Schedule - brief diff'
-DESCRIPTION='Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule.  </a>'
+DESCRIPTION='Below is the PUBLIC Panel, Events, Film, Anime, Video and Arisia TV schedule.  </a>'
 PUBSWANTS=1
 PROGWANTS=1
-QUERY="select  DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', concat( if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min')))) Duration , roomname, trackname, title from Sessions S, Schedule SCH, Tracks T , Rooms R where  R.roomid=SCH.roomid and T.trackid=S.trackid and SCH.sessionid = S.sessionid  and trackname not in ('Do Not Print') and S.ts>\"2008-01-18 23:00:00\" order by SCH.starttime,T.trackname"
+QUERY="
+    select DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', 
+           concat( if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min')))) Duration , 
+           roomname, 
+           trackname, 
+           title 
+           from Sessions S, 
+           Schedule SCH, 
+           Tracks T, 
+           Rooms R 
+     where R.roomid=SCH.roomid 
+       and T.trackid=S.trackid 
+       and SCH.sessionid = S.sessionid  
+       and S.pubstatusid = 2
+       and S.ts>\"2008-01-18 23:00:00\" 
+  order by SCH.starttime,
+           T.trackname"
