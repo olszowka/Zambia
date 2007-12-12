@@ -11,6 +11,8 @@ QUERY='
         from ParticipantOnSession POS, 
              Schedule SCH 
        where POS.sessionid=SCH.sessionid) as X 
+  LEFT JOIN CongoDump C 
+         ON P.badgeid=C.badgeid 
    where P.badgeid=X.badgeid
-order by P.pubsname;'
+order by C.lastname, C.firstname;'
 
