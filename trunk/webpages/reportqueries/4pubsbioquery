@@ -10,9 +10,9 @@ QUERY='
      (select distinct(badgeid) 
         from ParticipantOnSession POS, 
              Schedule SCH 
-       where POS.sessionid=SCH.sessionid) as X 
-  LEFT JOIN CongoDump C 
-         ON P.badgeid=C.badgeid 
-   where P.badgeid=X.badgeid
+       where POS.sessionid=SCH.sessionid) as X,
+         CongoDump C 
+   where P.badgeid=X.badgeid 
+     and P.badgeid=C.badgeid
 order by C.lastname, C.firstname;'
 
