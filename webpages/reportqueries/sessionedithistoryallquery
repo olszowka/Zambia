@@ -1,0 +1,5 @@
+TITLE='Session Edit History Report - All'
+DESCRIPTION='For each session, show the entire edit history.'
+PROGWANTS=1
+EVENTSWANTS=1
+QUERY="SELECT concat('<a href=EditSession.php?id=',S.sessionid,'>',S.sessionid,'</a>') Sessionid, T.trackname as 'Track', S.title as 'Title', SS.statusname as 'Current<BR>Status', timestamp as 'When', concat(name,' (', email_address,') ') as 'Who', concat(SEC.description, ' ',SS2.statusname) as 'What' from Sessions S, Tracks T, SessionStatuses SS, SessionEditHistory SEH, SessionEditCodes SEC, SessionStatuses SS2 where S.trackid=T.trackid and S.statusid = SS.statusid and S.sessionid = SEH.sessionid and SEH.sessioneditcode=SEC.sessioneditcode and SS2.statusid=SEH.statusid and S.statusid >= 1 and S.statusid <= 7 order by S.sessionid, SEH.timestamp ;"

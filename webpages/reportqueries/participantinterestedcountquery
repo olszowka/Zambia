@@ -1,0 +1,4 @@
+TITLE='Participant Interested Count'
+DESCRIPTION='Show the number of people that are interested in attending'
+PROGWANTS=1
+QUERY='select count(P.badgeid), P.interested from Participants P group by P.interested;'
