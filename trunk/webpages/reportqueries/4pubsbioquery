@@ -10,9 +10,8 @@ QUERY='
      (select distinct(badgeid) 
         from ParticipantOnSession POS, 
              Schedule SCH 
-       where POS.sessionid=SCH.sessionid) as X,
-         CongoDump C 
+       where POS.sessionid=SCH.sessionid) as X
    where P.badgeid=X.badgeid 
-     and P.badgeid=C.badgeid
-order by C.lastname, C.firstname;'
+order by substring_index(pubsname," ",-1);'
+
 
