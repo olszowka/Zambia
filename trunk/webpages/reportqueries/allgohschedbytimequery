@@ -18,8 +18,8 @@ QUERY="
                 S.sessionid,'</a>') as Sessionid,
          title, 
          concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants' , 
-	 S.pubstatusid,
-    if ((moderator=1), 'Yes', ' ') as 'moderator'
+         if ((S.pubstatusid=1), 'S-O', if((S.pubstatusid=3), 'DNP', ' ')) as 'Pubs Status',
+         if ((moderator=1), 'Yes', ' ') as 'moderator'
     from Rooms R, 
          Sessions S, 
          Schedule SCH 
