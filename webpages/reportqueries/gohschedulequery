@@ -12,7 +12,9 @@ select G.pubsname,
        concat(date_format(duration,'%i'),'min')))) duration,
      trackname, 
      concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid, 
-     concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') title
+     concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') title,
+     if ((S.pubstatusid=1), 'S-O', if((S.pubstatusid=3), 'DNP', ' ')) as 'Pubs Status',
+     if ((moderator=1), 'Yes', ' ') as 'moderator'
 from Rooms R, Sessions S, Participants G, Schedule SCH 
      LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid 
      LEFT JOIN Participants P ON POS.badgeid=P.badgeid 
