@@ -1,6 +1,7 @@
 TITLE='Full Participant Schedule by time '
 DESCRIPTION='The schedule sorted by participant'
 PROGWANTS=1
+GOHWANTS=1
 QUERY="
   select 
          concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
