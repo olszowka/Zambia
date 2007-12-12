@@ -2,4 +2,15 @@ TITLE='Pubs - Participant Bio and pubname'
 DESCRIPTION='Show the badgeid, pubsname and bio for each participant that are on at least one scheduled session.'
 PUBSWANTS=1
 GENCSV=1
-QUERY='select P.badgeid, P.pubsname, P.bio from Participants P, (select distinct(badgeid) from ParticipantOnSession POS, Schedule SCH where POS.sessionid=SCH.sessionid) as X where P.badgeid=X.badgeid;'
+QUERY='
+  select P.badgeid, 
+         P.pubsname, 
+         P.bio 
+    from Participants P,
+     (select distinct(badgeid) 
+        from ParticipantOnSession POS, 
+             Schedule SCH 
+       where POS.sessionid=SCH.sessionid) as X 
+   where P.badgeid=X.badgeid
+order by P.pubsname;'
+
