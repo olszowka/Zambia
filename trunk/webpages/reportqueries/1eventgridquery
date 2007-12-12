@@ -18,7 +18,7 @@ q2=`mysql -u $DBUSERNAME $DATABASE -p$DBPASSWORD -N -s -e "$prequery"`
 q1="select DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', "
 
 q3="
-  from (SELECT trackname,
+  from (SELECT T.trackname,
                ' ',
                concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as sessionid,
                SCH.roomid, 
@@ -30,6 +30,7 @@ q3="
                Rooms R, 
                Tracks T 
          where S.pubstatusid = 2
+           and S.trackid=T.trackid 
            and S.sessionid = SCH.sessionid 
            and SCH.roomid=R.roomid 
            and R.function like '%ent%') as Z 
