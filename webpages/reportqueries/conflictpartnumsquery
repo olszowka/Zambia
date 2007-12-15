@@ -11,6 +11,8 @@ QUERY="
         satsched as 'Sat Asgnd.', 
         sundaymaxprog as 'Sun Reqd.', 
         sunsched as 'Sun Asgnd.',
+        mondaymaxprog as 'Mon Reqd.', 
+        monsched as 'Mon Asgnd.',
         maxprog as 'Total Reqd.', 
         totsched as 'Total Asgnd.' 
    from ParticipantAvailability PA,  
@@ -19,7 +21,9 @@ QUERY="
                             sum(if(starttime<'24:00:00',1,0)) as frisched, 
                             sum(if((starttime>='24:00:00' 
                                  && starttime<='48:00:00'),1,0)) as satsched, 
-                            sum(if(starttime>='48:00:00',1,0)) as sunsched, 
+                            sum(if((starttime>='48:00:00'
+                                 && starttime<='72:00:00'),1,0)) as sunsched, 
+                            sum(if(starttime>='72:00:00',1,0)) as monsched, 
                             count(*) as totsched 
                        from (select POS.badgeid, 
                                     POS.sessionid, 
