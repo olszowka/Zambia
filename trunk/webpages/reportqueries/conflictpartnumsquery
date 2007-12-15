@@ -5,15 +5,15 @@ REGWANTS=1
 QUERY="
  select PA.badgeid, 
         P.pubsname, 
-        fridaymaxprog as 'Fri Reqd.', 
+        if ((fridaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',fridaymaxprog,'</div>')) as 'Fri Reqd.', 
         frisched as 'Fri Asgnd.', 
-        saturdaymaxprog as 'Sat Reqd.', 
+        if ((saturdaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',saturdaymaxprog,'</div>')) as 'Sat Reqd.', 
         satsched as 'Sat Asgnd.', 
-        sundaymaxprog as 'Sun Reqd.', 
+        if ((sundaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',sundaymaxprog,'</div>')) as 'Sun Reqd.', 
         sunsched as 'Sun Asgnd.',
-        mondaymaxprog as 'Mon Reqd.', 
+        if ((mondaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',mondaymaxprog,'</div>')) as 'Mon Reqd.', 
         monsched as 'Mon Asgnd.',
-        maxprog as 'Total Reqd.', 
+        concat('<div style=background:lightgray\;>',maxprog,'</div>') as 'Total Reqd.', 
         totsched as 'Total Asgnd.' 
    from ParticipantAvailability PA,  
         Participants P 
