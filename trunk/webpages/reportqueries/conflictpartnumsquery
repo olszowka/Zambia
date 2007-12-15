@@ -6,15 +6,15 @@ QUERY="
  select PA.badgeid, 
         P.pubsname, 
         if ((fridaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',fridaymaxprog,'</div>')) as 'Fri Reqd.', 
-        frisched as 'Fri Asgnd.', 
+	if ((frisched is NULL), '-', frisched) as 'Fri Asgnd.', 
         if ((saturdaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',saturdaymaxprog,'</div>')) as 'Sat Reqd.', 
-        satsched as 'Sat Asgnd.', 
+	if ((satsched is NULL), '-', satsched) as 'Sat Asgnd.', 
         if ((sundaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',sundaymaxprog,'</div>')) as 'Sun Reqd.', 
-        sunsched as 'Sun Asgnd.',
+	if ((sunsched is NULL), '-', sunsched) as 'Sun Asgnd.', 
         if ((mondaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',mondaymaxprog,'</div>')) as 'Mon Reqd.', 
-        monsched as 'Mon Asgnd.',
-        concat('<div style=background:lightgray\;>',maxprog,'</div>') as 'Total Reqd.', 
-        totsched as 'Total Asgnd.' 
+	if ((monsched is NULL), '-', monsched) as 'Mon Asgnd.', 
+        if ((maxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',maxprog,'</div>')) as 'Total Reqd.', 
+	if ((totsched is NULL), '-', totsched) as 'Tot Asgnd.'
    from ParticipantAvailability PA,  
         Participants P 
         left join (  select badgeid, 
