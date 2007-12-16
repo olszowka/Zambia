@@ -13,7 +13,7 @@ umask 022
 
 #mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD -e '\. fixnames'
 
-for x in ${SRCDIR}/1prog*query ; do
+for x in ${SRCDIR}/sessioninterestpartquery ; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
   eval `cat $x`
   echo $x
