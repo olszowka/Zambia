@@ -115,14 +115,24 @@ REG_EMAIL; ?>">registration</a> with your
 current information. This data is downloaded periodically from the registration database, and should be correct within a week.
 </div>
 <HR>
-<BR>
-      Your name as you wish to have it published&nbsp;&nbsp;
-      <INPUT type="text" size="20" name="pubsname"
-          value="<?php echo htmlspecialchars($participant["pubsname"],ENT_COMPAT); ?>"><BR>
-
-        <LABEL class="spanlabcb" for="bio">Your biography (500 characters or fewer):</LABEL><BR>
-         Note: Your biography will appear immediately following your name in the program.<BR>
-            <TEXTAREA rows=5 cols=72 name="bio"><?php echo htmlspecialchars($participant["bio"],ENT_COMPAT); ?></TEXTAREA>
+<?php if (!(may_I('EditBio'))) { // no permission to edit bio
+          echo "<P class=\"errmsg\">You may not edit your name for publication or biography at this time.  (They may have gone already to the publisher.)</P>\n";
+          }
+echo "<BR>\n";
+echo "Your name as you wish to have it published&nbsp;&nbsp;";
+echo "<INPUT type=\"text\" size=\"20\" name=\"pubsname\" ";
+echo "value=\"".htmlspecialchars($participant["pubsname"],ENT_COMPAT)."\"";
+if (!(may_I('EditBio'))) { // no permission to edit bio
+    echo " readonly";
+    }
+echo "><BR><BR>\n";
+echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your biography (500 characters or fewer):</LABEL><BR>\n";
+echo "Note: Your biography will appear immediately following your name in the program.<BR>\n";
+echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
+if (!(may_I('EditBio'))) { // no permission to edit bio
+    echo " readonly";
+    }
+echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>"; ?>
         <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
         <INPUT type="hidden" name="pubsnameold" value="<?php echo htmlspecialchars($pubsnameold,ENT_COMPAT); ?>">
     </form>
