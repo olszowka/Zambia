@@ -6,7 +6,7 @@ select
        concat(X.pubsname, '(', X.badgeid, ')') as Pubsname,
        X.trackname, 
        concat('<a href=StaffAssignParticipants.php?selsess=',X.sessionid,'>', X.sessionid,'</a>') as Sessionid,
-       X.title, 
+       concat('<a href=EditSession.php?id=',X.sessionid,'>',X.title,'</a>') Title,
        (if (X.assigned is NULL,' ','yes')) as 'Assigned?', 
        (if (moderator is NULL,' ','yes')) as 'Moderator?', 
        concat('<a href=MaintainRoomSched.php?selroom=',Y.roomid,'>', Y.roomname,'</a>') as Roomname,
