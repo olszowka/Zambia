@@ -15,9 +15,8 @@ QUERY="
                          concat(right(date_format(duration,'%i'),1),'min'), 
                          concat(date_format(duration,'%i'),'min')))) Duration, 
             roomname, 
-            pubsno as CODE, 
             trackname as TRACK, 
-            S.kidscatid,
+            K.kidscatname,
             title, 
             progguiddesc as 'Long Text', 
             group_concat(' ',pubsname, if (moderator=1,' (m)','')) as 'PARTIC' 

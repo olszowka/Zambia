@@ -1,24 +1,37 @@
-TITLE='Conflict Report - Assigned v Scheduled issues'
+TITLE='Conflict Report - Assigned v. Scheduled issue'
 DESCRIPTION='These are sessions that are either in the grid and have no one assigned or the have people assigned and are not in the grid'
 CONFLICTWANTS=1
 
 QUERY="
-	select trackname, 
+	select trackname, typename, divisionname,
 	  concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid, 
-	  title, 
+          concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') Title,
 	  if ((SCH.sessionid is NULL),
 	    'no room', 
 	    concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>')) in_grid, 
-	    if ((num_assigned is NULL), 0, num_assigned) as num_assigned
+	    if ((num_assigned is NULL), 0, num_assigned) as num_assigned,
+	    if ((num_int is NULL), 0, num_int) as num_int
 	from Tracks T, 
+             Types Y,
+             Divisions D,
 	     Sessions S 
-	left join Schedule SCH on S.sessionid=SCH.sessionid 
-	left join (select sessionid, 
-	  count(badgeid) as num_assigned 
-	  from ParticipantOnSession group by sessionid) A 
-	on A.sessionid=S.sessionid 
-	left join Rooms R on R.roomid=SCH.roomid 
+             left join Schedule SCH 
+                    on S.sessionid=SCH.sessionid 
+             left join (  select sessionid, 
+                                 count(badgeid) as num_assigned 
+                            from ParticipantOnSession 
+                        group by sessionid) A 
+ 	            on A.sessionid=S.sessionid 
+             left join (  select sessionid, count(badgeid) as num_int 
+                            from ParticipantSessionInterest
+                        group by sessionid) B
+                     on B.sessionid=S.sessionid
+             left join Rooms R 
+                    on R.roomid=SCH.roomid 
 	where T.trackid=S.trackid 
-	having (in_grid='no room' and num_assigned>0) 
-	  or (in_grid!='no room' and (num_assigned<1 or num_assigned is NULL))
-	 order by in_grid, num_assigned;"
+          and Y.typeid=S.typeid
+          and D.divisionid=S.divisionid
+     having (in_grid='no room' and num_assigned>0) 
+        or (in_grid!='no room' and (num_assigned<1 or num_assigned is NULL))
+     order by in_grid, num_assigned desc
+      ;"
