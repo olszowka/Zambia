@@ -86,12 +86,12 @@ echo htmlspecialchars(mysql_result($result,0,"notesforprog"));
 echo "\n";
 echo "<HR>\n";
 $query = <<<EOD
-SELECT POS.badgeid AS posbadgeid, POS.moderator, CD.badgeid, CD.badgename, PSI.rank, 
-PSI.willmoderate, PSI.comments FROM CongoDump AS CD 
-JOIN ParticipantSessionInterest AS PSI ON CD.badgeid=PSI.badgeid 
-LEFT JOIN ParticipantOnSession AS POS ON (CD.badgeid=POS.badgeid
+SELECT POS.badgeid AS posbadgeid, POS.moderator, P.badgeid, P.pubsname, PSI.rank, 
+PSI.willmoderate, PSI.comments FROM Participants AS P 
+JOIN ParticipantSessionInterest AS PSI ON P.badgeid=PSI.badgeid 
+LEFT JOIN ParticipantOnSession AS POS ON (P.badgeid=POS.badgeid
 and PSI.sessionid=POS.sessionid) where PSI.sessionid=$selsessionid
-ORDER BY POS.moderator DESC, POS.badgeid DESC, CD.badgename
+ORDER BY POS.moderator DESC, POS.badgeid DESC, P.pubsname
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
@@ -99,10 +99,14 @@ if (!$result=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
-$query="SELECT C.lastname, C.firstname, C.badgename, C.badgeid FROM CongoDump AS C,";
-$query.=" Participants AS P WHERE C.badgeid=P.badgeid AND P.interested=1 AND";
-$query.=" C.badgeid not in (Select badgeid from ParticipantSessionInterest where";
-$query.=" sessionid=$selsessionid) ORDER BY C.lastname";
+$query="   SELECT P.pubsname, P.badgeid ";
+$query.="    FROM Participants AS P ";
+$query.="   WHERE P.interested=1 ";
+$query.="     AND P.badgeid not in ";
+$query.="            (Select badgeid ";
+$query.="               from ParticipantSessionInterest ";
+$query.="              where sessionid=$selsessionid) ";
+$query.="ORDER BY P.pubsname ";
 if (!$Presult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     RenderError($title,$message);
@@ -132,7 +136,7 @@ for ($i=0;$i<$numrows;$i++) {
     echo ((isset($bigarray[$i]["posbadgeid"]))?1:0)."\">";
     echo "         </TD>\n";
     echo "      <TD class=\"vatop\">".$bigarray[$i]["badgeid"]."</TD>\n";
-    echo "      <TD class=\"vatop\">".$bigarray[$i]["badgename"]."</TD>\n";
+    echo "      <TD class=\"vatop\">".$bigarray[$i]["pubsname"]."</TD>\n";
     echo "      <TD class=\"vatop\">Rank: ".$bigarray[$i]["rank"]."</TD>\n";
     echo "      <TD class=\"vatop\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
     echo "      </TR>\n";
@@ -154,9 +158,9 @@ echo "<HR>\n";
 echo "<DIV><LABEL for=\"asgnpart\">Assign participant not indicated as interested or invited.</LABEL><BR>\n";
 echo "<SELECT name=\"asgnpart\">\n";
 echo "     <OPTION value=0 selected>Assign Participant</OPTION>\n";
-while (list($lastname,$firstname,$badgename,$badgeid)= mysql_fetch_array($Presult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$badgeid."\">".htmlspecialchars($lastname).", ";
-    echo htmlspecialchars($firstname)." (".htmlspecialchars($badgename).") - ";
+while (list($pubsname,$badgeid)= mysql_fetch_array($Presult, MYSQL_NUM)) {
+    echo "     <OPTION value=\"".$badgeid."\">";
+    echo htmlspecialchars($pubsname)." - ";
     echo htmlspecialchars($badgeid)."</OPTION>\n";
     }
 echo "</SELECT></DIV>\n";
