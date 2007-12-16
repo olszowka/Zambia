@@ -55,6 +55,18 @@
     if ($pubsnameold!=$pubsname) {
         $update_pubsname=true;
         }
+    if ($update_pubsname and !may_I('EditBio')) { //Don't have permission to change pubsname
+        $message_error="You may not update your name for publication at this time.\n";
+        if (getCongoData($badgeid)==0) {
+                require ('renderMyContact.php');
+                exit();
+                }
+            else {
+                $message=$message."<BR>Failure to re-retrieve Congo data for Participant.";
+                RenderError($title,$message);
+                exit();
+                }
+        }
     $query = "UPDATE Participants SET ";
     if ($update_password==true) {
         $query=$query."password=\"".md5($password)."\", ";
@@ -64,7 +76,9 @@
         }
     $query.="bestway=\"".$bestway."\", ";
     $query.="interested=".$interested.", ";
-    $query.="bio=\"".mysql_real_escape_string($bio,$link);
+    if (may_I('EditBio')) {
+        $query.="bio=\"".mysql_real_escape_string($bio,$link);
+        }
     $query.="\" WHERE badgeid=\"".$badgeid."\"";                               //"
     if (!mysql_query($query,$link)) {
         $message=$query."<BR>Error updating database.  Database not updated.";
