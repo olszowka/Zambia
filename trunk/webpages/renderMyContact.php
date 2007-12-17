@@ -116,7 +116,7 @@ current information. This data is downloaded periodically from the registration 
 </div>
 <HR>
 <?php if (!(may_I('EditBio'))) { // no permission to edit bio
-          echo "<P class=\"errmsg\">You may not edit your name for publication or biography at this time.  (They may have gone already to the publisher.)</P>\n";
+          echo "<P class=\"errmsg\">At this time, you may not edit either your biography or your name for publication.  They have already gone to print.</P>\n";
           }
 echo "<BR>\n";
 echo "Your name as you wish to have it published&nbsp;&nbsp;";
