@@ -17,7 +17,7 @@ QUERY="
                 S.sessionid,'</a>') as Sessionid,
          title, 
          concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants' , 
-         if ((moderator=1),'Yes', ' ') as Moderator
+         if ((moderator=1),'moderator', ' ') as Moderator
     from Rooms R, 
          Sessions S, 
          Schedule SCH 
