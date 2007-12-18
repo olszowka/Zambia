@@ -17,7 +17,7 @@ QUERY="
                 S.sessionid,'</a>') as Sessionid,
          title, 
          concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants' , 
-         moderator 
+         if ((moderator=1),'Yes', ' ') as Moderator
     from Rooms R, 
          Sessions S, 
          Schedule SCH 
@@ -29,4 +29,5 @@ QUERY="
                 ON T.trackid=S.trackid 
    where SCH.roomid = R.roomid 
      and SCH.sessionid = S.sessionid 
+     and S.typeid not in (10, 12)
 order by cast(P.badgeid as unsigned), SCH.starttime;"
