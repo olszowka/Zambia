@@ -18,4 +18,6 @@ QUERY="
                 on P.badgeid=X.badgeid 
    where C.badgeid=P.badgeid 
      and interested!=2 
-order by cast(P.badgeid as unsigned);"
+order by regtype, 
+         cast(assigned as unsigned) desc,
+          substring_index(pubsname,' ',-1);"
