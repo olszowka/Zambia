@@ -2,4 +2,16 @@ TITLE='Pubs - Who is on Which Session'
 DESCRIPTION='Show the badgeid, pubsname and session info for each participant that are on at least one scheduled session.'
 PUBSWANTS=1
 GENCSV=1
-QUERY="select P.badgeid, P.pubsname, s as Sessions from (select distinct(badgeid) , group_concat(' ',POS.sessionid, if (moderator=1,' (m)','')) as s from ParticipantOnSession POS, Schedule SCH where POS.sessionid=SCH.sessionid group by badgeid) as X, Participants P where  P.badgeid=X.badgeid;"
+QUERY="
+  select P.badgeid, 
+         P.pubsname, 
+         s as Sessions 
+   from (select distinct(badgeid) , 
+                group_concat(' ',POS.sessionid, if (moderator=1,' (m)','')) as s
+           from ParticipantOnSession POS, 
+              Schedule SCH 
+          where POS.sessionid=SCH.sessionid 
+       group by badgeid) as X, 
+         Participants P
+   where P.badgeid=X.badgeid;"
+		
