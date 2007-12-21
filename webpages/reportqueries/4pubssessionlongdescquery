@@ -1,5 +1,5 @@
 TITLE='Pubs - Session Characteristics plus long description'
-DESCRIPTION='For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, program guide description'
+DESCRIPTION='For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description'
 PUBSWANTS=1
 GENCSV=1
 QUERY="
@@ -12,7 +12,7 @@ QUERY="
           pubcharname, 
           kidscatname, 
           title, 
-          progguiddesc 
+          progguiddesc as 'Long Description'
      from Tracks T, 
           Types Ty, 
           Divisions D, 
@@ -28,6 +28,6 @@ left join PubCharacteristics PC
       and S.typeid=Ty.typeid 
       and S.divisionid=D.divisionid 
       and S.pubstatusid=PS.pubstatusid 
-      and S.pubstatusid = 2
+      and PS.pubstatusname = 'Public'
       and S.kidscatid=K.kidscatid 
       and S.sessionid=SCH.sessionid;"
