@@ -3,4 +3,32 @@ DESCRIPTION='sessionid, room, starttime, duration, (badgeid, pubsname, mod)'
 PUBSWANTS=1
 CSVONLY=1
 GENCSV=1
-QUERY="set group_concat_max_len=25000; select POS.sessionid, roomname, DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') starttime, concat('(', if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min'))),')') duration, trackname, title, group_concat( pubsname, ' MAKEMEACOMMA ', if(moderator=1,'M',''), ' MAKEMEACOMMA ' order by moderator, pubsname) panelinfo from Participants P, Rooms R, Sessions S, Schedule SCH, ParticipantOnSession POS, CongoDump C , Tracks T where P.badgeid=C.badgeid and S.sessionid=SCH.sessionid and POS.sessionid=S.sessionid and POS.badgeid=C.badgeid and T.trackid=S.trackid and SCH.roomid = R.roomid and SCH.sessionid = S.sessionid group by POS.sessionid order by pubsname;"
+QUERY="set group_concat_max_len=25000; 
+       select POS.sessionid, 
+              roomname, 
+              DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') starttime, 
+              concat('(', if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min'))),')') duration, 
+              trackname, 
+              title, 
+              group_concat( pubsname, ' MAKEMEACOMMA ', if(moderator=1,'M',''), ' MAKEMEACOMMA ' order by moderator, pubsname) panelinfo,
+               pubstatusname
+          from 
+               Rooms R, 
+               Sessions S, 
+               Schedule SCH 
+               left join ParticipantOnSession POS
+                      on SCH.sessionid=POS.sessionid
+               left join CongoDump C
+                      on C.badgeid=POS.badgeid
+               left join Participants P
+                      on P.badgeid=POS.badgeid,
+               Tracks T ,
+               PubStatuses PUB
+         where S.sessionid=SCH.sessionid 
+           and POS.sessionid=S.sessionid 
+           and T.trackid=S.trackid 
+           and SCH.roomid = R.roomid 
+           and SCH.sessionid = S.sessionid 
+           and PUB.pubstatusid = S.pubstatusid
+      group by POS.sessionid 
+      order by pubsname;"

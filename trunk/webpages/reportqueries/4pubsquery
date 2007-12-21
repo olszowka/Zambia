@@ -20,16 +20,17 @@ QUERY="
             title, 
             progguiddesc as 'Long Text', 
             group_concat(' ',pubsname, if (moderator=1,' (m)','')) as 'PARTIC' 
-       from Participants P, 
+       from 
             Rooms R, 
 	    KidsCategories K,
             Sessions S, 
             Tracks T,
             Schedule SCH 
-  LEFT JOIN ParticipantOnSession POS 
-         ON SCH.sessionid=POS.sessionid 
-      where P.badgeid=POS.badgeid 
-        and R.roomid = SCH.roomid 
+            left join ParticipantOnSession POS 
+                   on SCH.sessionid=POS.sessionid 
+            left join Participants P
+                   on POS.badgeid=P.badgeid
+      where R.roomid = SCH.roomid 
         and K.kidscatid=S.kidscatid
         and SCH.sessionid = S.sessionid 
         and T.trackid=S.trackid 

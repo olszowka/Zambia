@@ -25,4 +25,4 @@ QUERY="
      and interested=1 
      and C.regtype is NULL 
   having Schd < 3
-order by cast(C.badgeid as unsigned);"
+order by Intr desc, cast(C.badgeid as unsigned);"
