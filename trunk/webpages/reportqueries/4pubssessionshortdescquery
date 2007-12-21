@@ -13,4 +13,5 @@ QUERY="
          Sessions S, 
          Schedule SCH 
    where S.sessionid=SCH.sessionid 
+     and S.pubstatusid = 2
      and SCH.roomid = R.roomid;"
