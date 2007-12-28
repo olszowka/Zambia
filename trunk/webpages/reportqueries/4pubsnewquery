@@ -1,0 +1,52 @@
+TITLE='Pubs - Session Characteristics plus long description'
+DESCRIPTION='For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description'
+PUBSWANTS=1
+GENCSV=1
+QUERY="
+   select S.sessionid, 
+          trackname, 
+          typename, 
+          divisionname, 
+          pubcharname, 
+          kidscatname, 
+          title, 
+          roomname, 
+          DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),
+                      '%a %l:%i %p') as 'Start Time', 
+          concat('(', if(left(duration,2)=00, '', if(left(duration,1)=0,
+            concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))),
+            if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0,
+            concat(right(date_format(duration,'%i'),1),'min'),
+            concat(date_format(duration,'%i'),'min'))),')') duration,
+          if(group_concat(' ',pubsname) is NULL,
+             '', 
+             group_concat(' ',pubsname)) as 'Participants' ,
+          progguiddesc as 'Long Description'
+     from Tracks T, 
+          Types Ty, 
+          Divisions D, 
+          PubStatuses PS, 
+          KidsCategories K, 
+          Rooms R, 
+          Sessions S 
+          left join SessionHasPubChar SHPC 
+                 on S.sessionid=SHPC.sessionid 
+          left join PubCharacteristics PC 
+                 on SHPC.pubcharid=PC.pubcharid, 
+          Schedule SCH 
+          LEFT JOIN ParticipantOnSession POS 
+                 ON SCH.sessionid=POS.sessionid 
+          LEFT JOIN CongoDump C 
+                 ON POS.badgeid=C.badgeid 
+          LEFT JOIN Participants P 
+                 ON C.badgeid=P.badgeid
+    where S.trackid=T.trackid 
+      and S.typeid=Ty.typeid 
+      and S.divisionid=D.divisionid 
+      and S.pubstatusid=PS.pubstatusid 
+      and PS.pubstatusname = 'Public'
+      and S.kidscatid=K.kidscatid 
+      and S.sessionid=SCH.sessionid
+      and R.roomid=SCH.roomid
+ group by S.sessionid
+;"
