@@ -16,6 +16,7 @@ QUERY="
                          concat(date_format(duration,'%i'),'min')))) Duration, 
             roomname, 
             trackname as TRACK, 
+	    typename as TYPE,
             K.kidscatname,
             title, 
             progguiddesc as 'Long Text', 
@@ -25,6 +26,7 @@ QUERY="
 	    KidsCategories K,
             Sessions S, 
             Tracks T,
+            Types Ty, 
             Schedule SCH 
             left join ParticipantOnSession POS 
                    on SCH.sessionid=POS.sessionid 
@@ -34,6 +36,7 @@ QUERY="
         and K.kidscatid=S.kidscatid
         and SCH.sessionid = S.sessionid 
         and T.trackid=S.trackid 
+        and S.typeid=Ty.typeid 
         and S.pubstatusid = 2
    group by SCH.sessionid 
    order by SCH.starttime, 
