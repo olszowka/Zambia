@@ -7,15 +7,16 @@ QUERY="
            concat( if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min')))) Duration , 
            roomname, 
            trackname, 
-           title 
-           from Sessions S, 
+           title,
+           S.ts as changed
+      from Sessions S, 
            Schedule SCH, 
            Tracks T, 
-           Rooms R 
+           Rooms R
      where R.roomid=SCH.roomid 
        and T.trackid=S.trackid 
        and SCH.sessionid = S.sessionid  
        and S.pubstatusid = 2
-       and S.ts>\"2008-01-18 23:00:00\" 
+       and S.ts>\"2008-01-06 01:30:00\" 
   order by SCH.starttime,
-           T.trackname"
+           T.trackname;"
