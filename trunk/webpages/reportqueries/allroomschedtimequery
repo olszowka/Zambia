@@ -1,5 +1,5 @@
 TITLE='Full Room Schedule by time then room'
-DESCRIPTION='Lists all Sessions Scheduled in all Rooms.'
+DESCRIPTION='Lists all Sessions Scheduled in all Rooms (includes "Public", "Do Not Print" and "Staff Only").'
 PROGWANTS=1
 EVENTSWANTS=1
 GOHWANTS=1
@@ -16,10 +16,12 @@ QUERY="
          trackname, 
          concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', 
                 S.sessionid,'</a>') as Sessionid,
-         title, 
+         concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') as title,
+         S.pubstatusid,
          group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants' 
     from Rooms R, 
          Sessions S, 
+         PubStatuses PS,	
          Schedule SCH 
          LEFT JOIN ParticipantOnSession POS 
                 ON SCH.sessionid=POS.sessionid 
@@ -29,5 +31,6 @@ QUERY="
                 ON T.trackid=S.trackid 
    where SCH.roomid = R.roomid 
      and SCH.sessionid = S.sessionid 
+     and PS.pubstatusid = S.pubstatusid
 group by SCH.sessionid 
 order by SCH.starttime, R.roomname"
