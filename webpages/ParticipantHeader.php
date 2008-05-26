@@ -1,6 +1,7 @@
 <?php
 
     function participant_header($title) {
+    require_once ("javascript_functions.php");
     global $badgeid;
 ?>
 
@@ -10,6 +11,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=latin-1">
   <title>Zambia -- <?php echo $title ?></title>
   <link rel="stylesheet" href="ParticipantSection.css" type="text/css">
+  <?php mousescripts() ?>
 </head>
 <body>
 <H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1> 

@@ -131,6 +131,27 @@ function populate_select_from_query($query, $default_value, $option_0_text, $def
         }
     }
 
+// Function populate_multiselect_from_table(...)
+// Reads parameters (see below) and a specified table from the db.
+// Outputs HTML of the "<OPTION>" values for a Select control with
+// multiple enabled.
+//
+function populate_multiselect_from_table($table_name, $skipset) {
+    // assumes id's in the table start at 1 '
+    // skipset is array of integers of values of id from table to preselect
+    global $link;
+    // error_log("Zambia->populate_multiselect_from_table->\$skipset: ".print_r($skipset,TRUE)."\n"); // only for debugging
+    if ($skipset=="") $skipset=array(-1);
+    $result=mysql_query("Select * from ".$table_name." order by display_order",$link);
+    while (list($option_value,$option_name)= mysql_fetch_array($result, MYSQL_NUM)) {
+        echo "<OPTION value=\"".$option_value."\"";
+        if (array_search($option_value,$skipset)!==FALSE) {
+        echo " selected";
+            }
+        echo">$option_name</OPTION>\n";    
+        }
+    }
+
 // Function populate_multisource_from_table(...)
 // Reads parameters (see below) and a specified table from the db.
 // Outputs HTML of the "<OPTION>" values for a Select control associated
@@ -223,6 +244,7 @@ function update_session() {
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     if ($session["pubchardest"]!="") {
+        //error_log("Zamiba->update_session->\$session[\"pubchardest\"]: ".print_r($session["pubchardest"],TRUE)); // for debugging only
         for ($i=0 ; $session["pubchardest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasPubChar set sessionid=".$id.", pubcharid=";
             $query.=$session["pubchardest"][$i];

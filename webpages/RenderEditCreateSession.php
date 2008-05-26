@@ -34,216 +34,159 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
             <INPUT type="hidden" name="name" value="<?php echo htmlspecialchars($name,ENT_COMPAT);?>">
             <INPUT type="hidden" name="email" value="<?php echo htmlspecialchars($email,ENT_COMPAT);?>">
-        <TABLE>
-            <TR>
-                <TD class="form1">Session #: <INPUT type="text" size=3 name="sessionid" readonly
-                    value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>"</TD>  
-                <TD class="form1">Track: <SELECT name="track">
+            <!-- The pubno field is no longer used on the form, but the code expects it.-->
+            <INPUT type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT)."\">";?>
+            <!-- The pocketprogtext field is no longer used on the form, but the code expects it.-->
+            <INPUT type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">";?>
+            <DIV class="denseform">
+                <SPAN><LABEL for="sessionid">Session #: </LABEL><INPUT type="text" size=2 name="sessionid" readonly
+                     value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="divisionid">Division: </LABEL><SELECT name="divisionid">
+                     <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
+                     </SELECT>&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="track">Track: </LABEL><SELECT name="track">
                     <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
-                    </SELECT></TD>
-                <TD class="form1">Type: <SELECT name="type">
+                    </SELECT>&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="type">Type: </LABEL><SELECT name="type">
                     <?php populate_select_from_table("Types", $session["type"], "SELECT", FALSE); ?>
-                    </SELECT></TD>
-                <TD class="form1">Division: <SELECT name="divisionid">
-                    <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
-                    </SELECT></TD>
-                </TR>
-            <TR>
-                <TD colspan=2 class="form1">Room Set: <SELECT name="roomset">
-                    <?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
-                    </SELECT></TD>
-                <TD class="form1">Pub. Status: <SELECT name="pubstatusid">
+                    </SELECT>&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="pubstatusid">Pub. Status: </LABEL><SELECT name="pubstatusid">
                     <?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT", FALSE); ?>
-                    </SELECT></TD>
-                <TD class="form1">Pub. No.:<INPUT type="text" size=10 name="pubno" 
-                    value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT);?>"</TD>  
-                </TR>
-            </TABLE>
-
-      <HR> <!-- the horizontal rule give the browser a clue -->
-
-      <DIV class="bigbox"> <!-- try me -->
-
-        <DIV class="textwithlabel"> <!-- Block 2 is Title -->
-          <LABEL class="textlabel" for="title">Title: </LABEL>
-          <DIV class="titlelabelarea"><?php
-            echo "<INPUT type=text size=\"50\" name=\"title\" value=\"";
-            echo htmlspecialchars($session["title"],ENT_COMPAT)."\">";
-          ?></DIV>
-        </DIV> <!-- Block 2 is Title -->
-
-        <DIV class="textwithlabel"> <!-- Block 3 is Pocket Program Text -->
-          <LABEL class="textlabel" for="pocketprogtext">Pocket Program Text: (Not in use for Arisia'08)</LABEL>
-          <DIV class="ib">
-            <TEXTAREA class="textlabelarea" cols=70 name="pocketprogtext" readonly><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES); ?></TEXTAREA>
-          </DIV>
-        </DIV> <!-- Block 3 is Pocket Program Text -->
-
-        <DIV class="textwithlabel"> <!-- Block 4 is Program Guide Description -->
-          <LABEL class="textlabel" for="progguiddesc">Program Guide Description:</LABEL>
-          <DIV class="ib">
-            <TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES); ?></TEXTAREA>
-          </DIV>
-        </DIV> <!-- Block 4 is Pocket Program Text -->
-
-        <DIV class="textwithlabel"> <!-- Block 5 is Prospective Participant Info -->
-          <LABEL class="textlabel" for="persppartinfo">Prospective Participant Info:</LABEL>
-          <DIV class="ib">
-            <TEXTAREA class="textlabelarea" cols=70 name="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES); ?></TEXTAREA>
-          </DIV>
-        </DIV> <!-- Block 5 is Prospective Participant Info -->
-        
-        <DIV id="pubchar"> <!-- Publication Characteristics -->
-              <LABEL class="bb" style="text-align: center">Publication Characteristics</LABEL>
-              <DIV class="select_set">  <!-- lower box -->
-
-                <DIV class="ib">
-                  <LABEL class="bb" for="pubcharsrc">Possible Characteristics</LABEL>
-                  <SELECT class="select_l" id="pubcharsrc" name="pubcharsrc" size=6 multiple><?php populate_multisource_from_table("PubCharacteristics", $session["pubchardest"]); ?></SELECT>
+                    </SELECT></SPAN>
                 </DIV>
-
-                <DIV class="ib" style="vertical-align: top">
-                  <LABEL class="bb">&nbsp;</LABEL>
-                  <BUTTON onclick="fadditems(document.sessform.pubcharsrc,document.sessform.pubchardest)" 
-                          name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
-                  <BUTTON onclick="fdropitems(document.sessform.pubcharsrc,document.sessform.pubchardest)" 
-                          name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
+            <DIV class="denseform">
+                <SPAN><LABEL for="title">Title: </LABEL><INPUT type=text size="50" name="title" value="<?php
+                    echo htmlspecialchars($session["title"],ENT_COMPAT)."\">";
+                    ?>&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="invguest">Invited Guests Only? </LABEL>
+                    <INPUT type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?>
+                    name="invguest">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="signup">Sign up Req.?</LABEL>
+                    <INPUT type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?>
+                    name="signup">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="kids">Kid ?:</LABEL>
+                    <SELECT name="kids"><?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT", FALSE); ?></SELECT>
+                    </SPAN>
                 </DIV>
-
-                <DIV class="ib" >
-                  <LABEL class="bb" style="text-align: center" for="pubchardest[]">Selected Characteristics</LABEL>
-                  <SELECT class="select_r" id="pubchardest" name="pubchardest[]" size=6 multiple >
-                    <?php populate_multidest_from_table("PubCharacteristics", $session["pubchardest"]); ?>
-                  </SELECT>
+            <DIV class="denseform">
+                <SPAN><LABEL for="atten">Est. Atten.:</LABEL>
+                    <INPUT type=text size="3" name="atten" value="<?php
+                    echo htmlspecialchars($session["atten"],ENT_COMPAT)."\">"; ?>&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="duration">Duration:</LABEL>
+                    <INPUT type=text size="3" name="duration" value="<?php
+                    echo htmlspecialchars($session["duration"],ENT_COMPAT)."\">"; ?>&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="roomset">Room Set: </LABEL>
+                    <SELECT name="roomset"><?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
+                    </SELECT>&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="status">Status:</LABEL>
+                    <SELECT name="status"><?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?></SELECT>
+                    </SPAN>
                 </DIV>
-              </DIV> <!-- lower box -->
-            </DIV> <!-- Features -->        
-      </DIV> 
-
-      <hr> <!-- the horizontal rule give the browser a clue -->
-
-      <DIV class="b5"> <!-- b5 --> 
-
-        <DIV class="b5_a"> <!-- b5_a     -->
-          <DIV class="bb">
-            <LABEL class="ib" for="duration">Duration:</LABEL>
-            <DIV class="ib"><?php echo "<INPUT type=text size=\"4\" name=\"duration\" value=\""; echo htmlspecialchars($session["duration"],ENT_COMPAT)."\">"; ?></DIV>
-          </DIV>
-
-          <DIV class="bb">
-            <LABEL class="ib" for="atten">Est. Atten.:</LABEL>
-            <DIV class="ib"><?php echo "<INPUT type=text size=\"4\" name=\"atten\" value=\""; echo htmlspecialchars($session["atten"],ENT_COMPAT)."\">"; ?></DIV>
-          </DIV>
-
-          <DIV class="bb">
-            <LABEL class="ib" for="kids">Kid Category:</LABEL>
-            <DIV class="ib">
-              <SELECT name="kids"><?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT", FALSE); ?></SELECT>
+        <HR class="withspace">
+        <DIV class="thinbox">
+            <TABLE><COL width="100"><COL>
+                <TR>
+                    <TD style="text-align: right"><LABEL class="dense" for="progguiddesc">Description:</LABEL></TD>
+                    <TD style="padding-bottom: 1em"><TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" style="font-size: 85%"
+                            ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                <TR>
+                    <TD style="text-align: right"><LABEL class="dense" for="persppartinfo">Prospective Participant Info:</LABEL></TD>
+                    <TD><TEXTAREA class="textlabelarea" cols=70 name="persppartinfo" style="font-size: 85%"
+                            ><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                </TABLE>
             </DIV>
-          </DIV>
-
-          <DIV class="bb">
-            <LABEL class="ib" for="invguest">Invited Guests Only? </LABEL>
-            <DIV class="ib"> <input type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?> name="invguest"> </DIV>
-          </DIV>
-
-          <DIV class="bb">
-            <LABEL class="ib" for="signup">Sign up Req.?</LABEL>
-            <DIV class="ib"><input type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?> name="signup"></DIV>
-          </DIV>
-
-          <DIV class="bb">
-            <LABEL class="ib" for="status">Status:</LABEL>
-            <DIV class="ib">
-              <SELECT name="status"><?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?></SELECT>
+        <TABLE><COL><COL>
+        <TR>
+        <TD class="nospace">
+        <DIV class="thinbox" style="margin-top: 1em; width: 37em; font-size: 85%">
+            <DIV class="blockwbox" style="width: 33em; padding-left: 0.5em; padding-right: 0.5em; margin: 0.5em"> <!-- Features Box; -->
+                <DIV class="blockstitle"><LABEL>Required Features of Room</LABEL></DIV>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-celltitle"><LABEL for="featsrc">Possible Features</LABEL></SPAN>
+                        <SPAN class="tab-cell"><LABEL>&nbsp;</LABEL></SPAN>
+                        <SPAN class="tab-celltitle"><LABEL for="featdest[]">Selected Features</LABEL></SPAN>
+                        </DIV>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-cell">
+                             <SELECT class="selectfwidth" id="featsrc" name="featsrc" size=6 multiple>
+                                <?php populate_multisource_from_table("Features", $session["featdest"]); ?></SELECT>
+                             </SPAN>
+                        <SPAN class="thickobject">
+                            <BUTTON onclick="fadditems(document.sessform.featsrc,document.sessform.featdest)"
+                                name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
+                            <BUTTON onclick="fdropitems(document.sessform.featsrc,document.sessform.featdest)"
+                                name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
+                            </SPAN>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-cell">
+                            <SELECT class="selectfwidth" id="featdest" name="featdest[]" size=6 multiple >
+                                <?php populate_multidest_from_table("Features", $session["featdest"]); ?></SELECT>
+                            </SPAN>
+                        </DIV>
+                </DIV> <!-- Features -->
+</DIV>
+            <DIV class="blockwbox" style="width: 33em; padding-left: 0.5em; padding-right: 0.5em; margin: 0.5em"> <!-- Services Box; -->
+                <DIV class="blockstitle"><LABEL>Services Required</LABEL></DIV>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-celltitle"><LABEL for="servsrc">Possible Services</LABEL></SPAN>
+                        <SPAN class="tab-cell"><LABEL>&nbsp;</LABEL></SPAN>
+                        <SPAN class="tab-celltitle"><LABEL for="servdest[]">Selected Services</LABEL></SPAN>
+                        </DIV>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-cell">
+                             <SELECT class="selectfwidth" id="servsrc" name="servsrc" size=6 multiple>
+                                <?php populate_multisource_from_table("Services", $session["servdest"]); ?></SELECT>
+                             </SPAN>
+                        <SPAN class="thickobject">
+                            <BUTTON onclick="fadditems(document.sessform.servsrc,document.sessform.servdest)"
+                                name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
+                            <BUTTON onclick="fdropitems(document.sessform.servsrc,document.sessform.servdest)"
+                                name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
+                            </SPAN>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-cell">
+                            <SELECT class="selectfwidth" id="servdest" name="servdest[]" size=6 multiple >
+                                <?php populate_multidest_from_table("Services", $session["servdest"]); ?></SELECT>
+                            </SPAN>
+                        </DIV>
+                </DIV> <!-- Services -->
             </DIV>
-          </DIV>
-        </DIV> <!-- b5_a -->
-
-        <DIV class="b5_b"> <!-- b5_b -->
-          <DIV class="bigbox"> <!-- Both -->
-            <DIV class="features"> <!-- Features -->
-              <LABEL class="bb" style="text-align: center">Required Features of Room</LABEL>
-              <DIV class="select_set">  <!-- lower box -->
-
-                <DIV class="ib">
-                  <LABEL class="bb" for="featsrc">Possible Features</LABEL>
-                  <SELECT class="select_l" id="featsrc" name="featsrc" size=6 multiple><?php populate_multisource_from_table("Features", $session["featdest"]); ?></SELECT>
-                </DIV>
-
-                <DIV class="ib" style="vertical-align: top">
-                  <LABEL class="bb">&nbsp;</LABEL>
-                  <BUTTON onclick="fadditems(document.sessform.featsrc,document.sessform.featdest)" 
-                          name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
-                  <BUTTON onclick="fdropitems(document.sessform.featsrc,document.sessform.featdest)" 
-                          name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
-                </DIV>
-
-                <DIV class="ib" >
-                  <LABEL class="bb" style="text-align: center" for="featdest[]">Selected Features</LABEL>
-                  <SELECT class="select_r" id="featdest" name="featdest[]" size=6 multiple >
-                    <?php populate_multidest_from_table("Features", $session["featdest"]); ?>
-                  </SELECT>
-                </DIV>
-              </DIV> <!-- lower box -->
-            </DIV> <!-- Features -->
-
-            <DIV class="services"> <!-- Services -->
-              <LABEL class="bb" style="text-align: center">Services Required</LABEL>
-              <DIV class="select_set">  <!-- lower box -->
-                <DIV class="ib">
-                  <LABEL class="bb" style="text-align: center" for="servsrc">Possible Services</LABEL>
-                  <SELECT class="select_l" name="servsrc" id="servsrc" size=6 multiple >
-                    <?php populate_multisource_from_table("Services", $session["servdest"]); ?>
-                  </SELECT>
-                </DIV>
-                <DIV class="ib" style="vertical-align: top">
-                  <LABEL class="bb">&nbsp;</LABEL>
-                  <BUTTON onclick="fadditems(document.sessform.servsrc,document.sessform.servdest)" name="additems2" value="additems2" type="button">&nbsp;&nbsp;&rarr;&nbsp;&nbsp;</BUTTON>
-                  <BUTTON onclick="fdropitems(document.sessform.servsrc,document.sessform.servdest)" name="dropitems2" value="dropitems2" type="button">&nbsp;&nbsp;&larr;&nbsp;&nbsp;</BUTTON>
-                </DIV>
-                <DIV class="ib">
-                  <LABEL class="bb" style="text-align: center" for="servdest[]">Selected Services</LABEL>
-                  <SELECT class="select_r" name="servdest[]" id="servdest" size=6 multiple >
-                    <?php populate_multidest_from_table("Services", $session["servdest"]); ?>
-                  </SELECT>
-                </DIV>
-              </DIV> <!-- lower box -->
-            </DIV> <!-- Services -->
-          </DIV> <!-- both -->
-        </DIV> <!-- b5_b -->
-      </DIV> <!-- b5 -->
-
-      <HR> <!-- the horizontal rule give the browser a clue -->
-
-      <DIV class="bigbox"> <!-- Block 6s Notes and stuff -->
-        <DIV class="textwithlabel">
-          <LABEL class="textlabel" for="notesforpart">Notes for Participants:</LABEL>
-          <DIV class="ib">
-            <TEXTAREA class="textlabelarea" cols=70 name="notesforpart" ><?php echo htmlspecialchars($session["notesforpart"],ENT_NOQUOTES); ?></TEXTAREA>
-          </DIV>
+</DIV></TD>
+<TD style="vertical-align: top; padding-left: 1em">
+    <DIV>
+        <LABEL class="dense" for="pubchardest">Publication<BR>Characteristics</LABEL>
         </DIV>
-
-        <DIV class="textwithlabel">
-          <LABEL class="textlabel" for="servnotes">Notes for Tech and Hotel:</LABEL>
-          <DIV class="ib">
-            <TEXTAREA class="textlabelarea" cols=70 name="servnotes" ><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES); ?></TEXTAREA>
-          </DIV>
+    <DIV style="font-size: 85%">
+        <SELECT id="pubchardest" name="pubchardest[]" multiple><?php populate_multiselect_from_table("PubCharacteristics",
+            $session["pubchardest"]); ?></SELECT>&nbsp;</TD>
         </DIV>
-
-        <DIV class="textwithlabel">
-          <LABEL class="textlabel" for="notesforprog">Notes for Programming Committee:</LABEL>
-          <DIV class="ib">
-            <TEXTAREA class="textlabelarea" cols=70 name="notesforprog" ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES); ?></TEXTAREA>
-          </DIV>
-        </DIV>
-      </DIV> <!-- Block 6s Notes and stuff -->
-
-
-      <DIV class="buttons">
-        <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
-        <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
-      </DIV> &nbsp; <!-- space needed to keep the buttons in -->
+</TR></TABLE>
+        <HR class="withspace"><DIV class="thinbox">
+            <TABLE><COL width="100"><COL>
+                <TR>
+                    <TD style="text-align: right"><LABEL class="dense" for="notesforpart">Notes for Participants:</LABEL></TD>
+                    <TD style="padding-bottom: 1em"><TEXTAREA class="textlabelarea" cols=70 name="notesforpart" style="font-size: 85%"
+                            ><?php echo htmlspecialchars($session["notesforpart"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                <TR>
+                    <TD style="text-align: right"><LABEL class="dense" for="servnotes">Notes for Tech and Hotel:</LABEL></TD>
+                    <TD style="padding-bottom: 1em"><TEXTAREA class="textlabelarea" cols=70 name="servnotes" style="font-size: 85%"
+                            ><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                <TR>
+                    <TD style="text-align: right"><LABEL class="dense" for="notesforprog">Notes for Programming Committee:</LABEL></TD>
+                    <TD><TEXTAREA class="textlabelarea" cols=70 name="notesforprog" style="font-size: 85%"
+                            ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                </TABLE>
+            </DIV>
+        <HR class="withspace">
+        <DIV>
+            <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
+            <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
+            </DIV> &nbsp; <!-- space needed to keep the buttons in -->
 
       <?php
         if ($action=="create") {

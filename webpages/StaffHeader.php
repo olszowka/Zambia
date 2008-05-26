@@ -9,7 +9,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=latin-1">
   <title>Zambia -- <?php echo $title ?></title>
   <link rel="stylesheet" href="StaffSection.css" type="text/css">
-  <?php javascript_for_edit_session(); ?>
+  <?php javascript_for_edit_session();
+        mousescripts(); ?>
 </head>
 <body>
 <H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>

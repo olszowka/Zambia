@@ -107,8 +107,11 @@ function get_session_from_post() {
     $session["pocketprogtext"]=stripslashes($_POST["pocketprogtext"]);
     $session["progguiddesc"]=stripslashes($_POST["progguiddesc"]);
     $session["persppartinfo"]=stripslashes($_POST["persppartinfo"]);
+    //error_log("Zambia->get_session_from_post->\$_POST[\"pubchardest\"]: ".print_r($_POST["pubchardest"],TRUE)); // for debugging only
     $session["pubchardest"]=$_POST["pubchardest"];
+    //error_log("Zambia->get_session_from_post->\$session[\"pubchardest\"]: ".print_r($session["pubchardest"],TRUE)); // for debugging only
     $session["featdest"]=$_POST["featdest"];
+    //error_log("Zambia->get_session_from_post->\$session[\"featdest\"]: ".print_r($session["featdest"],TRUE)); // for debugging only
     $session["servdest"]=$_POST["servdest"];
     $session["duration"]=stripslashes($_POST["duration"]);
     $session["atten"]=$_POST["atten"];
