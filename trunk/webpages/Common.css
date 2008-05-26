@@ -272,11 +272,71 @@ select.yesno {
     padding: 3px;
     }
 
+.withspace {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    }
+
 .formbox {
     display: block;
     border: 3px solid #004400;
     padding: 3px;
+    text-align: left;
+    }
+
+.thinbox {
+    border: 1px solid black;
+    padding: 2px;
+    margin: 2px;
+    }
+
+.thinbox2 {
+    border: 1px solid black;
+    padding: 2px;
+    margin: 2px;
+    display: block;
+    }
+
+LABEL.dense {
+    font-size: 85%;
+    }
+
+.denseform {
+    font-size: 85%;
+    margin-bottom: 7px;
+    margin-top: 2px;
+    }
+
+.denseformrow {
+    font-size: 85%;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    display: table-row;
+    }
+
+.thickobject {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+    }
+
+.textbox {
+    display: table-cell;
+    }
+
+.blockwbox {
+    display: block;
+    border: 1px solid black;
+    padding: 2px;
+    margin: 2px;
+    }
+
+.blockstitle {
     text-align: center;
+    }
+
+.block {
+    display: block;
     }
 
 .cellwbox {
@@ -290,11 +350,6 @@ select.yesno {
     display: table-cell;
     }
     
-.trow {
-    display: table-row;
-    }
-
-
 .tab {
     display: table
     }
@@ -309,7 +364,16 @@ select.yesno {
 
 .tab-cell {
     display:table-cell;
-    padding-left: 1.5em
+    }
+
+.tab-celltitle {
+    display:table-cell;
+    text-align: center;
+    }
+
+.nospace {
+    margin: 0em;
+    padding: 0em;
     }
 
 #contact {
@@ -545,8 +609,8 @@ TD#smallspacer {
     display: table-cell; 
     vertical-align: top;
     }
-.
-b5_b {
+ 
+.b5_b {
     display: table-cell; 
     vertical-align: top;
     }
@@ -561,27 +625,12 @@ b5_b {
     padding: 2px;
     }
 
-.select_r {
-    display: table-cell; 
-    width: 15em;
-    padding: 2px;
-    }
-
-.select_l {
-    display: table-cell; 
-    width: 15em;
-    padding: 2px;
+.selectfwidth {
+    width: 13em;
     }
 
 .textwithlabel {
     display: table-row; 
-    }
-
-.textlabel {
-    display: table-cell; 
-    width: 7em ;
-    vertical-align: top;
-    text-align: right;
     }
 
 .textlabelarea {

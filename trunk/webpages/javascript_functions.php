@@ -44,9 +44,6 @@ function mysubmit() {
     for ( i = 0 ; i < document.sessform.servdest.length ; i++ ) {
         document.sessform.servdest.options[i].selected=true;
         }
-    for ( i = 0 ; i < document.sessform.pubchardest.length ; i++ ) {
-        document.sessform.pubchardest.options[i].selected=true;
-        }
     }
 
 //  End -->
@@ -83,4 +80,25 @@ function MM_swapImage() { //v3.0
 }
 // End -->
   </script>
-<?php } ?>
+<?php } 
+// This function writes out to the browser the javascript functions for highlighting the tabs.
+    function mousescripts() { ?>
+
+<script language="javascript">
+  <!--
+
+  // function called when the mouse is over a tab
+
+  function mouseovertab(x)
+  {
+    x.className="mousedovertab";
+  }
+
+  // function called when the mouse leaves a tab
+
+  function mouseouttab(x)
+  {
+    x.className="usabletab";
+  }
+  -->
+</script><?php } ?>
