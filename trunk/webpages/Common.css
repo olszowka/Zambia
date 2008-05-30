@@ -634,10 +634,25 @@ TD#smallspacer {
     }
 
 .textlabelarea {
-    display: table-cell; 
-    height: 6.4em;
     }
 
+.txtalbl {
+    text-align: right;
+    padding-bottom: 1em;
+    }
+
+.txtalbl-last {
+    text-align: right;
+    }
+
+.txta {
+    font-size: 85%;
+    padding-bottom: 1em;
+    }
+
+.txta-last {
+    font-size: 85%;
+    }
 
 .titledtextarea {
     margin: 1em;
