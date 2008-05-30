@@ -38,6 +38,14 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             <INPUT type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT)."\">";?>
             <!-- The pocketprogtext field is no longer used on the form, but the code expects it.-->
             <INPUT type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">";?>
+            <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
+              <TR style="margin: 0em; padding: 0em">
+                <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
+                <TD style="margin: 0em; padding: 0em">
+                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
+                    <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
+                    </TD></TR></TABLE>
+                </DIV>
             <DIV class="denseform">
                 <SPAN><LABEL for="sessionid">Session #: </LABEL><INPUT type="text" size=2 name="sessionid" readonly
                      value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
@@ -86,13 +94,13 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <DIV class="thinbox">
             <TABLE><COL width="100"><COL>
                 <TR>
-                    <TD style="text-align: right"><LABEL class="dense" for="progguiddesc">Description:</LABEL></TD>
-                    <TD style="padding-bottom: 1em"><TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" style="font-size: 85%"
+                    <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Description:</LABEL></TD>
+                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" 
                             ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 <TR>
-                    <TD style="text-align: right"><LABEL class="dense" for="persppartinfo">Prospective Participant Info:</LABEL></TD>
-                    <TD><TEXTAREA class="textlabelarea" cols=70 name="persppartinfo" style="font-size: 85%"
+                    <TD class="txtalbl-last"><LABEL class="dense" for="persppartinfo">Prospective Participant Info:</LABEL></TD>
+                    <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=70 name="persppartinfo"
                             ><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 </TABLE>
@@ -166,28 +174,31 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <HR class="withspace"><DIV class="thinbox">
             <TABLE><COL width="100"><COL>
                 <TR>
-                    <TD style="text-align: right"><LABEL class="dense" for="notesforpart">Notes for Participants:</LABEL></TD>
-                    <TD style="padding-bottom: 1em"><TEXTAREA class="textlabelarea" cols=70 name="notesforpart" style="font-size: 85%"
+                    <TD class="txtalbl"><LABEL class="dense" for="notesforpart">Notes for Participants:</LABEL></TD>
+                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="notesforpart"
                             ><?php echo htmlspecialchars($session["notesforpart"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 <TR>
-                    <TD style="text-align: right"><LABEL class="dense" for="servnotes">Notes for Tech and Hotel:</LABEL></TD>
-                    <TD style="padding-bottom: 1em"><TEXTAREA class="textlabelarea" cols=70 name="servnotes" style="font-size: 85%"
+                    <TD class="txtalbl"><LABEL class="dense" for="servnotes">Notes for Tech and Hotel:</LABEL></TD>
+                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="servnotes"
                             ><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 <TR>
-                    <TD style="text-align: right"><LABEL class="dense" for="notesforprog">Notes for Programming Committee:</LABEL></TD>
-                    <TD><TEXTAREA class="textlabelarea" cols=70 name="notesforprog" style="font-size: 85%"
+                    <TD class="txtalbl-last"><LABEL class="dense" for="notesforprog">Notes for Programming Committee:</LABEL></TD>
+                    <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=70 name="notesforprog"
                             ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 </TABLE>
             </DIV>
         <HR class="withspace">
-        <DIV>
-            <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
-            <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
-            </DIV> &nbsp; <!-- space needed to keep the buttons in -->
-
+            <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
+              <TR style="margin: 0em; padding: 0em">
+                <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
+                <TD style="margin: 0em; padding: 0em">
+                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
+                    <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
+                    </TD></TR></TABLE>
+                </DIV>
       <?php
         if ($action=="create") {
           echo "<INPUT type=\"hidden\" name=\"action\" value=\"create\">";
