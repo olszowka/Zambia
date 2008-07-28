@@ -4,6 +4,7 @@
    $title="Participant View";
    require_once('PartCommonCode.php');
    participant_header($title);
+   getCongoData($badgeid);
 ?>
 
 <?php if ($message_error!="") { ?>
@@ -19,13 +20,10 @@
 
 <p><h3> Please check back often as more options will become available as we get closer to the convention. </h3>
 
-<P> Ahoy maties,
+<P> Dear
+<?php echo $congoinfo["firstname"]; echo " "; echo $congoinfo["lastname"]; ?>,
 
-<p> Welcome aboard the ship of Arisia Programing.
-
-<p>Your programming captain this year is Michael Whitehouse. He can best
-be reached either by running up the signal flags, or if you are over
-the horizon, by email to <A HREF="mailto:<?php echo PROGRAM_EMAIL."\">".PROGRAM_EMAIL ?></A>. 
+<p> Welcome to the <?php echo CON_NAME; ?> Programming website.
 
 <p> First, please take a moment to indicate your ability and interest in partipating in <?php echo CON_NAME; ?> programming.
 <FORM class="nomargin" name="pwform" method=POST action="submitWelcome.php">
@@ -58,13 +56,13 @@ the horizon, by email to <A HREF="mailto:<?php echo PROGRAM_EMAIL."\">".PROGRAM_
       <li> Check your contact information. </li>
       <li> Indicate whether you will be participating in <?php echo 
 CON_NAME; ?>. </li>
-      <li> Enter a short bio for Arisia publications.</li>
+      <li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
     </ul>
 
 <?php if (may_I('search_panels')) { ?>
   <p> Use the "Search Panels" tab to:
     <ul>
-      <li> See suggested topics for Arisia programming. </li>
+      <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
       <li> Indicate panels you would like to participate on. </li>
     </ul>
 <?php } else { ?>

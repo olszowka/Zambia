@@ -43,5 +43,5 @@
 <DT> <a href="1wholegridreport.php">Whole Grid - for con</a></DT><DD>Display entire schedule with rooms on horizontal axis and time on vertical. This excludes any item marked "Do Not Print"</DD>
 <DT> <a href="2finalschedbreifdiffreport.php">Schedule for Arisia 2006 </a></DT><DD>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule. </a></DD>
 <DT> <a href="2finalschedbreifreport.php">Schedule for Arisia 2006 </a></DT><DD>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule. </a></DD>
-<DT> <a href="2prelimschedbriefreport.php">Preliminary Schedule</a></DT><DD>Below is the preliminary panel schedule. Please keep in mine that is it still changing as we recieve feedback from our panelists. If you have any comments please contact us a <a href="mailto: program@arisia.org">program@arisia.org</a></DD>
+<DT> <a href="2prelimschedbriefreport.php">Preliminary Schedule</a></DT><DD>Below is the preliminary panel schedule. Please keep in mind that is it still changing as we recieve feedback from our panelists. If you have any comments please contact us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?></a></DD>
 <?php staff_footer(); ?>

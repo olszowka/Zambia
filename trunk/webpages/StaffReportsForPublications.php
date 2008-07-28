@@ -1,12 +1,12 @@
 <?php
-  $title="Reports for Program";
+  $title="Reports for Publications Division";
   require_once('db_functions.php');
   require_once('StaffHeader.php');
   require_once('StaffFooter.php');
   require_once('StaffCommonCode.php');
   staff_header($title);
 ?>
-<p> Reports for Skip</p>
+<p>Data for Pocket Program</p>
 <dl>
 <DT> <a href="4pubsbioreport.php">Pubs - Participant Bio and pubname</a></DT><DD>Show the badgeid, pubsname and bio for each participant that are on at least one scheduled session.</DD>
 <DT> <a href="4pubsbioreport.csv">Pubs - Participant Bio and pubname - csv</a></DT><DD>Show the badgeid, pubsname and bio for each participant that are on at least one scheduled session. in csv format</DD>
@@ -19,7 +19,7 @@
 </dl>
 <p> Web Publication </p>
 <dl>
-<DT> <a href="2prelimschedbriefreport.php">Preliminary Schedule</a></DT><DD>Below is the preliminary panel schedule. Please keep in mine that is it still changing as we recieve feedback from our panelists. If you have any comments please contact us a <a href="mailto: program@arisia.org">program@arisia.org</a></DD>
+<DT> <a href="2prelimschedbriefreport.php">Preliminary Schedule</a></DT><DD>Below is the preliminary panel schedule. Please keep in mind that is it still changing as we receive feedback from our panelists. If you have any comments please contact us at <?php echo PROGRAM_EMAIL?></DD>
 <DT> <a href="2finalschedbreifreport.php">Schedule for Arisia 2008 </a></DT><DD>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule. </a></DD>
 </dl>
 <p> Pocket Program</p>
