@@ -51,12 +51,13 @@ function get_session_interests_from_post() {
 //
 // Notes on variables:
 // $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are just 1-24 whole hours, 0 for unset; 1 is midnight start of day 
+//
 function get_participant_availability_from_post() {
     global $partAvail;
     // for numeric fields in ParticipantAvailability--convert to 0 if blank
     $partAvail["maxprog"]=($_POST["maxprog"]=="")?0:$_POST["maxprog"];
     for ($i=1; $i<=CON_NUM_DAYS; $i++) {
-        $partAvail["maxprogday$i"]=$_POST["maxprogday$i"];
+        $partAvail["maxprogday$i"]=($_POST["maxprogday$i"]!="")?$_POST["maxprogday$i"]:0;
         }
     for ($i=1; $i<=AVAILABILITY_ROWS; $i++) {
         $x1=$partAvail["availstartday_$i"]=$_POST["availstartday_$i"];
