@@ -49,38 +49,22 @@ function get_session_interests_from_post() {
 // Reads the data posted by the browser form and populates
 // the $partavail global variable with it.
 //
+// Notes on variables:
+// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are just 1-24 whole hours, 0 for unset; 1 is midnight start of day 
 function get_participant_availability_from_post() {
     global $partAvail;
-    // for 6 numeric fields--convert to 0 if blank
-    $partAvail["fridaymaxprog"]=($_POST["fridaymaxprog"]=="")?0:$_POST["fridaymaxprog"]+0;
-    $partAvail["saturdaymaxprog"]=($_POST["saturdaymaxprog"]=="")?0:$_POST["saturdaymaxprog"]+0;
-    $partAvail["sundaymaxprog"]=($_POST["sundaymaxprog"]=="")?0:$_POST["sundaymaxprog"]+0;
-    $partAvail["mondaymaxprog"]=($_POST["mondaymaxprog"]=="")?0:$_POST["mondaymaxprog"]+0;
+    // for numeric fields in ParticipantAvailability--convert to 0 if blank
     $partAvail["maxprog"]=($_POST["maxprog"]=="")?0:$_POST["maxprog"];
-    $partAvail["availstartday_1"]=$_POST["availstartday_1"];
-    $partAvail["availstartday_2"]=$_POST["availstartday_2"];
-    $partAvail["availstartday_3"]=$_POST["availstartday_3"];
-    $partAvail["availstartday_4"]=$_POST["availstartday_4"];
-    $partAvail["availstartday_5"]=$_POST["availstartday_5"];
-    $partAvail["availstartday_6"]=$_POST["availstartday_6"];
-    $partAvail["availstarttime_1"]=$_POST["availstarttime_1"];
-    $partAvail["availstarttime_2"]=$_POST["availstarttime_2"];
-    $partAvail["availstarttime_3"]=$_POST["availstarttime_3"];
-    $partAvail["availstarttime_4"]=$_POST["availstarttime_4"];
-    $partAvail["availstarttime_5"]=$_POST["availstarttime_5"];
-    $partAvail["availstarttime_6"]=$_POST["availstarttime_6"];
-    $partAvail["availendday_1"]=$_POST["availendday_1"];
-    $partAvail["availendday_2"]=$_POST["availendday_2"];
-    $partAvail["availendday_3"]=$_POST["availendday_3"];
-    $partAvail["availendday_4"]=$_POST["availendday_4"];
-    $partAvail["availendday_5"]=$_POST["availendday_5"];
-    $partAvail["availendday_6"]=$_POST["availendday_6"];
-    $partAvail["availendtime_1"]=$_POST["availendtime_1"];
-    $partAvail["availendtime_2"]=$_POST["availendtime_2"];
-    $partAvail["availendtime_3"]=$_POST["availendtime_3"];
-    $partAvail["availendtime_4"]=$_POST["availendtime_4"];
-    $partAvail["availendtime_5"]=$_POST["availendtime_5"];
-    $partAvail["availendtime_6"]=$_POST["availendtime_6"];
+    for ($i=1; $i<=CON_NUM_DAYS; $i++) {
+        $partAvail["maxprogday$i"]=$_POST["maxprogday$i"];
+        }
+    for ($i=1; $i<=AVAILABILITY_ROWS; $i++) {
+        $x1=$partAvail["availstartday_$i"]=$_POST["availstartday_$i"];
+        $x2=$partAvail["availstarttime_$i"]=$_POST["availstarttime_$i"];
+        $x3=$partAvail["availendday_$i"]=$_POST["availendday_$i"];
+        $x4=$partAvail["availendtime_$i"]=$_POST["availendtime_$i"];
+        error_log("Zambia, get: $i, $x1, $x2, $x3, $x4");
+        }
     $partAvail["preventconflict"]=stripslashes($_POST["preventconflict"]);
     $partAvail["numkidsfasttrack"]=($_POST["numkidsfasttrack"]=="")?0:$_POST["numkidsfasttrack"]+0;
     $partAvail["otherconstraints"]=stripslashes($_POST["otherconstraints"]);

@@ -26,7 +26,7 @@
 <p> Welcome to the <?php echo CON_NAME; ?> Programming website.
 
 <p> First, please take a moment to indicate your ability and interest in partipating in <?php echo CON_NAME; ?> programming.
-<FORM class="nomargin" name="pwform" method=POST action="submitWelcome.php">
+<FORM class="nomargin" name="pwform" method=POST action="SubmitWelcome.php">
   <div id="update_section">
       <table><tr><td>&nbsp;&nbsp;&nbsp;</td>
       <td><label for="interested" class="padbot0p5">I am interested and able to participate in programming for <?php echo CON_NAME; ?> &nbsp;</label>
@@ -105,7 +105,7 @@ CON_NAME; ?>. </li>
     </ul>
 <?php } ?>
 
-<?php if (may_I('Brainstorm')) { ?>
+<?php if (may_I('BrainstormSubmit')) { ?>
   <p> Use the "Suggest a Session" tab to:  
     <ul>
       <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
