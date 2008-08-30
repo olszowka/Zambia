@@ -525,13 +525,14 @@ function getCongoData($badgeid) {
 // Function retrieve_participantAvailability_from_db()
 // Reads ParticipantAvailability and ParticipantAvailabilityTimes tables
 // from db to populate global array $partAvail.
+// Returns 0: success; -1: badgeid not found; -2: badgeid matches >1 row;
+//         -3: other error ($message_error populated)
 //
 function retrieve_participantAvailability_from_db($badgeid) {
     global $partAvail;
     global $link,$message2,$message_error;
     $query= <<<EOD
-Select badgeid, fridaymaxprog, saturdaymaxprog, sundaymaxprog, mondaymaxprog, maxprog,
-   preventconflict, otherconstraints, numkidsfasttrack FROM ParticipantAvailability
+Select badgeid, maxprog, preventconflict, otherconstraints, numkidsfasttrack FROM ParticipantAvailability
 EOD;
     $query.=" where badgeid=\"$badgeid\"";
     $result=mysql_query($query,$link);
@@ -540,33 +541,57 @@ EOD;
         return (-3);
         }
     $rows=mysql_num_rows($result);
+    if ($rows==0) {
+        return (-1);
+        }
     if ($rows!=1) {
         $message_error=$query."<BR>\n returned $rows rows.";
         return (-2);
         }
     $partAvailarray=mysql_fetch_array($result, MYSQL_NUM);
     $partAvail["badgeid"]=$partAvailarray[0];
-    $partAvail["fridaymaxprog"]=$partAvailarray[1];
-    $partAvail["saturdaymaxprog"]=$partAvailarray[2];
-    $partAvail["sundaymaxprog"]=$partAvailarray[3];
-    $partAvail["mondaymaxprog"]=$partAvailarray[4];
-    $partAvail["maxprog"]=$partAvailarray[5];
-    $partAvail["preventconflict"]=$partAvailarray[6];
-    $partAvail["otherconstraints"]=$partAvailarray[7];
-    $partAvail["numkidsfasttrack"]=$partAvailarray[8];
-    $query="Select badgeid, availabilitynum, starttime, endtime FROM ParticipantAvailabilityTimes ";
+    $partAvail["maxprog"]=$partAvailarray[1];
+    $partAvail["preventconflict"]=$partAvailarray[2];
+    $partAvail["otherconstraints"]=$partAvailarray[3];
+    $partAvail["numkidsfasttrack"]=$partAvailarray[4];
+
+    if (CON_NUM_DAYS>1) {
+        $query="SELECT badgeid, day, maxprog FROM ParticipantAvailabilityDays where badgeid=\"$badgeid\"";
+        $result=mysql_query($query,$link);
+        if (!$result) {
+            $message_error=$query."<BR>\n".mysql_error($link);
+            return (-3);
+            }
+        for ($i=1; $i<=CON_NUM_DAYS; $i++) {
+            unset($partAvail["maxprogday$i"]);
+            }
+        if (mysql_num_rows($result)>0) {
+            while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
+                $i=$row[1];
+                $partAvail["maxprogday$i"]=$row[2];
+                }
+            }
+        }
+    $query="SELECT badgeid, availabilitynum, starttime, endtime FROM ParticipantAvailabilityTimes ";
     $query.="where badgeid=\"$badgeid\" order by starttime";
     $result=mysql_query($query,$link);
     if (!$result) {
-        $message_error=mysql_error($link);
+        $message_error=$query."<BR>\n".mysql_error($link);
         return (-3);
         }
-    unset($partAvail["availtimes"]);
+    for ($i=1; $i<=AVAILABILITY_ROWS; $i++) {
+        unset($partAvail["starttimestamp_$i"]);
+        unset($partAvail["endtimestamp_$i"]);
+        }
+    $i=1;
     while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
-        $partAvail["availtimes"][]=$row;
+        $partAvail["starttimestamp_$i"]=$row[2];
+        $partAvail["endtimestamp_$i"]=$row[3];
+        $i++;
         }
     return (0);
     }
+//
 // Function set_permission_set($badgeid)
 // Performs complicated join to get the set of permission atoms available to the user
 // Stores them in global variable $permission_set

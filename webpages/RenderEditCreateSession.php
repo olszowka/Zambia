@@ -81,7 +81,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <INPUT type=text size="3" name="atten" value="<?php
                     echo htmlspecialchars($session["atten"],ENT_COMPAT)."\">"; ?>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="duration">Duration:</LABEL>
-                    <INPUT type=text size="3" name="duration" value="<?php
+                    <INPUT type=text size="5" name="duration" value="<?php
                     echo htmlspecialchars($session["duration"],ENT_COMPAT)."\">"; ?>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="roomset">Room Set: </LABEL>
                     <SELECT name="roomset"><?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>

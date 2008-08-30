@@ -27,7 +27,7 @@ participant_header($title);
 <?php if ($message!="") { ?>
 	<P class="regmsg"><?php echo $message; ?></P>
 	<?php } ?>
-<FORM name="partform" method=POST action="submitMyContact.php">
+<FORM name="partform" method=POST action="SubmitMyContact.php">
   <div id="update_section">
     <div class="divlistbox">
       <span class="spanlabcb">I am interested and able to participate in 

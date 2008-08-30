@@ -1,6 +1,6 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
-    global $partAvail,$availability;
+    global $partAvail;
     $title="My Availability";
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
@@ -9,18 +9,22 @@
         RenderError($title,$message_error);
         exit();
         }
-    if (retrieve_participantAvailability_from_db($badgeid)!=0) {
+    $x = retrieve_participantAvailability_from_db($badgeid);
+    if (($x!=0)&&($x!=-1)) {
         RenderError($title,$message_error);
         exit();
         }
-    $i=0;
-    while ($partAvail["availtimes"][$i]) {
-    	$x=parse_mysql_time($partAvail["availtimes"][$i][2]);
-    	$availability[$i]["startday"]=$x["day"];
-    	$availability[$i]["starttime"]=$x["hour"];
-    	$x=parse_mysql_time($partAvail["availtimes"][$i][3]);
-    	$availability[$i]["endday"]=$x["day"];
-    	$availability[$i]["endtime"]=$x["hour"];
+    $i=1;
+    while (isset($partAvail["starttimestamp_$i"])) {
+        //error_log("zambia-my_sched got here.i $i");
+        //availstartday, availendday: day1 is 1st day of con
+        //availstarttime, availendtime: measured in whole 1-24 hours only, 0 is unset; 1 is midnight beginning of day
+    	$x=parse_mysql_time($partAvail["starttimestamp_$i"]);
+    	$partAvail["availstartday_$i"]=$x["day"]+1;
+    	$partAvail["availstarttime_$i"]=$x["hour"]+1;
+    	$x=parse_mysql_time($partAvail["endtimestamp_$i"]);
+    	$partAvail["availendday_$i"]=$x["day"]+1;
+    	$partAvail["availendtime_$i"]=$x["hour"]+1;
         $i++;
     	}
     require ('renderMySchedConstr.php');

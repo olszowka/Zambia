@@ -36,6 +36,7 @@ FORM.nomargin {
 hr {
     height: 0.1em;
     background-color: #252588;
+    margin-bottom: 5px;
     }
 
 A {
@@ -305,6 +306,13 @@ LABEL.dense {
     font-size: 85%;
     margin-bottom: 7px;
     margin-top: 2px;
+    }
+
+.regform {
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
     }
 
 .denseformrow {

@@ -112,9 +112,6 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `ParticipantAvailability`;
 CREATE TABLE `ParticipantAvailability` (
   `badgeid` varchar(15) NOT NULL default '',
-  `fridaymaxprog` int(11) default NULL,
-  `saturdaymaxprog` int(11) default NULL,
-  `sundaymaxprog` int(11) default NULL,
   `maxprog` int(11) default NULL,
   `preventconflict` varchar(255) default NULL,
   `otherconstraints` varchar(255) default NULL,
@@ -131,6 +128,15 @@ LOCK TABLES `ParticipantAvailability` WRITE;
 /*!40000 ALTER TABLE `ParticipantAvailability` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ParticipantAvailability` ENABLE KEYS */;
 UNLOCK TABLES;
+
+CREATE TABLE `ParticipantAvailabilityDays` (
+  `badgeid` varchar(15) NOT NULL,
+  `day` smallint(6) NOT NULL,
+  `maxprog` int(11) default NULL,
+  PRIMARY KEY  (`badgeid`,`day`)
+  CONSTRAINT `ParticipantAvailabilityDays_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 --
 -- Table structure for table `ParticipantAvailabilityTimes`
