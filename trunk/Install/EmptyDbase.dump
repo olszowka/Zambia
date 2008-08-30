@@ -310,6 +310,27 @@ LOCK TABLES `Participants` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `Participants`
+--
+
+DROP TABLE IF EXISTS `PatchLog`;
+CREATE TABLE `PatchLog` (
+  `patchname` varchar(50) default NULL,
+  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `PatchLog`
+--
+
+LOCK TABLES `PatchLog` WRITE;
+/*!40000 ALTER TABLE `PatchLog` DISABLE KEYS */;
+INSERT INTO `PatchLog` VALUES
+   ('8-30-08 Rollup all previous patches through #19',NULL);
+/*!40000 ALTER TABLE `PatchLog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `PermissionAtoms`
 --
 
@@ -318,7 +339,7 @@ CREATE TABLE `PermissionAtoms` (
   `permatomid` int(11) NOT NULL auto_increment,
   `permatomtag` varchar(20) NOT NULL default '',
   `elementid` int(11) default NULL,
-  `page` varchar(20) default NULL,
+  `page` varchar(30) default NULL,
   `notes` text,
   PRIMARY KEY  (`permatomid`),
   UNIQUE KEY `taginx` (`permatomtag`,`elementid`)
@@ -330,7 +351,21 @@ CREATE TABLE `PermissionAtoms` (
 
 LOCK TABLES `PermissionAtoms` WRITE;
 /*!40000 ALTER TABLE `PermissionAtoms` DISABLE KEYS */;
-INSERT INTO `PermissionAtoms` VALUES (1,'Staff',NULL,'renderWelcome','Enables staff menu link'),(2,'Administrator',NULL,'many','Use to be determined'),(3,'Participant',NULL,'many','Use to be determined'),(4,'EditBio',NULL,'renderMyContact','Allow write to biography on my contact page'),(12,'my_availability',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(13,'search_panels',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(14,'my_panel_interests',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(15,'my_schedule',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(16,'my_suggestions_write',NULL,'MySuggestions','Enables write access to the form elements on the page MySuggestions.'),(17,'my_gen_int_write',NULL,'MyGeneralInterests','Enables write access to the form elements on the page My General Interests'),(18,'Brainstorm',NULL,'BrainstormWelcome','Use for special brainstorm user and pages.');
+INSERT INTO `PermissionAtoms` VALUES
+   (1,'Staff',NULL,'renderWelcome','Enables staff menu link'),
+   (2,'Administrator',NULL,'many','Use to be determined'),
+   (3,'Participant',NULL,'many','Use to be determined'),
+   (4,'EditBio',NULL,'renderMyContact','Allow write to biography on my contact page'),
+   (5,'my_availability',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),
+   (6,'search_panels',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),
+   (7,'my_panel_interests',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),
+   (8,'my_schedule',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),
+   (9,'my_suggestions_write',NULL,'MySuggestions','Enables write access to the form elements on the page MySuggestions.'),
+   (10,'my_gen_int_write',NULL,'MyGeneralInterests','Enables write access to the form elements on the page My General Interests'),
+   (11,'BrainstormSubmit',NULL,'EditCreateSession','Brainstorm user can create session'),
+   (12,'BS_sear_sess',NULL,'SearchSessions','Brainstorm user can view sessions'),
+   (13,'public_login',NULL,'Login','Brainstorm user can log in'),
+   (14,'SendEmail',NULL,'StaffManageParticipants','Access to Send email set of pages');
 /*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -352,7 +387,11 @@ CREATE TABLE `PermissionRoles` (
 
 LOCK TABLES `PermissionRoles` WRITE;
 /*!40000 ALTER TABLE `PermissionRoles` DISABLE KEYS */;
-INSERT INTO `PermissionRoles` VALUES (1,'Staff','Can access staff pages'),(2,'Administrator','Use to be determined'),(3,'Participant','Use to be determined'),(5,'Brainstorm','Use for Brainstorm pages');
+INSERT INTO `PermissionRoles` VALUES
+    (1,'Administrator','Use to be determined'),
+    (2,'Staff','Can access staff pages'),
+    (3,'Participant','Use to be determined'),
+    (4,'Brainstorm','Use for Brainstorm pages');
 /*!40000 ALTER TABLE `PermissionRoles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -382,7 +421,28 @@ CREATE TABLE `Permissions` (
 
 LOCK TABLES `Permissions` WRITE;
 /*!40000 ALTER TABLE `Permissions` DISABLE KEYS */;
-INSERT INTO `Permissions` VALUES (1,1,NULL,1,NULL),(2,3,NULL,3,NULL),(3,4,1,3,NULL),(4,4,2,3,NULL),(5,12,2,1,NULL),(6,12,2,3,NULL),(7,13,3,1,NULL),(8,13,3,3,NULL),(9,14,3,1,NULL),(10,14,3,3,NULL),(11,15,4,1,NULL),(12,15,4,3,NULL),(13,16,5,1,NULL),(14,16,5,3,NULL),(15,17,5,1,NULL),(16,17,5,3,NULL),(21,18,6,5,NULL);
+INSERT INTO `Permissions` VALUES
+    (1,1,NULL,2,NULL),
+    (2,3,1,3,NULL),
+    (3,4,2,2,NULL),
+    (4,4,2,3,NULL),
+    (5,5,3,2,NULL),
+    (6,5,3,3,NULL),
+    (7,10,3,2,NULL),
+    (8,10,3,3,NULL),
+    (9,6,4,2,NULL),
+    (10,6,4,3,NULL),
+    (11,7,4,2,NULL),
+    (12,7,4,3,NULL),
+    (13,8,5,2,NULL),
+    (14,8,5,3,NULL),
+    (15,12,7,2,NULL),
+    (16,14,7,2,NULL),
+    (17,12,7,3,NULL),
+    (18,14,7,3,NULL),
+    (19,12,7,4,NULL),
+    (20,13,7,4,NULL),
+    (21,14,7,4,NULL);
 /*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -405,7 +465,14 @@ CREATE TABLE `Phases` (
 
 LOCK TABLES `Phases` WRITE;
 /*!40000 ALTER TABLE `Phases` DISABLE KEYS */;
-INSERT INTO `Phases` VALUES (1,'Invitation',1,'Welcome, My Profile, My Suggestions and My General Interests'),(2,'Availability',1,'Add on My Availability'),(3,'Panel Sign Up',1,'Add on Search Panels and My Panel Interests'),(4,'Show Schedule',1,'Add on My Schedule'),(5,'Suggestions',0,'Allow write access to My Suggestions and My General Interests.'),(6,'Brainstorm',1,'Special brainstorm pages are accessible.');
+INSERT INTO `Phases` VALUES
+    (1,'Invitation',0,'Welcome, My Profile, My Suggestions and My General Interests'),
+    (2,'Edit Bio',0,'Parts. have write access to their biography'),
+    (3,'Availability',0,'Add on My Availability'),
+    (4,'Panel Sign Up',0,'Add on Search Panels and My Panel Interests'),
+    (5,'Show Schedule',0,'Add on My Schedule'),
+    (6,'Suggestions',0,'Allow write access to My Suggestions and My General Interests.'),
+    (7,'Brainstorm',0,'Special brainstorm pages are accessible.');
 /*!40000 ALTER TABLE `Phases` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -471,7 +538,26 @@ CREATE TABLE `RegTypes` (
 
 LOCK TABLES `RegTypes` WRITE;
 /*!40000 ALTER TABLE `RegTypes` DISABLE KEYS */;
-INSERT INTO `RegTypes` VALUES (' AdultFull-Comp |','Registered and Comp\'ed'),('Adult-Promo','Registered'),('Adult-Rollover','Registered'),('Adult-RolloverC','Registered and Comp\'ed'),('Adult-YearAhead','Registered'),('AdultFull','Registered'),('AdultFull-Comp','Registered and Comp\'ed'),('AdultFull-Pre-1','Registered'),('AdultFull-Pre-2','Registered'),('AdultFull-Pre1','Registered'),('AdultFull-Pre2','Registered'),('EarnedComp','Registered and Comp\'ed'),('ElfComp','Registered and Comp\'ed'),('EventComp-Full','Registered and Comp\'ed'),('GamingComp','Registered and Comp\'ed'),('ProgramComp','Registered and Comp\'ed'),('Promotional','Registered'),('Student','Registered'),('YearAhead','Registered');
+INSERT INTO `RegTypes` VALUES
+    (' AdultFull-Comp |','Registered and Comp\'ed'),
+    ('Adult-Promo','Registered'),
+    ('Adult-Rollover','Registered'),
+    ('Adult-RolloverC','Registered and Comp\'ed'),
+    ('Adult-YearAhead','Registered'),
+    ('AdultFull','Registered'),
+    ('AdultFull-Comp','Registered and Comp\'ed'),
+    ('AdultFull-Pre-1','Registered'),
+    ('AdultFull-Pre-2','Registered'),
+    ('AdultFull-Pre1','Registered'),
+    ('AdultFull-Pre2','Registered'),
+    ('EarnedComp','Registered and Comp\'ed'),
+    ('ElfComp','Registered and Comp\'ed'),
+    ('EventComp-Full','Registered and Comp\'ed'),
+    ('GamingComp','Registered and Comp\'ed'),
+    ('ProgramComp','Registered and Comp\'ed'),
+    ('Promotional','Registered'),
+    ('Student','Registered'),
+    ('YearAhead','Registered');
 /*!40000 ALTER TABLE `RegTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -493,7 +579,20 @@ CREATE TABLE `Roles` (
 
 LOCK TABLES `Roles` WRITE;
 /*!40000 ALTER TABLE `Roles` DISABLE KEYS */;
-INSERT INTO `Roles` VALUES (1,'Other',-1),(2,'Reading my own works',3),(3,'Autographing',4),(4,'Reading others works',5),(5,'Performing',6),(6,'Running workshops',7),(7,'Leading discussions',8),(8,'Running games',9),(9,'Working with children',10),(10,'Panel Moderator',2),(11,'Improv',11),(12,'Storytelling',12),(13,'Join Arisia Volunteer Staff',13);
+INSERT INTO `Roles` VALUES 
+     (1,'Other',-1),
+     (2,'Reading my own works',3),
+     (3,'Autographing',4),
+     (4,'Reading others works',5),
+     (5,'Performing',6),
+     (6,'Running workshops',7),
+     (7,'Leading discussions',8),
+     (8,'Running games',9),
+     (9,'Working with children',10),
+     (10,'Panel Moderator',2),
+     (11,'Improv',11),
+     (12,'Storytelling',12),
+     (13,'Join Arisia Volunteer Staff',13);
 /*!40000 ALTER TABLE `Roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -866,7 +965,24 @@ CREATE TABLE `Tracks` (
 
 LOCK TABLES `Tracks` WRITE;
 /*!40000 ALTER TABLE `Tracks` DISABLE KEYS */;
-INSERT INTO `Tracks` VALUES (1,'Anime',1,0),(2,'Art Prog.',2,1),(4,'Comics',3,1),(5,'ConSuite',4,1),(6,'Costuming',5,1),(7,'Events',6,1),(9,'Fan Interest',7,1),(10,'FastTrack',8,1),(11,'Filk',9,1),(12,'Film',10,0),(13,'Gaming Prog.',11,1),(14,'LARP',12,1),(15,'Media Prog.',14,1),(16,'Literature',13,1),(17,'Video',17,0),(18,'Science',15,1),(19,'Teen',16,1),(20,'Arisia TV',2,0),(21,'Gaming',11,0),(22,'Do Not Print',20,0),(24,'Art Show',2,0),(25,'Reading',16,0),(26,'Focus Topic',7,1),(27,'Geekery',6,1),(28,'Lifestyles',12,1),(29,'I do not know',700,0),(30,'Anime Prog.',1,1),(31,'New Items',600,1),(32,'Parties',500,0);
+INSERT INTO `Tracks` VALUES
+    (1,'Anime',1,0),
+    (2,'Art',2,1),
+    (3,'Comic',3,1),
+    (4,'Costuming',4,1),
+    (5,'eLife',5,1),
+    (6,'Fan Interest',6,1),
+    (7,'Fandom',7,1),
+    (8,'FastTrack',8,1),
+    (9,'Filk',9,0),
+    (10,'Gaming',10,1),
+    (11,'Lifestyles',11,1),
+    (12,'Literature',12,1),
+    (13,'Media',13,1),
+    (14,'Science',14,1),
+    (15,'Teen',15,1),
+    (16,'Parties',16,0),
+    (99,'I do not know',99,0);
 /*!40000 ALTER TABLE `Tracks` ENABLE KEYS */;
 UNLOCK TABLES;
 
