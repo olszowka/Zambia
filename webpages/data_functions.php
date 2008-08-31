@@ -64,7 +64,7 @@ function get_participant_availability_from_post() {
         $x2=$partAvail["availstarttime_$i"]=$_POST["availstarttime_$i"];
         $x3=$partAvail["availendday_$i"]=$_POST["availendday_$i"];
         $x4=$partAvail["availendtime_$i"]=$_POST["availendtime_$i"];
-        error_log("Zambia, get: $i, $x1, $x2, $x3, $x4");
+        // error_log("Zambia, get: $i, $x1, $x2, $x3, $x4"); // for debug only
         }
     $partAvail["preventconflict"]=stripslashes($_POST["preventconflict"]);
     $partAvail["numkidsfasttrack"]=($_POST["numkidsfasttrack"]=="")?0:$_POST["numkidsfasttrack"]+0;
