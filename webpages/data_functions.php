@@ -146,10 +146,12 @@ function set_session_defaults() {
 // Takes the string $time and return array of "day" and "hour" and "minute"
 //
 function parse_mysql_time($time) {
-    $h=0+substr($time,0,2);
+    $x=strpos($time,":");
+    $h=0+substr($time,0,$x);
+    //error_log("zambia-time=> \$time:$time \$h:$h ");
     $result['hour']=fmod($h,24);
     $result['day']=intval($h/24);
-    $result['minute']=substr($time,3,2);
+    $result['minute']=substr($time,$x+1,2);
     return($result);
     }
 
@@ -157,12 +159,15 @@ function parse_mysql_time($time) {
 // Takes the string $time and return string describing time
 //
 function time_description($time) {
-    $days=array("Fri","Sat","Sun","Mon");
+    // $days=array("Fri","Sat","Sun","Mon"); // was hardcoded here.  Now from db_name.php
+    global $daymap;
     $atime=parse_mysql_time($time);
     $result="";
-    $result.=$days[$atime["day"]]." ";
+    if (CON_NUM_DAYS>1) {
+        $result.=$daymap["short"][$atime["day"]+1]." "; // "short" means 3 letter day names.
+        }
     $hour=fmod($atime["hour"],12);
-    $result.=(($hour==0)?12:$hour).":".$atime["minute"]." ";
+    $result.=(($hour==0)?"12":$hour).":".$atime["minute"]." ";
     $result.=($atime["hour"]>=12)?"PM":"AM";
     return($result);
     }

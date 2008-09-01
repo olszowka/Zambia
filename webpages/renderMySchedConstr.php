@@ -35,7 +35,7 @@ for guidance when assigning and scheduling panels. </p>
 // 1st row on page contains up to 4 days of inputs
               echo "<DIV class=\"regform\">\n";
               for ($i=1; $i<=min(4,CON_NUM_DAYS); $i++) {
-                  $D=$daymap[$i];
+                  $D=$daymap["long"][$i];
                   echo "<SPAN><LABEL for=\"maxprogday$i\">$D maximum &nbsp;</LABEL>\n";
                   $N=$partAvail["maxprogday$i"];
                   echo "    <INPUT id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>&nbsp;&nbsp;&nbsp;&nbsp;</SPAN>\n";
@@ -46,7 +46,7 @@ for guidance when assigning and scheduling panels. </p>
           if (CON_NUM_DAYS>4) {
               echo "<DIV class=\"regform\">\n";
               for ($i=5; $i<=CON_NUM_DAYS; $i++) {
-                  $D=$daymap[$i];
+                  $D=$daymap["long"][$i];
                   echo "<SPAN><LABEL for=\"maxprogday$i\">$D maximum &nbsp;</LABEL>\n";
                   $N=$partAvail["maxprogday$i"];
                   echo "    <INPUT id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>&nbsp;&nbsp;</SPAN>\n";
@@ -84,7 +84,7 @@ guidance when scheduling your panels.</p>
             echo "        <OPTION value=0$sel>&nbsp;</OPTION>\n";
             for ($j=1; $j<=CON_NUM_DAYS; $j++) {
                 $sel = ($partAvail["availstartday_$i"]==$j)?" selected":"";
-                $day = $daymap[$j];
+                $day = $daymap["long"][$j];
                 echo "        <OPTION value=$j $sel>$day</OPTION>\n";
                 }
             echo "        </SELECT></TD>\n";
@@ -100,7 +100,7 @@ guidance when scheduling your panels.</p>
             echo "        <OPTION value=0$sel>&nbsp;</OPTION>\n";
             for ($j=1; $j<=CON_NUM_DAYS; $j++) {
                 $sel = ($partAvail["availendday_$i"]==$j)?" selected":"";
-                $day = $daymap[$j];
+                $day = $daymap["long"][$j];
                 echo "        <OPTION value=$j $sel>$day</OPTION>\n";
                 }
             echo "        </SELECT></TD>\n";
