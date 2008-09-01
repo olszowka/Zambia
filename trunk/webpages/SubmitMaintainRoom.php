@@ -38,11 +38,17 @@ function SubmitMaintainRoom() {
         if ($_POST["sess$i"]=="unset") {
             continue;
             }
-        if ($_POST["day$i"]==0 or $_POST["hour$i"]=="unset" or  $_POST["min$i"]=="unset") {
+        if (CON_NUM_DAYS==1) {
+                $day=1;
+                }
+            else {
+                $day=$_POST["day$i"];
+                }
+        if ($day==0 or $_POST["hour$i"]=="unset" or  $_POST["min$i"]=="unset") {
             $warn++;
             continue;
             }
-        $time=(($_POST["day$i"]-1)*24+$_POST["ampm$i"]*12+$_POST["hour$i"]).":".$_POST["min$i"];
+        $time=(($day-1)*24+$_POST["ampm$i"]*12+$_POST["hour$i"]).":".$_POST["min$i"];
         $sessionid=$_POST["sess$i"];
         $query="INSERT INTO Schedule SET sessionid=$sessionid, roomid=$selroomid, starttime=\"$time\"";
         if (!mysql_query($query,$link)) {

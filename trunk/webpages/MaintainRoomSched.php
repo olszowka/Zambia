@@ -194,12 +194,15 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
 $numsessions=$i;
 for ($i=1;$i<=newroomslots;$i++) {
     echo "   <TR>\n";
-    echo "      <TD><Select name=\"day$i\"><Option value=0 selected>Day&nbsp;</Option>";
-    for ($j=1; $j<=CON_NUM_DAYS; $j++) {
-        $x=$daymap["long"]["$j"];
-        echo"         <OPTION value=$j>$x</OPTION>\n";
+    echo "      <TD>";
+    if (CON_NUM_DAYS>1) {
+        echo "<Select name=\"day$i\"><Option value=0 selected>Day&nbsp;</Option>";
+        for ($j=1; $j<=CON_NUM_DAYS; $j++) {
+            $x=$daymap["long"]["$j"];
+            echo"         <OPTION value=$j>$x</OPTION>\n";
+            }
+        echo "</Select>&nbsp;\n";
         }
-    echo "</Select>&nbsp;\n";
     echo "          <Select name=\"hour$i\"><Option value=\"unset\" selected>Hour&nbsp;</Option><Option value=0>12</Option>";
     for ($j=1;$j<=11;$j++) {
         echo "<Option value=$j>$j</Option>";
