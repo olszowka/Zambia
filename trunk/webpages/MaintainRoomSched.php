@@ -7,6 +7,7 @@ require_once('StaffHeader.php');
 require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
+global $daymap;
 
 staff_header($title);
 $topsectiononly=true; // no room selected -- flag indicates to display only the top section of the page
@@ -193,8 +194,12 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
 $numsessions=$i;
 for ($i=1;$i<=newroomslots;$i++) {
     echo "   <TR>\n";
-    echo "      <TD><Select name=\"day$i\"><Option value=0 selected>Day&nbsp;</Option><Option value=1>Fri</Option>";
-    echo "<Option value=2>Sat</Option><Option value=3>Sun</Option><Option value=4>Mon</Option></Select>&nbsp;\n";
+    echo "      <TD><Select name=\"day$i\"><Option value=0 selected>Day&nbsp;</Option>";
+    for ($j=1; $j<=CON_NUM_DAYS; $j++) {
+        $x=$daymap["long"]["$j"];
+        echo"         <OPTION value=$j>$x</OPTION>\n";
+        }
+    echo "</Select>&nbsp;\n";
     echo "          <Select name=\"hour$i\"><Option value=\"unset\" selected>Hour&nbsp;</Option><Option value=0>12</Option>";
     for ($j=1;$j<=11;$j++) {
         echo "<Option value=$j>$j</Option>";
