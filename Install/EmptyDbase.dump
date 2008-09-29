@@ -46,7 +46,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `Divisions`;
 CREATE TABLE `Divisions` (
   `divisionid` int(11) NOT NULL auto_increment,
-  `divisionname` varchar(30) character set latin1 collate latin1_general_ci default NULL,
+  `divisionname` varchar(30) default NULL,
   `display_order` int(11) NOT NULL default '0',
   PRIMARY KEY  (`divisionid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -296,7 +296,7 @@ CREATE TABLE `Participants` (
   `bestway` varchar(12) default NULL,
   `interested` tinyint(1) default NULL,
   `bio` text,
-  `pubsname` varchar(50) character set latin1 collate latin1_general_ci default NULL,
+  `pubsname` varchar(50) default NULL,
   PRIMARY KEY  (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -483,8 +483,8 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `PubCharacteristics`;
 CREATE TABLE `PubCharacteristics` (
   `pubcharid` int(11) NOT NULL auto_increment,
-  `pubcharname` varchar(30) character set latin1 collate latin1_general_ci default NULL,
-  `pubchartag` varchar(10) character set latin1 collate latin1_general_ci default NULL,
+  `pubcharname` varchar(30) default NULL,
+  `pubchartag` varchar(10) default NULL,
   `display_order` int(11) NOT NULL default '0',
   PRIMARY KEY  (`pubcharid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -884,7 +884,7 @@ CREATE TABLE `Sessions` (
   `pubsno` varchar(50) default NULL,
   `title` varchar(100) default NULL,
   `pocketprogtext` text,
-  `progguiddesc` text character set latin1 collate latin1_general_ci,
+  `progguiddesc` text,
   `persppartinfo` text,
   `duration` time default NULL,
   `estatten` int(11) default NULL,
