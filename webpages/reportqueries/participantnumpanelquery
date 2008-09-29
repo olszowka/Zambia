@@ -2,10 +2,15 @@ TITLE='Participant # Panel and Constraints'
 DESCRIPTION='How many panels does each person want to be on and the other constraints they indicated'
 PROGWANTS=1
 QUERY='
-	select P.badgeid, P.pubsname, interested, 
-	  fridaymaxprog, saturdaymaxprog, sundaymaxprog, mondaymaxprog,
-          maxprog, preventconflict, otherconstraints 
-	from Participants P, ParticipantAvailability PA 
-	where P.badgeid=PA.badgeid 
-	order by cast(P.badgeid as unsigned);'
-
+SELECT P.badgeid, P.pubsname, interested,
+        Friday, Saturday, Sunday, Monday,
+        maxprog, preventconflict, otherconstraints
+    FROM ParticipantAvailability PA, Participants P
+    LEFT JOIN 
+        (SELECT badgeid, sum(if(day=1,maxprog,0)) as Friday, sum(if(day=2,maxprog,0)) as Saturday,
+                sum(if(day=3,maxprog,0)) as Sunday, sum(if(day=4,maxprog,0)) as Monday
+            FROM ParticipantAvailabilityDays
+            GROUP BY badgeid) PADQ
+        ON P.badgeid = PADQ.badgeid
+    WHERE P.badgeid=PA.badgeid
+    ORDER BY cast(P.badgeid as unsigned);'
