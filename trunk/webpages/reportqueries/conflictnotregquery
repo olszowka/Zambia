@@ -7,8 +7,8 @@ QUERY="
          P.pubsname, 
 	 if ((regtype is NULL), ' ', regtype) as 'regtype', 
 	 if ((assigned is NULL), '0', assigned) as 'assigned'
-    from Participants P, 
-         CongoDump C 
+    from CongoDump C,
+         Participants P 
          left join (  select POS.badgeid, 
                              count(POS.sessionid) as assigned 
                         from ParticipantOnSession POS,
