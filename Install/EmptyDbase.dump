@@ -995,6 +995,7 @@ CREATE TABLE `Types` (
   `typeid` int(11) NOT NULL auto_increment,
   `typename` varchar(50) default NULL,
   `display_order` int(11) default NULL,
+  `selfselect` tinyint(1) default NULL,
   PRIMARY KEY  (`typeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -1004,7 +1005,24 @@ CREATE TABLE `Types` (
 
 LOCK TABLES `Types` WRITE;
 /*!40000 ALTER TABLE `Types` DISABLE KEYS */;
-INSERT INTO `Types` VALUES (1,'Panel',1),(2,'Workshop',2),(4,'Lecture',4),(5,'Meeting',5),(8,'Reading',7),(9,'Group Reading',8),(10,'TV - Live Event',10),(11,'TV - Previous Event',11),(12,'Movie',12),(13,'TV Show',13),(14,'Open Gaming',30),(15,'Scheduled Game',30),(16,'TV - Movie',11),(17,'I do not know',700),(18,'Concert',4),(19,'Participatory Event',2),(20,'Drama',4);
+INSERT INTO `Types` VALUES
+    (1,'Panel',1,1),
+    (2,'Workshop',2,0),
+    (4,'Lecture',4,0),
+    (5,'Meeting',5,0),
+    (8,'Reading',7,0),
+    (9,'Group Reading',8,0),
+    (10,'TV - Live Event',10,0),
+    (11,'TV - Previous Event',11,0),
+    (12,'Movie',12,0),
+    (13,'TV Show',13,0),
+    (14,'Open Gaming',30,0),
+    (15,'Scheduled Game',30,0),
+    (16,'TV - Movie',11,0),
+    (17,'I do not know',700,0),
+    (18,'Concert',4,0),
+    (19,'Participatory Event',2,0),
+    (20,'Drama',4,0);
 /*!40000 ALTER TABLE `Types` ENABLE KEYS */;
 UNLOCK TABLES;
 
