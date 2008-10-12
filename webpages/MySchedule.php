@@ -31,12 +31,21 @@ EOD;
             $schdarray[$i]["notesforpart"])=mysql_fetch_array($result, MYSQL_NUM);
         }
     $query= <<<EOD
-    SELECT Sess.sessionid, CD.badgename, POS.moderator, PSI.comments FROM
-    ParticipantOnSession POS, CongoDump CD, 
-    (SELECT sessionid FROM ParticipantOnSession WHERE badgeid="$badgeid") AS Sess
-    LEFT JOIN ParticipantSessionInterest PSI ON Sess.sessionid = PSI.sessionid
-    and POS.badgeid = PSI.badgeid WHERE Sess.sessionid = POS.sessionid and 
-    POS.badgeid = CD.badgeid order by sessionid, moderator desc
+SELECT
+        POS.sessionid, CD.badgename, POS.moderator, PSI.comments
+    FROM
+        CongoDump CD,
+        ParticipantOnSession POS
+        LEFT JOIN
+                ParticipantSessionInterest PSI
+            ON POS.sessionid = PSI.sessionid and
+                POS.badgeid = PSI.badgeid
+            WHERE
+                POS.badgeid = CD.badgeid
+            AND
+		POS.sessionid in
+                    (select sessionid from ParticipantOnSession where badgeid='$badgeid')
+            order by sessionid, moderator desc
 EOD;
     if (!$result=mysql_query($query,$link)) {
         $message.=$query."<BR>Error querying database.<BR>";
