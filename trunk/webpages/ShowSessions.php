@@ -19,5 +19,8 @@
         $sessionid="";
         }
     $_SESSION['return_to_page']="ShowSessions.php?status=$status&track=$track&type=$type&sessionid=$sessionid";
-    RenderSearchSessionResults($track,$status,$type,$sessionid);
+    $trackidlist=$track;
+    $statusidlist=$status;
+    $typeidlist=$type;
+    RenderSearchSessionResults($trackidlist,$statusidlist,$typeidlist,$sessionid);
 ?>

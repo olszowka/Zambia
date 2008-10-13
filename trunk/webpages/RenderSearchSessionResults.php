@@ -1,5 +1,5 @@
 <?php
-    function RenderSearchSessionResults($track,$status,$type,$sessionid) {
+    function RenderSearchSessionResults($trackidlist,$statusidlist,$typeidlist,$sessionid) {
     global $link;
     global $result,$message2;
     require_once ('StaffCommonCode.php');
@@ -8,8 +8,7 @@
     require_once ('retrieve.php');
     require_once ('render_functions.php');
     $title='Precis Search Results';
-    $statusname=0;
-    if (retrieve_select_from_db($track,$status,$statusname,$type,$sessionid)==0) {
+    if (retrieve_select_from_db($trackidlist,$statusidlist,$typeidlist,$sessionid)==0) {
         staff_header($title);
         $showlinks=true; // Show links to edit sessions
         RenderPrecis($result,$showlinks);
