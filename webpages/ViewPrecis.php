@@ -14,12 +14,11 @@
     elseif ($showlinks="0") {
             $showlinks=false;
             }
-   $statusname="'Brainstorm','EditMe','Vetted'";
-   $type=0;
-   $track=0;
-   $status=0;
+   $statusidlist=get_idlist_from_db("SessionStatuses","statusid","statusname","'Brainstorm','Edit Me','Vetted'");
+   $typeidlist="";
+   $trackidlist="";
    $sessionid="";
-    if (retrieve_select_from_db($track,$status,$statusname,$type,$sessionid)==0) {
+    if (retrieve_select_from_db($trackdlist,$statusidlist,$typeidlist,$sessionid)==0) {
        staff_header($title);
        echo "<p> If you have any questions please contact ";
        echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> </p>\n";
