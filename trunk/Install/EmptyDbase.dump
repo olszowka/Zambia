@@ -133,10 +133,10 @@ CREATE TABLE `ParticipantAvailabilityDays` (
   `badgeid` varchar(15) NOT NULL,
   `day` smallint(6) NOT NULL,
   `maxprog` int(11) default NULL,
-  PRIMARY KEY  (`badgeid`,`day`)
+  PRIMARY KEY  (`badgeid`),
+  Unique Key (badgeid, day),
   CONSTRAINT `ParticipantAvailabilityDays_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 --
 -- Table structure for table `ParticipantAvailabilityTimes`
