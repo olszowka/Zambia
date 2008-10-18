@@ -34,4 +34,34 @@ function RenderPrecis($result,$showlinks) {
     }
     echo "</TABLE>\n";
 }
+// function RenderQueryResult($link,$result)
+// Writes output to render the results of a query as a table
+//
+function RenderQueryResult($link,$result) {
+    if (!mysql_info($link)) {
+        return(-1); // most recent query failed
+        }
+    $numrows=$mysql_num_rows($result);
+    if ($numrows==0) {
+        return(-2); // nothing to display
+        }
+    $numfields=$mysql_num_fields($result);
+    echo "<TABLE><TR>";
+    for ($i=0; $i<$numfields; $i++) {
+        $x=mysql_field_name($result, $i);
+        echo "<TH>$x</TH>";
+        }
+    echo "</TR>\n";
+    for ($i=0; $i<$numrows; $i++) {
+        $row=mysql_fetch_array($result, MYSQL_NUM);
+        echo "<TR>";
+        for ($j=0; $j<numfields; $j++) {
+            $x=$row[$j];
+            echo "<TD>$x</TD>";
+            }
+        echo "</TR>\n";
+        }
+     echo "</TABLE>\n";
+     return(0);
+     }
 ?>
