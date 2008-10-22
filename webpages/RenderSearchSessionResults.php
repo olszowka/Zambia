@@ -2,9 +2,6 @@
     function RenderSearchSessionResults($trackidlist,$statusidlist,$typeidlist,$sessionid) {
     global $link;
     global $result,$message2;
-    require_once ('StaffCommonCode.php');
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
     require_once ('retrieve.php');
     require_once ('render_functions.php');
     $title='Precis Search Results';

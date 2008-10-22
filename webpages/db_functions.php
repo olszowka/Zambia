@@ -410,12 +410,8 @@ function retrieve_session_from_db($sessionid) {
    log user in. */
 /* check login script, included in db_connect.php. */
 
-function isLoggedIn($firsttime) {
+function isLoggedIn() {
     global $link,$message2;
-    if ($firsttime) {
-        session_start();
-        $_SESSION['sessionstarted']=1;
-        }
 
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['password'])) {
         return false;

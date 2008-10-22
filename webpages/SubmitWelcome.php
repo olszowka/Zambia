@@ -1,6 +1,10 @@
 <?php
-    $title="Welcome";
+    // The current version of the Welcome Page does not include a form for doing this, but this
+    // code for SubmitWelcome supports having the user change his password directly on the
+    // Welcome page.  A previous version prompted the user to change his password if it was
+    // still the initial password.
     require ('PartCommonCode.php');
+    $title="Welcome";
     $interested = $_POST['interested'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];
@@ -62,7 +66,6 @@
 	exit(0);
 	}
     $result=mysql_query("Select badgename from Participants where badgeid='".$badgeid."'",$link);
-    session_start();
     if ($result) {
     		$dbobject=mysql_fetch_object($result);
     		$badgename=$dbobject->badgename;

@@ -1,10 +1,7 @@
 <?php
-    require_once ('db_functions.php');
+    require_once ('StaffCommonCode.php');
     require_once ('RenderViewSessions.php');
     require_once ('render_functions.php');
-    if ($session_started!=true) {
-         session_start();
-         }
     $_SESSION['return_to_page']='ViewAllSessions.php';
     $title="Query Session Results";
     if (prepare_db()===false) {
