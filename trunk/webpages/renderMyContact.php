@@ -1,11 +1,5 @@
 <?php
-require_once('db_functions.php');
-require_once('ParticipantHeader.php');
-require_once('ParticipantFooter.php');
-$firsttime=false;
-if (isLoggedIn($firsttime)===false) {
-	exit(0);
-	}
+require_once('PartCommonCode.php');
 if (isset($bio)) {
     $participant["bio"]=$bio;
     }

@@ -1,9 +1,5 @@
 <?php
-require_once('db_functions.php');
-require_once('ParticipantHeader.php');
-require_once('ParticipantFooter.php');
-
-session_start();
+require_once('PartCommonCode.php');
 $_SESSION=array();                 // Unset session data
 unset($_COOKIE[session_name()]);   // Clear cookie
 session_destroy();                 // Destroy session data

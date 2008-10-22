@@ -1,8 +1,6 @@
 <?php
-    require_once ('db_functions.php');
-    require_once ('data_functions.php');
+    require_once ('StaffCommonCode.php');
     require_once ('RenderSearchSessionResults.php');
-    session_start();
     if ($_POST["track"] or $_POST["status"] or $_POST["type"] or $_POST["sessionid"]) {
             $status=$_POST["status"]; 
             $track=$_POST["track"];

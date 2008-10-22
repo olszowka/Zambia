@@ -1,7 +1,10 @@
 <?php
-    require_once ('db_functions.php');
-    require_once ('data_functions.php');
-    require_once ('error_functions.php');
+    $logging_in=true;
+    require_once ('CommonCode.php');
+//    require_once ('db_functions.php');
+//    require_once ('data_functions.php');
+//    require_once ('error_functions.php');
+//    require_once ('php_functions.php');
     $title="Submit Password";
     // echo "Trying to connect to database.\n";
     if (prepare_db()===false) {
@@ -28,7 +31,8 @@
 	exit(0);
 	}
     $result=mysql_query("Select badgename from CongoDump where badgeid='".$badgeid."'",$link);
-    session_start();
+//    set_session_timeout(); // bunch of code to set a long timeout
+//    session_start();
     if ($result) {
     		$dbobject=mysql_fetch_object($result);
     		$badgename=$dbobject->badgename;

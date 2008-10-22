@@ -2,9 +2,6 @@
   function RenderViewSessions() {
     global $result; 
     $title="Session Query Results";
-      require_once('StaffHeader.php');
-      require_once('StaffFooter.php');
-      require_once('StaffCommonCode.php');
       staff_header($title);
 ?>
     <TABLE>

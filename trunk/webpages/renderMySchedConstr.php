@@ -1,13 +1,8 @@
 <?php
-require_once('db_functions.php');
-require_once('ParticipantHeader.php');
-require_once('ParticipantFooter.php');
-$firsttime=false;
-if (isLoggedIn($firsttime)===false) {
-    exit(0);
-    }
-
 participant_header($title);
+if (!isset($daymap)) {
+    error_log("zambia-render_my_avail: \$daymap is not set.");
+    }
 ?>
 
 <?php if ($message_error!="") { ?>

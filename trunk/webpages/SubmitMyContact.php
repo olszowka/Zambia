@@ -115,7 +115,7 @@
 	exit(0);
 	}
     $result=mysql_query("Select badgename from Participants where badgeid='".$badgeid."'",$link);
-    session_start();
+    //session_start();
     if ($result) {
             $dbobject=mysql_fetch_object($result);
             $badgename=$dbobject->badgename;
