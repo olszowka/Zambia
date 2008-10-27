@@ -1,6 +1,7 @@
 TITLE='GoH Schedule'
 DESCRIPTION='The GoH schedules'
 GOHWANTS=1
+PROGWANTS=1
 QUERY="
 select G.pubsname, 
      concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
@@ -21,6 +22,6 @@ from Rooms R, Sessions S, Participants G, Schedule SCH
      LEFT JOIN Tracks T ON T.trackid=S.trackid 
 where SCH.roomid = R.roomid 
   and SCH.sessionid = S.sessionid 
-  and G.badgeid in ('25028','38720','95091') 
+  and G.badgeid in ('4352', '6282', '6752', '93571')
   and G.badgeid=POS.badgeid
 order by G.pubsname, SCH.starttime;"
