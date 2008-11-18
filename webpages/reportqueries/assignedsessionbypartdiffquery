@@ -15,5 +15,5 @@ select P.badgeid,
        Participants P 
  where POS.badgeid=P.badgeid 
    and POS.sessionid=Sessions.sessionid 
-   and POS.ts>'2008-01-18 23:00:00'
+   and POS.ts>'2008-10-16 23:00:00'
 order by cast(P.badgeid as unsigned);"

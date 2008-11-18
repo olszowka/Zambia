@@ -6,7 +6,7 @@ TECHWANTS=1
 HOTELWANTS=1
 QUERY="
    select roomname,
-          DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', 
+          DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', 
           duration,
           trackname, 
           concat('<a href=StaffAssignParticipants.php?selsess=',X.sessionid,'>', X.sessionid,'</a>') as sessionid,

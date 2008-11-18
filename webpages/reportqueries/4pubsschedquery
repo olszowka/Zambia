@@ -5,7 +5,7 @@ PUBSWANTS=1
 QUERY="
    select roomname, 
           function, 
-          DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),
+          DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),
                       '%a %l:%i %p') as 'Start Time', 
           concat('(',left(duration,5),')') Duration, trackname,
                  pubsno, S.sessionid, title, 

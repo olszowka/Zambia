@@ -4,33 +4,34 @@ PROGWANTS=1
 EVENTSWANTS=1
 GOHWANTS=1
 QUERY="
-  select 
+select
          concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
-         function, 
-         DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', 
-         concat(if(left(duration,2)=00, '', if(left(duration,1)=0, 
+         function,
+         DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
+         concat(if(left(duration,2)=00, '', if(left(duration,1)=0,
            concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))),
-           if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0,  
-           concat(right(date_format(duration,'%i'),1),'min'), 
+           if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0,
+           concat(right(date_format(duration,'%i'),1),'min'),
            concat(date_format(duration,'%i'),'min')))) duration,
-         trackname, 
-         concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', 
+         trackname,
+         concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
                 S.sessionid,'</a>') as Sessionid,
          concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') as title,
          S.pubstatusid,
-         group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants' 
-    from Rooms R, 
-         Sessions S, 
-         PubStatuses PS,	
-         Schedule SCH 
-         LEFT JOIN ParticipantOnSession POS 
-                ON SCH.sessionid=POS.sessionid 
-         LEFT JOIN Participants P 
-                ON POS.badgeid=P.badgeid 
-         LEFT JOIN Tracks T 
-                ON T.trackid=S.trackid 
-   where SCH.roomid = R.roomid 
-     and SCH.sessionid = S.sessionid 
-     and PS.pubstatusid = S.pubstatusid
-group by SCH.sessionid 
-order by SCH.starttime, R.roomname"
+         group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants'
+    from
+                   Schedule SCH
+              JOIN Sessions S
+                   USING (sessionid)
+              JOIN Rooms R
+                   USING (roomid)
+              JOIN PubStatuses PS
+                   USING (pubstatusid)
+         LEFT JOIN ParticipantOnSession POS
+                ON SCH.sessionid=POS.sessionid
+         LEFT JOIN Participants P
+                ON POS.badgeid=P.badgeid
+         LEFT JOIN Tracks T
+                ON T.trackid=S.trackid
+group by SCH.scheduleid
+order by SCH.starttime, R.roomname;"

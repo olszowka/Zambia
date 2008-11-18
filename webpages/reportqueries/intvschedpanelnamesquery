@@ -10,7 +10,7 @@ select
        (if (X.assigned is NULL,' ','yes')) as 'Assigned?', 
        (if (moderator is NULL,' ','yes')) as 'Moderator?', 
        concat('<a href=MaintainRoomSched.php?selroom=',Y.roomid,'>', Y.roomname,'</a>') as Roomname,
-       DATE_FORMAT(ADDTIME('2008-01-18 00:00:00',Y.starttime),'%a %l:%i %p') as 'Start Time' 
+       DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',Y.starttime),'%a %l:%i %p') as 'Start Time' 
   from (    select PI.badgeid, PI.pubsname, PI.sessionid, POS.sessionid as assigned, moderator, title, trackname 
               from (    select T.trackname, S.title, S.sessionid, P.badgeid, P.pubsname 
                           from Tracks T, ParticipantSessionInterest PSI, 
