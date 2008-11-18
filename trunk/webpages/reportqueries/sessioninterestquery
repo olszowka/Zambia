@@ -1,4 +1,24 @@
 TITLE='Session Interest Report (all info)'
 DESCRIPTION='Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report.  (All data included including for invited sessions.)'
 PROGWANTS=1
-QUERY='select T.trackname as "Track", S.sessionid as "Session ID", title as "Title", P.pubsname, P.badgeid as "BadgeID", I.rank as "Rank", I.willmoderate as "Mod?", I.comments as "Comments" from Participants as P, ParticipantSessionInterest as I, Sessions as S, Tracks as T where P.badgeid=I.badgeid and S.sessionid=I.sessionid and T.trackid=S.trackid order by T.trackname, title;'
+QUERY="
+SELECT
+        T.trackname as 'Track',
+        CONCAT('<A HREF=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
+                S.sessionid,'</A>') as Sessionid,
+        CONCAT('<A HREF=EditSession.php?id=',S.sessionid,'>',title,'</A>') as title,
+        P.pubsname,
+        P.badgeid as 'BadgeID',
+        PSI.rank as 'Rank',
+        PSI.willmoderate as 'Mod?',
+        PSI.comments as 'Comments'
+    FROM
+        Participants P,
+        ParticipantSessionInterest PSI,
+        Sessions S,
+        Tracks T
+    WHERE
+        P.badgeid=PSI.badgeid AND
+        S.sessionid=PSI.sessionid AND
+        T.trackid=S.trackid
+    ORDER BY T.trackname, title;"
