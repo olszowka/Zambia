@@ -1,4 +1,22 @@
 TITLE='Conflict Report - Duplicate Session '
 DESCRIPTION='Lists all sessions scheduled more than once.'
 CONFLICTWANTS=1
-QUERY="select S.sessionid, S.title, R.roomname, DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time' from Sessions S, Rooms R, Schedule SCH, (select sessionid, count(*) as mycount from Schedule group by sessionid having mycount>1) X where S.sessionid=X.sessionid and S.sessionid=SCH.sessionid and R.roomid = SCH.roomid order by S.sessionid;"
+QUERY="
+     select S.Sessionid, 
+            S.Title, 
+            concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', 
+                R.roomname,'</a>') as Roomname,
+            DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time' 
+       from Sessions S, 
+            Rooms R, 
+            Schedule SCH, 
+            (select sessionid, 
+                    count(*) as mycount 
+               from Schedule 
+           group by sessionid 
+             having mycount>1) X 
+      where S.sessionid=X.sessionid 
+        and S.sessionid=SCH.sessionid 
+        and R.roomid = SCH.roomid 
+   order by S.sessionid;"
+
