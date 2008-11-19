@@ -1,15 +1,15 @@
 TITLE='Assigned Moderator by Session'
-DESCRIPTION='Shows who has been assigned to moderate each session.'
+DESCRIPTION='Shows who has been assigned to moderate each session (sorted by track then sessionid).'
 PROGWANTS=1
 EVENTSWANTS=1
 QUERY="
-select P.badgeid, 
-       P.pubsname, 
-       trackname,
+select Trackname,
+       P.Pubsname, 
+       P.Badgeid, 
        concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
                 S.sessionid,'</a>') as Sessionid,
-       concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') as title,
-       statusname 
+       concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') as Title,
+       Statusname 
   from ParticipantOnSession, 
        Sessions S, 
        Participants P,
