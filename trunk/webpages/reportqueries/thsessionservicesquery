@@ -9,8 +9,7 @@ QUERY="
              DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', 
              Duration, 
              Trackname, 
-             concat('<a href=StaffAssignParticipants.php?selsess=',X.sessionid,'>',
-                 X.sessionid,'</a>') as Sessionid,
+             X.Sessionid,
              concat('<a href=EditSession.php?id=',X.sessionid,'>',X.title,'</a>') Title,
              X.Servicename 
         from (select trackname, 
