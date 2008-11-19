@@ -1,4 +1,8 @@
 TITLE='Participant Interested Count'
-DESCRIPTION='Show the number of people that are interested in attending'
+DESCRIPTION='Show the number of people that are interested in attending (Interested, 1=yes, 2=no, 0=did not pick, NULL=did not hit save)'
 PROGWANTS=1
-QUERY='select count(P.badgeid), P.interested from Participants P group by P.interested;'
+QUERY='
+    select P.Interested as "Interest Flag",
+           count(P.badgeid) as Count
+      from Participants P 
+  group by P.interested;'
