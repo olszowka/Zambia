@@ -1,7 +1,26 @@
 TITLE='Session roomsets'
-DESCRIPTION='What roomsets are we using'
+DESCRIPTION='What roomsets are we using (Sorted by Room then Time)'
 PROGWANTS=1
 EVENTSWANTS=1
 TECHWANTS=1
 HOTELWANTS=1
-QUERY="select roomname,DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', duration,trackname, S.sessionid, title, roomsetname from RoomSets RS, Tracks T, Sessions S, Rooms R, Schedule SCH where T.trackid=S.trackid and S.sessionid=SCH.sessionid and SCH.roomid=R.roomid and RS.roomsetid=S.roomsetid order by roomname, starttime;"
+QUERY="
+    select Roomname,
+           DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', 
+           Duration,
+           Trackname, 
+           concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
+                 S.sessionid,'</a>') as Sessionid,
+           concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
+           Roomsetname 
+      from RoomSets RS, 
+           Tracks T, 
+           Sessions S, 
+           Rooms R, 
+           Schedule SCH 
+     where T.trackid=S.trackid 
+       and S.sessionid=SCH.sessionid 
+       and SCH.roomid=R.roomid 
+       and RS.roomsetid=S.roomsetid 
+  order by roomname, 
+           starttime;"
