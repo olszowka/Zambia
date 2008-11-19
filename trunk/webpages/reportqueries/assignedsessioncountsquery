@@ -1,5 +1,20 @@
 TITLE='Assigned Session by Session (counts)'
-DESCRIPTION='How many people are assinged to each session?'
+DESCRIPTION='How many people are assinged to each session? (Sorted by track then sessionid)'
 PROGWANTS=1
 EVENTSWANTS=1
-QUERY='select trackname, Sessions.sessionid as SessionId, title, statusname, count(badgeid) as NumAssigned from ParticipantOnSession, Sessions, Tracks, SessionStatuses  where ParticipantOnSession.sessionid=Sessions.sessionid  and Tracks.trackid=Sessions.trackid  and Sessions.statusid=SessionStatuses.statusid  group by sessionid order by trackname, sessionid;'
+QUERY="
+select Trackname, 
+       concat('<a href=StaffAssignParticipants.php?selsess=',Sessions.sessionid,'>',
+                 Sessions.sessionid,'</a>') as Sessionid,
+       concat('<a href=EditSession.php?id=',Sessions.sessionid,'>',Sessions.title,'</a>') Title,
+       Statusname, 
+       count(badgeid) as NumAssigned 
+  from ParticipantOnSession, 
+       Sessions, 
+       Tracks, 
+       SessionStatuses  
+ where ParticipantOnSession.sessionid=Sessions.sessionid  
+   and Tracks.trackid=Sessions.trackid  
+   and Sessions.statusid=SessionStatuses.statusid  
+group by sessionid 
+order by trackname, sessionid;"

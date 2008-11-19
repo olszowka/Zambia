@@ -3,11 +3,12 @@ DESCRIPTION='Shows who has been assigned to each session ordered by badgeid.'
 PROGWANTS=1
 EVENTSWANTS=1
 QUERY="
-select P.badgeid, 
-       P.pubsname, 
-       Sessions.sessionid as SessionId, 
-       title, 
-       if ((moderator=1), 'Yes', ' ') as 'moderator'
+select P.Badgeid, 
+       P.Pubsname, 
+       if ((moderator=1), 'Yes', ' ') as 'Moderator',
+       concat('<a href=StaffAssignParticipants.php?selsess=',Sessions.sessionid,'>',
+                 Sessions.sessionid,'</a>') as Sessionid,
+       concat('<a href=EditSession.php?id=',Sessions.sessionid,'>',Sessions.title,'</a>') Title
   from ParticipantOnSession, 
        Sessions, 
        Participants P

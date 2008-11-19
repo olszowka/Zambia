@@ -5,13 +5,14 @@ EVENTSWANTS=1
 GOHWANTS=1
 QUERY="
 select
-        roomname,
-        function,
+        Trackname,
+        concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
+        Function,
         DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
-        duration,
-        trackname,
-        S.sessionid,
-        title,
+        Duration,
+        concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
+                S.sessionid,'</a>') as Sessionid,
+        concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
         group_concat(' ',pubsname,' (',P.badgeid,')') as 'Participants'
     from
              Schedule SCH
