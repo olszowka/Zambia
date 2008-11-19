@@ -1,7 +1,25 @@
 TITLE='Session Tech and Hotel notes'
-DESCRIPTION='What notes are in on this panel for tech and hotel?'
+DESCRIPTION='What notes are in on this panel for tech and hotel? (sorted by room then time)'
 PROGWANTS=1
 EVENTSWANTS=1
 TECHWANTS=1
 HOTELWANTS=1
-QUERY="select roomname,DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time', duration,trackname, S.sessionid, title, servicenotes from Tracks T, Sessions S, Rooms R, Schedule SCH where T.trackid=S.trackid and S.sessionid=SCH.sessionid and SCH.roomid=R.roomid and S.servicenotes!=' ' order by roomname, starttime;"
+QUERY="
+    select Roomname,
+           DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start&nbsp;Time', 
+           Duration,
+           Trackname, 
+           concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
+                 S.sessionid,'</a>') as Sessionid,
+           concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
+           Servicenotes 
+      from Tracks T, 
+           Sessions S, 
+           Rooms R, 
+           Schedule SCH 
+     where T.trackid=S.trackid 
+       and S.sessionid=SCH.sessionid 
+       and SCH.roomid=R.roomid 
+       and S.servicenotes!=' ' 
+  order by Roomname, 
+           Starttime;"
