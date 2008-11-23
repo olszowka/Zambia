@@ -46,10 +46,13 @@ EOD;
 //        DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time',
 //        GROUP_CONCAT(IF(roomid=2,S.title,"") SEPARATOR '') as "President's ABCD Title",
 //        GROUP_CONCAT(IF(roomid=2,S.sessionid,"") SEPARATOR '') as "President's ABCD SessionID",
+//        GROUP_CONCAT(IF(roomid=2,S.duration,"") SEPARATOR '') as "Presidents's ABCD Duration",
 //        GROUP_CONCAT(IF(roomid=3,S.title,"") SEPARATOR '') as "President's A Title",
 //        GROUP_CONCAT(IF(roomid=3,S.sessionid,"") SEPARATOR '') as "President's A SessionID",
-//        GROUP_CONCAT(IF(roomid=6,S.title,"") SEPARATOR '') as "President's D Title"
-//        GROUP_CONCAT(IF(roomid=6,S.sessionid,"") SEPARATOR '') as "President's D SessionID"
+//        GROUP_CONCAT(IF(roomid=3,S.duration,"") SEPARATOR '') as "Presidents's A Duration",
+//        GROUP_CONCAT(IF(roomid=6,S.title,"") SEPARATOR '') as "President's D Title",
+//        GROUP_CONCAT(IF(roomid=6,S.sessionid,"") SEPARATOR '') as "President's D SessionID",
+//        GROUP_CONCAT(IF(roomid=6,S.duration,"") SEPARATOR '') as "Presidents's D Duration"
 //    FROM 
 //            Schedule SCH
 //       JOIN Sessions S
@@ -71,6 +74,7 @@ EOD;
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.title,\"\") SEPARATOR '') as \"%s\"",$x,$y);
         $y=$header_array[$i]["roomname"]." SessionID";
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.sessionid,\"\") SEPARATOR '') as \"%s\"",$x,$y);
+        $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.duration,\"\") SEPARATOR '') as \"%s\"",$x,$y);
         }
     $header_cells.="</TR>";
     $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN Rooms R USING (roomid) WHERE";
@@ -99,11 +103,14 @@ EOD;
         echo "</TD>";
         for ($j=1; $j<=$rooms; $j++) {
             echo "<TD>";
-            $x=$grid_array[$i][$j*2]; //sessionid
+            $x=$grid_array[$i][$j*3-1]; //sessionid
             if ($x!="") {
                     echo sprintf("(<A HREF=\"StaffAssignParticipants.php?selsess=%s\">%s</A>) ",$x,$x);
-                    $y = $grid_array[$i][$j*2-1]; //title
+                    $y = $grid_array[$i][$j*3-2]; //title
                     echo sprintf("<A HREF=\"EditSession.php?id=%s\">%s</A>",$x,$y);
+                    $y = substr($grid_array[$i][$j*3],0,-3); // duration; drop ":00" representing seconds off the end
+                    if (substr($y,0,1)=="0") {$y = substr($y,1,999);} // drop leading "0"
+                    echo sprintf(" (%s)",$y);
                     }
                 else
                     { echo "&nbsp;"; } 
