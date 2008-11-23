@@ -9,7 +9,7 @@ select
        concat('<a href=StaffAssignParticipants.php?selsess=',X.sessionid,'>', X.sessionid,'</a>') as Sessionid,
        concat('<a href=EditSession.php?id=',X.sessionid,'>',X.title,'</a>') Title,
        (if (X.assigned is NULL,' ','yes')) as 'Assigned?', 
-       (if (moderator is NULL,' ','yes')) as 'Moderator?', 
+       (if (moderator is NULL or moderator=0,' ','yes')) as 'Moderator?', 
        concat('<a href=MaintainRoomSched.php?selroom=',Y.roomid,'>', Y.roomname,'</a>') as Roomname,
        DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',Y.starttime),'%a %l:%i %p') as 'Start Time' 
   from (    select PI.badgeid, PI.pubsname, PI.sessionid, POS.sessionid as assigned, moderator, title, trackname 
