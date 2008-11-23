@@ -1,4 +1,12 @@
 TITLE='Session Interest Counts by Participant'
 DESCRIPTION='Just how many panels did each participant sign up for anyway?'
 PROGWANTS=1
-QUERY='select P.badgeid, P.pubsname, count(sessionid) as interested from Participants P left join ParticipantSessionInterest PSI on P.badgeid=PSI.badgeid where P.interested=1 group by cast(P.badgeid as unsigned);'
+QUERY="
+    select P.Badgeid, 
+           P.Pubsname, 
+           count(sessionid) as Interested 
+      from Participants P 
+ left join ParticipantSessionInterest PSI 
+        on P.badgeid=PSI.badgeid 
+     where P.interested=1 
+  group by cast(P.badgeid as unsigned);"
