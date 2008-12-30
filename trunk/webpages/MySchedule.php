@@ -1,6 +1,7 @@
 <?php
     $title="My Schedule";
     require ('PartCommonCode.php'); // initialize db; check login;
+    $CON_START_DATIM=CON_START_DATIM; //make it a variable so it will be substituted
     require_once('ParticipantHeader.php');
     require_once('renderMySessions2.php');
     if (!may_I('my_schedule')) {
@@ -11,13 +12,14 @@
     // set $badgeid from session
     $query= <<<EOD
     SELECT POS.sessionid, trackname, title, roomname, pocketprogtext,
-    DATE_FORMAT(ADDTIME('2006-01-13 00:00:00', starttime),'%a %l:%i %p') as 'Start Time',
+    DATE_FORMAT(ADDTIME('$CON_START_DATIM', starttime),'%a %l:%i %p') as 'Start Time',
     left(duration,5) as 'Duration', persppartinfo, notesforpart FROM
     ParticipantOnSession POS, Sessions S, Rooms R, Schedule SCH, Tracks T
     where badgeid="$badgeid" and POS.sessionid = S.sessionid and
     R.roomid = SCH.roomid and S.sessionid = SCH.sessionid and S.trackid = T.trackid
     ORDER BY starttime
 EOD;
+    //error_log("Zambia: $query");
     if (!$result=mysql_query($query,$link)) {
         $message.=$query."<BR>Error querying database.<BR>";
         RenderError($title,$message);
@@ -95,13 +97,13 @@ PROGRAM_EMAIL; ?></A>.\n";
     echo "<P>Thank you -- <A HREF=\"mailto: <?php echo PROGRAM_EMAIL; 
 ?>\"> Programming </a>\n";
     echo "    <TABLE>\n";
-    echo "        <COL><COL><COL><COL><COL width=\"12%\"><COL width=\"15%\"><COL width=\"15%\">\n";
+    echo "        <COL><COL width=\"30%\"><COL width=\"20%\"><COL><COL width=\"6%\"><COL><COL width=\"18%\">\n";
     for ($i=0; $i<$schdrows; $i++) {
         echo "        <TR>\n";
         echo "            <TD class=\"hilit\">".$schdarray[$i]["sessionid"]."</TD>\n";
+        echo "            <TD class=\"hilit\">".htmlspecialchars($schdarray[$i]["title"])."</TD>\n";
+        echo "            <TD class=\"hilit\">".$schdarray[$i]["roomname"]."</TD>\n";
         echo "            <TD class=\"hilit\">".$schdarray[$i]["trackname"]."</TD>\n";
-        echo "            <TD colspan=2 class=\"hilit\">".htmlspecialchars($schdarray[$i]["title"])."</TD>\n";
-        // echo "            <TD class=\"hilit\">".$schdarray[$i]["roomname"]."</TD>\n";
         echo "            <TD class=\"hilit\">&nbsp;</TD>\n";
         echo "            <TD class=\"hilit\">".$schdarray[$i]["starttime"]."</TD>\n";
         echo "            <TD class=\"hilit\">Duration: ".$schdarray[$i]["duration"]."</TD>\n";
@@ -117,8 +119,8 @@ PROGRAM_EMAIL; ?></A>.\n";
         echo "            </TR>\n";
         echo "        <TR><TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
         echo "        <TR><TD>&nbsp;</TD>\n";
-        echo "            <TD colspan=2 class=\"usrinp\">Panelists' Badge Names</TD>\n";
-        echo "            <TD colspan=4 class=\"usrinp\">Their Comments</TD>\n";
+        echo "            <TD class=\"usrinp\">Panelists' Badge Names</TD>\n";
+        echo "            <TD colspan=5 class=\"usrinp\">Their Comments</TD>\n";
         echo "            </TR>\n";
         echo "        <TR><TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
         for ($j=0; $j<$partrows; $j++) {
@@ -132,12 +134,12 @@ PROGRAM_EMAIL; ?></A>.\n";
                     $class="";
                     }
             echo "        <TR><TD>&nbsp;</TD>\n";
-            echo "            <TD colspan=2 class=\"$class\">".htmlspecialchars($partarray[$j]["badgename"]);
+            echo "            <TD class=\"$class\">".htmlspecialchars($partarray[$j]["badgename"]);
             if ($partarray[$j]["moderator"]) {
                 echo " (mod) ";
                 }
             echo "</TD>\n";
-            echo "            <TD colspan=4 class=\"$class\">".htmlspecialchars(fix_slashes($partarray[$j]["comments"]));
+            echo "            <TD colspan=5 class=\"$class\">".htmlspecialchars(fix_slashes($partarray[$j]["comments"]));
             echo "</TD>\n";
             echo "            </TR>\n";
             }
