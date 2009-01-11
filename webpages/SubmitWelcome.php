@@ -65,6 +65,7 @@
         require ('login.php');
 	exit(0);
 	}
+/*
     $result=mysql_query("Select badgename from Participants where badgeid='".$badgeid."'",$link);
     if ($result) {
     		$dbobject=mysql_fetch_object($result);
@@ -76,6 +77,7 @@
 		}
     $_SESSION['badgeid']=$badgeid;
     $_SESSION['password']=$dbpassword;
+*/
     require ('ParticipantHome.php');
     exit();
 ?>
