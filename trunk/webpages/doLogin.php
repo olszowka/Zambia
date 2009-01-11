@@ -31,8 +31,6 @@
 	exit(0);
 	}
     $result=mysql_query("Select badgename from CongoDump where badgeid='".$badgeid."'",$link);
-//    set_session_timeout(); // bunch of code to set a long timeout
-//    session_start();
     if ($result) {
     		$dbobject=mysql_fetch_object($result);
     		$badgename=$dbobject->badgename;
@@ -41,6 +39,15 @@
     	else {
     		$_SESSION['badgename']="";
 		}
+    $result=mysql_query("Select pubsname from Participants where badgeid='".$badgeid."'",$link);
+    $pubsname="";
+    if ($result) {
+        $dbobject=mysql_fetch_object($result);
+        $pubsname=$dbobject->pubsname;
+        }
+    if (!($pubsname=="")) {
+        $_SESSION['badgename']=$pubsname;
+        }
     $_SESSION['badgeid']=$badgeid;
     $_SESSION['password']=$dbpassword;
     set_permission_set($badgeid);

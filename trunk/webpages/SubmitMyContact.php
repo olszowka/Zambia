@@ -87,6 +87,7 @@
         }
     $message="Database updated successfully.";
     $pubsnameold=$pubsname;
+    $_SESSION['badgename']=$pubsname;
     if ($update_password==true) {
         $_SESSION['password']=md5($password);
         }
@@ -99,6 +100,7 @@
             RenderError($title,$message);
             exit();
             }
+    // It looks like code never gets past here.
     $result=mysql_query("Select password from Participants where badgeid='".$badgeid."'",$link);
     if (!$result) {
     	$message="Incorrect badgeid or password.";
@@ -124,6 +126,9 @@
         else {
             $_SESSION['badgename']="";
             }
+    if (!($pubsname=="")) {
+        $_SESSION['badgename']=$pubsname;
+        }
     $_SESSION['badgeid']=$badgeid;
     $_SESSION['password']=$dbpassword;
     require ('ParticipantHome.php');
