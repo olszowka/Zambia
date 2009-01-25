@@ -4,7 +4,7 @@
     require_once('render_functions.php');
     require_once('validation_functions.php');
     require_once('php_functions.php');
-    set_session_timeout();
+    //set_session_timeout();
     session_start();
     if (prepare_db()===false) {
         $message_error="Unable to connect to database.<BR>No further execution possible.";
