@@ -1,5 +1,5 @@
 <?php
-$title="Assign Participants";
+$title="Staff - Assign Participants";
 require_once('db_functions.php');
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');
@@ -86,12 +86,28 @@ echo htmlspecialchars(mysql_result($result,0,"notesforprog"));
 echo "\n";
 echo "<HR>\n";
 $query = <<<EOD
-SELECT POS.badgeid AS posbadgeid, POS.moderator, P.badgeid, P.pubsname, PSI.rank, 
-PSI.willmoderate, PSI.comments FROM Participants AS P 
-JOIN ParticipantSessionInterest AS PSI ON P.badgeid=PSI.badgeid 
-LEFT JOIN ParticipantOnSession AS POS ON (P.badgeid=POS.badgeid
-and PSI.sessionid=POS.sessionid) where PSI.sessionid=$selsessionid
-ORDER BY POS.moderator DESC, POS.badgeid DESC, P.pubsname
+SELECT
+            POS.badgeid AS posbadgeid,
+            POS.moderator,
+            P.badgeid,
+            P.pubsname,
+            PSI.rank,
+            PSI.willmoderate,
+            PSI.comments
+    FROM
+            Participants AS P
+       JOIN
+(select distinct badgeid, sessionid from
+(select badgeid, sessionid from ParticipantOnSession where sessionid=$selsessionid
+    union
+select badgeid, sessionid from ParticipantSessionInterest where sessionid=$selsessionid) as R2) as R
+        using (badgeid)
+  LEFT JOIN ParticipantSessionInterest AS PSI
+        on R.badgeid = PSI.badgeid and R.sessionid = PSI.sessionid
+  LEFT JOIN ParticipantOnSession AS POS
+        on R.badgeid = POS.badgeid and R.sessionid = POS.sessionid
+    where
+        POS.sessionid=$selsessionid or POS.sessionid is null;
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
