@@ -3,15 +3,19 @@ DESCRIPTION='Show the badgeid, pubsname and bio for each participant that are on
 PUBSWANTS=1
 GENCSV=1
 QUERY='
-  select P.badgeid, 
+  select P.badgeid,
+         CD.lastname,
+         CD.firstname,
+         CD.badgename, 
          P.pubsname, 
          P.bio 
-    from Participants P,
+    from Participants P join
+         CongoDump CD
+   using (badgeid)
+         join
      (select distinct(badgeid) 
         from ParticipantOnSession POS, 
              Schedule SCH 
        where POS.sessionid=SCH.sessionid) as X
-   where P.badgeid=X.badgeid 
-order by substring_index(pubsname," ",-1);'
-
-
+   using (badgeid) 
+order by CD.lastname;'

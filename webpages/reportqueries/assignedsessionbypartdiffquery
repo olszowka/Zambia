@@ -1,5 +1,5 @@
 TITLE='Differential Assigned Session by Participant'
-DESCRIPTION='Recent changes to whom has been assigned to each session ordered by badgeid.'
+DESCRIPTION='Recent changes to whom has been assigned to each session ordered by time, then badgeid.'
 PROGWANTS=1
 EVENTSWANTS=1
 GOHWANTS=1
@@ -9,11 +9,13 @@ select P.badgeid,
        P.pubsname, 
        Sessions.sessionid as SessionId, 
        title, 
-       if ((moderator=1), 'Yes', ' ') as 'moderator'
+       if ((moderator=1), 'Yes', ' ') as 'moderator',
+       POS.ts as changed
   from ParticipantOnSession POS, 
        Sessions, 
        Participants P 
  where POS.badgeid=P.badgeid 
    and POS.sessionid=Sessions.sessionid 
-   and POS.ts>'2008-10-16 23:00:00'
-order by cast(P.badgeid as unsigned);"
+   and POS.ts>'2009-1-7 13:50:00'
+order by POS.ts,
+       cast(P.badgeid as unsigned);"
