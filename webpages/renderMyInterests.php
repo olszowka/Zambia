@@ -16,7 +16,7 @@ function renderMyInterests ($title, $error, $message) {
     echo "<INPUT type=\"hidden\" name=\"newrow\" value=\"".($newrow?1:0)."\">\n";
     echo "<INPUT type=\"hidden\" name=\"rolerows\" value=\"".$rolerows."\">\n";
     echo "<DIV>\n";
-    echo "    <DIV><LABEL for=\"yespanels\"><p>New Panel Ideas (Please check the \"Seach Panels\" tab first): </p></LABEL></DIV>\n";
+    echo "    <DIV><LABEL for=\"yespanels\"><p>Workshops or presentations I'd like to run: </p></LABEL></DIV>\n";
     echo "    <DIV><TEXTAREA name=\"yespanels\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
