@@ -1,5 +1,5 @@
 <?php
-  $title="Staff Manage Participants";
+  $title="Staff - Manage Participants";
   require_once('db_functions.php');
   require_once('StaffHeader.php');
   require_once('StaffFooter.php');
