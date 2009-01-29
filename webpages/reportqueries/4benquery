@@ -4,10 +4,10 @@ PUBSWANTS=1
 GENCSV=1
 QUERY="
      select DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
-            concat('(',left(duration,5),')') Duration,
-            roomname,
-            trackname,
-            title,
+            concat('(',left(duration,5),')') Length,
+            Roomname,
+            trackname as Track,
+            Title,
          if(group_concat(' ',pubsname) is NULL,'',group_concat(' ',pubsname)) as 'Participants'
        from Rooms R
        JOIN Schedule SCH
@@ -18,10 +18,8 @@ QUERY="
             USING (trackid)
   LEFT JOIN ParticipantOnSession POS
          ON SCH.sessionid=POS.sessionid
-  LEFT JOIN CongoDump C
-         ON POS.badgeid=C.badgeid
-       JOIN Participants P
-         ON C.badgeid=P.badgeid
+  LEFT JOIN Participants P
+         ON POS.badgeid=P.badgeid
       WHERE S.pubstatusid = 2
    group by SCH.sessionid
    order by SCH.starttime,
