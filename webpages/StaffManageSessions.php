@@ -1,6 +1,6 @@
 <?php
   global $participant,$message_error,$message2,$congoinfo;
-  $title="Staff Manage Sessions";
+  $title="Staff - Manage Sessions";
   require_once('db_functions.php');
   require_once('StaffHeader.php');
   require_once('StaffFooter.php');
