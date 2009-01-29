@@ -33,5 +33,5 @@ QUERY="
           and D.divisionid=S.divisionid
      having (in_grid='no room' and num_assigned>0) 
         or (in_grid!='no room' and (num_assigned<1 or num_assigned is NULL))
-     order by in_grid, num_assigned desc
+     order by num_assigned desc, in_grid
       ;"
