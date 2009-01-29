@@ -24,13 +24,13 @@ SELECT
     WHERE
         R.function like '%ent%' AND
         R.roomid in
-        (SELECT DISTINCT roomid FROM Schedule);
+        (SELECT DISTINCT roomid FROM Schedule)
+    ORDER BY
+        R.display_order;
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
         $message.=$query;
-        $message.="<BR>";
-	$message.= mysql_error();
         RenderError($title,$message);
         exit ();
         }
@@ -84,8 +84,6 @@ EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
         $message.=$query;
-        $message.="<BR>";
-	$message.= mysql_error();
         RenderError($title,$message);
         exit ();
         }
