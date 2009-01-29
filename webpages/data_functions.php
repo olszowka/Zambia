@@ -64,7 +64,7 @@ function get_participant_availability_from_post() {
         $x2=$partAvail["availstarttime_$i"]=$_POST["availstarttime_$i"];
         $x3=$partAvail["availendday_$i"]=$_POST["availendday_$i"];
         $x4=$partAvail["availendtime_$i"]=$_POST["availendtime_$i"];
-        // error_log("Zambia, get: $i, $x1, $x2, $x3, $x4"); // for debug only
+        //error_log("Zambia, get: $i, $x1, $x2, $x3, $x4");
         }
     $partAvail["preventconflict"]=stripslashes($_POST["preventconflict"]);
     $partAvail["numkidsfasttrack"]=($_POST["numkidsfasttrack"]=="")?0:$_POST["numkidsfasttrack"]+0;
@@ -146,12 +146,10 @@ function set_session_defaults() {
 // Takes the string $time and return array of "day" and "hour" and "minute"
 //
 function parse_mysql_time($time) {
-    $x=strpos($time,":");
-    $h=0+substr($time,0,$x);
-    //error_log("zambia-time=> \$time:$time \$h:$h ");
+    $h=0+substr($time,0,2);
     $result['hour']=fmod($h,24);
     $result['day']=intval($h/24);
-    $result['minute']=substr($time,$x+1,2);
+    $result['minute']=substr($time,3,2);
     return($result);
     }
 
@@ -159,15 +157,12 @@ function parse_mysql_time($time) {
 // Takes the string $time and return string describing time
 //
 function time_description($time) {
-    // $days=array("Fri","Sat","Sun","Mon"); // was hardcoded here.  Now from db_name.php
-    global $daymap;
+    $days=array("Fri","Sat","Sun","Mon");
     $atime=parse_mysql_time($time);
     $result="";
-    if (CON_NUM_DAYS>1) {
-        $result.=$daymap["short"][$atime["day"]+1]." "; // "short" means 3 letter day names.
-        }
+    $result.=$days[$atime["day"]]." ";
     $hour=fmod($atime["hour"],12);
-    $result.=(($hour==0)?"12":$hour).":".$atime["minute"]." ";
+    $result.=(($hour==0)?12:$hour).":".$atime["minute"]." ";
     $result.=($atime["hour"]>=12)?"PM":"AM";
     return($result);
     }
