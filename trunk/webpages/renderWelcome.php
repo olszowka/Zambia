@@ -5,18 +5,24 @@
    require_once('PartCommonCode.php');
    participant_header($title);
    getCongoData($badgeid);
-?>
 
-<?php if ($message_error!="") { ?>
-	<P class="errmsg"><?php echo $message_error; ?></P>
-	<?php } ?>
-<?php if ($message!="") { ?>
-	<P class="regmsg"><?php echo $message; ?></P>
-	<?php } ?>
-<?php
+    if ($message_error!="") { 
+        echo "<P class=\"errmsg\">$message_error</P>\n";
+        }
+    if ($message!="") {
+        echo "<P class=\"regmsg\">$message</P>\n";
+        }
     $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
     $chint=($participant["interested"]==0);
-?>
+    if (may_I('postcon')) { ?>
+<P>Thank you for your participation in Arisia '09.  With your help it was a great con.  We look forward 
+to your participation again next year.</P>
+<P>We will post instructions for participating in brainstorming for Arisia '10 soon.</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--Arisia Program and Events Committees</P>
+<?php
+    participant_footer();
+    exit();
+    } ?>
 
 <p><h3> Please check back often as more options will become available as we get closer to the convention. </h3>
 
@@ -56,6 +62,7 @@
       <li> Check your contact information. </li>
       <li> Indicate whether you will be participating in <?php echo 
 CON_NAME; ?>. </li>
+      <li> Edit your name as you want to appear in our publications.</li>
       <li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
     </ul>
 
