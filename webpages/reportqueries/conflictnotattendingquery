@@ -14,4 +14,5 @@ QUERY="
   where P.badgeid=POS.badgeid 
     and SCH.sessionid=S.sessionid 
     and SCH.sessionid=POS.sessionid 
-    and P.interested!=1;"
+    and P.interested!=1
+  order by P.badgeid;"
