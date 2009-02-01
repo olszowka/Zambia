@@ -146,10 +146,10 @@ function set_session_defaults() {
 // Takes the string $time and return array of "day" and "hour" and "minute"
 //
 function parse_mysql_time($time) {
-    $h=0+substr($time,0,2);
+    $h=0+substr($time,0,strlen($time)-6);
     $result['hour']=fmod($h,24);
     $result['day']=intval($h/24);
-    $result['minute']=substr($time,3,2);
+    $result['minute']=substr($time,strlen($time)-5,2);
     return($result);
     }
 
