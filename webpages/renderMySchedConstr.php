@@ -120,11 +120,14 @@ guidance when scheduling your panels.</p>
         </DIV>
     </DIV>
 
-<p>
-    We are looking for a rough count of children attending FastTrack (programming for children ages 6-13).  Please indicate how many children will be attending with you:
-    
-     <INPUT id="kids" size=2 name="numkidsfasttrack" value="<?php echo $partAvail["numkidsfasttrack"]; ?>" >
-</p>
+<?php
+    if (MY_AVAIL_KIDS===TRUE) {
+        echo "<P>We are looking for a rough count of children attending FastTrack (programming for children";
+        echo " ages 6-13).  Please indicate how many children will be attending with you:\n";
+        $x=$partAvail["numkidsfasttrack"];
+        echo "<INPUT id=\"kids\" size=2 name=\"numkidsfasttrack\" value=\"$x\">\n</P>";
+        }
+    ?>
 
 <DIV id="otherconstraints">
     <DIV class="sectionheader">Other constraints or conflicts that we should know about?</DIV>
