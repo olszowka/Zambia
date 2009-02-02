@@ -120,7 +120,8 @@ if (!(may_I('EditBio'))) { // no permission to edit bio
     echo " readonly";
     }
 echo "><BR><BR>\n";
-echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your biography (500 characters or fewer):</LABEL><BR>\n";
+$bio=MAX_BIO_LEN;
+echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your biography ($bio characters or fewer):</LABEL><BR>\n";
 echo "Note: Your biography will appear immediately following your name in the program.<BR>\n";
 echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
 if (!(may_I('EditBio'))) { // no permission to edit bio

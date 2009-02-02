@@ -21,7 +21,7 @@
                 exit();
                 }
         }
-    if (strlen($bio)>500) {
+    if (strlen($bio)>MAX_BIO_LEN) {
         $message_error="Biography is too long: ".(strlen($bio))." characters.  Please edit.  Database not updated.";
         if (getCongoData($badgeid)==0) {
                 require ('renderMyContact.php');
