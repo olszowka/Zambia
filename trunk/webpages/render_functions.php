@@ -1,6 +1,6 @@
 <?php
 // RenderPrecis display requires:  a populated dataarray containing rows with 
-// $sessionid,$trackname,$title,$duration,$estatten,$progguiddesc, $persppartinfo IN THAT ORDER
+// $sessionid,$trackname,$typename,$title,$duration,$estatten,$progguiddesc, $persppartinfo IN THAT ORDER
 // it displays the precis view of the data.
 function RenderPrecis($result,$showlinks) {
     
@@ -27,8 +27,8 @@ function RenderPrecis($result,$showlinks) {
         echo "&nbsp;&nbsp;</TD>\n";
 	echo "  <TD class=\"border0000\"><b>".$duration."</TD>\n";
 	echo "</TR>\n";
-	echo "<TR><TD colspan=4 class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
-	echo "<TR><TD colspan=4 class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</TD></TR>\n";
+	echo "<TR><TD colspan=5 class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
+	echo "<TR><TD colspan=5 class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</TD></TR>\n";
 	echo "<TR><TD colspan=5 class=\"border0020\">&nbsp;</TD></TR>\n";
 	echo "<TR><TD colspan=5 class=\"border0000\">&nbsp;</TD></TR>\n";
     }

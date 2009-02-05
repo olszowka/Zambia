@@ -18,7 +18,7 @@
         exit ();
         }
    $query = <<<EOD
-SELECT sessionid, trackname, title, 
+SELECT sessionid, trackname, null typename, title, 
        concat( if(left(duration,2)=00, '', 
                if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))),
                if(date_format(duration,'%i')=00, '', 

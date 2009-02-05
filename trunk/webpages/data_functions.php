@@ -120,9 +120,9 @@ function set_session_defaults() {
     global $session;
     //$session["sessionid"] set elsewhere
     $session["track"]=0; // prompt with "SELECT"
-    $session["type"]=0; // prompt with "SELECT"
-    $session["divisionid"]=0; // prompt with "SELECT"
-    $session["pubstatusid"]=0; // prompt with "SELECT" 
+    $session["type"]=1; // default to "Panel"
+    $session["divisionid"]=2; // default to "Programming"
+    $session["pubstatusid"]=2; // default to "Public"
     $session["pubno"]="";
     $session["title"]="";
     $session["pocketprogtext"]="";
