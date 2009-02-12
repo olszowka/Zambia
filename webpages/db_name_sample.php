@@ -16,7 +16,11 @@ define("PREF_TTL_SESNS_LMT",10); // Input data verification limit for preferred 
 define("PREF_DLY_SESNS_LMT",5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS",8); // Number of rows of availability records to render
 define("MAX_BIO_LEN",1000); // Maximum length (in characters) permitted for participant biographies
-define("MY_AVAIL_KIDS",FALSE); // Enables questions regarding no. of kids in Fasttrack on "My Availability"
+define("MY_AVAIL_KIDS","FALSE"); // Enables questions regarding no. of kids in Fasttrack on "My Availability"
+define("BILINGUAL","TRUE"); // Triggers extra fields in Session and "My General Interests"
+define("SECOND_LANG","FRENCH");
+define("SECOND_TITLE_CAPTION","Titre en fran&ccedil;ais");
+define("SECOND_DESCRIPTION_CAPTION","Description en fran&ccedil;ais");
 define("BASESESSIONDIR","/var/lib/php5");
 global $daymap;
 $daymap = array ('long' => array(1 => "Thursday", 2 => "Friday", 3 => "Saturday", 4 => "Sunday", 5 => "Monday"),
