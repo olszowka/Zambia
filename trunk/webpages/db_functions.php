@@ -199,8 +199,10 @@ function update_session() {
     $query.="typeid=".$session["type"].", ";
     $query.="divisionid=".$session["divisionid"].", ";
     $query.="pubstatusid=".$session["pubstatusid"].", ";
+    $query.="languagestatusid=".$session["languagestatusid"].", ";
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link)."\", ";
     $query.="title=\"".mysql_real_escape_string($session["title"],$link)."\", ";
+    $query.="secondtitle=\"".mysql_real_escape_string($session["secondtitle"],$link)."\", ";
     $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link)."\", ";
     $query.="progguiddesc=\"".mysql_real_escape_string($session["progguiddesc"],$link)."\", ";
     $query.="persppartinfo=\"".mysql_real_escape_string($session["persppartinfo"],$link)."\", ";
@@ -282,8 +284,10 @@ function insert_session() {
     $temp=$session["divisionid"];
     $query.="divisionid=".(($temp==0)?"null":$temp).", ";
     $query.="pubstatusid=".$session["pubstatusid"].',';
+    $query.="languagestatusid=".$session["languagestatusid"].',';
     $query.="pubsno=\"".mysql_real_escape_string($session["pubno"],$link).'",';
     $query.="title=\"".mysql_real_escape_string($session["title"],$link).'",';
+    $query.="secondtitle=\"".mysql_real_escape_string($session["secondtitle"],$link).'",';
     $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link).'",';
     $query.="progguiddesc=\"".mysql_real_escape_string($session["progguiddesc"],$link).'",';
     $query.="persppartinfo=\"".mysql_real_escape_string($session["persppartinfo"],$link).'",';
@@ -338,9 +342,21 @@ function insert_session() {
 function retrieve_session_from_db($sessionid) {
     global $session;
     global $link,$message2;
-    $result=mysql_query("SELECT * FROM Sessions where sessionid=".$sessionid,$link);
+    $query= <<<EOD
+select
+        sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
+        title, secondtitle, pocketprogtext, progguiddesc, persppartinfo, duration,
+        estatten, kidscatid, signupreq, roomsetid, notesforpart, servicenotes,
+        statusid, notesforprog, warnings, invitedguest, ts
+    from
+        Sessions
+    where
+        sessionid=
+EOD;
+    $query.=$sessionid;
+    $result=mysql_query($query,$link);
     if (!$result) {
-        $message2=mysql_error($link);
+        $message2=$query."<BR>\n".mysql_error($link);
         return (-3);
         }
     $rows=mysql_num_rows($result);
@@ -354,8 +370,10 @@ function retrieve_session_from_db($sessionid) {
     $session["type"]=$sessionarray["typeid"];
     $session["divisionid"]=$sessionarray["divisionid"];
     $session["pubstatusid"]=$sessionarray["pubstatusid"];
+    $session["languagestatusid"]=$sessionarray["languagestatusid"];
     $session["pubno"]=$sessionarray["pubsno"];
     $session["title"]=$sessionarray["title"];
+    $session["secondtitle"]=$sessionarray["secondtitle"];
     $session["pocketprogtext"]=$sessionarray["pocketprogtext"];
     $session["progguiddesc"]=$sessionarray["progguiddesc"];
     $session["persppartinfo"]=$sessionarray["persppartinfo"];

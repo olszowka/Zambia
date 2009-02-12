@@ -36,8 +36,6 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             <INPUT type="hidden" name="email" value="<?php echo htmlspecialchars($email,ENT_COMPAT);?>">
             <!-- The pubno field is no longer used on the form, but the code expects it.-->
             <INPUT type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT)."\">";?>
-            <!-- The pocketprogtext field is no longer used on the form, but the code expects it.-->
-            <INPUT type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">";?>
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
@@ -76,6 +74,26 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <SELECT name="kids"><?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT", FALSE); ?></SELECT>
                     </SPAN>
                 </DIV>
+<?php
+        if (strtoupper(BILINGUAL)=="TRUE") {
+                echo "            <DIV class=\"denseform\">\n";
+                echo "                 <SPAN><LABEL for=\"secondtitle\">".SECOND_TITLE_CAPTION.": </LABEL>";
+                echo "<INPUT type=text size=\"50\" name=\"secondtitle\" value=\"";
+                echo htmlspecialchars($session["secondtitle"],ENT_COMPAT)."\">&nbsp;&nbsp;</SPAN>\n";
+                echo "                 <SPAN><LABEL for=\"languagestatusid\">Session Language: </LABEL><SELECT name=\"languagestatusid\">";
+                populate_select_from_table("LanguageStatuses", $session["languagestatusid"], "SELECT", FALSE);
+                echo "</SELECT>\n                    </SPAN>\n";
+                echo "                </DIV>\n";
+                }
+            else {
+                echo "            <INPUT type=\"hidden\" name=\"secondtitle\" value=\"";
+                echo htmlspecialchars($session["secondtitle"],ENT_COMPAT)."\">";
+                echo "            <INPUT type=\"hidden\" name=\"languagestatusid\" value=\"";
+                echo htmlspecialchars($session["languagestatusid"],ENT_COMPAT)."\">";
+                }
+?>
+            <!-- The pocketprogtext field is no longer used on the form, but the code expects it.-->
+            <INPUT type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">";?>
             <DIV class="denseform">
                 <SPAN><LABEL for="atten">Est. Atten.:</LABEL>
                     <INPUT type=text size="3" name="atten" value="<?php
@@ -98,6 +116,21 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" 
                             ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
+<?php
+        if (strtoupper(BILINGUAL)=="TRUE") {
+                echo "                <TR>\n";
+                echo "                    <TD class=\"txtalbl\"><LABEL class=\"dense\" for=\"pocketprogtext\">";
+                echo SECOND_DESCRIPTION_CAPTION.": </LABEL></TD>\n";
+                echo "                    <TD class=\"txta\"><TEXTAREA class=\"textlabelarea\" cols=70 name=\"pocketprogtext\">";
+                echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES)."</TEXTAREA></TD>\n";
+                echo "                    </TR>\n";
+                }
+            else {
+                echo "                <!-- The pocketprogtext field is no longer used on the form, but the code expects it.-->\n";
+                echo "                <INPUT type=\"hidden\" name=\"pocketprogtext\" value=\"";
+                echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">\n";
+                }
+?>
                 <TR>
                     <TD class="txtalbl-last"><LABEL class="dense" for="persppartinfo">Prospective Participant Info:</LABEL></TD>
                     <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=70 name="persppartinfo"
