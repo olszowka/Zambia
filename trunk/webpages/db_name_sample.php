@@ -11,7 +11,7 @@ define("PROGRAM_EMAIL","program@somewhere.net");
 define("REG_EMAIL","registration@somewhere.net");
 define("CON_NUM_DAYS",5); // code works for 1 - 8
 define("CON_START_DATIM","2009-08-06 00:00:00"); // Intended for use by report scripts; currently used by static
-        // grids only
+        // grids only (just a checkin test)
 define("SMTP_ADDRESS","smtp-out.netbusters.com");
 define("PREF_TTL_SESNS_LMT",10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT",5); // Input data verification limit for preferred daily limit of sessions
