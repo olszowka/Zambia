@@ -206,7 +206,12 @@ function update_session() {
     $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link)."\", ";
     $query.="progguiddesc=\"".mysql_real_escape_string($session["progguiddesc"],$link)."\", ";
     $query.="persppartinfo=\"".mysql_real_escape_string($session["persppartinfo"],$link)."\", ";
-    $query.="duration=\"".mysql_real_escape_string($session["duration"],$link)."\", ";
+    if (DURATION_IN_MINUTES=="TRUE") {
+            $query.="duration=\"".conv_min2hrsmin($session["duration"],$link)."\", ";
+            }
+        else {
+            $query.="duration=\"".mysql_real_escape_string($session["duration"],$link)."\", ";
+            }
     $query.="estatten=".$session["atten"].", ";
     $query.="kidscatid=".$session["kids"].", ";
     $query.="signupreq=".($session["signup"]?"1":"0").", ";
@@ -291,7 +296,12 @@ function insert_session() {
     $query.="pocketprogtext=\"".mysql_real_escape_string($session["pocketprogtext"],$link).'",';
     $query.="progguiddesc=\"".mysql_real_escape_string($session["progguiddesc"],$link).'",';
     $query.="persppartinfo=\"".mysql_real_escape_string($session["persppartinfo"],$link).'",';
-    $query.="duration=\"".mysql_real_escape_string($session["duration"],$link).'",';
+    if (DURATION_IN_MINUTES=="TRUE") {
+            $query.="duration=\"".conv_min2hrsmin($session["duration"],$link)."\", ";
+            }
+        else {
+            $query.="duration=\"".mysql_real_escape_string($session["duration"],$link)."\", ";
+            }
     $query.="estatten=".$session["atten"].',';
     $query.="kidscatid=".$session["kids"].',';
     $query.="signupreq=";
@@ -377,7 +387,13 @@ EOD;
     $session["pocketprogtext"]=$sessionarray["pocketprogtext"];
     $session["progguiddesc"]=$sessionarray["progguiddesc"];
     $session["persppartinfo"]=$sessionarray["persppartinfo"];
-    $session["duration"]=$sessionarray["duration"];
+    $timearray=parse_mysql_time_hours($sessionarray["duration"]);
+    if (DURATION_IN_MINUTES=="TRUE") {
+            $session["duration"]=" ".strval(60*$timearray["hours"]+$timearray["minutes"]);
+            }
+        else {
+            $session["duration"]=" ".$timearray["hours"].":".sprintf("%02d",$timearray["minutes"]);
+            }
     $session["atten"]=$sessionarray["estatten"];
     $session["kids"]=$sessionarray["kidscatid"];
     $session["signup"]=$sessionarray["signupreq"];

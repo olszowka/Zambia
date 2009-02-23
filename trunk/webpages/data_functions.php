@@ -1,4 +1,15 @@
 <?php
+// Function conv_min2hrsmin()
+// Input is unchecked form input in minutes
+// Output is string in MySql time format
+function conv_min2hrsmin($mininput) {
+    $min=filter_var($mininput,FILTER_SANITIZE_NUMBER_INT);
+    if (($min<1) or ($min>3000)) return "00:00:00";
+    $hrs = floor($min/60);
+    $minr= $min % 60;
+    return (sprintf("%02d:%02d:00",$hrs,$minr));
+    }
+//
 // Function stripfancy()
 // returns a string with many non-7-bit ASCII characters
 // removed from input string and replaced with similar
@@ -135,7 +146,12 @@ function set_session_defaults() {
     $session["featdest"]="";
     $session["servdest"]="";
     $session["pubchardest"]="";
-    $session["duration"]="1:00 ";
+    if (DURATION_IN_MINUTES=="TRUE") {
+            $session["duration"]=" 60";
+            }
+        else {
+            $session["duration"]=" 1:00";
+            } 
     $session["atten"]=0;
     $session["kids"]=2; // "Kids Welcome"
     $session["signup"]=false; // leave checkbox blank initially
@@ -147,7 +163,7 @@ function set_session_defaults() {
     $session["invguest"]=false; // leave checkbox blank initially
     }
 // Function parse_mysql_time($time)
-// Takes the string $time and return array of "day" and "hour" and "minute"
+// Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
 //
 function parse_mysql_time($time) {
     $h=0+substr($time,0,strlen($time)-6);
@@ -156,7 +172,18 @@ function parse_mysql_time($time) {
     $result['minute']=substr($time,strlen($time)-5,2);
     return($result);
     }
-
+//
+// Function parse_mysql_time_hours($time)
+// Takes the string $time in "hhh:mm:ss" and return array of "hours", "minutes", and "seconds"
+//
+function parse_mysql_time_hours($time) {
+    sscanf($time,"%d:%d:%d",$hours,$minutes,$seconds);
+    $result['hours']=$hours;
+    $result['minutes']=$minutes;
+    $result['seconds']=$seconds;
+    return($result);
+    }
+//
 // Function time_description($time)
 // Takes the string $time and return string describing time
 //
