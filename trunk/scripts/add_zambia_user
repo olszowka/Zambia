@@ -16,10 +16,11 @@ do
   echo "insert into CongoDump set badgeid=\"$badgeid\";"
   echo "update CongoDump set lastname=\"$lastname\", firstname=\"$firstname\", phone=\"$phone\", email=\"$email\", postaddress=\"$postaddress\", regtype=\"$regtype\" where badgeid=\"$badgeid\";"
   echo "insert into Participants set badgeid=\"$badgeid\", password=\"$INITIALUSERPASSWD\";"
-  echo "insert into ParticipantAvailability set badgeid=\"$badgeid\";"
 
-# permroleid of 3 means participant, 1 means staff... 
+# permroleid of 1 means administrator, 2 means staff, 3 means participant, 4 means brainstorm... 
 # you'll want to pick and choose
+  echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=1;"
+  echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=2;"
   echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=3;"
 done
 
