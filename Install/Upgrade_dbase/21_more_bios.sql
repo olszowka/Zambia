@@ -13,10 +13,10 @@ INSERT INTO BioEditStatuses
         (3,"Translation done--needs editing",3),
         (4,"Editing and translation done",4);
 ALTER TABLE Participants
-    ADD COLUMN `bioeditlock` TINYINT NOT NULL DEFAULT 0 AFTER `bio`,
+    ADD COLUMN `bioeditlock` CHAR(6) AFTER `bio`,
     ADD COLUMN `bioeditstatusid` INT(11) NOT NULL DEFAULT 1 AFTER `bio`,
     ADD COLUMN `scndlangbio` TEXT AFTER `bio`,
     ADD COLUMN `editedbio` TEXT AFTER `bio`,
     ADD KEY `bioeditstatusid` (`bioeditstatusid`),
     ADD CONSTRAINT Participants_fkey1 FOREIGN KEY (`bioeditstatusid`) REFERENCES `BioEditStatuses` (`bioeditstatusid`);
-INSERT INTO PatchLog (patchname) VALUES ('20_bilingual.sql');
+INSERT INTO PatchLog (patchname) VALUES ('21_more_bios.sql');
