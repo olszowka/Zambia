@@ -576,6 +576,10 @@ TD {
     padding-right: 0.2em
     }
 
+TD.center {
+    text-align: center;
+    }
+
 TD#sessidtcell {
     vertical-align:top;
     padding-right: 0.5em
