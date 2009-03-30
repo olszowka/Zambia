@@ -22,7 +22,8 @@ define("BILINGUAL","TRUE"); // Triggers extra fields in Session and "My General 
 define("SECOND_LANG","FRENCH");
 define("SECOND_TITLE_CAPTION","Titre en fran&ccedil;ais");
 define("SECOND_DESCRIPTION_CAPTION","Description en fran&ccedil;ais");
-define("DURATION_IN_MINUTES","FALSE"); // TRUE: in mm; False: in hh:mm
+define("SECOND_BIOGRAPHY_CAPTION","Biographie en fran&ccedil;ais");
+define("DURATION_IN_MINUTES","FALSE"); // TRUE: in mmm; False: in hh:mm
         // affects session edit/create page only, not reports
 define("BASESESSIONDIR","/var/lib/php5");
 global $daymap;
