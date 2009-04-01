@@ -13,7 +13,7 @@ INSERT INTO BioEditStatuses
         (3,"Translation done--needs editing",3),
         (4,"Editing and translation done",4);
 ALTER TABLE Participants
-    ADD COLUMN `bioeditlock` CHAR(6) AFTER `bio`,
+    ADD COLUMN `biolockedby` VARCHAR(15) AFTER `bio`,
     ADD COLUMN `bioeditstatusid` INT(11) NOT NULL DEFAULT 1 AFTER `bio`,
     ADD COLUMN `scndlangbio` TEXT AFTER `bio`,
     ADD COLUMN `editedbio` TEXT AFTER `bio`,
