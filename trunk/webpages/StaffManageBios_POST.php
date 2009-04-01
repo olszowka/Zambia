@@ -4,12 +4,12 @@
     require ('StaffEditBios_FNC.php');
     $title='Select Biographies to Edit';
     $postkeys=array_keys($_POST);
-    if (isset($_POST['badgeid'])) { // then coming here from edit individual biography
-            $badgeid=$_POST['badgeid'];
-            $edited_bio=mysql_real_escape_string(stripslashes($_POST['edited_bio']),$link);
-            $scndlangbio=mysql_real_escape_string(stripslashes($_POST['scndlangbio']),$link);
-            $bioeditstatus=stripslashes($_POST['bioeditstatus']);
-            $query = <<<EOD
+    if (isset($_POST['badgeid']) && isset($_POST['submit'])) { // then coming here with submit from edit individual biography
+        $badgeid=$_POST['badgeid'];
+        $edited_bio=mysql_real_escape_string(stripslashes($_POST['edited_bio']),$link);
+        $scndlangbio=mysql_real_escape_string(stripslashes($_POST['scndlangbio']),$link);
+        $bioeditstatus=stripslashes($_POST['bioeditstatus']);
+        $query = <<<EOD
 UPDATE Participants
     SET
         editedbio = '$edited_bio',
@@ -18,11 +18,13 @@ UPDATE Participants
     WHERE
         badgeid='$badgeid';
 EOD;
-            if (($result=mysql_query($query,$link))===false) {
-                $message=$query."<BR>\nError updating database.\n";
-                RenderError($title,$message);
-                exit();
-                }
+        if (($result=mysql_query($query,$link))===false) {
+            $message=$query."<BR>\nError updating database.\n";
+            RenderError($title,$message);
+            exit();
+            }
+        }
+    if (isset($_POST['badgeid'])) { // then coming here with submit or cancel from edit individual biography
             unlock_participant($badgeid);
             if (isset($_SESSION['bioid_list'])) {
                     $bioid_list=$_SESSION['bioid_list'];
@@ -31,7 +33,7 @@ EOD;
                     $bioid_list='-1';
                     }
             }
-        else {
+        else { // then coming here from Manage biographies report
             $c=count($postkeys);
             if ($c<2) {
                 $message="Internal problem parsing post variables.<BR>\n";

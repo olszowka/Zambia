@@ -11,6 +11,8 @@
 On this page you will find the online tools for managing Participants.</p>
 <hr>
 <DL>
+   <DT id="managebios"><A HREF="StaffManageBios.php">Manage biographies.</A></DT>
+   <DD id="managebios">Manage and edit participants' biographies.</DD>
    <DT><A HREF="AdminParticipants.php">Administer participants</A></DT>
    <DD>Use this tool to modify a participant's "interested" flag, change his password, or delete him from all sessions.</DD>
    <DT><A HREF="InviteParticipants.php">Invite a participant to a session</A></DT>

@@ -5,6 +5,7 @@
   require_once('StaffHeader.php');
   require_once('StaffFooter.php');
   require_once('StaffCommonCode.php');
+  unlock_participant(''); // unlocks any records locked by current user
   staff_header($title);
 ?>
 

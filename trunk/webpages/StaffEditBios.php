@@ -2,7 +2,7 @@
     global $participant,$message_error,$message2,$congoinfo;
     require ('StaffCommonCode.php');
     require ('StaffEditBios_FNC.php');
-    $title='Edit Participant Biographies';
+    $title='Edit Participant Biography';
     //print_r($_GET);
     if (!isset($_GET['badgeid'])) {
         $message="Required argument 'badgeid' missing from URL.<BR>\n";
@@ -10,7 +10,7 @@
         exit ();
         }
     $badgeid=$_GET['badgeid'];
-    $lockresult=lock_participant($badgeid); // returns true if succeeded, false if failed
+    $lockresult=lock_participant($badgeid); // returns 0 if succeeded, -2 if lock failed, -1 if db error
     $query = <<<EOD
 SELECT
         bio, editedbio, scndlangbio, bioeditstatusid, biolockedby,
@@ -43,10 +43,11 @@ EOD;
     for ($i=0; $i<$numeditstatuses; $i++) {
         $bioeditstatuses_array[$i]=mysql_fetch_assoc($result);
         }
-    if ($lockresult==false) {
-        $editor_badgeid=$participant_info_array['badgeid'];
-        $query="SELECT if(pubsname!=\"\",pubsname,badgename) name FROM Participants P JOIN CongoDump CD USING ('badgeid')";
-        $query.=" WHERE P.badgeid=\'$editor_badgeid\'";
+    staff_header($title);
+    if ($lockresult==-2) {
+        $editor_badgeid=$participant_info_array['biolockedby'];
+        $query="SELECT if(pubsname!=\"\",pubsname,badgename) name FROM Participants P JOIN CongoDump CD USING (badgeid)";
+        $query.=" WHERE P.badgeid='$editor_badgeid'";
         if (($result=mysql_query($query,$link))===false) {
             $message=$query."<BR>\nError retrieving data from database.\n";
             RenderError($title,$message);
@@ -55,7 +56,6 @@ EOD;
         $editor_name=mysql_result($result,0);
         echo "<P class=\"warning\">This biography is currently being edited by $editor_name.</P>\n";
         }
-    staff_header($title);
     echo "<FORM name=\"bioeditform\" method=POST action=\"StaffManageBios_POST.php\">\n";
     $participant_name=htmlspecialchars($participant_info_array['name']);
     $orig_bio=htmlspecialchars($participant_info_array['bio']);
@@ -78,9 +78,11 @@ EOD;
         echo "&nbsp;".$bioeditstatuses_array[$i]['bioeditstatusname']."<BR>\n";
         }
     echo "<DIV class=\"submit\">\n";
-    echo "<DIV id=\"submit\"><BUTTON class=\"SubmitButton\" type=\"submit\" name=\"submit\">Save</BUTTON></DIV>\n";
+    echo "<DIV id=\"submit\"><BUTTON class=\"SubmitButton\" type=\"submit\" name=\"cancel\">Cancel</BUTTON>";
+    echo "&nbsp;<BUTTON class=\"SubmitButton\" type=\"submit\" name=\"submit\">Save</BUTTON></DIV>\n";
     echo "</DIV>\n";
     echo "</FORM>\n";
+    echo "<BR><BR>\n";
     staff_footer();
 ?>
 

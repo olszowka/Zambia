@@ -705,4 +705,36 @@ function get_idlist_from_db($table_name,$id_col_name,$desc_col_name,$desc_col_ma
     $result=mysql_query($query,$link);
     return(mysql_result($result,0));
     }
+
+//function unlock_participant($badgeid);
+//Removes all locks from participant table for participant in parameter
+//and all locks held by the user known from the session
+//call with $badgeid='' to unlock based on user only
+
+function unlock_participant($badgeid) {
+    global $query,$link;
+    $query='UPDATE Participants SET biolockedby=NULL WHERE ';
+    if (isset($_SESSION['badgeid'])) {
+            $query.="biolockedby='".$_SESSION['badgeid']."'";
+            if ($badgeid!='') {
+                $query.=" or badgeid='$badgeid'";
+                }
+            }
+        else {
+            if ($badgeid!='') {
+                    $query.="badgeid='$badgeid'";
+                    }
+                else {
+                    return(0); //can't find anything to unlock
+                    }
+            }
+    //error_log("Zambia: unlock_participants: ".$query);
+    $result=mysql_query($query,$link);
+    if (!$result) {
+            return (-1);
+            }
+        else {
+            return (0);
+            }
+    }
 ?>
