@@ -69,17 +69,20 @@
         }
     $query = "UPDATE Participants SET ";
     if ($update_password==true) {
-        $query=$query."password=\"".md5($password)."\", ";
+        $x = md5($password);
+        $query.="password=\"$x\", ";
         }
     if ($update_pubsname) {
-        $query=$query."pubsname=\"".mysql_real_escape_string($pubsname,$link)."\", ";
+        $x=mysql_real_escape_string($pubsname,$link);
+        $query=$query."pubsname=\"$x\", ";
         }
-    $query.="bestway=\"".$bestway."\", ";
-    $query.="interested=".$interested.", ";
+    $query.="bestway=\"$bestway\", ";
+    $query.="interested=\"$interested\" ";
     if (may_I('EditBio')) {
-        $query.="bio=\"".mysql_real_escape_string($bio,$link);
+        $x=mysql_real_escape_string($bio,$link);
+        $query.=", bio=\"$x\" ";
         }
-    $query.="\" WHERE badgeid=\"".$badgeid."\"";                               //"
+    $query.="WHERE badgeid=\"".$badgeid."\"";                               //"
     if (!mysql_query($query,$link)) {
         $message=$query."<BR>Error updating database.  Database not updated.";
         RenderError($title,$message);
