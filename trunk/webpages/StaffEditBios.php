@@ -48,11 +48,13 @@ EOD;
         $editor_badgeid=$participant_info_array['biolockedby'];
         $query="SELECT if(pubsname!=\"\",pubsname,badgename) name FROM Participants P JOIN CongoDump CD USING (badgeid)";
         $query.=" WHERE P.badgeid='$editor_badgeid'";
+        //error_log("Zambia: StaffEditBios:".$query);
         if (($result=mysql_query($query,$link))===false) {
             $message=$query."<BR>\nError retrieving data from database.\n";
             RenderError($title,$message);
             exit();
             }
+        //error_log("Zambia: StaffEditBios:".mysql_num_rows($result));
         $editor_name=mysql_result($result,0);
         echo "<P class=\"warning\">This biography is currently being edited by $editor_name.</P>\n";
         }

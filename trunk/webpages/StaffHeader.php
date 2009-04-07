@@ -30,7 +30,7 @@
       <td class="tabblocks border0020">
         <?php maketab("Participant View",1,"welcome.php"); ?></td>
       <td class="tabblocks border0020">
-        <?php maketab("Brainstorm View",1,"BrainstormWelcome.php"); ?></td>
+        <?php maketab("Brainstorm View",may_I('public_login'),"BrainstormWelcome.php"); ?></td>
     </tr>
   </table>
 <table class="header">

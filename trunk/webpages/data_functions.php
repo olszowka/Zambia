@@ -134,7 +134,7 @@ function set_session_defaults() {
     //$session["sessionid"] set elsewhere
     $session["track"]=0; // prompt with "SELECT"
     $session["type"]=1; // default to "Panel"
-    $session["divisionid"]=2; // default to "Programming"
+    $session["divisionid"]=1; // default to "Programming"
     $session["pubstatusid"]=2; // default to "Public"
     $session["languagestatusid"]=1; // default to "English"
     $session["pubno"]="";
@@ -158,7 +158,7 @@ function set_session_defaults() {
     $session["roomset"]=0; // prompt with "SELECT"
     $session["notesforpart"]="";
     $session["servnotes"]="";
-    $session["status"]=6; // default to "Edit Me"
+    $session["status"]=2; // default to "Edit Me"
     $session["notesforprog"]="";
     $session["invguest"]=false; // leave checkbox blank initially
     }
