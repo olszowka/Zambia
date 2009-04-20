@@ -107,7 +107,7 @@
                 }
             $result=mysql_query($query,$link);
             $errno=mysql_errno($link);
-            error_log("Zambia: SubmitEditCreateParticipant.php: query errno: $errno");
+            //error_log("Zambia: SubmitEditCreateParticipant.php: query errno: $errno");
             if ($errno==1062) { // primary key violation; loop again and hope it was just a concurrency problem
                 $result=mysql_query("ROLLBACK;",$link);
                 if ($errno!=0) {
@@ -125,7 +125,7 @@
                 }
             $result=mysql_query($query2,$link);
             $errno=mysql_errno($link);
-            error_log("Zambia: SubmitEditCreateParticipant.php: query2 errno: $errno");
+            //error_log("Zambia: SubmitEditCreateParticipant.php: query2 errno: $errno");
             if ($errno==1062) { // primary key violation; loop again and hope it was just a concurrency problem
                 $result=mysql_query("ROLLBACK;",$link);
                 if (mysql_errno($link)!=0) {
