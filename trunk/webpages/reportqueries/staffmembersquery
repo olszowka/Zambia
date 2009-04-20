@@ -1,0 +1,15 @@
+TITLE='Staff Members'
+DESCRIPTION='List Staff Members and their priviliges'
+ADMINWANTS=1
+QUERY="
+SELECT
+        badgeid as Badgeid, if(P.pubsname is null or P.pubsname = '',concat(firstname,' ',lastname),P.pubsname) as Name,
+        if (password='4cb9c8a8048fd02294477fcb1a41191a','changme','OK') as Password,
+        group_concat(permrolename SEPARATOR ', ') as Privileges
+    FROM
+        Participants P
+            JOIN CongoDump using (badgeid)
+            JOIN UserHasPermissionRole using (badgeid)
+            JOIN PermissionRoles using (permroleid)
+    WHERE P.badgeid < '2' or P.badgeid in ('6499','53159')
+    GROUP BY badgeid, name, password;"

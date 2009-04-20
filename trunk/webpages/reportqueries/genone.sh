@@ -1,5 +1,6 @@
 #!/bin/sh
 
+DBHOSTNAME=`cat ../db_name.php | awk -F'"' '/DBHOSTNAME/ {print $4}'`
 DATABASE=`cat ../db_name.php | awk -F'"' '/DBDB/ {print $4}'`
 DBUSERNAME=`cat ../db_name.php | awk -F'"' '/DBUSERID/ {print $4}'`
 DBPASSWORD=`cat ../db_name.php | awk -F'"' '/DBPASSWORD/ {print $4}'`
@@ -13,7 +14,7 @@ umask 022
 
 #mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD -e '\. fixnames'
 
-for x in ${SRCDIR}/gohschedulequery; do
+for x in ${SRCDIR}/staffmembersquery; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
   eval `cat $x`
   echo $x
@@ -24,7 +25,7 @@ for x in ${SRCDIR}/gohschedulequery; do
                             sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" | \
                             sed "s%CON_NAME%$CON_NAME%" > $DESTDIR/${name}report.php
 
-  echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
+  echo $QUERY | mysql --host=$DBHOSTNAME -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   

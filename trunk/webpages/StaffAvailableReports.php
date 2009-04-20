@@ -36,6 +36,7 @@ First cut at categorizing reports is underway.   The reports are starting to be 
    <tr><td><A HREF="reportPUBS.php">Publication Reports</A>
    <tr><td><A HREF="reportREG.php">Registration Reports</A>
    <tr><td><A HREF="reportTECH.php">Tech Reports</A>
+   <tr><td><A HREF="reportADMIN.php">Zambia Administration Reports</A>
    <tr><td>&nbsp;
    <tr><td><A HREF="manualGRIDS.php">Grids</A>
    <tr><td><A HREF="reportindex.php">All Reports</A>

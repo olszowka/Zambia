@@ -1,9 +1,18 @@
 <?php
-function javascript_for_edit_session() {
+function javascript_for_edit_session() { //now also for edit participant
 ?>
     <SCRIPT LANGUAGE="JavaScript">
 
 <!-- Begin
+
+function fpopdefaults() {
+    var a, b, c;
+    a = document.partform.firstname.value;
+    b = document.partform.lastname.value;
+    c = a + " " + b;
+    document.partform.pubsname.value = c;
+    document.partform.badgename.value = c;
+    }
 
 function fadditems(source, dest) {
     var i;
