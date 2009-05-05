@@ -14,6 +14,17 @@ These updates are already applied to EmptyDbase.dump:
 07_participant_write_perms.sql
 08_add_brainstorm.sql
 09_session_history.sql
+10_brainstorm_search_session.sql
+10_types.sql
+11_perm_bug.sql
+12_patchlog.sql
+13_part_avail_mon.sql
+14_interested_table.sql
+15_public_user.sql
+16_fix_charset.sql
+17_partavailnull.sql
+18_editbioperms.sql
+19_partavail.sql
 
 I'm really not sure what the status of  DemoDbase.dump is.  It has at least the first 4. 
 
