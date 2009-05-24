@@ -23,9 +23,15 @@
         $error=true;
         }
       else {    
-        $query="SELECT sessionid FROM (SELECT sessionid, trackid FROM Sessions where sessionid=";
-        $query.=$sessionid." and invitedguest=0 and statusid in (2,3,7)) AS S join ";
-        $query.="(SELECT trackid FROM Tracks where selfselect=1) AS T on S.trackid = T.trackid";
+        $query= "SELECT S.sessionid FROM";
+        $query.="            Sessions S";
+        $query.="       JOIN Tracks T USING (trackid)";
+        $query.="       JOIN SessionStatuses SS USING (statusid)";
+        $query.="    WHERE";
+        $query.="        T.selfselect=1 and";
+        $query.="        SS.may_be_scheduled=1 and";
+        $query.="        S.invitedguest=0 and";
+        $query.="        S.sessionid=$sessionid";
         if (!$result=mysql_query($query,$link)) {
           $message=$query."<BR>Error querying database.<BR>";
           RenderError($title,$message);

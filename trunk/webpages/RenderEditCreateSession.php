@@ -6,7 +6,7 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateSession ($action, $session, $message1, $message2) {
-    global $name, $email;
+    global $name, $email, $debug;
     require_once("StaffHeader.php");
     require_once("StaffFooter.php");
     if ($action=="create") {
@@ -29,6 +29,9 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
       exit(); // If there is a message2, then there is a fatal error.
     }
     //error_log("Zambia: ".print_r($session,TRUE));
+    if (isset($debug)) {
+        echo $debug."<BR>\n";
+        }  
   ?>
     <DIV class="formbox">
         <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
@@ -64,10 +67,10 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <SPAN><LABEL for="title">Title: </LABEL><INPUT type=text size="50" name="title" value="<?php
                     echo htmlspecialchars($session["title"],ENT_COMPAT)."\">";
                     ?>&nbsp;&nbsp;</SPAN>
-                <SPAN><LABEL for="invguest">Invited Guests Only? </LABEL>
+                <SPAN id="sinvguest"><LABEL for="invguest">Invited Guests Only? </LABEL>
                     <INPUT type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?>
                     name="invguest">&nbsp;&nbsp;</SPAN>
-                <SPAN><LABEL for="signup">Sign up Req.?</LABEL>
+                <SPAN id="ssignup"><LABEL for="signup">Sign up Req.?</LABEL>
                     <INPUT type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?>
                     name="signup">&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="kids">Kid ?:</LABEL>
@@ -131,7 +134,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">\n";
                 }
 ?>
-                <TR>
+                <TR id="trprospartinfo">
                     <TD class="txtalbl-last"><LABEL class="dense" for="persppartinfo">Prospective Participant Info:</LABEL></TD>
                     <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=70 name="persppartinfo"
                             ><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></TEXTAREA></TD>
@@ -195,7 +198,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 </DIV> <!-- Services -->
             </DIV>
 </DIV></TD>
-<TD style="vertical-align: top; padding-left: 1em">
+<TD style="vertical-align: top; padding-left: 1em" id="spubchar">
     <DIV>
         <LABEL class="dense" for="pubchardest">Publication<BR>Characteristics</LABEL>
         </DIV>

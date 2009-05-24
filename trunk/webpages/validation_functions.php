@@ -52,6 +52,17 @@ function validate_name_email($name, $email) {
         }
     return ($status);
     }
+// Function validate_integer($input,$min,$max)
+// Return true if input is integer within range (inclusive)
+// otherwise false
+//
+function validate_integer($input,$min,$max) {
+    return filter_var(
+        $input,
+        FILTER_VALIDATE_INT,
+        array('options' => array('min_range' => $min, 'max_range' => $max))
+        );
+    }
 // Function validate_session()
 // Reads global $session array and performs tests.
 // If a test fails, then the global $message is populated
@@ -59,77 +70,65 @@ function validate_name_email($name, $email) {
 //
 function validate_session() {
     // may be incomplete!!
-    global $session, $messages;
+    global $sstatus, $session, $messages, $debug;
     $flag=true;
-    if ($session["status"]==4||$session["status"]==5) {  //don't validate "dropped" or "cancelled"
-        return ($flag);
-        }
-    $brainstorm=($session["status"]==1 || $session["status"]==6); //less stringent criteria if brainstorm (editme)
-/*    if (!strlen($session["title"])) {
-        $messages.="A valid title is required.<BR>\n";
-        $flag=false;
-        } */
-    $i=strlen($session["title"]);
-    if ($i<10||$i>48) {
-        $messages.="Title is $i characters long.  Please edit it to between <B>10</B> and <B>48</B> characters.<BR>\n";
-        $flag=false;
-        }
-/*    if (!strlen($session["progguiddesc"])) {
-        $messages.="A title is required.<BR>\n";
-        $flag=false;
-        } */
-    if (($i=strlen($session["pocketprogtext"]))>110) {
-        $messages.="Pocket program text is $i characters long.  Please edit it to <B>110</B> characters or fewer.<B
-R>\n";
-        $flag=false;
-        }
-    $i=strlen($session["progguiddesc"]);
-    if ($i<10||$i>500) {
-        $messages.="Program guide description is $i characters long.  Please edit it to between";
-        $messages.=" <B>10</B> and <B>500</B> characters long.<BR>\n";
+    get_sstatus();
+    if (!(validate_integer($session['atten'],1,99999))) { //must require integer atten to be able to write to db
+        $messages.="Estimated attendance must be a positive integer.<BR>\n";
         $flag=false;
         }
     if ($session["track"]==0) {
         $messages.="Please select a track.<BR>\n";
         $flag=false;
         }
-    if ($brainstorm) { // less stringent criteria if brainstorm or editme
-                       // set some defaults if brainstorm or editme
-            if ($session["pubstatusid"]==0) { // default to "public" if not set
-                $session["pubstatusid"]=2;
-                }
-            if ($session["divisionid"]==0) { // default to "unspecified" if not set
-                $session["divisionid"]=6;
-                }
-            if ($session["type"]==0) { // default to "I do not know" if not set
-                $session["type"]=17;
-                }
-            if ($session["roomset"]==0) { // default to "Unspecified" if not set
-                $session["roomset"]=4;
-                }
-            }
-        else { // more stringent criteria if not brainstorm or editme
-            if ($session["pubstatusid"]==0) {
-                $messages.="Please select a publication status.<BR>\n";
-                $flag=false;
-                }
-            if ($session["type"]==0 || $session["type"]==17) { // don't allow "I do not know"
-                $messages.="Please select a type.<BR>\n";
-                $flag=false;
-                }
-            if ($session["divisionid"]==0 || $session["divisionid"]==6) { // don't allow "Unspecified"
-                $messages.="Please select a division.<BR>\n";
-                $flag=false;
-                }
-            if ($session["kids"]==0) {
-                $messages.="Please select a kid category.<BR>\n";
-                $flag=false;
-                }
-            if ($session["roomset"]==0 || $session["roomset"]==4) { // don't allow "Unspecified"
-                $messages.="Please select a room set.<BR>\n";
-                $flag=false;
-                }
-            }
+    if ($session['roomset']==0) { 
+        $messages.="Please select a room set.<BR>\n";
+        $flag=false;
+        }
+    if (!($sstatus[$session["status"]]['validate'])) {
+//don't validate further those not marked with 'validate' such as "dropped" or "cancelled"
+        return ($flag);
+        }
+    $i=strlen($session["title"]);
+    if ($i<10||$i>48) {
+        $messages.="Title is $i characters long.  Please edit it to between <B>10</B> and <B>48</B> characters.<BR>\n";
+        $flag=false;
+        }
+    $i=strlen($session["progguiddesc"]);
+    if ($i<10||$i>500) {
+        $messages.="Description is $i characters long.  Please edit it to between";
+        $messages.=" <B>10</B> and <B>500</B> characters long.<BR>\n";
+        $flag=false;
+        }
+    if (!($sstatus[$session["status"]]['may_be_scheduled'])) {
+//don't validate further those not marked with 'may_be_scheduled'.
+        return($flag);
+        }
+//most stringent validation for those which may be scheduled.
+    if ($session["pubstatusid"]==0) {
+        $messages.="Please select a publication status.<BR>\n";
+        $flag=false;
+        }
+    if ($session["type"]==0 || $session["type"]==99) { // don't allow "I do not know"
+        $messages.="Please select a type.<BR>\n";
+        $flag=false;
+        }
+    if ($session["divisionid"]==0 || $session["divisionid"]==6) { // don't allow "Unspecified"
+        $messages.="Please select a division.<BR>\n";
+        $flag=false;
+        }
+    if ($session["kids"]==0) {
+        $messages.="Please select a kid category.<BR>\n";
+        $flag=false;
+        }
+    if ($session["roomset"]==0 || $session["roomset"]==99) { // don't allow "Unspecified"
+        $messages.="Please select a room set.<BR>\n";
+        $flag=false;
+        }
+    if ($session["track"]==0 || $session["track"]==99) { // don't allow "Unspecified"
+        $messages.="Please select a track.<BR>\n";
+        $flag=false;
+        }
     return ($flag);
     }
 // Function validate_participant_availability()

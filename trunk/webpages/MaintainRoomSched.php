@@ -177,9 +177,19 @@ echo "   </TABLE>\n";
 echo "<H4>Add To Room Schedule</H4>\n";
 echo "<TABLE>\n";
 $query = <<<EOD
-SELECT S.sessionid, T.trackname, S.title, SC.roomid FROM Tracks AS T join Sessions AS S ON T.trackid = S.trackid
-LEFT JOIN Schedule AS SC ON S.sessionid = SC.sessionid where S.statusid = 7 or S.statusid = 3 or S.statusid=2 HAVING SC.roomid IS NULL ORDER BY T.trackname,
-S.sessionid
+SELECT
+        S.sessionid, T.trackname, S.title, SCH.roomid
+    FROM
+        Sessions S JOIN
+        Tracks T USING (trackid) JOIN
+        SessionStatuses SS USING (statusid) LEFT JOIN
+        Schedule SCH USING (sessionid)
+    WHERE
+        SS.may_be_scheduled=1
+    HAVING
+        SCH.roomid is null
+    ORDER BY
+        T.trackname, S.sessionid
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";

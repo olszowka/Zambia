@@ -1,5 +1,9 @@
 <?php
 function SubmitMaintainRoom() {
+//
+//  This is hardcoded to follow the workflow of editme -> vetted -> scheduled -> assigned
+//  We need to find a way to make it more configurable and flexible
+//
     global $link;
 //    print_r($_POST);
     $numrows=$_POST["numrows"];
@@ -15,7 +19,8 @@ function SubmitMaintainRoom() {
         $schedentries=substr($schedentries,0,strlen($schedentries)-1); // remove trailing comma
 //        echo $schedentries."<BR>\n";
 //  Set status of deleted entries back to vetted.
-        $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=2 WHERE S.sessionid=SC.sessionid AND ";
+        $vs=get_idlist_from_db('SessionStatuses','statusid','statusname',"'vetted'");
+        $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=$vs WHERE S.sessionid=SC.sessionid AND ";
         $query.="SC.scheduleid IN ($schedentries)";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
@@ -59,7 +64,8 @@ function SubmitMaintainRoom() {
             exit();
             }
 // Set status of scheduled entries to Scheduled.
-        $query="UPDATE Sessions SET statusid=3 WHERE sessionid=$sessionid";
+        $vs=get_idlist_from_db('SessionStatuses','statusid','statusname',"'scheduled'");
+        $query="UPDATE Sessions SET statusid=$vs WHERE sessionid=$sessionid";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
             echo "<P class=\"errmsg\">".$message."\n";
