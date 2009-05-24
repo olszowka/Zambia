@@ -186,12 +186,14 @@ function parse_mysql_time_hours($time) {
 //
 // Function time_description($time)
 // Takes the string $time and return string describing time
+// $time is mysql output measured from start of con
+// result is like "Fri 1:00 PM"
 //
 function time_description($time) {
-    $days=array("Fri","Sat","Sun","Mon");
+    global $daymap;
     $atime=parse_mysql_time($time);
     $result="";
-    $result.=$days[$atime["day"]]." ";
+    $result.=$daymap['short'][$atime["day"]+1]." ";
     $hour=fmod($atime["hour"],12);
     $result.=(($hour==0)?12:$hour).":".$atime["minute"]." ";
     $result.=($atime["hour"]>=12)?"PM":"AM";

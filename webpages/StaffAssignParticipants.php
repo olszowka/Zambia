@@ -27,8 +27,11 @@ if (isset($_POST["selsess"])) { // room was selected by this form
         unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
         }
 
-$query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S, Tracks AS T WHERE ";
-$query.="S.trackid = T.trackid AND (S.statusid in (2,3,7)) ORDER BY T.trackname, S.sessionid";
+$query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S ";
+$query.="JOIN Tracks AS T USING (trackid) ";
+$query.="JOIN SessionStatuses AS SS USING (statusid) ";
+$query.="WHERE SS.may_be_scheduled=1 ";
+$query.="ORDER BY T.trackname, S.sessionid, S.title";
 if (!$Sresult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";

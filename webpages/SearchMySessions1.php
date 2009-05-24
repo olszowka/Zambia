@@ -6,17 +6,44 @@
     require_once('ParticipantFooter.php');
     $trackid=$_POST["track"];
     $titlesearch=stripslashes($_POST["title"]);
+// List of sessions that match search criteria 
+// Does not includes sessions in which participant is interested if they do match match search
+// Use "My Panel Interests" page to just see everything in which you are interested
     $query = <<<EOD
-Select S2.sessionid, S2.trackname, S2.title, S2.duration, S2.progguiddesc, S2.persppartinfo, PSI.badgeid from ( Select S.sessionid, T.trackname, S.title, concat( if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min')))) as duration, S.progguiddesc, S.persppartinfo from Sessions S, Tracks AS T, Types Y where S.trackid = T.trackid and T.selfselect=1 and S.typeid=Y.typeid and Y.selfselect=1 and S.invitedguest=0 and (S.statusid=2 or S.statusid=7 or S.statusid=3)
+SELECT
+        S.sessionid, T.trackname, S.title,
+        CASE
+            WHEN (minute(S.duration)=0) THEN date_format(S.duration,'%l hr')
+            WHEN (hour(S.duration)=0) THEN date_format(S.duration, '%i min')
+            ELSE date_format(S.duration,'%l hr, %i min')
+            END
+            as duration,
+        S.progguiddesc, S.persppartinfo, PSI.badgeid
+    FROM
+        Sessions S JOIN
+        Tracks T USING (trackid) JOIN
+        SessionStatuses SST USING (statusid) LEFT JOIN
+        ParticipantSessionInterest PSI USING (sessionid)
+    WHERE
+        SST.may_be_scheduled=1 AND
+        S.Sessionid in
+            (SELECT S2.Sessionid FROM
+                     Sessions S2 JOIN
+                     Tracks T USING (trackid) JOIN
+                     Types Y USING (typeid)
+                 WHERE
+                     S2.invitedguest=0 AND
+                     T.selfselect=1 AND
+                     Y.selfselect=1
 EOD;
     if ($trackid!=0) {
-        $query.=" and S.trackid=".$trackid;
+        $query.="                     AND S.trackid=$trackid\n";
         }
     if ($titlesearch!="") {
-        $query.=" AND title LIKE \"%".mysql_real_escape_string($titlesearch,$link)."%\" ";
+        $x=mysql_real_escape_string($titlesearch,$link);
+        $query.="                     AND S.title LIKE \"%$x%\"\n";
         }
-    $query.= ") as S2 left join ( select * from ParticipantSessionInterest where badgeid=\"";
-    $query.=$badgeid."\") as PSI on S2.sessionid=PSI.sessionid order by S2.trackname, S2.sessionid";
+    $query.=")\n";
     if (!$result=mysql_query($query,$link)) {
         $message=$query."<BR>Error querying database.<BR>";
         RenderError($title,$message);

@@ -1,8 +1,10 @@
 <?php
     function StaffRenderError ($title, $message) {
+    global $debug;
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title);
+    if (isset($debug)) echo $debug."<BR>\n";
     echo "<P id=\"errmsg\">".$message."</P>\n";
     staff_footer();
     }
