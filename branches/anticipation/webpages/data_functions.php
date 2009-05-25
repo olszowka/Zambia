@@ -135,7 +135,7 @@ function set_session_defaults() {
     $session["track"]=0; // prompt with "SELECT"
     $session["type"]=1; // default to "Panel"
     $session["divisionid"]=1; // default to "Programming"
-    $session["pubstatusid"]=2; // default to "Public"
+    $session["pubstatusid"]=3; // default to "Public"
     $session["languagestatusid"]=1; // default to "English"
     $session["pubno"]="";
     $session["title"]="";
