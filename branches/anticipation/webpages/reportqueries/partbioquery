@@ -1,0 +1,10 @@
+TITLE='Participant Bio and pubname'
+DESCRIPTION='Show the badgeid, pubsname and bio for each participant who indicated he is attending.'
+PROGWANTS=1
+QUERY='
+  select P.badgeid, 
+         P.pubsname, 
+         P.bio 
+    from Participants P
+   where P.interested=1
+order by substring_index(pubsname," ",-1);'
