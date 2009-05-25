@@ -129,6 +129,10 @@ function validate_session() {
         $messages.="Please select a track.<BR>\n";
         $flag=false;
         }
+    if ($session["duration"]==0) {
+        $messages.="Please enter a duration.<BR>\n";
+        $flag=false;
+        }
     return ($flag);
     }
 // Function validate_participant_availability()

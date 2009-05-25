@@ -75,36 +75,41 @@ function get_name_and_email(&$name, &$email) {
     return(TRUE); //return TRUE even if didn't retrieve from db because there's nothing to be done
     }
 
-// Function populate_select_from_table(...)
-// Reads parameters (see below) and a specified table from the db.
-// Outputs HTML of the "<OPTION>" values for a Select control.
+// Function populate_select_from_table($table_name, $default_value, $option_0_text, $default_flag)
+//     Reads parameters and a specified table from the db.
+//     Outputs HTML of the "<OPTION>" values for a Select control.
+//     set $default_value=-1 for no default value (note not really supported by HTML)
+//     set $default_value=0 for initial value to be set as $option_0_text
+//     otherwise the initial value will be equal to the row whose id == $default_value
+//     assumes id's in the table start at 1
+//     if $default_flag is true, the option 0 will always appear.
+//     if $default_flag is false, the option 0 will only appear when $default_value is 0
+//        or not in the table.
 //
 function populate_select_from_table($table_name, $default_value, $option_0_text, $default_flag) {
-    // set $default_value=-1 for no default value (note not really supported by HTML)
-    // set $default_value=0 for initial value to be set as $option_0_text
-    // otherwise the initial value will be equal to the row whose id == $default_value
-    // assumes id's in the table start at 1
-    // if $default_flag is true, the option 0 will always appear.
-    // if $default_flag is false, the option 0 will only appear when $default_value is 0.
     global $link;
-    if ($default_value==0) {
-            echo "<OPTION value=0 selected>".$option_0_text."</OPTION>\n";
-            }
-        elseif ($default_flag) {
-            echo "<OPTION value=0>".$option_0_text."</OPTION>\n";
-            }            
+    $output_string = "";
+    $matched_flag=FALSE;
     $result=mysql_query("Select * from ".$table_name." order by display_order",$link);
     while ($arow = mysql_fetch_array($result, MYSQL_NUM)) {
         $option_value=$arow[0];
         $option_name=$arow[1];
-        echo "<OPTION value=".$option_value." ";
-        if ($option_value==$default_value)
-            echo "selected";
-        echo ">".$option_name."</OPTION>\n";
+        $output_string.="<OPTION value=$option_value ";
+        if ($option_value==$default_value) {
+            $matched_flag=TRUE;
+            $output_string.="selected ";
+            }
+        $output_string.=">$option_name</OPTION>\n";
         }
+    if (($default_value==0) OR !$matched_flag) {
+            $output_string = "<OPTION value=0 selected>$option_0_text</OPTION>\n".$output_string;
+            }
+        elseif ($default_flag) {
+            $output_string = "<OPTION value=0 >$option_0_text</OPTION>\n".$output_string;
+            }
+    echo $output_string;
     }
 
-// Function populate_select_from_query(...)
 // Reads parameters (see below) and a specified query for the db.
 // Outputs HTML of the "<OPTION>" values for a Select control.
 //
