@@ -156,7 +156,7 @@ for ($i=0;$i<$numrows;$i++) {
     echo "         </TD>\n";
     echo "      <TD class=\"vatop\">".$bigarray[$i]["badgeid"]."</TD>\n";
     echo "      <TD class=\"vatop\">".$bigarray[$i]["pubsname"]."</TD>\n";
-    echo "      <TD class=\"vatop\">Rank: ".$bigarray[$i]["rank"]."</TD>\n";
+    echo "      <TD class=\"vatop\">&nbsp;<SPAN id=\"SASRANK\">Rank: {$bigarray[$i]["rank"]}</SPAN></TD>\n";
     echo "      <TD class=\"vatop\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
     echo "      </TR>\n";
     echo "   <TR>\n";

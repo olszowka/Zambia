@@ -43,7 +43,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                 <SPAN><LABEL for="lastname">Last Name: </LABEL><INPUT type="text" size=13 name="lastname" id="lastname"
                      value="<?php echo htmlspecialchars($participant_arr["lastname"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 <SPAN>&nbsp;<BUTTON type=button onclick="fpopdefaults()" value="noop">Populate Defaults</BUTTON>&nbsp;</SPAN>
-                <SPAN><LABEL for="badgeid">Badge ID: </LABEL><INPUT type="text" size=4 name="badgeid" readonly
+                <SPAN><LABEL for="badgeid">Participant #: </LABEL><INPUT type="text" size=4 name="badgeid" readonly
                      value="<?php echo htmlspecialchars($participant_arr["badgeid"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 </DIV>
             <DIV class="denseform">
