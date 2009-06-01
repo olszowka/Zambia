@@ -276,7 +276,7 @@ function update_session() {
         }
     $query=substr($query,0,-2); // remove extra trailing comma
     $message2=$query;
-    error_log("Zambia: update_session(: $query");
+    //error_log("Zambia: update_session(: $query");
     if (!mysql_query($query,$link)) { return false; }
     return true;
     }
@@ -371,7 +371,7 @@ function insert_session() {
         $query.="($id,$i,".(($session["excludeday$i"]==1)?"1":"0")."), ";
         }
     $query=substr($query,0,-2); // remove extra trailing comma
-    error_log("Zambia: create_session(: $query");
+    //error_log("Zambia: create_session(: $query");
     $result = mysql_query($query,$link);
     return $id;
     }
