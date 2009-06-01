@@ -226,6 +226,12 @@ function update_session() {
     $query.="servicenotes=\"".mysql_real_escape_string($session["servnotes"],$link)."\", ";
     $query.="statusid=".$session["status"].", ";
     $query.="notesforprog=\"".mysql_real_escape_string($session["notesforprog"],$link)."\" ";
+    if (($session["recommendedtime"]=="") OR ($session["recommendedtime"]==0)) {
+            $query.=",recommendedtimeid=NULL";
+            }
+        else {
+            $query.=",recommendedtimeid={$session["recommendedtime"]}";
+            }
     $query.=" WHERE sessionid=".$session["sessionid"];
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
@@ -264,7 +270,14 @@ function update_session() {
             if (!mysql_query($query,$link)) { return false; }
             }
         }
-
+    $query="REPLACE SessionExcludedDays (sessionid,day,excluded) values ";
+    for ($i=1;$i<=CON_NUM_DAYS;$i++) {
+        $query.="($id,$i,".(($session["excludeday$i"]==1)?"1":"0")."), ";
+        }
+    $query=substr($query,0,-2); // remove extra trailing comma
+    $message2=$query;
+    error_log("Zambia: update_session(: $query");
+    if (!mysql_query($query,$link)) { return false; }
     return true;
     }
 
@@ -317,6 +330,13 @@ function insert_session() {
     $query.="servicenotes=\"".mysql_real_escape_string($session["servnotes"],$link).'",';
     $query.="statusid=".$session["status"].',';
     $query.="notesforprog=\"".mysql_real_escape_string($session["notesforprog"],$link).'",';
+    if (($session["recommendedtime"]=="") OR ($session["recommendedtime"]==0)) {
+            $query.="recommendedtimeid=NULL,";
+            }
+        else {
+            $query.="recommendedtimeid={$session["recommendedtime"]},";
+            }
+
     $query.="warnings=0,invitedguest="; // warnings db field not editable by form
     if ($session["invguest"]) {$query.="1";} else {$query.="0";}
     $result = mysql_query($query,$link);
@@ -346,7 +366,13 @@ function insert_session() {
             $result = mysql_query($query,$link);
             }
         }
-
+    $query="INSERT INTO SessionExcludedDays (sessionid,day,excluded) values ";
+    for ($i=1;$i<=CON_NUM_DAYS;$i++) {
+        $query.="($id,$i,".(($session["excludeday$i"]==1)?"1":"0")."), ";
+        }
+    $query=substr($query,0,-2); // remove extra trailing comma
+    error_log("Zambia: create_session(: $query");
+    $result = mysql_query($query,$link);
     return $id;
     }
 
@@ -362,7 +388,7 @@ select
         sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
         title, secondtitle, pocketprogtext, progguiddesc, persppartinfo, duration,
         estatten, kidscatid, signupreq, roomsetid, notesforpart, servicenotes,
-        statusid, notesforprog, warnings, invitedguest, ts
+        statusid, notesforprog, warnings, invitedguest, recommendedtimeid, ts
     from
         Sessions
     where
@@ -408,6 +434,7 @@ EOD;
     $session["status"]=$sessionarray["statusid"];
     $session["notesforprog"]=$sessionarray["notesforprog"];
     $session["invguest"]=$sessionarray["invitedguest"];
+    $session["recommendedtime"]=$sessionarray["recommendedtimeid"];
     $result=mysql_query("SELECT featureid FROM SessionHasFeature where sessionid=".$sessionid,$link);
     if (!$result) {
         $message2=mysql_error($link);
@@ -434,6 +461,15 @@ EOD;
     unset($session["pubchardest"]);
     while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
         $session["pubchardest"][]=$row[0];
+        }
+    $query="SELECT sessionid, day, excluded FROM SessionExcludedDays WHERE sessionid=$sessionid";
+    $result=mysql_query($query,$link);
+    if (!$result) {
+        $message2=mysql_error($link);
+        return (-3);
+        }
+    while(list($xsessionid, $day, $excluded)= mysql_fetch_array($result, MYSQL_NUM)) {
+        $session["excludeday$day"]=$excluded;
         }
     return (37);
     }

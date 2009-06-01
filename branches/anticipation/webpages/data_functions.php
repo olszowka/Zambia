@@ -121,6 +121,10 @@ function get_session_from_post() {
     $session["servnotes"]=stripslashes($_POST["servnotes"]);
     $session["status"]=$_POST["status"];
     $session["notesforprog"]=stripslashes($_POST["notesforprog"]);
+    $session["recommendedtime"]=$_POST["recommendedtime"];
+    for ($i=1;$i<=CON_NUM_DAYS;$i++) {
+        $session["excludeday$i"]=$_POST["excludeday$i"];
+        }
     }
 
 // Function set_session_defaults() 
@@ -161,6 +165,10 @@ function set_session_defaults() {
     $session["status"]=2; // default to "Edit Me"
     $session["notesforprog"]="";
     $session["invguest"]=false; // leave checkbox blank initially
+    $session["recommendedtime"]=""; // initially blank
+    for ($i=1;$i<=CON_NUM_DAYS;$i++) {
+        $session["excludeday$i"]=0;
+        }
     }
 // Function parse_mysql_time($time)
 // Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"

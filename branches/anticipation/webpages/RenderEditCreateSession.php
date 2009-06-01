@@ -6,7 +6,7 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateSession ($action, $session, $message1, $message2) {
-    global $name, $email, $debug;
+    global $name, $email, $debug, $daymap;
     require_once("StaffHeader.php");
     require_once("StaffFooter.php");
     if ($action=="create") {
@@ -112,8 +112,8 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </SPAN>
                 </DIV>
         <HR class="withspace">
-        <DIV class="thinbox">
-            <TABLE><COL width="100"><COL>
+        <DIV class="thinbox" id="D1">
+            <TABLE width="600"><COL width="100"><COL>
                 <TR>
                     <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Description:</LABEL></TD>
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" 
@@ -141,10 +141,39 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </TR>
                 </TABLE>
             </DIV>
+        <DIV class="thinbox" id="D2">
+            <TABLE><COL width="200"><COL>
+                <TR>
+                    <TD colspan=2><DIV class="denseform" style="text-align: center">Information for Scheduling</DIV></TD>
+                    </TR>
+                <TR>
+                    <TD><DIV class="denseform">Check to <I>Exclude</I> Day</DIV></TD>
+                    <TD><DIV class="denseform"><LABEL for="recommendedtime">Recommended Time</LABEL></DIV></TD>
+                    </TR>
+                <TR>
+                    <TD><DIV class="denseform"><INPUT type="checkbox" value=1 name="excludeday1"<?php
+                         if ($session['excludeday1']) {
+                             echo " checked";
+                             }
+                         echo ">&nbsp;{$daymap['long'][1]}";?></DIV></TD>
+                    <TD style="vertical-align:top" rowspan= <?php echo CON_NUM_DAYS;?>><DIV class="denseform">
+                        <SELECT name="recommendedtime">
+                        <?php populate_select_from_table("RecommendTimeRef", $session["recommendedtime"],"&nbsp;", TRUE); ?>
+                            </SELECT></DIV></TD>
+                    </TR>
+                <?php for ($i=2; $i<=CON_NUM_DAYS; $i++) {
+                          echo "<TR><TD><DIV class=\"denseform\"><INPUT type=\"checkbox\" value=1 name=\"excludeday$i\"";
+                          if ($session["excludeday$i"]) {
+                              echo " checked";
+                              }
+                          echo ">&nbsp;{$daymap['long'][$i]}</DIV></TD></TR>\n";
+                          } ?>
+                </TABLE>
+            </DIV>
         <TABLE><COL><COL>
         <TR>
         <TD class="nospace">
-        <DIV class="thinbox" style="margin-top: 1em; width: 37em; font-size: 85%">
+        <DIV class="thinbox" style="margin-top: 1em; width: 37em; font-size: 85%; margin-left: 0px; padding-left: 0px">
             <DIV class="blockwbox" style="width: 33em; padding-left: 0.5em; padding-right: 0.5em; margin: 0.5em"> <!-- Features Box; -->
                 <DIV class="blockstitle"><LABEL>Required Features of Room</LABEL></DIV>
                     <DIV class="tab-row">
@@ -207,7 +236,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             $session["pubchardest"]); ?></SELECT>&nbsp;</TD>
         </DIV>
 </TR></TABLE>
-        <HR class="withspace"><DIV class="thinbox">
+        <DIV class="thinbox">
             <TABLE><COL width="100"><COL>
                 <TR>
                     <TD class="txtalbl"><LABEL class="dense" for="notesforpart">Notes for Participants:</LABEL></TD>
