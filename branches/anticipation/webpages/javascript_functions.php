@@ -1,4 +1,67 @@
 <?php
+function javascript_for_import_participant() { //
+?>
+<link rel="stylesheet" type="text/css" media="screen" href="themes/green/grid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="themes/jqModal.css" />
+<script src="jquery.js" type="text/javascript"></script>
+<script src="jquery.jqGrid.js" type="text/javascript"></script>
+<script src="js/jqModal.js" type="text/javascript"></script>
+<script src="js/jqDnR.js" type="text/javascript"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){ 
+  jQuery("#list").jqGrid({
+    url:'getParticpantFormData.php',
+    datatype: 'xml',
+    mtype: 'GET',
+    colNames:['Submission Date','Name', 'Lang', 'Email', 'Badge Id' ],
+    colModel :[ 
+      {name:'mail_date', index:'mail_date', width:250	}, 
+      {name:'name', index:'name', width:300}, 
+      {name:'lang', index:'lang', width:50, align:'left'},
+      {name:'lang', index:'email', width:300},
+      {name:'lang', index:'badgeid', width:100}
+	   ],
+    pager: jQuery('#pager'),
+    rowNum:20,
+    rowList:[20,50,100],
+    sortname: 'name',
+    sortorder: "asc",
+    viewrecords: true,
+    imgpath: 'themes/green/images',
+	height: "100%",
+	multiselect: true,
+	subGrid : true,
+	subGridUrl: 'getParticpantDetails.php',
+    subGridModel: [{ 
+		name  : ['Address','FR','Alt(FR)','Language','EN','Alt(EN)','Language'], 
+        width : [300, 30, 60, 200, 30, 60, 200],
+		params: ['name']
+	}],
+    caption: 'Participants from Email Form',
+	toolbar: [true,"top"],
+	loadError : function(xhr,st,err) {
+    	jQuery("#rsperror").html("Type: "+st+"; Response: "+ xhr.status + " "+xhr.statusText);
+    }
+  }); 
+
+$("#t_list").append("<input type='button' value='Add to Zambia' style='height:20px;font-size:-3'/>");
+$("input","#t_list").click(function(){
+	var gsr = jQuery("#list").getGridParam('selarrrow');
+	var msg = $("#load_list").text();
+	$.get('addParticipant.php',{'ids[]':gsr}, function(data) { 
+		$("#load_list").html("Importing " + data);
+		$("#load_list").fadeIn("normal", function() {
+			$("#load_list").fadeOut("normal", function() {
+				$("#load_list").text(msg);
+				$("#list").trigger("reloadGrid");
+				});
+			});
+		});
+});
+}); 
+</script>
+<?php } ?>
+<?php
 function javascript_for_edit_session() { //now also for edit participant
 ?>
     <SCRIPT LANGUAGE="JavaScript">

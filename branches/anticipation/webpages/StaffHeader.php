@@ -1,5 +1,5 @@
 <?php
-    function staff_header($title) {
+    function staff_header($title, $extrajs = null) {
       require_once ("javascript_functions.php");
 ?>
 
@@ -10,6 +10,9 @@
   <title>Zambia -- <?php echo $title ?></title>
   <link rel="stylesheet" href="StaffSection.css" type="text/css">
   <?php javascript_for_edit_session();
+		if ($extrajs != null) {
+			call_user_func($extrajs);
+		};
         mousescripts(); ?>
 </head>
 <body>
