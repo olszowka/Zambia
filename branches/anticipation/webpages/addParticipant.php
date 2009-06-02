@@ -47,7 +47,7 @@
 	 */
 	function addtoCongo($badgeid, $longname, $email, $postmail) {
 		// Add them CongoDump
-		$badgeid = $badgeid +1;
+		$badgeid = $badgeid;
 		$names = explode(' ', $longname);
 		$CONGOSQL  = "INSERT into Congodump set badgeid='". $badgeid ."' ";
 		$CONGOSQL .= ", firstname='". mysql_real_escape_string($names[0]) ."' ";
@@ -206,8 +206,7 @@
                 } else
                 {
                     $other = $row[other_en];
-                }
-                ;
+                };
                 
                 if ($row[other_fr] != null)
                 {
@@ -215,8 +214,7 @@
                 } else
                 {
                     $otherLang = $row[language_en];
-                }
-                ;
+                };
                 
                 addToParticipants($badgeid, $row[particbio],
                 $row[panel_fr], $row[panel_interp_fr], $row[panel_en], $row[panel_interp_en], $row[moderate], $row[masque],
