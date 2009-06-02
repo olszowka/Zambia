@@ -9,4 +9,12 @@ CREATE TABLE Imported (
     
 CREATE INDEX rawidx USING BTREE ON Imported(mbox, message_number);
 
+CREATE TABLE LastBadgeId (
+	badgeid VARCHAR(15),
+	id VARCHAR(10) NOT NULL,
+    PRIMARY KEY  (id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO LastBadgeId (badgeid, id) VALUES ('3000', 'last');
+
 INSERT INTO PatchLog (patchname) VALUES ('25_create_import_info.sql');
