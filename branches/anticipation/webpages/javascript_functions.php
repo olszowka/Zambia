@@ -46,9 +46,12 @@ jQuery(document).ready(function(){
 
 $("#t_list").append("<input type='button' value='Add to Zambia' style='height:20px;font-size:-3'/>");
 $("input","#t_list").click(function(){
+	$('#rsperror').text("");
 	var gsr = jQuery("#list").getGridParam('selarrrow');
 	var msg = $("#load_list").text();
 	$.get('addParticipant.php',{'ids[]':gsr}, function(data) { 
+		var error = $(data).find('#error').html();
+		if ( error != null) { $('#rsperror').text(error); };
 		$("#load_list").html("Importing " + data);
 		$("#load_list").fadeIn("normal", function() {
 			$("#load_list").fadeOut("normal", function() {

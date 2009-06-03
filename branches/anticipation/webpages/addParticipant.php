@@ -166,22 +166,32 @@
 			$sql = "INSERT into ParticipantGeneralInfo set badgeid ='". $badgeid ."' ";
 			$sql .= ", infoid = '" . $infoid . "'";
 			$sql .= ", infovalue = '" . mysql_real_escape_string($info) . "'";
-		echo $sql;
 			$result = mysql_query( $sql ) ;
-		if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
+			if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 		}
+	}
+
+	function insertTrackInterest($badgeid, $trackid) {
+		$sql = "INSERT into ParticipantTrackInterest set badgeid ='". $badgeid ."' ";
+		$sql .= ", trackid = '" . $trackid . "'";
+		$result = mysql_query( $sql ) ;
+		if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 	}
 
 	/* ---------------------------------------------------------------------------------------------
 	 * 
 	 */
+	header("Content-type: application/xhtml;charset=utf-8");
+	echo("<div id='import'>");
+
     if (prepare_db()===false) {
         $message="Error connecting to database.";
+		echo "<div id='error'>Error connecting to database.</div> </br>";
+		echo("</div>");
         exit ();
     }
 
 	$ids = $_GET["ids"];
-	header("Content-type: application/xhtml;charset=utf-8");
 	
 	$badgeid = getLastBadgeId();
 	$oldbadgeid = $badgeid;
@@ -241,10 +251,23 @@
                 insertKnowledge($badgeid, 14, $row[kidstrackknow]);
                 
                 // Tracks
-                /* TODO -- not really needed at the moment...
-                 *                 $SQL .= "englishlit, frenchlit, academictrack, fantrack, mediatrack, gamingtrack, , visualarts, , culturetrack, , ";
-                 $SQL .= "costumetrack, filktrack, techtrack, kidstrack, kidstrackknow, quiztrack, creativewrite, kaffeeklatsch, readingtrack, , ";
-                 */
+				if ($row[englishlit]) insertTrackInterest($badgeid, 2);
+				if ($row[frenchlit]) insertTrackInterest($badgeid, 3);
+				if ($row[academictrack]) insertTrackInterest($badgeid, 4);
+				if ($row[techtrack]) insertTrackInterest($badgeid, 5);
+				if ($row[culturetrack]) insertTrackInterest($badgeid, 6);
+				if ($row[fantrack]) insertTrackInterest($badgeid, 7);
+				if ($row[gamingtrack]) insertTrackInterest($badgeid, 8);
+				if ($row[mediatrack]) insertTrackInterest($badgeid, 9);
+				if ($row[kidstrack]) insertTrackInterest($badgeid, 11);
+				if ($row[filktrack]) insertTrackInterest($badgeid, 12);
+				if ($row[costumetrack]) insertTrackInterest($badgeid, 13);
+				if ($row[visualarts]) insertTrackInterest($badgeid, 14);
+				if ($row[creativewrite]) insertTrackInterest($badgeid, 16);
+				if ($row[quiztrack]) insertTrackInterest($badgeid, 19);
+				if ($row[kaffeeklatsch]) insertTrackInterest($badgeid, 20);
+				if ($row[readingtrack]) insertTrackInterest($badgeid, 21);
+
                 // Times , $row[itemcountother]
                 addAvailabilityDays($badgeid, $row[itemsperday]);
                 
@@ -254,11 +277,12 @@
                 $num = createAvailTimesForDay($badgeid, 4, $num, array ($row[sunto10am], $row[suntonoon], $row[sunnoonto5pm], $row[sunaftr5pm], $row[sunaftr6pm], $row[sunaftr7pm], $row[sun8pm10pm], $row[sun10pm12am], $row[sun12ammon2am]));
                 createAvailTimesForDay($badgeid, 5, $num, array ($row[monto10am], $row[montonoon], $row[monnoonto5pm]));
 			} catch (Exception $exception) {
-				echo "Problem importing user $row[name], exception: ".$exception->getMessage()." </br>";
+				echo "<div id='error'>Problem importing user". $row[name].", exception: ".$exception->getMessage()."</div> </br>";
 			};
 		}
 	}
 
 	if ($oldbadgeid != $badgeid)
 		setLastBadgeId($badgeid) ;
+	echo("</div>");
 ?>
