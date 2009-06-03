@@ -5,7 +5,7 @@ CREATE TABLE Imported (
 	message_number INTEGER default NULL,
 	badgeid VARCHAR(15) NOT NULL,
     PRIMARY KEY  (badgeid)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
     
 CREATE INDEX rawidx USING BTREE ON Imported(mbox, message_number);
 
@@ -13,7 +13,7 @@ CREATE TABLE LastBadgeId (
 	badgeid VARCHAR(15),
 	id VARCHAR(10) NOT NULL,
     PRIMARY KEY  (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO LastBadgeId (badgeid, id) VALUES ('3000', 'last');
 

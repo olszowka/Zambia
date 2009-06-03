@@ -25,7 +25,7 @@ CREATE TABLE GeneralInfoRef (
  info_description varchar(200) default NULL,
  display_order int(11) NOT NULL,
  PRIMARY KEY  (`infoid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1;
 
 INSERT INTO GeneralInfoRef
 	(infoid, info_description, display_order)
