@@ -13,7 +13,7 @@
     }
 
 // calculate the number of rows for the query. We need this for paging the result 
-$result = mysql_query("SELECT COUNT(*) AS count FROM anticipation.rawdata"); 
+$result = mysql_query("SELECT COUNT(*) AS count FROM ".PARTICIPANT_SOURCE.".rawdata"); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
 
@@ -36,8 +36,8 @@ $start = $limit*$page - $limit;
 if($start <0) $start = 0; 
 
 // the actual query for the grid data 
-$SQL = "SELECT raw.mbox, raw.message_number, raw.mail_date, raw.name, raw.lang, raw.email, imp.badgeid from anticipation.rawdata raw" .
-	" left join imported imp on raw.mbox = imp.mbox AND raw.message_number = imp.message_number ORDER BY $sidx $sord LIMIT $start , $limit";
+$SQL = "SELECT raw.mbox, raw.message_number, raw.mail_date, raw.name, raw.lang, raw.email, imp.badgeid from ".PARTICIPANT_SOURCE.".rawdata raw" .
+	" left join Imported imp on raw.mbox = imp.mbox AND raw.message_number = imp.message_number ORDER BY $sidx $sord LIMIT $start , $limit";
 $result = mysql_query( $SQL ) or die("Couldn't execute query.".mysql_error()); 
 
 // we should set the appropriate header information

@@ -49,7 +49,7 @@
 		// Add them CongoDump
 		$badgeid = $badgeid;
 		$names = explode(' ', $longname);
-		$CONGOSQL  = "INSERT into Congodump set badgeid='". $badgeid ."' ";
+		$CONGOSQL  = "INSERT into CongoDump set badgeid='". $badgeid ."' ";
 		$CONGOSQL .= ", firstname='". mysql_real_escape_string($names[0]) ."' ";
 		// Take a guess that the last name is the rest of the string... works for the majority but not all ....
 		array_shift($names);
@@ -121,7 +121,7 @@
 		$SQL .= "satto10am, sattonoon, satnoonto5pm, sataftr5pm, sataftr6pm, sataftr7pm, sat8pm10pm, sat10pm12am, sat12amsun2am, ";
 		$SQL .= "sunto10am, suntonoon, sunnoonto5pm, sunaftr5pm, sunaftr6pm, sunaftr7pm, sun8pm10pm, sun10pm12am, sun12ammon2am, ";
 		$SQL .= "monto10am, montonoon, monnoonto5pm ";
-		$SQL .= "FROM anticipation.rawdata WHERE mbox LIKE '".$args[0]."' AND  message_number LIKE '" . $args[1] . "'";
+		$SQL .= "FROM ".PARTICIPANT_SOURCE.".rawdata WHERE mbox LIKE '".$args[0]."' AND  message_number LIKE '" . $args[1] . "'";
 
 		// We should have one row for the participant
 		$result = mysql_query( $SQL );

@@ -11,7 +11,7 @@ $id = $_GET["id"];
 $args = explode('_', $id);
 
 $SQL  = "SELECT postmail, french, other_fr, language_fr, english, other_en, language_en ";
-$SQL .= "FROM anticipation.rawdata WHERE mbox LIKE '".$args[0]."' AND  message_number LIKE '" . $args[1] . "'";
+$SQL .= "FROM ".PARTICIPANT_SOURCE.".rawdata WHERE mbox LIKE '".$args[0]."' AND  message_number LIKE '" . $args[1] . "'";
 $result = mysql_query( $SQL ) or die("Couldnt execute query.".mysql_error());
 
 // we should set the appropriate header information
