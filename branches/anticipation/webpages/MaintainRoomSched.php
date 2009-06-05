@@ -59,7 +59,7 @@ if ($topsectiononly) {
     exit();
     }
 $query = <<<EOD
-SELECT roomid, roomname, opentime1, closetime1, opentime2, closetime2, opentime3, closetime3,
+SELECT roomid, roomname, 
 function, floor, height, dimensions, area, notes FROM Rooms WHERE roomid=$selroomid
 EOD;
 if (!$result=mysql_query($query,$link)) {
@@ -88,7 +88,7 @@ echo "      <TR>\n";
 echo "         <TH class=\"lrpad border1111\">Function</TH>\n";
 echo "         <TH class=\"lrpad border1111\">Floor</TH>\n";
 echo "         <TH class=\"lrpad border1111\">Dimensions</TH>\n";
-echo "         <TH class=\"lrpad border1111\">Area</TH>\n";
+echo "         <TH class=\"lrpad border1111\">Area (m&#178;)</TH>\n";
 echo "         <TH class=\"lrpad border1111\">Height</TH>\n";
 echo "         </TR>\n";
 echo "      <TR>\n";
