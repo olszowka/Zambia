@@ -65,11 +65,12 @@
 	 * 
 	 */
 	function addToParticipants($badgeid, $particbio, $panelfr, $panelIntFr, $panelEn, $panelIntEn, $moderate, $masque,
-							$french, $english, $other, $otherLang) {
+							$french, $english, $other, $otherLang, $pubsname) {
 		// Add to Participants
 		$PARTICPANTSQL  = "INSERT into Participants set badgeid='". $badgeid ."' ";
 		$PARTICPANTSQL .= ", password='ffff', interested='1'";
 		$PARTICPANTSQL .= ", bio =\"". mysql_real_escape_string($particbio) ."\" ";
+		$PARTICPANTSQL .= ", pubsname=\"".mysql_real_escape_string($pubsname)."\"";
 		$PARTICPANTSQL .= ", willpartfre ='".$panelfr."' ";
 		$PARTICPANTSQL .= ", willpartfretrans ='".$panelIntFr."' ";
 		$PARTICPANTSQL .= ", willparteng ='".$panelEn."' ";
@@ -228,7 +229,7 @@
                 
                 addToParticipants($badgeid, $row[particbio],
                 $row[panel_fr], $row[panel_interp_fr], $row[panel_en], $row[panel_interp_en], $row[moderate], $row[masque],
-                $row[french], $row[english], $other, $otherLang
+                $row[french], $row[english], $other, $otherLang, $row[name]
                 );
                 
                 // Add to UserHasPermissionRole
