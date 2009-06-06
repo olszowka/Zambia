@@ -68,18 +68,24 @@ if (!$result=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
+$query = <<<EOD
+SELECT opentime, closetime from RoomAvailability WHERE roomid=$selroomid
+EOD;
+if (!$result2=mysql_query($query,$link)) {
+    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
+    echo "<P class\"errmsg\">".$message."\n";
+    staff_footer();
+    exit();
+    }
 echo "<H2>$selroomid - ".htmlspecialchars(mysql_result($result,0,"roomname"))."</H2>";
-//echo "|".mysql_result($result,0,"opentime1")."|<BR>\n";
 echo "<H4>Open Times</H4>\n";
 echo "<DIV class=\"border1111 lrpad lrmargin\"><P class=\"lrmargin\">";
-if (mysql_result($result,0,"opentime1")!="") {
-    echo time_description(mysql_result($result,0,"opentime1"))." through ".time_description(mysql_result($result,0,"closetime1"))."<BR>\n";
-    }
-if (mysql_result($result,0,"opentime2")!="") {
-    echo time_description(mysql_result($result,0,"opentime2"))." through ".time_description(mysql_result($result,0,"closetime2"))."<BR>\n";
-    }
-if (mysql_result($result,0,"opentime3")!="") {
-    echo time_description(mysql_result($result,0,"opentime3"))." through ".time_description(mysql_result($result,0,"closetime3"))."<BR>\n";
+$availabilityrows=mysql_num_rows($result2);
+for ($i=1; $i<= $availabilityrows; $i++) {
+    list($opentime,$closetime)=mysql_fetch_array($result2,MYSQL_NUM);
+    if ($opentime!="") {
+        echo time_description($opentime)." through ".time_description($closetime)."<BR>\n";
+        }
     }
 echo "</DIV>\n";
 echo "<H4>Characteristics</H4>\n";
