@@ -24,10 +24,10 @@ jQuery(document).ready(function(){
 	    mtype: 'GET',
 		colNames:['Name', 'Pubs name', 'Email', 'Zambia Id' ],
 		colModel :[ 
-			{name:'badgename', index:'badgename', width:300}, 
-			{name:'pubsname', index:'pubsname', width:300}, 
-      		{name:'email', index:'email', width:300},
-      		{name:'badgeid', index:'badgeid', width:100}
+			{name:'c.badgename', index:'badgename', width:300}, 
+			{name:'d.pubsname', index:'pubsname', width:300}, 
+      		{name:'c.email', index:'email', width:300},
+      		{name:'c.badgeid', index:'badgeid', width:100}
 		],
 	    pager: jQuery('#pager'),
 		rowNum:12, 

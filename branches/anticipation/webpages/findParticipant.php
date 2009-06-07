@@ -72,7 +72,7 @@ while($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
 echo "<row id='".$row[badgeid]."'>";            
             echo "<cell><![CDATA[". $row[badgename]."]]></cell>";
             echo "<cell><![CDATA[". $row[pubsname]."]]></cell>";
-            echo "<cell>". $row[email]."</cell>";
+            echo "<cell><![CDATA[". $row[email]."]]></cell>";
             echo "<cell>". $row[badgeid]."</cell>";
 echo "</row>";
 }
