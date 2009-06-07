@@ -53,8 +53,8 @@
 		$CONGOSQL .= ", firstname='". mysql_real_escape_string($names[0]) ."' ";
 		// Take a guess that the last name is the rest of the string... works for the majority but not all ....
 		array_shift($names);
-		$CONGOSQL .= ", lastname='". implode(' ', $names) ."' ";
-		$CONGOSQL .= ", email='". $email ."' ";
+		$CONGOSQL .= ", lastname='". mysql_real_escape_string(implode(' ', $names)) ."' ";
+		$CONGOSQL .= ", email='". mysql_real_escape_string($email) ."' ";
 		$CONGOSQL .= ", postaddress='". mysql_real_escape_string($postmail) ."' ";
 		$CONGOSQL .= ", badgename='". mysql_real_escape_string($longname) ."' ";
 		$result = mysql_query( $CONGOSQL );
@@ -182,7 +182,7 @@
 	/* ---------------------------------------------------------------------------------------------
 	 * 
 	 */
-	header("Content-type: application/xhtml;charset=utf-8");
+	header("Content-type: application/xhtml;charset=latin-1");
 	echo("<div id='import'>");
 
     if (prepare_db()===false) {

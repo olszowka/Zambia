@@ -1,4 +1,74 @@
 <?php
+function javascript_for_view_participant() { //
+?>
+<link rel="stylesheet" type="text/css" media="screen" href="themes/green/grid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="themes/jqModal.css" />
+<link type="text/css" href="themes/base/ui.all.css" rel="stylesheet" />
+<script src="jquery.js" type="text/javascript"></script>
+<script src="jquery-ui-1.7.2.custom.min.js" type="text/javascript"></script>
+<script src="jquery.jqGrid.js" type="text/javascript"></script>
+<script src="js/jqModal.js" type="text/javascript"></script>
+<script src="js/jqDnR.js" type="text/javascript"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){ 
+
+	$("#particpanttabs").tabs({
+		ajaxOptions: { async: false },
+		cache: false
+	});
+	
+	jQuery("#particpantgrid").jqGrid({ 
+		url:'findParticipant.php',
+		datatype: "xml", 
+		height: "100%", 
+	    mtype: 'GET',
+		colNames:['Name', 'Pubs name', 'Email', 'Zambia Id' ],
+		colModel :[ 
+			{name:'badgename', index:'badgename', width:300}, 
+			{name:'pubsname', index:'pubsname', width:300}, 
+      		{name:'email', index:'email', width:300},
+      		{name:'badgeid', index:'badgeid', width:100}
+		],
+	    pager: jQuery('#pager'),
+		rowNum:12, 
+    	imgpath: 'themes/green/images',
+		pager: jQuery('#pager'), 
+		sortname: 'badgename', 
+		viewrecords: true,
+		sortorder: "asc", 
+	    caption: 'Participants',
+		multiselect: false, 
+		onSelectRow: function(ids) { 
+			var $tabs = $('#particpanttabs').tabs();
+
+			$tabs.
+				tabs( 'url' , 0 , 'particpantoverview.php?id='+ids ).tabs( 'load' , 0 ).tabs('select', 0).
+				tabs( 'url' , 1 , 'participantbiotab.php?id='+ids ).tabs( 'load' , 1 );
+			return false;
+		},
+		loadError : function(xhr,st,err) {
+			jQuery("#rsperror").html("Type: "+st+"; Response: "+ xhr.status + " "+xhr.statusText);
+		}
+	}); 
+	
+}); 
+
+       var timeoutHnd;
+        
+        function doSearch(ev){ 
+                if(timeoutHnd) 
+                        clearTimeout(timeoutHnd); 
+                timeoutHnd = setTimeout(gridReload,500);
+        }
+         
+        function gridReload(){ 
+                var nm_mask = jQuery("#name_cd").val(); 
+                jQuery("#particpantgrid").setGridParam({url:"findParticipant.php?nm_mask="+nm_mask,page:1}).trigger("reloadGrid");
+        }
+         
+</script>
+<?php } ?>
+<?php
 function javascript_for_import_participant() { //
 ?>
 <link rel="stylesheet" type="text/css" media="screen" href="themes/green/grid.css" />
@@ -18,8 +88,8 @@ jQuery(document).ready(function(){
       {name:'mail_date', index:'mail_date', width:250	}, 
       {name:'name', index:'name', width:300}, 
       {name:'lang', index:'lang', width:50, align:'left'},
-      {name:'lang', index:'email', width:300},
-      {name:'lang', index:'badgeid', width:100}
+      {name:'email', index:'email', width:300},
+      {name:'badgeid', index:'badgeid', width:100}
 	   ],
     pager: jQuery('#pager'),
     rowNum:20,
