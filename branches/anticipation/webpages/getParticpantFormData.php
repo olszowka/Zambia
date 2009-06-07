@@ -58,7 +58,7 @@ echo "<row id='".$row[mbox]."_".$row[message_number]."'>";
             echo "<cell>". $row[mail_date]."</cell>";
             echo "<cell>". $row[name]."</cell>";
             echo "<cell>". $row[lang]."</cell>";
-            echo "<cell>". $row[email]."</cell>";
+            echo "<cell><![CDATA[". $row[email]."]]></cell>";
             echo "<cell>". $row[badgeid]."</cell>";
 echo "</row>";
 }
