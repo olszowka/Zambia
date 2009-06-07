@@ -9,7 +9,7 @@
 		
 		echo "<table>";
 		echo "<tr>";
-		echo "<td colspan=5><b>Publication  Name:</b>" . $row[pubsname] . "</td>";
+		echo "<td colspan=5><b>Publication  Name:</b>" . htmlentities($row[pubsname]) . "</td>";
 		echo "</tr>";
 		echo "</table>";
 
@@ -17,9 +17,9 @@
 		echo "<tr>";
 		echo "<td>";
 		if ($row[editedbio]) {
-			echo $row[editedbio];
+			echo htmlentities($row[editedbio]);
 		} else {
-			echo $row[bio];
+			echo htmlentities($row[bio]);
 		}
 		echo "<td>";
 		echo "</tr>";

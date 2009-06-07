@@ -7,10 +7,10 @@
 		if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 		$row = mysql_fetch_array($result,MYSQL_ASSOC);
 		
-		echo "Firstname: " . $row[firstname];
-		echo "Last name: " . $row[lastname];
-		echo "Email: " . $row[email];
-		echo "Reg Type: " . $row[regtype];
+		echo "Firstname: " . htmlentities($row[firstname]);
+		echo "Last name: " . htmlentities($row[lastname]);
+		echo "Email: " . htmlentities($row[email]);
+		echo "Reg Type: " . htmlentities($row[regtype]);
 	};
 	
 	function convertToYN($arg) {
@@ -29,7 +29,7 @@
 
 		echo "<table border='1'>";
 		while ($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
-			echo "<tr><td width='150'><em>" . $row[info_description] . "</em></td><td>" . $row[infovalue] . "</td></tr>";
+			echo "<tr><td width='150'><em>" . htmlentities($row[info_description]) . "</em></td><td>" . htmlentities($row[infovalue]) . "</td></tr>";
 		}
 		echo "</table>";
 	}
@@ -87,13 +87,13 @@
 		
 		echo "<table>";
 		echo "<tr>";
-		echo "<td colspan=5><b>Publication  Name:</b>" . $row[pubsname] . "</td>";
+		echo "<td colspan=5><b>Publication  Name:</b>" . htmlentities($row[pubsname]) . "</td>";
 		echo "</tr>";
 		echo "<tr>";
 		echo "<td><b>Speaks French:</b> ".convertToYN($row[speaksFrench])."</td>";
 		echo "<td><b>Speaks English:</b> ".convertToYN($row[speaksEnglish])."</td>";
 		echo "<td><b>Speaks Other:</b> ".convertToYN($row[speaksOther])."</td>";
-		echo "<td><b>Language(s):</b> ".$row[otherLangs]. "</td>";
+		echo "<td><b>Language(s):</b> ".htmlentities($row[otherLangs]). "</td>";
 		echo "</tr>";
 		echo "</table>";
 		echo "<table>";
@@ -109,18 +109,6 @@
 		echo "<td><b>In Masquerade:</b> ".convertToYN($row[masque])."</td>";
 		echo "</tr>";
 		echo "</table>";
-
-//		echo "<table>";
-//		echo "<tr>";
-//		echo "<td>";
-//		if ($row[editedbio]) {
-//			echo $row[editedbio];
-//		} else {
-//			echo $row[bio];
-//		}
-//		echo "<td>";
-//		echo "</tr>";
-//		echo "</table>";
 	}
 
     if (prepare_db()===false) {

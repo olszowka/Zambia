@@ -26,13 +26,13 @@ echo "<rows>";
 // be sure to put text data in CDATA
 while($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
 	echo "<row>";
-	echo "<cell>". $row[postmail]."</cell>\n";
+	echo "<cell><![CDATA[". htmlentities($row[postmail])."]]></cell>\n";
 	echo "<cell>". $row[french]."</cell>";
 	echo "<cell>". $row[other_fr]."</cell>";
-	echo "<cell><![CDATA[". $row[language_fr]."]]></cell>";
+	echo "<cell><![CDATA[". htmlentities($row[language_fr])."]]></cell>";
 	echo "<cell>". $row[english]."</cell>";
 	echo "<cell>". $row[other_en]."</cell>";
-	echo "<cell><![CDATA[". $row[language_en]."]]></cell>";
+	echo "<cell><![CDATA[". htmlentities($row[language_en])."]]></cell>";
 	echo "</row>";
 }
 echo "</rows>";				
