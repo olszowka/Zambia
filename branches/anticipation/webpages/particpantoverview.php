@@ -17,7 +17,7 @@
 		switch ($arg) {
 			case "0" : return "no"; break;
 			case "1" : return "yes"; break;
-			default : return "unkown";
+			default : return "unknown";
 		}
 	}
 	
