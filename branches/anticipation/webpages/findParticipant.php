@@ -7,7 +7,7 @@
 	$sord = $_GET['sord']; 
 	if(!$sidx) $sidx =1; 
 
-	if(isset($_GET["nm_mask"])) $nm_mask = $_GET['nm_mask']; else $nm_mask = ""; 
+	if(isset($_GET["nm_mask"])) $nm_mask = mb_convert_encoding ( $_GET['nm_mask'], 'latin1', 'utf8' ); else $nm_mask = ""; 
 	
     if (prepare_db()===false) {
         $message="Error connecting to database.";
