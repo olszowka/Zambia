@@ -43,7 +43,8 @@ jQuery(document).ready(function(){
 
 			$tabs.
 				tabs( 'url' , 0 , 'particpantoverview.php?id='+ids ).tabs( 'load' , 0 ).tabs('select', 0).
-				tabs( 'url' , 1 , 'participantbiotab.php?id='+ids ).tabs( 'load' , 1 );
+				tabs( 'url' , 1 , 'participantbiotab.php?id='+ids ).tabs( 'load' , 1 ).
+				tabs( 'url' , 2 , 'participantcontacttab.php?id='+ids ).tabs( 'load' , 2 );
 			return false;
 		},
 		loadError : function(xhr,st,err) {

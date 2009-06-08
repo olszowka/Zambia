@@ -25,6 +25,7 @@ On this page you will find the online tools for viewing Participant information.
     <ul>
         <li><a href="particpantoverview.php"><span>Overview</span></a></li>
         <li><a href="participantbiotab.php"><span>Bio</span></a></li>
+        <li><a href="participantcontacttab.php"><span>Contact Info</span></a></li>
     </ul>
     <div id="Overview">
     </div>
