@@ -89,15 +89,28 @@ function validate_session() {
 //don't validate further those not marked with 'validate' such as "dropped" or "cancelled"
         return ($flag);
         }
-    $i=strlen($session["title"]);
-    if ($i<10||$i>48) {
-        $messages.="Title is $i characters long.  Please edit it to between <B>10</B> and <B>48</B> characters.<BR>\n";
+    $te=strlen($session["title"]);
+    $tf=strlen($session["secondtitle"]);
+    $de=strlen($session["progguiddesc"]);
+    $df=strlen($session["pocketprogtext"]);
+    if ($te>=100) {
+        $messages.="Title is $te characters long.  Please edit it to be shorter than <B>100</B> characters.<BR>\n";
         $flag=false;
         }
-    $i=strlen($session["progguiddesc"]);
-    if ($i<10||$i>500) {
-        $messages.="Description is $i characters long.  Please edit it to between";
-        $messages.=" <B>10</B> and <B>500</B> characters long.<BR>\n";
+    if ($tf>=100) {
+        $messages.="French title is $tf characters long.  Please edit it to be shorter than <B>100</B> characters.<BR>\n";
+        $flag=false;
+        }
+    if ($de>=500) {
+        $messages.="Description is $de characters long.  Please edit it to be shorter than <B>500</B> characters.<BR>\n";
+        $flag=false;
+        }
+    if ($df>=500) {
+        $messages.="French description is $df characters long.  Please edit it to be shorter than <B>500</B> characters.<BR>\n";
+        $flag=false;
+        }
+    if (!(($te>=10 AND $de>=15) OR ($tf>=10 AND $df>=15))) {
+        $messages.="Please fill out either the English or the French pair of title and description.<BR>\n";
         $flag=false;
         }
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {
