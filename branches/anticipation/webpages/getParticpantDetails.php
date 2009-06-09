@@ -16,11 +16,11 @@ $result = mysql_query( $SQL ) or die("Couldnt execute query.".mysql_error());
 
 // we should set the appropriate header information
 if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) {
-              header("Content-type: application/xhtml+xml;charset=latin-1"); 
+              header("Content-type: application/xhtml+xml"); 
 } else {
-          header("Content-type: text/xml;charset=latin-1");
+          header("Content-type: text/xml");
 }
-echo "<?xml version='1.0' encoding='latin-1'?>";
+echo "<?xml version='1.0'?>";
 
 echo "<rows>";
 // be sure to put text data in CDATA
