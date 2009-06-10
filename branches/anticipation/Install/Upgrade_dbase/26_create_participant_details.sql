@@ -3,7 +3,7 @@ ALTER TABLE Participants
    ADD COLUMN masque TINYINT(1),
    ADD COLUMN willmoderate TINYINT(1),
    ADD COLUMN willparteng TINYINT(1),
-   ADD COLUMN willpartendtrans TINYINT(1),
+   ADD COLUMN willpartengtrans TINYINT(1),
    ADD COLUMN willpartfre TINYINT(1),
    ADD COLUMN willpartfretrans TINYINT(1),
    ADD COLUMN speaksFrench TINYINT(1),
