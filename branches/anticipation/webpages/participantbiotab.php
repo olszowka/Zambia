@@ -2,7 +2,7 @@
     require_once ('db_functions.php');
 	
 	function getParticipantInfo($id) {
-		$SQL = "select bio, editedbio, pubsname, willparteng, willpartendtrans, willpartfre, willpartfretrans, willmoderate, masque, speaksFrench, speaksEnglish, speaksOther, otherLangs from Participants where badgeid = '".$id."'";
+		$SQL = "select bio, editedbio, pubsname, willparteng, willpartengtrans, willpartfre, willpartfretrans, willmoderate, masque, speaksFrench, speaksEnglish, speaksOther, otherLangs from Participants where badgeid = '".$id."'";
 		$result = mysql_query( $SQL ) or die("Couldnt execute query.".mysql_error());
 		if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 		$row = mysql_fetch_array($result,MYSQL_ASSOC);

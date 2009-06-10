@@ -74,7 +74,7 @@
 		$PARTICPANTSQL .= ", willpartfre ='".$panelfr."' ";
 		$PARTICPANTSQL .= ", willpartfretrans ='".$panelIntFr."' ";
 		$PARTICPANTSQL .= ", willparteng ='".$panelEn."' ";
-		$PARTICPANTSQL .= ", willpartendtrans ='".$panelIntEn."' ";
+		$PARTICPANTSQL .= ", willpartengtrans ='".$panelIntEn."' ";
 		$PARTICPANTSQL .= ", willmoderate ='".$moderate."' ";
 		$PARTICPANTSQL .= ", masque ='".$masque."' ";
 		$PARTICPANTSQL .= ", speaksFrench ='".$french."' ";

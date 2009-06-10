@@ -80,7 +80,7 @@
 	}
 	
 	function getParticipantInfo($id) {
-		$SQL = "select bio, editedbio, pubsname, willparteng, willpartendtrans, willpartfre, willpartfretrans, willmoderate, masque, speaksFrench, speaksEnglish, speaksOther, otherLangs from Participants where badgeid = '".$id."'";
+		$SQL = "select bio, editedbio, pubsname, willparteng, willpartengtrans, willpartfre, willpartfretrans, willmoderate, masque, speaksFrench, speaksEnglish, speaksOther, otherLangs from Participants where badgeid = '".$id."'";
 		$result = mysql_query( $SQL ) or die("Couldnt execute query.".mysql_error());
 		if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 		$row = mysql_fetch_array($result,MYSQL_ASSOC);
@@ -102,7 +102,7 @@
 		echo "</tr>";
 		echo "<tr>";
 		echo "<td><b>English:</b> ".convertToYN($row[willparteng])."</td>";
-		echo "<td><b>English Translated:</b> ".convertToYN($row[willpartendtrans])."</td>";
+		echo "<td><b>English Translated:</b> ".convertToYN($row[willpartengtrans])."</td>";
 		echo "<td><b>French:</b> ".convertToYN($row[willpartfre])."</td>";
 		echo "<td><b>French Translated:</b> ".convertToYN($row[willpartfretrans])."</td>";
 		echo "<td><b>Will Moderate:</b> ".convertToYN($row[willmoderate])."</td>";
