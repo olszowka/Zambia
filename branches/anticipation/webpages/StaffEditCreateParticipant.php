@@ -33,6 +33,17 @@
             $participant_arr['phone']="";
             $participant_arr['email']="";
             $participant_arr['postaddress']="";
+            $participant_arr['masque']=0; // not participating the the masquerade
+            $participant_arr['willmoderate']=0; // 
+            $participant_arr['willparteng']=0; // 
+            $participant_arr['willpartengtrans']=0; // 
+            $participant_arr['willpartfre']=0; // 
+            $participant_arr['willpartfretrans']=0; // 
+            $participant_arr['speaksfrench']=0; // 
+            $participant_arr['speaksenglish']=0; // 
+            $participant_arr['speaksother']=0; // 
+            $participant_arr['otherlangs']=""; // 
+            $participant_arr['datacleanupid']=1; // data not cleaned up
             }
         else { // get participant array from database
             $title="Edit Participant";
@@ -41,7 +52,7 @@
                 RenderError($title,$message_error);
                 exit();
                 }
-            if (!(isset($_GET['badgeid']))) {
+            if (!(isset($_GET['badgeid']))) {((willparteng=='1')?'1':'0')."',";
                 $message_error="Required parameter 'badgeid' not found.  Can't continue.<BR>\n";
                 RenderError($title,$message_error);
                 exit();
@@ -69,8 +80,12 @@
             $participant_arr['email']=$result_array['email'];
             $participant_arr['postaddress']=$result_array['postaddress'];
             $participant_arr['regtype']=$result_array['regtype'];
-            $query="SELECT bestway, interested, bio, pubsname ";
-            $query.=" FROM Participants where badgeid='$badgeid'";
+            $query=<<<EOD
+SELECT bestway, interested, bio, pubsname, masque, willmoderate, willparteng,
+        willpartengtrans, willpartfre, willpartfretrans, speaksFrench,
+        speaksEnglish, speaksOther, otherLangs, datacleanupid
+    FROM Participants where badgeid='$badgeid'
+EOD;
             if (($result=mysql_query($query,$link))===false) {
                 $message_error="Error retrieving data from database<BR>\n";
                 $message_error.=$query;
@@ -84,10 +99,22 @@
                 exit();
                 }
             $result_array=mysql_fetch_array($result,MYSQL_ASSOC);
+            $participant_arr['badgeid']=$badgeid;
             $participant_arr['bestway']=$result_array['bestway'];
             $participant_arr['interested']=$result_array['interested'];
             $participant_arr['bio']=$result_array['bio'];
             $participant_arr['pubsname']=$result_array['pubsname'];
+            $participant_arr['masque']=$result_array['masque'];
+            $participant_arr['willmoderate']=$result_array['willmoderate'];
+            $participant_arr['willparteng']=$result_array['willparteng'];
+            $participant_arr['willpartengtrans']=$result_array['willpartengtrans'];
+            $participant_arr['willpartfre']=$result_array['willpartfre'];
+            $participant_arr['willpartfretrans']=$result_array['willpartfretrans'];
+            $participant_arr['speaksfrench']=$result_array['speaksFrench'];
+            $participant_arr['speaksenglish']=$result_array['speaksEnglish'];
+            $participant_arr['speaksother']=$result_array['speaksOther'];
+            $participant_arr['otherlangs']=$result_array['otherLangs'];
+            $participant_arr['datacleanupid']=$result_array['datacleanupid'];
             }
     RenderEditCreateParticipant($action,$participant_arr,$message_warn,$message_error);
     exit();
