@@ -33,7 +33,6 @@ function MakeQueryEditCreateParticipant($action, &$query_arr, $participant_arr) 
             }
         else { // edit/update
             $query_arr[1] = "UPDATE Participants set\n";
-            $query_arr[1].= "    password='".mysql_real_escape_string($participant_arr['password'])."',\n";
             $query_arr[1].= "    bestway='".mysql_real_escape_string($participant_arr['bestway'])."',\n";
             $query_arr[1].= "    interested=".(($participant_arr['interested']=='')?"NULL":$participant_arr['interested']).",\n";
             $query_arr[1].= "    bio='".mysql_real_escape_string($participant_arr['bio'])."',\n";
