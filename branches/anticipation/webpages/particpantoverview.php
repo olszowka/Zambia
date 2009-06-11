@@ -87,7 +87,9 @@
 		
 		echo "<table>";
 		echo "<tr>";
-		echo "<td colspan=5><b>Publication  Name:</b>" . htmlentities($row[pubsname]) . "</td>";
+		echo "<td ><b>Publication  Name:</b>" . htmlentities($row[pubsname]) . "</td>";
+		echo "<td > </td>";
+		echo "<td colspan=5><a style='font-size:10pt; border-style:ridge; border-width:3px; color: white; background-color:#106A22;' class='button' href='/StaffEditCreateParticipant.php?action=edit&badgeid=$id'>Edit</a></td>";
 		echo "</tr>";
 		echo "<tr>";
 		echo "<td><b>Speaks French:</b> ".convertToYN($row[speaksFrench])."</td>";

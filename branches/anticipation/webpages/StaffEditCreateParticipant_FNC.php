@@ -68,7 +68,7 @@ function MakeQueryEditCreateParticipant($action, &$query_arr, $participant_arr) 
     //     participant_arr: array with all data of record to edit or defaults for create
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
-function RenderEditCreateParticipant ($action, $participant_arr, $message1, $message2) {
+function RenderEditCreateParticipant ($action, $participant_arr, $message1, $message2, $return_url=null) {
     if ($action=="create") {
             $title="Add New Participant";
             }
@@ -92,6 +92,9 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
     <DIV class="formbox">
         <FORM name="partform" class="bb"  method=POST action="SubmitEditCreateParticipant.php">
             <INPUT type="hidden" name="action" value="<?php echo htmlspecialchars($action,ENT_COMPAT);?>">
+<?php if ($return_url != null) { ?>			
+            <INPUT type="hidden" name="returnurl" value="<?php echo htmlspecialchars($return_url,ENT_COMPAT);?>">
+<?php } ?>			
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>

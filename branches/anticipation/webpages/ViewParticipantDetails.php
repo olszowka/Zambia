@@ -5,6 +5,9 @@
   require_once('StaffFooter.php');
   require_once('StaffCommonCode.php');
   staff_header($title, 'javascript_for_view_participant');
+
+  $id = $_GET["id"];
+
 ?>
 
 <p>
@@ -23,9 +26,19 @@ On this page you will find the online tools for viewing Participant information.
 
 <div id="particpanttabs" >
     <ul>
+<?php
+if ($id) {
+        echo "<li><a href='particpantoverview.php?id=$id'><span>Overview</span></a></li>";
+        echo "<li><a href='participantbiotab.php?id=$id'><span>Bio</span></a></li>";
+        echo "<li><a href='participantcontacttab.php?id=$id'><span>Contact Info</span></a></li>";
+} else {
+?>    	
         <li><a href="particpantoverview.php"><span>Overview</span></a></li>
         <li><a href="participantbiotab.php"><span>Bio</span></a></li>
         <li><a href="participantcontacttab.php"><span>Contact Info</span></a></li>
+<?php
+}
+?>    	
     </ul>
     <div id="Overview">
     </div>
