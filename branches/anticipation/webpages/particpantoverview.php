@@ -1,5 +1,6 @@
 <?php 
     require_once ('db_functions.php');
+    require_once ('data_functions.php');
 	
 	function getCongoDump($id) {
 		$SQL = "select firstname, lastname, email, regtype from CongoDump where badgeid = '".$id."'";
@@ -37,7 +38,8 @@
 	function getAvailabilityTimes($id) {
 		global $daymap;
 
-		$SQL = "select availabilitynum, starttime, endtime from ParticipantAvailabilityTimes where badgeid = '".$id."'";
+		$SQL = "select availabilitynum, starttime, endtime from ParticipantAvailabilityTimes where badgeid = '$id'";
+                $SQL .=" order by starttime";
 		$result = mysql_query( $SQL ) or die("Couldnt execute query.".mysql_error());
 		if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 		
@@ -48,15 +50,20 @@
 			echo "<caption>Availability</caption>";
 			echo "<tr><td>".$daymap["long"][$day]."</td>";
 			while  ($row) {
-				if (($row[starttime] - ($day-1)*24) < 24) {
-					echo "<td>" . ($row[starttime] - ($day-1)*24) . " to " . ($row[endtime] - ($day-1)*24) . "</td>";
-				} else  {
-					echo "</tr><tr>";
-					$day += 1;
-					echo "<td>" . $daymap["long"][$day] . "</td>";
-				}
+                                $pstart=parse_mysql_time($row['starttime']);
+                                $pend=parse_mysql_time($row['endtime']);
+                                if ($pend['hour']==0) $pend['hour']=24; 
+				if ($pstart['day']==($day-1)) {
+				                echo "<td> {$pstart['hour']} to {$pend['hour']} </td>";
+				                }
+                                         else  {
+					        echo "</tr><tr>";
+					        $day += 1;
+					        echo "<td>" . $daymap["long"][$day] . "</td>";
+                                                continue;
+				                }
 				$row = mysql_fetch_array($result,MYSQL_ASSOC);
-			}
+			        }       
 			echo "</tr>";
 			echo "</table>";
 		} else {
