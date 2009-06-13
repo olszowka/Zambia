@@ -1,26 +1,26 @@
 <?php
     $title="Update My Schedule Constraint Info";
     global $participant,$message_error,$messages,$congoinfo;
-    global $partAvail,$availability;
+    global $partAvail,$partAvailRows,$availability;
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     get_participant_availability_from_post();
     $status=validate_participant_availability(); /* return true if OK.  Store error messages in
         global $messages */
-            for ($i = 1; $i <= AVAILABILITY_ROWS; $i++) {
-                if ($partAvail["availstartday_$i"]==0) {
-                   unset($partAvail["availstartday_$i"]);
-                   }
-                if ($partAvail["availstarttime_$i"]==0) {
-                   unset($partAvail["availstarttime_$i"]);
-                   }
-                if ($partAvail["availendday_$i"]==0) {
-                   unset($partAvail["availendday_$i"]);
-                   }
-                if ($partAvail["availendtime_$i"]==0) {
-                   unset($partAvail["availendtime_$i"]);
-                   }
-                }
+	for ($i = 1; $i <= AVAILABILITY_ROWS; $i++) {
+		if ($partAvail["availstartday_$i"]==0) {
+		   unset($partAvail["availstartday_$i"]);
+		   }
+		if ($partAvail["availstarttime_$i"]==0) {
+		   unset($partAvail["availstarttime_$i"]);
+		   }
+		if ($partAvail["availendday_$i"]==0) {
+		   unset($partAvail["availendday_$i"]);
+		   }
+		if ($partAvail["availendtime_$i"]==0) {
+		   unset($partAvail["availendtime_$i"]);
+		   }
+		}
     if ($status==false) {
             $message_error="The data you entered was incorrect.  Database not updated.<BR>".$messages; // error message
             unset($messages);
@@ -67,7 +67,7 @@
                     RenderError($title,$message);
                     exit();
                     }
-                }     
+                }
             $query = "DELETE FROM ParticipantAvailabilityTimes WHERE badgeid=\"$badgeid\" and ";
             $query .="availabilitynum in (";
             $deleteany=false;

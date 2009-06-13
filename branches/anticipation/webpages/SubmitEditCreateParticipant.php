@@ -1,6 +1,7 @@
 <?php
     require_once ('StaffCommonCode.php');
     require ('StaffEditCreateParticipant_FNC.php');
+    global $badgeid, $partAvail,$partAvailRows,$availability,$messages;
     if (!isset($_POST['action'])) {
         $title="Edit or Add Participant";
         $message_error="Required parameter 'action' not found.  Can't continue.<BR>\n";
@@ -14,7 +15,7 @@
         RenderError($title,$message_error);
         exit();
         }
-    if ($action=="create") { 
+    if ($action=="create") {
             $title="Add Participant";
             if (!may_I('create_participant')) {
                 $message_error="You do not have permission to access this page.<BR>\n";
@@ -30,8 +31,28 @@
                 exit();
                 }
             }
+    get_participant_availability_from_post();
+    $status=validate_participant_availability(); /* return true if OK.  Store error messages in
+        global $messages */
+    //error_log("Zambia: SECP: gpafp:".(($status)?"true":"false"."\n"),3,"error.log");
+    //error_log("Zambia: SECP: gpafp messages: $messages\n",3,"error.log");
+    //echo "Zambia: SECP: gpafp:".(($status)?"true":"false");
+    for ($i = 1; $i <= $partAvailRows; $i++) {
+        if ($partAvail["availstartday_$i"]==0) {
+            unset($partAvail["availstartday_$i"]);
+            }
+        if ($partAvail["availstarttime_$i"]==0) {
+            unset($partAvail["availstarttime_$i"]);
+            }
+        if ($partAvail["availendday_$i"]==0) {
+            unset($partAvail["availendday_$i"]);
+            }
+        if ($partAvail["availendtime_$i"]==0) {
+            unset($partAvail["availendtime_$i"]);
+            }
+        }
     $message_error="";
-    $message_warn="";
+    $message_fatal="";
     $participant_arr['badgeid']=stripslashes($_POST['badgeid']);
     $participant_arr['firstname']=stripslashes($_POST['firstname']);
     $participant_arr['lastname']=stripslashes($_POST['lastname']);
@@ -55,7 +76,8 @@
     $participant_arr['speaksother']=stripslashes($_POST['speaksother']);
     $participant_arr['datacleanupid']=stripslashes($_POST['datacleanpuid']);
     $participant_arr['otherlangs']=stripslashes($_POST['otherlangs']);
-    $error_status=false;
+    $error_status=$status;
+    $message_error=$messages;
     if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < 5) OR
         (strlen($participant_arr['badgename']) < 5) OR
         (strlen($participant_arr['pubsname']) < 5)) {
@@ -68,7 +90,7 @@
         }
     if ($error_status) {
         $message_error.="Database not updated.  <BR>\n";
-        RenderEditCreateParticipant($action,$participant_arr,$message_warn,$message_error);
+        RenderEditCreateParticipant($action,$participant_arr,$message_error,$message_fatal);
         exit();
         }
     prepare_db();
@@ -138,6 +160,9 @@
                     RenderError($title,$message_error);
                     exit();
                     }
+                $query="REPLACE ParticipantAvailability set badgeid='{$participant_arr['badgeid']}'";
+                $result=mysql_query($query,$link);
+                updateParticipantAvailabilityTimes($participant_arr['badgeid']);
                 $result=mysql_query("COMMIT;",$link);
                 $errno=mysql_errno($link);
                 if ($errno!=0) {
@@ -178,9 +203,24 @@
             $participant_arr['speaksother']=0; //
             $participant_arr['otherlangs']=""; //
             $participant_arr['datacleanupid']=1; // data not cleaned up
-            $message_warn="Participant added successfully.";
-            $message_error="";
-            RenderEditCreateParticipant($action,$participant_arr,$message_warn,$message_error);
+            for ($i = 1; $i <= $partAvailRows; $i++) {
+                if ($i <= AVAILABILITY_ROWS) {
+                        $partAvail["availstartday_$i"]=0;
+                        $partAvail["availstarttime_$i"]=0;
+                        $partAvail["availendday_$i"]=0;
+                        $partAvail["availendtime_$i"]=0;
+                        }
+                    else {
+                        unset ($partAvail["availstartday_$i"]);
+                        unset ($partAvail["availstarttime_$i"]);
+                        unset ($partAvail["availendday_$i"]);
+                        unset ($partAvail["availendtime_$i"]);
+                        }
+                }
+            $participant_arr['num_availability_slots']=AVAILABILITY_ROWS;
+            $message_error="Participant added successfully.";
+            $message_fatal="";
+            RenderEditCreateParticipant($action,$participant_arr,$message_error,$message_fatal);
             exit();
             }
         else { // insert
@@ -204,6 +244,7 @@
                     exit();
                     }
                 }
+            updateParticipantAvailabilityTimes($participant_arr['badgeid']);
             $result=mysql_query("COMMIT;",$link);
             if (!$result) {
                 $message_error="Database error: failed to commit transaction.  Database not updated.<BR>\n";

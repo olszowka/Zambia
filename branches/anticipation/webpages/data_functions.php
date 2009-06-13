@@ -61,16 +61,22 @@ function get_session_interests_from_post() {
 // the $partavail global variable with it.
 //
 // Notes on variables:
-// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are just 1-24 whole hours, 0 for unset; 1 is midnight start of day 
+// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are just 1-24 whole hours, 0 for unset; 1 is midnight start of day
 //
 function get_participant_availability_from_post() {
-    global $partAvail;
+    global $partAvail,$partAvailRows;
     // for numeric fields in ParticipantAvailability--convert to 0 if blank
     $partAvail["maxprog"]=($_POST["maxprog"]=="")?0:$_POST["maxprog"];
     for ($i=1; $i<=CON_NUM_DAYS; $i++) {
         $partAvail["maxprogday$i"]=($_POST["maxprogday$i"]!="")?$_POST["maxprogday$i"]:0;
         }
-    for ($i=1; $i<=AVAILABILITY_ROWS; $i++) {
+    if (isset($_POST['avail_rows_rendered'])) {
+    		$partAvailRows=$_POST['avail_rows_rendered'];
+    		}
+    	else {
+    		$partAvailRows=AVAILABILITY_ROWS;
+    		}
+    for ($i=1; $i<=$partAvailRows; $i++) {
         $x1=$partAvail["availstartday_$i"]=$_POST["availstartday_$i"];
         $x2=$partAvail["availstarttime_$i"]=$_POST["availstarttime_$i"];
         $x3=$partAvail["availendday_$i"]=$_POST["availendday_$i"];
@@ -127,7 +133,7 @@ function get_session_from_post() {
         }
     }
 
-// Function set_session_defaults() 
+// Function set_session_defaults()
 // Populates the $session global variable with default data
 // for use when creating a new session.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -155,7 +161,7 @@ function set_session_defaults() {
             }
         else {
             $session["duration"]=" 1:00";
-            } 
+            }
     $session["atten"]=0;
     $session["kids"]=2; // "Kids Welcome"
     $session["signup"]=false; // leave checkbox blank initially
@@ -209,9 +215,9 @@ function time_description($time) {
     }
 
 // Function fix_slashes($arg)
-// Takes the string $arg and removes multiple slashes, 
+// Takes the string $arg and removes multiple slashes,
 // slash-quote and slash-double quote.
-function fix_slashes($arg) {    
+function fix_slashes($arg) {
     while (($pos=strpos($arg,"\\\\"))!==false) {
         if ($pos==0) {
                 $arg=substr($arg,1);
@@ -254,5 +260,5 @@ function isStaff($badgeid) {
 //
 function may_I($permatomtag) {
     return (in_array($permatomtag,$_SESSION['permission_set']));
-    }    
+    }
 ?>

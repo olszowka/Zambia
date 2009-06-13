@@ -1,4 +1,57 @@
 <?php
+	// This function will update the ParticipantAvailabilityTimes table in the db.
+function updateParticipantAvailabilityTimes($badgeid) {
+    global $partAvail, $partAvailRows, $link;
+	for ($i=1; $i<=$partAvailRows; $i++) {
+		if ($partAvail["availstarttime_$i"]>0) {
+			if (CON_NUM_DAYS==1) {
+				// for 1 day con didn't collect or validate day info; just set day=1
+				$partAvail["availstartday_$i"]=1;
+				$partAvail["availendday_$i"]=1;
+				}
+			$starttime=(($partAvail["availstartday_$i"]-1)*24+$partAvail["availstarttime_$i"]-1).":00:00";
+			$endtime=(($partAvail["availendday_$i"]-1)*24+$partAvail["availendtime_$i"]-1).":00:00";
+			$query = "REPLACE ParticipantAvailabilityTimes set ";
+			$query .="badgeid=\"$badgeid\",availabilitynum=$i,starttime=\"$starttime\",endtime=\"$endtime\"";
+                        //error_log("Zambia: uPAT: query: $query \n",3,"error.log");
+			if (!mysql_query($query,$link)) {
+				$message=$query."<BR>Error updating database.  Database not updated.";
+				RenderError($title,$message);
+				exit();
+				}
+			}
+		}
+	if (CON_NUM_DAYS>=1) {
+		$query = "REPLACE ParticipantAvailabilityDays (badgeid,day,maxprog) values";
+		for ($i=1; $i<=CON_NUM_DAYS; $i++) {
+			$x=$partAvail["maxprogday$i"];
+			$query.="(\"$badgeid\",$i,$x),";
+			}
+		$query = substr($query,0,-1); // remove extra trailing comma
+		if (!mysql_query($query,$link)) {
+			$message=$query."<BR>Error updating database.  Database not updated.";
+			RenderError($title,$message);
+			exit();
+			}
+		}
+	$query = "DELETE FROM ParticipantAvailabilityTimes WHERE badgeid='$badgeid' and ";
+	$query .="availabilitynum in (";
+	$deleteany=false;
+	for ($i=1; $i<=$partAvailRows; $i++) {
+		 if ($partAvail["availstarttime_$i"]==0) {
+			 $query.=$i.", ";
+			 $deleteany=true;
+			 }
+		 }
+	if ($deleteany) {
+		$query = substr($query,0,-2).")";
+		if (!mysql_query($query,$link)) {
+			$message=$query."<BR>Error updating database.  Database not updated.";
+			RenderError($title,$message);
+			exit();
+			}
+		}
+    }
     // This function will build the queries for inserting to or updating the database
     // Returns number of queries to execute
     // 1st Query: Participants
@@ -20,16 +73,16 @@ function MakeQueryEditCreateParticipant($action, &$query_arr, $participant_arr) 
             $query_arr[1].= "'".mysql_real_escape_string($participant_arr['bio'])."',";
             $query_arr[1].= "NULL,"; // biolockedby
             $query_arr[1].= "'".mysql_real_escape_string($participant_arr['pubsname'])."',\n";
-            $query_arr[1].= "        ".(($participant_arr['willparteng']=='1')?'1':'0').",";    
-            $query_arr[1].= (($participant_arr['willpartengtrans']=='1')?'1':'0').",";    
-            $query_arr[1].= (($participant_arr['willpartfre']=='1')?'1':'0').",";    
-            $query_arr[1].= (($participant_arr['willpartfretrans']=='1')?'1':'0').",";    
-            $query_arr[1].= (($participant_arr['speaksenglish']=='1')?'1':'0').",";    
-            $query_arr[1].= (($participant_arr['speaksfrench']=='1')?'1':'0').",";    
-            $query_arr[1].= (($participant_arr['speaksother']=='1')?'1':'0').",";    
+            $query_arr[1].= "        ".(($participant_arr['willparteng']=='1')?'1':'0').",";
+            $query_arr[1].= (($participant_arr['willpartengtrans']=='1')?'1':'0').",";
+            $query_arr[1].= (($participant_arr['willpartfre']=='1')?'1':'0').",";
+            $query_arr[1].= (($participant_arr['willpartfretrans']=='1')?'1':'0').",";
+            $query_arr[1].= (($participant_arr['speaksenglish']=='1')?'1':'0').",";
+            $query_arr[1].= (($participant_arr['speaksfrench']=='1')?'1':'0').",";
+            $query_arr[1].= (($participant_arr['speaksother']=='1')?'1':'0').",";
             $query_arr[1].= "'".mysql_real_escape_string($participant_arr['otherlangs'])."',";
             if (!validate_integer($participant_arr['datacleanupid'],1,99)) $participant_arr['datacleanupid']=1;
-            $query_arr[1].= $participant_arr['datacleanupid'].")\n"; 
+            $query_arr[1].= $participant_arr['datacleanupid'].")\n";
             }
         else { // edit/update
             $query_arr[1] = "UPDATE Participants set\n";
@@ -69,6 +122,7 @@ function MakeQueryEditCreateParticipant($action, &$query_arr, $participant_arr) 
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateParticipant ($action, $participant_arr, $message1, $message2, $return_url=null) {
+    global $daymap,$partAvail;
     if ($action=="create") {
             $title="Add New Participant";
             }
@@ -92,9 +146,9 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
     <DIV class="formbox">
         <FORM name="partform" class="bb"  method=POST action="SubmitEditCreateParticipant.php">
             <INPUT type="hidden" name="action" value="<?php echo htmlspecialchars($action,ENT_COMPAT);?>">
-<?php if ($return_url != null) { ?>			
+<?php if ($return_url != null) { ?>
             <INPUT type="hidden" name="returnurl" value="<?php echo htmlspecialchars($return_url,ENT_COMPAT);?>">
-<?php } ?>			
+<?php } ?>
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
@@ -104,7 +158,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                     </TD></TR></TABLE>
                 </DIV>
             <DIV class="denseform">
-                <SPAN><LABEL for="firstname">First Name: </LABEL><INPUT type="text" size=7 name="firstname" id="firstname" 
+                <SPAN><LABEL for="firstname">First Name: </LABEL><INPUT type="text" size=7 name="firstname" id="firstname"
                      value="<?php echo htmlentities($participant_arr["firstname"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="lastname">Last Name: </LABEL><INPUT type="text" size=13 name="lastname" id="lastname"
                      value="<?php echo htmlentities($participant_arr["lastname"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
@@ -187,7 +241,7 @@ populate_select_from_table('DataCleanupRef',$participant_arr['datacleanupid'],''
                 </DIV>
             <DIV class="denseform">
                 <SPAN><LABEL for="bio" style="vertical-align: top">Biography: </LABEL>
-                    <TEXTAREA class="textlabelarea" cols=70 name="bio" ><?php 
+                    <TEXTAREA class="textlabelarea" cols=70 name="bio" ><?php
 echo htmlentities($participant_arr["bio"],ENT_NOQUOTES);
 ?></TEXTAREA>
                     </SPAN>
@@ -206,6 +260,58 @@ echo htmlentities($participant_arr["bio"],ENT_NOQUOTES);
                     <BUTTON class="ib" type=submit value="save">Save</BUTTON>
                     </TD></TR></TABLE>
                 </DIV>
+<table>
+  <tr> <!-- row one -->
+<?php if (CON_NUM_DAYS>1) { echo "<td> Start Day </td>\n";} ?>
+    <td> Start Time </td>
+    <td> &nbsp; </td>
+<?php if (CON_NUM_DAYS>1) { echo "<td> End Day </td>\n";} ?>
+    <td> End Time </td>
+  </tr> <!-- header row  -->
+<?php
+//  Notes on variables:
+//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are measured in 1-24 whole hours
+//     0 is unset, 1 is midnight beginning of day
+    $rows_to_render=max($participant_arr['num_availability_slots']+2,AVAILABILITY_ROWS);
+    for ($i=1; $i<=$rows_to_render; $i++) {
+            echo "  <TR> <!-- Row $i -->\n";
+        if (CON_NUM_DAYS>1) {
+            echo "    <TD><SELECT name=\"availstartday_$i\">\n";
+            $sel = isset($partAvail["availstartday_$i"])?"":" selected";
+            echo "        <OPTION value=0$sel>&nbsp;</OPTION>\n";
+            for ($j=1; $j<=CON_NUM_DAYS; $j++) {
+                $sel = ($partAvail["availstartday_$i"]==$j)?" selected":"";
+                $day = $daymap["long"][$j];
+                echo "        <OPTION value=$j $sel>$day</OPTION>\n";
+                }
+            echo "        </SELECT></TD>\n";
+            }
+        echo "    <TD><SELECT name=\"availstarttime_$i\">\n";
+        $timeindex=(isset($partAvail["availstarttime_$i"]))?$partAvail["availstarttime_$i"]:0;
+        populate_select_from_table("Times", $timeindex, "", true);
+        echo "        </SELECT></TD>\n";
+        echo "    <TD> Until </TD>\n";
+        if (CON_NUM_DAYS>1) {
+            echo "    <TD><SELECT name=\"availendday_$i\">\n";
+             $sel = isset($partAvail["availendday_$i"])?"":" selected";
+            echo "        <OPTION value=0$sel>&nbsp;</OPTION>\n";
+            for ($j=1; $j<=CON_NUM_DAYS; $j++) {
+                $sel = ($partAvail["availendday_$i"]==$j)?" selected":"";
+                $day = $daymap["long"][$j];
+                echo "        <OPTION value=$j $sel>$day</OPTION>\n";
+                }
+            echo "        </SELECT></TD>\n";
+            }
+        echo "    <TD><SELECT name=\"availendtime_$i\">\n";
+        $timeindex=(isset($partAvail["availendtime_$i"]))?$partAvail["availendtime_$i"]:0;
+        populate_select_from_table("Times", $timeindex, "", true);
+        echo "        </SELECT></TD>\n";
+        echo "    </TR>\n";
+        }
+?>
+</table>
+<INPUT type="hidden" name="avail_rows_rendered" value="<?php echo $rows_to_render;?>">
+
       </FORM>
     </DIV>
 <?php staff_footer(); } ?>

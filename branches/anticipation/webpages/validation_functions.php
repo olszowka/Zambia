@@ -81,7 +81,7 @@ function validate_session() {
         $messages.="Please select a track.<BR>\n";
         $flag=false;
         }
-    if ($session['roomset']==0) { 
+    if ($session['roomset']==0) {
         $messages.="Please select a room set.<BR>\n";
         $flag=false;
         }
@@ -154,29 +154,32 @@ function validate_session() {
 // with the HTML of an error message.
 //
 function validate_participant_availability() {
-    global $partAvail, $messages;
-    $flag=true;
+    global $partAvail, $partAvailRows, $messages;
+    $error_flag=false;
     $messages="";
     if (!($partAvail["maxprog"]>=0 and $partAvail["maxprog"]<=PREF_TTL_SESNS_LMT)) {
         $x=PREF_TTL_SESNS_LMT;
         $messages="For the overall maximum number of panels, enter a number between 0 and $x.<BR>\n";
-        $flag=false;
+        $error_flag=true;
         }
     if (CON_NUM_DAYS>1) {
         for ($i=1; $i<=CON_NUM_DAYS; $i++) {
             if (!($partAvail["maxprogday$i"]>=0 and $partAvail["maxprogday$i"]<=10)) {
                 $x=PREF_DLY_SESNS_LMT;
                 $messages.="For each daily maximum number of panels, enter a number between 0 and $x.<BR>\n";
-                $flag=false;
+                $error_flag=true;
                 break;
                 }
             }
-        } 
+        }
     if (!($partAvail["numkidsfasttrack"]>=0 and $partAvail["numkidsfasttrack"]<=8)) {
         $messages.="For the number of kids for fastrack, enter a number between 0 and 8.<BR>\n";
-        $flag=false;
+        $error_flag=true;
         }
-    for ($i=1; $i<= AVAILABILITY_ROWS; $i++) {
+    if (!isset($partAvailRows)) {
+        $partAvailRows=AVAILABILITY_ROWS;
+        }
+    for ($i=1; $i<= $partAvailRows; $i++) {
         if (CON_NUM_DAYS>1) {
                 // Day fields will be populated
                 $x1=$partAvail["availstartday_$i"];
@@ -186,7 +189,7 @@ function validate_participant_availability() {
                 //error_log("zambia: $i, $x1, $x2, $x3, $x4"); //for debugging only
                 if (($x1>0 || $x2>0 || $x3>0 || $x4>0) && ($x1==0 || $x2==0 || $x3==0 || $x4==0 )) {
                     $messages.="To define an available slot, set all 4 items.  To delete a slot, clear all 4 items.<BR>\n";
-                    $flag=false;
+                    $error_flag=true;
                     break;
                     }
                 }
@@ -196,12 +199,12 @@ function validate_participant_availability() {
                 $x4=$partAvail["availendtime_$i"];
                 if (($x2>0 || $x4>0) && ($x2==0 || $x4==0)) {
                     $messages.="To define an available slot, set both items.  To delete a slot, clear both items.<BR>\n";
-                    $flag=false;
+                    $error_flag=true;
                     break;
                     }
                 }
         }
-    for ($i=1; $i<= AVAILABILITY_ROWS; $i++) {
+    for ($i=1; $i<= $partAvailRows; $i++) {
         if (CON_NUM_DAYS>1) {
                 // Day fields will be populated
                 $x1=$partAvail["availstartday_$i"];
@@ -210,7 +213,7 @@ function validate_participant_availability() {
                 $x4=$partAvail["availendtime_$i"];
                 if ($x1!=0 && (($x3<$x1) || ($x1==$x3 && $x4<=$x2))) {
                     $messages.="End time and day must be after start time and day.<BR>\n";
-                    $flag=false;
+                    $error_flag=true;
                     break;
                     }
                 }
@@ -220,12 +223,12 @@ function validate_participant_availability() {
                 $x4=$partAvail["availendtime_$i"];
                 if (($x4<=$x2) && ($x2!=0)) {
                     $messages.="End time must be after start time.<BR>\n";
-                    $flag=false;
+                    $error_flag=true;
                     break;
                     }
                 }
 
         }
-    return ($flag);
+    return ($error_flag);
     }
 ?>

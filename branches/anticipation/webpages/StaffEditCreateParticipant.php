@@ -1,6 +1,7 @@
 <?php
     require_once ('StaffCommonCode.php');
     require ('StaffEditCreateParticipant_FNC.php');
+    global $partAvail;
     if (!isset($_GET['action'])) {
         $title="Edit or Add Participant";
         $message_error="Required parameter 'action' not found.  Can't continue.<BR>\n";
@@ -34,15 +35,15 @@
             $participant_arr['email']="";
             $participant_arr['postaddress']="";
             $participant_arr['masque']=0; // not participating the the masquerade
-            $participant_arr['willmoderate']=0; // 
-            $participant_arr['willparteng']=0; // 
-            $participant_arr['willpartengtrans']=0; // 
-            $participant_arr['willpartfre']=0; // 
-            $participant_arr['willpartfretrans']=0; // 
-            $participant_arr['speaksfrench']=0; // 
-            $participant_arr['speaksenglish']=0; // 
-            $participant_arr['speaksother']=0; // 
-            $participant_arr['otherlangs']=""; // 
+            $participant_arr['willmoderate']=0; //
+            $participant_arr['willparteng']=0; //
+            $participant_arr['willpartengtrans']=0; //
+            $participant_arr['willpartfre']=0; //
+            $participant_arr['willpartfretrans']=0; //
+            $participant_arr['speaksfrench']=0; //
+            $participant_arr['speaksenglish']=0; //
+            $participant_arr['speaksother']=0; //
+            $participant_arr['otherlangs']=""; //
             $participant_arr['datacleanupid']=1; // data not cleaned up
             }
         else { // get participant array from database
@@ -52,7 +53,7 @@
                 RenderError($title,$message_error);
                 exit();
                 }
-            if (!(isset($_GET['badgeid']))) {((willparteng=='1')?'1':'0')."',";
+            if (!(isset($_GET['badgeid']))) {
                 $message_error="Required parameter 'badgeid' not found.  Can't continue.<BR>\n";
                 RenderError($title,$message_error);
                 exit();
@@ -115,6 +116,31 @@ EOD;
             $participant_arr['speaksother']=$result_array['speaksOther'];
             $participant_arr['otherlangs']=$result_array['otherLangs'];
             $participant_arr['datacleanupid']=$result_array['datacleanupid'];
+            //$partAvail=array('red','blue');
+            $x = retrieve_participantAvailability_from_db($badgeid);
+            if ($x!=0) {
+                $message_error="Problem retrieving ParticipantAvailability... from DB. error code=$x.<BR>\n";
+                RenderError($title,$message_error);
+                exit();
+                }
+            $i=1;
+            //error_log("SECP: before populate \$partAvail: \$i: $i \n",3,"error.log");
+            //$x=print_r($partAvail,true);
+            //$x="Hi\n".$x;
+            //error_log($x,3,"error.log");
+            while (isset($partAvail["starttimestamp_$i"])) {
+                //error_log("SECP: populate \$partAvail: \$i: $i \n",3,"error.log");
+                //availstartday, availendday: day1 is 1st day of con
+                //availstarttime, availendtime: measured in whole 1-24 hours only, 0 is unset; 1 is midnight beginning of day
+                $x=parse_mysql_time($partAvail["starttimestamp_$i"]);
+                $partAvail["availstartday_$i"]=$x["day"]+1;
+                $partAvail["availstarttime_$i"]=$x["hour"]+1;
+                $x=parse_mysql_time($partAvail["endtimestamp_$i"]);
+                $partAvail["availendday_$i"]=$x["day"]+1;
+                $partAvail["availendtime_$i"]=$x["hour"]+1;
+                $i++;
+                }
+            $participant_arr['num_availability_slots']=$i-1;
             }
     RenderEditCreateParticipant($action,$participant_arr,$message_warn,$message_error);
     exit();
