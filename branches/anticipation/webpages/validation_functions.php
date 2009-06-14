@@ -109,8 +109,12 @@ function validate_session() {
         $messages.="French description is $df characters long.  Please edit it to be shorter than <B>500</B> characters.<BR>\n";
         $flag=false;
         }
+    if ($te<10) {
+        $messages.="The title is $te characters long and is required to be at least <B>10</B> characters.<BR>\n";
+        $flag=false;
+        }
     if (!(($te>=10 AND $de>=15) OR ($tf>=10 AND $df>=15))) {
-        $messages.="Please fill out either the English or the French pair of title and description.<BR>\n";
+        $messages.="Please fill out either the English description or the French title and description.<BR>\n";
         $flag=false;
         }
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {
