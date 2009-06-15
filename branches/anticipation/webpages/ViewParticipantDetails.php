@@ -31,11 +31,13 @@ if ($id) {
         echo "<li><a href='particpantoverview.php?id=$id'><span>Overview</span></a></li>";
         echo "<li><a href='participantbiotab.php?id=$id'><span>Bio</span></a></li>";
         echo "<li><a href='participantcontacttab.php?id=$id'><span>Contact Info</span></a></li>";
+        echo "<li><a href='participantitemstab.php?id=$id'><span>Sessions</span></a></li>";
 } else {
 ?>    	
         <li><a href="particpantoverview.php"><span>Overview</span></a></li>
         <li><a href="participantbiotab.php"><span>Bio</span></a></li>
         <li><a href="participantcontacttab.php"><span>Contact Info</span></a></li>
+        <li><a href="participantitemstab.php"><span>Sessions</span></a></li>
 <?php
 }
 ?>    	
