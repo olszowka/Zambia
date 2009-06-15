@@ -1,4 +1,6 @@
 <?php 
+	header("Content-type: application/xhtml;charset=latin-1");
+
     require_once ('db_functions.php');
     require_once ('data_functions.php');
 	
