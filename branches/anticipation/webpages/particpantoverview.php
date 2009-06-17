@@ -1,5 +1,5 @@
 <?php 
-	header("Content-type: application/xhtml;charset=latin-1");
+	header("Content-type: text/html");
 
     require_once ('db_functions.php');
     require_once ('data_functions.php');
@@ -129,6 +129,7 @@
 
 $id = $_GET["id"];
 
+echo "<div>";
 if ($id) {
 //getCongoDump($id);
 getParticipantInfo($id);
@@ -144,5 +145,6 @@ getGeneralInfo($id);
 } else {
 	echo "No data";
 }
+echo "</div>";
 
 ?>

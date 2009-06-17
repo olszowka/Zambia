@@ -1,5 +1,5 @@
 <?php 
-	header("Content-type: application/xhtml;charset=latin-1");
+	header("Content-type: text/html;");
 
     require_once ('db_functions.php');
 	
@@ -39,11 +39,13 @@
 
 $id = $_GET["id"];
 
+echo "<div>";
 if ($id) {
 getParticipantInfo($id);
 getParticipantSessions($id);
 } else {
 	echo "No data";
 }
+echo "</div>";
 
 ?>

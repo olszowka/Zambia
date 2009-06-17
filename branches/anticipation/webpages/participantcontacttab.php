@@ -1,5 +1,5 @@
 <?php 
-	header("Content-type: application/xhtml;charset=latin-1");
+	header("Content-type: text/html");
     require_once ('db_functions.php');
 	
 	function getParticipantInfo($id) {
@@ -35,11 +35,13 @@
 
 $id = $_GET["id"];
 
+echo "<div>";
 if ($id) {
 getParticipantInfo($id);
 getParticipantContactInfo($id);
 } else {
 	echo "No data";
 }
+echo "</div>";
 
 ?>
