@@ -17,14 +17,15 @@
         }
     $query = <<<EOD
 SELECT
-        S.sessionid, TR.trackname, TY.typename, PS.pubstatusname, S.title,
+        S.sessionid, TR.trackname, TY.typename, S.title, R.roomname,
+        DATE_FORMAT(ADDTIME('2009-08-06 00:00:00',starttime),'%a %l:%i %p') as 'starttime',
         if(S.progguiddesc="",S.pocketprogtext,S.progguiddesc) as description
     FROM
         Sessions S join
         Schedule using (sessionid) join
         Tracks TR using (trackid) join
         Types TY using (typeid) join
-        PubStatuses PS using (pubstatusid)
+        Rooms R using (roomid)
     ORDER BY
         TR.trackname, S.sessionid;
 EOD;
@@ -44,10 +45,11 @@ EOD;
     echo "Click on the title to edit the session itself.<BR>\n";
     echo "<TABLE BORDER=1>";
     echo "<TR>\n";
-    echo "    <TH class=\"small\">Sessionid</TH>\n";
+    echo "    <TH class=\"small\">Session<BR>ID</TH>\n";
     echo "    <TH class=\"small\">Track</TH>\n";
     echo "    <TH class=\"small\">Type</TH>\n";
-    echo "    <TH class=\"small\">Pub Status</TH>\n";
+    echo "    <TH class=\"small\">Room Name</TH>\n";
+    echo "    <TH class=\"small\">Day&nbsp;and&nbsp;Time</TH>\n";
     echo "    <TH class=\"small\">Title</TH>\n";
     echo "    <TH class=\"small\">Description</TH>\n";
     echo "    </TR>\n";
@@ -57,7 +59,8 @@ EOD;
         echo "    <TD class=\"small\"><A HREF=\"StaffAssignParticipants.php?selsess={$resultrow['sessionid']}\">{$resultrow['sessionid']}</A></TD>\n";
         echo "    <TD class=\"small\">".htmlentities($resultrow['trackname'])."</TD>\n";
         echo "    <TD class=\"small\">".htmlentities($resultrow['typename'])."</TD>\n";
-        echo "    <TD class=\"small\">".htmlentities($resultrow['pubstatusname'])."</TD>\n";
+        echo "    <TD class=\"small\">".htmlentities($resultrow['roomname'])."</TD>\n";
+        echo "    <TD class=\"small\">".htmlentities($resultrow['starttime'])."</TD>\n";
         echo "    <TD class=\"small\"><A HREF=\"EditSession.php?id={$resultrow['sessionid']}\">".htmlentities($resultrow['title'])."</A></TD>\n";
         echo "    <TD class=\"small\">".htmlentities($resultrow['description'])."</TD>\n";
         echo "    </TR>\n";
