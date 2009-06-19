@@ -2,10 +2,14 @@ TITLE='Participants With People to Avoid'
 DESCRIPTION='Show the badgeid, pubsname and list of people to avoid for each participant who indicated he is attending and listed people with whom he does not want to share a panel.'
 PROGWANTS=1
 QUERY="
-select PI.badgeid, P.pubsname, PI.nopeople
-        from ParticipantInterests PI join
-             Participants P
-       using (badgeid)
-       where P.interested=1 
-         and (nopeople is not null and nopeople!='')
-    order by substring_index(pubsname,' ',-1);"
+SELECT
+        P.badgeid, P.pubsname, PGI.infovalue
+    FROM
+        Participants P JOIN
+        ParticipantGeneralInfo PGI USING (badgeid)
+    WHERE
+        P.interested=1 and
+        PGI.infoid=7 and
+        PGI.infovalue!=\"\" and
+        PGI.infovalue is not null       
+    ORDER BY substring_index(P.pubsname,' ',-1);"
