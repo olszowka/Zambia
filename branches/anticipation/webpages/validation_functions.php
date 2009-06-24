@@ -101,14 +101,14 @@ function validate_session() {
         $messages.="French title is $tf characters long.  Please edit it to be shorter than <B>100</B> characters.<BR>\n";
         $flag=false;
         }
-    if ($de>=500) {
-        $messages.="Description is $de characters long.  Please edit it to be shorter than <B>500</B> characters.<BR>\n";
-        $flag=false;
-        }
-    if ($df>=500) {
-        $messages.="French description is $df characters long.  Please edit it to be shorter than <B>500</B> characters.<BR>\n";
-        $flag=false;
-        }
+    //if ($de>=500) {
+    //    $messages.="Description is $de characters long.  Please edit it to be shorter than <B>500</B> characters.<BR>\n";
+    //    $flag=false;
+    //    }
+    //if ($df>=500) {
+    //    $messages.="French description is $df characters long.  Please edit it to be shorter than <B>500</B> characters.<BR>\n";
+    //    $flag=false;
+    //    }
     if ($te<10) {
         $messages.="The title is $te characters long and is required to be at least <B>10</B> characters.<BR>\n";
         $flag=false;
