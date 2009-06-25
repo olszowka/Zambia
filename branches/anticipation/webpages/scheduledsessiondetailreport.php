@@ -15,10 +15,11 @@
         echo "<P>This report retrieved no results matching the criteria.</P>\n";
         staff_footer();
         }
+    $con_start_datetime=CON_START_DATIM;
     $query = <<<EOD
 SELECT
         S.sessionid, TR.trackname, TY.typename, S.title, R.roomname,
-        DATE_FORMAT(ADDTIME('2009-08-06 00:00:00',starttime),'%a %l:%i %p') as 'starttime',
+        DATE_FORMAT(ADDTIME('$con_start_datetime',starttime),'%a %l:%i %p') as 'starttime',
         if(S.progguiddesc="",S.pocketprogtext,S.progguiddesc) as description
     FROM
         Sessions S join

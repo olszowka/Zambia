@@ -66,7 +66,8 @@ EOD;
 //    GROUP BY SCH.scheduleid
 //    ORDER BY SCH.starttime;
 //
-    $query="SELECT DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'starttime'";
+    $con_start_datetime=CON_START_DATIM;
+    $query="SELECT DATE_FORMAT(ADDTIME('$con_start_datetime',SCH.starttime),'%a %l:%i %p') as 'starttime'";
     for ($i=1; $i<=$rooms; $i++) {
         $header_cells.="<TH>";
         $header_cells.=sprintf("<A HREF=\"MaintainRoomSched.php?selroom=%s\">%s</A>",$header_array[$i]["roomid"],$header_array[$i]["roomname"]);

@@ -15,6 +15,8 @@
   <DD>Display scheduled sessions and select characteristics.</DD>
 <DT> <a href="unscheduledsessiondetailreport.php">Unscheduled Session Details</a></DT>
   <DD>Display unscheduled sessions and select characteristics.</DD>
+<DT> <a href="techandfacilities.php">Tech and Facilities Info</a></DT>
+  <DD>Display all sessions with info regarding tech and facilities.</DD>
 
 </DL>
 <?php staff_footer(); ?>
