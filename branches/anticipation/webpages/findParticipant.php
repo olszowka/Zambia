@@ -1,6 +1,5 @@
 <?php 
     require_once ('db_functions.php');
-// http://zambia.dev.anticipationsf.ca/findParticipant.php?_search=false&nd=1244313926092&page=1&rows=12&sidx=name&sord=asc
 	$page = $_GET['page']; 
 	$limit = $_GET['rows']; 
 	$sidx = $_GET['sidx']; 
@@ -15,7 +14,7 @@
     }
 
 // calculate the number of rows for the query. We need this for paging the result 
-$SQL = "SELECT COUNT(*) AS count from CongoDump c, Participants d where c.badgeid = d.badgeid";
+$SQL = "SELECT COUNT(*) AS count from CongoDump c, Participants d where c.badgeid = d.badgeid  AND d.interested != '2' AND d.interested != '3' ";
 if ($nm_mask) {
 	$SQL .= " AND d.pubsname like '%".$nm_mask."%'";
 }
@@ -43,9 +42,9 @@ $start = $limit*$page - $limit;
 if($start <0) $start = 0; 
 
 // the actual query for the grid data 
-$SQL = "SELECT c.badgename, c.badgeid, c.email, d.pubsname from CongoDump c, Participants d where c.badgeid = d.badgeid ";
+$SQL = "SELECT c.badgename, c.badgeid, c.email, d.pubsname from CongoDump c, Participants d where c.badgeid = d.badgeid  AND d.interested != '2' AND d.interested != '3' ";
 if ($nm_mask) {
-	$SQL .= "AND d.pubsname like '%".$nm_mask."%' ";
+	$SQL .= "AND d.pubsname like '%".$nm_mask."%'";
 }
 $SQL .="ORDER BY $sidx $sord LIMIT $start , $limit";
 

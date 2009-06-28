@@ -133,11 +133,12 @@
 	}
 	
 	function getLastBadgeId() {
-		$SQL = "SELECT badgeid from LastBadgeId";
+		$SQL = "SELECT MAX(badgeid) FROM Participants WHERE badgeid>='2' AND badgeid NOT IN ('53159','6499')";
 		$result = mysql_query( $SQL );
 		if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 		$row = mysql_fetch_array($result,MYSQL_ASSOC);
-		return $row[badgeid];
+//		mysql_result($result,0);
+		return mysql_result($result,0);
 	}
 
 	function setLastBadgeId($badgeid) {

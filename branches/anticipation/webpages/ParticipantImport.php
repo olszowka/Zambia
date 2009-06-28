@@ -8,7 +8,10 @@
 ?>
 
 <p>
-On this page you will find the online tools for managing Participants.</p>
+On this page you will find the online tools for managing Participants. This is a list of participants from the PFA data that
+do not appear to match any Participant's within Zambia.</p>
+<p>NOTE: Please check using the <a href='/ViewParticipantDetails.php' target='new'>View Participants</a> page 
+to avoid duplicates, as it is possible that the name or email may have been enetered differently on two occasions</p>
 <hr>
 <?php if(may_I('create_participant')) { ?>
 <span id="rsperror" style="color:red"></span>
