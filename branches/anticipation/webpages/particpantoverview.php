@@ -10,10 +10,13 @@
 		if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 		$row = mysql_fetch_array($result,MYSQL_ASSOC);
 		
-		echo "Firstname: " . htmlentities($row[firstname]);
-		echo "Last name: " . htmlentities($row[lastname]);
-		echo "Email: " . htmlentities($row[email]);
-		echo "Reg Type: " . htmlentities($row[regtype]);
+		echo "<table>";
+		echo "<tr>";
+		echo "<td ><b>First Name: </b>" . htmlentities($row[firstname]) . "</td>";
+		echo "<td ><b>Last Name: </b>" . htmlentities($row[lastname]) . "</td>";
+		echo "<td ><b>Reg Type: </b>" . htmlentities($row[regtype]) . "</td>";
+		echo "</tr>";
+		echo "</table>";
 	};
 	
 	function convertToYN($arg) {
@@ -131,7 +134,7 @@ $id = $_GET["id"];
 
 echo "<div>";
 if ($id) {
-//getCongoDump($id);
+getCongoDump($id);
 getParticipantInfo($id);
 echo "<table>";
 echo "<tr><td align='top'>";

@@ -14,9 +14,9 @@
     }
 
 // calculate the number of rows for the query. We need this for paging the result 
-$SQL = "SELECT COUNT(*) AS count from CongoDump c, Participants d where c.badgeid = d.badgeid  AND d.interested != '2' AND d.interested != '3' ";
+$SQL = "SELECT COUNT(*) AS count from CongoDump c LEFT JOIN Participants d on c.badgeid = d.badgeid  WHERE d.interested != '2' AND d.interested != '3' ";
 if ($nm_mask) {
-	$SQL .= " AND d.pubsname like '%".$nm_mask."%'";
+	$SQL .= "AND c.firstname like '%".$nm_mask."%' OR c.lastname like '%".$nm_mask."%' OR d.pubsname like '%".$nm_mask."%'";
 }
 $result = mysql_query($SQL);
 
@@ -42,9 +42,9 @@ $start = $limit*$page - $limit;
 if($start <0) $start = 0; 
 
 // the actual query for the grid data 
-$SQL = "SELECT c.badgename, c.badgeid, c.email, d.pubsname from CongoDump c, Participants d where c.badgeid = d.badgeid  AND d.interested != '2' AND d.interested != '3' ";
+$SQL = "SELECT c.firstname, c.lastname, c.badgename, c.badgeid, c.email, d.pubsname from CongoDump c LEFT JOIN Participants d on c.badgeid = d.badgeid WHERE d.interested != '2' AND d.interested != '3' ";
 if ($nm_mask) {
-	$SQL .= "AND d.pubsname like '%".$nm_mask."%'";
+	$SQL .= "AND c.firstname like '%".$nm_mask."%' OR c.lastname like '%".$nm_mask."%' OR d.pubsname like '%".$nm_mask."%'";
 }
 $SQL .="ORDER BY $sidx $sord LIMIT $start , $limit";
 
@@ -69,7 +69,7 @@ echo "<records>".$count."</records>";
 // be sure to put text data in CDATA
 while($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
 			echo "<row id='".$row[badgeid]."'>";      
-            echo "<cell><![CDATA[". htmlentities($row[badgename])."]]></cell>";
+            echo "<cell><![CDATA[". htmlentities($row[firstname]) ." ". htmlentities($row[lastname]) . "]]></cell>";
             echo "<cell><![CDATA[". htmlentities($row[pubsname])."]]></cell>";
             echo "<cell><![CDATA[". $row[email]."]]></cell>";
             echo "<cell>". $row[badgeid]."</cell>";
