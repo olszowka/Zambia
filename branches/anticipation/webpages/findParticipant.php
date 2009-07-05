@@ -16,7 +16,7 @@
 // calculate the number of rows for the query. We need this for paging the result 
 $SQL = "SELECT COUNT(*) AS count from CongoDump c LEFT JOIN Participants d on c.badgeid = d.badgeid  WHERE d.interested != '2' AND d.interested != '3' ";
 if ($nm_mask) {
-	$SQL .= "AND c.firstname like '%".$nm_mask."%' OR c.lastname like '%".$nm_mask."%' OR d.pubsname like '%".$nm_mask."%'";
+	$SQL .= "AND (c.firstname like '%".$nm_mask."%' OR c.lastname like '%".$nm_mask."%' OR d.pubsname like '%".$nm_mask."%')";
 }
 $result = mysql_query($SQL);
 
@@ -44,7 +44,7 @@ if($start <0) $start = 0;
 // the actual query for the grid data 
 $SQL = "SELECT c.firstname, c.lastname, c.badgename, c.badgeid, c.email, d.pubsname from CongoDump c LEFT JOIN Participants d on c.badgeid = d.badgeid WHERE d.interested != '2' AND d.interested != '3' ";
 if ($nm_mask) {
-	$SQL .= "AND c.firstname like '%".$nm_mask."%' OR c.lastname like '%".$nm_mask."%' OR d.pubsname like '%".$nm_mask."%'";
+	$SQL .= "AND (c.firstname like '%".$nm_mask."%' OR c.lastname like '%".$nm_mask."%' OR d.pubsname like '%".$nm_mask."%')";
 }
 $SQL .="ORDER BY $sidx $sord LIMIT $start , $limit";
 
