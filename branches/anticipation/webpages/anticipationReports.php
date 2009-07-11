@@ -17,6 +17,8 @@
   <DD>Display unscheduled sessions and select characteristics.</DD>
 <DT> <a href="techandfacilities.php">Tech and Facilities Info</a></DT>
   <DD>Display all sessions with info regarding tech and facilities.</DD>
-
+<DT> <a href="statrepconflict2few.php">Conflict Report -- Too Few Participants</A></DT>
+  <DD>Display all scheduled sessions with fewer than 4 participants except those
+    of type performance, reading, autographing, or Kaffeeklatsch.</DD>
 </DL>
 <?php staff_footer(); ?>
