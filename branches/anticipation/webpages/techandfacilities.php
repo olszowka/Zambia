@@ -99,7 +99,7 @@ EOD;
         echo "    <TD class=\"small\">".htmlentities($resultrow['Duration'])."</TD>\n";
         echo "    <TD class=\"small\">".htmlentities($resultrow['Trackname'])."</TD>\n";
         echo "    <TD class=\"small\">".htmlentities($resultrow['Sessionid'])."</TD>\n";
-        echo "    <TD class=\"small\"><A HREF=\"EditSession.php?id={$resultrow['sessionid']}\">".htmlentities($resultrow['title'])."</A></TD>\n";
+        echo "    <TD class=\"small\"><A HREF=\"EditSession.php?id={$resultrow['Sessionid']}\">".htmlentities($resultrow['title'])."</A></TD>\n";
         echo "    <TD class=\"small\">".htmlentities($resultrow['Servicenotes'])."</TD>\n";
         echo "    <TD class=\"small\">".htmlentities($resultrow['svcs'])."</TD>\n";
         echo "    <TD class=\"small\">".htmlentities($resultrow['feats'])."</TD>\n";
