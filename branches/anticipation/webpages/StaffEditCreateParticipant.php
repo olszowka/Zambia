@@ -24,7 +24,7 @@
                 }
             $participant_arr['password']="changeme";
             $participant_arr['bestway']=""; //null means hasn't logged in yet.
-            $participant_arr['interested']=""; //null means hasn't logged in yet.
+            $participant_arr['interested']="1"; //1 means interested and attending
             $participant_arr['bio']="";
             $participant_arr['bioeditstatusid']=1; //not edited -- whatever is first step
             $participant_arr['pubsname']="";
