@@ -65,7 +65,13 @@ jQuery(document).ready(function(){
          
         function gridReload(){ 
                 var nm_mask = jQuery("#name_cd").val(); 
-                jQuery("#particpantgrid").setGridParam({url:"findParticipant.php?nm_mask="+encodeURI(nm_mask),page:1}).trigger("reloadGrid");
+                var all_mask = jQuery("#all_check").val();
+                var urlString = "findParticipant.php?nm_mask="+encodeURI(nm_mask);
+                if (all_mask == 'on') {
+//                    alert(all_mask);
+                    urlString += "&showall=true";
+                }
+                jQuery("#particpantgrid").setGridParam({url:urlString,page:1}).trigger("reloadGrid");
         }
          
 </script>

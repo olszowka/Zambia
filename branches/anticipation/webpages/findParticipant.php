@@ -4,9 +4,12 @@
 	$limit = $_GET['rows']; 
 	$sidx = $_GET['sidx']; 
 	$sord = $_GET['sord']; 
+	$showall = false;
 	if(!$sidx) $sidx =1; 
 
 	if(isset($_GET["nm_mask"])) $nm_mask = mb_convert_encoding ( $_GET['nm_mask'], 'latin1', 'utf8' ); else $nm_mask = ""; 
+	
+	if(isset($_GET["showall"])) $showall = true;
 	
     if (prepare_db()===false) {
         $message="Error connecting to database.";
@@ -14,7 +17,10 @@
     }
 
 // calculate the number of rows for the query. We need this for paging the result 
-$SQL = "SELECT COUNT(*) AS count from CongoDump c LEFT JOIN Participants d on c.badgeid = d.badgeid  WHERE d.interested != '2' AND d.interested != '3' ";
+$SQL = "SELECT COUNT(*) AS count from CongoDump c LEFT JOIN Participants d on c.badgeid = d.badgeid  WHERE d.interested != '3' ";
+if (!$showall) {
+	$SQL .= "AND d.interested != '2' ";
+}
 if ($nm_mask) {
 	$SQL .= "AND (c.firstname like '%".$nm_mask."%' OR c.lastname like '%".$nm_mask."%' OR d.pubsname like '%".$nm_mask."%')";
 }
@@ -42,7 +48,10 @@ $start = $limit*$page - $limit;
 if($start <0) $start = 0; 
 
 // the actual query for the grid data 
-$SQL = "SELECT c.firstname, c.lastname, c.badgename, c.badgeid, c.email, d.pubsname from CongoDump c LEFT JOIN Participants d on c.badgeid = d.badgeid WHERE d.interested != '2' AND d.interested != '3' ";
+$SQL = "SELECT c.firstname, c.lastname, c.badgename, c.badgeid, c.email, d.pubsname from CongoDump c LEFT JOIN Participants d on c.badgeid = d.badgeid WHERE d.interested != '3' ";
+if (!$showall) {
+	$SQL .= "AND d.interested != '2' ";
+}
 if ($nm_mask) {
 	$SQL .= "AND (c.firstname like '%".$nm_mask."%' OR c.lastname like '%".$nm_mask."%' OR d.pubsname like '%".$nm_mask."%')";
 }

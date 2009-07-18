@@ -17,7 +17,8 @@ On this page you will find the online tools for viewing Participant information.
 <div id="particpantview" style="font-size: 10pt;">
 <span id="rsperror" style="color:red"></span>
 
-<div>  Name: <input type="text" id="name_cd" onkeydown="doSearch(arguments[0]||event)" />  
+<div>  Name: <input type="text" id="name_cd" onkeydown="doSearch(arguments[0]||event)" />
+  All: <input type="checkbox" id="all_check" onclick="gridReload()"/>
 <button onclick="gridReload()" id="submitButton" style="margin-left:30px;">Search</button> </div> 
 
 <br /> 
