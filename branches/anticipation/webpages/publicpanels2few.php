@@ -38,8 +38,12 @@ SELECT
                 GROUP BY
                     SCH.scheduleid) as A USING (sessionid)
     WHERE
-        S.typeid=1
+        S.typeid=1 and
 # panels only
+        S.trackid not in (1,13,22,98) and
+# Business Meetings(22), Guest of Honour Item (1), Costume & Craft(13), Terry's Ideas(98)
+        S.pubstatusid = 3
+# public
     HAVING
         A.countparts < 4 or isnull(A.countparts)
     ORDER BY TR.trackname, S.sessionid;
