@@ -10,61 +10,62 @@ function javascript_for_view_participant() { //
 <script src="js/jqModal.js" type="text/javascript"></script>
 <script src="js/jqDnR.js" type="text/javascript"></script>
 <script type="text/javascript">
-jQuery(document).ready(function(){ 
+jQuery(document).ready(function(){
 
-	$("#particpanttabs").tabs({
-		ajaxOptions: { async: false },
-		cache: false
-	});
-	
-	jQuery("#particpantgrid").jqGrid({ 
-		url:'findParticipant.php',
-		datatype: "xml", 
-		height: "100%", 
-	    mtype: 'GET',
-		colNames:['Name', 'Pubs name', 'Email', 'Zambia Id' ],
-		colModel :[ 
-			{name:'c.badgename', index:'badgename', width:300}, 
-			{name:'d.pubsname', index:'pubsname', width:300}, 
-      		{name:'c.email', index:'email', width:300},
-      		{name:'c.badgeid', index:'badgeid', width:100}
-		],
-	    pager: jQuery('#pager'),
-		rowNum:12, 
-    	imgpath: 'themes/green/images',
-		pager: jQuery('#pager'), 
-		sortname: 'badgename', 
-		viewrecords: true,
-		sortorder: "asc", 
-	    caption: 'Participants',
-		multiselect: false, 
-		onSelectRow: function(ids) { 
-			var $tabs = $('#particpanttabs').tabs();
+    $("#particpanttabs").tabs({
+        ajaxOptions: { async: false },
+        cache: false
+    });
 
-			$tabs.
-				tabs( 'url' , 0 , 'particpantoverview.php?id='+ids ).tabs( 'load' , 0 ).tabs('select', 0).
-				tabs( 'url' , 1 , 'participantbiotab.php?id='+ids ).tabs( 'load' , 1 ).
-				tabs( 'url' , 2 , 'participantcontacttab.php?id='+ids ).tabs( 'load' , 2 ).
-				tabs( 'url' , 3 , 'participantitemstab.php?id='+ids ).tabs( 'load' , 3 );
-			return false;
-		},
-		loadError : function(xhr,st,err) {
-			jQuery("#rsperror").html("Type: "+st+"; Response: "+ xhr.status + " "+xhr.statusText);
-		}
-	}); 
-	
-}); 
+    jQuery("#particpantgrid").jqGrid({
+        url:'findParticipant.php',
+        datatype: "xml",
+        height: "100%",
+        mtype: 'GET',
+        colNames:['Name', 'Pubs name', 'Email', 'Zambia Id' ],
+        colModel :[
+            {name:'c.badgename', index:'badgename', width:300},
+            {name:'d.pubsname', index:'pubsname', width:300},
+            {name:'c.email', index:'email', width:300},
+            {name:'c.badgeid', index:'badgeid', width:100}
+        ],
+        pager: jQuery('#pager'),
+        rowNum:12,
+        imgpath: 'themes/green/images',
+        pager: jQuery('#pager'),
+        sortname: 'badgename',
+        viewrecords: true,
+        sortorder: "asc",
+        caption: 'Participants',
+        multiselect: false,
+        onSelectRow: function(ids) {
+            var $tabs = $('#particpanttabs').tabs();
+
+            $tabs.
+                tabs( 'url' , 0 , 'particpantoverview.php?id='+ids ).tabs( 'load' , 0 ).tabs('select', 0).
+                tabs( 'url' , 1 , 'participantbiotab.php?id='+ids ).tabs( 'load' , 1 ).
+                tabs( 'url' , 2 , 'participantcontacttab.php?id='+ids ).tabs( 'load' , 2 ).
+                tabs( 'url' , 3 , 'participantitemstab.php?id='+ids ).tabs( 'load' , 3 ).
+                tabs( 'url' , 4 , 'participantfullschedtab.php?id='+ids ).tabs( 'load' , 4 );
+            return false;
+        },
+        loadError : function(xhr,st,err) {
+            jQuery("#rsperror").html("Type: "+st+"; Response: "+ xhr.status + " "+xhr.statusText);
+        }
+    });
+
+});
 
        var timeoutHnd;
-        
-        function doSearch(ev){ 
-                if(timeoutHnd) 
-                        clearTimeout(timeoutHnd); 
+
+        function doSearch(ev){
+                if(timeoutHnd)
+                        clearTimeout(timeoutHnd);
                 timeoutHnd = setTimeout(gridReload,500);
         }
-         
-        function gridReload(){ 
-                var nm_mask = jQuery("#name_cd").val(); 
+
+        function gridReload(){
+                var nm_mask = jQuery("#name_cd").val();
                 var all_mask = jQuery("#all_check").val();
                 var urlString = "findParticipant.php?nm_mask="+encodeURI(nm_mask);
                 if (all_mask == 'on') {
@@ -73,7 +74,7 @@ jQuery(document).ready(function(){
                 }
                 jQuery("#particpantgrid").setGridParam({url:urlString,page:1}).trigger("reloadGrid");
         }
-         
+
 </script>
 <?php } ?>
 <?php
@@ -86,19 +87,19 @@ function javascript_for_import_participant() { //
 <script src="js/jqModal.js" type="text/javascript"></script>
 <script src="js/jqDnR.js" type="text/javascript"></script>
 <script type="text/javascript">
-jQuery(document).ready(function(){ 
+jQuery(document).ready(function(){
   jQuery("#list").jqGrid({
     url:'getParticpantFormData.php',
     datatype: 'xml',
     mtype: 'GET',
     colNames:['Submission Date','Name', 'Lang', 'Email', 'Badge Id' ],
-    colModel :[ 
-      {name:'mail_date', index:'mail_date', width:250	}, 
-      {name:'name', index:'name', width:300}, 
+    colModel :[
+      {name:'mail_date', index:'mail_date', width:250   },
+      {name:'name', index:'name', width:300},
       {name:'lang', index:'lang', width:50, align:'left'},
       {name:'email', index:'email', width:300},
       {name:'badgeid', index:'badgeid', width:100}
-	   ],
+       ],
     pager: jQuery('#pager'),
     rowNum:20,
     rowList:[20,50,100],
@@ -106,40 +107,40 @@ jQuery(document).ready(function(){
     sortorder: "asc",
     viewrecords: true,
     imgpath: 'themes/green/images',
-	height: "100%",
-	multiselect: true,
-	subGrid : true,
-	subGridUrl: 'getParticpantDetails.php',
-    subGridModel: [{ 
-		name  : ['Address','FR','Alt(FR)','Language','EN','Alt(EN)','Language'], 
+    height: "100%",
+    multiselect: true,
+    subGrid : true,
+    subGridUrl: 'getParticpantDetails.php',
+    subGridModel: [{
+        name  : ['Address','FR','Alt(FR)','Language','EN','Alt(EN)','Language'],
         width : [300, 30, 60, 200, 30, 60, 200],
-		params: ['name']
-	}],
+        params: ['name']
+    }],
     caption: 'Participants from Email Form',
-	toolbar: [true,"top"],
-	loadError : function(xhr,st,err) {
-    	jQuery("#rsperror").html("Type: "+st+"; Response: "+ xhr.status + " "+xhr.statusText);
+    toolbar: [true,"top"],
+    loadError : function(xhr,st,err) {
+        jQuery("#rsperror").html("Type: "+st+"; Response: "+ xhr.status + " "+xhr.statusText);
     }
-  }); 
+  });
 
 $("#t_list").append("<input type='button' value='Add to Zambia' style='height:20px;font-size:-3'/>");
 $("input","#t_list").click(function(){
-	$('#rsperror').text("");
-	var gsr = jQuery("#list").getGridParam('selarrrow');
-	var msg = $("#load_list").text();
-	$.get('addParticipant.php',{'ids[]':gsr}, function(data) { 
-		var error = $(data).find('#error').html();
-		if ( error != null) { $('#rsperror').text(error); };
-		$("#load_list").html("Importing " + data);
-		$("#load_list").fadeIn("normal", function() {
-			$("#load_list").fadeOut("normal", function() {
-				$("#load_list").text(msg);
-				$("#list").trigger("reloadGrid");
-				});
-			});
-		});
+    $('#rsperror').text("");
+    var gsr = jQuery("#list").getGridParam('selarrrow');
+    var msg = $("#load_list").text();
+    $.get('addParticipant.php',{'ids[]':gsr}, function(data) {
+        var error = $(data).find('#error').html();
+        if ( error != null) { $('#rsperror').text(error); };
+        $("#load_list").html("Importing " + data);
+        $("#load_list").fadeIn("normal", function() {
+            $("#load_list").fadeOut("normal", function() {
+                $("#load_list").text(msg);
+                $("#list").trigger("reloadGrid");
+                });
+            });
+        });
 });
-}); 
+});
 </script>
 <?php } ?>
 <?php
@@ -233,7 +234,7 @@ function MM_swapImage() { //v3.0
 }
 // End -->
   </script>
-<?php } 
+<?php }
 // This function writes out to the browser the javascript functions for highlighting the tabs.
     function mousescripts() { ?>
 

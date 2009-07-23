@@ -19,11 +19,11 @@ On this page you will find the online tools for viewing Participant information.
 
 <div>  Name: <input type="text" id="name_cd" onkeydown="doSearch(arguments[0]||event)" />
   All: <input type="checkbox" id="all_check" onclick="gridReload()"/>
-<button onclick="gridReload()" id="submitButton" style="margin-left:30px;">Search</button> </div> 
+<button onclick="gridReload()" id="submitButton" style="margin-left:30px;">Search</button> </div>
 
-<br /> 
-<table id="particpantgrid" class="scroll" cellpadding="0" cellspacing="0"></table> 
-<div id="pager" class="scroll" style="text-align:center;"></div> 
+<br />
+<table id="particpantgrid" class="scroll" cellpadding="0" cellspacing="0"></table>
+<div id="pager" class="scroll" style="text-align:center;"></div>
 
 <div id="particpanttabs" >
     <ul>
@@ -33,21 +33,23 @@ if ($id) {
         echo "<li><a href='participantbiotab.php?id=$id'><span>Bio</span></a></li>";
         echo "<li><a href='participantcontacttab.php?id=$id'><span>Contact Info</span></a></li>";
         echo "<li><a href='participantitemstab.php?id=$id'><span>Sessions</span></a></li>";
+        echo "<li><a href='participantfullschedtab.php?id=$id'><span>Full Schedule</span></a></li>";
 } else {
-?>    	
+?>
         <li><a href="particpantoverview.php"><span>Overview</span></a></li>
         <li><a href="participantbiotab.php"><span>Bio</span></a></li>
         <li><a href="participantcontacttab.php"><span>Contact Info</span></a></li>
         <li><a href="participantitemstab.php"><span>Sessions</span></a></li>
+        <li><a href="participantfullschedtab.php"><span>Full Schedule</span></a></li>
 <?php
 }
-?>    	
+?>
     </ul>
     <div id="Overview">
     </div>
     <div id="Bio">
     </div>
-</div>	
+</div>
 </div>
 
 <?php } ?>
