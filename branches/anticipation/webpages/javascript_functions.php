@@ -9,6 +9,7 @@ function javascript_for_view_participant() { //
 <script src="jquery.jqGrid.js" type="text/javascript"></script>
 <script src="js/jqModal.js" type="text/javascript"></script>
 <script src="js/jqDnR.js" type="text/javascript"></script>
+<script src="js/jquery.jqprint.0.3.js" type="text/javascript"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
 

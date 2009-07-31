@@ -102,8 +102,11 @@ $id = $_GET["id"];
 
 echo "<div>";
 if ($id) {
+echo "<button type='button' onclick=\"$('#printSchedule').jqprint();\" style=\"float:right;\">Print</button>";
+echo "<div id='printSchedule'>";
 getParticipantInfo($id);
 getParticipantFullSchedule($id);
+echo "</div>";
 } else {
     echo "No data";
 }
