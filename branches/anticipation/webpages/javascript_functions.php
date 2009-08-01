@@ -54,7 +54,7 @@ jQuery(document).ready(function(){
             jQuery("#rsperror").html("Type: "+st+"; Response: "+ xhr.status + " "+xhr.statusText);
         }
     });
-
+    
 });
 
        var timeoutHnd;
@@ -70,11 +70,97 @@ jQuery(document).ready(function(){
                 var all_mask = jQuery("#all_check").val();
                 var urlString = "findParticipant.php?nm_mask="+encodeURI(nm_mask);
                 if (all_mask == 'on') {
-//                    alert(all_mask);
                     urlString += "&showall=true";
                 }
                 jQuery("#particpantgrid").setGridParam({url:urlString,page:1}).trigger("reloadGrid");
         }
+
+</script>
+<?php } ?>
+<?php
+function javascript_for_ops_grid() { //
+?>
+<link rel="stylesheet" type="text/css" media="screen" href="themes/green/grid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="themes/jqModal.css" />
+<link type="text/css" href="themes/base/ui.all.css" rel="stylesheet" />
+<script src="jquery.js" type="text/javascript"></script>
+<script src="jquery-ui-1.7.2.custom.min.js" type="text/javascript"></script>
+<script src="jquery.jqGrid.js" type="text/javascript"></script>
+<script src="js/jqModal.js" type="text/javascript"></script>
+<script src="js/jqDnR.js" type="text/javascript"></script>
+<script src="js/jquery.jqprint.0.3.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+	$("#progtabs").tabs({
+	    ajaxOptions: { async: false },
+	    cache: false
+	});
+
+    jQuery("#programmegrid").jqGrid({
+        url:'getProgGrid.php',
+        datatype: "xml",
+        height: "100%",
+        mtype: 'GET',
+        colNames:['date', 'start', 'end', 'room', 'title', 'participants' ],
+        colModel :[
+            {name:'date', index:'starttime', width:90},
+            {name:'start', index:'starttime', width:90},
+            {name:'end', index:'starttime', width:90},
+            {name:'room', index:'room', width:90},
+            {name:'title', index:'title', width:300},
+            {name:'participants', index:'participants', width:600}
+        ],
+        pager: jQuery('#pager'),
+        rowNum:20,
+        imgpath: 'themes/green/images',
+        pager: jQuery('#pager'),
+        sortname: 'starttime',
+        viewrecords: true,
+        sortorder: "asc",
+        caption: 'Programme Grid',
+        multiselect: false,
+        onSelectRow: function(ids) {
+            var $tabs = $('#progtabs').tabs();
+
+            $tabs.
+                tabs( 'url' , 0 , 'programmefeaturestab.php?id='+ids ).tabs( 'load' , 0 ).tabs('select', 0).
+                tabs( 'url' , 1 , 'programmeservicestab.php?id='+ids ).tabs( 'load' , 1 ).
+                tabs( 'url' , 2 , 'programmehistorytab.php?id='+ids ).tabs( 'load' , 2 );
+            return false;
+        },
+        loadError : function(xhr,st,err) {
+            jQuery("#rsperror").html("Type: "+st+"; Response: "+ xhr.status + " "+xhr.statusText);
+        }
+    });
+    });
+
+var timeoutHnd;
+
+function doSearch(ev){
+        if(timeoutHnd)
+                clearTimeout(timeoutHnd);
+        timeoutHnd = setTimeout(gridReload,500);
+}
+
+function gridReload(){
+        var nm_mask = jQuery("#name_cd").val();
+        var rm_mask = jQuery("#room_cd").val();
+        var urlString = "getProgGrid.php";
+        if (nm_mask) {
+            urlString += "?nm_mask="+encodeURI(nm_mask);
+        }
+        if (rm_mask) {
+            if (nm_mask) {
+            	urlString += "&";
+            } else {
+            	urlString += "?";
+            }
+            urlString += "rm_mask="+encodeURI(rm_mask);
+        }
+        jQuery("#programmegrid").setGridParam({url:urlString,page:1}).trigger("reloadGrid");
+}
 
 </script>
 <?php } ?>
@@ -140,7 +226,6 @@ $("input","#t_list").click(function(){
                 });
             });
         });
-});
 });
 </script>
 <?php } ?>

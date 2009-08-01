@@ -45,10 +45,6 @@ if ($id) {
 }
 ?>
     </ul>
-    <div id="Overview">
-    </div>
-    <div id="Bio">
-    </div>
 </div>
 </div>
 

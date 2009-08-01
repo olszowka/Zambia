@@ -14,6 +14,8 @@ On this page you will find the online tools for managing Panels, Events, Films, 
 <hr>
 <table>
   <COL><COL>
+   <tr><td><A HREF="ViewProgForOps.php">View/Search Scheduled Sessions (Programme Ops)</A>
+   <tr><td>Used for examing sessions, search by title or participant, or assigned room, also see services and features
    <tr><td><A HREF="CreateSession.php">Create a New Session</A>
    <tr><td>Used for creating new sessions.  They are intially created in status "edit me".  Once created, a second persion edits for content (and uniqueness). This person promotes the session to status "Brainstorm".  A third set of eyes does a basic grammar and spelling edit and promotes the session to status "Vetted".   At that time it is ready for general viewing by prospective panelists. 
    <tr><td><A HREF="ViewSessionCountReport.php">View Counts of Sessions</A> 
