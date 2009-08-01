@@ -39,7 +39,7 @@ if ($id) {
         <li><a href="particpantoverview.php"><span>Overview</span></a></li>
         <li><a href="participantbiotab.php"><span>Bio</span></a></li>
         <li><a href="participantcontacttab.php"><span>Contact Info</span></a></li>
-        <li><a href="participantitemstab.php"><span>Sessions</span></a></li>
+        <li><a href="participantitemstab.php"><span>Schedule Summary</span></a></li>
         <li><a href="participantfullschedtab.php"><span>Full Schedule</span></a></li>
 <?php
 }
