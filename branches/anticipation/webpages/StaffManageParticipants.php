@@ -20,6 +20,8 @@ On this page you will find the online tools for managing Participants.</p>
    <DD>Manually import new participants in the database from participant form data</DD>
    <DT><A HREF="ViewParticipantDetails.php">View Participant's Details</A></DT> 
    <DD>View details for a participant </DD>
+   <DT><A HREF="participantLabels.php">Generate PDF for labels</A></DT>
+   <DD>Generate PDF for participant labels for back of badge.</DD>
 <?php } ?>
    <DT><A HREF="AdminParticipants.php">Administer participants</A></DT>
    <DD>Use this tool to modify a participant's "interested" flag, change his password, or delete him from all sessions.</DD>

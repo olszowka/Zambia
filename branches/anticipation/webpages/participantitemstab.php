@@ -22,7 +22,7 @@
 SELECT
         P.badgeid, P.pubsname, CD.email, B.starttime, B.title, B.parts,
         if(C.pubsname=P.pubsname,"Yourself",if(C.pubsname is not null, C.pubsname, "<Not Available>")) as moderator,
-        B.description, B.dur, B.roomname, B.languagestatusname, B.trackname,
+        B.description, B.dur, B.roomname, B.languagestatusname, B.trackname, B.pubsno,
         if(isnull(D.svcs),"None",D.svcs) as services, B.sessionid
     FROM
         Participants P join
@@ -30,7 +30,7 @@ SELECT
         ParticipantOnSession POS using (badgeid) join
 #          Most info for each session - B
            (SELECT
-                    S.sessionid, S.title, if(S.progguiddesc!="",S.progguiddesc,S.pocketprogtext) as description,
+                    S.sessionid, S.pubsno, S.title, if(S.progguiddesc!="",S.progguiddesc,S.pocketprogtext) as description,
                     DATE_FORMAT(ADDTIME('$con_start_datim',SCH.starttime),'%a %k:%i') as starttime,
                     SCH.starttime as starttime2, DATE_FORMAT(S.duration,'%k:%i hrs:min') as dur,
                     R.roomname, L.languagestatusname, T.trackname, A.parts
@@ -78,7 +78,8 @@ EOD;
         echo "<table>";
         while ($resultrow) {
         echo "<tr>";
-        	echo "<td>".htmlentities($resultrow['starttime'])."</td>";
+        	echo "<td>".htmlentities($resultrow['pubsno'])."</td>";
+	        echo "<td>".htmlentities($resultrow['starttime'])."</td>";
             echo "<td>".htmlentities($resultrow['roomname'])."</td>";
             echo "<td>".htmlentities($resultrow['title'])."</td>";
             echo "<td>(".htmlentities($resultrow['languagestatusname']).")</td>";
@@ -104,6 +105,7 @@ echo "<button type='button' onclick=\"$('#printScheduleSummary').jqprint();\" st
 echo "<div id='printScheduleSummary'>";
 getParticipantInfo($id);
 getParticipantFullSchedule($id);
+echo "<p>Green Room 515ab Programme ops 515c</p>";
 echo "</div>";
 } else {
     echo "No data";
