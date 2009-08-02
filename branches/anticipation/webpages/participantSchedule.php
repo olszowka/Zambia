@@ -4,6 +4,28 @@ require_once('StaffCommonCode.php');
 
 require_once('fpdf.php');
 
+class PDF extends FPDF
+{
+	private $participant;
+	private $localPage;
+	
+	public function setParticipant($p) {
+		$this->participant = $p;
+	}
+	
+	public function setLocalPage($p) {
+		$this->localPage = $p;
+	}
+	
+	function Header()
+	{
+		$this->SetFont('Arial','B',15);
+		$this->Cell(0,0,$this->participant." - ".$this->localPage,0,0,'C');
+		//Line break
+		$this->Ln(10);
+	}
+}
+
 if (prepare_db()===false) {
 	$message="Error connecting to database.";
 	exit ();
@@ -54,7 +76,8 @@ $SQL = "SELECT
                     Services SV using (serviceid)
                 GROUP BY
                     sessionid) as D using (sessionid)
-ORDER BY P.pubsname, B.starttime2";
+                    ORDER BY P.pubsname, B.starttime2";
+//ORDER BY CD.lastname asc, CD.firstname asc, B.starttime2";
 
 $LINE_HEIGHT = 4;
 $FONT_SIZE = 8;
@@ -64,23 +87,31 @@ if(may_I('create_participant')) {
 	if (!$result) throw new Exception("Couldn't execute query.".mysql_error());
 	$resultrow = mysql_fetch_array($result,MYSQL_ASSOC);
 	
-	$pdf=new FPDF('P','mm','Letter'); //, 'in', 'letter');
+	$pdf=new PDF('P','mm','Letter'); //, 'in', 'letter');
 	$pdf->SetFont('Arial');
 	$pdf->SetFontSize($FONT_SIZE);
+	$pdf->SetAutoPageBreak(false);
 	
 	$prevName = "";
+	$currentPage = $pdf->PageNo();
+	$partPageNbr = 1;
 	while ($resultrow) {
 		$currentName = $resultrow['pubsname'];
 		if ($currentName != ' ') {
-			if ($currentName != $prevName) {
+			if (($currentName != $prevName) || ($currentPage != $pdf->PageNo()) || ($pdf->GetY() > 220)) {
+				if ($currentName != $prevName) {
+					$partPageNbr = 1;
+				} else {
+					$partPageNbr += 1;
+				}
+				$pdf->setParticipant($currentName);
+				$pdf->setLocalPage($partPageNbr);
 				$pdf->AddPage();
-				$pdf->SetFont('Arial', 'B');
-				$pdf->Write($LINE_HEIGHT,$currentName."\n");
-				$pdf->SetFont('Arial');
 				$prevName = $currentName;
+				$currentPage = $pdf->PageNo();
 			}
 			$pdf->SetFont('Arial', 'B');
-			$pdf->Write($LINE_HEIGHT,"Title:  ".$resultrow['title']."\n");
+			$pdf->Write($LINE_HEIGHT,"Title:  ".$resultrow['title']." ".$pdf->GetY()."\n");
 			$pdf->SetFont('Arial');
 			$pdf->Write($LINE_HEIGHT,"When:  ".$resultrow['starttime']."\n");
 			$pdf->Write($LINE_HEIGHT,"Duration:  ".$resultrow['dur']."\n");

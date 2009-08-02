@@ -73,7 +73,7 @@ while ($resultrow) {
 			$count = 0;
 		}
 		
-		$str = sprintf("%s %s %s %s", $resultrow['pubsno'], $resultrow['StartTime'], $resultrow['Roomname'], $resultrow['Title'] );
+		$str = sprintf("%s %s %s %s", $resultrow['StartTime'], $resultrow['Roomname'], $resultrow['Title'], $resultrow['pubsno'] );
 		$str = truncate($str, $MAX_LINE_CHAR);
 		$text .= sprintf("%s\n", $str );
 		$count ++;
