@@ -22,6 +22,8 @@ On this page you will find the online tools for managing Participants.</p>
    <DD>View details for a participant </DD>
    <DT><A HREF="participantLabels.php">Generate PDF for labels</A></DT>
    <DD>Generate PDF for participant labels for back of badge.</DD>
+   <DT><A HREF="participantSchedule.php">Generate PDF schedule</A></DT>
+   <DD>Generate PDF schedule to hand to participants.</DD>
 <?php } ?>
    <DT><A HREF="AdminParticipants.php">Administer participants</A></DT>
    <DD>Use this tool to modify a participant's "interested" flag, change his password, or delete him from all sessions.</DD>
