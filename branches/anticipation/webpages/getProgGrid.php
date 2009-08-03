@@ -27,7 +27,7 @@ $BASESQLSELECT = "select * from (SELECT S.sessionid as sessionid, SD.starttime a
 	
 $BASESQL = "FROM Schedule SD, Sessions S "
 	. "left join (ParticipantOnSession PS CROSS JOIN Participants P) on (PS.sessionid = S.sessionid AND P.badgeid = PS.badgeid) "
-	. " where S.statusid = 5 and S.sessionid = SD.sessionid ";
+	. " where S.sessionid = SD.sessionid ";
 	
 $SQLGROUP = " group by S.sessionid ) as temp "; // order by SD.starttime, SD.roomid"
 
