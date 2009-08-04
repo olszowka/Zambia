@@ -20,5 +20,9 @@
 <DT> <a href="statrepconflict2few.php">Conflict Report -- Too Few Participants</A></DT>
   <DD>Display all scheduled sessions with fewer than 4 participants except those
     of type performance, reading, autographing, or Kaffeeklatsch.</DD>
+<DT> <a href="staffallgridstaticreportpubsnopublic.php">Programme Grid - public</A></DT>
+  <DD>Grid of all sessions.</DD>
+<DT> <a href="staffallgridstaticreportpubsno.php">Programme Grid - not public</A></DT>
+  <DD>Grid of all sessions (including DO-NOT-PUB and STAFF-ONLY).</DD>
 </DL>
 <?php staff_footer(); ?>
