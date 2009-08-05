@@ -103,12 +103,13 @@ jQuery(document).ready(function(){
         datatype: "xml",
         height: "100%",
         mtype: 'GET',
-        colNames:['date', 'start', 'end', 'room', 'title', 'participants' ],
+        colNames:['date', 'start', 'end', 'room', 'session id', 'title', 'participants' ],
         colModel :[
             {name:'date', index:'starttime', width:90},
             {name:'start', index:'starttime', width:90},
             {name:'end', index:'starttime', width:90},
             {name:'room', index:'room', width:90},
+            {name:'session id', index:'sessionid', width:60},
             {name:'title', index:'title', width:300},
             {name:'participants', index:'participants', width:600}
         ],

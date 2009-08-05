@@ -106,8 +106,9 @@ while($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
 	echo "<cell><![CDATA[". htmlentities($row[start])."]]></cell>";
 	echo "<cell><![CDATA[". htmlentities($row[end])."]]></cell>";
 	echo "<cell><![CDATA[". htmlentities($row[room])."]]></cell>";
+	echo "<cell><![CDATA[<a href='EditSession.php?id=".$row[sessionid]."' target='new'>".htmlentities($row[sessionid])."</a>]]></cell>";
 	echo "<cell><![CDATA[". htmlentities($row[title])."]]></cell>";
-	echo "<cell><![CDATA[". htmlentities($row[participants])."]]></cell>";
+	echo "<cell><![CDATA[<a href='StaffAssignParticipants.php?selsess=".$row[sessionid]."' target='new'>". htmlentities($row[participants])."</a>]]></cell>";
 	echo "</row>";
 }
 echo "</rows>"; 
