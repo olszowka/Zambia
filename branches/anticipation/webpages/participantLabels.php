@@ -1,8 +1,8 @@
 <?php
 require('PDF_Label.php');
 
-$MAX_LINE_CHAR = 80;
-$MAX_LINES = 15;
+$MAX_LINE_CHAR = 60;
+$MAX_LINES = 20;
 
 require_once ('db_functions.php');
 require_once('StaffCommonCode.php');
@@ -46,8 +46,11 @@ function truncate($string, $limit) {
 if(may_I('create_participant')) {
 // Avery 05395
 //2-1/3" x 3-3/8"
-$pdf = new PDF_Label(array('paper-size'=>'letter', 'metric'=>'in', 'marginLeft'=>1, 'marginTop'=>1, 'NX'=>2, 'NY'=>4, 'SpaceX'=>0, 'SpaceY'=>0, 'width'=>3.375, 'height'=>2.33, 'font-size'=>6));
+//$pdf = new PDF_Label(array('paper-size'=>'letter', 'metric'=>'in', 'marginLeft'=>1, 'marginTop'=>1, 'NX'=>2, 'NY'=>4, 'SpaceX'=>0, 'SpaceY'=>0, 'width'=>3.375, 'height'=>2.33, 'font-size'=>6));
+$pdf = new PDF_Label('5164');
 
+$pdf->Set_Font_Size(9);
+	
 $pdf->AddPage();
 
 $result = mysql_query( $SQL ) or die("Couldnt execute query.".mysql_error());
