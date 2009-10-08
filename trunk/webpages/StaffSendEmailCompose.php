@@ -6,8 +6,7 @@ require_once('email_functions.php');
 require_once('db_functions.php');
 require_once('render_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
-require_once "Swift/Swift.php";
-require_once "Swift/Swift/Connection/SMTP.php";
+require_once(SWIFT_DIRECTORY."/swift_required.php");
 global $title, $message, $link;
 if (isset($_POST['sendto'])) { // page has been visited before
 // restore previous values to form
@@ -26,9 +25,13 @@ if ($_POST['navigate']!='send') {
 $title="Staff Send Email";
 $subst_list=array("\$BADGEID\$","\$FIRSTNAME\$","\$LASTNAME\$","\$EMAILADDR\$","\$PUBNAME\$","\$BADGENAME\$");
 $email=get_email_from_post();
-$swift =& new Swift(new Swift_Connection_SMTP(SMTP_ADDRESS)); // Is machine name of SMTP host defined in db_name.php
-$log =& Swift_LogContainer::getLog();
-$log->setLogLevel(0); // 0 is minimum logging; 4 is maximum logging
+//Create the Transport
+$transport = Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -t -i');
+//Create the Mailer using your created Transport
+$mailer = Swift_Mailer::newInstance($transport);
+//$swift =& new Swift(new Swift_Connection_SMTP(SMTP_ADDRESS)); // Is machine name of SMTP host defined in db_name.php
+//$log =& Swift_LogContainer::getLog();
+//$log->setLogLevel(0); // 0 is minimum logging; 4 is maximum logging
 $query="SELECT emailtoquery FROM EmailTo where emailtoid=".$email['sendto'];
 if (!$result=mysql_query($query,$link)) {
     db_error($title,$query,$staff=true); // outputs messages regarding db error
@@ -59,17 +62,28 @@ if (!$result=mysql_query($query,$link)) {
     }
 $emailcc=mysql_result($result,0);
 for ($i=0; $i<$recipient_count; $i++) {
+    //Create the message
+    $message = Swift_Message::newInstance();
     $repl_list=array($recipientinfo[$i]['badgeid'],$recipientinfo[$i]['firstname'],$recipientinfo[$i]['lastname']);
     $repl_list=array_merge($repl_list,array($recipientinfo[$i]['email'],$recipientinfo[$i]['pubsname'],$recipientinfo[$i]['badgename']));
     $emailverify['body']=str_replace($subst_list,$repl_list,$email['body']);
-    $message =& new Swift_Message($email['subject'],$emailverify['body']);
+    //Give the message a subject
+        $message->setSubject($email['subject']);
+    //Define from address
+	$message->setFrom($emailfrom);
+    //Define body
+        $message->setBody($emailverify['body'],'text/plain');
+    //$message =& new Swift_Message($email['subject'],$emailverify['body']);
     echo ($recipientinfo[$i]['pubsname']." - ".$recipientinfo[$i]['email'].": ");
-    $recipients =& new Swift_RecipientList();
-    $recipients->addTo($recipientinfo[$i]['email']); // define the To: field
+    $message->addTo($recipientinfo[$i]['email']);
+    //$recipients =& new Swift_RecipientList();
+    //$recipients->addTo($recipientinfo[$i]['email']); // define the To: field
     if ($emailcc!="") {
-        $recipients->addBcc($emailcc); // define the BCC: field
+	$message->addBcc($emailcc);
+        //$recipients->addBcc($emailcc); // define the BCC: field
         }
-    if ($swift->send($message, $recipients, $emailfrom)) {
+    //if ($swift->send($message, $recipients, $emailfrom)) {
+    if ($mailer->send($message)) {
             echo "Sent<BR>";
             }
         else {
