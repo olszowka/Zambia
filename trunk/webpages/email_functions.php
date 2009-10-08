@@ -108,10 +108,10 @@ function render_verify_email($email,$email_verify,$message_warning) {
     echo "<H3>Step 2 -- Verify </H3>\n";
     echo "<FORM name=\"emailverifyform\" method=POST action=\"StaffSendEmailCompose.php\">\n";
     echo "<P>Recipient List:<BR>\n";
-    echo "<TEXTAREA readonly rows=\"4\" cols=\"70\">";
+    echo "<TEXTAREA readonly rows=\"8\" cols=\"70\">";
     echo $email_verify['recipient_list']."</TEXTAREA></P>\n";
     echo "<P>Rendering of message body to first recipient:<BR>\n";
-    echo "<TEXTAREA readonly rows=\"4\" cols=\"70\">";
+    echo "<TEXTAREA readonly rows=\"12\" cols=\"70\">";
     echo $email_verify['body']."</TEXTAREA></P>\n";
     echo "<INPUT type=\"hidden\" name=\"sendto\" value=\"".$email['sendto']."\">\n";
     echo "<INPUT type=\"hidden\" name=\"sendfrom\" value=\"".$email['sendfrom']."\">\n";
