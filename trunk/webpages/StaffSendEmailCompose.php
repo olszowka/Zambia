@@ -62,6 +62,7 @@ if (!$result=mysql_query($query,$link)) {
     }
 $emailcc=mysql_result($result,0);
 for ($i=0; $i<$recipient_count; $i++) {
+    $ok=TRUE;
     //Create the message
     $message = Swift_Message::newInstance();
     $repl_list=array($recipientinfo[$i]['badgeid'],$recipientinfo[$i]['firstname'],$recipientinfo[$i]['lastname']);
@@ -75,7 +76,13 @@ for ($i=0; $i<$recipient_count; $i++) {
         $message->setBody($emailverify['body'],'text/plain');
     //$message =& new Swift_Message($email['subject'],$emailverify['body']);
     echo ($recipientinfo[$i]['pubsname']." - ".$recipientinfo[$i]['email'].": ");
-    $message->addTo($recipientinfo[$i]['email']);
+    try {
+        $message->addTo($recipientinfo[$i]['email']);
+        }
+    catch (Swift_SwiftException $e) {
+        echo $e->getMessage()."<BR>\n";
+	$ok=FALSE;
+        }
     //$recipients =& new Swift_RecipientList();
     //$recipients->addTo($recipientinfo[$i]['email']); // define the To: field
     if ($emailcc!="") {
@@ -83,11 +90,15 @@ for ($i=0; $i<$recipient_count; $i++) {
         //$recipients->addBcc($emailcc); // define the BCC: field
         }
     //if ($swift->send($message, $recipients, $emailfrom)) {
-    if ($mailer->send($message)) {
+    try {
+        $mailer->send($message);
+        }
+    catch (Swift_SwiftException $e) {
+        echo $e->getMessage()."<BR>\n";
+	$ok=FALSE;
+        }
+    if ($ok==TRUE) {
             echo "Sent<BR>";
-            }
-        else {
-            echo "Failed<BR>";
             }
     }
 //$log =& Swift_LogContainer::getLog();
