@@ -89,6 +89,34 @@ function render_send_email($email,$message_warning) {
     staff_footer();
     }
 
+// function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad)
+//
+function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad) {
+    $title="Results of Queueing Email";
+    require_once('StaffHeader.php');
+    require_once('StaffFooter.php');
+    staff_header($title);
+    echo "<P>$goodCount message(s) were queued for email transmission.<BR>\n";
+    echo "$badCount message(s) failed.</P>\n";
+    echo "<P>List of messages successfully queued:<BR>\n";
+    echo "Badgeid, Name for Publications, Email Address<BR>\n";
+    foreach ($arrayOfGood as $recipient) {
+        echo htmlspecialchars($recipient['badgeid']).", ";
+        echo htmlspecialchars($recipient['name']).", ";
+        echo htmlspecialchars($recipient['email'])."<BR>\n";
+        }
+    echo"</P>\n";
+    echo "<P>List of recipients which failed:<BR>\n";
+    echo "Badgeid, Name for Publications, Email Address<BR>\n";
+    foreach ($arrayOfBad as $recipient) {
+        echo htmlspecialchars($recipient['badgeid']).", ";
+        echo htmlspecialchars($recipient['name']).", ";
+        echo htmlspecialchars($recipient['email'])."<BR>\n";
+        }
+    echo"</P>\n";
+    staff_footer();
+    }
+
 // function render_verify_email($email,$emailverify)
 // $email is an array with all values for the send email form:
 //   sendto, sendfrom, subject, body
