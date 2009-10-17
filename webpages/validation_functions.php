@@ -26,7 +26,10 @@ function validate_session_interests($max_si_row) {
         }
     return ($flag);
     }
-function is_email($email){
+
+// Tracy's old version
+
+function is_email($email) {
     $x = '\d\w!\#\$%&\'*+\-/=?\^_`{|}~';    //just for clarity
 
     return count($email = explode('@', $email, 3)) == 2
@@ -35,6 +38,15 @@ function is_email($email){
         && preg_match("#^[$x]+(\.?([$x]+\.)*[$x]+)?$#", $email[0])
         && preg_match('#^(([a-z0-9]+-*)?[a-z0-9]+\.)+[a-z]{2,6}.?$#', $email[1]);
 }
+//
+// Version based on regex from www.regular-expressions.info. PHP doesn't like the regex syntax.
+//
+//function is_email($email) {
+//    $pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b";
+//    if (strlen($email)==0) return 0;
+//    return preg_match($pattern,$email);
+//    }
+
 function validate_name_email($name, $email) {
     global $messages;
     $status=true;
