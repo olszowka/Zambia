@@ -80,7 +80,7 @@ for ($i=0; $i<$recipient_count; $i++) {
              // subject
              $query.="\"".mysql_real_escape_string($email['subject'],$link)."\",";
              // body
-             $query.="\"".mysql_real_escape_string($emailverify['body'],$link)."\",";
+             $query.="\"".mysql_real_escape_string(wordwrap(preg_replace("/(?<!\\r)\\n/","\r\n",$emailverify['body']),70,"\r\n"),$link)."\",";
              // status 1 is unsent (queued)
              $query.="1);";
              if (!$result=mysql_query($query,$link)) {
