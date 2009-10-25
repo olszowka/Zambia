@@ -38,7 +38,7 @@ if (!$Presult=mysql_query($query,$link)) {
 $query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S ";
 $query.="JOIN Tracks AS T USING (trackid) ";
 $query.="JOIN SessionStatuses AS SS USING (statusid) ";
-$query.="WHERE SS.may_be_scheduled=1 ";
+$query.="WHERE S.statusid in (2,3,7) "; // vetted, scheduled, assigned
 $query.="ORDER BY T.trackname, S.sessionid, S.title";
 if (!$Sresult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
