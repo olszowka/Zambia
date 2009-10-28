@@ -212,7 +212,7 @@ function update_session() {
         else {
             $query.="duration=\"".mysql_real_escape_string($session["duration"],$link)."\", ";
             }
-    $query.="estatten=".$session["atten"].", ";
+    $query.="estatten=".($session["atten"]!=""?$session["atten"]:"null").", ";
     $query.="kidscatid=".$session["kids"].", ";
     $query.="signupreq=".($session["signup"]?"1":"0").", ";
     $query.="invitedguest=".($session["invguest"]?"1":"0").", ";
@@ -302,7 +302,7 @@ function insert_session() {
         else {
             $query.="duration=\"".mysql_real_escape_string($session["duration"],$link)."\", ";
             }
-    $query.="estatten=".$session["atten"].',';
+    $query.="estatten=".($session["atten"]!=""?$session["atten"]:"null").',';
     $query.="kidscatid=".$session["kids"].',';
     $query.="signupreq=";
     if ($session["signup"]) {$query.="1,";} else {$query.="0,";}

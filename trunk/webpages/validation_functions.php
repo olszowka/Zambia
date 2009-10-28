@@ -85,8 +85,8 @@ function validate_session() {
     global $sstatus, $session, $messages, $debug;
     $flag=true;
     get_sstatus();
-    if (!(validate_integer($session['atten'],1,99999))) { //must require integer atten to be able to write to db
-        $messages.="Estimated attendance must be a positive integer.<BR>\n";
+    if (!(validate_integer($session['atten'],1,99999) or $session['atten']=="")) { //must require integer atten to be able to write to db
+        $messages.="Estimated attendance must be a positive integer or blank.<BR>\n";
         $flag=false;
         }
     if ($session["track"]==0) {

@@ -152,7 +152,7 @@ function set_session_defaults() {
         else {
             $session["duration"]=" 1:00";
             } 
-    $session["atten"]=0;
+    $session["atten"]="";
     $session["kids"]=2; // "Kids Welcome"
     $session["signup"]=false; // leave checkbox blank initially
     $session["roomset"]=0; // prompt with "SELECT"

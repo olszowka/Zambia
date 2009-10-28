@@ -48,7 +48,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </TD></TR></TABLE>
                 </DIV>
             <DIV class="denseform">
-                <SPAN><LABEL for="sessionid">Session #: </LABEL><INPUT type="text" size=2 name="sessionid" readonly
+                <SPAN><LABEL for="sessionid">Session #: </LABEL><INPUT type="text" size=4 name="sessionid" readonly
                      value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="divisionid">Division: </LABEL><SELECT name="divisionid">
                      <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
