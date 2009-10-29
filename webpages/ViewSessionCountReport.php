@@ -120,6 +120,34 @@ select "<b>Total", SessionStatuses.statusname, count(*)
     and SessionStatuses.statusid=8 
   group by Sessions.statusid
 UNION select " ", " ", " " from dual
+UNION
+select trackname, statusname status, count(*) count 
+  from Sessions, Tracks, SessionStatuses 
+  where Sessions.trackid=Tracks.trackid 
+    and SessionStatuses.statusid=Sessions.statusid 
+    and SessionStatuses.statusid=9 
+  group by Sessions.statusid, Sessions.trackid 
+UNION
+select "<b>Total", SessionStatuses.statusname, count(*)
+  from Sessions, SessionStatuses 
+  where SessionStatuses.statusid=Sessions.statusid 
+    and SessionStatuses.statusid=9 
+  group by Sessions.statusid
+UNION select " ", " ", " " from dual
+UNION
+select trackname, statusname status, count(*) count 
+  from Sessions, Tracks, SessionStatuses 
+  where Sessions.trackid=Tracks.trackid 
+    and SessionStatuses.statusid=Sessions.statusid 
+    and SessionStatuses.statusid=10 
+  group by Sessions.statusid, Sessions.trackid 
+UNION
+select "<b>Total", SessionStatuses.statusname, count(*)
+  from Sessions, SessionStatuses 
+  where SessionStatuses.statusid=Sessions.statusid 
+    and SessionStatuses.statusid=10
+  group by Sessions.statusid
+UNION select " ", " ", " " from dual
 ;
 EOD;
     if (($result=mysql_query($query,$link))===false) {
