@@ -1,9 +1,9 @@
 <?php
-    global $participant,$message_error,$message2,$congoinfo;
+    global $participant,$message_error,$message2,$congoinfo,$session_interests,$session_interest_index, $title;
     $title="Select Interested Sessions";
     require ('PartCommonCode.php'); //define database functions
-    require_once('ParticipantHeader.php');
-    require_once('renderMySessions2.php');
+    require ('PartPanelInterests_FNC.php');
+    require ('PartPanelInterests_Render.php');
     $maxrow=$_POST["maxrow"];
     $delcount=0;
     $dellist="";
@@ -45,7 +45,13 @@
     if ($inscount>0) {
         $message.=$inscount." session(s) added to interest list.";
         }
-    renderMySessions2($title, $error, $message, $badgeid);
-    participant_footer();
-    exit(0);
+	$messageSave=$message;
+	$message="";
+// Get the participant's interest data -- use global $session_interests
+    $session_interest_count=get_session_interests_from_db($badgeid); // Returns count; Will render its own errors
+// Get title, etc. of such data -- use global $session_interests
+    get_si_session_info_from_db($session_interest_count); // Will render its own errors
+    $message=$messageSave.$message;
+    $message_error="";
+    render_session_interests($badgid,$session_interest_count,$message,$message_error); // includes footer
 ?>        

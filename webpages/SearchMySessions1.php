@@ -1,7 +1,7 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="Show Search Session Results";
-    require ('PartCommonCode.php'); // initialize db; check login;
+    require ('PartCommonCode.php'); // initialize db; check login; retrieve $badgeid
     require_once('ParticipantHeader.php');
     require_once('ParticipantFooter.php');
     $trackid=$_POST["track"];
@@ -26,6 +26,7 @@ SELECT
         ParticipantSessionInterest PSI USING (sessionid)
     WHERE
         SST.may_be_scheduled=1 AND
+        (PSI.badgeid=$badgeid OR PSI.badgeid is null) AND
         S.Sessionid in
             (SELECT S2.Sessionid FROM
                      Sessions S2 JOIN

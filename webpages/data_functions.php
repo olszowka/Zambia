@@ -35,27 +35,6 @@ function get_nameemail_from_post(&$name, &$email) {
     return;
     }
 //
-// Function get_session_interests_from_post()
-// Reads the data posted by the browser form and populates
-// the $partavail global variable with it.  Returns
-// the maximum index value.
-//
-function get_session_interests_from_post() {
-    global $sessInts;
-    // for 5 numeric fields--convert to 0 if blank
-    $i=0;
-    while (isset($_POST["sessionid".$i])) {
-        $sessInts[$i]["sessionid"]=$_POST["sessionid".$i];
-        $sessInts[$i]["rank"]=$_POST["rank".$i];
-        $sessInts[$i]["delete"]=(isset($_POST["delete".$i]))?true:false;
-        $sessInts[$i]["comments"]=stripslashes($_POST["comments".$i]);
-        $sessInts[$i]["mod"]=(isset($_POST["mod".$i]))?true:false;
-        $i++;
-        }
-    $i--;
-    return($i);
-    }
-
 // Function get_participant_availability_from_post()
 // Reads the data posted by the browser form and populates
 // the $partavail global variable with it.

@@ -27,7 +27,7 @@
       <td class="tabblocks border0020" colspan=2>
          <?php maketab("My Availability",may_I('my_availability'),"my_sched_constr.php"); ?></td>
       <td class="tabblocks border0020" colspan=2>
-         <?php maketab("My Panel Interests",may_I('my_panel_interests'),"my_sessions2.php"); ?></td>
+         <?php maketab("My Panel Interests",may_I('my_panel_interests'),"PartPanelInterests.php"); ?></td>
       <td class="tabblocks border0020" colspan=2>
  	 <!-- XXX this should have a may_I -->
          <?php maketab("My General Interests",1,"my_interests.php"); ?></td>

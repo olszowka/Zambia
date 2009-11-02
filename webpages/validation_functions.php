@@ -10,28 +10,77 @@ function validate_suggestions() {  // just stub for now
 // with the HTML of an error message.
 //
 function validate_session_interests($max_si_row) {
-    global $sessInts, $messages;
+    global $session_interests, $message;
     $flag=true;
-    $messages="";
-    for ($i=0; $i<=$max_si_row; $i++) {
-        if (!((is_numeric($sessInts[$i]["rank"]))||($sessInts[$i]["rank"]==""))) {
-            $messages="Ranks must be numbers.<BR>\n";
+    $message="";
+    $count=array(0,0,0,0);
+    for ($i=1; $i<=$max_si_row; $i++) {
+        if ($session_interests[$i]['rank']=="" or $session_interests[$i]['delete']) continue;
+        if (filter_var($session_interests[$i]['rank'],FILTER_VALIDATE_INT,array('options' => array('min_range' => 1, 'max_range' => 5)))==false) {
+            $message="Ranks must be integers between 1 and 5.<BR>\n";
             $flag=false;
+            break;
             }
-        if ($sessInts[$i]["rank"]<0) {
-            $messages="Ranks must be greater than zero.<BR>\n";
-            $flag=false;
-            }
-        if (!$flag) {break;}
+        $count[$session_interests[$i]['rank']]++;    
         }
+    if ($count[1]>4 or $count[2]>4 or $count[3]>4 or $count[4]>4) {
+        $message.="You may not use preferences 1-4 more than 4 times each.<BR>\n";
+        $flag=false;
+	    }
     return ($flag);
+    }
+
+//Function validate_add_session_interest($sessionid,$badgeid,$mode)
+//$mode is ParticipantAddSession or StaffInviteSession
+//First checks that $sessionid is a valid integer which could be a session
+//Then checks db that it is a session which is eligible for participant to sign up.
+
+function validate_add_session_interest($sessionid,$badgeid,$mode) {
+    global $link, $message, $title;
+    if (!($mode==ParticipantAddSession or $mode==StaffInviteSession)) {
+        $message="Function validate_add_session_interest called with invalid mode.<BR>\n";
+        return (false);
+        }
+    if (filter_var($sessionid,FILTER_VALIDATE_INT,array('options' => array('min_range' => 1)))==false) {
+        $message="Sessionid not valid.<BR>\n";
+        return (false);
+        }
+    $query= "SELECT S.sessionid FROM";
+    $query.="            Sessions S";
+    $query.="       JOIN Tracks T USING (trackid)";
+    $query.="       JOIN SessionStatuses SS USING (statusid)";
+    $query.="    WHERE";
+    $query.="        T.selfselect=1 and";
+    $query.="        SS.may_be_scheduled=1 and";
+    $query.="        S.invitedguest=0 and";
+    $query.="        S.sessionid=$sessionid";
+    if (!$result=mysql_query($query,$link)) {
+        $message=$query."<BR>\nError querying database.<BR>\n";
+        RenderError($title,$message);
+        exit();
+        }
+    if (mysql_num_rows($result)==0) {
+        $message.="That Session ID is not valid or is not eligible for sign up.<BR>\n";
+        return (false);
+        }
+    $query="SELECT sessionid FROM ParticipantSessionInterest where sessionid=";
+    $query.="$sessionid and badgeid=\"$badgeid\"";
+    if (!$result=mysql_query($query,$link)) {
+        $message=$query."<BR>Error querying database.<BR>\n";
+        RenderError($title,$message);
+        exit();
+        }
+    if (mysql_num_rows($result)!=0) {
+        $message.="You specified a session already on your list.<BR>\n";
+        return (false);
+        }
+    return (true);   
     }
 
 // Tracy's old version
 
 function is_email($email) {
     $x = '\d\w!\#\$%&\'*+\-/=?\^_`{|}~';    //just for clarity
-
     return count($email = explode('@', $email, 3)) == 2
         && strlen($email[0]) < 65
         && strlen($email[1]) < 256
