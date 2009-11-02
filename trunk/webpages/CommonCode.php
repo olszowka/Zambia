@@ -1,4 +1,5 @@
 <?php
+    require_once('Constants.php');
     require_once('data_functions.php');
     require_once('db_functions.php');
     require_once('render_functions.php');

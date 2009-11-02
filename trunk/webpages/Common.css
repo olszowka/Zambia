@@ -563,7 +563,7 @@ LABEL.dense {
     display: table-cell;
     }
 
-#submit {
+#submit, #submit2 {
     position: absolute;
     right: 10em; 
     }
