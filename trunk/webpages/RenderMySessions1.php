@@ -4,9 +4,10 @@
   echo '<FORM name="resform" method=POST action="SubmitMySessions1.php">';
 
   if (may_I('my_panel_interests')) {
+    echo "<DIV class=\"submit\" id=\"submit\"><BUTTON class=\"SubmitButton\" type=\"submit\" name=\"save\">Save</BUTTON></DIV>\n";
     echo "<p> If you have selected any panels, please remember ";
     echo "to SAVE before leaving the page. ";
-    echo "(Save button is at the bottom.) </p>";
+    echo "(Use either \"Save\" buttons at the top or bottom.) </p>";
     echo "<p> You will find below the results of your search.  ";
     echo "We have included the session id, track, title, duration, ";
     echo "a check box for you to indicate interest, followed by ";
@@ -59,7 +60,7 @@ if (may_I('my_panel_interests')) {
     echo "        <INPUT type=\"hidden\" name=\"maxrow\" value=\"".($i-1)."\">\n";
    echo "        </TABLE>";
 if (may_I('my_panel_interests')) {
-   echo '     <DIV class="SubmitButton"><BUTTON type="submit" name="save" >Save</BUTTON></DIV>';
+   echo "<DIV class=\"submit\" id=\"submit2\"><BUTTON class=\"SubmitButton\" type=\"submit\" name=\"save\">Save</BUTTON></DIV>\n";
 }
 ?>
       </FORM>
