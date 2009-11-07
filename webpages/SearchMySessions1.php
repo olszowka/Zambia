@@ -23,10 +23,13 @@ SELECT
         Sessions S JOIN
         Tracks T USING (trackid) JOIN
         SessionStatuses SST USING (statusid) LEFT JOIN
-        ParticipantSessionInterest PSI USING (sessionid)
+                (SELECT
+                         badgeid, sessionid
+                     FROM
+                         ParticipantSessionInterest
+                     WHERE badgeid='$badgeid') as PSI USING (sessionid)
     WHERE
         SST.may_be_scheduled=1 AND
-        (PSI.badgeid=$badgeid OR PSI.badgeid is null) AND
         S.Sessionid in
             (SELECT S2.Sessionid FROM
                      Sessions S2 JOIN
