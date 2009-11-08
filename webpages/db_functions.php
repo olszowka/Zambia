@@ -13,6 +13,8 @@ function prepare_db() {
 // current timestamp by MySQL. 
 function record_session_history($sessionid, $badgeid, $name, $email, $editcode, $statusid) {
     global $link, $message_error;
+	$name=mysql_real_escape_string($name,$link);
+	$email=mysql_real_escape_string($email,$link);
     $query='';
     $query.="INSERT INTO SessionEditHistory SET ";
     $query.="sessionid=$sessionid, ";
