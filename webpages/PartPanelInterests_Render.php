@@ -48,7 +48,7 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
         echo "            <TEXTAREA height=5em cols=80 name=\"comments$j\" id=\"intCmnt\">". htmlspecialchars( $session_interests[$i]['comments'],ENT_COMPAT)."</TEXTAREA></TD>\n";
         echo "        </TR>\n";
         echo "    <TR>\n";
-        echo "        <TD colspan=4 class=\"border0010\">".htmlspecialchars($session_interests[$j]['progguiddesc'],ENT_NOQUOTES)."</TD>\n";
+        echo "        <TD colspan=4 class=\"border0010\">".htmlspecialchars($session_interests[$i]['progguiddesc'],ENT_NOQUOTES)."</TD>\n";
         echo "        </TR>\n";
         echo "    <TR>\n";
         echo "        <TD colspan=4 class=\"border0000\">".htmlspecialchars($session_interests[$i]['persppartinfo'],ENT_NOQUOTES)."</TD>\n";
