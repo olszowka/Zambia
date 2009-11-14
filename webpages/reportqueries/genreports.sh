@@ -27,7 +27,7 @@ for x in ${SRCDIR}/*query ; do
                             sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" | \
                             sed "s%CON_NAME%$CON_NAME%" > $DESTDIR/${name}report.php
 
-  echo $QUERY | ~/usr/bin/mysql -h $HOST_NAME -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php 2> $HOME/reportlogs/err_$name
+  echo $QUERY | ~/usr/bin/mysql -h $HOST_NAME -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   
