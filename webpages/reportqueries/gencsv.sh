@@ -27,14 +27,11 @@ for x in ${SRCDIR}/4*query ; do
      sed 's%</TD>%",%g' |\
      sed 's%</TH>%",%g' |\
      sed 's%<TR>%%g' |\
-     sed 's%
-%\\n%g' |\
+     sed 's%\015%\\n%g' |\
      sed 's%\\n\\n%\\n%g' |\
      sed 's%\\n\\n%\\n%g' |\
-     sed 's%,</TR>%
-%g' |\
-     tr '
-' '\n' |\
+     sed 's%,</TR>%\015%g' |\
+     tr '\015' '\n' |\
      tr '\240\351\221\222\223\224\225\226\227'  ' e`\047""*--' |\
      tr '\200-\377' '?' > $DESTDIR/${name}report.csv
   
