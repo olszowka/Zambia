@@ -7,12 +7,13 @@ select
        X.trackname, 
        concat('<a href=StaffAssignParticipants.php?selsess=',X.sessionid,'>', X.sessionid,'</a>') as Sessionid,
        concat('<a href=EditSession.php?id=',X.sessionid,'>',X.title,'</a>') Title,
-       (if (X.assigned is NULL,' ','yes')) as 'Assigned?', 
-       (if (moderator is NULL or moderator=0,' ','yes')) as 'Moderator?', 
+       X.rank as Rank,
+       (if (X.assigned is NULL,' ','yes')) as 'Asgn?', 
+       (if (moderator is NULL or moderator=0,' ','yes')) as 'Mod?', 
        concat('<a href=MaintainRoomSched.php?selroom=',Y.roomid,'>', Y.roomname,'</a>') as Roomname,
-       DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',Y.starttime),'%a %l:%i %p') as 'Start Time' 
-  from (    select PI.badgeid, PI.pubsname, PI.sessionid, POS.sessionid as assigned, moderator, title, trackname 
-              from (    select T.trackname, S.title, S.sessionid, P.badgeid, P.pubsname 
+       DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',Y.starttime),'%a %l:%i %p') as 'Start Time' 
+  from (    select PI.badgeid, PI.pubsname, PI.sessionid, POS.sessionid as assigned, moderator, title, trackname, rank
+             from (    select T.trackname, S.title, S.sessionid, P.badgeid, P.pubsname, PSI.rank
                           from Tracks T, ParticipantSessionInterest PSI, 
                                Participants P, Sessions S
                          where S.trackid=T.trackid and P.interested=1 
