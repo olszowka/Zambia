@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export TZ=US/Eastern
+
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
