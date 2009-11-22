@@ -38,7 +38,7 @@
   time on vertical. This includes all items regardless of publication
   status.</DD>
 
-<DT> <a href="staffonlygridstatticreport.php">Staff-Only Grid</a></DT>
+<DT> <a href="staffonlygridstaticreport.php">Staff-Only Grid</a></DT>
   <DD>Display the only the items that are Staff-Only or Do-Not-Publish
   with rooms on horizontal axis and time on vertical. </DD>
 

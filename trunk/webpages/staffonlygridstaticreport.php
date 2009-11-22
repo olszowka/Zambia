@@ -1,18 +1,18 @@
 <?php
-    $title="Fast Track Grid";
+    $title="Staff and Do-Not-Publish Grid";
     require_once('db_functions.php');
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $_SESSION['return_to_page']="fasttrakgridstaticreport.php";
+    $_SESSION['return_to_page']="staffonlygridstaticreport.php";
 
     function topofpage() {
         staff_header($title);
         date_default_timezone_set('US/Eastern');
         echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Grid of all fast track sessions as determined by function of room</P>\n";
+        echo "<P>Grid of all Staff-only and Do-Not-Publish sessions</P>\n";
         }
 
     function noresults() {
@@ -21,17 +21,21 @@
         }
 
     $query = <<<EOD
-SELECT
+SELECT DISTINCT
         R.roomname,
         R.roomid
     FROM
             Rooms R
+        JOIN
+            Schedule SCH
+        USING (roomid)
+        JOIN
+            Sessions S
+        USING (sessionid)
     WHERE
-        R.function like '%Fast Track%' AND
+        S.pubstatusid != 2 AND
         R.roomid in
-        (SELECT DISTINCT roomid FROM Schedule)
-    ORDER BY
-        R.display_order;
+        (SELECT DISTINCT roomid FROM Schedule);
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
@@ -48,27 +52,7 @@ EOD;
         $header_array[$i]=mysql_fetch_assoc($result);
         }
     $header_cells="<TR><TH>Time</TH>";
-//
-//SELECT
-//        DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time',
-//        GROUP_CONCAT(IF(roomid=2,S.title,"") SEPARATOR '') as "President's ABCD Title",
-//        GROUP_CONCAT(IF(roomid=2,S.sessionid,"") SEPARATOR '') as "President's ABCD SessionID",
-//        GROUP_CONCAT(IF(roomid=3,S.title,"") SEPARATOR '') as "President's A Title",
-//        GROUP_CONCAT(IF(roomid=3,S.sessionid,"") SEPARATOR '') as "President's A SessionID",
-//        GROUP_CONCAT(IF(roomid=6,S.title,"") SEPARATOR '') as "President's D Title"
-//        GROUP_CONCAT(IF(roomid=6,S.sessionid,"") SEPARATOR '') as "President's D SessionID"
-//    FROM 
-//            Schedule SCH
-//       JOIN Sessions S
-//            USING (sessionid)
-//       JOIN Rooms R
-//            USING (roomid)
-//    WHERE
-//        S.pubstatusid = 2 AND
-//        R.function like '%Fast Track%'
-//    GROUP BY SCH.scheduleid
-//    ORDER BY SCH.starttime;
-//
+
     $query="SELECT DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') as 'starttime'";
     for ($i=1; $i<=$rooms; $i++) {
         $header_cells.="<TH>";
@@ -82,8 +66,8 @@ EOD;
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.duration,\"\") SEPARATOR '') as \"%s\"",$x,$y);
         }
     $header_cells.="</TR>";
-    $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN Rooms R USING (roomid) WHERE S.pubstatusid = 2 AND";
-    $query.=" R.function like '%Fast Track%' GROUP BY SCH.starttime ORDER BY SCH.starttime;";
+    $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN Rooms R USING (roomid) WHERE S.pubstatusid != 2";
+    $query.=" GROUP BY SCH.starttime ORDER BY SCH.starttime;";
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
         $message.=$query;

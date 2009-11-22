@@ -5,16 +5,21 @@
     require_once('StaffFooter.php');
     require_once('StaffCommonCode.php');
     global $link;
+    $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
     $_SESSION['return_to_page']="eventgridfullstaticreport.php";
+
     function topofpage() {
         staff_header($title);
+        date_default_timezone_set('US/Eastern');
         echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
         echo "<P>Grid of all events (including unpublished) as determined by function of room</P>\n";
         }
+
     function noresults() {
         echo "<P>This report retrieved no results matching the criteria.</P>\n";
         staff_footer();
         }
+
     $query = <<<EOD
 SELECT
         R.roomname,
@@ -66,7 +71,7 @@ EOD;
 //    GROUP BY SCH.scheduleid
 //    ORDER BY SCH.starttime;
 //
-    $query="SELECT DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'starttime'";
+    $query="SELECT DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') as 'starttime'";
     for ($i=1; $i<=$rooms; $i++) {
         $header_cells.="<TH>";
         $header_cells.=sprintf("<A HREF=\"MaintainRoomSched.php?selroom=%s\">%s</A>",$header_array[$i]["roomid"],$header_array[$i]["roomname"]);
