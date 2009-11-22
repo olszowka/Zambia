@@ -10,7 +10,17 @@
         exit ();
         }
    $query = <<<EOD
-SELECT sessionid, trackname, title, concat( if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min')))), estatten, statusname from Sessions, Tracks, SessionStatuses where Sessions.trackid=Tracks.trackid and Sessions.statusid=SessionStatuses.statusid and SessionStatuses.statusname not in ('A06scheduled')
+SELECT
+        sessionid, trackname, title,
+	CONCAT( IF(LEFT(duration,2)=00, '', IF(LEFT(duration,1)=0, CONCAT(RIGHT(LEFT(duration,2),1),'hr '), CONCAT(LEFT(duration,2),'hr '))),
+	IF(DATE_FORMAT(duration,'%i')=00, '', IF(LEFT(DATE_FORMAT(duration,'%i'),1)=0, CONCAT(RIGHT(DATE_FORMAT(duration,'%i'),1),'min'), CONCAT(DATE_FORMAT(duration,'%i'),'min')))) duration,
+	estatten, statusname
+    FROM
+        Sessions JOIN
+        Tracks USING (trackid) JOIN
+        SessionStatuses USING (statusid)
+    ORDER BY
+        trackname, statusname
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.";
