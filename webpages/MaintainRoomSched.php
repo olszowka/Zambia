@@ -237,9 +237,12 @@ for ($i=1;$i<=newroomslots;$i++) {
         echo "</Select>&nbsp;\n";
         }
 	// ****HOUR****
-    echo "          <Select name=\"hour$i\"><Option value=\"unset\" ";
-    if ((!isset($_POST["hour$i"])) or $_POST["hour$i"]=="unset") echo "selected";
-    echo ">Hour&nbsp;</Option><Option value=0>12</Option>";
+    echo "          <Select name=\"hour$i\"><Option value=\"-1\" ";
+    if (!isset($_POST["hour$i"])) $_POST["hour$i"]=-1;
+    if ($_POST["hour$i"]==-1) echo "selected";
+    echo ">Hour&nbsp;</Option><Option value=0 ";
+	if ($_POST["hour$i"]==0) echo "selected";
+	echo ">12</Option>";
     for ($j=1;$j<=11;$j++) {
         echo "<Option value=$j ";
         if ($_POST["hour$i"]==$j) echo "selected";
@@ -247,8 +250,9 @@ for ($i=1;$i<=newroomslots;$i++) {
         }
     echo "</select>\n";
 	// ****MIN****
-    echo "          <Select name=\"min$i\"><Option value=\"unset\" ";
-    if ((!isset($_POST["min$i"])) or $_POST["min$i"]=="unset") echo "selected";
+    echo "          <Select name=\"min$i\"><Option value=\"-1\" ";
+	if (!isset($_POST["min$i"])) $_POST["min$i"]=-1;
+    if ($_POST["min$i"]==-1) echo "selected";
 	echo">Min&nbsp;</Option>";
     for ($j=0;$j<=55;$j+=5) {
         echo "<Option value=$j ";
