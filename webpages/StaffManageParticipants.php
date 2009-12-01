@@ -11,7 +11,7 @@
 On this page you will find the online tools for managing Participants.</p>
 <hr>
 <DL>
-   <DT id="managebios"><A HREF="StaffManageBios.php">Manage biographies.</A></DT>
+   <DT id="managebios"><!-- <A HREF="StaffManageBios.php"> --><SPAN style="text-decoration: line-through">Manage biographies.</SPAN><!--</A> --></DT>
    <DD id="managebios">Manage and edit participants' biographies.</DD>
 <?php if(may_I('create_participant')) { ?>
    <DT><A HREF="StaffEditCreateParticipants.php?action=create">Enter Participants</A></DT> 
