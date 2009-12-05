@@ -8,7 +8,7 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
     $_SESSION['return_to_page']="gohgridstaticreport.php";
 
-    function topofpage() {
+    function topofpage($title) {
         staff_header($title);
         date_default_timezone_set('US/Eastern');
         echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
@@ -25,10 +25,11 @@ SELECT
         R.roomname,
         R.roomid
     FROM
-            Rooms R
+        Rooms R
     WHERE
         R.roomid in
-        (SELECT DISTINCT roomid FROM Schedule);
+        (SELECT DISTINCT roomid FROM Schedule SCH JOIN ParticipantOnSession USING (sessionid)
+	 WHERE badgeid in ('7768', '96666', '96667', '96668', '10909'));
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
@@ -58,18 +59,19 @@ EOD;
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.title,\"\") SEPARATOR '') as \"%s\"",$x,$y);
         $y=$header_array[$i]["roomname"]." SessionID";
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.sessionid,\"\") SEPARATOR '') as \"%s\"",$x,$y);
+        $y=$header_array[$i]["roomname"]." Duration";
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.duration,\"\") SEPARATOR '') as \"%s\"",$x,$y);
         }
     $header_cells.="</TR>";
 
-    $query.=" FROM Participants G, Sessions S";
+    $query.=" FROM Sessions S";
     $query.=" JOIN Schedule SCH USING (sessionid)";
     $query.=" JOIN Rooms R USING (roomid)";
-    $query.=" LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid";
-    $query.=" LEFT JOIN Participants P ON POS.badgeid=P.badgeid";
-    $query.=" WHERE G.badgeid in ('7768', '96666', '96667', '96668', '10909') AND G.badgeid=POS.badgeid";
+    $query.=" WHERE S.sessionid in ";
+    $query.=" (SELECT DISTINCT sessionid FROM ParticipantOnSession ";
+    $query.=" WHERE badgeid IN ('7768', '96666', '96667', '96668', '10909')) ";
     $query.=" GROUP BY SCH.starttime ORDER BY SCH.starttime;";
-
+    // echo "<BR>Query:<BR>$query<BR>\n"; // for debug only
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
         $message.=$query;
@@ -79,14 +81,14 @@ EOD;
         exit ();
         }
     if (0==($rows=mysql_num_rows($result))) {
-        topofpage();
+        topofpage($title);
         noresults();
         exit();
         }
     for ($i=1; $i<=$rows; $i++) {
         $grid_array[$i]=mysql_fetch_array($result,MYSQL_BOTH);
         } 
-    topofpage();
+    topofpage($title);
     echo "<P>Click on the room name to edit the room's schedule; the session id to edit the session's participants; or the title to edit the session.</P>\n";
     echo "<TABLE BORDER=1>";
     echo $header_cells;
@@ -96,11 +98,14 @@ EOD;
         echo "</TD>";
         for ($j=1; $j<=$rooms; $j++) {
             echo "<TD>";
-            $x=$grid_array[$i][$j*2]; //sessionid
+            $x=$grid_array[$i][$j*3-1]; //sessionid
             if ($x!="") {
                     echo sprintf("(<A HREF=\"StaffAssignParticipants.php?selsess=%s\">%s</A>) ",$x,$x);
-                    $y = $grid_array[$i][$j*2-1]; //title
+                    $y = $grid_array[$i][$j*3-2]; //title
                     echo sprintf("<A HREF=\"EditSession.php?id=%s\">%s</A>",$x,$y);
+		    $y = substr($grid_array[$i][$j*3],0,-3); // duration; drop ":00" representing seconds off the end
+		    if (substr($y,0,1)=="0") {$y = substr($y,1,999);} // drop leading "0"
+		    echo sprintf(" (%s)",$y);
                     }
                 else
                     { echo "&nbsp;"; } 
