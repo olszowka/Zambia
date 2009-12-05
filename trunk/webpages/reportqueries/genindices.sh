@@ -6,9 +6,11 @@ SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
 
-categories="GAMING PROG EVENTS GOH PUBS FASTTRACK TECH HOTEL CONFLICT REG ADMIN GRIDS"
+export TZ=US/Eastern
 
-CVSONLY=0; GENCVS=0 ; DESCRIPTION="" ; QUERY="" ; TITLE="" # zero out before looping
+categories="GAMING PROG EVENTS GOH PUBS FASTTRACK TECH HOTEL CONFLICT REG ADMIN GRIDS CSVS"
+
+CSVONLY=0; GENCSV=0 ; DESCRIPTION="" ; QUERY="" ; TITLE="" # zero out before looping
 for i in $categories ; do 
 
    echo $i
@@ -25,15 +27,15 @@ for i in $categories ; do
      name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
      eval `cat $x`
 
-     if [ $CVSONLY = 0 ] ; then
+     if [ $CSVONLY = 0 ] ; then
        echo '<DT> <a href="'${name}report.php'">'$TITLE'</a></DT><DD>'$DESCRIPTION'</DD>' >> $DEST
      fi
-     if [ $GENCVS = 1 ] ; then
+     if [ $GENCSV = 1 ] ; then
        echo '<DT> <a href="'${name}report.csv'">'$TITLE - csv'</a></DT><DD>'$DESCRIPTION in csv format'</DD>' >> $DEST
      fi
 
      # zero out before looping
-     CVSONLY=0; GENCVS=0 ; DESCRIPTION="" ; QUERY="" ; TITLE="" 
+     CSVONLY=0; GENCSV=0 ; DESCRIPTION="" ; QUERY="" ; TITLE="" 
    done
 
   echo '</DL>' >> $DEST
