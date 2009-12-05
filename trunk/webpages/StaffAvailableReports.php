@@ -5,7 +5,7 @@
   require_once('StaffHeader.php');
   require_once('StaffFooter.php');
   require_once('StaffCommonCode.php');
-  require_once('RenderSearchSession.php');
+  //require_once('RenderSearchSession.php');
   staff_header($title);
 ?>
 
@@ -38,8 +38,9 @@ First cut at categorizing reports is underway.   The reports are starting to be 
    <tr><td><A HREF="reportTECH.php">Tech Reports</A>
    <tr><td><A HREF="reportADMIN.php">Zambia Administration Reports</A>
    <tr><td><A HREF="reportCSVS.php">Reports downloadable as CSVs</A>
-   <tr><td><A HREF="manualGRIDS.php">Grids</A>
+   <tr><td><A HREF="reportGRIDS.php">Grids</A>
    <tr><td><A HREF="reportindex.php">All Reports</A>
 </table>
+<P>Most reports are regenerated every 10 minutes.  Reports with [On Demand] at the end of the description are generated when requested.</P>
 <p><I>If a Div/Area Head would like any of their reports tweaked, email to <?php echo PROGRAM_EMAIL ?> and let us know.</I></p>
 <?php staff_footer(); ?>
