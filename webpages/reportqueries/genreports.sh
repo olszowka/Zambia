@@ -20,6 +20,9 @@ for x in ${SRCDIR}/*query ; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
   eval `cat $x`
   echo $x
+  if [[ -n $MIGRATED && $MIGRATED != "false" ]]; then
+    continue;
+  fi;
 
   cat genreportheader.php | sed "s/REPORT_TITLE/$TITLE/" | \
                             sed "s/REPORT_DATE/`date`/" | \
@@ -31,5 +34,5 @@ for x in ${SRCDIR}/*query ; do
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   
-  DESCRIPTION="" ; QUERY="" ; TITLE="" # zero out before looping
+  DESCRIPTION="" ; QUERY="" ; TITLE="" ; MIGRATED="" # zero out before looping
 done
