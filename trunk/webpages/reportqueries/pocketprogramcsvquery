@@ -1,0 +1,7 @@
+TITLE='Report for Pubs (CSV Version) [On&nbsp;Demand]'
+DESCRIPTION="Report for Paul's Pocket Program"
+PUBSWANTS=1
+CSVSWANTS=1
+GENCSV=0
+QUERY=" "
+MIGRATED=true

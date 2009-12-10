@@ -6,7 +6,7 @@
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $_SESSION['return_to_page']="staffallgridstaticreport.php";
+    $_SESSION['return_to_page']="everythinggridreport.php";
     function topofpage() {
         staff_header($title);
 	date_default_timezone_set('US/Eastern');
