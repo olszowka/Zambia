@@ -17,6 +17,7 @@ umask 022
 #mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD -e '\. fixnames'
 
 for x in ${SRCDIR}/*query ; do
+  MIGRATED="false"
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
   eval `cat $x`
   echo $x
@@ -34,5 +35,5 @@ for x in ${SRCDIR}/*query ; do
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   
-  DESCRIPTION="" ; QUERY="" ; TITLE="" ; MIGRATED="" # zero out before looping
+  DESCRIPTION="" ; QUERY="" ; TITLE="" ; MIGRATED="false" # zero out before looping
 done
