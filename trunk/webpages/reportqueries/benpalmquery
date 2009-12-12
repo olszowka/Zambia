@@ -1,9 +1,9 @@
 TITLE='Report for Ben and the palm'
 DESCRIPTION='StartTime Duration Room Track Title Participants'
 PUBSWANTS=1
-GENCSV=1
+GENCSV=0
 QUERY="
-     select DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
+     select DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
             concat('(',left(duration,5),')') Length,
             Roomname,
             trackname as Track,
