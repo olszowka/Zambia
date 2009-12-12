@@ -1,5 +1,5 @@
-TITLE='Report for Pubs (CSV Version) [On&nbsp;Demand]'
-DESCRIPTION="Report for Paul's Pocket Program"
+TITLE='Report for Pubs (CSV Version)'
+DESCRIPTION="Report for Paul's Pocket Program [On&nbsp;Demand]"
 PUBSWANTS=1
 CSVSWANTS=1
 GENCSV=0
