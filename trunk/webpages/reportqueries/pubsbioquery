@@ -1,7 +1,7 @@
 TITLE='Pubs - Participant Bio and pubname'
 DESCRIPTION='Show the badgeid, pubsname and bio for each participant that are on at least one scheduled session.'
 PUBSWANTS=1
-GENCSV=1
+GENCSV=0
 QUERY='
   select P.badgeid,
          CD.lastname,
