@@ -10,7 +10,7 @@ Select
   concat('<a href=StaffAssignParticipants.php?selsess=',X.s,'>', X.s,'</a>') 
     as Sessionid, 
   X.sn 'sessionname', 
-  group_concat(' ',P2.pubsname,' (',P2.badgeid,')') 'others on this panel' 
+  group_concat(DISTINCT P2.pubsname,concat(' (',P2.badgeid,')') SEPARATOR ', ') 'others on this panel' 
 from (select PI.badgeid as b, P.pubsname as pn,  
              S.sessionid as s, nopeople as no, title as sn, trackname as tn 
         from ParticipantInterests PI, ParticipantOnSession PS , 
