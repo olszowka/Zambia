@@ -3,7 +3,7 @@
     require ('PartCommonCode.php'); // initialize db; check login;
     $CON_START_DATIM=CON_START_DATIM; //make it a variable so it will be substituted
     require_once('ParticipantHeader.php');
-    require_once('renderMySessions2.php');
+    // require_once('renderMySessions2.php');
     if (!may_I('my_schedule')) {
         $message_error="You do not currently have permission to view this page.<BR>\n";
         RenderError($title,$message_error);
