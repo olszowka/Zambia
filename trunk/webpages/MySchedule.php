@@ -34,20 +34,16 @@ EOD;
         }
     $query= <<<EOD
 SELECT
-        POS.sessionid, CD.badgename, POS.moderator, PSI.comments
+            POS.sessionid, CD.badgename, P.pubsname, POS.moderator, PSI.comments
     FROM
-        CongoDump CD,
-        ParticipantOnSession POS
-        LEFT JOIN
-                ParticipantSessionInterest PSI
-            ON POS.sessionid = PSI.sessionid and
-                POS.badgeid = PSI.badgeid
-            WHERE
-                POS.badgeid = CD.badgeid
-            AND
-		POS.sessionid in
+            ParticipantOnSession POS
+       JOIN CongoDump CD USING(badgeid)
+       JOIN Participants P USING(badgeid)
+  LEFT JOIN ParticipantSessionInterest PSI USING(sessionid,badgeid)
+    WHERE
+            POS.sessionid in
                     (select sessionid from ParticipantOnSession where badgeid='$badgeid')
-            order by sessionid, moderator desc
+            ORDER BY sessionid, moderator desc
 EOD;
     if (!$result=mysql_query($query,$link)) {
         $message.=$query."<BR>Error querying database.<BR>";
@@ -56,8 +52,8 @@ EOD;
         }
     $partrows=mysql_num_rows($result);
     for ($i=0; $i<$partrows; $i++) {
-        list($partarray[$i]["sessionid"],$partarray[$i]["badgename"],$partarray[$i]["moderator"],
-            $partarray[$i]["comments"])=mysql_fetch_array($result, MYSQL_NUM);
+        list($partarray[$i]["sessionid"],$partarray[$i]["badgename"],$partarray[$i]["pubsname"],
+	    $partarray[$i]["moderator"],$partarray[$i]["comments"])=mysql_fetch_array($result, MYSQL_NUM);
         }
     $query="SELECT message FROM CongoDump C LEFT JOIN RegTypes R on C.regtype=R.regtype ";
     $query.="WHERE C.badgeid=\"$badgeid\"";
@@ -119,7 +115,7 @@ PROGRAM_EMAIL; ?></A>.\n";
         echo "            </TR>\n";
         echo "        <TR><TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
         echo "        <TR><TD>&nbsp;</TD>\n";
-        echo "            <TD class=\"usrinp\">Panelists' Badge Names</TD>\n";
+        echo "            <TD class=\"usrinp\">Panelists' Publication Names (Badge Names)</TD>\n";
         echo "            <TD colspan=5 class=\"usrinp\">Their Comments</TD>\n";
         echo "            </TR>\n";
         echo "        <TR><TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
@@ -134,9 +130,10 @@ PROGRAM_EMAIL; ?></A>.\n";
                     $class="";
                     }
             echo "        <TR><TD>&nbsp;</TD>\n";
-            echo "            <TD class=\"$class\">".htmlspecialchars($partarray[$j]["badgename"]);
+            echo "            <TD class=\"$class\">".htmlspecialchars($partarray[$j]["pubsname"]);
+	    if ($partarray[$j]["pubsname"]!=$partarray[$j]["badgename"]) echo " (".htmlspecialchars($partarray[$j]["badgename"]).")";
             if ($partarray[$j]["moderator"]) {
-                echo " (mod) ";
+                echo " <I>mod</I> ";
                 }
             echo "</TD>\n";
             echo "            <TD colspan=5 class=\"$class\">".htmlspecialchars(fix_slashes($partarray[$j]["comments"]));
