@@ -3,9 +3,9 @@ DESCRIPTION='Maps badgeid, pubsname, badgename and first and last name together 
 PROGWANTS=1
 EVENTSWANTS=1
 REGWANTS=1
-QUERY='
+QUERY="
   select C.badgeid, P.pubsname, C.badgename, C.lastname, C.firstname 
     from CongoDump C, Participants P 
    where C.badgeid=P.badgeid 
      and P.badgeid is not NULL 
-order by pubsname;'
+order by IF(instr(P.pubsname,C.lastname)>0,C.lastname,substring_index(P.pubsname,' ',-1)),C.firstname;"
