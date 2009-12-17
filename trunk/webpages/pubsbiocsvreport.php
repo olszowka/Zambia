@@ -14,8 +14,9 @@ SELECT
 	     ) as X
 	   USING (badgeid) 
 	ORDER BY
-	    IF(locate(" ",pubsname)!=0,substring(P.pubsname,char_length(pubsname)-locate(" ",reverse(pubsname))+2),pubsname)
+	    IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
 EOD;
+// order by: if lastname is part of pubsname, order by it, otherwise, order by last word/token in pubsname
 if (!$result=mysql_query($query,$link)) {
 	require_once('StaffHeader.php');
 	require_once('StaffFooter.php');
