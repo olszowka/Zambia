@@ -28,8 +28,21 @@ if (isset($_POST["selpart"])) {
                 
             }        
     }
-$query="SELECT C.lastname, C.firstname, C.badgename, C.badgeid FROM CongoDump AS C,";
-$query.=" Participants AS P WHERE C.badgeid=P.badgeid AND P.interested=1 ORDER BY C.lastname";
+$query = <<<EOD
+SELECT
+            CD.lastname,
+            CD.firstname,
+            CD.badgename,
+            P.badgeid,
+            P.pubsname
+    FROM
+            Participants P
+       JOIN CongoDump CD USING(badgeid)
+    WHERE
+            P.interested=1
+    ORDER BY
+            IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+EOD;
 if (!$Presult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     RenderError($title,$message);
@@ -50,9 +63,16 @@ echo "<FORM name=\"invform\" method=POST action=\"InviteParticipants.php\">";
 echo "<DIV><LABEL for=\"selpart\">Select Participant</LABEL>\n";
 echo "<SELECT name=\"selpart\">\n";
 echo "     <OPTION value=0 selected>Select Participant</OPTION>\n";
-while (list($lastname,$firstname,$badgename,$badgeid)= mysql_fetch_array($Presult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$badgeid."\">".htmlspecialchars($lastname).", ";
-    echo htmlspecialchars($firstname)." (".htmlspecialchars($badgename).") - ";
+while (list($lastname,$firstname,$badgename,$badgeid,$pubsname)= mysql_fetch_array($Presult, MYSQL_NUM)) {
+    echo "     <OPTION value=\"".$badgeid."\">";
+    if ($pubsname!="") {
+	        echo htmlspecialchars($pubsname);
+            }
+	    else {
+		    echo htmlspecialchars($lastname).", ";
+            echo htmlspecialchars($firstname);
+            }
+    echo " (".htmlspecialchars($badgename).") - ";
     echo htmlspecialchars($badgeid)."</OPTION>\n";
     }
 echo "</SELECT></DIV>\n";
