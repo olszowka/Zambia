@@ -1,4 +1,22 @@
 TITLE='FastTrack Schedule (for con)'
 DESCRIPTION='What is happening in FastTrack - The At-Con Version'
 FASTTRACKWANTS=1
-QUERY=" Select DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time', R.roomname, S.title, group_concat(P.pubsname,' ') as 'Participants' from Rooms R, Sessions S, Schedule SCH LEFT JOIN ParticipantOnSession POS on SCH.sessionid=POS.sessionid LEFT JOIN Participants P on POS.badgeid=P.badgeid where SCH.roomid = R.roomid and SCH.sessionid = S.sessionid and S.trackid=8 group by SCH.sessionid order by SCH.starttime;"
+QUERY="
+SELECT
+            DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time',
+            R.roomname,
+            S.title,
+            group_concat(P.pubsname SEPARATOR ', ') as 'Participants'
+    FROM
+            Schedule SCH
+       JOIN Rooms R USING(roomid)
+       JOIN Sessions S USING(sessionid)
+       JOIN Tracks TR USING(trackid)
+  LEFT JOIN ParticipantOnSession POS USING(sessionid)
+  LEFT JOIN Participants P USING(badgeid)
+    WHERE
+            TR.trackname='FAST TRACK'
+    GROUP BY
+            SCH.scheduleid
+    ORDER BY
+            SCH.starttime"
