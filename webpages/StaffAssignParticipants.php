@@ -118,14 +118,23 @@ if (!$result=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
-$query="   SELECT P.pubsname, P.badgeid ";
-$query.="    FROM Participants AS P ";
-$query.="   WHERE P.interested=1 ";
-$query.="     AND P.badgeid not in ";
-$query.="            (Select badgeid ";
-$query.="               from ParticipantSessionInterest ";
-$query.="              where sessionid=$selsessionid) ";
-$query.="ORDER BY P.pubsname ";
+$query = <<<EOD
+SELECT
+            P.pubsname,
+            P.badgeid,
+            CD.lastname
+    FROM
+            Participants P
+       JOIN CongoDump CD USING(badgeid)
+    WHERE
+            P.interested=1
+        AND P.badgeid not in
+                   (Select badgeid
+                        from ParticipantSessionInterest
+                       where sessionid=$selsessionid)
+    ORDER BY
+            IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+EOD;
 if (!$Presult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     RenderError($title,$message);
