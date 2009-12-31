@@ -4,9 +4,10 @@ require_once('StaffCommonCode.php'); //reset connection to db and check if logge
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $query=<<<EOD
 SELECT
-            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time',
+            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a') as 'Day',
+            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%l:%i %p') as 'Start Time',
             left(duration,5) Length,
-	    Roomname,
+	        Roomname,
             trackname as Track,
             Title,
             if(group_concat(pubsname) is NULL,'',group_concat(pubsname SEPARATOR ', ')) as 'Participants'
@@ -60,7 +61,7 @@ if (mysql_num_rows($result)==0) {
 	}
 header('Content-disposition: attachment; filename=PDASchedule.csv');
 header('Content-type: text/csv');
-echo "start time,duration,room name,track,title,participants\n";
+echo "day,start time,duration,room name,track,title,participants\n";
 while ($row= mysql_fetch_array($result, MYSQL_NUM)) {
 	$betweenValues=false;
 	foreach ($row as $value) {
