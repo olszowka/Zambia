@@ -3,12 +3,13 @@ DESCRIPTION='StartTime Duration Room Track Title Participants'
 PUBSWANTS=1
 GENCSV=0
 QUERY="
-     select DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
+     select DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',starttime),'%a') as 'Day',
+            DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',starttime),'%l:%i %p') as 'Start Time',
             concat('(',left(duration,5),')') Length,
             Roomname,
             trackname as Track,
             Title,
-         if(group_concat(' ',pubsname) is NULL,'',group_concat(' ',pubsname)) as 'Participants'
+            if(group_concat(pubsname) is NULL,'',group_concat(pubsname SEPARATOR ', ')) as 'Participants'
        from Rooms R
        JOIN Schedule SCH
             USING (roomid)
