@@ -15,9 +15,9 @@
     $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
     $chint=($participant["interested"]==0);
     if (may_I('postcon')) { ?>
-<P>Thank you for your participation in Arisia '09.  With your help it was a great con.  We look forward 
+<P>Thank you for your participation in Arisia '10.  With your help it was a great con.  We look forward 
 to your participation again next year.</P>
-<P>We will post instructions for participating in brainstorming for Arisia '10 soon.</P>
+<P>We will post instructions for participating in brainstorming for Arisia '11 soon.</P>
 <P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--Arisia Program and Events Committees</P>
 <?php
     participant_footer();
