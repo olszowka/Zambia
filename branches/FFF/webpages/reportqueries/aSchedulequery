@@ -1,0 +1,7 @@
+TITLE='Schedule Listings'
+DESCRIPTION='For the public, with links between the schedule elements to their descriptions, the bios of the presenters, and a link to the grid. [On&nbsp;Demand]'
+PROGWANTS=1
+GRIDSWANTS=1
+QUERY=' '
+MIGRATED=true
+

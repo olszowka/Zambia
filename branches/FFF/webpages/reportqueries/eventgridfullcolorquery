@@ -1,0 +1,7 @@
+TITLE='Unabridged Color Event Grid'
+DESCRIPTION='Display entire event schedule with rooms on horizontal axis and time on vertical, keyed by color. This includes all items marked "Do Not Print" or "Staff Only". [On&nbsp;Demand]'
+PROGWANTS=1
+GRIDSWANTS=1
+QUERY=' '
+MIGRATED=true
+

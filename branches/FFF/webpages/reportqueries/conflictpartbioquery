@@ -1,0 +1,6 @@
+TITLE='Conflict Report - Participant Bio in conflict'
+DESCRIPTION='Show the badgeid, pubsname and both bio entries for each participant who indicated he is attending. [On&nbsp;Demand]'
+CONFLICTWANTS=1
+PROGWANTS=1
+QUERY=' '
+MIGRATED=true
