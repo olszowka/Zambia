@@ -92,6 +92,8 @@ $query = <<<EOD
 SELECT
             POS.badgeid AS posbadgeid,
             POS.moderator,
+            POS.volunteer,
+            POS.announcer,
             P.badgeid,
             P.pubsname,
             PSI.rank,
@@ -142,9 +144,17 @@ if (!$Presult=mysql_query($query,$link)) {
     }
 $i=0;
 $modid=0;
+$volid=0;
+$annid=0;
 while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     if ($bigarray[$i]["moderator"]==1) {
         $modid=$bigarray[$i]["badgeid"];
+        }
+    if ($bigarray[$i]["volunteer"]==1) {
+        $volid=$bigarray[$i]["badgeid"];
+        }
+    if ($bigarray[$i]["announcer"]==1) {
+        $annid=$bigarray[$i]["badgeid"];
         }
     $i++;
     }
@@ -152,7 +162,11 @@ $numrows=$i;
 echo "<FORM name=\"selsesform\" method=POST action=\"StaffAssignParticipants.php\">\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
 echo "<INPUT type=\"radio\" name=\"moderator\" id=\"moderator\" value=\"0\"".(($modid==0)?"checked":"").">";
-echo "<LABEL for=\"moderator\">No Moderator Selected</LABEL>";
+echo "<LABEL for=\"moderator\">No Moderator Selected</LABEL><br>";
+echo "<INPUT type=\"radio\" name=\"volunteer\" id=\"volunteer\" value=\"0\"".(($volid==0)?"checked":"").">";
+echo "<LABEL for=\"volunteer\">No Volunteer Assigned</LABEL><br>";
+echo "<INPUT type=\"radio\" name=\"announcer\" id=\"announcer\" value=\"0\"".(($annid==0)?"checked":"").">";
+echo "<LABEL for=\"announcer\">No Announcer</LABEL>";
 echo "<TABLE>\n";
 for ($i=0;$i<$numrows;$i++) {
     echo "   <TR>\n";
@@ -169,9 +183,15 @@ for ($i=0;$i<$numrows;$i++) {
     echo "      <TD class=\"vatop\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
     echo "      </TR>\n";
     echo "   <TR>\n";
-    echo "      <TD class=\"vatop\"><INPUT type=\"radio\" name=\"moderator\" id=\"moderator\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["moderator"])?"checked":"")."></TD>";
-    echo "      <TD class=\"vatop lrpad\">Moderator</TD>";
+    echo "      <TD class=\"vatop\" vcenter><INPUT type=\"radio\" name=\"moderator\" id=\"moderator\"value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["moderator"])?"checked":"")."><br>";
+    echo "      <INPUT type=\"radio\" name=\"volunteer\" id=\"volunteer\"value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["volunteer"])?"checked":"")."><br>";
+    echo "      <INPUT type=\"radio\" name=\"announcer\" id=\"announcer\"value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["announcer"])?"checked":"")."></TD>";
+    echo "      <TD class=\"vatop lrpad\">Moderator<br>";
+    echo "      Volunteer<br>";
+    echo "      Announcing</TD>";
     echo "      <TD colspan=4 class=\"border1111 lrpad\">".htmlspecialchars($bigarray[$i]["comments"]);
     echo "</TD>\n";
     echo "      </TR>\n";
@@ -181,6 +201,8 @@ echo "</TABLE>";
 echo "<INPUT type=\"hidden\" name=\"selsess\" value=\"$selsessionid\">\n";
 echo "<INPUT type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasmodid\" value=\"$modid\">\n";
+echo "<INPUT type=\"hidden\" name=\"wasvolid\" value=\"$volid\">\n";
+echo "<INPUT type=\"hidden\" name=\"wasannid\" value=\"$annid\">\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
 echo "<HR>\n";
 echo "<DIV><LABEL for=\"asgnpart\">Assign participant not indicated as interested or invited.</LABEL><BR>\n";

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export TZ=US/Eastern
 
@@ -27,7 +27,7 @@ for x in ${SRCDIR}/conflictnotinterquery; do
                             sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" | \
                             sed "s%CON_NAME%$CON_NAME%" > $DESTDIR/${name}report.php
 
-  echo $QUERY | ~/usr/bin/mysql --host=$DBHOSTNAME -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
+  echo $QUERY | /usr/bin/mysql --host=$DBHOSTNAME -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   

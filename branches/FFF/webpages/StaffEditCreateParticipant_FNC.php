@@ -53,9 +53,9 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                      value="<?php echo htmlspecialchars($participant_arr["badgename"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="interested">Will participate and attend: </LABEL><SELECT name="interested">
                     <OPTION value="" <?php if ($participant_arr["interested"]=="") echo "selected";?> >Not yet logged in</OPTION>
-                    <OPTION value="" <?php if ($participant_arr["interested"]=="0") echo "selected";?> >Did not answer</OPTION>
-                    <OPTION value="" <?php if ($participant_arr["interested"]=="1") echo "selected";?> >Yes</OPTION>
-                    <OPTION value="" <?php if ($participant_arr["interested"]=="2") echo "selected";?> >No</OPTION>
+                    <OPTION value="0" <?php if ($participant_arr["interested"]=="0") echo "selected";?> >Did not answer</OPTION>
+                    <OPTION value="1" <?php if ($participant_arr["interested"]=="1") echo "selected";?> >Yes</OPTION>
+                    <OPTION value="2" <?php if ($participant_arr["interested"]=="2") echo "selected";?> >No</OPTION>
                     </SELECT>
                 </DIV>
             <DIV class="denseform">
@@ -63,9 +63,16 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                      value="<?php echo htmlspecialchars($participant_arr["email"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="bestway">Preferred way to be contacted: </LABEL><SELECT name="bestway">
                     <OPTION value="" <?php if ($participant_arr["bestway"]=="") echo "selected";?> >Did not answer</OPTION>
-                    <OPTION value="" <?php if ($participant_arr["bestway"]=="Email") echo "selected";?> >Email</OPTION>
-                    <OPTION value="" <?php if ($participant_arr["bestway"]=="Phone") echo "selected";?> >Phone</OPTION>
-                    <OPTION value="" <?php if ($participant_arr["bestway"]=="Postal mail") echo "selected";?> >Postal mail</OPTION>
+                    <OPTION value="Email" <?php if ($participant_arr["bestway"]=="Email") echo "selected";?> >Email</OPTION>
+                    <OPTION value="Phone" <?php if ($participant_arr["bestway"]=="Phone") echo "selected";?> >Phone</OPTION>
+                    <OPTION value="Postal mail" <?php if ($participant_arr["bestway"]=="Postal mail") echo "selected";?> >Postal mail</OPTION>
+                    </SELECT>
+                <SPAN><LABEL for="permroleid">Level of participation: </LABEL><SELECT name="permroleid">
+                    <OPTION value="" <?php if ($participant_arr["permroleid"]=="") echo "selected";?> >Not determined</OPTION>
+                    <OPTION value="3" <?php if ($participant_arr["permroleid"]=="3") echo "selected";?> >Presenter</OPTION>
+                    <OPTION value="5" <?php if ($participant_arr["permroleid"]=="5") echo "selected";?> >Volunteer</OPTION>
+                    <OPTION value="4" <?php if ($participant_arr["permroleid"]=="4") echo "selected";?> >Brainstorm</OPTION>
+                    <OPTION value="2" <?php if ($participant_arr["permroleid"]=="2") echo "selected";?> >Staff</OPTION>
                     </SELECT>
                 </DIV>
             <DIV class="denseform">

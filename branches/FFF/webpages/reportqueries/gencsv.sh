@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 DATABASE=`cat ../db_name.php | awk -F'"' '/DBDB/ {print $4}'`
 DBUSERNAME=`cat ../db_name.php | awk -F'"' '/DBUSERID/ {print $4}'`

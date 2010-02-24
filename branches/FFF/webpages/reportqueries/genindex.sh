@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export TZ=US/Eastern
 

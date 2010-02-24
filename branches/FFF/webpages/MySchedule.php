@@ -34,7 +34,7 @@ EOD;
         }
     $query= <<<EOD
 SELECT
-            POS.sessionid, CD.badgename, P.pubsname, POS.moderator, PSI.comments
+            POS.sessionid, CD.badgename, P.pubsname, POS.moderator, POS.volunteer, POS.announcer, PSI.comments
     FROM
             ParticipantOnSession POS
        JOIN CongoDump CD USING(badgeid)
@@ -53,7 +53,8 @@ EOD;
     $partrows=mysql_num_rows($result);
     for ($i=0; $i<$partrows; $i++) {
         list($partarray[$i]["sessionid"],$partarray[$i]["badgename"],$partarray[$i]["pubsname"],
-	    $partarray[$i]["moderator"],$partarray[$i]["comments"])=mysql_fetch_array($result, MYSQL_NUM);
+	     $partarray[$i]["moderator"],$partarray[$i]["volunteer"],$partarray[$i]["announcer"],
+	     $partarray[$i]["comments"])=mysql_fetch_array($result, MYSQL_NUM);
         }
     $query="SELECT message FROM CongoDump C LEFT JOIN RegTypes R on C.regtype=R.regtype ";
     $query.="WHERE C.badgeid=\"$badgeid\"";
@@ -134,6 +135,12 @@ PROGRAM_EMAIL; ?></A>.\n";
 	    if ($partarray[$j]["pubsname"]!=$partarray[$j]["badgename"]) echo " (".htmlspecialchars($partarray[$j]["badgename"]).")";
             if ($partarray[$j]["moderator"]) {
                 echo " <I>mod</I> ";
+                }
+            if ($partarray[$j]["volunteer"]) {
+                echo " <I>volunteer</I> ";
+                }
+            if ($partarray[$j]["announcer"]) {
+                echo " <I>announcer</I> ";
                 }
             echo "</TD>\n";
             echo "            <TD colspan=5 class=\"$class\">".htmlspecialchars(fix_slashes($partarray[$j]["comments"]));

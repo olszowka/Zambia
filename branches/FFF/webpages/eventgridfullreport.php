@@ -27,7 +27,7 @@ SELECT
     FROM
             Rooms R
     WHERE
-        R.function like '%ent%' AND
+        R.function like '%vent%' AND
         R.roomid in
         (SELECT DISTINCT roomid FROM Schedule)
     ORDER BY
@@ -67,7 +67,7 @@ EOD;
 //       JOIN Rooms R
 //            USING (roomid)
 //    WHERE
-//        R.function like '%ent%'
+//        R.function like '%vent%'
 //    GROUP BY SCH.scheduleid
 //    ORDER BY SCH.starttime;
 //
@@ -85,7 +85,7 @@ EOD;
         }
     $header_cells.="</TR>";
     $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN Rooms R USING (roomid) WHERE";
-    $query.=" R.function like '%ent%' GROUP BY SCH.starttime ORDER BY SCH.starttime;";
+    $query.=" R.function like '%vent%' GROUP BY SCH.starttime ORDER BY SCH.starttime;";
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
         $message.=$query;

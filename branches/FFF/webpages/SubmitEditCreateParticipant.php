@@ -16,19 +16,6 @@
         }
     if ($action=="create") { 
             $title="Add Participant";
-            if (!may_I('create_participant')) {
-                $message_error="You do not have permission to access this page.<BR>\n";
-                RenderError($title,$message_error);
-                exit();
-                }
-            }
-        else {
-            $title="Add Participant";
-            if (!may_I('edit_participant')) {
-                $message_error="You do not have permission to access this page.<BR>\n";
-                RenderError($title,$message_error);
-                exit();
-                }
             }
     $message_error="";
     $message_warn="";
@@ -42,6 +29,7 @@
     $participant_arr['regtype']=stripslashes($_POST['regtype']);
     $participant_arr['bestway']=stripslashes($_POST['bestway']);
     $participant_arr['interested']=stripslashes($_POST['interested']);
+    $participant_arr['permroleid']=stripslashes($_POST['permroleid']);
     $participant_arr['bio']=stripslashes($_POST['bio']);
     $participant_arr['pubsname']=stripslashes($_POST['pubsname']);
     $participant_arr['password']=md5('changeme');
@@ -64,7 +52,7 @@
     prepare_db();
     if ($action=="create") {
         for ($i=1; $i<2; $i++) { // loop to make attempt twice incase of concurrency issue
-            $query = "SELECT MAX(badgeid) FROM Participants WHERE badgeid>='2' AND badgeid NOT IN ('53159','6499')";
+            $query = "SELECT MAX(badgeid) FROM Participants WHERE badgeid>='1' AND badgeid<68";
             $result=mysql_query($query,$link);
             if (!$result) {
                 $message_error="Unrecoverable error updating database.  Database not updated.<BR>\n";
@@ -99,6 +87,9 @@
             $query2.= "'".mysql_real_escape_string($participant_arr['email'])."',";
             $query2.= "'".mysql_real_escape_string($participant_arr['postaddress'])."',";
             $query2.= "'".mysql_real_escape_string($participant_arr['regtype'])."');";
+            $query3 = "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES (";
+            $query3.= "'".mysql_real_escape_string($badgeid)."',";
+            $query3.= "'".mysql_real_escape_string($participant_arr['permroleid'])."');";
             $result=mysql_query("START TRANSACTION;",$link);
             if (mysql_errno($link)!=0) {
                 $message_error="Database error: failed to start transaction.  Database not updated.<BR>\n";
@@ -138,6 +129,24 @@
             if ($errno!=0) {
                 $message_error="Database errorx: unknown.  Database not updated.<BR>\n";
                 $message_error.=$query2;
+                RenderError($title,$message_error);
+                exit();
+                }
+            $result=mysql_query($query3,$link);
+            $errno=mysql_errno($link);
+            //error_log("Zambia: SubmitEditCreateParticipant.php: query2 errno: $errno");
+            if ($errno==1062) { // primary key violation; loop again and hope it was just a concurrency problem
+                $result=mysql_query("ROLLBACK;",$link);
+                if (mysql_errno($link)!=0) {
+                    $message_error="Database error: failed to rollback transaction.  Database not updated.<BR>\n";
+                    RenderError($title,$message_error);
+                    exit();
+                    }
+                continue;
+                }
+            if ($errno!=0) {
+                $message_error="Database errorx: unknown.  Database not updated.<BR>\n";
+                $message_error.=$query3;
                 RenderError($title,$message_error);
                 exit();
                 }

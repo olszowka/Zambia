@@ -16,14 +16,10 @@
         }
     if ($action=="create") { //initialize participant array
             $title="Add Participant";
-            if (!may_I('create_participant')) {
-                $message_error="You do not have permission to access this page.<BR>\n";
-                RenderError($title,$message_error);
-                exit();
-                }
             $participant_arr['password']="changeme";
             $participant_arr['bestway']=""; //null means hasn't logged in yet.
             $participant_arr['interested']=""; //null means hasn't logged in yet.
+            $participant_arr['permroleid']=""; //null means hasn't logged in yet.
             $participant_arr['bio']="";
             $participant_arr['bioeditstatusid']=1; //not edited -- whatever is first step
             $participant_arr['pubsname']="";
@@ -36,11 +32,6 @@
             }
         else { // get participant array from database
             $title="Edit Participant";
-            if (!may_I('edit_participant')) {
-                $message_error="You do not have permission to access this page.<BR>\n";
-                RenderError($title,$message_error);
-                exit();
-                }
             if (!(isset($_GET['badgeid']))) {
                 $message_error="Required parameter 'badgeid' not found.  Can't continue.<BR>\n";
                 RenderError($title,$message_error);
@@ -69,8 +60,10 @@
             $participant_arr['email']=$result_array['email'];
             $participant_arr['postaddress']=$result_array['postaddress'];
             $participant_arr['regtype']=$result_array['regtype'];
-            $query="SELECT bestway, interested, bio, pubsname ";
-            $query.=" FROM Participants where badgeid='$badgeid'";
+            $query="SELECT P.bestway, P.interested, U.permorleid, P.bio, P.pubsname ";
+            $query.=" FROM Participants P";
+            $query.=" JOIN UserHasPermissionRole U USING (badgeid)";
+            $query.=" where badgeid='$badgeid'";
             if (($result=mysql_query($query,$link))===false) {
                 $message_error="Error retrieving data from database<BR>\n";
                 $message_error.=$query;
@@ -86,6 +79,7 @@
             $result_array=mysql_fetch_array($result,MYSQL_ASSOC);
             $participant_arr['bestway']=$result_array['bestway'];
             $participant_arr['interested']=$result_array['interested'];
+            $participant_arr['permroleid']=$result_array['permroleid'];
             $participant_arr['bio']=$result_array['bio'];
             $participant_arr['pubsname']=$result_array['pubsname'];
             }

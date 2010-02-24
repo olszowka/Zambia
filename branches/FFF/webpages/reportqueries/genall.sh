@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # Generate all of the reports, in the correct order.
 
-. ./genreports.sh
-. ./gencsv.sh  
-. ./genindex.sh  
-. ./genindices.sh  
+/bin/bash ./genreports.sh
+/bin/bash ./gencsv-1.sh  
+/bin/bash ./genindex.sh  
+/bin/bash ./genindices.sh  
