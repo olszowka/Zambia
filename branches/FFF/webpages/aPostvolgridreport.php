@@ -1,19 +1,18 @@
 <?php
     require_once('db_functions.php');
-    require_once('PostingHeader.php');
-    require_once('PostingFooter.php');
-    require_once('CommonCode.php');
-    require_once('error_functions.php');
+    require_once('StaffHeader.php');
+    require_once('StaffFooter.php');
+    require_once('StaffCommonCode.php');
 
     /* Global Variables */
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
     $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
-    $_SESSION['return_to_page']="Postgrid.html";
+    $_SESSION['return_to_page']="aPostvolgridreport.php";
 
     /* Function to start the page correctly. */    
     function topofpage() {
-        posting_header("Published Grid");
+        staff_header("Published Volunteer Grid");
         date_default_timezone_set('US/Eastern');
         echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
         echo "<P>Grid of all sessions.</P>\n";
@@ -22,7 +21,7 @@
     /* No matching retuned values. */
     function noresults() {
         echo "<P>This report retrieved no results matching the criteria.</P>\n";
-        posting_footer();
+        staff_footer();
         }
 
     /* This query returns the room names for an array. */
@@ -34,7 +33,7 @@ SELECT
             Rooms R
     WHERE
         R.roomid in
-      (SELECT DISTINCT SCH.roomid FROM Schedule SCH JOIN Sessions S USING (sessionid) where pubstatusid=2)
+        (SELECT DISTINCT roomid FROM Schedule)
     ORDER BY
     	  R.display_order;
 EOD;
@@ -63,7 +62,7 @@ EOD;
     $header_cells="<TR><TH>Time</TH>";
     for ($i=1; $i<=$rooms; $i++) {
         $header_cells.="<TH>";
-        $header_cells.=$header_array[$i]["roomname"];
+        $header_cells.=sprintf("<A HREF=\"MaintainRoomSched.php?selroom=%s\">%s</A>",$header_array[$i]["roomid"],$header_array[$i]["roomname"]);
         $header_cells.="</TH>";
         }
     $header_cells.="</TR>";
@@ -73,15 +72,13 @@ EOD;
     $query = <<<EOD
 SELECT
       S.sessionid,
-      GROUP_CONCAT(concat("<A HREF=\"Bios.html#",P.pubsname,"\">",P.pubsname,"</A>") SEPARATOR ", ") as allpubsnames
+      GROUP_CONCAT(IF((POS.volunteer=1 OR POS.announcer=1),concat(P.pubsname,", "),"") SEPARATOR "") as allpubsnames
     FROM
       Sessions S
     JOIN
       ParticipantOnSession POS USING (sessionid)
     JOIN
       Participants P USING (badgeid)
-    WHERE 
-      POS.volunteer=0 AND POS.announcer=0
     GROUP BY
       sessionid
     ORDER BY
@@ -157,7 +154,7 @@ EOD;
             }
         $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid)";
         $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid)";
-        $query.=" WHERE S.pubstatusid = 2 AND TIME_TO_SEC(SCH.starttime) <= $time";
+        $query.=" WHERE TIME_TO_SEC(SCH.starttime) <= $time";
         $query.=" AND (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) >= ($time + $Grid_Spacer);";
         if (($result=mysql_query($query,$link))===false) {
             $message="Error retrieving data from database.<BR>";
@@ -183,7 +180,7 @@ EOD;
         if ($skiprow == 0) {$grid_array[$time]['blocktime'] = "Skip";}
         if ($refskiprow != 0) {
             $k=$grid_array[$time]['blocktime'];
-            $grid_array[$time]['blocktime']=sprintf("<A HREF=\"Schedule.html#%s\">%s</A>",$k,$k);
+            $grid_array[$time]['blocktime']=sprintf("<A HREF=\"aSchedulereport.php#%s\">%s</A>",$k,$k);
             }
         }
 
@@ -194,9 +191,9 @@ EOD;
        htmlcellcolor, because, by design, that is the only thing written in
        a continuation block. */
     topofpage();
-    echo "<P>Click on the session title to visit the session's <A HREF=\"Descriptions.html\">description</A>,";
-    echo " the presenter to visit their <A HREF=\"Bios.html\">bio</A>, or the time to visit that section of";
-    echo " the <A HREF=\"Schedule.html\">schedule</A>.</P>\n";
+    echo "<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,";
+    echo " the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or the time to visit that section of";
+    echo " the <A HREF=\"aSchedulereport.php\">schedule</A>.</P>\n";
     $skipinit=0;
     $skipaccum=1;
     for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {
@@ -215,9 +212,12 @@ EOD;
                 $x=$grid_array[$i]["$z sessionid"]; //sessionid
                 if ($y!="") {
                     echo sprintf("<TD BGCOLOR=\"%s\">",$y);
+                    if ($x!="") {
+                        echo sprintf("(<A HREF=\"StaffAssignParticipants.php?selsess=%s\">%s</A>)",$x,$x);
+                        }
                     $y = $grid_array[$i]["$z title"]; //title
                     if ($y!="") {
-                        echo sprintf("<A HREF=\"Descriptions.html#%s\">%s</A>",$x,$y);
+                        echo sprintf("<A HREF=\"EditSession.php?id=%s\">%s</A>",$x,$y);
                         }
                     $y = substr($grid_array[$i]["$z duration"],0,-3); // duration; drop ":00" representing seconds off the end
                     if (substr($y,0,1)=="0") {$y = substr($y,1,999);} // drop leading "0"
@@ -238,4 +238,4 @@ EOD;
             }
         }
     echo "</TABLE>";
-    posting_footer();
+    staff_footer();
