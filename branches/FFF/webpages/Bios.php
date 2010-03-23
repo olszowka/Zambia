@@ -31,11 +31,12 @@
     $query="SELECT concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',";
     $query.=" GROUP_CONCAT(DISTINCT concat('<DT><A HREF=\"Descriptions.html#',S.sessionid,'\">',S.title,'</A>',";
     $query.="   if((moderator=1),'(m)',''),' &mdash; ',concat('<A HREF=\"Schedule.html#',";
-    $query.="   DATE_FORMAT(ADDTIME('2010-02-12 00:00:00',starttime),'%a %l:%i %p'),'\">',";
-    $query.="   DATE_FORMAT(ADDTIME('2010-02-12 00:00:00',starttime),'%a %l:%i %p'),'</A>'),";
-    $query.="   ' &mdash; ',concat(if(left(duration,2)=00,'',if(left(duration,1)=0,concat(right(left(duration,2),1),'hr '),";
-    $query.="   concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00,'',if(left(date_format(duration,'%i'),1)=0,";
-    $query.="   concat(right(date_format(duration,'%i'),1),'min'),concat(date_format(duration,'%i'),'min')))),'</DT>') SEPARATOR ' ') as Title,";
+    $query.="   DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',";
+    $query.="   DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>'),";
+    $query.="   ' &mdash; ',CASE WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')";
+    $query.="   WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')";
+    $query.="   ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')";
+    $query.="   END,'</DT>') SEPARATOR ' ') as Title,";
     $query.=" if ((P.editedbio is NULL),' ',P.editedbio) as Bio,";
     $query.=" P.pubsname";
     $query.=" FROM Sessions S";

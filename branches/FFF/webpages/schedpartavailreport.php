@@ -23,8 +23,8 @@
     $query = <<<EOD
 SELECT
         P.badgeid, P.pubsname, 
-        DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',starttime),'%a %l:%i %p') AS 'Start Time', 
-        DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',endtime),'%a %l:%i %p') AS 'End Time',
+        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') AS 'Start Time', 
+        DATE_FORMAT(ADDTIME('$ConStartDatim',endtime),'%a %l:%i %p') AS 'End Time',
         PA.otherconstraints,
         PA.preventconflict
     FROM

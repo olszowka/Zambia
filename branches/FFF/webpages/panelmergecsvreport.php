@@ -17,7 +17,7 @@ $query=<<<EOD
 SELECT
             S.sessionid, 
             R.roomname, 
-            DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',SCH.starttime),'%a %l:%i %p') starttime, 
+            DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') starttime, 
             CASE
                 WHEN HOUR(S.duration) < 1 THEN concat(date_format(S.duration,'%i'),'min')
                 WHEN MINUTE(S.duration)=0 THEN concat(date_format(S.duration,'%k'),'hr')
