@@ -1,5 +1,5 @@
 TITLE='Conflict Report - Sessions with no moderator'
-DESCRIPTION='Panels need a moderator.  Events may not.  Think before you jump.  (This is limited to items in the schedule which have at least one participant.) [On&nbspDemand]'
+DESCRIPTION='Panels need a moderator.  Events may not.  Think before you jump.  (This is limited to items in the schedule which have at least one participant.) [On&nbsp;Demand]'
 CONFLICTWANTS=1
 QUERY=' '
 MIGRATED=true

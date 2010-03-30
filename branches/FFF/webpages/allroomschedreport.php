@@ -6,7 +6,7 @@
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $_SESSION['return_to_page']="allassignedreportreport.php";
+    $_SESSION['return_to_page']="allroomschedreport.php";
 
     function topofpage() {
         staff_header("Full Room Schedule by room then time.");

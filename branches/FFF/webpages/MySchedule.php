@@ -11,13 +11,35 @@
         }
     // set $badgeid from session
     $query= <<<EOD
-    SELECT POS.sessionid, trackname, title, roomname, pocketprogtext,
+SELECT
+    POS.sessionid,
+    trackname,
+    title,
+    roomname,
+    pocketprogtext,
     DATE_FORMAT(ADDTIME('$ConStartDatim', starttime),'%a %l:%i %p') as 'Start Time',
-    left(duration,5) as 'Duration', persppartinfo, notesforpart FROM
-    ParticipantOnSession POS, Sessions S, Rooms R, Schedule SCH, Tracks T
-    where badgeid="$badgeid" and POS.sessionid = S.sessionid and
-    R.roomid = SCH.roomid and S.sessionid = SCH.sessionid and S.trackid = T.trackid
-    ORDER BY starttime
+    CASE
+      WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
+      WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
+      ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+      END
+      AS Duration,
+    persppartinfo,
+    notesforpart
+  FROM
+      ParticipantOnSession POS,
+      Sessions S,
+      Rooms R,
+      Schedule SCH,
+      Tracks T
+  WHERE
+    badgeid="$badgeid" and
+    POS.sessionid = S.sessionid and
+    R.roomid = SCH.roomid and
+    S.sessionid = SCH.sessionid and
+    S.trackid = T.trackid
+  ORDER BY
+    starttime
 EOD;
     //error_log("Zambia: $query");
     if (!$result=mysql_query($query,$link)) {
@@ -34,16 +56,27 @@ EOD;
         }
     $query= <<<EOD
 SELECT
-            POS.sessionid, CD.badgename, P.pubsname, POS.moderator, POS.volunteer, POS.announcer, PSI.comments
-    FROM
-            ParticipantOnSession POS
-       JOIN CongoDump CD USING(badgeid)
-       JOIN Participants P USING(badgeid)
-  LEFT JOIN ParticipantSessionInterest PSI USING(sessionid,badgeid)
-    WHERE
-            POS.sessionid in
-                    (select sessionid from ParticipantOnSession where badgeid='$badgeid')
-            ORDER BY sessionid, moderator desc
+    POS.sessionid,
+    CD.badgename,
+    P.pubsname,
+    POS.moderator,
+    POS.volunteer,
+    POS.announcer,
+    PSI.comments
+  FROM
+      ParticipantOnSession POS
+    JOIN CongoDump CD USING(badgeid)
+    JOIN Participants P USING(badgeid)
+    LEFT JOIN ParticipantSessionInterest PSI USING(sessionid,badgeid)
+  WHERE
+    POS.sessionid in (SELECT
+                          sessionid 
+                        FROM
+                            ParticipantOnSession
+                        WHERE badgeid='$badgeid')
+  ORDER BY
+    sessionid,
+    moderator DESC
 EOD;
     if (!$result=mysql_query($query,$link)) {
         $message.=$query."<BR>Error querying database.<BR>";

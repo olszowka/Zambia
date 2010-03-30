@@ -28,7 +28,7 @@
     /* This query grabs everything necessary for the schedule to be printed. */
     $query="SELECT if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"Bios.html#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',";
     $query.=" concat('<A NAME=\"',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\"></A>',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p')) as 'Start Time',";
-    $query.=" concat(if(left(duration,2)=00,'',if(left(duration,1)=0,concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00,'',if(left(date_format(duration,'%i'),1)=0,concat(right(date_format(duration,'%i'),1),'min'),concat(date_format(duration,'%i'),'min')))) Duration,";
+    $query.=" CASE WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min') WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr') ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min') END AS Duration,";
     $query.=" GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,";
     $query.=" S.sessionid as Sessionid,";
     $query.=" concat('<A HREF=\"Descriptions.html#',S.sessionid,'\">',S.title,'</A>') as Title,";

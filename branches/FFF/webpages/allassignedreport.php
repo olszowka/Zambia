@@ -6,7 +6,7 @@
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $_SESSION['return_to_page']="allassignedreportreport.php";
+    $_SESSION['return_to_page']="allassignedreport.php";
 
     function topofpage() {
         staff_header("All Sessions that are assigned");
@@ -25,7 +25,12 @@ SELECT
     trackname as Trackname, 
     concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid,
     concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
-    duration as Duration, 
+    CASE
+      WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
+      WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
+      ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+      END
+      AS Duration,
     group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants',
     GROUP_CONCAT(DISTINCT if((POS.moderator=1),P.pubsname,'') SEPARATOR ' ') as 'Moderator', 
     GROUP_CONCAT(DISTINCT if((POS.volunteer=1),P.pubsname,'') SEPARATOR ' ') as 'Volunteer', 

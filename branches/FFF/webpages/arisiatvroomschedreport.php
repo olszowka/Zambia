@@ -6,13 +6,13 @@
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $_SESSION['return_to_page']="allroomschedtimereport.php";
+    $_SESSION['return_to_page']="arisiatvroomschedreport.php";
 
     function topofpage() {
-        staff_header("Full Room Schedule by time then room.");
+        staff_header("Arisia TV by time.");
         date_default_timezone_set('US/Eastern');
         echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Lists all Sessions Scheduled in all Rooms (includes \"Public\", \"Do Not Print\" and \"Staff Only\").</P>\n";
+        echo "<P>Just things in TV room.</P>\n";
         }
 
     function noresults() {
@@ -23,32 +23,32 @@
     $query = <<<EOD
 SELECT
     DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time',
-    concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
     CASE
       WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
       WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
       ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
       END
       AS Duration,
-    Function,
-    Trackname,
-    concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid,
-    concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') as Title,
-    PS.pubstatusname as PubStatus,
-    group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants'
+    trackname, 
+    S.sessionid,
+    title,
+    group_concat(' ',pubsname,' (',P.badgeid,')') as 'Participants'
   FROM
+      Tracks T,
+      Rooms R,
+      Sessions S,
       Schedule SCH
-    JOIN Sessions S USING (sessionid)
-    JOIN Rooms R USING (roomid)
-    JOIN PubStatuses PS USING (pubstatusid)
-    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
-    LEFT JOIN Participants P ON POS.badgeid=P.badgeid
-    LEFT JOIN Tracks T ON T.trackid=S.trackid
+    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid = POS.sessionid
+    LEFT JOIN Participants P ON POS.badgeid = P.badgeid
+  WHERE
+    T.trackid = S.trackid and
+    SCH.roomid = R.roomid and
+    SCH.sessionid = S.sessionid and
+    roomname in ('ArisiaTV')
   GROUP BY
-    SCH.scheduleid
+    SCH.sessionid
   ORDER BY
-    SCH.starttime,
-    R.roomname
+    SCH.starttime
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";

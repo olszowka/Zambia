@@ -6,13 +6,13 @@
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $_SESSION['return_to_page']="allroomschedtimereport.php";
+    $_SESSION['return_to_page']="benpalmreport.php";
 
     function topofpage() {
-        staff_header("Full Room Schedule by time then room.");
+        staff_header("Report for Ben and the palm.");
         date_default_timezone_set('US/Eastern');
         echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Lists all Sessions Scheduled in all Rooms (includes \"Public\", \"Do Not Print\" and \"Staff Only\").</P>\n";
+        echo "<P>StartTime Duration Room Track Title Participants.</P>\n";
         }
 
     function noresults() {
@@ -22,30 +22,24 @@
 
     $query = <<<EOD
 SELECT
-    DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time',
-    concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
-    CASE
-      WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
-      WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
-      ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
-      END
-      AS Duration,
-    Function,
-    Trackname,
-    concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid,
-    concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') as Title,
-    PS.pubstatusname as PubStatus,
-    group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants'
+    DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a') as 'Day',
+    DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%l:%i %p') as 'Start Time',
+    concat('(',left(duration,5),')') Length,
+    Roomname,
+    trackname as Track,
+    Title,
+    if(group_concat(pubsname) is NULL,'',group_concat(pubsname SEPARATOR ', ')) as 'Participants'
   FROM
-      Schedule SCH
+      Rooms R
+    JOIN Schedule SCH USING (roomid)
     JOIN Sessions S USING (sessionid)
-    JOIN Rooms R USING (roomid)
-    JOIN PubStatuses PS USING (pubstatusid)
+    LEFT JOIN Tracks T USING (trackid)
     LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
     LEFT JOIN Participants P ON POS.badgeid=P.badgeid
-    LEFT JOIN Tracks T ON T.trackid=S.trackid
+  WHERE
+    S.pubstatusid = 2
   GROUP BY
-    SCH.scheduleid
+    SCH.sessionid
   ORDER BY
     SCH.starttime,
     R.roomname

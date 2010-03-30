@@ -4,7 +4,7 @@
     require ('PartCommonCode.php'); // initialize db; check login; retrieve $badgeid
     require_once('ParticipantHeader.php');
     require_once('ParticipantFooter.php');
-    $CON_START_DATIM=CON_START_DATIM;
+    $ConStartDatim=CON_START_DATIM;
     $trackid=$_POST["track"];
     $titlesearch=stripslashes($_POST["title"]);
 // List of sessions that match search criteria 
@@ -14,12 +14,12 @@
 SELECT
         S.sessionid, T.trackname, S.title,
         CASE
-            WHEN (minute(S.duration)=0) AND (SCH.starttime) THEN CONCAT(date_format(S.duration,'%l hr starting '), date_format(addtime('$CON_START_DATIM', SCH.starttime), '%a %l:%i %p'))
-            WHEN (minute(S.duration)=0) THEN date_format(S.duration,'%l hr')
-            WHEN (hour(S.duration)=0) AND (SCH.starttime) THEN CONCAT(date_format(S.duration, '%i min starting '), date_format(addtime('$CON_START_DATIM', SCH.starttime), '%a %l:%i %p'))
-            WHEN (hour(S.duration)=0) THEN date_format(S.duration, '%i min')
-            WHEN (SCH.starttime) THEN CONCAT(date_format(S.duration,'%l hr, %i min starting '), date_format(addtime('$CON_START_DATIM', SCH.starttime), '%a %l:%i %p'))
-            ELSE date_format(S.duration,'%l hr, %i min')
+            WHEN (minute(S.duration)=0) AND (SCH.starttime) THEN CONCAT(DATE_FORMAT(S.duration,'%l hr starting '), DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime), '%a %l:%i %p'))
+            WHEN (minute(S.duration)=0) THEN DATE_FORMAT(S.duration,'%l hr')
+            WHEN (hour(S.duration)=0) AND (SCH.starttime) THEN CONCAT(DATE_FORMAT(S.duration, '%i min starting '), DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime), '%a %l:%i %p'))
+            WHEN (hour(S.duration)=0) THEN DATE_FORMAT(S.duration, '%i min')
+            WHEN (SCH.starttime) THEN CONCAT(DATE_FORMAT(S.duration,'%l hr, %i min starting '), DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime), '%a %l:%i %p'))
+            ELSE DATE_FORMAT(S.duration,'%l hr, %i min')
             END
             as duration,
         S.progguiddesc, S.persppartinfo, PSI.badgeid
