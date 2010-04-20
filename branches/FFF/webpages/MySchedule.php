@@ -179,7 +179,12 @@ PROGRAM_EMAIL; ?></A>.\n";
             echo "            <TD colspan=5 class=\"$class\">".htmlspecialchars(fix_slashes($partarray[$j]["comments"]));
             echo "</TD>\n";
             echo "            </TR>\n";
-            }
+	    }
+	$picture=sprintf("Feedback/%s.jpg",$schdarray[$i]["sessionid"]);
+	if (file_exists($picture)) {
+	    echo " <TR><TD colspan=7><I>Feedback:</I><br> ";
+	    echo sprintf("<img src=\"%s\"></TD></TR>",$picture);
+	    }
         echo "        <TR><TD colspan=7 class=\"border0020\">&nbsp;</TD></TR>\n";
         echo "        <TR><TD colspan=7 class=\"border0000\">&nbsp;</TD></TR>\n";
         }
