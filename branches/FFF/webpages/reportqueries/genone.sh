@@ -14,7 +14,7 @@ DESTDIR=".."
 
 umask 022
 
-#mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD -e '\. fixnames'
+#mysql -h$DBHOSTNAME -u$DBUSERNAME -p$DBPASSWORD -H $DATABASE  -e '\. fixnames'
 
 for x in ${SRCDIR}/conflictnotinterquery; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
@@ -27,7 +27,7 @@ for x in ${SRCDIR}/conflictnotinterquery; do
                             sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" | \
                             sed "s%CON_NAME%$CON_NAME%" > $DESTDIR/${name}report.php
 
-  echo $QUERY | /usr/bin/mysql --host=$DBHOSTNAME -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
+  echo $QUERY | /usr/bin/mysql -h$DBHOSTNAME -u$DBUSERNAME -p$DBPASSWORD -H $DATABASE >> $DESTDIR/${name}report.php
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+DBHOSTNAME=`cat ../db_name.php | awk -F'"' '/DBHOSTNAME/ {print $4}'`
 DATABASE=`cat ../db_name.php | awk -F'"' '/DBDB/ {print $4}'`
 DBUSERNAME=`cat ../db_name.php | awk -F'"' '/DBUSERID/ {print $4}'`
 DBPASSWORD=`cat ../db_name.php | awk -F'"' '/DBPASSWORD/ {print $4}'`
@@ -14,7 +15,7 @@ for x in ${SRCDIR}/4*query ; do
   eval `cat $x`
   echo $x
 
-  echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD | \
+  echo $QUERY | mysql -u$DBUSERNAME -p$DBPASSWORD -h$DBHOSTNAME -H $DATABASE  | \
      sed 's%"%""%g' |\
      sed 's%MAKEMEACOMMA ,%</TD><TD>%g' |\
      sed 's%MAKEMEACOMMA </TD>%</TD>%g' |\
