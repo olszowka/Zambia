@@ -16,7 +16,7 @@ SELECT
     trackname,
     title,
     roomname,
-    pocketprogtext,
+    progguiddesc,
     DATE_FORMAT(ADDTIME('$ConStartDatim', starttime),'%a %l:%i %p') as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
@@ -50,7 +50,7 @@ EOD;
     $schdrows=mysql_num_rows($result);
     for ($i=0; $i<$schdrows; $i++) {
         list($schdarray[$i]["sessionid"],$schdarray[$i]["trackname"],
-            $schdarray[$i]["title"],$schdarray[$i]["roomname"],$schdarray[$i]["pocketprogtext"],
+            $schdarray[$i]["title"],$schdarray[$i]["roomname"],$schdarray[$i]["progguiddesc"],
             $schdarray[$i]["starttime"],$schdarray[$i]["duration"],$schdarray[$i]["persppartinfo"],
             $schdarray[$i]["notesforpart"])=mysql_fetch_array($result, MYSQL_NUM);
         }
@@ -123,6 +123,7 @@ PROGRAM_EMAIL; ?></A>.\n";
     echo "<P>In order to put together the entire schedule, we had to schedule some panels outside of the times that certain panelists requested.  If this happened to you, we would love to have you on the panel, but understand if you cannot make it.  Please let us know if you cannot.\n";
     echo "<P>Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on hwhich you'd still like to participate.\n";
     echo "<P>To facilitate communication yet also preserve privacy, we provide you the option of putting your contact information in the comments field for each panel (under the <A HREF=\"./my_sessions2.php\">\"My Panel Interests\"</A> tab).  That will expose it to other panelists who can then email or call you as appropriate to discuss the panel in advance.  If you check back in a day or two you may find other panelists' information.\n";
+echo "<P><A HREF=\"MyScheduleIcal.php\">Here</A> is an iCal (Calendar standard) calendar of your schedule.\n";
     echo "<P>Your registration status is <SPAN class=\"hilit\">$regmessage.</SPAN>\n";
     echo "<P>Thank you -- <A HREF=\"mailto: <?php echo PROGRAM_EMAIL; 
 ?>\"> Programming </a>\n";
@@ -139,7 +140,7 @@ PROGRAM_EMAIL; ?></A>.\n";
         echo "            <TD class=\"hilit\">Duration: ".$schdarray[$i]["duration"]."</TD>\n";
         echo "            </TR>\n";
         echo "        <TR><TD>&nbsp;</TD>\n";
-        echo "            <TD colspan=6 class=\"border0010\">".htmlspecialchars($schdarray[$i]["pocketprogtext"])."</TD>\n";
+        echo "            <TD colspan=6 class=\"border0010\">".htmlspecialchars($schdarray[$i]["progguiddesc"])."</TD>\n";
         echo "            </TR>\n";
         echo "        <TR><TD>&nbsp;</TD>\n";
         echo "            <TD colspan=6 class=\"border0010\">".htmlspecialchars($schdarray[$i]["persppartinfo"])."</TD>\n";
