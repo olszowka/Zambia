@@ -1,5 +1,5 @@
-TITLE='Descriptions Page'
-DESCRIPTION='For the public, with links between the descriptons, the bios of the presenters, the schedule, and a link to the grid. [On&nbsp;Demand]'
+TITLE='Session Descriptions'
+DESCRIPTION='Descriptions for all sessions. [On&nbsp;Demand]'
 PROGWANTS=1
 GRIDSWANTS=1
 QUERY=' '

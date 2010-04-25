@@ -1,5 +1,5 @@
 TITLE='Program Participant Number, Names, Contact, and Involvement'
-DESCRIPTION='Full listing of the names and contact, and how many classes, as a Program Participant, Announcer or Volunteer they are involved in. Replaces 4progthankyounotereport's non-csv version [On&nbsp;Demand]'
+DESCRIPTION='Full listing of the names and contact, and how many classes, as a Program Participant, Announcer or Volunteer they are involved in.  Replaces 4progthankyounotereport's non-csv version. [On&nbsp;Demand]'
 PROGWANTS=1
 QUERY=' '
 MIGRATED=true

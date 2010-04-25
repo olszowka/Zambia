@@ -1,5 +1,5 @@
 TITLE='Differential Assigned Session by Participant'
-DESCRIPTION='Recent changes to whom has been assigned to each session ordered by time, then badgeid.  [On&nbsp;Demand]'
+DESCRIPTION='Recent changes to whom has been assigned to each session ordered by time, then badgeid. [On&nbsp;Demand]'
 PROGWANTS=1
 EVENTSWANTS=1
 GOHWANTS=1

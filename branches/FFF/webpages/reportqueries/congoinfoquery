@@ -1,5 +1,5 @@
 TITLE='Congo Info (all info).'
-DESCRIPTION='Shows the information retreived from Congo.  [On&nbsp;Demand]'
+DESCRIPTION='Shows the information retreived from Congo. [On&nbsp;Demand]'
 PROGWANTS=1
 EVENTSWANTS=1
 REGWANTS=1

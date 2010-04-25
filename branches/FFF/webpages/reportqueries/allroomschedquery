@@ -1,4 +1,4 @@
-TITLE='Full Room Schedule by room then time'
+TITLE='Full Room Schedule by room then time.'
 DESCRIPTION='Lists all Sessions Scheduled in all Rooms. [On&nbsp;Demand]'
 PROGWANTS=1
 EVENTSWANTS=1

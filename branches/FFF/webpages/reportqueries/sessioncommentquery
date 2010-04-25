@@ -1,5 +1,5 @@
 TITLE='Session Commentary'
-DESCRIPTION='Comments recorded for Sessions. [On&nbsp;Demand]'
+DESCRIPTION='Comments recorded for Sessions.  <A HREF="CommentOnSessions.php">(Add a comment)</A> [On&nbsp;Demand]'
 PROGWANTS=1
 QUERY=' '
 MIGRATED=true

@@ -1,5 +1,5 @@
 TITLE='Published Time Filled Color Programming Grid'
-DESCRIPTION='Display published schedule of programming rooms with rooms on horizontal axis and regular time on vertical, keyed by color. This excludes any item marked "Do Not Print" or "Staff Only". [On&nbsp;Demand]'
+DESCRIPTION='Display published grid of programming rooms with rooms on horizontal axis and regular time on vertical, keyed by color. This excludes any item marked "Do Not Print" or "Staff Only". [On&nbsp;Demand]'
 PROGWANTS=1
 GRIDSWANTS=1
 QUERY=' '

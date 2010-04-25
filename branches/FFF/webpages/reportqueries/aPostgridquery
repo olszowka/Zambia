@@ -1,5 +1,5 @@
-TITLE='Postable Grid'
-DESCRIPTION='For the public, with links between the classes, the schedule, their descriptions and the bios of the presenters. [On&nbsp;Demand]'
+TITLE='Sessions Grid'
+DESCRIPTION='Grid of all sessions. [On&nbsp;Demand]'
 PROGWANTS=1
 GRIDSWANTS=1
 QUERY=' '

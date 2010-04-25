@@ -1,5 +1,5 @@
 TITLE='Assigned Moderator by Session'
-DESCRIPTION='Shows who has been assigned to moderate each session (sorted by track then sessionid).  [On&nbsp;Demand]'
+DESCRIPTION='Shows who has been assigned to moderate each session (sorted by track then sessionid). [On&nbsp;Demand]'
 PROGWANTS=1
 EVENTSWANTS=1
 QUERY='  '
