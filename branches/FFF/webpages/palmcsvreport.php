@@ -1,16 +1,28 @@
 <?php
-require_once('db_functions.php');
-require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
-$ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-$query=<<<EOD
+    require_once('db_functions.php');
+    require_once('StaffHeader.php');
+    require_once('StaffFooter.php');
+    require_once('StaffCommonCode.php');
+    global $link;
+    $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+
+    ## LOCALIZATIONS
+    $_SESSION['return_to_page']="palmcsvreport.php";
+    $title="CSV -- Report for uploading to PDA's";
+    $description="<P>StartTime, Duration, Room, Track, Title, Participants</P>\n";
+    $additionalinfo="";
+    $indicies="PUBSWANTS=1, CSVSWANTS=1, GENCSV=0";
+    $resultsfile="PDASchedule.csv";
+
+    $query=<<<EOD
 SELECT
-            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a') as 'Day',
-            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%l:%i %p') as 'Start Time',
-            left(duration,5) Length,
-	        Roomname,
+            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a') AS Day,
+            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%l:%i %p') AS 'Start Time',
+            left(duration,5) AS Duration,
+	    roomname AS 'Room Name',
             trackname as Track,
             Title,
-            if(group_concat(pubsname) is NULL,'',group_concat(pubsname SEPARATOR ', ')) as 'Participants'
+            if(group_concat(pubsname) is NULL,'',group_concat(pubsname SEPARATOR ', ')) as Participants
     FROM
             Rooms R
        JOIN Schedule SCH USING (roomid)
@@ -39,46 +51,12 @@ EOD;
 //	ORDER BY
 //	    IF(locate(" ",pubsname)!=0,substring(P.pubsname,char_length(pubsname)-locate(" ",reverse(pubsname))+2),pubsname)
 //EOD;
-if (!$result=mysql_query($query,$link)) {
-	require_once('StaffHeader.php');
-	require_once('StaffFooter.php');
-	$title="Send CSV file of Schedule for PDA Upload";
-	staff_header($title);
-	$message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
-    exit();
-    }
-if (mysql_num_rows($result)==0) {
-	require_once('StaffHeader.php');
-	require_once('StaffFooter.php');
-	$title="Send CSV file of Schedule for PDA Upload";
-	staff_header($title);
-	$message="Report returned no records.";
-    echo "<P>".$message."\n";
-    staff_footer();
-    exit(); 
-	}
-header('Content-disposition: attachment; filename=PDASchedule.csv');
-header('Content-type: text/csv');
-echo "day,start time,duration,room name,track,title,participants\n";
-while ($row= mysql_fetch_array($result, MYSQL_NUM)) {
-	$betweenValues=false;
-	foreach ($row as $value) {
-		if ($betweenValues) echo ",";
-		if (strpos($value,"\"")!==false) {
-				$value=str_replace("\"","\"\"",$value);
-				echo "\"$value\""; 
-				}
-			elseif (strpos($value,",")!==false or strpos($value,"\n")!==false) {
-				echo "\"$value\"";
-				}
-			else {
-				echo $value;
-				}
-		$betweenValues=true;
-		}
-	echo "\n";
-	}
-exit();
+
+    ## Retrieve query
+    list($headers,$rows,$header_array,$class_array)=querycsvreport($query,$link);
+
+    ## Page rendering
+    topofpagecsv($resultsfile);
+    rendercsvreport($headers,$rows,$header_array,$class_array);
+
 ?>

@@ -1,33 +1,43 @@
 <?php
-require_once('db_functions.php');
-require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
-$ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-$query="SET group_concat_max_len=25000";
-if (!$result=mysql_query($query,$link)) {
-	require_once('StaffHeader.php');
-	require_once('StaffFooter.php');
-	$title="Send CSV file of Panel Merge Report for Publications";
-	staff_header($title);
+    require_once('db_functions.php');
+    require_once('StaffHeader.php');
+    require_once('StaffFooter.php');
+    require_once('StaffCommonCode.php');
+    global $link;
+    $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+
+    ## LOCALIZATIONS
+    $_SESSION['return_to_page']="panelmergecsvreport.php";
+    $title="CSV -- Report for Program Panel Merge";
+    $description="<P>sessionid,room,start time,duration,track,title,participants</P>\n";
+    $additionalinfo="";
+    $indicies="PUBSWANTS=1, CSVSWANTS=1, GENCSV=0";
+    $resultsfile="panelmerge.csv";
+
+    # First query sets the max length, second the actual program description query.
+    $query="SET group_concat_max_len=25000";
+    if (!$result=mysql_query($query,$link)) {
 	$message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
-    exit();
-    }
-$query=<<<EOD
+        $message.="<P class\"errmsg\">".$query."\n";
+	RenderError($title,$message);
+        exit();
+        }
+
+    $query=<<<EOD
 SELECT
             S.sessionid, 
-            R.roomname, 
-            DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') starttime, 
+            R.roomname AS room, 
+            DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS 'start time', 
             CASE
                 WHEN HOUR(S.duration) < 1 THEN concat(date_format(S.duration,'%i'),'min')
                 WHEN MINUTE(S.duration)=0 THEN concat(date_format(S.duration,'%k'),'hr')
                 ELSE concat(date_format(S.duration,'%k'),'hr ',date_format(S.duration,'%i'),'min')
                 END
                 AS duration,
-            T.trackname, 
+            T.trackname AS track, 
             S.title, 
-            group_concat(P.pubsname, if(POS.moderator=1,'(m)','') ORDER BY POS.moderator DESC SEPARATOR ', ') panelinfo,
-            PUB.pubstatusname
+            group_concat(P.pubsname, if(POS.moderator=1,'(m)','') ORDER BY POS.moderator DESC SEPARATOR ', ') AS participants,
+            PUB.pubstatusname AS status
     FROM
             Sessions S
        JOIN Schedule SCH USING(sessionid)
@@ -41,46 +51,12 @@ SELECT
    ORDER BY
             SCH.starttime
 EOD;
-if (!$result=mysql_query($query,$link)) {
-	require_once('StaffHeader.php');
-	require_once('StaffFooter.php');
-	$title="Send CSV file of Panel Merge Report for Publications";
-	staff_header($title);
-	$message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
-    exit();
-    }
-if (mysql_num_rows($result)==0) {
-	require_once('StaffHeader.php');
-	require_once('StaffFooter.php');
-	$title="Send CSV file of Panel Merge Report for Publications";
-	staff_header($title);
-	$message="Report returned no records.";
-    echo "<P>".$message."\n";
-    staff_footer();
-    exit(); 
-	}
-header('Content-disposition: attachment; filename=panelmerge.csv');
-header('Content-type: text/csv');
-echo "sessionid,room,\"start time\",duration,track,title,participants\n";
-while ($row= mysql_fetch_array($result, MYSQL_NUM)) {
-	$betweenValues=false;
-	foreach ($row as $value) {
-		if ($betweenValues) echo ",";
-		if (strpos($value,"\"")!==false) {
-				$value=str_replace("\"","\"\"",$value);
-				echo "\"$value\""; 
-				}
-			elseif (strpos($value,",")!==false or strpos($value,"\n")!==false) {
-				echo "\"$value\"";
-				}
-			else {
-				echo $value;
-				}
-		$betweenValues=true;
-		}
-	echo "\n";
-	}
-exit();
+
+    ## Retrieve query
+    list($headers,$rows,$header_array,$class_array)=querycsvreport($query,$link);
+
+    ## Page rendering
+    topofpagecsv($resultsfile);
+    rendercsvreport($headers,$rows,$header_array,$class_array);
+
 ?>

@@ -1,24 +1,19 @@
 <?php
-    $title="Unabridged Event Grid";
     require_once('db_functions.php');
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+
+    ## LOCALIZATIONS
     $_SESSION['return_to_page']="eventgridfullreport.php";
-
-    function topofpage() {
-        staff_header($title);
-        date_default_timezone_set('US/Eastern');
-        echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Grid of all events (including unpublished) as determined by function of room</P>\n";
-        }
-
-    function noresults() {
-        echo "<P>This report retrieved no results matching the criteria.</P>\n";
-        staff_footer();
-        }
+    $title="Unabridged Event Grid";
+    $description="<P>Display entire event schedule with rooms on horizontal axis and time on vertical. This includes all items marked \"Do Not Print\" or \"Staff Only\".</P>\n";
+    $additionalinfo="<P>Click on the room name to edit the room's schedule;\n";
+    $additionalinfo.="the session id to edit the session's participants; or\n";
+    $additionalinfo.="the title to edit the session.</P>\n";
+    $indicies="PROGWANTS=1, GRIDSWANTS=1";
 
     $query = <<<EOD
 SELECT
@@ -40,37 +35,15 @@ EOD;
         exit ();
         }
     if (0==($rooms=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
     for ($i=1; $i<=$rooms; $i++) {
         $header_array[$i]=mysql_fetch_assoc($result);
         }
     $header_cells="<TR><TH>Time</TH>";
-//
-//SELECT
-//        DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time',
-//        GROUP_CONCAT(IF(roomid=2,S.title,"") SEPARATOR '') as "President's ABCD Title",
-//        GROUP_CONCAT(IF(roomid=2,S.sessionid,"") SEPARATOR '') as "President's ABCD SessionID",
-//        GROUP_CONCAT(IF(roomid=2,S.duration,"") SEPARATOR '') as "Presidents's ABCD Duration",
-//        GROUP_CONCAT(IF(roomid=3,S.title,"") SEPARATOR '') as "President's A Title",
-//        GROUP_CONCAT(IF(roomid=3,S.sessionid,"") SEPARATOR '') as "President's A SessionID",
-//        GROUP_CONCAT(IF(roomid=3,S.duration,"") SEPARATOR '') as "Presidents's A Duration",
-//        GROUP_CONCAT(IF(roomid=6,S.title,"") SEPARATOR '') as "President's D Title",
-//        GROUP_CONCAT(IF(roomid=6,S.sessionid,"") SEPARATOR '') as "President's D SessionID",
-//        GROUP_CONCAT(IF(roomid=6,S.duration,"") SEPARATOR '') as "Presidents's D Duration"
-//    FROM 
-//            Schedule SCH
-//       JOIN Sessions S
-//            USING (sessionid)
-//       JOIN Rooms R
-//            USING (roomid)
-//    WHERE
-//        R.function like '%vent%'
-//    GROUP BY SCH.scheduleid
-//    ORDER BY SCH.starttime;
-//
+
     $query="SELECT DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') as 'starttime'";
     for ($i=1; $i<=$rooms; $i++) {
         $header_cells.="<TH>";
@@ -93,15 +66,14 @@ EOD;
         exit ();
         }
     if (0==($rows=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
     for ($i=1; $i<=$rows; $i++) {
         $grid_array[$i]=mysql_fetch_array($result,MYSQL_BOTH);
         } 
-    topofpage();
-    echo "<P>Click on the room name to edit the room's schedule; the session id to edit the session's participants; or the title to edit the session.</P>\n";
+    topofpagereport($title,$description,$additionalinfo);
     echo "<TABLE BORDER=1>";
     echo $header_cells;
     for ($i=1; $i<=$rows; $i++) {

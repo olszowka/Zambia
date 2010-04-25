@@ -3,26 +3,18 @@
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     require_once('StaffCommonCode.php');
-
-    /* Global Variables */
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+
+    ## LOCALIZATIONS
     $_SESSION['return_to_page']="aPostgridreport.php";
-
-    /* Function to start the page correctly. */    
-    function topofpage() {
-        staff_header("Published Grid");
-        date_default_timezone_set('US/Eastern');
-        echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Grid of all sessions.</P>\n";
-        }
-
-    /* No matching retuned values. */
-    function noresults() {
-        echo "<P>This report retrieved no results matching the criteria.</P>\n";
-        staff_footer();
-        }
+    $title="Sessions Grid";
+    $description="<P>Grid of all sessions.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,\n";
+    $additionalinfo.=" the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or the time to visit that section of";
+    $additionalinfo.=" the <A HREF=\"aSchedulereport.php\">schedule</A>.</P>\n";
+    $indicies="PROGWANTS=1, GRIDSWANTS=1";
+    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
 
     /* This query returns the room names for an array.  Fix to figure out if
        pubstatus=2 only. */
@@ -51,8 +43,8 @@ EOD;
 
     /* Standard test to make sure there was some information returned. */
     if (0==($rooms=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
 
@@ -96,8 +88,8 @@ EOD;
         exit ();
         }
     if (0==($presenters=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
     $tmp_array=('');
@@ -120,8 +112,8 @@ EOD;
         exit ();
         }
     if (0==($earliest=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
     $grid_start_sec=mysql_result($result,0);
@@ -136,8 +128,8 @@ EOD;
         exit ();
         }
     if (0==($latest=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
     $grid_end_sec=mysql_result($result,0);
@@ -168,8 +160,8 @@ EOD;
             exit ();
             }
         if (0==($rows=mysql_num_rows($result))) {
-            topofpage();
-            noresults();
+            $message="<P>This report retrieved no results matching the criteria.</P>\n";
+            RenderError($title,$message);
             exit();
             }
         $grid_array[$time]=mysql_fetch_array($result,MYSQL_BOTH);
@@ -187,16 +179,12 @@ EOD;
             }
         }
 
-    /* Printing body.  Uses the page-init from above adds informational line
-       then creates the grid.  $skipinit kills the rogue extra /TABLE and
-       $skipaccum allows for only one new tabel per set of skips.  The extra
-       ifs keep the parens out of the otherwise empty blocks.  We switch on
-       htmlcellcolor, because, by design, that is the only thing written in
-       a continuation block. */
-    topofpage();
-    echo "<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,";
-    echo " the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or the time to visit that section of";
-    echo " the <A HREF=\"aSchedulereport.php\">schedule</A>.</P>\n";
+    /* Printing body.  Uses the page-init then creates the grid.  $skipinit
+       kills the rogue extra /TABLE and $skipaccum allows for only one new
+       tabel per set of skips.  The extra ifs keep the parens out of the
+       otherwise empty blocks.  We switch on htmlcellcolor, because, by
+       design, that is the only thing written in a continuation block. */
+    topofpagereport($title,$description,$additionalinfo);
     $skipinit=0;
     $skipaccum=1;
     for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {

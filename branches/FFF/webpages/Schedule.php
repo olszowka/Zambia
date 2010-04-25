@@ -4,26 +4,20 @@
     require_once('PostingFooter.php');
     require_once('CommonCode.php');
     require_once('error_functions.php');
-
-    /* Global Variables */
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+
+    ## LOCALIZATIONS
     $_SESSION['return_to_page']="Schedule.html";
-
-    /* Function to start the page correctly. */    
-    function topofpage() {
-        posting_header("Schedule");
-        date_default_timezone_set('US/Eastern');
-        echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Schedule for all sessions.</P>\n";
-        }
-
-    /* No matching retuned values. */
-    function noresults() {
-        echo "<P>This report retrieved no results matching the criteria.</P>\n";
-        posting_footer();
-        }
+    $title="Event Schedule";
+    $description="<P>Schedule for all sessions.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,\n";
+    $additionalinfo.="the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or visit the\n";
+    $additionalinfo.="<A HREF=\"aPostgridreport.php\">grid</A>.</P>\n";
+    $indicies="PROGWANTS=1, GRIDSWANTS=1";
+    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+    $oldrole=$_SESSION['role'];
+    $_SESSION['role']="Posting";
 
     /* This query grabs everything necessary for the schedule to be printed. */
     $query="SELECT if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"Bios.html#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',";
@@ -53,8 +47,8 @@
 
     /* Standard test to make sure there was some information returned. */
     if (0==($elements=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
 
@@ -65,10 +59,8 @@
 
     /* Printing body.  Uses the page-init from above adds informational line
        then creates the Schedule. */
-    topofpage();
-    echo "<P>Click on the session title to visit the session's <A HREF=\"Descriptions.html\">description</A>,";
-    echo " the presenter to visit their <A HREF=\"Bios.html\">bio</A>, or visit the";
-    echo " <A HREF=\"Postgrid.html\">grid</A>.</P>\n";
+    topofpagereport($title,$description,$additionalinfo);
+    $_SESSION['role']=$oldrole;
     echo "<DL>\n";
     $printtime="";
     for ($i=1; $i<=$elements; $i++) {

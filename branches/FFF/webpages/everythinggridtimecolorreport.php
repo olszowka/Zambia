@@ -1,29 +1,20 @@
 <?php
-    $title="Staff Grid";
     require_once('db_functions.php');
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     require_once('StaffCommonCode.php');
-
-    /* Global Variables */
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+
+    ## LOCALIZATIONS
     $_SESSION['return_to_page']="everythinggridtimecolorreport.php";
-
-    /* Function to start the page correctly. */    
-    function topofpage() {
-        staff_header($title);
-        date_default_timezone_set('US/Eastern');
-        echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Grid of all sessions (including DO-NOT-PUB and STAFF-ONLY)</P>\n";
-        }
-
-    /* No matching retuned values. */
-    function noresults() {
-        echo "<P>This report retrieved no results matching the criteria.</P>\n";
-        staff_footer();
-        }
+    $title="Unabridged Time Filled Color Complete Grid";
+    $description="<P>Display complete schedule of all rooms with rooms on horizontal axis and regular time on vertical, keyed by color. This includes all items marked \"Do Not Print\" or \"Staff Only\".</P>\n";
+    $additionalinfo="<P>Click on the room name to edit the room's schedule;\n";
+    $additionalinfo.="the session id to edit the session's participants; or\n";
+    $additionalinfo.="the title to edit the session.</P>\n";
+    $indicies="PROGWANTS=1, GRIDSWANTS=1";
+    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
 
     /* This query returns the room names for an array. */
     $query = <<<EOD
@@ -51,8 +42,8 @@ EOD;
 
     /* Standard test to make sure there was some information returned. */
     if (0==($rooms=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
 
@@ -80,8 +71,8 @@ EOD;
         exit ();
         }
     if (0==($earliest=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
     $grid_start_sec=mysql_result($result,0);
@@ -96,8 +87,8 @@ EOD;
         exit ();
         }
     if (0==($latest=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
     $grid_end_sec=mysql_result($result,0);
@@ -128,8 +119,8 @@ EOD;
             exit ();
             }
         if (0==($rows=mysql_num_rows($result))) {
-            topofpage();
-            noresults();
+            $message="<P>This report retrieved no results matching the criteria.</P>\n";
+            RenderError($title,$message);
             exit();
             }
         $grid_array[$time]=mysql_fetch_array($result,MYSQL_BOTH);
@@ -144,8 +135,7 @@ EOD;
     /* Printing body.  Uses the page-init from above adds informational line
        then creates the grid.  skipinit kills the rogue extrat /TABLE and
        skipaccum allows for only one new tabel per set of skips.  */
-    topofpage();
-    echo "<P>Click on the room name to edit the room's schedule; the session id to edit the session's participants; or the title to edit the session.</P>\n";
+    topofpagereport($title,$description,$additionalinfo);
     $skipinit=0;
     $skipaccum=1;
     for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {

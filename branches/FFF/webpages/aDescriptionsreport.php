@@ -3,26 +3,18 @@
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     require_once('StaffCommonCode.php');
-
-    /* Global Variables */
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+
+    ## LOCALIZATIONS
     $_SESSION['return_to_page']="aDescriptionsreport.php";
-
-    /* Function to start the page correctly. */    
-    function topofpage() {
-        staff_header("Class Descriptions");
-        date_default_timezone_set('US/Eastern');
-        echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Descriptions for all sessions.</P>\n";
-        }
-
-    /* No matching retuned values. */
-    function noresults() {
-        echo "<P>This report retrieved no results matching the criteria.</P>\n";
-        staff_footer();
-        }
+    $title="Session Descriptions";
+    $description="<P>Descriptions for all sessions.</P>\n";
+    $additionalinfo="<P>Click on the time to visit the session's <A HREF=\"Schedule.html\">timeslot</A>,\n";
+    $additionalinfo.="the presenter to visit their <A HREF=\"Bios.html\">bio</A>, or visit the\n";
+    $additionalinfo.="<A HREF=\"Postgrid.html\">grid</A>.</P>\n";
+    $indicies="PROGWANTS=1, GRIDSWANTS=1";
+    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
 
     /* This query grabs everything necessary for the schedule to be printed. */
     $query="SELECT if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"aBiosreport.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',";
@@ -52,8 +44,8 @@
 
     /* Standard test to make sure there was some information returned. */
     if (0==($elements=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
 
@@ -64,10 +56,7 @@
 
     /* Printing body.  Uses the page-init from above adds informational line
        then creates the Descriptions. */
-    topofpage();
-    echo "<P>Click on the time to visit the session's <A HREF=\"aSchedulereport.php\">timeslot</A>,";
-    echo " the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or visit the";
-    echo " <A HREF=\"aPostgridreport.php\">grid</A>.</P>\n";
+    topofpagereport($title,$description,$additionalinfo);
     echo "<DL>\n";
     for ($i=1; $i<=$elements; $i++) {
       echo sprintf("<P><DT><B>%s</B>",$element_array[$i]['Title']);

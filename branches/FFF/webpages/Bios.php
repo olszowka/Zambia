@@ -4,26 +4,20 @@
     require_once('PostingFooter.php');
     require_once('CommonCode.php');
     require_once('error_functions.php');
-
-    /* Global Variables */
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+
+    ## LOCALIZATIONS
     $_SESSION['return_to_page']="Bios.html";
-
-    /* Function to start the page correctly. */    
-    function topofpage() {
-        posting_header("Presenter Bios");
-        date_default_timezone_set('US/Eastern');
-        echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>List of all biographical information.</P>\n";
-        }
-
-    /* No matching retuned values. */
-    function noresults() {
-        echo "<P>This report retrieved no results matching the criteria.</P>\n";
-        posting_footer();
-        }
+    $title="Bios for Presenters";
+    $description="<P>List of all Presenters biographical information.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.html\">description</A>,\n";
+    $additionalinfo.="the time to visit the <A HREF=\"Schedule.html\">timeslot</A>, or visit the\n";
+    $additionalinfo.="<A HREF=\"Postgrid.html\">grid</A>.</P>\n";
+    $indicies="PROGWANTS=1, GRIDSWANTS=1";
+    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+    $oldrole=$_SESSION['role'];
+    $_SESSION['role']="Posting";
 
     /* This complex query grabs the name, class information, and editedbio (if there is one)
        Most, if not all of the formatting is done within the query, as opposed to in
@@ -59,8 +53,8 @@
 
     /* Standard test to make sure there was some information returned. */
     if (0==($elements=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
 
@@ -69,12 +63,9 @@
         $element_array[$i]=mysql_fetch_assoc($result);
         }
 
-    /* Printing body.  Uses the page-init from above adds informational line
-       then creates the bio page. */
-    topofpage();
-    echo "<P>Click on the session title to visit the session's <A HREF=\"Descriptions.html\">description</A>,";
-    echo " the time to visit the <A HREF=\"Schedule.html\">timeslot</A>, or visit the";
-    echo " <A HREF=\"Postgrid.html\">grid</A>.</P>\n";
+    /* Printing body.  Uses the page-init then creates the bio page. */
+    topofpagereport($title,$description,$additionalinfo);
+    $_SESSION['role']=$oldrole;
     for ($i=1; $i<=$elements; $i++) {
       $picture=sprintf("Participant_Images/%s.jpg",$element_array[$i]['pubsname']);
       if (file_exists($picture)) {

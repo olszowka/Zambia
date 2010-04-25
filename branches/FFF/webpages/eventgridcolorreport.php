@@ -1,28 +1,19 @@
 <?php
-    $title="Event Grid";
     require_once('db_functions.php');
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     require_once('StaffCommonCode.php');
-
-    /* Global Variables */
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+
+    ## LOCALIZATIONS
     $_SESSION['return_to_page']="eventgridcolorreport.php";
-
-    /* Function to start the page correctly. */    
-    function topofpage() {
-        staff_header($title);
-        date_default_timezone_set('US/Eastern');
-        echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Grid of all events as determined by function of room</P>\n";
-        }
-
-    /* No matching retuned values. */
-    function noresults() {
-        echo "<P>This report retrieved no results matching the criteria.</P>\n";
-        staff_footer();
-        }
+    $title="Published Color Event Grid";
+    $description="<P>Display published event schedule with rooms on horizontal axis and time on vertical, keyed by color. This excludes any item marked "Do Not Print" or "Staff Only".</P>\n";
+    $additionalinfo="<P>Click on the room name to edit the room's schedule;\n";
+    $additionalinfo.="the session id to edit the session's participants; or\n";
+    $additionalinfo.="the title to edit the session.</P>\n";
+    $indicies="PROGWANTS=1, GRIDSWANTS=1";
 
     /* This query returns the room names for an array. */    
     $query = <<<EOD
@@ -51,8 +42,8 @@ EOD;
 
     /* Standard test to make sure there was some information returned. */
     if (0==($rooms=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
 
@@ -91,8 +82,8 @@ EOD;
         exit ();
         }
     if (0==($rows=mysql_num_rows($result))) {
-        topofpage();
-        noresults();
+        $message="<P>This report retrieved no results matching the criteria.</P>\n";
+        RenderError($title,$message);
         exit();
         }
     for ($i=1; $i<=$rows; $i++) {
@@ -101,8 +92,7 @@ EOD;
 
     /* Printing body.  Uses the page-init from above adds informational line
        then creates the grid  */
-    topofpage();
-    echo "<P>Click on the room name to edit the room's schedule; the session id to edit the session's participants; or the title to edit the session.</P>\n";
+    topofpagereport($title,$description,$additionalinfo);
     echo "<TABLE BORDER=1>";
     echo $header_cells;
     for ($i=1; $i<=$rows; $i++) {
