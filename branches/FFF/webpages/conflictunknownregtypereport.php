@@ -7,18 +7,23 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="programcommentreport.php";
-    $title="Overall Program Commentary";
-    $description="<P>Comments recorded overall for Programming.  <A HREF=\"CommentOnProgramming.php\">(Add a comment)</A></P>\n";
+    $_SESSION['return_to_page']="conflictunknownregtypereport.php";
+    $title="Conflict Report - Unknown RegTypes";
+    $description="<P>Congo RegTypes that Zambia does not recognize.</P>\n";
     $additionalinfo="";
-    $indicies="PROGWANTS=1";
+    $indicies="CONFLICTWANTS=1, REGWANTS=1";
 
     $query = <<<EOD
 SELECT
-    COP.commenter,
-    COP.comment
+    distinct(C.regtype)
   FROM
-      CommentsOnProgramming COP
+      CongoDump C 
+    LEFT JOIN RegTypes R on C.regtype=R.regtype
+  WHERE
+    R.regtype is NULL and
+    C.regtype is not NULL
+  ORDER BY
+    C.Regtype
 EOD;
 
     ## Retrieve query

@@ -7,7 +7,7 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="prognamesannvolprog.php";
+    $_SESSION['return_to_page']="prognamesannvolprogreport.php";
     $title="Program Participant Number, Names, Contact, and Involvement";
     $description="<P>Full listing of the names and contact, and how many classes, as a Program Participant, Announcer or Volunteer they are involved in.  Replaces 4progthankyounotereport's non-csv version.</P>\n";
     $additionalinfo="";
