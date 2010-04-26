@@ -14,6 +14,7 @@
     $additionalinfo.="the session id to edit the session's participants; or\n";
     $additionalinfo.="the title to edit the session.</P>\n";
     $indicies="GOHWANTS=1, GRIDSWANTS=1";
+    $GohBadgeList=GOH_BADGE_LIST; // make it a variable so it can be substituted
 
     $query = <<<EOD
 SELECT
@@ -24,7 +25,7 @@ SELECT
     WHERE
         R.roomid in
         (SELECT DISTINCT roomid FROM Schedule SCH JOIN ParticipantOnSession USING (sessionid)
-	 WHERE badgeid in ('7768', '96666', '96667', '96668', '10909'));
+	 WHERE badgeid in $GohBadgeList);
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
@@ -64,7 +65,7 @@ EOD;
     $query.=" JOIN Rooms R USING (roomid)";
     $query.=" WHERE S.sessionid in ";
     $query.=" (SELECT DISTINCT sessionid FROM ParticipantOnSession ";
-    $query.=" WHERE badgeid IN ('7768', '96666', '96667', '96668', '10909')) ";
+    $query.=" WHERE badgeid IN $GohBadgeList) ";
     $query.=" GROUP BY SCH.starttime ORDER BY SCH.starttime;";
     // echo "<BR>Query:<BR>$query<BR>\n"; // for debug only
     if (($result=mysql_query($query,$link))===false) {

@@ -7,16 +7,18 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="allroomschedtimereport.php";
-    $title="Full Room Schedule by time then room";
-    $description="<P>Lists all Sessions Scheduled in all Rooms (includes \"Public\", \"Do Not Print\" and \"Staff Only\").</P>\n";
+    $_SESSION['return_to_page']="gohschedulereport.php";
+    $title="GoH Schedule";
+    $description="<P>The GoH schedules.</P>\n";
     $additionalinfo="";
-    $indicies="PROGWANTS=1, EVENTSWANTS=1, GOHWANTS=1";
+    $indicies="GOHWANTS=1, PROGWANTS=1";
+    $GohBadgeList=GOH_BADGE_LIST; // make it a variable so it can be substituted
 
     $query = <<<EOD
-SELECT
-    DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time',
+SELECT 
+    G.pubsname, 
     concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
+    DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time', 
     CASE
       WHEN HOUR(duration) < 1 THEN
         concat(date_format(duration,'%i'),'min')
@@ -24,26 +26,25 @@ SELECT
         concat(date_format(duration,'%k'),'hr')
       ELSE
         concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
-      END AS Duration,
-    Function,
-    Trackname,
-    concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid,
-    concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') as Title,
-    PS.pubstatusname as PubStatus,
-    group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants'
+      END AS duration,
+      trackname, 
+      concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid, 
+      concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') title,
+      if ((S.pubstatusid=1), 'S-O', if((S.pubstatusid=3), 'DNP', ' ')) as 'Pubs Status',
+      if ((moderator=1), 'Yes', ' ') as 'moderator'
   FROM
-      Schedule SCH
-    JOIN Sessions S USING (sessionid)
+      Sessions S
+    JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
-    JOIN PubStatuses PS USING (pubstatusid)
-    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
+    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid 
     LEFT JOIN Participants P ON POS.badgeid=P.badgeid
     LEFT JOIN Tracks T ON T.trackid=S.trackid
-  GROUP BY
-    SCH.scheduleid
+    JOIN Participants G ON G.badgeid = POS.badgeid
+  WHERE
+    G.badgeid in $GohBadgeList
   ORDER BY
-    SCH.starttime,
-    R.roomname
+    G.pubsname,
+    SCH.starttime
 EOD;
 
     ## Retrieve query

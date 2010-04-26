@@ -17,11 +17,13 @@
 SELECT
     DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time',
     CASE
-      WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
-      WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
-      ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
-      END
-      AS Duration,
+      WHEN HOUR(duration) < 1 THEN
+        concat(date_format(duration,'%i'),'min')
+      WHEN MINUTE(duration)=0 THEN
+        concat(date_format(duration,'%k'),'hr')
+      ELSE
+        concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+      END AS Duration,
     trackname, 
     S.sessionid,
     title,

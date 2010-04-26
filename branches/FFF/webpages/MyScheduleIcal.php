@@ -9,8 +9,8 @@
   $ConName=CON_NAME;
   $ProgramEmail=PROGRAM_EMAIL;
   $DBHostname=DBHOSTNAME;
+  $url=CON_URL;
   $dtstamp=date('Ymd').'T'.date('His');
-  $url="http://nelaonline.org/cmsms/index.php?page=fff"; //should probably be added to db_name.php
   $badgeid=$_SESSION['badgeid'];
 
   ## First query, to establish the schedarray, from which we need 

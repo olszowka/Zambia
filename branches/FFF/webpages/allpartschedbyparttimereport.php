@@ -19,11 +19,13 @@ SELECT
     if ((moderator=1),'moderator', ' ') as Moderator,
     DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time', 
     CASE
-      WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
-      WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
-      ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
-      END
-      AS Duration,
+      WHEN HOUR(duration) < 1 THEN
+        concat(date_format(duration,'%i'),'min')
+      WHEN MINUTE(duration)=0 THEN
+        concat(date_format(duration,'%k'),'hr')
+      ELSE
+        concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+      END AS Duration,
     concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
     Function, 
     Trackname,

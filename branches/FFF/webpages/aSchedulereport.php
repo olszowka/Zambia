@@ -17,21 +17,38 @@
     $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
 
     /* This query grabs everything necessary for the schedule to be printed. */
-    $query="SELECT if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"aBiosreport.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',";
-    $query.=" concat('<A NAME=\"',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\"></A>',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p')) as 'Start Time',";
-    $query.=" CASE WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min') WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr') ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min') END AS Duration,";
-    $query.=" GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,";
-    $query.=" S.sessionid as Sessionid,";
-    $query.=" concat('<A HREF=\"aDescriptionsreport.php#',S.sessionid,'\">',S.title,'</A>') as Title,";
-    $query.=" concat('<P>',S.progguiddesc,'</P>') as Description";
-    $query.=" FROM Sessions S";
-    $query.=" JOIN Schedule SCH USING (sessionid)";
-    $query.=" JOIN Rooms R USING (roomid)";
-    $query.=" LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid";
-    $query.=" LEFT JOIN Participants P ON POS.badgeid=P.badgeid";
-    $query.=" WHERE S.pubstatusid = 2 AND POS.volunteer=0 AND POS.announcer=0";
-    $query.=" GROUP BY sessionid ORDER BY SCH.starttime,R.display_order;";
-
+    $query = <<<EOD
+SELECT
+    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"aBiosreport.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
+    concat('<A NAME=\"',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\"></A>',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p')) as 'Start Time',
+    CASE
+      WHEN HOUR(duration) < 1 THEN
+        concat(date_format(duration,'%i'),'min')
+      WHEN MINUTE(duration)=0 THEN
+        concat(date_format(duration,'%k'),'hr')
+      ELSE
+        concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+      END AS Duration,
+    GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
+    S.sessionid as Sessionid,
+    concat('<A HREF=\"aDescriptionsreport.php#',S.sessionid,'\">',S.title,'</A>') as Title,
+    concat('<P>',S.progguiddesc,'</P>') as Description
+  FROM
+      Sessions S
+    JOIN Schedule SCH USING (sessionid)
+    JOIN Rooms R USING (roomid)
+    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
+    LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+  WHERE
+    S.pubstatusid = 2 AND
+    POS.volunteer=0 AND
+    POS.announcer=0
+  GROUP BY
+    sessionid
+  ORDER BY
+    SCH.starttime,
+    R.display_order
+EOD;
     /* Standard test for failing to connect to the database. */
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";

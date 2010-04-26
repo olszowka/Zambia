@@ -20,11 +20,13 @@ SELECT
     Function,
     DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time',
     CASE
-      WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
-      WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
-      ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
-      END
-      AS Duration,
+      WHEN HOUR(duration) < 1 THEN
+        concat(date_format(duration,'%i'),'min')
+      WHEN MINUTE(duration)=0 THEN
+        concat(date_format(duration,'%k'),'hr')
+      ELSE
+        concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+      END AS Duration,
     concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid,
     concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
     group_concat(' ',pubsname,' (',P.badgeid,')') as 'Participants'

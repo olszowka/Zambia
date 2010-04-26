@@ -19,24 +19,39 @@
     /* This complex query grabs the name, class information, and editedbio (if there is one)
        Most, if not all of the formatting is done within the query, as opposed to in
        the post-processing. */
-    $query="SELECT concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',";
-    $query.=" GROUP_CONCAT(DISTINCT concat('<DT><A HREF=\"aDescriptionsreport.php#',S.sessionid,'\">',S.title,'</A>',";
-    $query.="   if((moderator=1),'(m)',''),' &mdash; ',concat('<A HREF=\"aSchedulereport.php#',";
-    $query.="   DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',";
-    $query.="   DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>'),";
-    $query.="   ' &mdash; ',CASE WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')";
-    $query.="   WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')";
-    $query.="   ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')";
-    $query.="   END,'</DT>') SEPARATOR ' ') as Title,";
-    $query.=" if ((P.editedbio is NULL),' ',P.editedbio) as Bio,";
-    $query.=" P.pubsname";
-    $query.=" FROM Sessions S";
-    $query.=" JOIN Schedule SCH USING (sessionid)";
-    $query.=" JOIN Rooms R USING (roomid)";
-    $query.=" LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid";
-    $query.=" LEFT JOIN Participants P ON POS.badgeid=P.badgeid";
-    $query.=" WHERE P.badgeid AND POS.volunteer=0 AND POS.announcer=0";
-    $query.=" GROUP BY Participants ORDER BY P.pubsname;";
+    $query = <<<EOD
+SELECT
+    concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',
+    GROUP_CONCAT(DISTINCT concat('<DT><A HREF=\"aDescriptionsreport.php#',S.sessionid,'\">',S.title,'</A>',
+    if((moderator=1),'(m)',''), ' &mdash; ',
+       concat('<A HREF=\"aSchedulereport.php#',
+              DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',
+              DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>'), ' &mdash; ',
+       CASE 
+         WHEN HOUR(duration) < 1 THEN
+           concat(date_format(duration,'%i'),'min')
+         WHEN MINUTE(duration)=0 THEN
+           concat(date_format(duration,'%k'),'hr')
+         ELSE
+           concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+         END,'</DT>') SEPARATOR ' ') as Title,
+    if ((P.editedbio is NULL),' ',P.editedbio) as Bio,
+    P.pubsname
+  FROM
+      Sessions S
+    JOIN Schedule SCH USING (sessionid)
+    JOIN Rooms R USING (roomid)
+    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
+    LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+  WHERE
+    P.badgeid AND
+    POS.volunteer=0 AND
+    POS.announcer=0
+  GROUP BY
+    Participants
+  ORDER BY
+    P.pubsname
+EOD;
 
     /* Standard test for failing to connect to the database. */
     if (($result=mysql_query($query,$link))===false) {

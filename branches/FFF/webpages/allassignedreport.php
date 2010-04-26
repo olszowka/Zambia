@@ -19,11 +19,13 @@ SELECT
     concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid,
     concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
     CASE
-      WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
-      WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
-      ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
-      END
-      AS Duration,
+      WHEN HOUR(duration) < 1 THEN
+        concat(date_format(duration,'%i'),'min')
+      WHEN MINUTE(duration)=0 THEN
+        concat(date_format(duration,'%k'),'hr')
+      ELSE
+        concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+      END AS Duration,
     group_concat(' ',P.pubsname,' (',P.badgeid,')') as 'Participants',
     GROUP_CONCAT(DISTINCT if((POS.moderator=1),P.pubsname,'') SEPARATOR ' ') as 'Moderator', 
     GROUP_CONCAT(DISTINCT if((POS.volunteer=1),P.pubsname,'') SEPARATOR ' ') as 'Volunteer', 
