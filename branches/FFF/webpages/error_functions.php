@@ -137,15 +137,15 @@ function rendercsvreport($headers,$rows,$header_array,$class_array) {
   }
 }
 
-function queryhtmlreport($query,$link) {
+function queryhtmlreport($query,$link,$title,$description) {
   if (($result=mysql_query($query,$link))===false) {
-    $message="Error retrieving data from database.<BR>";
+    $message="<P>Error retrieving data from database.</P>\n<P>";
     $message.=$query;
     RenderError($title,$message);
     exit ();
   }
   if (0==($rows=mysql_num_rows($result))) {
-    $message="This report retrieved no results matching the criteria.";
+    $message="$description\n<P>This report retrieved no results matching the criteria.<P>\n";
     RenderError($title,$message);
     exit();
   }
