@@ -1,9 +1,5 @@
 TITLE='Participant Roles'
-DESCRIPTION='What Roles is a participant willing to take?'
+DESCRIPTION='What Roles is a participant willing to take? [On&nbsp;Demand]'
 PROGWANTS=1
-QUERY='
-	select P.badgeid, P.pubsname, rolename 
-	from Participants P, ParticipantHasRole PR, Roles 
-	where P.badgeid=PR.badgeid and PR.roleid=Roles.roleid 
-	order by cast(P.badgeid as unsigned);'
-
+QUERY=' '
+MIGRATED=true

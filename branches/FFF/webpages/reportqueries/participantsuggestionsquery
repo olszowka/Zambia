@@ -1,8 +1,5 @@
 TITLE='Participant Suggestions'
-DESCRIPTION='What is did each participant suggest?'
-QUERY='
-	select P.badgeid, P.pubsname, paneltopics, otherideas, suggestedguests 
-	from  ParticipantSuggestions as PS, 
-	Participants as P
-	where P.badgeid=PS.badgeid;'
-DELETEME=1
+DESCRIPTION='What is did each participant suggest? [On&nbsp;Demand]'
+PROGWANTS=1
+QUERY=' '
+MIGRATED=true
