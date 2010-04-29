@@ -96,7 +96,13 @@ function topofpagecsv($filename) {
   header("Content-disposition: attachment; filename=$filename");
 }
 
-function renderhtmlreport($headers,$rows,$header_array,$element_array) {
+function renderhtmlreport($rows,$header_array,$element_array) {
+  $headers="";
+  foreach ($header_array as $header_name) {
+    $headers.="<TH>";
+    $headers.=$header_name;
+    $headers.="</TH>\n";
+  }
   echo "<TABLE BORDER=1>";
   echo "<TR>" . $headers . "</TR>";
   for ($i=1; $i<=$rows; $i++) {
@@ -123,7 +129,14 @@ function renderhtmlreport($headers,$rows,$header_array,$element_array) {
   }
 }
 
-function rendercsvreport($headers,$rows,$header_array,$element_array) {
+function rendercsvreport($rows,$header_array,$element_array) {
+  $headers="";
+  foreach ($header_array as $header_name) {
+    $headers.="\"";
+    $headers.=$header_name;
+    $headers.="\",";
+  }
+  $headers = substr($headers, 0, -1);
   echo "$headers\n";
   for ($i=1; $i<=$rows; $i++) {
     $rowinfo="";
@@ -137,7 +150,7 @@ function rendercsvreport($headers,$rows,$header_array,$element_array) {
   }
 }
 
-function queryhtmlreport($query,$link,$title,$description) {
+function queryreport($query,$link,$title,$description) {
   if (($result=mysql_query($query,$link))===false) {
     $message="<P>Error retrieving data from database.</P>\n<P>";
     $message.=$query;
@@ -145,7 +158,7 @@ function queryhtmlreport($query,$link,$title,$description) {
     exit ();
   }
   if (0==($rows=mysql_num_rows($result))) {
-    $message="$description\n<P>This report retrieved no results matching the criteria.<P>\n";
+    $message="$description\n<P>This report retrieved no results matching the criteria.</P>\n";
     RenderError($title,$message);
     exit();
   }
@@ -153,41 +166,7 @@ function queryhtmlreport($query,$link,$title,$description) {
     $element_array[$i]=mysql_fetch_assoc($result);
   }
   $header_array=array_keys($element_array[1]);
-  $columns=count($header_array);
-  $headers="";
-  foreach ($header_array as $header_name) {
-    $headers.="<TH>";
-    $headers.=$header_name;
-    $headers.="</TH>\n";
-  }
-  return array ($headers,$rows,$header_array,$element_array);
-}
-
-function querycsvreport($query,$link) {
-  if (($result=mysql_query($query,$link))===false) {
-    $message="Error retrieving data from database.<BR>";
-    $message.=$query;
-    RenderError($title,$message);
-    exit ();
-  }
-  if (0==($rows=mysql_num_rows($result))) {
-    $message="This report retrieved no results matching the criteria.";
-    RenderError($title,$message);
-    exit();
-  }
-  for ($i=1; $i<=$rows; $i++) {
-    $element_array[$i]=mysql_fetch_assoc($result);
-  }
-  $header_array=array_keys($element_array[1]);
-  $columns=count($header_array);
-  $headers="";
-  foreach ($header_array as $header_name) {
-    $headers.="\"";
-    $headers.=$header_name;
-    $headers.="\",";
-  }
-  $headers = substr($headers, 0, -1);
-  return array ($headers,$rows,$header_array,$element_array);
+  return array ($rows,$header_array,$element_array);
 }
 
 ?>

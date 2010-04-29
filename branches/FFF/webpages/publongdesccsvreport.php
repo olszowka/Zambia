@@ -41,10 +41,10 @@ SELECT
 EOD;
 
     ## Retrieve query
-    list($headers,$rows,$header_array,$class_array)=querycsvreport($query,$link);
+    list($rows,$header_array,$class_array)=queryreport($query,$link,$title,$description);
 
     ## Page rendering
     topofpagecsv($resultsfile);
-    rendercsvreport($headers,$rows,$header_array,$class_array);
+    rendercsvreport($rows,$header_array,$class_array);
 
 ?>

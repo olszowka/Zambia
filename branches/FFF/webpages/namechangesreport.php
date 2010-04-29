@@ -34,8 +34,8 @@ SELECT
 EOD;
 
     ## Retrieve query
-    list($headers,$rows,$header_array,$class_array)=queryhtmlreport($query,$link,$title,$description);
+    list($rows,$header_array,$class_array)=queryreport($query,$link,$title,$description);
 
     ## Page Rendering
     topofpagereport($title,$description,$additionalinfo);
-    renderhtmlreport($headers,$rows,$header_array,$class_array);
+    renderhtmlreport($rows,$header_array,$class_array);
