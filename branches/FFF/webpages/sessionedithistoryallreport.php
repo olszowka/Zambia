@@ -17,7 +17,8 @@
 SELECT
     concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid,
     T.trackname as 'Track', 
-    concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title, SS.statusname as 'Current<BR>Status',
+    concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
+    SS.statusname as 'Current<BR>Status',
     timestamp as 'When', 
     concat(name,' (', email_address,') ') as 'Who', 
     concat(SEC.description, ' ',SS2.statusname) as 'What' 
@@ -35,7 +36,7 @@ SELECT
     SEH.sessioneditcode=SEC.sessioneditcode and
     SS2.statusid=SEH.statusid and
     S.statusid >= 1 and
-    S.statusid <= 7 and
+    S.statusid <= 7
   ORDER BY
     S.sessionid, 
     SEH.timestamp

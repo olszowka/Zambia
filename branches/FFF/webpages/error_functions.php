@@ -96,14 +96,14 @@ function topofpagecsv($filename) {
   header("Content-disposition: attachment; filename=$filename");
 }
 
-function renderhtmlreport($headers,$rows,$header_array,$class_array) {
+function renderhtmlreport($headers,$rows,$header_array,$element_array) {
   echo "<TABLE BORDER=1>";
   echo "<TR>" . $headers . "</TR>";
   for ($i=1; $i<=$rows; $i++) {
     echo "<TR>";
     foreach ($header_array as $header_name) {
       echo "<TD>";
-      echo $class_array[$i][$header_name];
+      echo $element_array[$i][$header_name];
       echo "</TD>\n";
     }
     echo "</TR>\n";
@@ -123,13 +123,13 @@ function renderhtmlreport($headers,$rows,$header_array,$class_array) {
   }
 }
 
-function rendercsvreport($headers,$rows,$header_array,$class_array) {
+function rendercsvreport($headers,$rows,$header_array,$element_array) {
   echo "$headers\n";
   for ($i=1; $i<=$rows; $i++) {
     $rowinfo="";
     foreach ($header_array as $header_name) {
       $rowinfo.="\"";
-      $rowinfo.=$class_array[$i][$header_name];
+      $rowinfo.=$element_array[$i][$header_name];
       $rowinfo.="\",";
     }
     $rowinfo=substr($rowinfo, 0, -1);
@@ -150,9 +150,9 @@ function queryhtmlreport($query,$link,$title,$description) {
     exit();
   }
   for ($i=1; $i<=$rows; $i++) {
-    $class_array[$i]=mysql_fetch_assoc($result);
+    $element_array[$i]=mysql_fetch_assoc($result);
   }
-  $header_array=array_keys($class_array[1]);
+  $header_array=array_keys($element_array[1]);
   $columns=count($header_array);
   $headers="";
   foreach ($header_array as $header_name) {
@@ -160,7 +160,7 @@ function queryhtmlreport($query,$link,$title,$description) {
     $headers.=$header_name;
     $headers.="</TH>\n";
   }
-  return array ($headers,$rows,$header_array,$class_array);
+  return array ($headers,$rows,$header_array,$element_array);
 }
 
 function querycsvreport($query,$link) {
@@ -176,9 +176,9 @@ function querycsvreport($query,$link) {
     exit();
   }
   for ($i=1; $i<=$rows; $i++) {
-    $class_array[$i]=mysql_fetch_assoc($result);
+    $element_array[$i]=mysql_fetch_assoc($result);
   }
-  $header_array=array_keys($class_array[1]);
+  $header_array=array_keys($element_array[1]);
   $columns=count($header_array);
   $headers="";
   foreach ($header_array as $header_name) {
@@ -187,7 +187,7 @@ function querycsvreport($query,$link) {
     $headers.="\",";
   }
   $headers = substr($headers, 0, -1);
-  return array ($headers,$rows,$header_array,$class_array);
+  return array ($headers,$rows,$header_array,$element_array);
 }
 
 ?>
