@@ -1,5 +1,5 @@
 TITLE='Arisia TV by time.'
 DESCRIPTION='Just things in TV room. [On&nbsp;Demand]'
 ARISIATVWANTS=1
-QUERY='  '
+QUERY=' '
 MIGRATED=true

@@ -3,5 +3,5 @@ DESCRIPTION='Shows who has responded and if they are attending.  (Interested, 1=
 PROGWANTS=1
 EVENTSWANTS=1
 PUBSWANTS=1
-QUERY='  '
+QUERY=' '
 MIGRATED=true

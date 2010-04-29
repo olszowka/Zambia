@@ -15,7 +15,7 @@
     $additionalinfo.="the time to visit the <A HREF=\"Schedule.html\">timeslot</A>, or visit the\n";
     $additionalinfo.="<A HREF=\"Postgrid.html\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+    $Grid_Spacer=GRID_SPACER;
     $oldrole=$_SESSION['role'];
     $_SESSION['role']="Posting";
 

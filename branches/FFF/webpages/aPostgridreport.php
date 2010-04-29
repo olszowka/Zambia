@@ -14,7 +14,7 @@
     $additionalinfo.=" the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or the time to visit that section of";
     $additionalinfo.=" the <A HREF=\"aSchedulereport.php\">schedule</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+    $Grid_Spacer=GRID_SPACER;
 
     /* This query returns the room names for an array.  Fix to figure out if
        pubstatus=2 only. */

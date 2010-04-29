@@ -3,6 +3,6 @@ DESCRIPTION='For Scheduled items ONLY. Show sessionid, track, type, divisionid, 
 PUBSWANTS=1
 CSVSWANTS=1
 GENCSV=0
-QUERY=" "
+QUERY=' '
 MIGRATED=true
 

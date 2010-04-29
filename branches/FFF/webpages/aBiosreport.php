@@ -14,7 +14,7 @@
     $additionalinfo.="the time to visit the <A HREF=\"Schedule.html\">timeslot</A>, or visit the\n";
     $additionalinfo.="<A HREF=\"Postgrid.html\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+    $Grid_Spacer=GRID_SPACER;
 
     /* This complex query grabs the name, class information, and editedbio (if there is one)
        Most, if not all of the formatting is done within the query, as opposed to in

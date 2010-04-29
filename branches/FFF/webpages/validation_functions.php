@@ -156,9 +156,9 @@ function validate_session() {
         $flag=false;
         }
     $i=strlen($session["progguiddesc"]);
-    if ($i<10||$i>500) {
+    if ($i<10||$i>MAX_WDESC_LEN) {
         $messages.="Description is $i characters long.  Please edit it to between";
-        $messages.=" <B>10</B> and <B>500</B> characters long.<BR>\n";
+        $messages.=" <B>10</B> and <B>".MAX_WDESC_LEN."</B> characters long.<BR>\n";
         $flag=false;
         }
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {

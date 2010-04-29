@@ -1,5 +1,5 @@
 TITLE='Conflict Report - Room Schedule Overlaps.'
 DESCRIPTION='Find any pairs of sessions whose times overlap in the same room. [On&nbsp;Demand]'
 CONFLICTWANTS=1
-QUERY='  '
+QUERY=' '
 MIGRATED=true

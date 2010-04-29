@@ -14,7 +14,7 @@
     $additionalinfo.="the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or visit the\n";
     $additionalinfo.="<A HREF=\"aPostgridreport.php\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+    $Grid_Spacer=GRID_SPACER;
 
     /* This query grabs everything necessary for the schedule to be printed. */
     $query = <<<EOD

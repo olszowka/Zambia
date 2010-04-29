@@ -2,5 +2,5 @@ TITLE='Assigned Session by Session (counts)'
 DESCRIPTION='How many people are assinged to each session? (Sorted by track then sessionid.) [On&nbsp;Demand]'
 PROGWANTS=1
 EVENTSWANTS=1
-QUERY='  '
+QUERY=' '
 MIGRATED=true

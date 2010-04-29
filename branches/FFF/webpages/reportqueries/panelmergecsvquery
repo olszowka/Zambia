@@ -3,6 +3,6 @@ DESCRIPTION='sessionid,room,start time,duration,track,title,participants [On&nbs
 PUBSWANTS=1
 CSVSWANTS=1
 GENCSV=0
-QUERY=" "
+QUERY=' '
 MIGRATED=true
 

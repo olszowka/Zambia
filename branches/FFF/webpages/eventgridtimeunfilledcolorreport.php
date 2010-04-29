@@ -14,7 +14,7 @@
     $additionalinfo.="the session id to edit the session's participants; or\n";
     $additionalinfo.="the title to edit the session.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
-    $Grid_Spacer=(60 * 30); // space grid sections by 60 seconds per minute and 30 minutes
+    $Grid_Spacer=GRID_SPACER;
 
    /* This query returns the room names for an array. */
     $query = <<<EOD
