@@ -69,15 +69,19 @@ function RenderError($title,$message) {
 // Top of page reporting
 function topofpagereport($title,$description,$info) {
   if ($_SESSION['role'] == "Brainstorm") {
+    require_once('BrainstormCommonCode.php');
     brainstorm_header($title);
   }
   elseif ($_SESSION['role'] == "Participant") {
+    require_once('PartCommonCode.php');
     participant_header($title);
   }
   elseif ($_SESSION['role'] == "Staff") {
+    require_once('StaffCommonCode.php');
     staff_header($title);
   }
   elseif ($_SESSION['role'] == "Posting") {
+    require_once('PostingCommonCode.php');
     posting_header($title);
   }
   date_default_timezone_set('US/Eastern');

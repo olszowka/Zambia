@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/TR/xhtml1/transitional">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=latin-1">
-  <title>FFF 34 -- <?php echo $title ?></title>
+  <title><?php echo CON_NAME ."-- $title"; ?></title>
   <link rel="stylesheet" href="Common.css" type="text/css">
 </head>
 <body>

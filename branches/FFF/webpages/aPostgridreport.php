@@ -1,8 +1,14 @@
 <?php
-    require_once('db_functions.php');
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
-    require_once('StaffCommonCode.php');
+    if ($_SESSION['role'] == "Brainstorm") {
+      require_once('BrainstormCommonCode.php');
+      } elseif ($_SESSION['role'] == "Participant") {
+      require_once('PartCommonCode.php');
+      } elseif ($_SESSION['role'] == "Staff") {
+      require_once('StaffCommonCode.php');
+      } else {
+      $_SESSION['role'] = "Posting";
+      require_once('PostingCommonCode.php');
+      }
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 

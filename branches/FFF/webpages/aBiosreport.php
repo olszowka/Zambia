@@ -1,8 +1,14 @@
 <?php
-    require_once('db_functions.php');
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
-    require_once('StaffCommonCode.php');
+    if ($_SESSION['role'] == "Brainstorm") {
+      require_once('BrainstormCommonCode.php');
+      } elseif ($_SESSION['role'] == "Participant") {
+      require_once('PartCommonCode.php');
+      } elseif ($_SESSION['role'] == "Staff") {
+      require_once('StaffCommonCode.php');
+      } else {
+      $_SESSION['role'] = "Posting";
+      require_once('PostingCommonCode.php');
+      }
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
@@ -10,9 +16,9 @@
     $_SESSION['return_to_page']="aBiosreport.php";
     $title="Bios for Presenters";
     $description="<P>List of all Presenters biographical information.</P>\n";
-    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.html\">description</A>,\n";
-    $additionalinfo.="the time to visit the <A HREF=\"Schedule.html\">timeslot</A>, or visit the\n";
-    $additionalinfo.="<A HREF=\"Postgrid.html\">grid</A>.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,\n";
+    $additionalinfo.="the time to visit the <A HREF=\"aSchedulereport.php\">timeslot</A>, or visit the\n";
+    $additionalinfo.="<A HREF=\"aPostgridreport.php\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 
