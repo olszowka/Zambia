@@ -1,34 +1,7 @@
 TITLE='Program Participant Thank you note query'
-DESCRIPTION='prefered name, firstname, lastname, mailing address, count of scheduled sessions (for only some tracks!)'
+DESCRIPTION='prefered name, firstname, lastname, mailing address, count of scheduled sessions (for only some tracks!) [On&nbsp;Demand]'
 PROGWANTS=1
 CSVONLY=1
 GENCSV=1
-QUERY=" 
-       select P.badgeid, 
-              P.pubsname, 
-              C.firstname, 
-              C.lastname, 
-              C.email, 
-              SCH.sessioncount as 'Total involvement', 
-              SCH.volcount as 'Volunteer Sessions',
-              SCH.anncount as 'Announcer Sessions',
-              (SCH.sessioncount-SCH.volcount-SCH.anncount) as 'Program Sessions' 
-         from CongoDump as C, 
-              Participants as P 
-   left join (select POS1.badgeid as badgeid , 
-                     count(SCH1.sessionid) as sessioncount,
-                     sum(if(volunteer=1,1,0)) as volcount,
-                     sum(if(announcer=1,1,0)) as anncount
-                from ParticipantOnSession POS1, 
-                     Schedule SCH1, 
-                     Sessions S, 
-                     Tracks T 
-               where POS1.sessionid=SCH1.sessionid 
-                 and SCH1.sessionid=S.sessionid 
-                 and S.trackid=T.trackid 
-            group by POS1.badgeid) as SCH 
-                  on P.badgeid=SCH.badgeid 
-               where SCH.sessioncount is not NULL 
-          and C.badgeid=P.badgeid 
-    group by (P.badgeid) 
-order by cast(P.badgeid as unsigned); "
+QUERY=' '
+MIGRATED=true
