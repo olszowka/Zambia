@@ -9,7 +9,7 @@
     ## LOCALIZATIONS
     $_SESSION['return_to_page']="completepubgridtimeunfilledcolorreport.php";
     $title="Published Time Semi-filled Color Grid";
-    $description="<P>Display published schedule with rooms on horizontal axis and regular time on vertical, keyed by color (only). This excludes any item marked "Do Not Print" or "Staff Only".</P>\n";
+    $description="<P>Display published schedule with rooms on horizontal axis and regular time on vertical, keyed by color (only). This excludes any item marked \"Do Not Print\" or \"Staff Only\".</P>\n";
     $additionalinfo="<P>Click on the room name to edit the room's schedule;\n";
     $additionalinfo.="the session id to edit the session's participants; or\n";
     $additionalinfo.="the title to edit the session.</P>\n";

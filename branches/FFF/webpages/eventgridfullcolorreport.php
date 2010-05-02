@@ -9,7 +9,7 @@
     ## LOCALIZATIONS
     $_SESSION['return_to_page']="eventgridfullcolorreport.php";
     $title="Unabridged Color Event Grid";
-    $description="<P>Display entire event schedule with rooms on horizontal axis and time on vertical, keyed by color. This includes all items marked "Do Not Print" or "Staff Only".</P>\n";
+    $description="<P>Display entire event schedule with rooms on horizontal axis and time on vertical, keyed by color. This includes all items marked \"Do Not Print\" or \"Staff Only\".</P>\n";
     $additionalinfo="<P>Click on the room name to edit the room's schedule;\n";
     $additionalinfo.="the session id to edit the session's participants; or\n";
     $additionalinfo.="the title to edit the session.</P>\n";
