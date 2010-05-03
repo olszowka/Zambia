@@ -26,7 +26,7 @@
     $query = <<<EOD
 SELECT
     if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"aBiosreport.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
-    concat('<A HREF=\"aSchedulereport.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') as 'Start Time',
+    GROUP_CONCAT(DISTINCT concat('<A HREF=\"aSchedulereport.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') SEPARATOR ', ') as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN
         concat(date_format(duration,'%i'),'min')
@@ -55,30 +55,10 @@ SELECT
     S.title
 EOD;
 
-    /* Standard test for failing to connect to the database. */
-    if (($result=mysql_query($query,$link))===false) {
-        $message="Error retrieving data from database.<BR>";
-        $message.=$query;
-        $message.="<BR>";
-	$message.= mysql_error();
-        RenderError($title,$message);
-        exit ();
-        }
+    ## Retrieve query
+    list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description);
 
-    /* Standard test to make sure there was some information returned. */
-    if (0==($elements=mysql_num_rows($result))) {
-        $message="<P>This report retrieved no results matching the criteria.</P>\n";
-        RenderError($title,$message);
-        exit();
-        }
-
-    /* Associate the information with header_array. */
-    for ($i=1; $i<=$elements; $i++) {
-        $element_array[$i]=mysql_fetch_assoc($result);
-        }
-
-    /* Printing body.  Uses the page-init from above adds informational line
-       then creates the Descriptions. */
+    /* Printing body.  Uses the page-init then creates the Descriptions. */
     topofpagereport($title,$description,$additionalinfo);
     echo "<DL>\n";
     for ($i=1; $i<=$elements; $i++) {
@@ -99,4 +79,13 @@ EOD;
       echo "</DD></P>\n";
     }
     echo "</DL>\n";
-    staff_footer();
+    if ($_SESSION['role'] == "Brainstorm") {
+      brainstorm_footer();
+      } elseif ($_SESSION['role'] == "Participant") {
+      participant_footer();
+      } elseif ($_SESSION['role'] == "Staff") {
+      staff_footer();
+      } elseif ($_SESSION['role'] == "Posting") {
+      posting_footer();
+      }
+

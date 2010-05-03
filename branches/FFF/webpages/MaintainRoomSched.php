@@ -194,7 +194,21 @@ for ($i=1;$i<=$numrows;$i++) {
 echo "   </TABLE>\n";
 echo "<H4>Add To Room Schedule</H4>\n";
 echo "<TABLE>\n";
-$query = <<<EOD
+if (strtoupper(DOUBLE_SCHEDULE)=="TRUE") {
+SELECT
+        S.sessionid, T.trackname, S.title, SCH.roomid
+    FROM
+        Sessions S JOIN
+        Tracks T USING (trackid) JOIN
+        SessionStatuses SS USING (statusid) LEFT JOIN
+        Schedule SCH USING (sessionid)
+    WHERE
+        SS.may_be_scheduled=1
+    ORDER BY
+        T.trackname, S.sessionid
+EOD;
+ } else {
+    $query = <<<EOD
 SELECT
         S.sessionid, T.trackname, S.title, SCH.roomid
     FROM
@@ -209,6 +223,7 @@ SELECT
     ORDER BY
         T.trackname, S.sessionid
 EOD;
+ }
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";
