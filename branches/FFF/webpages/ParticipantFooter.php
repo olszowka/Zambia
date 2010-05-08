@@ -1,5 +1,5 @@
 <?php
-    function participant_footer() {
+    function participant_footer_old() {
 ?>
 
 <hr>

@@ -1,6 +1,6 @@
 <?php
 
-    function participant_header($title) {
+    function participant_header_old($title) {
     require_once ("javascript_functions.php");
     global $badgeid;
 ?>

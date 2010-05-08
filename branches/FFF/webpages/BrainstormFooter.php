@@ -1,5 +1,5 @@
 <?php
-    function brainstorm_footer() {
+    function brainstorm_footer_old() {
 ?>
 
 <hr>

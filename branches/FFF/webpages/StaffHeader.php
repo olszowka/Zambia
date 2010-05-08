@@ -1,5 +1,5 @@
 <?php
-    function staff_header($title) {
+    function staff_header_old($title) {
       require_once ("javascript_functions.php");
 ?>
 

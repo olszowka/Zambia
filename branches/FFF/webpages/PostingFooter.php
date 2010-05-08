@@ -1,5 +1,5 @@
 <?php
-    function posting_footer() {
+    function posting_footer_old() {
 ?>
 
 <hr>

@@ -1,5 +1,5 @@
 <?php
-    function brainstorm_header($title) {
+    function brainstorm_header_old($title) {
       require_once ("javascript_functions.php");
 ?>
 

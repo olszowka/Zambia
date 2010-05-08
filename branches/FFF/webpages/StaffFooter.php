@@ -1,5 +1,5 @@
 <?php
-    function staff_footer() {
+    function staff_footer_old() {
 ?>
 
 <hr>

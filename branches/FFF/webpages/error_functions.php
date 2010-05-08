@@ -1,6 +1,6 @@
 <?php
 
-  // Render Error reporting
+// Render Error reporting
 function StaffRenderError ($title, $message) {
     global $debug;
     require_once('StaffHeader.php');
@@ -64,113 +64,6 @@ function RenderError($title,$message) {
     echo "</body>";
     echo "</html>";
   }
-}
-
-// Top of page reporting
-function topofpagereport($title,$description,$info) {
-  if ($_SESSION['role'] == "Brainstorm") {
-    require_once('BrainstormCommonCode.php');
-    brainstorm_header($title);
-  }
-  elseif ($_SESSION['role'] == "Participant") {
-    require_once('PartCommonCode.php');
-    participant_header($title);
-  }
-  elseif ($_SESSION['role'] == "Staff") {
-    require_once('StaffCommonCode.php');
-    staff_header($title);
-  }
-  elseif ($_SESSION['role'] == "Posting") {
-    require_once('PostingCommonCode.php');
-    posting_header($title);
-  }
-  date_default_timezone_set('US/Eastern');
-  echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-  echo $description;
-  echo $info;
-  
-}
-
-function topofpagecsv($filename) {
-  header("Expires: 0");
-  header("Cache-control: private");
-  header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-  header("Content-Description: File Transfer");
-  header("Content-Type: text/csv");
-  header("Content-disposition: attachment; filename=$filename");
-}
-
-function renderhtmlreport($rows,$header_array,$element_array) {
-  $headers="";
-  foreach ($header_array as $header_name) {
-    $headers.="<TH>";
-    $headers.=$header_name;
-    $headers.="</TH>\n";
-  }
-  echo "<TABLE BORDER=1>";
-  echo "<TR>" . $headers . "</TR>";
-  for ($i=1; $i<=$rows; $i++) {
-    echo "<TR>";
-    foreach ($header_array as $header_name) {
-      echo "<TD>";
-      echo $element_array[$i][$header_name];
-      echo "</TD>\n";
-    }
-    echo "</TR>\n";
-  }
-  echo "</TABLE>";
-  if ($_SESSION['role'] == "Brainstorm") {
-    brainstorm_footer();
-  }
-  elseif ($_SESSION['role'] == "Participant") {
-    participant_footer();
-  }
-  elseif ($_SESSION['role'] == "Staff") {
-    staff_footer();
-  }
-  elseif ($_SESSION['role'] == "Posting") {
-    posting_footer();
-  }
-}
-
-function rendercsvreport($rows,$header_array,$element_array) {
-  $headers="";
-  foreach ($header_array as $header_name) {
-    $headers.="\"";
-    $headers.=$header_name;
-    $headers.="\",";
-  }
-  $headers = substr($headers, 0, -1);
-  echo "$headers\n";
-  for ($i=1; $i<=$rows; $i++) {
-    $rowinfo="";
-    foreach ($header_array as $header_name) {
-      $rowinfo.="\"";
-      $rowinfo.=$element_array[$i][$header_name];
-      $rowinfo.="\",";
-    }
-    $rowinfo=substr($rowinfo, 0, -1);
-    echo "$rowinfo\n";
-  }
-}
-
-function queryreport($query,$link,$title,$description) {
-  if (($result=mysql_query($query,$link))===false) {
-    $message="<P>Error retrieving data from database.</P>\n<P>";
-    $message.=$query;
-    RenderError($title,$message);
-    exit ();
-  }
-  if (0==($rows=mysql_num_rows($result))) {
-    $message="$description\n<P>This report retrieved no results matching the criteria.</P>\n";
-    RenderError($title,$message);
-    exit();
-  }
-  for ($i=1; $i<=$rows; $i++) {
-    $element_array[$i]=mysql_fetch_assoc($result);
-  }
-  $header_array=array_keys($element_array[1]);
-  return array ($rows,$header_array,$element_array);
 }
 
 ?>
