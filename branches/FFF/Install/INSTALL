@@ -69,7 +69,7 @@ version.  If you are helping develop you'll want the head of the tree.
 
 4 - Tweak the code to use your database
 
-You want to edit copy db_name_sample.php to db_name.php  
+You want to edit copy webpages/db_name_sample.php to Local/db_name.php  
 and edit it as needed.
 
 The reports are currently a hack.  You need to edit 2 files in the 

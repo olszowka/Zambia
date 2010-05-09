@@ -1,6 +1,6 @@
 We need consistency... here is the plan
 
-contains configuration information that each conference should set: db_name.php
+contains configuration information that each conference should set: Local/db_name.php
 
 contains css information: Common.css  ParticipantSection.css  StaffSection.css
 
