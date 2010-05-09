@@ -436,6 +436,12 @@ LABEL.dense {
     border-bottom: solid black 2px;
     border-left: none
     }
+.border1000 {
+    border-top: solid black 1px;
+    border-right: none;
+    border-bottom: none;
+    border-left: none
+    }
 .border1111 {
     border-top: solid black 1px;
     border-right: solid black 1px;

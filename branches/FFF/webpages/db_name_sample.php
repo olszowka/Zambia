@@ -1,5 +1,5 @@
 <?php
-// This is an example file.  Please copy to db_name.php and edit as needed.
+// This is an example file.  Please copy to ../Local/db_name.php and edit as needed.
 define("DBHOSTNAME","localhost");
 define("DBUSERID","zambiademo");
 define("DBPASSWORD","4fandom");

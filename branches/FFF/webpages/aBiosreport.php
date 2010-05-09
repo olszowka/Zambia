@@ -1,5 +1,5 @@
 <?php
-    require_once('PostingCommonCode.php');
+    require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
@@ -50,45 +50,25 @@ SELECT
     P.pubsname
 EOD;
 
-    /* Standard test for failing to connect to the database. */
-    if (($result=mysql_query($query,$link))===false) {
-        $message="Error retrieving data from database.<BR>";
-        $message.=$query;
-        $message.="<BR>";
-	$message.= mysql_error();
-        RenderError($title,$message);
-        exit ();
-        }
+    ## Retrieve query
+    list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description);
 
-    /* Standard test to make sure there was some information returned. */
-    if (0==($elements=mysql_num_rows($result))) {
-        $message="<P>This report retrieved no results matching the criteria.</P>\n";
-        RenderError($title,$message);
-        exit();
-        }
-
-    /* Associate the information with header_array. */
-    for ($i=1; $i<=$elements; $i++) {
-        $element_array[$i]=mysql_fetch_assoc($result);
-        }
-
-    /* Printing body.  Uses the page-init from above adds informational line
-       then creates the bio page. */
+    /* Printing body.  Uses the page-init then creates the bio page. */
     topofpagereport($title,$description,$additionalinfo);
     for ($i=1; $i<=$elements; $i++) {
-      $picture=sprintf("Participant_Images/%s.jpg",$element_array[$i]['pubsname']);
+      $picture=sprintf("../Local/Participant_Images/%s.jpg",$element_array[$i]['pubsname']);
       if (file_exists($picture)) {
 	echo "<TABLE>\n<TR>\n<TD width=310>";
 	echo sprintf("<img width=300 src=\"%s\"</TD>\n<TD>",$picture);
+      } else {
+	echo "<TABLE>\n<TR>\n<TD>";
       }
       echo sprintf("<P><B>%s</B> ",$element_array[$i]['Participants']);
       if ($element_array[$i]['Bio'] != ' ') {
 	echo sprintf("%s",$element_array[$i]['Bio']);
       }
       echo sprintf("\n<DL>\n  <i>%s</i>\n</DL></P>\n",$element_array[$i]['Title']);
-      if (file_exists($picture)) {
-	echo "</TD>\n</TR>\n</TABLE>\n";
-      }
+      echo "</TD>\n</TR>\n</TABLE>\n";
     }
-    posting_footer();
+    staff_footer();
 

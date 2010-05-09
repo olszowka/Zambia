@@ -53,7 +53,7 @@
 
 function posting_header($title) {
   $ConName=CON_NAME; // make it a variable so it can be substituted
-  $HeaderTemplateFile="../HeaderTemplate.html";
+  $HeaderTemplateFile="../Local/HeaderTemplate.html";
 
   echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/strict.dtd\">\n";
   echo "<html xmlns=\"http://www.w3.org/TR/xhtml1/transitional\">\n";
@@ -238,7 +238,7 @@ function brainstorm_header($title) {
 
 function posting_footer() {
   $ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
-  $FooterTemplateFile="../FooterTemplate.html";
+  $FooterTemplateFile="../Local/FooterTemplate.html";
 
   if (file_exists($FooterTemplateFile)) {
     readfile($FooterTemplateFile);

@@ -1,7 +1,6 @@
 <?php 
+require_once('PartCommonCode.php');
 require_once('db_functions.php');
-require_once('ParticipantHeader.php');
-require_once('ParticipantFooter.php');
 
 $title="Login";
 

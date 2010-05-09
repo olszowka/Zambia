@@ -1,5 +1,5 @@
 <?php
-    require_once('PostingCommonCode.php');
+    require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
@@ -13,7 +13,7 @@
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 
-    /* This query grabs everything necessary for the schedule to be printed. */
+    /* This query grabs everything necessary for the descriptions to be printed. */
     $query = <<<EOD
 SELECT
     if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"aBiosreport.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
@@ -70,4 +70,4 @@ EOD;
       echo "</DD></P>\n";
     }
     echo "</DL>\n";
-    posting_footer();
+    staff_footer();

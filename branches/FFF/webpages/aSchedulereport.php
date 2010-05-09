@@ -1,5 +1,5 @@
 <?php
-    require_once('PostingCommonCode.php');
+    require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
@@ -103,4 +103,4 @@ EOD;
       echo "</DD></P>\n";
     }
     echo "</DL>\n";
-    posting_footer();
+    staff_footer();

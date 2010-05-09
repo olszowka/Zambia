@@ -1,5 +1,5 @@
 <?php
-    require_once('PostingCommonCode.php');
+    require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
@@ -13,8 +13,7 @@
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 
-    /* This query returns the room names for an array.  Fix to figure out if
-       pubstatus=2 only. */
+    /* This query returns the room names for an array. */
     $query = <<<EOD
 SELECT
         R.roomname,
@@ -23,32 +22,15 @@ SELECT
             Rooms R
     WHERE
         R.roomid in
-        (SELECT DISTINCT SCH.roomid FROM Schedule SCH JOIN Sessions S USING (sessionid) where pubstatusid=2) 
+        (SELECT DISTINCT SCH.roomid FROM Schedule SCH JOIN Sessions S USING (sessionid) where pubstatusid=2)
     ORDER BY
     	  R.display_order;
 EOD;
 
-    /* Standard test for failing to connect to the database. */
-    if (($result=mysql_query($query,$link))===false) {
-        $message="Error retrieving data from database.<BR>";
-        $message.=$query;
-        $message.="<BR>";
-	$message.= mysql_error();
-        RenderError($title,$message);
-        exit ();
-        }
+    ## Retrieve query
+    list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description);
 
-    /* Standard test to make sure there was some information returned. */
-    if (0==($rooms=mysql_num_rows($result))) {
-        $message="<P>This report retrieved no results matching the criteria.</P>\n";
-        RenderError($title,$message);
-        exit();
-        }
-
-    /* Associate the information with header_array. */
-    for ($i=1; $i<=$rooms; $i++) {
-        $header_array[$i]=mysql_fetch_assoc($result);
-        }
+    ## Set up the header cells
     $header_cells="<TR><TH>Time</TH>";
     for ($i=1; $i<=$rooms; $i++) {
         $header_cells.="<TH>";
@@ -76,25 +58,12 @@ SELECT
     ORDER BY
       sessionid;
 EOD;
-    if (($result=mysql_query($query,$link))===false) {
-        $message="Error retrieving data from database.<BR>";
-        $message.=$query;
-        $message.="<BR>";
-        $message.= mysql_error();
-        RenderError($title,$message);
-        exit ();
-        }
-    if (0==($presenters=mysql_num_rows($result))) {
-        $message="<P>This report retrieved no results matching the criteria.</P>\n";
-        RenderError($title,$message);
-        exit();
-        }
-    $tmp_array=('');
+
+    ## Retrieve query
+    list($presenters,$unneeded_array_b,$presenters_tmp_array)=queryreport($query,$link,$title,$description);
+
     for ($i=1; $i<=$presenters; $i++) {
-        $tmp_array[$i]=mysql_fetch_assoc($result);
-        } 
-    for ($i=1; $i<=$presenters; $i++) {
-        $presenters_array[$tmp_array[$i]['sessionid']]=$tmp_array[$i]['allpubsnames'];
+        $presenters_array[$presenters_tmp_array[$i]['sessionid']]=$presenters_tmp_array[$i]['allpubsnames'];
         } 
 
     /* This query finds the first second that is actually scheduled
@@ -223,4 +192,4 @@ EOD;
             }
         }
     echo "</TABLE>";
-    posting_footer();
+    staff_footer();

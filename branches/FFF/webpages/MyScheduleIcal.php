@@ -44,7 +44,7 @@ EOD;
         exit();
         }
     $schdrows=mysql_num_rows($result);
-    for ($i=0; $i<$schdrows; $i++) {
+    for ($i=1; $i<=$schdrows; $i++) {
         list($schdarray[$i]["sessionid"],$schdarray[$i]["trackname"],
             $schdarray[$i]["title"],$schdarray[$i]["roomname"],$schdarray[$i]["progguiddesc"],
             $schdarray[$i]["dtstart"],$schdarray[$i]["dtend"])=mysql_fetch_array($result, MYSQL_NUM);
@@ -77,7 +77,7 @@ EOD;
         exit();
         }
     $partrows=mysql_num_rows($result);
-    for ($i=0; $i<$partrows; $i++) {
+    for ($i=1; $i<=$partrows; $i++) {
         list($partarray[$i]["sessionid"],$partarray[$i]["badgename"],$partarray[$i]["pubsname"],
 	     $partarray[$i]["moderator"],$partarray[$i]["volunteer"],
              $partarray[$i]["announcer"])=mysql_fetch_array($result, MYSQL_NUM);
@@ -97,7 +97,7 @@ EOD;
         exit();
         }
     $partnamerow=mysql_num_rows($result);
-    for ($i=0; $i<$partnamerow; $i++) {
+    for ($i=1; $i<=$partnamerow; $i++) {
         list($partname[$i]["pubsname"])=mysql_fetch_array($result, MYSQL_NUM);
         }
 
@@ -106,7 +106,7 @@ EOD;
   echo add_ical_header();
 
   ## This should loop for every element in the produced array
-  for ($i=0; $i<$schdrows; $i++) {
+  for ($i=1; $i<=$schdrows; $i++) {
   
     # UID should be DTSTAMP, followed by DTSTART, followed by DTEND followed by SEQUENCE followed by $DBHostname
     # DTSTAMP should be generated from whenever this file is clicked on
