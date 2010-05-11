@@ -7,47 +7,46 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="publongdescreport.php";
-    $title="Pubs - Session Characteristics plus long description";
+    $_SESSION['return_to_page']="publongdesccsvreport.php";
+    $title="CSV - Session Characteristics plus long description";
     $description="<P>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description.</P>\n";
     $additionalinfo="";
-    $indicies="PUBSWANTS=1";
+    $indicies="PUBSWANTS=1, CSVSWANTS=1, GENCSV=0";
+    $resultsfile="longdesc.csv";
 
-    $query = <<<EOD
+    $query=<<<EOD
 SELECT
-    S.sessionid, 
-    trackname, 
-    typename, 
-    divisionname, 
-    pubstatusname, 
-    pubsno, 
-    pubcharname, 
-    kidscatname, 
-    title, 
-    progguiddesc as 'Long Description'
+    S.sessionid,
+    T.trackname AS track,
+    TY.typename AS type,
+    DV.divisionname AS division,
+    PS.pubstatusname AS 'publication status',
+    S.pubsno,
+    group_concat(PC.pubcharname SEPARATOR ' ') AS 'publication characteristics',
+    K.kidscatname AS 'kids category',
+    S.title,
+    S.progguiddesc as description
   FROM
-      Tracks T, 
-      Types Ty, 
-      Divisions D, 
-      PubStatuses PS, 
-      KidsCategories K, 
-      Sessions S 
-    LEFT JOIN SessionHasPubChar SHPC on S.sessionid=SHPC.sessionid 
-    LEFT JOIN PubCharacteristics PC on SHPC.pubcharid=PC.pubcharid, 
-      Schedule SCH 
-  WHERE
-    S.trackid=T.trackid and
-    S.typeid=Ty.typeid and
-    S.divisionid=D.divisionid and
-    S.pubstatusid=PS.pubstatusid and
-    PS.pubstatusname = 'Public' and
-    S.kidscatid=K.kidscatid and
-    S.sessionid=SCH.sessionid;
+      Schedule SCH
+    JOIN Sessions S USING(sessionid)
+    JOIN Tracks T USING(trackid)
+    JOIN Types TY USING(typeid)
+    JOIN Divisions DV USING(divisionid)
+    JOIN PubStatuses PS USING(pubstatusid)
+    JOIN KidsCategories K USING(kidscatid)
+    LEFT JOIN SessionHasPubChar SHPC USING(sessionid)
+    LEFT JOIN PubCharacteristics PC USING(pubcharid)
+  WHERE 
+    PS.pubstatusname = 'Public'
+  GROUP BY
+    scheduleid
 EOD;
 
     ## Retrieve query
     list($rows,$header_array,$class_array)=queryreport($query,$link,$title,$description);
 
-    ## Page Rendering
-    topofpagereport($title,$description,$additionalinfo);
-    renderhtmlreport($rows,$header_array,$class_array);
+    ## Page rendering
+    topofpagecsv($resultsfile);
+    rendercsvreport($rows,$header_array,$class_array);
+
+?>

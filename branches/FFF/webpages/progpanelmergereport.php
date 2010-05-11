@@ -13,7 +13,6 @@
     $additionalinfo="";
     $indicies="PUBSWANTS=1, GENCSV=0";
 
-//$query="set group_concat_max_len=25000;"
     $query = <<<EOD
 SELECT
     POS.sessionid, 
