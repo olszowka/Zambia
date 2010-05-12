@@ -4,12 +4,12 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="aPostgridreport.php";
+    $_SESSION['return_to_page']="StaffPostgrid.php";
     $title="Sessions Grid";
     $description="<P>Grid of all sessions.</P>\n";
-    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,\n";
-    $additionalinfo.=" the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or the time to visit that section of";
-    $additionalinfo.=" the <A HREF=\"aSchedulereport.php\">schedule</A>.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
+    $additionalinfo.=" the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, or the time to visit that section of";
+    $additionalinfo.=" the <A HREF=\"StaffSchedule.php\">schedule</A>. Look at the volunteer <A HREF=\"StaffPostvolgrid.php\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 
@@ -44,7 +44,7 @@ EOD;
     $query = <<<EOD
 SELECT
       S.sessionid,
-      GROUP_CONCAT(concat("<A HREF=\"aBiosreport.php#",P.pubsname,"\">",P.pubsname,"</A>") SEPARATOR ", ") as allpubsnames
+      GROUP_CONCAT(concat("<A HREF=\"StaffBios.php#",P.pubsname,"\">",P.pubsname,"</A>") SEPARATOR ", ") as allpubsnames
     FROM
       Sessions S
     JOIN
@@ -141,7 +141,7 @@ EOD;
         if ($skiprow == 0) {$grid_array[$time]['blocktime'] = "Skip";}
         if ($refskiprow != 0) {
             $k=$grid_array[$time]['blocktime'];
-            $grid_array[$time]['blocktime']=sprintf("<A HREF=\"aSchedulereport.php#%s\">%s</A>",$k,$k);
+            $grid_array[$time]['blocktime']=sprintf("<A HREF=\"StaffSchedule.php#%s\">%s</A>",$k,$k);
             }
         }
 
@@ -171,7 +171,7 @@ EOD;
                     echo sprintf("<TD BGCOLOR=\"%s\">",$y);
                     $y = $grid_array[$i]["$z title"]; //title
                     if ($y!="") {
-                        echo sprintf("<A HREF=\"aDescriptionsreport.php#%s\">%s</A>",$x,$y);
+                        echo sprintf("<A HREF=\"StaffDescriptions.php#%s\">%s</A>",$x,$y);
                         }
                     $y = substr($grid_array[$i]["$z duration"],0,-3); // duration; drop ":00" representing seconds off the end
                     if (substr($y,0,1)=="0") {$y = substr($y,1,999);} // drop leading "0"

@@ -17,14 +17,6 @@
     $indicies="PUBSWANTS=1, CSVONLY=1, GENCSV=1";
 
     # First query sets the max length, second the actual program description query.
-    $query="SET group_concat_max_len=25000";
-    if (!$result=mysql_query($query,$link)) {
-	$message=$query."<BR>Error querying database. Unable to continue.<BR>";
-        $message.="<P class\"errmsg\">".$query."\n";
-	RenderError($title,$message);
-        exit();
-        }
-
     $query = <<<EOD
 SELECT
     POS.badgeid,

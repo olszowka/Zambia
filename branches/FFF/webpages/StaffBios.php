@@ -4,12 +4,12 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="aBiosreport.php";
+    $_SESSION['return_to_page']="StaffBios.php";
     $title="Bios for Presenters";
     $description="<P>List of all Presenters biographical information.</P>\n";
-    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,\n";
-    $additionalinfo.="the time to visit the <A HREF=\"aSchedulereport.php\">timeslot</A>, or visit the\n";
-    $additionalinfo.="<A HREF=\"aPostgridreport.php\">grid</A>.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
+    $additionalinfo.="the time to visit the <A HREF=\"StaffSchedule.php\">timeslot</A>, or visit the\n";
+    $additionalinfo.="<A HREF=\"StaffPostgrid.php\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 
@@ -19,9 +19,9 @@
     $query = <<<EOD
 SELECT
     concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',
-    GROUP_CONCAT(DISTINCT concat('<DT><A HREF=\"aDescriptionsreport.php#',S.sessionid,'\">',S.title,'</A>',
+    GROUP_CONCAT(DISTINCT concat('<DT><A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>',
     if((moderator=1),'(m)',''), ' &mdash; ',
-       concat('<A HREF=\"aSchedulereport.php#',
+       concat('<A HREF=\"StaffSchedule.php#',
               DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',
               DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>'), ' &mdash; ',
        CASE 

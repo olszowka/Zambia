@@ -93,7 +93,7 @@ function staff_header($title) {
     echo "  <table class=\"tabhead\">\n    <tr class=\"tabrow\">\n      <td class=\"tabblocks border0020\">\n          ";
     maketab("Staff Overview",1,"StaffPage.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
-    maketab("Available Reports",1,"StaffAvailableReports.php");
+    maketab("Available Reports",1,"genindex.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
     maketab("Manage Sessions",1,"StaffManageSessions.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";

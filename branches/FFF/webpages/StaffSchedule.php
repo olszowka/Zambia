@@ -4,12 +4,12 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="aSchedulereport.php";
+    $_SESSION['return_to_page']="StaffSchedule.php";
     $title="Event Schedule";
     $description="<P>Schedule for all sessions.</P>\n";
-    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,\n";
-    $additionalinfo.="the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or visit the\n";
-    $additionalinfo.="<A HREF=\"aPostgridreport.php\">grid</A>.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
+    $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, or visit the\n";
+    $additionalinfo.="<A HREF=\"StaffPostgrid.php\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 
@@ -17,7 +17,7 @@
     if (strtoupper(DOUBLE_SCHEDULE)=="TRUE") {
     $query = <<<EOD
 SELECT
-    if ((P.pubsname is NULL), ' ', concat('<A HREF=\"aBiosreport.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)',''))) as 'Participants',
+    if ((P.pubsname is NULL), ' ', concat('<A HREF=\"StaffBios.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)',''))) as 'Participants',
     concat('<A NAME=\"',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\"></A>',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p')) as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN
@@ -29,7 +29,7 @@ SELECT
       END AS Duration,
     R.roomname as Roomname,
     S.sessionid as Sessionid,
-    concat('<A HREF=\"aDescriptionsreport.php#',S.sessionid,'\">',S.title,'</A>') as Title,
+    concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
     concat('<P>',S.progguiddesc,'</P>') as Description
   FROM
       Sessions S
@@ -48,7 +48,7 @@ EOD;
     } else {
     $query = <<<EOD
 SELECT
-    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"aBiosreport.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
+    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffBios.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
     concat('<A NAME=\"',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\"></A>',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p')) as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN
@@ -60,7 +60,7 @@ SELECT
       END AS Duration,
     GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
     S.sessionid as Sessionid,
-    concat('<A HREF=\"aDescriptionsreport.php#',S.sessionid,'\">',S.title,'</A>') as Title,
+    concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
     concat('<P>',S.progguiddesc,'</P>') as Description
   FROM
       Sessions S

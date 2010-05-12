@@ -7,12 +7,12 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="aPostvolgridreport.php";
+    $_SESSION['return_to_page']="StaffPostvolgrid.php";
     $title="Volunteer Grid";
     $description="<P>For the volunteer coordinators, with links between the classes, the schedule, and their descriptions. Volunteer and Announcer listed.</P>\n";
-    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"aDescriptionsreport.php\">description</A>,\n";
-    $additionalinfo.="the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or the time to visit that section of\n";
-    $additionalinfo.="the <A HREF=\"aSchedulereport.php\">schedule</A>.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
+    $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, or the time to visit that section of\n";
+    $additionalinfo.="the <A HREF=\"StaffSchedule.php\">schedule</A>. Look at the standard <A HREF=\"StaffPostgrid.php\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 
@@ -30,27 +30,11 @@ SELECT
     	  R.display_order;
 EOD;
 
-    /* Standard test for failing to connect to the database. */
-    if (($result=mysql_query($query,$link))===false) {
-        $message="Error retrieving data from database.<BR>";
-        $message.=$query;
-        $message.="<BR>";
-	$message.= mysql_error();
-        RenderError($title,$message);
-        exit ();
-        }
 
-    /* Standard test to make sure there was some information returned. */
-    if (0==($rooms=mysql_num_rows($result))) {
-        $message="<P>This report retrieved no results matching the criteria.</P>\n";
-        RenderError($title,$message);
-        exit();
-        }
+    ## Retrieve query
+    list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description);
 
-    /* Associate the information with header_array. */
-    for ($i=1; $i<=$rooms; $i++) {
-        $header_array[$i]=mysql_fetch_assoc($result);
-        }
+    ## Set up the header cells
     $header_cells="<TR><TH>Time</TH>";
     for ($i=1; $i<=$rooms; $i++) {
         $header_cells.="<TH>";
@@ -76,25 +60,11 @@ SELECT
     ORDER BY
       sessionid;
 EOD;
-    if (($result=mysql_query($query,$link))===false) {
-        $message="Error retrieving data from database.<BR>";
-        $message.=$query;
-        $message.="<BR>";
-        $message.= mysql_error();
-        RenderError($title,$message);
-        exit ();
-        }
-    if (0==($presenters=mysql_num_rows($result))) {
-        $message="<P>This report retrieved no results matching the criteria.</P>\n";
-        RenderError($title,$message);
-        exit();
-        }
-    $tmp_array=('');
+    ## Retrieve query
+    list($presenters,$unneeded_array_b,$presenters_tmp_array)=queryreport($query,$link,$title,$description);
+
     for ($i=1; $i<=$presenters; $i++) {
-        $tmp_array[$i]=mysql_fetch_assoc($result);
-        } 
-    for ($i=1; $i<=$presenters; $i++) {
-        $presenters_array[$tmp_array[$i]['sessionid']]=$tmp_array[$i]['allpubsnames'];
+        $presenters_array[$presenters_tmp_array[$i]['sessionid']]=$presenters_tmp_array[$i]['allpubsnames'];
         } 
 
     /* This query finds the first second that is actually scheduled
@@ -172,7 +142,7 @@ EOD;
         if ($skiprow == 0) {$grid_array[$time]['blocktime'] = "Skip";}
         if ($refskiprow != 0) {
             $k=$grid_array[$time]['blocktime'];
-            $grid_array[$time]['blocktime']=sprintf("<A HREF=\"aSchedulereport.php#%s\">%s</A>",$k,$k);
+            $grid_array[$time]['blocktime']=sprintf("<A HREF=\"StaffSchedule.php#%s\">%s</A>",$k,$k);
             }
         }
 

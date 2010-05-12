@@ -4,20 +4,20 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="aDescriptionsreport.php";
+    $_SESSION['return_to_page']="StaffDescriptions.php";
     $title="Session Descriptions";
     $description="<P>Descriptions for all sessions.</P>\n";
-    $additionalinfo="<P>Click on the time to visit the session's <A HREF=\"aSchedulereport.php\">timeslot</A>,\n";
-    $additionalinfo.="the presenter to visit their <A HREF=\"aBiosreport.php\">bio</A>, or visit the\n";
-    $additionalinfo.="<A HREF=\"aPostgridreprot.php\">grid</A>.</P>\n";
+    $additionalinfo="<P>Click on the time to visit the session's <A HREF=\"StaffSchedule.php\">timeslot</A>,\n";
+    $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, or visit the\n";
+    $additionalinfo.="<A HREF=\"StaffPostgrid.php\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 
     /* This query grabs everything necessary for the descriptions to be printed. */
     $query = <<<EOD
 SELECT
-    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"aBiosreport.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
-    GROUP_CONCAT(DISTINCT concat('<A HREF=\"aSchedulereport.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') SEPARATOR ', ') as 'Start Time',
+    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffBios.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
+    GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffSchedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') SEPARATOR ', ') as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN
         concat(date_format(duration,'%i'),'min')
