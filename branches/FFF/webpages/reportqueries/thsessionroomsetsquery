@@ -1,8 +1,0 @@
-TITLE='Session roomsets'
-DESCRIPTION='What roomsets are we using (Sorted by Room then Time.) [On&nbsp;Demand]'
-PROGWANTS=1
-EVENTSWANTS=1
-TECHWANTS=1
-HOTELWANTS=1
-QUERY=' '
-MIGRATED=true

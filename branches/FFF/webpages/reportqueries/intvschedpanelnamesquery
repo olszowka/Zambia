@@ -1,5 +1,0 @@
-TITLE='Interest v Schedule - sorted by pubsname'
-DESCRIPTION='Show who is interested in each panel and if they are assigned to it.  Also show the scheduling information (sorted by pubsname). [On&nbsp;Demand]'
-PROGWANTS=1
-QUERY=' '
-MIGRATED=true

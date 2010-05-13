@@ -1,7 +1,0 @@
-TITLE='Sessions Grid'
-DESCRIPTION='Grid of all sessions. [On&nbsp;Demand]'
-PROGWANTS=1
-GRIDSWANTS=1
-QUERY=' '
-MIGRATED=true
-

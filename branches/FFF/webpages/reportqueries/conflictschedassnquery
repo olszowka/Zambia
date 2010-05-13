@@ -1,5 +1,0 @@
-TITLE='Conflict Report - Assigned v. Scheduled issue'
-DESCRIPTION='These are sessions that are either in the grid and have no one assigned or the have people assigned and are not in the grid. [On&nbsp;Demand]'
-CONFLICTWANTS=1
-QUERY=' '
-MIGRATED=true

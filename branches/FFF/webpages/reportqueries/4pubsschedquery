@@ -1,6 +1,0 @@
-TITLE='Schedule report for Pubs'
-DESCRIPTION='Lists all Sessions Scheduled in all Rooms. [On&nbsp;Demand]'
-PUBSWANTS=1
-GENCSV=1
-QUERY=' '
-MIGRATED=true

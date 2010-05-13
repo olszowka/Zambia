@@ -1,5 +1,0 @@
-TITLE='Session Interest Report (counts)'
-DESCRIPTION='For each session, show number of participants who have put it on their interest list. (Excludes invited guest sessions.) [On&nbsp;Demand]'
-PROGWANTS=1
-QUERY=' '
-MIGRATED=true

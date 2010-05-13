@@ -1,5 +1,0 @@
-TITLE='Participant Interested Count'
-DESCRIPTION='Show the number of people that are interested in attending. [On&nbsp;Demand]'
-PROGWANTS=1
-QUERY=' '
-MIGRATED=true

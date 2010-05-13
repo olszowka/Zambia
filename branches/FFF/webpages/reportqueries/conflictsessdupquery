@@ -1,5 +1,0 @@
-TITLE='Conflict Report - Duplicate Session'
-DESCRIPTION='Lists all sessions scheduled more than once.'
-CONFLICTWANTS=1
-QUERY=' '
-MIGRATED=true

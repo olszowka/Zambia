@@ -1,5 +1,0 @@
-TITLE='Invited Guest Report'
-DESCRIPTION='For each invited guest session, list the participants who have been invited (and have not deleted the invitation.) [On&nbsp;Demand]'
-PROGWANTS=1
-QUERY=' '
-MIGRATED=true

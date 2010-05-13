@@ -1,7 +1,0 @@
-TITLE='Full Room Schedule by time then room'
-DESCRIPTION='Lists all Sessions Scheduled in all Rooms (includes "Public", "Do Not Print" and "Staff Only"). [On&nbsp;Demand]'
-PROGWANTS=1
-EVENTSWANTS=1
-GOHWANTS=1
-QUERY=' '
-MIGRATED=true

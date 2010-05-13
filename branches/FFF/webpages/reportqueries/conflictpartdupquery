@@ -1,5 +1,0 @@
-TITLE='Conflict Report - Participant Double Booked'
-DESCRIPTION='Find all instances where a participant is scheduled to be in two or more places at once. [On&nbsp;Demand]'
-CONFLICTWANTS=1
-QUERY=' '
-MIGRATED=true

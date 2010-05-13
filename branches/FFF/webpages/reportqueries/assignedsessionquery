@@ -1,6 +1,0 @@
-TITLE='Assigned Session by Session'
-DESCRIPTION='Shows who has been assigned to each session. (Sorted by track and then sessionid.) [On&nbsp;Demand]'
-PROGWANTS=1
-EVENTSWANTS=1
-QUERY=' '
-MIGRATED=true

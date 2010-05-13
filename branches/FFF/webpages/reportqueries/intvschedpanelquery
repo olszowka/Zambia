@@ -1,5 +1,0 @@
-TITLE='Interest v Schedule - sorted by track, then title'
-DESCRIPTION='Show who is interested in each panel and if they are assigned to it.  Also show the scheduling information. [On&nbsp;Demand]'
-PROGWANTS=1
-QUERY=' '
-MIGRATED=true

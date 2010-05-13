@@ -1,6 +1,0 @@
-TITLE='Conflict Report - Participant Bio in conflict'
-DESCRIPTION='Show the badgeid, pubsname and bio for each participant who indicated he is attending. [On&nbsp;Demand]' 
-PROGWANTS=1
-CONFLICTWANTS=1
-QUERY=' '
-MIGRATED=true

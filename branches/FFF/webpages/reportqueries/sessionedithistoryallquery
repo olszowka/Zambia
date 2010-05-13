@@ -1,6 +1,0 @@
-TITLE='Session Edit History Report - All'
-DESCRIPTION='For each session, show the entire edit history. [On&nbsp;Demand]'
-PROGWANTS=1
-EVENTSWANTS=1
-QUERY=' '
-MIGRATED=true

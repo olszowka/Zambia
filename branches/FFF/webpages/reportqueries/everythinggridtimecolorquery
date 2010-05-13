@@ -1,7 +1,0 @@
-TITLE='Unabridged Time Filled Color Complete Grid'
-DESCRIPTION='Display complete schedule of all rooms with rooms on horizontal axis and regular time on vertical, keyed by color. This includes all items marked "Do Not Print" or "Staff Only". [On&nbsp;Demand]'
-PROGWANTS=1
-GRIDSWANTS=1
-QUERY=' '
-MIGRATED=true
-

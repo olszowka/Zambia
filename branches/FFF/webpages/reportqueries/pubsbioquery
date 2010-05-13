@@ -1,5 +1,0 @@
-TITLE='Pubs - Participant Bio and pubname'
-DESCRIPTION='Show the badgeid, pubsname and bio for each participant who is on at least one scheduled session. [On&nbsp;Demand]'
-PUBSWANTS=1
-QUERY=' '
-MIGRATED=true

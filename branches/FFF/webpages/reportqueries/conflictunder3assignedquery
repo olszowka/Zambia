@@ -1,5 +1,0 @@
-TITLE='Conflict Report - Scheduled Programming sessions without enough people'
-DESCRIPTION='This report runs against scheduled sessions in division program only.   If these are panels, you need at least 3 people.  All other types require at least 1. [On&nbsp;Demand]'
-CONFLICTWANTS=1
-QUERY=' '
-MIGRATED=true

@@ -1,8 +1,0 @@
-TITLE='Session Services by Service'
-DESCRIPTION='Which Session needs which Services? (Sorted by service then time.) [On&nbsp;Demand]'
-PROGWANTS=1
-EVENTSWANTS=1
-TECHWANTS=1
-HOTELWANTS=1
-QUERY=' '
-MIGRATED=true

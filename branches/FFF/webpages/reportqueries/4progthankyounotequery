@@ -1,7 +1,0 @@
-TITLE='Program Participant Thank you note query'
-DESCRIPTION='prefered name, firstname, lastname, mailing address, count of scheduled sessions (for only some tracks!) [On&nbsp;Demand]'
-PROGWANTS=1
-CSVONLY=1
-GENCSV=1
-QUERY=' '
-MIGRATED=true

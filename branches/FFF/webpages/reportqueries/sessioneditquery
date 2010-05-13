@@ -1,6 +1,0 @@
-TITLE='Session Edit History Report'
-DESCRIPTION='Show the most recent edit activity for each session (sorted by time). [On&nbsp;Demand]'
-PROGWANTS=1
-EVENTSWANTS=1
-QUERY=' '
-MIGRATED=true

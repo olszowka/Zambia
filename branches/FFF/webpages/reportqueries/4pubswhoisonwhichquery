@@ -1,6 +1,0 @@
-TITLE='Pubs - Who is on Which Session'
-DESCRIPTION='Show the badgeid, pubsname and session info for each participant that are on at least one scheduled session. [On&nbsp;Demand]'
-PUBSWANTS=1
-GENCSV=1
-QUERY=' '
-MIGRATED=true

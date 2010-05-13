@@ -1,8 +1,0 @@
-TITLE='Session Features'
-DESCRIPTION='Which Session needs which Features? (Sorted by room then time.) [On&nbsp;Demand]'
-PROGWANTS=1
-EVENTSWANTS=1
-TECHWANTS=1
-HOTELWANTS=1
-QUERY=' '
-MIGRATED=true

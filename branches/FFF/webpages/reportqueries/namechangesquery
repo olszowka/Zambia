@@ -1,7 +1,0 @@
-TITLE='Name Report - Changes'
-DESCRIPTION="(in progress... try back in a bit). Do these folks want to update thier badgenames?   The pubsname and badgename don't match.   Report shows badgeid, pubsname, badgename, firstname and lastname. [On&nbsp;Demand]"
-PROGWANTS=1
-EVENTSWANTS=1
-REGWANTS=1
-QUERY=' '
-MIGRATED=true

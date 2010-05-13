@@ -1,6 +1,0 @@
-TITLE='Interest v Schedule - sorted by GoHs'
-DESCRIPTION='For each GoH, show which panels (but not Events) they are interested in,  and if they are assigned to it.  Also show the scheduling information. [On&nbsp;Demand]'
-GOHWANTS=1
-PROGWANTS=1
-QUERY=' '
-MIGRATED=true
