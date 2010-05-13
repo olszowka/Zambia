@@ -195,6 +195,7 @@ echo "   </TABLE>\n";
 echo "<H4>Add To Room Schedule</H4>\n";
 echo "<TABLE>\n";
 if (strtoupper(DOUBLE_SCHEDULE)=="TRUE") {
+    $query = <<<EOD
 SELECT
         S.sessionid, T.trackname, S.title, SCH.roomid
     FROM
