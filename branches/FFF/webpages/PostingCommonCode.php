@@ -1,8 +1,8 @@
 <?php
+    $logging_in=true;
+    $_SESSION['permission_set'][0] = "none";
+    $_SESSION['role']="Posting";
     require_once('CommonCode.php');
-    require_once('error_functions.php');
-    require_once('PostingHeader.php');
-    require_once('PostingFooter.php');
-    $_SESSION['role'] = "Posting";
-    $_SESSION['permission_set'][] = "none";
+    $_SESSION['permission_set'][0] = "none";
+    $_SESSION['role']="Posting";
 ?>

@@ -449,16 +449,6 @@ EOD;
 function isLoggedIn() {
     global $link,$message2;
 
-    // Horrible hack to allow for public pages.
-    if ($_SESSION['role'] == "Posting") {
-      return true;
-      }
-    if ($_SESSION['role'] == "") {
-      $_SESSION['role'] = "Posting";
-      return true;
-      }
-
-    // check for good login
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['password'])) {
         return false;
         }

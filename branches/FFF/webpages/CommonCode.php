@@ -5,6 +5,7 @@
     require_once('render_functions.php');
     require_once('validation_functions.php');
     require_once('php_functions.php');
+    require_once('error_functions.php');
 
     //set_session_timeout();
     session_start();
@@ -284,19 +285,15 @@ function brainstorm_footer() {
 //Top of page reporting, simplified by the pieces above for HTML pages
 function topofpagereport($title,$description,$info) {
   if ($_SESSION['role'] == "Brainstorm") {
-    require_once('BrainstormCommonCode.php');
     brainstorm_header($title);
   }
   elseif ($_SESSION['role'] == "Participant") {
-    require_once('PartCommonCode.php');
     participant_header($title);
   }
   elseif ($_SESSION['role'] == "Staff") {
-    require_once('StaffCommonCode.php');
     staff_header($title);
   }
   elseif ($_SESSION['role'] == "Posting") {
-    require_once('PostingCommonCode.php');
     posting_header($title);
   }
   date_default_timezone_set('US/Eastern');
