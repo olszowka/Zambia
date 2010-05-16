@@ -221,10 +221,8 @@ EOD;
             for ($i=1; $i<=$rows; $i++) {
                 $printrows_array[$i]=$i;
 	        $grid_array[$i]=mysql_fetch_array($result,MYSQL_BOTH);
-                for ($i=1; $i<=$rooms; $i++) {
-                    $j=$header_array[$i]['roomname'];
-                    $grid_array[$i]["$j cellclass"]="border1111";
-                    }
+                $k=$grid_array[$i]['blocktime'];
+                $grid_array[$i]['blocktime']=sprintf("<A HREF=\"StaffSchedule.php#%s\"><B>%s</B></A>",$k,$k);
 	        }
             } else {
             $grid_array[$time]=mysql_fetch_array($result,MYSQL_BOTH);
@@ -247,7 +245,7 @@ EOD;
             if ($skiprow == 0) {$grid_array[$time]['blocktime'] = "Skip";}
             if ($refskiprow != 0) {
                 $k=$grid_array[$time]['blocktime'];
-                $grid_array[$time]['blocktime']=sprintf("<A HREF=\"StaffSchedule.php#%s\">%s</A>",$k,$k);
+                $grid_array[$time]['blocktime']=sprintf("<A HREF=\"StaffSchedule.php#%s\"><B>%s</B></A>",$k,$k);
                 }
             }
         }
@@ -271,13 +269,14 @@ EOD;
         if ($grid_array[$i]['blocktime'] == "Skip") {
             $skipaccum++;
             } else {
-            echo "<TR><TH class=\"border1111\"><B>";
+            echo "<TR><TH class=\"border1111\">";
             echo $grid_array[$i]['blocktime'];
-            echo "</B></TH>";
+            echo "</TH>";
             for ($j=1; $j<=$rooms; $j++) {
                 $header_roomname=$header_array[$j]['roomname'];
                 $bgcolor=$grid_array[$i]["$header_roomname htmlcellcolor"]; //cell background color
                 $cellclass=$grid_array[$i]["$header_roomname cellclass"]; //cell edge state
+                if ($cellclass == "") {$cellclass="border1111";}
                 $sessionid=$grid_array[$i]["$header_roomname sessionid"]; //sessionid
                 $title=$grid_array[$i]["$header_roomname title"]; //title
                 $duration = substr($grid_array[$i]["$header_roomname duration"],0,-3); // duration; drop ":00" representing seconds off the end
