@@ -436,11 +436,35 @@ LABEL.dense {
     border-bottom: solid black 2px;
     border-left: none
     }
+.border0101 {
+    border-top: none;
+    border-right: solid black 1px;
+    border-bottom: none;
+    border-left: solid black 1px
+    }
+.border0101d {
+    border-top: dashed black 1px;
+    border-right: solid black 1px;
+    border-bottom: dashed black 1px;
+    border-left: solid black 1px
+    }
 .border1000 {
     border-top: solid black 1px;
     border-right: none;
     border-bottom: none;
     border-left: none
+    }
+.border1101 {
+    border-top: solid black 1px;
+    border-right: solid black 1px;
+    border-bottom: none;
+    border-left: solid black 1px
+    }
+.border1101d {
+    border-top: solid black 1px;
+    border-right: solid black 1px;
+    border-bottom: dashed black 1px;
+    border-left: solid black 1px
     }
 .border1111 {
     border-top: solid black 1px;
@@ -460,11 +484,17 @@ LABEL.dense {
     border-bottom: solid black 1px;
     border-left: solid black 1px
     }
-.border1221 {
+.border1211 {
     border-top: solid black 1px;
     border-right: solid black 2px;
-    border-bottom: solid black 2px;
+    border-bottom: solid black 1px;
     border-left: solid black 1px
+    }
+.border1212 {
+    border-top: solid black 1px;
+    border-right: solid black 2px;
+    border-bottom: solid black 1px;
+    border-left: solid black 2px
     }
 .border2111 {
     border-top: solid black 2px;
@@ -484,6 +514,12 @@ LABEL.dense {
     border-bottom: solid black 1px;
     border-left: solid black 1px
     }
+.border2212 {
+    border-top: solid black 2px;
+    border-right: solid black 2px;
+    border-bottom: solid black 1px;
+    border-left: solid black 2px
+    }
 .border2221 {
     border-top: solid black 2px;
     border-right: solid black 2px;
@@ -491,6 +527,12 @@ LABEL.dense {
     border-left: solid black 1px
     }
 .border2222 {
+    border-top: solid black 2px;
+    border-right: solid black 2px;
+    border-bottom: solid black 2px;
+    border-left: solid black 2px
+    }
+.border3333 {
     border-top: solid black 2px;
     border-right: solid black 2px;
     border-bottom: solid black 2px;
