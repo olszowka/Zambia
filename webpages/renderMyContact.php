@@ -100,8 +100,24 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
     </div>
     <div class="congo_data">
       <span class="label">Postal Address&nbsp;</span>
-      <span class="value"><?php echo $congoinfo["postaddress"]; ?></span>
+      <span class="value"><?php echo $congoinfo["postaddress1"]; ?></span>
       </div>
+<?php if (strlen($congoinfo['postaddress2'])>0) { ?>      
+    <div class="congo_data">
+      <span class="label">&nbsp;</span>
+      <span class="value"><?php echo $congoinfo["postaddress2"]; ?></span>
+      </div>
+      <?php } ?>
+    <div class="congo_data">
+      <span class="label">&nbsp;</span>
+      <span class="value"><?php echo "{$congoinfo['postcity']}, {$congoinfo['poststate']} {$congoinfo['postzip']}"; ?></span>
+      </div>
+<?php if (strlen($congoinfo['postcountry'])>0) { ?>      
+    <div class="congo_data">
+      <span class="label">&nbsp;</span>
+      <span class="value"><?php echo $congoinfo['postcountry']; ?></span>
+      </div>
+      <?php } ?>
   </div>
   <P class="congo-note">Please confirm your contact information.  If it is 
 not correct, contact <A href="mailto:<?php echo 
