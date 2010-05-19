@@ -45,7 +45,9 @@ if ($conflict!=true) {
 		echo "     <OPTION value=0 ".(($selroomid==0)?"selected":"").">Select Room</OPTION>\n";
 		while (list($roomid,$roomname, $rmfunct)= mysql_fetch_array($Rresult, MYSQL_NUM)) {
 		    echo "     <OPTION value=\"".$roomid."\" ".(($selroomid==$roomid)?"selected":"");
-		    echo ">".htmlspecialchars($roomname)." (".htmlspecialchars($rmfunct).")</OPTION>\n";
+		    echo ">".htmlspecialchars($roomname);
+		    if (strlen($rmfunct)>0) echo " (".htmlspecialchars($rmfunct).")";
+		    echo "</OPTION>\n";
 		    }
 		echo "</SELECT></DIV>\n";
 		echo "<br><P>For any session where you are rescheduling, please read the Notes for Programming Committee. \n";
