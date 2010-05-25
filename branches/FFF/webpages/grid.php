@@ -123,15 +123,16 @@
     /* This set of queries finds the appropriate presenters for a class,
        based on sessionid, and produces links for them.
        To get the volunteers use the following instead/in addition to the GROUP_CONCAT line below:
-       WHERE POS.volunteer=0 AND POS.announcer=0 removed
-       GROUP_CONCAT(IF((POS.volunteer=1 OR POS.announcer=1),concat(P.pubsname,", "),"") SEPARATOR "") as allpubsnames
+       WHERE POS.volunteer=0 AND POS.introducer=0 AND POS.aidedecamp=0 removed
+       GROUP_CONCAT(IF((POS.volunteer=1 OR POS.introducer=1 OR POS.aidedecamp=1),concat(P.pubsname,", "),"") SEPARATOR "") as allpubsnames
     */
     $query = <<<EOD
 SELECT
       S.sessionid,
-      GROUP_CONCAT(IF((POS.volunteer=0 AND POS.announcer=0),concat("<A HREF=\"StaffBios.php#",P.pubsname,"\">",P.pubsname,"</A>",if((POS.moderator=1),'(m), ',', ')),"") SEPARATOR "") as presentpubsnames,
+      GROUP_CONCAT(IF((POS.volunteer=0 AND POS.introducer=0 AND POS.aidedecamp=0),concat("<A HREF=\"StaffBios.php#",P.pubsname,"\">",P.pubsname,"</A>",if((POS.moderator=1),'(m), ',', ')),"") SEPARATOR "") as presentpubsnames,
       GROUP_CONCAT(IF((POS.volunteer=1),concat(P.pubsname,"(v), "),"") SEPARATOR "") as volpubsnames,
-      GROUP_CONCAT(IF((POS.announcer=1),concat(P.pubsname,"(a), "),"") SEPARATOR "") as annpubsnames
+      GROUP_CONCAT(IF((POS.introducer=1),concat(P.pubsname,"(i), "),"") SEPARATOR "") as intpubsnames,
+      GROUP_CONCAT(IF((POS.aidedecamp=1),concat(P.pubsname,"(a), "),"") SEPARATOR "") as aidpubsnames
     FROM
       Sessions S
     JOIN
@@ -148,7 +149,7 @@ EOD;
     list($presenters,$unneeded_array_b,$presenters_tmp_array)=queryreport($query,$link,$title,$description);
 
     for ($i=1; $i<=$presenters; $i++) {
-        $presenters_array[$presenters_tmp_array[$i]['sessionid']]=$presenters_tmp_array[$i]['presentpubsnames'].$presenters_tmp_array[$i]['volpubsnames'].$presenters_tmp_array[$i]['annpubsnames'];
+        $presenters_array[$presenters_tmp_array[$i]['sessionid']]=$presenters_tmp_array[$i]['presentpubsnames'].$presenters_tmp_array[$i]['volpubsnames'].$presenters_tmp_array[$i]['intpubsnames'].$presenters_tmp_array[$i]['aidpubsnames'];
         } 
 
     /* These queries finds the first and last second that is actually scheduled

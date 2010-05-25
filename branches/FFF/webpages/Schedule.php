@@ -40,7 +40,8 @@ SELECT
   WHERE
     S.pubstatusid = 2 AND
     POS.volunteer=0 AND
-    POS.announcer=0
+    POS.introducer=0 AND
+    POS.aidedecamp=0
   ORDER BY
     SCH.starttime,
     R.display_order
@@ -71,7 +72,8 @@ SELECT
   WHERE
     S.pubstatusid = 2 AND
     POS.volunteer=0 AND
-    POS.announcer=0
+    POS.introducer=0 AND
+    POS.aidedecamp=0
   GROUP BY
     sessionid
   ORDER BY

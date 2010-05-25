@@ -56,7 +56,8 @@ SELECT
     P.pubsname,
     POS.moderator,
     POS.volunteer,
-    POS.announcer
+    POS.introducer,
+    POS.aidedecamp
   FROM
       ParticipantOnSession POS
     JOIN CongoDump CD USING(badgeid)
@@ -79,8 +80,8 @@ EOD;
     $partrows=mysql_num_rows($result);
     for ($i=1; $i<=$partrows; $i++) {
         list($partarray[$i]["sessionid"],$partarray[$i]["badgename"],$partarray[$i]["pubsname"],
-	     $partarray[$i]["moderator"],$partarray[$i]["volunteer"],
-             $partarray[$i]["announcer"])=mysql_fetch_array($result, MYSQL_NUM);
+	     $partarray[$i]["moderator"],$partarray[$i]["volunteer"],$partarray[$i]["introducer"],
+             $partarray[$i]["aidedecamp"])=mysql_fetch_array($result, MYSQL_NUM);
         }
 
   $query=<<<EOD
@@ -154,8 +155,11 @@ EOD;
         if ($partarray[$j]["volunteer"]) {
             echo " - volunteer";
             }
-        if ($partarray[$j]["announcer"]) {
-            echo " - announcer";
+        if ($partarray[$j]["introducer"]) {
+            echo " - introducer";
+            }
+        if ($partarray[$j]["aidedecamp"]) {
+            echo " - assistant";
             }
         echo "\\n\\n ";
         }

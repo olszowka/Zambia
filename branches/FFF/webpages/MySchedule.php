@@ -170,7 +170,8 @@ SELECT
     P.pubsname,
     POS.moderator,
     POS.volunteer,
-    POS.announcer,
+    POS.introducer,
+    POS.aidedecamp,
     PSI.comments AS PresenterComments
   FROM
       ParticipantOnSession POS
@@ -272,8 +273,11 @@ EOD;
             if ($partarray[$j]["volunteer"]) {
                 echo " <I>volunteer</I> ";
                 }
-            if ($partarray[$j]["announcer"]) {
-                echo " <I>announcer</I> ";
+            if ($partarray[$j]["introducer"]) {
+                echo " <I>introducer</I> ";
+                }
+            if ($partarray[$j]["aidedecamp"]) {
+                echo " <I>assistant</I> ";
                 }
             echo "</TD>\n";
             echo "    <TD colspan=5 class=\"$class\">".htmlspecialchars(fix_slashes($partarray[$j]["PresenterComments"]));

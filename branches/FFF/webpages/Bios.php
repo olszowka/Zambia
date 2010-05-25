@@ -43,7 +43,8 @@ SELECT
   WHERE
     P.badgeid AND
     POS.volunteer=0 AND
-    POS.announcer=0
+    POS.introducer=0 AND
+    POS.aidedecamp=0
   GROUP BY
     Participants
   ORDER BY

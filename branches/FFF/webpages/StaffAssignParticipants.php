@@ -90,29 +90,42 @@ echo "\n";
 echo "<HR>\n";
 $query = <<<EOD
 SELECT
-            POS.badgeid AS posbadgeid,
-            POS.moderator,
-            POS.volunteer,
-            POS.announcer,
-            P.badgeid,
-            P.pubsname,
-            PSI.rank,
-            PSI.willmoderate,
-            PSI.comments
-    FROM
-            Participants AS P
-       JOIN
-(select distinct badgeid, sessionid from
-(select badgeid, sessionid from ParticipantOnSession where sessionid=$selsessionid
-    union
-select badgeid, sessionid from ParticipantSessionInterest where sessionid=$selsessionid) as R2) as R
-        using (badgeid)
-  LEFT JOIN ParticipantSessionInterest AS PSI
-        on R.badgeid = PSI.badgeid and R.sessionid = PSI.sessionid
-  LEFT JOIN ParticipantOnSession AS POS
-        on R.badgeid = POS.badgeid and R.sessionid = POS.sessionid
-    where
-        POS.sessionid=$selsessionid or POS.sessionid is null;
+    POS.badgeid AS posbadgeid,
+    POS.moderator,
+    POS.volunteer,
+    POS.introducer,
+    POS.aidedecamp,
+    P.badgeid,
+    P.pubsname,
+    PSI.rank,
+    PSI.willmoderate,
+    PSI.comments
+  FROM
+      Participants AS P
+      JOIN (SELECT
+                distinct badgeid,
+                sessionid
+              FROM
+                  (SELECT
+                       badgeid,
+                       sessionid
+                     FROM
+                         ParticipantOnSession
+                     WHERE
+                       sessionid=$selsessionid
+                   UNION
+                   SELECT
+                       badgeid,
+                       sessionid 
+                     FROM
+                         ParticipantSessionInterest
+                     WHERE
+                       sessionid=$selsessionid) as R2) as R using (badgeid)
+    LEFT JOIN ParticipantSessionInterest AS PSI on R.badgeid = PSI.badgeid and R.sessionid = PSI.sessionid
+    LEFT JOIN ParticipantOnSession AS POS on R.badgeid = POS.badgeid and R.sessionid = POS.sessionid
+  WHERE
+    POS.sessionid=$selsessionid OR
+    POS.sessionid is null;
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
@@ -145,7 +158,8 @@ if (!$Presult=mysql_query($query,$link)) {
 $i=0;
 $modid=0;
 $volid=0;
-$annid=0;
+$intid=0;
+$aidid=0;
 while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     if ($bigarray[$i]["moderator"]==1) {
         $modid=$bigarray[$i]["badgeid"];
@@ -153,8 +167,11 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     if ($bigarray[$i]["volunteer"]==1) {
         $volid=$bigarray[$i]["badgeid"];
         }
-    if ($bigarray[$i]["announcer"]==1) {
-        $annid=$bigarray[$i]["badgeid"];
+    if ($bigarray[$i]["introducer"]==1) {
+        $intid=$bigarray[$i]["badgeid"];
+        }
+    if ($bigarray[$i]["aidedecamp"]==1) {
+        $aidid=$bigarray[$i]["badgeid"];
         }
     $i++;
     }
@@ -165,8 +182,8 @@ echo "<INPUT type=\"radio\" name=\"moderator\" id=\"moderator\" value=\"0\"".(($
 echo "<LABEL for=\"moderator\">No Moderator Selected</LABEL><br>";
 echo "<INPUT type=\"radio\" name=\"volunteer\" id=\"volunteer\" value=\"0\"".(($volid==0)?"checked":"").">";
 echo "<LABEL for=\"volunteer\">No Volunteer Assigned</LABEL><br>";
-echo "<INPUT type=\"radio\" name=\"announcer\" id=\"announcer\" value=\"0\"".(($annid==0)?"checked":"").">";
-echo "<LABEL for=\"announcer\">No Announcer</LABEL>";
+echo "<INPUT type=\"radio\" name=\"introducer\" id=\"introducer\" value=\"0\"".(($intid==0)?"checked":"").">";
+echo "<LABEL for=\"introducer\">No Introducer Assigned</LABEL>";
 echo "<TABLE>\n";
 for ($i=0;$i<$numrows;$i++) {
     echo "   <TR>\n";
@@ -184,14 +201,17 @@ for ($i=0;$i<$numrows;$i++) {
     echo "      </TR>\n";
     echo "   <TR>\n";
     echo "      <TD class=\"vatop\" vcenter><INPUT type=\"radio\" name=\"moderator\" id=\"moderator\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["moderator"])?"checked":"")."><br>";
+    echo (($bigarray[$i]["moderator"])?"checked":"")."><br>\n";
     echo "      <INPUT type=\"radio\" name=\"volunteer\" id=\"volunteer\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["volunteer"])?"checked":"")."><br>";
-    echo "      <INPUT type=\"radio\" name=\"announcer\" id=\"announcer\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["announcer"])?"checked":"")."></TD>";
-    echo "      <TD class=\"vatop lrpad\">Moderator<br>";
-    echo "      Volunteer<br>";
-    echo "      Announcing</TD>";
+    echo (($bigarray[$i]["volunteer"])?"checked":"")."><br>\n";
+    echo "      <INPUT type=\"radio\" name=\"introducer\" id=\"introducer\"value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["introducer"])?"checked":"")."><br>\n";
+    echo "      <INPUT type=\"checkbox\" name=\"aidedecamp\" id=\"aidedecamp\"value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["aidedecamp"])?"checked":"")." value=\"1\"></TD>\n";
+    echo "      <TD class=\"vatop lrpad\">Moderator<br>\n";
+    echo "      Volunteer<br>\n";
+    echo "      Introducer<br>\n";
+    echo "      Assisting</TD>\n";
     echo "      <TD colspan=4 class=\"border1111 lrpad\">".htmlspecialchars($bigarray[$i]["comments"]);
     echo "</TD>\n";
     echo "      </TR>\n";
@@ -202,7 +222,8 @@ echo "<INPUT type=\"hidden\" name=\"selsess\" value=\"$selsessionid\">\n";
 echo "<INPUT type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasmodid\" value=\"$modid\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasvolid\" value=\"$volid\">\n";
-echo "<INPUT type=\"hidden\" name=\"wasannid\" value=\"$annid\">\n";
+echo "<INPUT type=\"hidden\" name=\"wasintid\" value=\"$intid\">\n";
+echo "<INPUT type=\"hidden\" name=\"wasaidid\" value=\"$aidid\">\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
 echo "<HR>\n";
 echo "<DIV><LABEL for=\"asgnpart\">Assign participant not indicated as interested or invited.</LABEL><BR>\n";

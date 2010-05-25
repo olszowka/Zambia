@@ -52,7 +52,9 @@ SELECT
     JOIN
       Participants P USING (badgeid)
     WHERE 
-      POS.volunteer=0 AND POS.announcer=0
+      POS.volunteer=0 AND
+      POS.introducer=0 AND
+      POS.aidedecamp=0
     GROUP BY
       sessionid
     ORDER BY

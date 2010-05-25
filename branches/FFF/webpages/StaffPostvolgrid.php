@@ -9,7 +9,7 @@
     ## LOCALIZATIONS
     $_SESSION['return_to_page']="StaffPostvolgrid.php";
     $title="Volunteer Grid";
-    $description="<P>For the volunteer coordinators, with links between the classes, the schedule, and their descriptions. Volunteer and Announcer listed.</P>\n";
+    $description="<P>For the volunteer coordinators, with links between the classes, the schedule, and their descriptions. Volunteer, Introducer, and Assistants listed.</P>\n";
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
     $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, or the time to visit that section of\n";
     $additionalinfo.="the <A HREF=\"StaffSchedule.php\">schedule</A>. Look at the standard <A HREF=\"StaffPostgrid.php\">grid</A>.</P>\n";
@@ -48,7 +48,7 @@ EOD;
     $query = <<<EOD
 SELECT
       S.sessionid,
-      GROUP_CONCAT(IF((POS.volunteer=1 OR POS.announcer=1),concat(P.pubsname,", "),"") SEPARATOR "") as allpubsnames
+      GROUP_CONCAT(IF((POS.volunteer=1 OR POS.introducer=1 OR POS.aidedecamp=1),concat(P.pubsname,", "),"") SEPARATOR "") as allpubsnames
     FROM
       Sessions S
     JOIN
