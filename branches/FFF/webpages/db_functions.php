@@ -536,7 +536,26 @@ function retrieve_participant_from_db($badgeid) {
 //
 function getCongoData($badgeid) {
     global $message_error,$message2,$congoinfo,$link;
-    $result=mysql_query("Select badgeid,firstname,lastname,badgename,phone,email,postaddress from CongoDump where badgeid='".$badgeid."'",$link);
+    $query= <<<EOD
+SELECT
+        badgeid,
+	firstname,
+	lastname,
+	badgename,
+	phone,
+	email,
+	postaddress1,
+	postaddress2,
+	postcity,
+	poststate,
+	postzip,
+	postcountry
+    FROM
+        CongoDump
+    WHERE
+        badgeid="$badgeid"
+EOD;
+    $result=mysql_query($query,$link);
     if (!$result) {
         $message_error=mysql_error($link)."\n<BR>Database Error.<BR>No further execution possible.";
         return(-1);

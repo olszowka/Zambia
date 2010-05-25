@@ -45,7 +45,9 @@ if ($conflict!=true) {
 		echo "     <OPTION value=0 ".(($selroomid==0)?"selected":"").">Select Room</OPTION>\n";
 		while (list($roomid,$roomname, $rmfunct)= mysql_fetch_array($Rresult, MYSQL_NUM)) {
 		    echo "     <OPTION value=\"".$roomid."\" ".(($selroomid==$roomid)?"selected":"");
-		    echo ">".htmlspecialchars($roomname)." (".htmlspecialchars($rmfunct).")</OPTION>\n";
+		    echo ">".htmlspecialchars($roomname);
+		    if (strlen($rmfunct)>0) echo " (".htmlspecialchars($rmfunct).")";
+		    echo "</OPTION>\n";
 		    }
 		echo "</SELECT></DIV>\n";
 		echo "<br><P>For any session where you are rescheduling, please read the Notes for Programming Committee. \n";
@@ -182,7 +184,8 @@ echo "      </TR>\n";
 for ($i=1;$i<=$numrows;$i++) {
     echo "   <TR>\n";
     echo "      <TD class=\"border0010\"><INPUT type=\"checkbox\" name=\"del$i\" value=\"1\"></TD>\n";
-    echo "<INPUT type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["scheduleid"]."\"></TD>\n";
+    echo "<INPUT type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["scheduleid"]."\">";
+    echo "<INPUT type=\"hidden\" name=\"rowsession$i\" value=\"{$bigarray[$i]["sessionid"]}\"></TD>\n";
     echo "      <TD class=\"vatop lrpad border0010\">".time_description($bigarray[$i]["starttime"])."</TD>\n";
     echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["duration"]."</TD>\n";
     echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["trackname"]."</TD>\n";
