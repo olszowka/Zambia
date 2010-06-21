@@ -108,7 +108,7 @@
     $query.=") ORDER BY R.display_order";
 
     ## Retrieve query
-    list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description);
+    list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description,0);
 
     ## Set up the header cells
     // Need to add the iCal link in here once it works
@@ -146,7 +146,7 @@ SELECT
 EOD;
 
     ## Retrieve query
-    list($presenters,$unneeded_array_b,$presenters_tmp_array)=queryreport($query,$link,$title,$description);
+    list($presenters,$unneeded_array_b,$presenters_tmp_array)=queryreport($query,$link,$title,$description,0);
 
     for ($i=1; $i<=$presenters; $i++) {
         $presenters_array[$presenters_tmp_array[$i]['sessionid']]=$presenters_tmp_array[$i]['presentpubsnames'].$presenters_tmp_array[$i]['volpubsnames'].$presenters_tmp_array[$i]['intpubsnames'].$presenters_tmp_array[$i]['aidpubsnames'];
@@ -155,11 +155,11 @@ EOD;
     /* These queries finds the first and last second that is actually scheduled
        so we don't waste grid-space. */
     $query="SELECT TIME_TO_SEC(starttime) as 'beginschedule' FROM Schedule ORDER BY starttime ASC LIMIT 0,1";
-    list($earliest,$unneeded_array_c,$grid_start_sec_array)=queryreport($query,$link,$title,$description);
+    list($earliest,$unneeded_array_c,$grid_start_sec_array)=queryreport($query,$link,$title,$description,0);
     $grid_start_sec=$grid_start_sec_array[1]['beginschedule'];
 
     $query="SELECT (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) as 'endschedule' FROM Schedule SCH JOIN Sessions S USING (sessionid) ORDER BY endschedule DESC LIMIT 0,1";
-    list($latest,$unneeded_array_d,$grid_end_sec_array)=queryreport($query,$link,$title,$description);
+    list($latest,$unneeded_array_d,$grid_end_sec_array)=queryreport($query,$link,$title,$description,0);
     $grid_end_sec=$grid_end_sec_array[1]['endschedule'];
 
     /* This complex set of queries fills in the header_cells and then

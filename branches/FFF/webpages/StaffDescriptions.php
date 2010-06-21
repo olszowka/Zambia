@@ -48,7 +48,7 @@ SELECT
 EOD;
 
     ## Retrieve query
-    list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description);
+    list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description,0);
 
     /* Printing body.  Uses the page-init then creates the Descriptions. */
     topofpagereport($title,$description,$additionalinfo);

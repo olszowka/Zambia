@@ -370,9 +370,12 @@ function rendercsvreport($rows,$header_array,$element_array) {
 }
 
 // Pull the informaiton requested by the queries
-function queryreport($query,$link,$title,$description) {
+function queryreport($query,$link,$title,$description,$reportid) {
   if (($result=mysql_query($query,$link))===false) {
     $message="<P>Error retrieving data from database.</P>\n<P>";
+    if ($reportid !=0) {
+      $message.="Edit Report <A HREF=EditReport.php?selreport=$reportid>$reportid</A></P>\n<P>";
+    }
     $message.=$query;
     RenderError($title,$message);
     exit ();

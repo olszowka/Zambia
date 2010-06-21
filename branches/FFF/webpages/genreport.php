@@ -5,13 +5,14 @@
 
     ## LOCALIZATIONS
     $reportid=$_GET["reportid"];
-    $_SESSION['return_to_page']="genindex.php";
+    $_SESSION['return_to_page']="genreport.php?reportid=$reportid";
     $title="General Report Generator";
     $description="<P>If you are seeing this, something failed trying to get report: $reportid.</P>\n";
     $additionalinfo="";
 
     ## No reportid, load the all-reports page
     if (!$reportid) {
+      $_SESSION['return_to_page']="genreport.php";
       $title="List of all reports";
       $description="<P>Here is a list of all the reports that are available to be generated.</P>\n";
       $query = <<<EOD
@@ -25,7 +26,7 @@ SELECT
 EOD;
 
       ## Retrieve query
-      list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description);
+      list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
       ## Page Rendering
       topofpagereport($title,$description,$additionalinfo);
@@ -46,13 +47,13 @@ SELECT
 EOD;
 
       ## Retrieve query
-      list($returned_reports,$unused_array,$report_array)=queryreport($query,$link,$title,$description);
+      list($returned_reports,$unused_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
       ## Fix reference problem
       $report_array[1]['reportquery']=str_replace('$ConStartDatim',$ConStartDatim,$report_array[1]['reportquery']);
 
       ## Retrieve secondary query
-      list($rows,$header_array,$class_array)=queryreport($report_array[1]['reportquery'],$link,$report_array[1]['reporttitle'],$report_array[1]['reportdescription']);
+      list($rows,$header_array,$class_array)=queryreport($report_array[1]['reportquery'],$link,$report_array[1]['reporttitle'],$report_array[1]['reportdescription'],$reportid);
       $report_array[1]['reportadditionalinfo'].="<P><A HREF=\"genreport.php?reportid=$reportid&csv=y\" target=_blank>csv</A> file</P>\n";
       if ($returned_reports > 1) {$report_array[1]['reportadditionalinfo'].="<P>Number of matches: $rows</P>\n";}
 

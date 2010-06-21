@@ -28,7 +28,7 @@ SELECT
 EOD;
 
     ## Retrieve query
-    list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description);
+    list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description,0);
 
     ## Set up the header cells
     $header_cells="<TR><TH>Time</TH>";
@@ -62,7 +62,7 @@ SELECT
 EOD;
 
     ## Retrieve query
-    list($presenters,$unneeded_array_b,$presenters_tmp_array)=queryreport($query,$link,$title,$description);
+    list($presenters,$unneeded_array_b,$presenters_tmp_array)=queryreport($query,$link,$title,$description,0);
 
     for ($i=1; $i<=$presenters; $i++) {
         $presenters_array[$presenters_tmp_array[$i]['sessionid']]=$presenters_tmp_array[$i]['allpubsnames'];

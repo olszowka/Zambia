@@ -25,7 +25,7 @@ SELECT
     gflowname
 EOD;
       ## Retrieve query
-      list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description);
+      list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
       ## Hand-add "All Reports" and "Grids" entry for now.
       $rows++;
@@ -57,7 +57,7 @@ SELECT
 EOD;
 
       ## Retrieve query
-      list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description);
+      list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
       ## Page Rendering
       topofpagereport($title,$description,$additionalinfo);
