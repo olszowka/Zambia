@@ -30,6 +30,9 @@ define("BASESESSIONDIR","/var/lib/php5");
 global $daymap;
 $daymap = array ('long' => array(1 => "Thursday", 2 => "Friday", 3 => "Saturday", 4 => "Sunday", 5 => "Monday"),
     'short' => array(1 => 'Thu', 2 => 'Fri', 3 => 'Sat', 4 => 'Sun', 5 => 'Mon'));
-define("stripfancy_from","ÀÁÂÃÄÅÆÇÈÉÊË®");
-define("stripfancy_to","AAAAAAECEEEE ");
+define("stripfancy_from",""); //db & html now is utf8, so supports many characters.  Define these two strings
+//                              if you need some characters not to be used.  "from" and "to" should be equal length
+//                              strings.  Any character matched in "from" will be replaced by corresponding character
+//                              in "to".
+define("stripfancy_to","");
 ?>

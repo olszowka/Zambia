@@ -40,7 +40,7 @@ function RenderError($title,$message) {
             // better to output some error message reliably than none at all
             echo "<html>";
             echo "<head>";
-            echo '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">';
+            echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
             echo "<title>Zambia -".$title."</title>";
             echo "</head>";
             echo "<body>";

@@ -19,7 +19,12 @@ function conv_min2hrsmin($mininput) {
 // file db_name.php to configure
 //
 function stripfancy($input) {
-    return(strtr($input,stripfancy_from,stripfancy_to));
+    if (stripfancy_from) {
+            return(strtr($input,stripfancy_from,stripfancy_to));
+            }
+        else {
+            return($input);
+            }
     }
 //
 // Function get_nameemail_from_post($name, $email)
