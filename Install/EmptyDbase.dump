@@ -28,7 +28,7 @@ CREATE TABLE `CongoDump` (
   `postaddress` varchar(100) default NULL,
   `regtype` varchar(40) default NULL,
   PRIMARY KEY  (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `CongoDump`
@@ -49,7 +49,7 @@ CREATE TABLE `Divisions` (
   `divisionname` varchar(30) default NULL,
   `display_order` int(11) NOT NULL default '0',
   PRIMARY KEY  (`divisionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Divisions`
@@ -71,7 +71,7 @@ CREATE TABLE `Features` (
   `featurename` varchar(50) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`featureid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Features`
@@ -93,7 +93,7 @@ CREATE TABLE `KidsCategories` (
   `kidscatname` varchar(50) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`kidscatid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `KidsCategories`
@@ -118,7 +118,7 @@ CREATE TABLE `ParticipantAvailability` (
   `numkidsfasttrack` int(11) default NULL,
   PRIMARY KEY  (`badgeid`),
   CONSTRAINT `ParticipantAvailability_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ParticipantAvailability`
@@ -136,7 +136,7 @@ CREATE TABLE `ParticipantAvailabilityDays` (
   PRIMARY KEY  (`badgeid`),
   Unique Key (badgeid, day),
   CONSTRAINT `ParticipantAvailabilityDays_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `ParticipantAvailabilityTimes`
@@ -150,7 +150,7 @@ CREATE TABLE `ParticipantAvailabilityTimes` (
   `endtime` time default NULL,
   PRIMARY KEY  (`badgeid`,`availabilitynum`),
   CONSTRAINT `ParticipantAvailabilityTimes_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ParticipantAvailabilityTimes`
@@ -173,7 +173,7 @@ CREATE TABLE `ParticipantHasRole` (
   KEY `roleid` (`roleid`),
   CONSTRAINT `ParticipantHasRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantHasRole_ibfk_2` FOREIGN KEY (`roleid`) REFERENCES `Roles` (`roleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ParticipantHasRole`
@@ -198,7 +198,7 @@ CREATE TABLE `ParticipantInterests` (
   `otherroles` text,
   PRIMARY KEY  (`badgeid`),
   CONSTRAINT `ParticipantInterests_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ParticipantInterests`
@@ -223,7 +223,7 @@ CREATE TABLE `ParticipantOnSession` (
   KEY `sessionid` (`sessionid`),
   CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ParticipantOnSession`
@@ -251,7 +251,7 @@ CREATE TABLE `ParticipantSessionInterest` (
   CONSTRAINT `ParticipantSessionInterest_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_3` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_4` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ParticipantSessionInterest`
@@ -274,7 +274,7 @@ CREATE TABLE `ParticipantSuggestions` (
   `suggestedguests` text,
   PRIMARY KEY  (`badgeid`),
   CONSTRAINT `ParticipantSuggestions_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ParticipantSuggestions`
@@ -298,7 +298,7 @@ CREATE TABLE `Participants` (
   `bio` text,
   `pubsname` varchar(50) default NULL,
   PRIMARY KEY  (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Participants`
@@ -317,7 +317,7 @@ DROP TABLE IF EXISTS `PatchLog`;
 CREATE TABLE `PatchLog` (
   `patchname` varchar(50) default NULL,
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `PatchLog`
@@ -343,7 +343,7 @@ CREATE TABLE `PermissionAtoms` (
   `notes` text,
   PRIMARY KEY  (`permatomid`),
   UNIQUE KEY `taginx` (`permatomtag`,`elementid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `PermissionAtoms`
@@ -379,7 +379,7 @@ CREATE TABLE `PermissionRoles` (
   `permrolename` varchar(100) default NULL,
   `notes` text,
   PRIMARY KEY  (`permroleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `PermissionRoles`
@@ -413,7 +413,7 @@ CREATE TABLE `Permissions` (
   CONSTRAINT `Permissions_ibfk_1` FOREIGN KEY (`permatomid`) REFERENCES `PermissionAtoms` (`permatomid`),
   CONSTRAINT `Permissions_ibfk_2` FOREIGN KEY (`phaseid`) REFERENCES `Phases` (`phaseid`),
   CONSTRAINT `Permissions_ibfk_3` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 4096 kB';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 4096 kB';
 
 --
 -- Dumping data for table `Permissions`
@@ -457,7 +457,7 @@ CREATE TABLE `Phases` (
   `current` tinyint(1) default '0',
   `notes` text,
   PRIMARY KEY  (`phaseid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Phases`
@@ -487,7 +487,7 @@ CREATE TABLE `PubCharacteristics` (
   `pubchartag` varchar(10) default NULL,
   `display_order` int(11) NOT NULL default '0',
   PRIMARY KEY  (`pubcharid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `PubCharacteristics`
@@ -509,7 +509,7 @@ CREATE TABLE `PubStatuses` (
   `pubstatusname` varchar(12) default NULL,
   `display_order` int(11) NOT NULL default '0',
   PRIMARY KEY  (`pubstatusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `PubStatuses`
@@ -530,7 +530,7 @@ CREATE TABLE `RegTypes` (
   `regtype` varchar(40) NOT NULL default '',
   `message` varchar(100) default NULL,
   PRIMARY KEY  (`regtype`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `RegTypes`
@@ -571,7 +571,7 @@ CREATE TABLE `Roles` (
   `rolename` varchar(50) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`roleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Roles`
@@ -609,7 +609,7 @@ CREATE TABLE `RoomHasSet` (
   KEY `roomsetid` (`roomsetid`),
   CONSTRAINT `RoomHasSet_ibfk_1` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`),
   CONSTRAINT `RoomHasSet_ibfk_2` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `RoomHasSet`
@@ -631,7 +631,7 @@ CREATE TABLE `RoomSets` (
   `roomsetname` varchar(50) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`roomsetid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `RoomSets`
@@ -665,7 +665,7 @@ CREATE TABLE `Rooms` (
   `opentime3` time default NULL,
   `closetime3` time default NULL,
   PRIMARY KEY  (`roomid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Rooms`
@@ -692,7 +692,7 @@ CREATE TABLE `Schedule` (
   KEY `roomid` (`roomid`),
   CONSTRAINT `Schedule_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `Schedule_ibfk_2` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Schedule`
@@ -713,7 +713,7 @@ CREATE TABLE `Services` (
   `servicename` varchar(50) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`serviceid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Services`
@@ -735,7 +735,7 @@ CREATE TABLE `SessionEditCodes` (
   `description` varchar(40) default NULL,
   `display_order` int(11) NOT NULL default '1',
   PRIMARY KEY  (`sessioneditcode`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `SessionEditCodes`
@@ -768,7 +768,7 @@ CREATE TABLE `SessionEditHistory` (
   CONSTRAINT `SessionEditHistory_ibfk_2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `SessionEditHistory_ibfk_3` FOREIGN KEY (`sessioneditcode`) REFERENCES `SessionEditCodes` (`sessioneditcode`),
   CONSTRAINT `SessionEditHistory_ibfk_4` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 8192 kB';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 8192 kB';
 
 --
 -- Dumping data for table `SessionEditHistory`
@@ -791,7 +791,7 @@ CREATE TABLE `SessionHasFeature` (
   KEY `featureid` (`featureid`),
   CONSTRAINT `SessionHasFeature_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `SessionHasFeature_ibfk_2` FOREIGN KEY (`featureid`) REFERENCES `Features` (`featureid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `SessionHasFeature`
@@ -814,7 +814,7 @@ CREATE TABLE `SessionHasPubChar` (
   KEY `Fkey2` (`pubcharid`),
   CONSTRAINT `Fkey1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `Fkey2` FOREIGN KEY (`pubcharid`) REFERENCES `PubCharacteristics` (`pubcharid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `SessionHasPubChar`
@@ -837,7 +837,7 @@ CREATE TABLE `SessionHasService` (
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `SessionHasService_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `SessionHasService_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `Services` (`serviceid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `SessionHasService`
@@ -858,7 +858,7 @@ CREATE TABLE `SessionStatuses` (
   `statusname` varchar(50) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`statusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `SessionStatuses`
@@ -913,7 +913,7 @@ CREATE TABLE `Sessions` (
   CONSTRAINT `Sessions_ibfk_5` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`),
   CONSTRAINT `Sessions_ibfk_6` FOREIGN KEY (`pubstatusid`) REFERENCES `PubStatuses` (`pubstatusid`),
   CONSTRAINT `Sessions_ibfk_7` FOREIGN KEY (`divisionid`) REFERENCES `Divisions` (`divisionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Sessions`
@@ -934,7 +934,7 @@ CREATE TABLE `Times` (
   `timetext` char(10) default NULL,
   `display_order` int(11) default NULL,
   PRIMARY KEY  (`timeindex`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Times`
@@ -957,7 +957,7 @@ CREATE TABLE `Tracks` (
   `display_order` int(11) default NULL,
   `selfselect` tinyint(1) default NULL,
   PRIMARY KEY  (`trackid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Tracks`
@@ -997,7 +997,7 @@ CREATE TABLE `Types` (
   `display_order` int(11) default NULL,
   `selfselect` tinyint(1) default NULL,
   PRIMARY KEY  (`typeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Types`
@@ -1038,7 +1038,7 @@ CREATE TABLE `UserHasPermissionRole` (
   KEY `FK_UserHasPermissionRole` (`permroleid`),
   CONSTRAINT `UserHasPermissionRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `UserHasPermissionRole_ibfk_2` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `UserHasPermissionRole`
