@@ -28,7 +28,9 @@ SELECT
             Rooms R
     WHERE
         R.roomid in
-        (SELECT DISTINCT roomid FROM Schedule);
+        (SELECT DISTINCT roomid FROM Schedule)
+    ORDER BY
+        R.display_order;
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
@@ -80,8 +82,10 @@ EOD;
     topofpage();
     echo "<P>Click on the room name to edit the room's schedule; the session id to edit the session's participants; or the title to edit the session.</P>\n";
     echo "<TABLE BORDER=1>";
-    echo $header_cells;
     for ($i=1; $i<=$rows; $i++) {
+        if (($i%10)==1) {
+            echo $header_cells;
+            }
         echo "<TR><TD>";
         echo $grid_array[$i]['starttime'];
         echo "</TD>";
@@ -89,7 +93,7 @@ EOD;
             echo "<TD>";
             $x=$grid_array[$i][$j*3-1]; //sessionid
             if ($x!="") {
-                    echo sprintf("(<A HREF=\"StaffAssignParticipants.php?selsess=%s\">%s</A>) ",$x,$x);
+                    echo sprintf("(<A HREF=\"StaffAssignParticipants.php?selsess=%s\" TITLE=\"Click to edit session participants.\">%s</A>) ",$x,$x);
                     $y = $grid_array[$i][$j*3-2]; //title
                     echo sprintf("<A HREF=\"EditSession.php?id=%s\">%s</A>",$x,$y);
                     $y = substr($grid_array[$i][$j*3],0,-3); // duration; drop ":00" representing seconds off the end

@@ -90,19 +90,17 @@ function populate_select_from_table($table_name, $default_value, $option_0_text,
     // if $default_flag is false, the option 0 will only appear when $default_value is 0.
     global $link;
     if ($default_value==0) {
-            echo "<OPTION value=0 selected>".$option_0_text."</OPTION>\n";
+            echo "<OPTION value=\"0\" selected>$option_0_text</OPTION>\n";
             }
         elseif ($default_flag) {
-            echo "<OPTION value=0>".$option_0_text."</OPTION>\n";
+            echo "<OPTION value=\"0\">$option_0_text</OPTION>\n";
             }            
-    $result=mysql_query("Select * from ".$table_name." order by display_order",$link);
-    while ($arow = mysql_fetch_array($result, MYSQL_NUM)) {
-        $option_value=$arow[0];
-        $option_name=$arow[1];
-        echo "<OPTION value=".$option_value." ";
+    $result=mysql_query("Select * from $table_name order by display_order",$link);
+    while (list($option_value,$option_name) = mysql_fetch_array($result, MYSQL_NUM)) {
+        echo "<OPTION value=\"$option_value\"";
         if ($option_value==$default_value)
-            echo "selected";
-        echo ">".$option_name."</OPTION>\n";
+            echo " selected";
+        echo ">$option_name</OPTION>\n";
         }
     }
 
@@ -119,17 +117,17 @@ function populate_select_from_query($query, $default_value, $option_0_text, $def
     // if $default_flag is false, the option 0 will only appear when $default_value is 0.
     global $link;
     if ($default_value==0) {
-            echo "<OPTION value=0 selected>".$option_0_text."</OPTION>\n";
+            echo "<OPTION value=\"0\" selected>$option_0_text</OPTION>\n";
             }
         elseif ($default_flag) {
-            echo "<OPTION value=0>".$option_0_text."</OPTION>\n";
+            echo "<OPTION value=\"0\">$option_0_text</OPTION>\n";
             }            
     $result=mysql_query($query,$link);
     while (list($option_value,$option_name)= mysql_fetch_array($result, MYSQL_NUM)) {
-        echo "<OPTION value=".$option_value." ";
+        echo "<OPTION value=\"$option_value\"";
         if ($option_value==$default_value)
-            echo "selected";
-        echo ">".$option_name."</OPTION>\n";
+            echo " selected";
+        echo ">$option_name</OPTION>\n";
         }
     }
 

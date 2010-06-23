@@ -186,6 +186,26 @@ TEXTAREA.readonly {
      color: #808080;
      }
 
+.emphasis {
+     font-weight: bold;
+     }
+
+.controlwithlabel {
+     display: inline-block;
+     margin: 1em;
+     vertical-align: top;
+     }
+
+.newlabel {
+     text-align: center;
+     display: block
+     }
+
+.control {
+     display: block;
+     text-align: center;
+     }
+
 #congo_section {
      display: table;
      padding: .5em;
@@ -491,6 +511,9 @@ LABEL.dense {
     border-left: solid black 2px
     }
 
+.padding2000 {
+     padding-top: 2px;
+     }
 
 #update_section {
     display: table;
