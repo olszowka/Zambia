@@ -3,27 +3,24 @@ DESCRIPTION='For each session, show the entire edit history.'
 PROGWANTS=1
 EVENTSWANTS=1
 QUERY="
-     SELECT concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
-                 S.sessionid,'</a>') as Sessionid,
-            T.trackname as 'Track', 
-            concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
-            SS.statusname as 'Current<BR>Status', 
-            timestamp as 'When', 
-            concat(name,' (', email_address,') ') as 'Who', 
-            SEC.description as 'What',
+SELECT
+        concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
+             S.sessionid,'</a>') as Sessionid,
+        T.trackname as 'Track', 
+        concat('<a href=EditSession.php?id=',S.sessionid,'>',S.title,'</a>') Title,
+        SS.statusname as 'Current<BR>Status', 
+        timestamp as 'When', 
+        concat(name,' (', email_address,') ') as 'Who', 
+        SEC.description as 'What',
 	    ifnull(SEH.editdescription,'&nbsp;') as 'Notes'
-       from Sessions S, 
-            Tracks T, 
-            SessionStatuses SS, 
-            SessionEditHistory SEH, 
-            SessionEditCodes SEC, 
-            SessionStatuses SS2 
-      where S.trackid=T.trackid 
-        and S.statusid = SS.statusid
-        and S.sessionid = SEH.sessionid 
-        and SEH.sessioneditcode=SEC.sessioneditcode 
-        and SS2.statusid=SEH.statusid 
-        and S.statusid >= 1 
-        and S.statusid <= 7 
-   order by S.sessionid, 
-            SEH.timestamp ;"
+    FROM
+        Sessions S JOIN 
+        Tracks T USING (trackid) JOIN
+        SessionEditHistory SEH USING (sessionid) JOIN
+        SessionEditCodes SEC USING (sessioneditcode) JOIN
+        SessionStatuses SS ON SS.statusid=SEH.statusid
+    WHERE
+        S.statusid >= 1 AND
+        S.statusid <= 7
+    ORDER BY
+        S.sessionid, SEH.timestamp;"
