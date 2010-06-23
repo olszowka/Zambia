@@ -10,7 +10,8 @@ QUERY="
             SS.statusname as 'Current<BR>Status', 
             timestamp as 'When', 
             concat(name,' (', email_address,') ') as 'Who', 
-            concat(SEC.description, ' ',SS2.statusname) as 'What' 
+            SEC.description as 'What',
+	    ifnull(SEH.editdescription,'&nbsp;') as 'Notes'
        from Sessions S, 
             Tracks T, 
             SessionStatuses SS, 
