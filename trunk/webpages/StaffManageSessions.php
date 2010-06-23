@@ -23,6 +23,8 @@ On this page you will find the online tools for managing Panels, Events, Films, 
    <tr><td><A HREF="ViewPrecis.php?showlinks=0">Precis View</A>&nbsp;
        (<A HREF="ViewPrecis.php?showlinks=1">Precis View With Links</A>)
    <tr><td>Since the purpose of the Precis is to get participants to signup to be on various panels or to help with various events, this report contains sessions where that status is "brainstorm" or "vetted".  Note that sessions marked "invited guest only" are not included in the precis (regardless of status).
+   <tr><td><A HREF="StaffSearchPreviousSessions.php">Import Sessions</A>
+   <tr><td>Search the databases of previous cons for sessions to import to the current con.
 </table>
 
 <p> Session Search (shows same data as Precis View except on all sessions):</p>
