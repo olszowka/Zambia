@@ -7,6 +7,7 @@
     $message_error="";
     $message_warn="";
     set_session_defaults();
+    $session["roomset"]=4; // "Unspecified"
     if (!(may_I('Participant')||may_I('Staff'))) { // must be brainstorm user
         $session["status"]=1; // brainstorm
         }

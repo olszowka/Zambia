@@ -103,7 +103,8 @@ var enable = true;
         <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
         <INPUT type="hidden" name="type" value="<?php echo $session["type"]; ?>">
         <INPUT type="hidden" name="divisionid" value="<?php echo $session["divisionid"]; ?>">
-        <INPUT type="hidden" name="roomset" value="<?php echo $session; ?>">
+        <INPUT type="hidden" name="roomset" value="<?php echo $session["roomset"]; ?>">
+        <INPUT type="hidden" name="languagestatusid" value="<?php echo $session["languagestatusid"]; ?>">
         <INPUT type="hidden" name="pubstatusid" value="<?php echo $session["pubstatusid"]; ?>">
         <INPUT type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT);?>">
         <INPUT type="hidden" name="duration" value="<?php echo htmlspecialchars($session["duration"],ENT_COMPAT);?>">
