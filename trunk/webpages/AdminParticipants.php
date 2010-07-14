@@ -40,11 +40,11 @@ echo "<P>&nbsp;\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Submit</BUTTON></DIV>\n";
 echo "</FORM>\n";
 echo "<HR>\n";
-if ((!isset($_POST["partid"])) or ($_POST["partid"]==0)) {
+if ((!isset($_POST["partid"])) or ($_POST["partid"]===0)) {
     staff_footer();
     exit();
     }
-$query ="SELECT interested, pubsname FROM Participants WHERE badgeid=$selpartid";
+$query ="SELECT interested, pubsname FROM Participants WHERE badgeid=\"".mysql_real_escape_string($selpartid)."\"";
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";
