@@ -3,7 +3,7 @@
     require_once ('CommonCode.php');
 //    require_once ('db_functions.php');
 //    require_once ('data_functions.php');
-//    require_once ('error_functions.php');
+    require_once ('error_functions.php');
 //    require_once ('php_functions.php');
     $title="Submit Password";
     // echo "Trying to connect to database.\n";
