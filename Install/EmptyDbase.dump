@@ -106,6 +106,22 @@ INSERT INTO `KidsCategories` VALUES (1,'Targeted',1),(2,'Welcome',2),(3,'Only w/
 UNLOCK TABLES;
 
 --
+-- Table structure for table `Participants`
+--
+SELECT "Just before DROP TABLE Participants";
+
+DROP TABLE IF EXISTS `Participants`;
+CREATE TABLE `Participants` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `password` varchar(32) default NULL,
+  `bestway` varchar(12) default NULL,
+  `interested` tinyint(1) default NULL,
+  `bio` text,
+  `pubsname` varchar(50) default NULL,
+  PRIMARY KEY  (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `ParticipantAvailability`
 --
 
@@ -129,6 +145,7 @@ LOCK TABLES `ParticipantAvailability` WRITE;
 /*!40000 ALTER TABLE `ParticipantAvailability` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `ParticipantAvailabilityDays`;
 CREATE TABLE `ParticipantAvailabilityDays` (
   `badgeid` varchar(15) NOT NULL,
   `day` smallint(6) NOT NULL,
@@ -285,34 +302,6 @@ LOCK TABLES `ParticipantSuggestions` WRITE;
 /*!40000 ALTER TABLE `ParticipantSuggestions` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `Participants`
---
-
-DROP TABLE IF EXISTS `Participants`;
-CREATE TABLE `Participants` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `password` varchar(32) default NULL,
-  `bestway` varchar(12) default NULL,
-  `interested` tinyint(1) default NULL,
-  `bio` text,
-  `pubsname` varchar(50) default NULL,
-  PRIMARY KEY  (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `Participants`
---
-
-LOCK TABLES `Participants` WRITE;
-/*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Participants`
---
-
 DROP TABLE IF EXISTS `PatchLog`;
 CREATE TABLE `PatchLog` (
   `patchname` varchar(50) default NULL,
@@ -333,6 +322,8 @@ UNLOCK TABLES;
 --
 -- Table structure for table `PermissionAtoms`
 --
+
+SELECT "Just before DROP TABLE PermissionAtoms";
 
 DROP TABLE IF EXISTS `PermissionAtoms`;
 CREATE TABLE `PermissionAtoms` (
