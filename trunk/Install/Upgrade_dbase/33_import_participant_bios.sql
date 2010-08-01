@@ -2,7 +2,7 @@
 CREATE TABLE PreviousParticipants (
     badgeid varchar(15) NOT NULL,
     bio text,
-    PRIMARY KEY (badgeid`)
+    PRIMARY KEY (badgeid)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO PatchLog (patchname) VALUES ('33_import_participant_bios.sql');
 
