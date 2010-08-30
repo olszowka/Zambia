@@ -25,7 +25,11 @@
     $participant_arr['badgename']=stripslashes($_POST['badgename']);
     $participant_arr['phone']=stripslashes($_POST['phone']);
     $participant_arr['email']=stripslashes($_POST['email']);
-    $participant_arr['postaddress']=stripslashes($_POST['postaddress']);
+    $participant_arr['postaddress1']=stripslashes($_POST['postaddress1']);
+    $participant_arr['postaddress2']=stripslashes($_POST['postaddress2']);
+    $participant_arr['postcity']=stripslashes($_POST['postcity']);
+    $participant_arr['poststate']=stripslashes($_POST['poststate']);
+    $participant_arr['postzip']=stripslashes($_POST['postzip']);
     $participant_arr['regtype']=stripslashes($_POST['regtype']);
     $participant_arr['bestway']=stripslashes($_POST['bestway']);
     $participant_arr['interested']=stripslashes($_POST['interested']);
@@ -78,14 +82,18 @@
             $query.= "'".mysql_real_escape_string($participant_arr['bio'])."',";
             $query.= "NULL,"; // biolockedby
             $query.= "'".mysql_real_escape_string($participant_arr['pubsname'])."');";
-            $query2 = "INSERT INTO CongoDump (badgeid, firstname, lastname, badgename, phone, email, postaddress, regtype) VALUES (";
+            $query2 = "INSERT INTO CongoDump (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, regtype) VALUES (";
             $query2.= "'".mysql_real_escape_string($badgeid)."',";
             $query2.= "'".mysql_real_escape_string($participant_arr['firstname'])."',";
             $query2.= "'".mysql_real_escape_string($participant_arr['lastname'])."',";
             $query2.= "'".mysql_real_escape_string($participant_arr['badgename'])."',";
             $query2.= "'".mysql_real_escape_string($participant_arr['phone'])."',";
             $query2.= "'".mysql_real_escape_string($participant_arr['email'])."',";
-            $query2.= "'".mysql_real_escape_string($participant_arr['postaddress'])."',";
+            $query2.= "'".mysql_real_escape_string($participant_arr['postaddress1'])."',";
+            $query2.= "'".mysql_real_escape_string($participant_arr['postaddress2'])."',";
+            $query2.= "'".mysql_real_escape_string($participant_arr['postcity'])."',";
+            $query2.= "'".mysql_real_escape_string($participant_arr['poststate'])."',";
+            $query2.= "'".mysql_real_escape_string($participant_arr['postzip'])."',";
             $query2.= "'".mysql_real_escape_string($participant_arr['regtype'])."');";
             $query3 = "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES (";
             $query3.= "'".mysql_real_escape_string($badgeid)."',";
@@ -177,7 +185,11 @@
         $participant_arr['badgename']="";
         $participant_arr['phone']="";
         $participant_arr['email']="";
-        $participant_arr['postaddress']="";
+        $participant_arr['postaddress1']="";
+        $participant_arr['postaddress2']="";
+        $participant_arr['postcity']="";
+        $participant_arr['poststate']="";
+        $participant_arr['postzip']="";
         $message_warn="Participant added successfully.";
         $message_error="";
         RenderEditCreateParticipant($action,$participant_arr,$message_warn,$message_error);

@@ -76,8 +76,20 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                     </SELECT>
                 </DIV>
             <DIV class="denseform">
-                <SPAN><LABEL for="postaddress">Postal Address: </LABEL><INPUT type="text" size=80 name="postaddress"
-                     value="<?php echo htmlspecialchars($participant_arr["postaddress"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="postaddress1">Postal Address line 1: </LABEL><INPUT type="text" size=80 name="postaddress1"
+                     value="<?php echo htmlspecialchars($participant_arr["postaddress1"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                </DIV>
+            <DIV class="denseform">
+                <SPAN><LABEL for="postaddress2">Postal Address line 2: </LABEL><INPUT type="text" size=80 name="postaddress2"
+                     value="<?php echo htmlspecialchars($participant_arr["postaddress2"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                </DIV>
+            <DIV class="denseform">
+                <SPAN><LABEL for="postcity">Postal City: </LABEL><INPUT type="text" size=20 name="postcity"
+                     value="<?php echo htmlspecialchars($participant_arr["postcity"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="poststate">State: </LABEL><INPUT type="text" size=2 name="poststate"
+                     value="<?php echo htmlspecialchars($participant_arr["poststate"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="postzip">Zip: </LABEL><INPUT type="text" size=10 name="postzip"
+                     value="<?php echo htmlspecialchars($participant_arr["postzip"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 </DIV>
             <DIV class="denseform">
                 <SPAN><LABEL for="bio" style="vertical-align: top">Biography: </LABEL>

@@ -28,7 +28,11 @@
             $participant_arr['badgename']="";
             $participant_arr['phone']="";
             $participant_arr['email']="";
-            $participant_arr['postaddress']="";
+            $participant_arr['postaddress1']="";
+	    $participant_arr['postaddress2']="";
+	    $participant_arr['postcity']="";
+	    $participant_arr['poststate']="";
+	    $participant_arr['postzip']="";
             }
         else { // get participant array from database
             $title="Edit Participant";
@@ -38,7 +42,7 @@
                 exit();
                 }
             $badgeid=mysql_real_escape_string($_GET['badgeid'],$link);
-            $query="SELECT firstname, lastname, badgename, phone, email, postaddress, regtype ";
+            $query="SELECT firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, regtype ";
             $query.=" FROM CongoDump where badgeid='$badgeid'";
             if (($result=mysql_query($query,$link))===false) {
                 $message_error="Error retrieving data from database<BR>\n";
@@ -58,7 +62,11 @@
             $participant_arr['badgename']=$result_array['badgename'];
             $participant_arr['phone']=$result_array['phone'];
             $participant_arr['email']=$result_array['email'];
-            $participant_arr['postaddress']=$result_array['postaddress'];
+            $participant_arr['postaddress1']=$result_array['postaddress1'];
+            $participant_arr['postaddress2']=$result_array['postaddress2'];
+            $participant_arr['postcity']=$result_array['postcity'];
+            $participant_arr['poststate']=$result_array['poststate'];
+            $participant_arr['postzip']=$result_array['postzip'];
             $participant_arr['regtype']=$result_array['regtype'];
             $query="SELECT P.bestway, P.interested, U.permorleid, P.bio, P.pubsname ";
             $query.=" FROM Participants P";
