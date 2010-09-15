@@ -125,19 +125,19 @@ function set_session_defaults() {
     $session["featdest"]="";
     $session["servdest"]="";
     $session["pubchardest"]="";
-    if (DURATION_IN_MINUTES=="TRUE") {
-            $session["duration"]=" 60";
+    if (DURATION_IN_MINUTES=="TRUE") { // Migrate to db_name.php
+            $session["duration"]=" 90";
             }
         else {
-            $session["duration"]=" 1:00";
+            $session["duration"]=" 1:30";
             } 
     $session["atten"]="";
-    $session["kids"]=2; // "Kids Welcome"
+    $session["kids"]=1; // "Kids Not Allowed"
     $session["signup"]=false; // leave checkbox blank initially
-    $session["roomset"]=0; // prompt with "SELECT"
+    $session["roomset"]=""; // prompt with "SELECT"
     $session["notesforpart"]="";
     $session["servnotes"]="";
-    $session["status"]=2; // default to "Edit Me"
+    $session["status"]=1; // Brainstorm=1 Edit Me=6 Vetted=2 (should probably switch on Phases)
     $session["notesforprog"]="";
     $session["invguest"]=false; // leave checkbox blank initially
     }

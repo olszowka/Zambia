@@ -23,7 +23,7 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
     //error_log("Zambia: ".print_r($session,TRUE));
   ?>
 <script language="javascript" type="text/javascript">
-var phase1required=new Array("name", "email", "track", "title", "progguiddesc");
+var phase1required=new Array("name", "email", "track", "roomset", "title", "progguiddesc");
 var currentPhase, unhappyColour, happyColor;
 
 function colourCodeElements(phaseName, unhappyC, happyC) {
@@ -101,11 +101,10 @@ var enable = true;
   
     <DIV class="formbox">
         <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
-        <INPUT type="hidden" name="type" value="<?php echo $session["type"]; ?>">
         <INPUT type="hidden" name="divisionid" value="<?php echo $session["divisionid"]; ?>">
-        <INPUT type="hidden" name="roomset" value="<?php echo $session; ?>">
         <INPUT type="hidden" name="pubstatusid" value="<?php echo $session["pubstatusid"]; ?>">
         <INPUT type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT);?>">
+        <INPUT type="hidden" name="languagestatusid" value="<?php echo $session["languagestatusid"]; ?>">
         <INPUT type="hidden" name="duration" value="<?php echo htmlspecialchars($session["duration"],ENT_COMPAT);?>">
         <INPUT type="hidden" name="atten" value="<?php echo htmlspecialchars($session["atten"],ENT_COMPAT);?>">
         <INPUT type="hidden" name="kids" value="<?php echo $session["kids"];?>">
@@ -130,10 +129,22 @@ var enable = true;
                             echo "value=\"$email\" "; ?>
                        ></TD></TR> 
             <TR>
-                <TD class="form1">&nbsp;<BR>
-                    <LABEL for="track" ID="track">Track:</LABEL><BR><SELECT name="track" onChange="return checkSubmitButton();">
-                    <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
-                    </SELECT></TD>
+                <TABLE>
+                   <TR>
+                       <TD class="form1">&nbsp;<BR>
+                           <LABEL for="track" ID="track">Track:</LABEL><BR><SELECT name="track" onChange="return checkSubmitButton();">
+                           <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
+                           </SELECT></TD>
+                       <TD class="form1">&nbsp;<BR>
+                           <LABEL for="type" ID="type">Type:</LABEL><BR><SELECT name="type" onChange="return checkSubmitButton();">
+                           <?php populate_select_from_table("Types", $session["type"], "Panel", FALSE); ?>
+                           </SELECT></TD>
+                       <TD class="form1">&nbsp;<BR>
+                           <LABEL for="roomset" ID="roomset">Room Set:</LABEL><BR><SELECT name="roomset" onChange="return checkSubmitButton();">
+                           <?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
+                           </SELECT></TD>
+                       </TR>
+		   </TABLE>
                 </TR>
             <TR>
                 <TD class="form1">&nbsp;<BR>
@@ -154,7 +165,7 @@ var enable = true;
             <TEXTAREA cols="70" rows="7" name="notesforprog" ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES); ?></TEXTAREA>
                 </TD>
              </TR>
-         </TABLE>
+         </TABLE><BR>
         <INPUT type=reset value="Reset">&nbsp;
         <INPUT type=submit ID="sButtonBottom" value="Save">
       </FORM>
