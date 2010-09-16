@@ -521,11 +521,7 @@ LABEL.dense {
 
 #bestway {
     display: table-row;
-    top: 1em;
-    left: 0;
-    width: 27em;
-    margin: 3em;
-    /* border: solid #eeeeee 2px; */
+    height: 30px;
     }
 
 #bwbuttons {
@@ -558,6 +554,7 @@ LABEL.dense {
 
 .divlistbox {
     display: table-row;
+    height: 45px;
     }
 
 .padbot0p5 {
@@ -566,6 +563,7 @@ LABEL.dense {
 
 .spanvalcb {
     display: table-cell;
+    padding-left: 5px;
     }
 
 .radiohead {
@@ -580,6 +578,7 @@ LABEL.dense {
 
 .password {
     display: table-row;
+    height: 35px;
     }
 
 .password .value {
