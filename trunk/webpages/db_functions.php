@@ -515,7 +515,7 @@ function isLoggedIn() {
 function retrieve_participant_from_db($badgeid) {
     global $participant;
     global $link,$message2;
-    $result=mysql_query("SELECT pubsname, password, bestway, interested, bio FROM Participants where badgeid='$badgeid'",$link);
+    $result=mysql_query("SELECT pubsname, password, bestway, interested, bio, share_email FROM Participants where badgeid='$badgeid'",$link);
     if (!$result) {
         $message2=mysql_error($link);
         return (-3);
@@ -531,6 +531,8 @@ function retrieve_participant_from_db($badgeid) {
 // Function getCongoData()
 // Reads CongoDump table
 // from db to populate global array $congoinfo.
+// also calls retrieve_participant_from_db() to populate
+// global array $participant
 //
 function getCongoData($badgeid) {
     global $message_error,$message2,$congoinfo,$link;

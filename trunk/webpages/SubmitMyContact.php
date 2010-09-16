@@ -3,6 +3,9 @@
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     $interested = $_POST['interested'];
+    $share_email = $_POST['share_email'];
+    //print_r($share_email);
+    //echo "<BR>";
     $bestway = $_POST['bestway'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];
@@ -77,6 +80,13 @@
         $query=$query."pubsname=\"$x\", ";
         }
     $query.="bestway=\"$bestway\", ";
+    $query.="share_email=";
+    if ($share_email==='1' || $share_email==='0') {
+            $query.="$share_email, ";
+            }
+        else {
+            $query.="null, ";
+            }
     $query.="interested=\"$interested\" ";
     if (may_I('EditBio')) {
         $x=mysql_real_escape_string($bio,$link);
