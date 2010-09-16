@@ -99,6 +99,27 @@ programming<BR>for <?php echo CON_NAME; ?>&nbsp;</span>
             <span class="value"><INPUT type="password" size="10" name="cpassword"></span>
             </div>
         </div>
+<?php if (!(may_I('EditBio'))) { // no permission to edit bio
+          echo "<P class=\"errmsg\">At this time, you may not edit either your biography or your name for publication.  They have already gone to print.</P>\n";
+          }
+echo "<BR>\n";
+echo "Your name as you wish to have it published&nbsp;&nbsp;";
+echo "<INPUT type=\"text\" size=\"20\" name=\"pubsname\" ";
+echo "value=\"".htmlspecialchars($participant["pubsname"],ENT_COMPAT)."\"";
+if (!(may_I('EditBio'))) { // no permission to edit bio
+    echo " readonly";
+    }
+echo "><BR><BR>\n";
+echo "<INPUT type=\"hidden\" name=\"pubsnameold\" value=\"".htmlspecialchars($pubsnameold,ENT_COMPAT)."\">";
+$bio=MAX_BIO_LEN;
+echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your biography ($bio characters or fewer):</LABEL><BR>\n";
+echo "Note: Your biography will appear immediately following your name in the program.<BR>\n";
+echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
+if (!(may_I('EditBio'))) { // no permission to edit bio
+    echo " readonly";
+    }
+echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>"; ?>
+        <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
     <div id="congo_section" class="border2222">
         <div class="congo_table">
             <div class="congo_data">
@@ -151,27 +172,5 @@ programming<BR>for <?php echo CON_NAME; ?>&nbsp;</span>
             with your current information. This data is downloaded periodically from the
             registration database, and should be correct within a week.
         </div>
-<HR>
-<?php if (!(may_I('EditBio'))) { // no permission to edit bio
-          echo "<P class=\"errmsg\">At this time, you may not edit either your biography or your name for publication.  They have already gone to print.</P>\n";
-          }
-echo "<BR>\n";
-echo "Your name as you wish to have it published&nbsp;&nbsp;";
-echo "<INPUT type=\"text\" size=\"20\" name=\"pubsname\" ";
-echo "value=\"".htmlspecialchars($participant["pubsname"],ENT_COMPAT)."\"";
-if (!(may_I('EditBio'))) { // no permission to edit bio
-    echo " readonly";
-    }
-echo "><BR><BR>\n";
-$bio=MAX_BIO_LEN;
-echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your biography ($bio characters or fewer):</LABEL><BR>\n";
-echo "Note: Your biography will appear immediately following your name in the program.<BR>\n";
-echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
-if (!(may_I('EditBio'))) { // no permission to edit bio
-    echo " readonly";
-    }
-echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>"; ?>
-        <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
-        <INPUT type="hidden" name="pubsnameold" value="<?php echo htmlspecialchars($pubsnameold,ENT_COMPAT); ?>">
     </form>
 <?php participant_footer() ?>
