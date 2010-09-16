@@ -62,6 +62,7 @@ to your participation again next year.</P>
       <li> Check your contact information. </li>
       <li> Indicate whether you will be participating in <?php echo 
 CON_NAME; ?>. </li>
+      <li> Opt out of sharing your email address with other program participants.</li>
       <li> Edit your name as you want to appear in our publications.</li>
       <li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
     </ul>
