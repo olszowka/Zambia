@@ -23,7 +23,7 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
     echo "<FORM name=\"sessionform\" method=POST action=\"PartPanelInterests_POST2.php\">\n";
     echo "<DIV class=\"submit\" id=\"submit\"><BUTTON class=\"SubmitButton\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
     echo "<P>Please use the following scale when ranking your interest in the panels you have chosen:  </P>\n";
-    echo "<P>1 - Oooh! Oh! Pick Me!, 2-3 - I'd like to if I can, 4-5 - Meh, I can take it or leave it. </P>\n";
+    echo "<P>1 - Oooh! Oh! Pick Me!, 2-3 - I'd like to if I can, 4-5 - I am qualified but this is not one of my primary interests.</P>\n";
     echo "<P>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</P>\n";
     echo "<H3>List of Sessions in Which I'm Interested in Participating</H3>\n";
     echo "<TABLE>\n";
@@ -44,7 +44,7 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
         echo "        <TD colspan=2 class=\"border0000 usrinp\">Remove this panel from my list:<INPUT type=\"checkbox\" value=1 name=\"delete$j\"></TD>\n";
         echo "        </TR>\n";
         echo "    <TR>\n";
-        echo "        <TD  class=\"border0000 usrinp\" colspan=4>My notes regarding this panel for Programming and other panel participants: ";
+        echo "        <TD  class=\"border0000 usrinp\" colspan=4>Use this space to convince us why you would be fabulous on this panel. ";
         echo "            <TEXTAREA height=5em cols=80 name=\"comments$j\" id=\"intCmnt\">". htmlspecialchars( $session_interests[$i]['comments'],ENT_COMPAT)."</TEXTAREA></TD>\n";
         echo "        </TR>\n";
         echo "    <TR>\n";
