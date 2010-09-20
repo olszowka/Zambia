@@ -167,10 +167,10 @@ echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>"; ?>
                 </div>
 <?php } ?>
             </div>
-        <P class="congo-note">Please confirm your contact information.  If it is 
-            not correct, contact <A href="mailto:<?php echo REG_EMAIL; ?>">registration</a>
-            with your current information. This data is downloaded periodically from the
-            registration database, and should be correct within a week.
+        <P class="congo-note">Please confirm your contact information.  If it is not correct, please log into Arisia's
+            <A HREF="http://arisia.stonekeep.com" target="_blank">on-line registration system</A> and correct it there.
+            Please note that the password there is <span style="font-weight: bold">not the same</span> as the one you use
+            in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</P>
         </div>
     </form>
 <?php participant_footer() ?>
