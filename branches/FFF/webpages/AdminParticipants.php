@@ -18,7 +18,7 @@ if (isset($_POST["partid"])) {
     else {
         $selpartid=0;
         }
-$query="SELECT P.badgeid, CD.lastname, CD.firstname, CD.badgename FROM Participants P, CongoDump CD ";
+$query="SELECT P.badgeid, CD.lastname, CD.firstname, CD.badgename, P.pubsname FROM Participants P, CongoDump CD ";
 $query.="where P.badgeid = CD.badgeid ORDER BY CD.lastname";
 if (!$Sresult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
@@ -30,10 +30,10 @@ echo "<FORM name=\"selpartform\" method=POST action=\"AdminParticipants.php\">\n
 echo "<DIV><LABEL for=\"partid\">Select Participant</LABEL>\n";
 echo "<SELECT name=\"partid\">\n";
 echo "     <OPTION value=0 ".(($selpartid==0)?"selected":"").">Select Participant</OPTION>\n";
-while (list($partid,$lastname,$firstname,$badgename)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
+while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
     echo "     <OPTION value=\"".$partid."\" ".(($selpartid==$partid)?"selected":"");
     echo ">".htmlspecialchars($lastname).", ".htmlspecialchars($firstname);
-    echo " (".htmlspecialchars($badgename).") - ".$partid."</OPTION>\n";
+    echo " (".htmlspecialchars($badgename)."/".htmlspecialchars($pubsname).") - ".$partid."</OPTION>\n";
     }
 echo "</SELECT></DIV>\n";
 echo "<P>&nbsp;\n";
@@ -79,6 +79,8 @@ list($interested, $pubsname)= mysql_fetch_array($result, MYSQL_NUM);
       </div>
 <BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
 </FORM>
+<BR><HR>
+<DIV class="sectionheader"><A HREF=StaffEditCreateParticipant.php?action=edit&badgeid=<?php echo $selpartid;?>>Further Edit Participant's info</A></DIV>
 <?php
 staff_footer();
 ?>

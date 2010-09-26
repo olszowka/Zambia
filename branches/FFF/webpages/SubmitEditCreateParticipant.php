@@ -35,6 +35,8 @@
     $participant_arr['interested']=stripslashes($_POST['interested']);
     $participant_arr['permroleid']=stripslashes($_POST['permroleid']);
     $participant_arr['bio']=stripslashes($_POST['bio']);
+    $participant_arr['altcontact']=stripslashes($_POST['altcontact']);
+    $participant_arr['prognotes']=stripslashes($_POST['prognotes']);
     $participant_arr['pubsname']=stripslashes($_POST['pubsname']);
     $participant_arr['password']=md5('changeme');
     $error_status=false;
@@ -74,13 +76,15 @@
             //error_log("Zambia: SubmitEditCreateParticipant.php: maxbadgeid: $maxbadgeid");
             sscanf($maxbadgeid,"%d",$x);
             $badgeid=sprintf("%d",$x+1); // convert to num; add 1; convert back to string
-            $query = "INSERT INTO Participants (badgeid, password, bestway, interested, bio, biolockedby, pubsname) VALUES (";
+            $query = "INSERT INTO Participants (badgeid, password, bestway, interested, bio, biolockedby, altcontact, prognotes, pubsname) VALUES (";
             $query.= "'".mysql_real_escape_string($badgeid)."',";
             $query.= "'".mysql_real_escape_string($participant_arr['password'])."',";
             $query.= "'".mysql_real_escape_string($participant_arr['bestway'])."',";
             $query.= (($participant_arr['interested']=='')?"NULL":$participant_arr['interested']).",";
             $query.= "'".mysql_real_escape_string($participant_arr['bio'])."',";
             $query.= "NULL,"; // biolockedby
+            $query.= "'".mysql_real_escape_string($participant_arr['altcontact'])."',";
+            $query.= "'".mysql_real_escape_string($participant_arr['prognotes'])."',";
             $query.= "'".mysql_real_escape_string($participant_arr['pubsname'])."');";
             $query2 = "INSERT INTO CongoDump (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, regtype) VALUES (";
             $query2.= "'".mysql_real_escape_string($badgeid)."',";
@@ -175,9 +179,13 @@
         // insert was successful.  Prepare to do another one.
         $title="Add Participant";
         $participant_arr['password']="changeme";
+        $participant_arr['badgeid']="auto-assigned";
         $participant_arr['bestway']=""; //null means hasn't logged in yet.
         $participant_arr['interested']=""; //null means hasn't logged in yet.
+        $participant_arr['permroleid']=""; //null means hasn't logged in yet.
         $participant_arr['bio']="";
+        $participant_arr['altcontact']="";
+        $participant_arr['prognotes']="";
         $participant_arr['bioeditstatusid']=1; //not edited -- whatever is first step
         $participant_arr['pubsname']="";
         $participant_arr['firstname']="";

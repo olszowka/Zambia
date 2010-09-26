@@ -15,7 +15,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
         else {
             exit();
             }
-    staff_header($title);
+    //    staff_header($title);
     // still inside function RenderEditCreateParticipant
     if (strlen($message1)>0) {
       echo "<P id=\"message1\"><font color=red>".$message1."</font></P>\n";
@@ -43,8 +43,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                 <SPAN><LABEL for="lastname">Last Name: </LABEL><INPUT type="text" size=13 name="lastname" id="lastname"
                      value="<?php echo htmlspecialchars($participant_arr["lastname"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 <SPAN>&nbsp;<BUTTON type=button onclick="fpopdefaults()" value="noop">Populate Defaults</BUTTON>&nbsp;</SPAN>
-                <SPAN><LABEL for="badgeid">Badge ID: </LABEL><INPUT type="text" size=4 name="badgeid" readonly
-                     value="<?php echo htmlspecialchars($participant_arr["badgeid"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="badgeid">Badge ID: <?php echo $participant_arr["badgeid"];?></LABEL>&nbsp;&nbsp;</SPAN>
                 </DIV>
             <DIV class="denseform">
                 <SPAN><LABEL for="pubsname">Name for Publications: </LABEL><INPUT type="text" size=20 name="pubsname" id="pubsname"
@@ -94,6 +93,16 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
             <DIV class="denseform">
                 <SPAN><LABEL for="bio" style="vertical-align: top">Biography: </LABEL>
                     <TEXTAREA class="textlabelarea" cols=70 name="bio" ><?php echo htmlspecialchars($participant_arr["bio"],ENT_NOQUOTES);?></TEXTAREA>
+                    </SPAN>
+                </DIV>
+            <DIV class="denseform">
+                <SPAN><LABEL for="altcontact" style="vertical-align: top">Alternative ways to contact: </LABEL>
+                    <TEXTAREA class="textlabelarea" cols=70 name="altcontact" ><?php echo htmlspecialchars($participant_arr["altcontact"],ENT_NOQUOTES);?></TEXTAREA>
+                    </SPAN>
+                </DIV>
+            <DIV class="denseform">
+                <SPAN><LABEL for="prognotes" style="vertical-align: top">Additional Progranning notes: </LABEL>
+                    <TEXTAREA class="textlabelarea" cols=70 name="prognotes" ><?php echo htmlspecialchars($participant_arr["prognotes"],ENT_NOQUOTES);?></TEXTAREA>
                     </SPAN>
                 </DIV>
             <DIV class="denseform">
