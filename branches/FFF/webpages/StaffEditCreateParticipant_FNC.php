@@ -29,6 +29,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
     <DIV class="formbox">
         <FORM name="partform" class="bb"  method=POST action="SubmitEditCreateParticipant.php">
             <INPUT type="hidden" name="action" value="<?php echo htmlspecialchars($action,ENT_COMPAT);?>">
+            <INPUT type="hidden" name="selbadgeid" value="<?php echo $participant_arr["badgeid"]; ?>">
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
@@ -64,7 +65,12 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                     <OPTION value="" <?php if ($participant_arr["bestway"]=="") echo "selected";?> >Did not answer</OPTION>
                     <OPTION value="Email" <?php if ($participant_arr["bestway"]=="Email") echo "selected";?> >Email</OPTION>
                     <OPTION value="Phone" <?php if ($participant_arr["bestway"]=="Phone") echo "selected";?> >Phone</OPTION>
+                    <OPTION value="SMS" <?php if ($participant_arr["bestway"]=="SMS") echo "selected";?> >SMS</OPTION>
                     <OPTION value="Postal mail" <?php if ($participant_arr["bestway"]=="Postal mail") echo "selected";?> >Postal mail</OPTION>
+                    <OPTION value="Twitter DM" <?php if ($participant_arr["bestway"]=="Twitter DM") echo "selected";?> >Twitter DM</OPTION>
+                    <OPTION value="Fet Life" <?php if ($participant_arr["bestway"]=="Fet Life") echo "selected";?> >Fet Life</OPTION>
+                    <OPTION value="Facebook" <?php if ($participant_arr["bestway"]=="Facebook") echo "selected";?> >Facebook</OPTION>
+                    <OPTION value="Instant Messenger" <?php if ($participant_arr["bestway"]=="Instant Messenger") echo "selected";?> >Instant Messenger</OPTION>
                     </SELECT>
                 <SPAN><LABEL for="permroleid">Level of participation: </LABEL><SELECT name="permroleid">
                     <OPTION value="" <?php if ($participant_arr["permroleid"]=="") echo "selected";?> >Not determined</OPTION>
@@ -101,7 +107,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                     </SPAN>
                 </DIV>
             <DIV class="denseform">
-                <SPAN><LABEL for="prognotes" style="vertical-align: top">Additional Progranning notes: </LABEL>
+                <SPAN><LABEL for="prognotes" style="vertical-align: top">Additional Programming notes: </LABEL>
                     <TEXTAREA class="textlabelarea" cols=70 name="prognotes" ><?php echo htmlspecialchars($participant_arr["prognotes"],ENT_NOQUOTES);?></TEXTAREA>
                     </SPAN>
                 </DIV>
