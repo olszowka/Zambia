@@ -6,17 +6,6 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateParticipant ($action, $participant_arr, $message1, $message2) {
-    if ($action=="create") {
-            $title="Add New Participant";
-            }
-        elseif ($action=="edit") {
-            $title="Edit Participant";
-            }
-        else {
-            exit();
-            }
-    //    staff_header($title);
-    // still inside function RenderEditCreateParticipant
     if (strlen($message1)>0) {
       echo "<P id=\"message1\"><font color=red>".$message1."</font></P>\n";
     }
@@ -72,7 +61,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                     <OPTION value="Facebook" <?php if ($participant_arr["bestway"]=="Facebook") echo "selected";?> >Facebook</OPTION>
                     <OPTION value="Instant Messenger" <?php if ($participant_arr["bestway"]=="Instant Messenger") echo "selected";?> >Instant Messenger</OPTION>
                     </SELECT>
-                <SPAN><LABEL for="permroleid">Level of participation: </LABEL><SELECT name="permroleid">
+		<SPAN><LABEL for="permroleid">Level of participation 3=Presenter 5=Volunteer 4=Brainstorm 2=Staff: <?php echo $participant_arr["permroleid_list"] ; ?> : </LABEL><SELECT name="permroleid">
                     <OPTION value="" <?php if ($participant_arr["permroleid"]=="") echo "selected";?> >Not determined</OPTION>
                     <OPTION value="3" <?php if ($participant_arr["permroleid"]=="3") echo "selected";?> >Presenter</OPTION>
                     <OPTION value="5" <?php if ($participant_arr["permroleid"]=="5") echo "selected";?> >Volunteer</OPTION>
@@ -127,4 +116,4 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                 </DIV>
       </FORM>
     </DIV>
-<?php staff_footer(); } ?>
+<?php } ?>

@@ -392,4 +392,68 @@ function queryreport($query,$link,$title,$description,$reportid) {
   return array ($rows,$header_array,$element_array);
 }
 
+// Show a list of participants to select from, generated from all participants.
+function select_participant ($selpartid, $returnto) {
+  global $link;
+  $query="SELECT P.badgeid, CD.lastname, CD.firstname, CD.badgename, P.pubsname FROM Participants P, CongoDump CD ";
+  $query.="where P.badgeid = CD.badgeid ORDER BY CD.lastname";
+  if (!$Sresult=mysql_query($query,$link)) {
+    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
+    echo "<P class\"errmsg\">".$message."\n";
+    staff_footer();
+    exit();
+  }
+  echo "<FORM name=\"selpartform\" method=POST action=\"".$returnto."\">\n";
+  echo "<DIV><LABEL for=\"partid\">Select Participant</LABEL>\n";
+  echo "<SELECT name=\"partid\">\n";
+  echo "     <OPTION value=0 ".(($selpartid==0)?"selected":"").">Select Participant</OPTION>\n";
+  while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
+    echo "     <OPTION value=\"".$partid."\" ".(($selpartid==$partid)?"selected":"");
+    echo ">".htmlspecialchars($lastname).", ".htmlspecialchars($firstname);
+    echo " (".htmlspecialchars($badgename)."/".htmlspecialchars($pubsname).") - ".$partid."</OPTION>\n";
+  }
+  echo "</SELECT></DIV>\n";
+  echo "<P>&nbsp;\n";
+  echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Submit</BUTTON></DIV>\n";
+  echo "</FORM>\n";
+}
+
+//Used to add a note on a participant as part of flow, and allowing for participant change.
+function SubmitNoteOnParticipant ($note, $partid) {
+  global $link;
+  $query = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
+  $query.=$partid."','";
+  $query.=$_SESSION['badgeid']."','";
+  $query.=mysql_real_escape_string($note)."')";
+  if (!mysql_query($query,$link)) {
+    $message=$query."<BR>Error updating database with note.  Database not updated.";
+    echo "<P class=\"errmsg\">".$message."\n";
+    return;
+  }
+  $message="Database updated successfully with note.<BR>";
+  echo "<P class=\"regmsg\">".$message."\n";
+}
+
+//Pull the notes for a participant
+//"SELECT PR.pubsname, PB.pubsname, N.timestamp, N.note FROM NotesOnParticipants N, Participants PR, Participants PB WHERE N.rbadgeid=PR.badgeid AND N.badgeid=PB.badgeid;
+function ShowNotesOnParticipant ($partid) {
+  global $link;
+  $query = <<<EOD
+SELECT
+    N.timestamp as'When',
+    P.pubsname as 'Who',
+    N.note as 'What Was Done'
+  FROM
+      NotesOnParticipants N,
+      Participants P
+  WHERE
+    N.rbadgeid=P.badgeid AND
+    N.badgeid=$partid
+  ORDER BY
+    timestamp DESC
+EOD;
+  list($rows,$header_array,$notes_array)=queryreport($query,$link,"Notes on Participant","","");
+  renderhtmlreport($rows,$header_array,$notes_array);
+}
+
 ?>

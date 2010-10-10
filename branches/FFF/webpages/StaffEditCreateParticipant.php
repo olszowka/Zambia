@@ -46,45 +46,55 @@
         else { // get participant array from database
             $title="Edit Participant";
             staff_header($title);
-            if (isset($_POST["badgeid"])) {
-                    $selbadgeid=$_POST["badgeid"];
+            if (isset($_POST["partid"])) {
+                    $selpartid=$_POST["partid"];
                     }
-                elseif (isset($_GET["badgeid"])) {
-                    $selbadgeid=$_GET["badgeid"];
+                elseif (isset($_GET["partid"])) {
+                    $selpartid=$_GET["partid"];
                     }
                 else {
-                    $selbadgeid=0;
+                    $selpartid=0;
                     }
-            $query="SELECT P.badgeid, CD.lastname, CD.firstname, CD.badgename, P.pubsname FROM Participants P, CongoDump CD ";
-            $query.="where P.badgeid = CD.badgeid ORDER BY CD.lastname";
-            if (!$Sresult=mysql_query($query,$link)) {
-                $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-                echo "<P class\"errmsg\">".$message."\n";
+
+	    //Choose the individual from the database
+            select_participant($selpartid, "StaffEditCreateParticipant.php?action=edit");
+
+	    //Stop page here if and individual has not yet been selected
+            if ($selpartid==0) {
                 staff_footer();
                 exit();
                 }
-            echo "<FORM name=\"selpartform\" method=POST action=\"StaffEditCreateParticipant.php\">\n";
-	    echo "<INPUT type=\"hidden\" name=\"action\" value=\"edit\">\n";
-            echo "<DIV><LABEL for=\"badgeid\">Select Participant</LABEL>\n";
-            echo "<SELECT name=\"badgeid\">\n";
-            echo "     <OPTION value=0 ".(($selbadgeid==0)?"selected":"").">Select Participant</OPTION>\n";
-            while (list($badgeid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
-                echo "     <OPTION value=\"".$badgeid."\" ".(($selbadgeid==$badgeid)?"selected":"");
-                echo ">".htmlspecialchars($lastname).", ".htmlspecialchars($firstname);
-                echo " (".htmlspecialchars($badgename)."/".htmlspecialchars($pubsname).") - ".$badgeid."</OPTION>\n";
-                }
-            echo "</SELECT></DIV>\n";
-            echo "<P>&nbsp;\n";
-            echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Submit</BUTTON></DIV>\n";
-            echo "</FORM>\n";
-            if ($selbadgeid==0) {
-                staff_footer();
-                exit();
-                }
-	    $participant_arr['badgeid']=$selbadgeid;
-            $badgeid=mysql_real_escape_string($selbadgeid,$link);
-            $query="SELECT firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, regtype ";
-            $query.=" FROM CongoDump where badgeid='$badgeid'";
+
+	    //Get Participant information for updating
+	    $participant_arr['badgeid']=$selpartid;
+            $partid=mysql_real_escape_string($selpartid,$link);
+            $query= <<<EOD
+SELECT
+    CD.firstname,
+    CD.lastname,
+    CD.badgename,
+    CD.phone,
+    CD.email,
+    CD.postaddress1,
+    CD.postaddress2,
+    CD.postcity,
+    CD.poststate,
+    CD.postzip,
+    CD.regtype,
+    P.bestway,
+    P.interested,
+    P.bio,
+    P.pubsname,
+    P.altcontact,
+    P.prognotes,
+    group_concat(U.permroleid) as 'permroleid_list'
+  FROM 
+      CongoDump CD
+    JOIN Participants P USING (badgeid)
+    JOIN UserHasPermissionRole U USING (badgeid)
+  WHERE
+    badgeid='$selpartid'
+EOD;
             if (($result=mysql_query($query,$link))===false) {
                 $message_error="Error retrieving data from database<BR>\n";
                 $message_error.=$query;
@@ -97,43 +107,22 @@
                 RenderError($title,$message_error);
                 exit();
                 }
-            $result_array=mysql_fetch_array($result,MYSQL_ASSOC);
-            $participant_arr['firstname']=$result_array['firstname'];
-            $participant_arr['lastname']=$result_array['lastname'];
-            $participant_arr['badgename']=$result_array['badgename'];
-            $participant_arr['phone']=$result_array['phone'];
-            $participant_arr['email']=$result_array['email'];
-            $participant_arr['postaddress1']=$result_array['postaddress1'];
-            $participant_arr['postaddress2']=$result_array['postaddress2'];
-            $participant_arr['postcity']=$result_array['postcity'];
-            $participant_arr['poststate']=$result_array['poststate'];
-            $participant_arr['postzip']=$result_array['postzip'];
-            $participant_arr['regtype']=$result_array['regtype'];
-            $query="SELECT P.bestway, P.interested, U.permroleid, P.bio, P.pubsname, P.altcontact, P.prognotes ";
-            $query.=" FROM Participants P";
-            $query.=" JOIN UserHasPermissionRole U USING (badgeid)";
-            $query.=" where badgeid='$badgeid'";
-            if (($result=mysql_query($query,$link))===false) {
-                $message_error="Error retrieving data from database<BR>\n";
-                $message_error.=$query;
-                RenderError($title,$message_error);
-                exit();
-                }
-            if (mysql_num_rows($result)!=1) {
-                $message_error="Database query did not return expected number of rows (1).<BR>\n";
-                $message_error.=$query;
-                RenderError($title,$message_error);
-                exit();
-                }
-            $result_array=mysql_fetch_array($result,MYSQL_ASSOC);
-            $participant_arr['bestway']=$result_array['bestway'];
-            $participant_arr['interested']=$result_array['interested'];
-            $participant_arr['permroleid']=$result_array['permroleid'];
-            $participant_arr['bio']=$result_array['bio'];
-            $participant_arr['pubsname']=$result_array['pubsname'];
-	    $participant_arr['altcontact']=$result_array['altcontact'];
-	    $participant_arr['prognotes']=$result_array['prognotes'];
+            $participant_arr=mysql_fetch_array($result,MYSQL_ASSOC);
+	    $permroleid_arr=explode(",", $participant_arr['permroleid_list']);
             }
     RenderEditCreateParticipant($action,$participant_arr,$message_warn,$message_error);
-    exit();
+    
+?>
+<FORM name="partnoteform" method=POST action="NoteOnParticipant.php">
+<INPUT type="hidden" name="partid" value="<?php echo $selpartid; ?>">
+<DIV class="titledtextarea">
+  <LABEL for="note">Note:</LABEL>
+  <TEXTAREA name="note" rows=6 cols=72></TEXTAREA>
+</DIV>
+<BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
+</FORM>
+
+<?php
+// Show previous notes added, for references, and end page
+ShowNotesOnParticipant($selpartid);
 ?>
