@@ -419,7 +419,7 @@ function select_participant ($selpartid, $returnto) {
 }
 
 //Used to add a note on a participant as part of flow, and allowing for participant change.
-function SubmitNoteOnParticipant ($note, $partid) {
+function submit_participant_note ($note, $partid) {
   global $link;
   $query = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
   $query.=$partid."','";
@@ -436,7 +436,7 @@ function SubmitNoteOnParticipant ($note, $partid) {
 
 //Pull the notes for a participant
 //"SELECT PR.pubsname, PB.pubsname, N.timestamp, N.note FROM NotesOnParticipants N, Participants PR, Participants PB WHERE N.rbadgeid=PR.badgeid AND N.badgeid=PB.badgeid;
-function ShowNotesOnParticipant ($partid) {
+function show_participant_notes ($partid) {
   global $link;
   $query = <<<EOD
 SELECT
@@ -455,5 +455,188 @@ EOD;
   list($rows,$header_array,$notes_array)=queryreport($query,$link,"Notes on Participant","","");
   renderhtmlreport($rows,$header_array,$notes_array);
 }
+
+function create_participant ($participant_arr) {
+  global $link;
+  $error_status=false;
+  // Commented out, becuase some people have short names
+  /* if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < 5) OR
+      (strlen($participant_arr['badgename']) < 5) OR
+      (strlen($participant_arr['pubsname']) < 5)) {
+    $message_error="All name fields are required and minimum length is 5 characters.  <BR>\n";
+    $error_status=true;
+  } */
+  if (!is_email($participant_arr['email'])) {
+    $message_error.="Email address is not valid.  <BR>\n";
+    $error_status=true;
+  }
+  if ($error_status) {
+    $message_error.="Database not updated.  <BR>\n";
+    exit();
+  }
+  $query = "SELECT MAX(badgeid) FROM Participants WHERE badgeid>='1' AND badgeid<68";
+  $result=mysql_query($query,$link);
+  if (!$result) {
+    $message_error="Unrecoverable error updating database.  Database not updated.<BR>\n";
+    $message_error.=$query;
+    RenderError($title,$message_error);
+    exit();
+  }
+  if (mysql_num_rows($result)!=1) {
+    $message_error="Database query returned unexpected number of rows(1 expected).  Database not updated.<BR>\n";
+    $message_error.=$query;
+    RenderError($title,$message_error);
+    exit();
+  }
+  $maxbadgeid=mysql_result($result,0);
+  //error_log("Zambia: SubmitEditCreateParticipant.php: maxbadgeid: $maxbadgeid");
+  sscanf($maxbadgeid,"%d",$x);
+  $newbadgeid=sprintf("%d",$x+1); // convert to num; add 1; convert back to string
+  $query = "INSERT INTO Participants (badgeid, password, bestway, interested, bio, altcontact, prognotes, pubsname) VALUES (";
+  $query.= "'".mysql_real_escape_string($newbadgeid)."',";
+  $query.= "'".mysql_real_escape_string($participant_arr['password'])."',";
+  $query.= "'".mysql_real_escape_string($participant_arr['bestway'])."',";
+  $query.= (($participant_arr['interested']=='')?"NULL":$participant_arr['interested']).",";
+  $query.= "'".mysql_real_escape_string($participant_arr['bio'])."',";
+  $query.= "'".mysql_real_escape_string($participant_arr['altcontact'])."',";
+  $query.= "'".mysql_real_escape_string($participant_arr['prognotes'])."',";
+  $query.= "'".mysql_real_escape_string($participant_arr['pubsname'])."');";
+  $query2 = "INSERT INTO CongoDump (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, regtype) VALUES (";
+  $query2.= "'".mysql_real_escape_string($newbadgeid)."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['firstname'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['lastname'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['badgename'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['phone'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['email'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['postaddress1'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['postaddress2'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['postcity'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['poststate'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['postzip'])."',";
+  $query2.= "'".mysql_real_escape_string($participant_arr['regtype'])."');";
+  $query3 = "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ";
+  if ($participant_arr["permroleid2"]=="checked") {
+    $query3.="('".$newbadgeid."','2'),";
+  }
+  if ($participant_arr["permroleid3"]=="checked") {
+    $query3.="('".$newbadgeid."','3'),";
+  }
+  if ($participant_arr["permroleid4"]=="checked") {
+    $query3.="('".$newbadgeid."','4'),";
+  }
+  if ($participant_arr["permroleid5"]=="checked") {
+    $query3.="('".$newbadgeid."','5'),";
+  }
+  $query3=rtrim($query3,',');
+  $query4 = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
+  $query4.=$newbadgeid."','";
+  $query4.=$_SESSION['badgeid']."','";
+  $query4.=mysql_real_escape_string($participant_arr['note'])."')";
+  if (!mysql_query($query,$link)) {
+    $message_error=$query."<BR>Error updating CongoDump database.  Database not updated.";
+    RenderError($title,$message_error);
+    exit();
+  }
+  if (!mysql_query($query2,$link)) {
+    $message_error=$query2."<BR>Error updating Participant database.  Database not updated.";
+    RenderError($title,$message_error);
+    exit();
+  }
+  if (!mysql_query($query3,$link)) {
+    $message_error=$query3."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
+    RenderError($title,$message_error);
+    exit();
+  }
+  if (!mysql_query($query4,$link)) {
+    $message_error=$query4."<BR>Error updating NotesOnParticipants database.  Database not updated.";
+    RenderError($title,$message_error);
+    exit();
+  }
+  $message="Database updated successfully with ".$participant_arr["badgename"].".<BR>";
+  echo "<P class=\"regmsg\">".$message."\n";
+}
+
+function edit_participant ($participant_arr) {
+  global $link;
+  $error_status=false;
+
+  // Commented out, becuase some people have short names
+  /* if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < 5) OR
+      (strlen($participant_arr['badgename']) < 5) OR
+      (strlen($participant_arr['pubsname']) < 5)) {
+    $message_error="All name fields are required and minimum length is 5 characters.  <BR>\n";
+    $error_status=true;
+  } */
+  if (!is_email($participant_arr['email'])) {
+    $message="Email address: ".$participant_arr['email']." is not valid.  <BR>\n";
+    echo "<P class=\"errmsg\">".$message."\n";
+    return;
+  }
+  $query = "update Participants set ";
+  $query.= "bestway=\"".mysql_real_escape_string($participant_arr['bestway'])."\",";
+  $query.= "interested=\"".(($participant_arr['interested']=='')?"NULL":$participant_arr['interested'])."\",";
+  $query.= "bio=\"".mysql_real_escape_string($participant_arr['bio'])."\",";
+  $query.= "altcontact=\"".mysql_real_escape_string($participant_arr['altcontact'])."\",";
+  $query.= "prognotes=\"".mysql_real_escape_string($participant_arr['prognotes'])."\",";
+  $query.= "pubsname=\"".mysql_real_escape_string($participant_arr['pubsname'])."\"";
+  $query.= " WHERE badgeid=\"".$participant_arr['partid']."\";";
+  $query2 = "update CongoDump set ";
+  $query2.= "firstname=\"".mysql_real_escape_string($participant_arr['firstname'])."\",";
+  $query2.= "lastname=\"".mysql_real_escape_string($participant_arr['lastname'])."\",";
+  $query2.= "badgename=\"".mysql_real_escape_string($participant_arr['badgename'])."\",";
+  $query2.= "phone=\"".mysql_real_escape_string($participant_arr['phone'])."\",";
+  $query2.= "email=\"".mysql_real_escape_string($participant_arr['email'])."\",";
+  $query2.= "postaddress1=\"".mysql_real_escape_string($participant_arr['postaddress1'])."\",";
+  $query2.= "postaddress2=\"".mysql_real_escape_string($participant_arr['postaddress2'])."\",";
+  $query2.= "postcity=\"".mysql_real_escape_string($participant_arr['postcity'])."\",";
+  $query2.= "poststate=\"".mysql_real_escape_string($participant_arr['poststate'])."\",";
+  $query2.= "postzip=\"".mysql_real_escape_string($participant_arr['postzip'])."\",";
+  $query2.= "regtype=\"".mysql_real_escape_string($participant_arr['regtype'])."\"";
+  $query2.= " WHERE badgeid=\"".$participant_arr['partid']."\";";
+  $query3 = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
+  $query3.=$participant_arr['partid']."','";
+  $query3.=$_SESSION['badgeid']."','";
+  $query3.=mysql_real_escape_string($participant_arr['note'])."')";
+  for ($i=2; $i<=5; $i++) {
+    $perm="permroleid".$i;
+    $wperm="waspermroleid".$i;
+    if (isset ($participant_arr[$perm])) {
+      if ($participant_arr[$wperm] == "not") {
+	$queryl ="INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ";
+        $queryl.="('".$participant_arr['partid']."','".$i."');";
+        if (!mysql_query($queryl,$link)) {
+	  $message=$queryl."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
+	  echo "<P class=\"errmsg\">".$message."\n";
+	  return;
+	}
+      }
+    } elseif ($participant_arr[$wperm] == "indeed") {
+      $queryl ="DELETE FROM UserHasPermissionRole where ";
+      $queryl.="badgeid=".$participant_arr['partid']." AND permroleid=".$i.";";
+      if (!mysql_query($queryl,$link)) {
+	$message=$queryl."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
+	echo "<P class=\"errmsg\">".$message."\n";
+	return;
+      }
+    }
+  }
+  if (!mysql_query($query,$link)) {
+    $message=$query."<BR>Error updating Participants database.  Database not updated.";
+    echo "<P class=\"errmsg\">".$message."\n";
+    return;
+  }
+  if (!mysql_query($query2,$link)) {
+    $message=$query2."<BR>Error updating CongoDump database.  Database not updated.";
+    echo "<P class=\"errmsg\">".$message."\n";
+    return;
+  }
+  if (!mysql_query($query3,$link)) {
+    $message=$query3."<BR>Error updating NotesOnParticipants database.  Database not updated.";
+    echo "<P class=\"errmsg\">".$message."\n";
+    return;
+  }
+  $message="Database updated successfully.<BR>";
+  echo "<P class=\"regmsg\">".$message."\n";
+}    
 
 ?>

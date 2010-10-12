@@ -7,18 +7,19 @@
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateParticipant ($action, $participant_arr, $message1, $message2) {
     if (strlen($message1)>0) {
-      echo "<P id=\"message1\"><font color=red>".$message1."</font></P>\n";
+      echo "<P id=\"message1\"><font color=red>Message: ".$message1."</font></P>\n";
     }
     if (strlen($message2)>0) {
-      echo "<P id=\"message2\"><font color=red>".$message2."</font></P>\n";
+      echo "<P id=\"message2\"><font color=red>Message: ".$message2."</font></P>\n";
       exit(); // If there is a message2, then there is a fatal error.
     }
     //error_log("Zambia: ".print_r($participant_arr,TRUE));
   ?>
     <DIV class="formbox">
-        <FORM name="partform" class="bb"  method=POST action="SubmitEditCreateParticipant.php">
+        <FORM name="partform" class="bb"  method=POST action="StaffEditCreateParticipant.php">
             <INPUT type="hidden" name="action" value="<?php echo htmlspecialchars($action,ENT_COMPAT);?>">
-            <INPUT type="hidden" name="selbadgeid" value="<?php echo $participant_arr["badgeid"]; ?>">
+            <INPUT type="hidden" name="partid" value="<?php echo $participant_arr["badgeid"]; ?>">
+            <INPUT type="hidden" name="password" value="<?php echo $participant_arr["password"]; ?>">
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
@@ -61,13 +62,26 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                     <OPTION value="Facebook" <?php if ($participant_arr["bestway"]=="Facebook") echo "selected";?> >Facebook</OPTION>
                     <OPTION value="Instant Messenger" <?php if ($participant_arr["bestway"]=="Instant Messenger") echo "selected";?> >Instant Messenger</OPTION>
                     </SELECT>
-		<SPAN><LABEL for="permroleid">Level of participation 3=Presenter 5=Volunteer 4=Brainstorm 2=Staff: <?php echo $participant_arr["permroleid_list"] ; ?> : </LABEL><SELECT name="permroleid">
-                    <OPTION value="" <?php if ($participant_arr["permroleid"]=="") echo "selected";?> >Not determined</OPTION>
-                    <OPTION value="3" <?php if ($participant_arr["permroleid"]=="3") echo "selected";?> >Presenter</OPTION>
-                    <OPTION value="5" <?php if ($participant_arr["permroleid"]=="5") echo "selected";?> >Volunteer</OPTION>
-                    <OPTION value="4" <?php if ($participant_arr["permroleid"]=="4") echo "selected";?> >Brainstorm</OPTION>
-                    <OPTION value="2" <?php if ($participant_arr["permroleid"]=="2") echo "selected";?> >Staff</OPTION>
-                    </SELECT>
+                    </SPAN>
+                </DIV>
+	    <DIV class="denseform">
+		<SPAN><LABEL for="permroleid">Level of participation (At least one must be selected):</LABEL>
+                    <?php 
+                        for ($i=2; $i<=5; $i++) {
+			  $pos = strpos($participant_arr['permroleid_list'],"$i");
+			  if($pos === false) {
+			    echo "<INPUT type=\"hidden\" name=\"waspermroleid".$i."\" value=\"not\">";
+			  } else {
+			    echo "<INPUT type=\"hidden\" name=\"waspermroleid".$i."\" value=\"indeed\">";
+			    $check["$i"]="checked";
+			  }
+			} ?>
+		    <INPUT type="hidden" name="permroleid_list" value="<?php echo $participant_arr['permroleid_list']; ?>">
+                    <INPUT type="checkbox" name="permroleid3" value="checked" <?php if ($check["3"] == "checked") {echo "checked";}; ?>>Presenter</OPTION>
+                    <INPUT type="checkbox" name="permroleid5" value="checked" <?php if ($check["5"] == "checked") {echo "checked";}; ?>>Volunteer</OPTION>
+                    <INPUT type="checkbox" name="permroleid4" value="checked" <?php if ($check["4"] == "checked") {echo "checked";}; ?>>Brainstorm</OPTION>
+                    <INPUT type="checkbox" name="permroleid2" value="checked" <?php if ($check["2"] == "checked") {echo "checked";}; ?>>Staff</OPTION>
+		    </SPAN>
                 </DIV>
             <DIV class="denseform">
                 <SPAN><LABEL for="postaddress1">Postal Address line 1: </LABEL><INPUT type="text" size=80 name="postaddress1"
@@ -96,6 +110,10 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                     </SPAN>
                 </DIV>
             <DIV class="denseform">
+            <SPAN><LABEL for="note" style="vertical-align: top">Programming Log Note:</LABEL>
+		<TEXTAREA class="textlabelarea" name="note" rows=2 cols=72>Participant entry <?php echo htmlspecialchars($action);?></TEXTAREA>
+                </DIV>
+            <DIV class="denseform">
                 <SPAN><LABEL for="prognotes" style="vertical-align: top">Additional Programming notes: </LABEL>
                     <TEXTAREA class="textlabelarea" cols=70 name="prognotes" ><?php echo htmlspecialchars($participant_arr["prognotes"],ENT_NOQUOTES);?></TEXTAREA>
                     </SPAN>
@@ -103,7 +121,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
             <DIV class="denseform">
                 <SPAN><LABEL for="phone">Phone: </LABEL><INPUT type="text" size=14 name="phone"
                      value="<?php echo htmlspecialchars($participant_arr["phone"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
-                <SPAN><LABEL for="regtype">Registration Type:: </LABEL><INPUT type="text" size=14 name="regtype"
+                <SPAN><LABEL for="regtype">Registration Type: </LABEL><INPUT type="text" size=14 name="regtype"
                      value="<?php echo htmlspecialchars($participant_arr["regtype"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 </DIV>
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>

@@ -7,7 +7,7 @@ staff_header($title);
 
 // Submit the note, if there was one, when this was called
 if (isset($_POST["note"])) {
-  SubmitNoteOnParticipant($_POST["note"], $_POST["partid"]);
+  submit_participant_note ($_POST["note"], $_POST["partid"]);
  }
 
 // Submit the updates to this page if there was any
@@ -78,5 +78,5 @@ list($interested, $pubsname)= mysql_fetch_array($result, MYSQL_NUM);
 <DIV class="sectionheader"><A HREF=StaffEditCreateParticipant.php?action=edit&badgeid=<?php echo $selpartid;?>>Edit <?php echo htmlspecialchars($pubsname); ?> Further</A></DIV>
 <?php
 // Show previous notes added, for references, and end page
-ShowNotesOnParticipant($selpartid);
+show_participant_notes ($selpartid);
 ?>
