@@ -25,9 +25,9 @@ function SubmitEditReport () {
     $reportadditionalinfo = htmlspecialchars_decode($_POST["reportadditionalinfo"]);
     $reportquery = htmlspecialchars_decode(refrom($_POST["reportquery"]));
     $query = "update Reports set ";
-    $query.="reportdescription=\"".mysql_real_escape_string($reportdescription);
-    $query.="\",reportadditionalinfo=\"".mysql_real_escape_string($reportadditionalinfo);
-    $query.="\",reportquery=\"".mysql_real_escape_string($reportquery);
+    $query.="reportdescription=\"".mysql_real_escape_string(stripslashes($reportdescription));
+    $query.="\",reportadditionalinfo=\"".mysql_real_escape_string(stripslashes($reportadditionalinfo));
+    $query.="\",reportquery=\"".mysql_real_escape_string(stripslashes($reportquery));
     $query.="\" where reportid=".$reportid;
     if (!mysql_query($query,$link)) {
         $message=$query."<BR>Error updating database.  Database not updated.";
@@ -48,9 +48,9 @@ function SubmitNewReport () {
     $query = "INSERT INTO Reports (reportname,reporttitle,reportdescription,reportadditionalinfo,reportquery) VALUES ('";
     $query.=mysql_real_escape_string($reportname)."','";
     $query.=mysql_real_escape_string($reporttitle)."','";
-    $query.=mysql_real_escape_string($reportdescription)."','";
-    $query.=mysql_real_escape_string($reportadditionalinfo)."','";
-    $query.=mysql_real_escape_string($reportquery)."')";
+    $query.=mysql_real_escape_string(stripslashes($reportdescription))."','";
+    $query.=mysql_real_escape_string(stripslashes($reportadditionalinfo))."','";
+    $query.=mysql_real_escape_string(stripslashes($reportquery))."')";
     if (!mysql_query($query,$link)) {
         $message=$query."<BR>Error updating database.  Database not updated.";
         echo "<P class=\"errmsg\">".$message."\n";
