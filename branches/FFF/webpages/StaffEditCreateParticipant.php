@@ -19,6 +19,9 @@ if (!($action=="edit"||$action=="create")) {
   RenderError($title,$message_error);
   exit();
  }
+
+
+
 if ($action=="create") { //initialize participant array
   $title="Add Participant";
   staff_header($title);
@@ -57,6 +60,12 @@ if ($action=="create") { //initialize participant array
  else { // get participant array from database
    $title="Edit Participant";
    staff_header($title);
+
+   // Collaps the three choices into one
+   if ($_POST["partidl"]!=0) {$_POST["partid"]=$_POST["partidl"];}
+   if ($_POST["partidf"]!=0) {$_POST["partid"]=$_POST["partidf"];}
+   if ($_POST["partidp"]!=0) {$_POST["partid"]=$_POST["partidp"];}
+
    if (isset($_POST["partid"])) {
      $selpartid=$_POST["partid"];
    }

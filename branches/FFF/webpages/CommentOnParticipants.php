@@ -5,10 +5,17 @@ require_once('SubmitCommentOn.php');
 
 staff_header($title);
 
+// Collaps the three choices into one
+if ($_POST["partidl"]!=0) {$_POST["partid"]=$_POST["partidl"];}
+if ($_POST["partidf"]!=0) {$_POST["partid"]=$_POST["partidf"];}
+if ($_POST["partidp"]!=0) {$_POST["partid"]=$_POST["partidp"];}
+
+// Submit the comment, if there was one, when this is called
 if (isset($_POST["comment"])) {
     SubmitCommentOnParticipants();
     }
 
+// Carry ofer the person being commented on, from the from before if they exist
 if (isset($_POST["partid"])) {
         $selpartid=$_POST["partid"];
         }
@@ -16,14 +23,17 @@ if (isset($_POST["partid"])) {
         $selpartid=0;
         }
 
+// Choose the individual from the database
 select_participant($selpartid, "CommentOnParticipants.php");
 
+// Stop page here if individual has not been selected
 if ((!isset($_POST["partid"])) or ($_POST["partid"]==0)) {
     staff_footer();
     exit();
     }
 ?>
-<?php echo "<HR>&nbsp;<BR>\n"; ?>
+<HR>
+<BR>
 <FORM name="partcommentform" method=POST action="CommentOnParticipants.php">
   <P>Comment on/for <?php echo htmlspecialchars($pubsname)?> for 
 <?php echo CON_NAME; ?>:

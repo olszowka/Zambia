@@ -4,6 +4,11 @@ require_once('StaffCommonCode.php');
 
 staff_header($title);
 
+// Collaps the three choices into one
+if ($_POST["partidl"]!=0) {$_POST["partid"]=$_POST["partidl"];}
+if ($_POST["partidf"]!=0) {$_POST["partid"]=$_POST["partidf"];}
+if ($_POST["partidp"]!=0) {$_POST["partid"]=$_POST["partidp"];}
+
 // Submit the note, if there was one, when this was called
 if (isset($_POST["note"])) {
   submit_participant_note($_POST["note"], $_POST["partid"]);
@@ -20,16 +25,16 @@ if (isset($_POST["partid"])) {
    $selpartid=0;
  }
 
-//Choose the individual from the database
+// Choose the individual from the database
 select_participant($selpartid, "NoteOnParticipant.php");
 
-//Stop page here if and individual has not yet been selected
+// Stop page here if and individual has not yet been selected
 if ($selpartid==0) {
   staff_footer();
   exit();
  }
 
-//Add note through form below
+// Add note through form below
 ?>
 
 <HR>

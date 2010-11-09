@@ -5,6 +5,11 @@ require_once('SubmitAdminParticipants.php');
 
 staff_header($title);
 
+// Collaps the three choices into one
+if ($_POST["partidl"]!=0) {$_POST["partid"]=$_POST["partidl"];}
+if ($_POST["partidf"]!=0) {$_POST["partid"]=$_POST["partidf"];}
+if ($_POST["partidp"]!=0) {$_POST["partid"]=$_POST["partidp"];}
+
 // Submit the note, if there was one, when this was called
 if (isset($_POST["note"])) {
   submit_participant_note ($_POST["note"], $_POST["partid"]);
@@ -21,10 +26,10 @@ if (isset($_POST["partid"])) {
  }
  else { $selpartid=0; }
 
-//Choose the individual from the database
+// Choose the individual from the database
 select_participant($selpartid, "AdminParticipants.php");
 
-//Stop page here if and individual has not yet been selected
+// Stop page here if and individual has not yet been selected
 if ((!isset($_POST["partid"])) or ($_POST["partid"]==0)) {
     staff_footer();
     exit();
@@ -75,7 +80,7 @@ list($interested, $pubsname)= mysql_fetch_array($result, MYSQL_NUM);
 </FORM>
 <BR>
 <HR>
-<DIV class="sectionheader"><A HREF=StaffEditCreateParticipant.php?action=edit&badgeid=<?php echo $selpartid;?>>Edit <?php echo htmlspecialchars($pubsname); ?> Further</A></DIV>
+<DIV class="sectionheader"><A HREF=StaffEditCreateParticipant.php?action=edit&partid=<?php echo $selpartid;?>>Edit <?php echo htmlspecialchars($pubsname); ?> Further</A></DIV>
 <?php
 // Show previous notes added, for references, and end page
 show_participant_notes ($selpartid);
