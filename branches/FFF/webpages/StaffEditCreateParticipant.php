@@ -27,7 +27,7 @@ if ($action=="create") { //initialize participant array
   staff_header($title);
 
   // If the information has already been added, and we are
-  // on the return loop, add the participant to the database.
+  // on the return loop, add the Participant to the database.
   if ((isset ($_POST["email"]) and $_POST["email"]!="")) {
     create_participant ($_POST);
   }
