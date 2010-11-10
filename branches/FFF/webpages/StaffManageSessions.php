@@ -15,6 +15,8 @@ On this page you will find the online tools for managing Panels, Events, Films, 
 <DL>
    <DT><A HREF="CreateSession.php">Create a New Session</A></DT>
    <DD>Used for creating new sessions.  They are intially created in status "edit me".  Once created, a second persion edits for content (and uniqueness). This person promotes the session to status "Brainstorm".  A third set of eyes does a basic grammar and spelling edit and promotes the session to status "Vetted".   At that time it is ready for general viewing by prospective panelists.</DD>
+   <DT><A HREF="EditSession.php">Edit an Existing Session</A></DT>
+   <DD>Rapidly access a Session from the list of Sessions to Edit or Update.</DD>
    <DT><A HREF="ViewSessionCountReport.php">View Counts of Sessions</A></DT>
    <DD>A quick report broken down by status and then by track to give an idea of where we are.</DD>
    <DT><A HREF="genreport.php?reportid=91">View All Sessions:</A></DT>

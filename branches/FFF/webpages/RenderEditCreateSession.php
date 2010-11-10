@@ -74,9 +74,13 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <SPAN id="ssignup"><LABEL for="signup">Sign up Req.?</LABEL>
                     <INPUT type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?>
                     name="signup">&nbsp;&nbsp;</SPAN>
+                <?php if (strtoupper(MY_AVAIL_KIDS)=="FALSE") { ?>
+	        <SPAN><INPUT type="hidden" name="kids" value="<?php echo $session["kids"];?>"></SPAN>
+		<?php } else { ?>
                 <SPAN><LABEL for="kids">Kid ?:</LABEL>
                     <SELECT name="kids"><?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT", FALSE); ?></SELECT>
                     </SPAN>
+		<?php } ?>
                 </DIV>
 <?php
         if (strtoupper(BILINGUAL)=="TRUE") {
