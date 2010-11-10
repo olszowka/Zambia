@@ -29,7 +29,7 @@ SELECT
     GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
     S.sessionid as Sessionid,
     concat('<A NAME=\"',S.sessionid,'\"></A>',S.title) as Title,
-    concat('<P>Web: ',S.progguiddesc,'</P>') as 'Web Description'
+    concat('<P>Web: ',S.progguiddesc,'</P>') as 'Web Description',
     concat('<P>Book: ',S.pocketprogtext,'</P>') as 'Book Description'
   FROM
       Sessions S

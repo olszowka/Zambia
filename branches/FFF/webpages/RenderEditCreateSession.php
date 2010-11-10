@@ -49,7 +49,8 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 </DIV>
             <DIV class="denseform">
                 <SPAN><LABEL for="sessionid">Session #: </LABEL><A HREF=StaffAssignParticipants.php?selsess=<?php echo $session["sessionid"];?>>
-                      <?php echo $session["sessionid"];?></A>&nbsp;&nbsp;</SPAN>
+                      <?php echo $session["sessionid"];?></A>
+                      <INPUT type="hidden" name="sessionid" value="<?php echo $session["sessionid"];?>"></SPAN>
                 <SPAN><LABEL for="divisionid">Division: </LABEL><SELECT name="divisionid">
                      <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
                      </SELECT>&nbsp;&nbsp;</SPAN>
