@@ -11,14 +11,19 @@
 // Use "My Panel Interests" page to just see everything in which you are interested
     $query = <<<EOD
 SELECT
-        S.sessionid, T.trackname, S.title,
+        S.sessionid,
+        T.trackname,
+        S.title,
         CASE
             WHEN (minute(S.duration)=0) THEN date_format(S.duration,'%l hr')
             WHEN (hour(S.duration)=0) THEN date_format(S.duration, '%i min')
             ELSE date_format(S.duration,'%l hr, %i min')
             END
             as duration,
-        S.progguiddesc, S.persppartinfo, PSI.badgeid
+        S.pocketprogtext,
+        S.progguiddesc,
+        S.persppartinfo,
+        PSI.badgeid
     FROM
         Sessions S JOIN
         Tracks T USING (trackid) JOIN

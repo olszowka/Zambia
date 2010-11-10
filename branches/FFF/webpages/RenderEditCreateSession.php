@@ -48,8 +48,8 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </TD></TR></TABLE>
                 </DIV>
             <DIV class="denseform">
-                <SPAN><LABEL for="sessionid">Session #: </LABEL><INPUT type="text" size=4 name="sessionid" readonly
-                     value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="sessionid">Session #: </LABEL><A HREF=StaffAssignParticipants.php?selsess=<?php echo $session["sessionid"];?>>
+                      <?php echo $session["sessionid"];?></A>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="divisionid">Division: </LABEL><SELECT name="divisionid">
                      <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
                      </SELECT>&nbsp;&nbsp;</SPAN>
@@ -95,8 +95,6 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 echo htmlspecialchars($session["languagestatusid"],ENT_COMPAT)."\">";
                 }
 ?>
-            <!-- The pocketprogtext field is no longer used on the form, but the code expects it.-->
-            <INPUT type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">";?>
             <DIV class="denseform">
                 <SPAN><LABEL for="atten">Est. Atten.:</LABEL>
                     <INPUT type=text size="3" name="atten" value="<?php
@@ -115,23 +113,23 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <DIV class="thinbox">
             <TABLE><COL width="100"><COL>
                 <TR>
-                    <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Description:</LABEL></TD>
+                    <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Web Description:</LABEL></TD>
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" 
                             ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                <TR>
+                    <TD class="txtalbl"><LABEL class="dense" for="pocketprogtext">Program Book Description:</LABEL></TD>
+                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="pocketprogtext" 
+                            ><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
 <?php
         if (strtoupper(BILINGUAL)=="TRUE") {
                 echo "                <TR>\n";
-                echo "                    <TD class=\"txtalbl\"><LABEL class=\"dense\" for=\"pocketprogtext\">";
+                echo "                    <TD class=\"txtalbl\"><LABEL class=\"dense\" for=\"altlangprogguiddesc\">";
                 echo SECOND_DESCRIPTION_CAPTION.": </LABEL></TD>\n";
-                echo "                    <TD class=\"txta\"><TEXTAREA class=\"textlabelarea\" cols=70 name=\"pocketprogtext\">";
-                echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES)."</TEXTAREA></TD>\n";
+                echo "                    <TD class=\"txta\"><TEXTAREA class=\"textlabelarea\" cols=70 name=\"altlangprogguidedesc\">";
+                echo htmlspecialchars($session["altlangproggidedesc"],ENT_NOQUOTES)."</TEXTAREA></TD>\n";
                 echo "                    </TR>\n";
-                }
-            else {
-                echo "                <!-- The pocketprogtext field is no longer used on the form, but the code expects it.-->\n";
-                echo "                <INPUT type=\"hidden\" name=\"pocketprogtext\" value=\"";
-                echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">\n";
                 }
 ?>
                 <TR id="trprospartinfo">

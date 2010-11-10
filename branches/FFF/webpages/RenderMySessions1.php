@@ -32,7 +32,7 @@
 -->
 <?php
     $i=0;
-    while (list($sessionid,$trackname,$title,$duration,$progguiddesc, $persppartinfo, $rbadgeid)= mysql_fetch_array($result, MYSQL_NUM)) {
+    while (list($sessionid,$trackname,$title,$duration,$pocketprogtext,$progguiddesc,$persppartinfo,$rbadgeid)= mysql_fetch_array($result, MYSQL_NUM)) {
         echo "        <TR>\n";
         echo "            <TD rowspan=4 class=\"border0000\" id=\"sessidtcell\"><b>".$sessionid."&nbsp;&nbsp;";
              echo "<INPUT type=hidden name=\"sessionid".$i."\" value=\"".$sessionid."\"></TD>\n";
@@ -51,7 +51,8 @@ if (may_I('my_panel_interests')) {
              echo ((strlen($rbadgeid)>1)?"1":"0")."\"></TD>\n";
         echo "        </TR>\n";
 }
-        echo "        <TR><TD colspan=3 class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
+        echo "        <TR><TD colspan=3 class=\"border0010\">Web: ".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
+        echo "        <TR><TD colspan=3 class=\"border0010\">Book: ".htmlspecialchars($pocketprogtext,ENT_NOQUOTES)."</TD></TR>\n";
         echo "        <TR><TD colspan=4 class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</TD></TR>\n";
         echo "        <TR><TD colspan=6 class=\"border0020\">&nbsp;</TD></TR>\n";
         echo "        <TR><TD colspan=6 class=\"border0000\" id=\"smallspacer\">&nbsp;</TD></TR>\n";

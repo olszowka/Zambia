@@ -61,19 +61,35 @@ if ($topsectiononly) {
     exit();
     }
 $query = <<<EOD
-SELECT title, progguiddesc, persppartinfo, notesforpart, notesforprog FROM Sessions
+SELECT title, pocketprogtext, progguiddesc, persppartinfo, notesforpart, notesforprog FROM Sessions
 WHERE sessionid=$selsessionid
 EOD;
 if (!$result=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
+    $message=$query."Error querying database. Unable to continue.";
+    echo "<P class\"errmsg\">".$message."</P>\n";
+    staff_footer();
+    exit();
+    }
+if (mysql_num_rows($result)==0) {
+    $message="Zero rows returned, this is either a removed class, or a not-yet-created one.  Please select another session above.";
+    echo "<P class\"errmsg\">".$message."</P>\n";
+    staff_footer();
+    exit();
+    }
+if (mysql_num_rows($result)!=1) {
+    $message=$query."returned unexpected number of rows (1 expected).";
+    echo "<P class\"errmsg\">".$message."</P>\n";
     staff_footer();
     exit();
     }
 echo "<H2>$selsessionid - <A HREF=\"EditSession.php?id=".$selsessionid."\">".htmlspecialchars(mysql_result($result,0,"title"))."</A></H2>";    
-echo "<P>Program Guide Text\n";
+echo "<P>Web Program Text\n";
 echo "<P class=\"border1111 lrmargin lrpad\">";
 echo htmlspecialchars(mysql_result($result,0,"progguiddesc"));
+echo "\n";
+echo "<P>Program Book Text\n";
+echo "<P class=\"border1111 lrmargin lrpad\">";
+echo htmlspecialchars(mysql_result($result,0,"pocketprogtext"));
 echo "\n";
 echo "<P>Prospective Participant Info\n";
 echo "<P class=\"border1111 lrmargin lrpad\">";

@@ -12,7 +12,9 @@
 // Use "My Panel Interests" page to just see everything in which you are interested
     $query = <<<EOD
 SELECT
-        S.sessionid, T.trackname, S.title,
+        S.sessionid,
+        T.trackname,
+        S.title,
         CASE
             WHEN (minute(S.duration)=0) AND (SCH.starttime) THEN CONCAT(DATE_FORMAT(S.duration,'%l hr starting '), DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime), '%a %l:%i %p'))
             WHEN (minute(S.duration)=0) THEN DATE_FORMAT(S.duration,'%l hr')
@@ -22,7 +24,10 @@ SELECT
             ELSE DATE_FORMAT(S.duration,'%l hr, %i min')
             END
             as duration,
-        S.progguiddesc, S.persppartinfo, PSI.badgeid
+        S.pocketprogtext,
+        S.progguiddesc,
+        S.persppartinfo,
+        PSI.badgeid
     FROM
         Sessions S JOIN
         Tracks T USING (trackid) JOIN

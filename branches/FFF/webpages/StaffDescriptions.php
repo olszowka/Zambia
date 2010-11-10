@@ -29,7 +29,8 @@ SELECT
     GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
     S.sessionid as Sessionid,
     concat('<A NAME=\"',S.sessionid,'\"></A>',S.title) as Title,
-    concat('<P>',S.progguiddesc,'</P>') as Description
+    concat('<P>Web: ',S.progguiddesc,'</P>') as 'Web Description'
+    concat('<P>Book: ',S.pocketprogtext,'</P>') as 'Book Description'
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
@@ -64,7 +65,8 @@ EOD;
       if ($element_array[$i]['Roomname']) {
 	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Roomname']);
       }
-      echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Description']);
+      echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Web Description']);
+      echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Book Description']);
       if ($element_array[$i]['Participants']) {
 	echo sprintf("<i>%s</i>",$element_array[$i]['Participants']);
       }

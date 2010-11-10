@@ -1,6 +1,6 @@
 <?php
 // RenderPrecis display requires:  a populated dataarray containing rows with 
-// $sessionid,$trackname,$typename,$title,$duration,$estatten,$progguiddesc, $persppartinfo IN THAT ORDER
+// $sessionid,$trackname,$typename,$title,$duration,$estatten,$pocketprogtext,$progguiddesc,$persppartinfo IN THAT ORDER
 // it displays the precis view of the data.
 function RenderPrecis($result,$showlinks) {
     
@@ -8,7 +8,7 @@ function RenderPrecis($result,$showlinks) {
     echo "<hr>\n";
     echo "<TABLE>\n";
     echo "   <COL><COL><COL><COL><COL>\n";
-    while (list($sessionid,$trackname,$typename,$title,$duration,$estatten,$progguiddesc,$persppartinfo)
+    while (list($sessionid,$trackname,$typename,$title,$duration,$estatten,$pocketprogtext,$progguiddesc,$persppartinfo)
 	     =mysql_fetch_array($result, MYSQL_NUM)) {
         echo "<TR>\n";
         echo "  <TD rowspan=3 class=\"border0000\" id=\"sessidtcell\"><b>";
@@ -27,41 +27,12 @@ function RenderPrecis($result,$showlinks) {
         echo "&nbsp;&nbsp;</TD>\n";
 	echo "  <TD class=\"border0000\"><b>".$duration."</TD>\n";
 	echo "</TR>\n";
-	echo "<TR><TD colspan=5 class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
+	echo "<TR><TD colspan=5 class=\"border0010\">Web: ".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</TD></TR>\n";
+	echo "<TR><TD colspan=5 class=\"border0010\">Book: ".htmlspecialchars($pocketprogtext,ENT_NOQUOTES)."</TD></TR>\n";
 	echo "<TR><TD colspan=5 class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</TD></TR>\n";
 	echo "<TR><TD colspan=5 class=\"border0020\">&nbsp;</TD></TR>\n";
 	echo "<TR><TD colspan=5 class=\"border0000\">&nbsp;</TD></TR>\n";
     }
     echo "</TABLE>\n";
 }
-// function RenderQueryResult($link,$result)
-// Writes output to render the results of a query as a table
-//
-function RenderQueryResult($link,$result) {
-    if (!mysql_info($link)) {
-        return(-1); // most recent query failed
-        }
-    $numrows=$mysql_num_rows($result);
-    if ($numrows==0) {
-        return(-2); // nothing to display
-        }
-    $numfields=$mysql_num_fields($result);
-    echo "<TABLE><TR>";
-    for ($i=0; $i<$numfields; $i++) {
-        $x=mysql_field_name($result, $i);
-        echo "<TH>$x</TH>";
-        }
-    echo "</TR>\n";
-    for ($i=0; $i<$numrows; $i++) {
-        $row=mysql_fetch_array($result, MYSQL_NUM);
-        echo "<TR>";
-        for ($j=0; $j<numfields; $j++) {
-            $x=$row[$j];
-            echo "<TD>$x</TD>";
-            }
-        echo "</TR>\n";
-        }
-     echo "</TABLE>\n";
-     return(0);
-     }
 ?>

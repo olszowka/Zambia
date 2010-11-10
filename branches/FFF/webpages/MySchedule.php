@@ -113,6 +113,7 @@ SELECT
     trackname,
     title,
     roomname,
+    pocketprogtext,
     progguiddesc,
     DATE_FORMAT(ADDTIME('$ConStartDatim', starttime),'%a %l:%i %p') as 'Start Time',
     CASE
@@ -235,7 +236,11 @@ EOD;
         echo "  </TR>\n";
         echo "  <TR>\n";
         echo "    <TD>&nbsp;</TD>\n";
-        echo "    <TD colspan=6 class=\"border0010\">".htmlspecialchars($schdarray[$i]["progguiddesc"])."</TD>\n";
+        echo "    <TD colspan=6 class=\"border0010\">Web: ".htmlspecialchars($schdarray[$i]["progguiddesc"])."</TD>\n";
+        echo "  </TR>\n";
+        echo "  <TR>\n";
+        echo "    <TD>&nbsp;</TD>\n";
+        echo "    <TD colspan=6 class=\"border0010\">Book: ".htmlspecialchars($schdarray[$i]["pocketprogtext"])."</TD>\n";
         echo "  </TR>\n";
         echo "  <TR>\n";
         echo "    <TD>&nbsp;</TD>\n";

@@ -1,6 +1,5 @@
 <?php
 require_once('StaffCommonCode.php');
-/*require_once('SubmitEditReport.php');*/
 
 $title="Edit Reports";
 global $link;
@@ -51,6 +50,7 @@ function SubmitNewReport () {
     $query.=mysql_real_escape_string(stripslashes($reportdescription))."','";
     $query.=mysql_real_escape_string(stripslashes($reportadditionalinfo))."','";
     $query.=mysql_real_escape_string(stripslashes($reportquery))."')";
+    echo $query;
     if (!mysql_query($query,$link)) {
         $message=$query."<BR>Error updating database.  Database not updated.";
         echo "<P class=\"errmsg\">".$message."\n";
@@ -63,6 +63,10 @@ function SubmitNewReport () {
 $topsectiononly=true; // no reportquery selected -- flag indicates to display only the top section of the page
 if ($_POST["submit"]=="updatereport") {
     SubmitEditReport(); 
+    }
+
+if ($_POST["submit"]=="newreport") {
+    SubmitNewReport(); 
     }
 
 if (isset($_POST["selreport"])) {
@@ -81,6 +85,15 @@ if ($selreportid==0) {
         $topsectiononly=true;
         unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
         }
+
+
+if ($_GET["selreport"]=="-1") {
+  $reportname='No Name Yet';
+  $reporttitle='No Title Yet';
+  $reportdescription='No Description Yet';
+  $reportadditionalinfo='';
+  $reportquery='No Query Yet';
+ } else {
 
 $query="SELECT reportid, reporttitle, reportdescription FROM Reports ";
 $query.="ORDER BY reportid";
@@ -119,21 +132,35 @@ if (!$result=mysql_query($query,$link)) {
     exit();
     }
 list($reporttitle, $reportdescription, $reportadditionalinfo, $reportquery)= mysql_fetch_array($result, MYSQL_NUM);
-
-echo "<HR>&nbsp;<BR>\n"; ?>
-<FORM name="reporteditform" method=POST action="EditReport.php">
-  <P>Edit <?php echo htmlspecialchars($reporttitle)?> for 
-<?php echo CON_NAME; ?>:
-<INPUT type="hidden" name="selreport" value="<?php echo $selreportid; ?>">
+ }
+echo "<HR>&nbsp;<BR>\n";
+echo "<FORM name=\"reporteditform\" method=POST action=\"EditReport.php\">";
+if ($_GET["selreport"]=="-1") {
+?>
 <DIV class="titledtextarea">
+  <SPAN><LABEL for="reportname"><B>Name:</B><BR></LABEL>
+  <INPUT type="text" size=72 name="reportname" id="reportname" value="<?php echo htmlspecialchars($reportname) ?>"></SPAN>
+  <SPAN><LABEL for="reporttitle"><BR><B>Title:</B><BR></LABEL>
+  <INPUT type="text" size=72 name="reporttitle" id="reporttitle" value="<?php echo htmlspecialchars($reporttitle) ?>"></SPAN>
+<?php } else { ?>
+  <P>Edit <?php echo htmlspecialchars($reporttitle)?> for <?php echo CON_NAME; ?>:
+<DIV class="titledtextarea">
+<?php } ?>
   <LABEL for="reportdescription">Description:</LABEL>
   <TEXTAREA name="reportdescription" rows=2 cols=72><?php echo htmlspecialchars($reportdescription) ?></TEXTAREA>
   <LABEL for="reportadditionalinfo">Additional Information:</LABEL>
   <TEXTAREA name="reportadditionalinfo" rows=2 cols=72><?php echo htmlspecialchars($reportadditionalinfo) ?></TEXTAREA>
-  <LABEL for="reportquery">Query: (note, due to a strange anomoly in the system, "FROM" is rendered in pig-latin.  Don't worry, it gets fixed.)</LABEL>
+  <LABEL for="reportquery">Query: (note, due to a strange anomoly in the system, "FROM" is rendered in pig-latin.  Do not worry, it gets fixed.)</LABEL>
   <TEXTAREA name="reportquery" rows=15 cols=72><?php echo htmlspecialchars(unfrom($reportquery)) ?></TEXTAREA>
 </DIV> 
-<BUTTON class="SubmitButton" type="submit" name="submit" value="updatereport">Update</BUTTON>
+<INPUT type="hidden" name="selreport" value="<?php echo $selreportid; ?>">
+<BUTTON class="SubmitButton" type="submit" name="submit" value=<?php 
+if ($_GET["selreport"]=="-1") { 
+  echo "\"newreport\"";
+} else {
+  echo "\"updatereport\"";
+ }
+?>>Update</BUTTON>
 </FORM>
 <?php
 staff_footer();

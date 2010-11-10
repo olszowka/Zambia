@@ -151,14 +151,21 @@ function validate_session() {
         return ($flag);
         }
     $i=strlen($session["title"]);
-    if ($i<10||$i>48) {
-        $messages.="Title is $i characters long.  Please edit it to between <B>10</B> and <B>48</B> characters.<BR>\n";
+    if ($i<MIN_TITLE_LEN||$i>MAX_TITLE_LEN) {
+        $messages.="Title is $i characters long.  Please edit it to between";
+        $message.="<B>".MIN_TITLE_LEN."</B> and <B>".MAX_TITLE_LEN."</B> characters.<BR>\n";
+        $flag=false;
+        }
+    $i=strlen($session["pocketprogtext"]);
+    if ($i<MIN_PROG_DESC_LEN||$i>MAX_PROG_DESC_LEN) {
+        $messages.="Program book description is $i characters long.  Please edit it to between";
+        $messages.=" <B>".MIN_PROG_DESC_LEN."</B> and <B>".MAX_PROG_DESC_LEN."</B> characters long.<BR>\n";
         $flag=false;
         }
     $i=strlen($session["progguiddesc"]);
-    if ($i<10||$i>MAX_WDESC_LEN) {
-        $messages.="Description is $i characters long.  Please edit it to between";
-        $messages.=" <B>10</B> and <B>".MAX_WDESC_LEN."</B> characters long.<BR>\n";
+    if ($i<MIN_DESC_LEN||$i>MAX_DESC_LEN) {
+        $messages.="Web description is $i characters long.  Please edit it to between";
+        $messages.=" <B>".MIN_DESC_LEN."</B> and <B>".MAX_DESC_LEN."</B> characters long.<BR>\n";
         $flag=false;
         }
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {
