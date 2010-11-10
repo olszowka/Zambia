@@ -526,12 +526,13 @@ function create_participant ($participant_arr) {
   //error_log("Zambia: SubmitEditCreateParticipant.php: maxbadgeid: $maxbadgeid");
   sscanf($maxbadgeid,"%d",$x);
   $newbadgeid=sprintf("%d",$x+1); // convert to num; add 1; convert back to string
-  $query = "INSERT INTO Participants (badgeid, password, bestway, interested, bio, altcontact, prognotes, pubsname) VALUES (";
+  $query = "INSERT INTO Participants (badgeid, password, bestway, interested, bio, progbio, altcontact, prognotes, pubsname) VALUES (";
   $query.= "'".mysql_real_escape_string($newbadgeid)."',";
   $query.= "'".mysql_real_escape_string($participant_arr['password'])."',";
   $query.= "'".mysql_real_escape_string($participant_arr['bestway'])."',";
   $query.= (($participant_arr['interested']=='')?"NULL":$participant_arr['interested']).",";
   $query.= "'".mysql_real_escape_string($participant_arr['bio'])."',";
+  $query.= "'".mysql_real_escape_string($participant_arr['progbio'])."',";
   $query.= "'".mysql_real_escape_string($participant_arr['altcontact'])."',";
   $query.= "'".mysql_real_escape_string($participant_arr['prognotes'])."',";
   $query.= "'".mysql_real_escape_string($participant_arr['pubsname'])."');";
@@ -610,6 +611,7 @@ function edit_participant ($participant_arr) {
   $query.= "bestway=\"".mysql_real_escape_string($participant_arr['bestway'])."\",";
   $query.= "interested=\"".(($participant_arr['interested']=='')?"NULL":$participant_arr['interested'])."\",";
   $query.= "bio=\"".mysql_real_escape_string($participant_arr['bio'])."\",";
+  $query.= "progbio=\"".mysql_real_escape_string($participant_arr['progbio'])."\",";
   $query.= "altcontact=\"".mysql_real_escape_string($participant_arr['altcontact'])."\",";
   $query.= "prognotes=\"".mysql_real_escape_string($participant_arr['prognotes'])."\",";
   $query.= "pubsname=\"".mysql_real_escape_string($participant_arr['pubsname'])."\"";

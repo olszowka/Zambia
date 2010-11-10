@@ -8,12 +8,29 @@
         $badgeid=$_POST['badgeid'];
         $edited_bio=mysql_real_escape_string(stripslashes($_POST['edited_bio']),$link);
         $scndlangbio=mysql_real_escape_string(stripslashes($_POST['scndlangbio']),$link);
+        $edited_progbio=mysql_real_escape_string(stripslashes($_POST['edited_progbio']),$link);
+        $progscndlangbio=mysql_real_escape_string(stripslashes($_POST['progscndlangbio']),$link);
         $bioeditstatus=stripslashes($_POST['bioeditstatus']);
+
+    if (strlen($edited_bio)>MAX_BIO_LEN) {
+        $message_error="Web Biography is too long: ".(strlen($edited_bio))." characters.  Please go back and re-edit.  Database not updated.";
+	RenderError($title,$message_error);
+	exit();
+    }
+    if (strlen($edited_progbio)>MAX_PROG_BIO_LEN) {
+        $message_error="Program Book Biography is too long: ".(strlen($edited_progbio))." characters.  Please go back and re-edit.  Database not updated.";
+	RenderError($title,$message_error);
+        exit();
+    }
+	
+
         $query = <<<EOD
 UPDATE Participants
     SET
         editedbio = '$edited_bio',
         scndlangbio = '$scndlangbio',
+        progeditedbio = '$edited_progbio',
+        progscndlangbio = '$progscndlangbio',
         bioeditstatusid = $bioeditstatus
     WHERE
         badgeid='$badgeid';

@@ -13,7 +13,7 @@
     $lockresult=lock_participant($badgeid); // returns 0 if succeeded, -2 if lock failed, -1 if db error
     $query = <<<EOD
 SELECT
-        bio, editedbio, scndlangbio, bioeditstatusid, biolockedby,
+        bio, progbio, editedbio, progeditedbio, scndlangbio, progscndlangbio, bioeditstatusid, biolockedby,
         if(pubsname!="",pubsname,badgename) name 
     FROM 
         Participants P JOIN CongoDump CD USING (badgeid)
@@ -61,16 +61,25 @@ EOD;
     echo "<FORM name=\"bioeditform\" method=POST action=\"StaffManageBios_POST.php\">\n";
     $participant_name=htmlspecialchars($participant_info_array['name']);
     $orig_bio=htmlspecialchars($participant_info_array['bio']);
+    $orig_progbio=htmlspecialchars($participant_info_array['progbio']);
     $edited_bio=htmlspecialchars($participant_info_array['editedbio']);
+    $edited_progbio=htmlspecialchars($participant_info_array['progeditedbio']);
     $scndlangbio=htmlspecialchars($participant_info_array['scndlangbio']);
+    $progscndlangbio=htmlspecialchars($participant_info_array['progscndlangbio']);
     echo "<INPUT type=hidden name=\"badgeid\" value=\"$badgeid\"\n";
     echo "<H3 style=\"text.align:center\">$participant_name</H3>\n";
-    echo "<LABEL for=\"orig_bio\">Original Biography:</LABEL><BR>\n";
+    echo "<LABEL for=\"orig_bio\">Original Web Biography (Limit ".MAX_BIO_LEN." characters):</LABEL><BR>\n";
     echo "<TEXTAREA readonly name=\"orig_bio\" rows=8 cols=72 >$orig_bio</TEXTAREA><BR><BR>\n";
-    echo "<LABEL for=\"edited_bio\">Edited Biography:</LABEL><BR>\n";
+    echo "<LABEL for=\"edited_bio\">Edited Web Biography:</LABEL><BR>\n";
     echo "<TEXTAREA name=\"edited_bio\" rows=8 cols=72>$edited_bio</TEXTAREA><BR><BR>\n";
     echo "<LABEL for=\"scndlangbio\">".SECOND_BIOGRAPHY_CAPTION."</LABEL><BR>\n";
     echo "<TEXTAREA name=\"scndlangbio\" rows=8 cols=72>$scndlangbio</TEXTAREA><BR><BR>\n";
+    echo "<LABEL for=\"orig_progbio\">Original Programming Book Biography (Limit ".MAX_PROG_BIO_LEN." characters):</LABEL><BR>\n";
+    echo "<TEXTAREA readonly name=\"orig_progbio\" rows=8 cols=72 >$orig_progbio</TEXTAREA><BR><BR>\n";
+    echo "<LABEL for=\"edited_progbio\">Edited Programming Book Biography:</LABEL><BR>\n";
+    echo "<TEXTAREA name=\"edited_progbio\" rows=8 cols=72>$edited_progbio</TEXTAREA><BR><BR>\n";
+    echo "<LABEL for=\"progscndlangbio\">".SECOND_BIOGRAPHY_CAPTION."</LABEL><BR>\n";
+    echo "<TEXTAREA name=\"progscndlangbio\" rows=8 cols=72>$progscndlangbio</TEXTAREA><BR><BR>\n";
     echo "<LABEL for=\"bioeditstatus\">Status of this participant's biography:</LABEL><BR>\n";
     for ($i=0; $i<$numeditstatuses; $i++) {
         $statid=$bioeditstatuses_array[$i]['bioeditstatusid'];

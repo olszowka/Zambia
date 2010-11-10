@@ -70,7 +70,7 @@ if (!$result=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
-echo "<H2>$selsessionid - ".htmlspecialchars(mysql_result($result,0,"title"))."</H2>";    
+echo "<H2>$selsessionid - <A HREF=\"EditSession.php?id=".$selsessionid."\">".htmlspecialchars(mysql_result($result,0,"title"))."</A></H2>";    
 echo "<P>Program Guide Text\n";
 echo "<P class=\"border1111 lrmargin lrpad\">";
 echo htmlspecialchars(mysql_result($result,0,"progguiddesc"));

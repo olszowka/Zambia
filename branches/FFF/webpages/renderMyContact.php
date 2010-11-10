@@ -3,6 +3,9 @@ require_once('PartCommonCode.php');
 if (isset($bio)) {
     $participant["bio"]=$bio;
     }
+if (isset($progbio)) {
+    $participant["progbio"]=$progbio;
+    }
 if (isset($pubsname)) {
         $participant["pubsname"]=$pubsname;
         }
@@ -137,13 +140,21 @@ if (!(may_I('EditBio'))) { // no permission to edit bio
     }
 echo "><BR><BR>\n";
 $bio=MAX_BIO_LEN;
-echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your biography ($bio characters or fewer):</LABEL><BR>\n";
-echo "Note: Your biography will appear immediately following your name in the program.<BR>\n";
+$progbio=MAX_PROG_BIO_LEN;
+echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your web-based biography ($bio characters or fewer):</LABEL><BR>\n";
+echo "Note: Your web-based biography will appear immediately following your name on the web page.<BR>\n";
 echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
 if (!(may_I('EditBio'))) { // no permission to edit bio
     echo " readonly";
     }
-echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>"; ?>
+echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>\n<BR>\n";
+echo "<LABEL class=\"spanlabcb\" for=\"progbio\">Your program guide biography ($progbio characters or fewer):</LABEL><BR>\n";
+echo "Note: Your program guide biography will appear immediately following your name in the program book.<BR>\n";
+echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"progbio\"";
+if (!(may_I('EditBio'))) { // no permission to edit progbio
+    echo " readonly";
+    }
+echo ">".htmlspecialchars($participant["progbio"],ENT_COMPAT)."</TEXTAREA>"; ?>
         <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
         <INPUT type="hidden" name="pubsnameold" value="<?php echo htmlspecialchars($pubsnameold,ENT_COMPAT); ?>">
     </form>

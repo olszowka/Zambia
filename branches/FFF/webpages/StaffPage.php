@@ -7,6 +7,9 @@
   require_once('StaffCommonCode.php');
   unlock_participant(''); // unlocks any records locked by current user
   staff_header($title);
+  if (file_exists("../Local/Verbiage/StaffPage_0")) {
+    echo file_get_contents("../Local/Verbiage/StaffPage_0");
+  } else {
 ?>
 
 <p> Please note the tabs above.   One of them will take you to your 
@@ -54,6 +57,6 @@ This is an category we can mine for ideas in future years.
 <p>For your reference there are several statuses pulled over from previous 
 years.  They are here for your reference and in general should be mined for 
 information.  Feel free to flip an session from a previous year into the 
-workflow for this year if you want to see it happen this year. 
+workflow for this year if you want to see it happen this year.
 
-<?php staff_footer(); ?>
+<?php } staff_footer(); ?>

@@ -100,8 +100,13 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                      value="<?php echo htmlspecialchars($participant_arr["postzip"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 </DIV>
             <DIV class="denseform">
-                <SPAN><LABEL for="bio" style="vertical-align: top">Biography: </LABEL>
+                <SPAN><LABEL for="bio" style="vertical-align: top">Web Biography<BR>(Limit <?php echo MAX_BIO_LEN;?> characters): </LABEL>
                     <TEXTAREA class="textlabelarea" cols=70 name="bio" ><?php echo htmlspecialchars($participant_arr["bio"],ENT_NOQUOTES);?></TEXTAREA>
+                    </SPAN>
+                </DIV>
+            <DIV class="denseform">
+                <SPAN><LABEL for="progbio" style="vertical-align: top">Programming Book Biography<BR>(Limit <?php echo MAX_PROG_BIO_LEN;?> characters): </LABEL>
+                    <TEXTAREA class="textlabelarea" cols=70 name="progbio" ><?php echo htmlspecialchars($participant_arr["progbio"],ENT_NOQUOTES);?></TEXTAREA>
                     </SPAN>
                 </DIV>
             <DIV class="denseform">

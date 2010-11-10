@@ -517,7 +517,7 @@ function isLoggedIn() {
 function retrieve_participant_from_db($badgeid) {
     global $participant;
     global $link,$message2;
-    $result=mysql_query("SELECT pubsname, password, bestway, interested, bio FROM Participants where badgeid='$badgeid'",$link);
+    $result=mysql_query("SELECT pubsname, password, bestway, interested, bio, progbio FROM Participants where badgeid='$badgeid'",$link);
     if (!$result) {
         $message2=mysql_error($link);
         return (-3);

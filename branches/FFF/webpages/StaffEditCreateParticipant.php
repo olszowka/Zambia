@@ -39,6 +39,7 @@ if ($action=="create") { //initialize participant array
   $participant_arr['interested']=""; //null means hasn't logged in yet.
   $participant_arr['permroleid']=""; //null means hasn't logged in yet.
   $participant_arr['bio']="";
+  $participant_arr['progbio']="";
   $participant_arr['altcontact']="";
   $participant_arr['prognotes']="";
   $participant_arr['bioeditstatusid']=1; //not edited -- whatever is first step
@@ -111,6 +112,7 @@ SELECT
     P.bestway,
     P.interested,
     P.bio,
+    P.progbio,
     P.pubsname,
     P.altcontact,
     P.prognotes,

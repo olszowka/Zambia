@@ -63,7 +63,7 @@ to your participation again next year.</P>
       <li> Indicate whether you will be participating in <?php echo 
 CON_NAME; ?>. </li>
       <li> Edit your name as you want to appear in our publications.</li>
-      <li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
+      <li> Enter a short and long bio for <?php echo CON_NAME; ?> web and program book publications.</li>
     </ul>
 
 <?php if (may_I('search_panels')) { ?>
