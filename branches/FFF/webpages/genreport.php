@@ -4,14 +4,25 @@
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
+    $showreport=0;
     $reportid=$_GET["reportid"];
-    $_SESSION['return_to_page']="genreport.php?reportid=$reportid";
+    $reportname=$_GET["reportname"];
     $title="General Report Generator";
-    $description="<P>If you are seeing this, something failed trying to get report: $reportid.</P>\n";
     $additionalinfo="";
 
+    ## Switch on which way this is called
+    if (!$reportname) {
+      $_SESSION['return_to_page']="genreport.php?reportid=$reportid";
+      $description="<P>If you are seeing this, something failed trying to get report: $reportid.</P>\n";
+    } else {
+      $_SESSION['return_to_page']="genreport.php?reportname=$reportname";
+      $description="<P>If you are seeing this, something failed trying to get report: $reportname.</P>\n";
+      $showreport++;
+    }
+    if ($reportid) {$showreport++;}
+
     ## No reportid, load the all-reports page
-    if (!$reportid) {
+    if ($showreport==0) {
       $_SESSION['return_to_page']="genreport.php";
       $title="List of all reports";
       $description="<P>Here is a list of all the reports that are available to be generated.</P>\n";
@@ -43,8 +54,13 @@ SELECT
   FROM
       Reports
   WHERE
-    reportid = '$reportid'
 EOD;
+
+      if (!$reportid) {
+	$query.="\n    reportname = '$reportname'";
+      } else {
+	$query.="\n    reportid = '$reportid'";
+      }
 
       ## Retrieve query
       list($returned_reports,$unused_array,$report_array)=queryreport($query,$link,$title,$description,0);

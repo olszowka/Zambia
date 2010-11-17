@@ -19,7 +19,7 @@ On this page you will find the online tools for managing Panels, Events, Films, 
    <DD>Rapidly access a Session from the list of Sessions to Edit or Update.</DD>
    <DT><A HREF="ViewSessionCountReport.php">View Counts of Sessions</A></DT>
    <DD>A quick report broken down by status and then by track to give an idea of where we are.</DD>
-   <DT><A HREF="genreport.php?reportid=91">View All Sessions:</A></DT>
+   <DT><A HREF="genreport.php?reportname=ViewAllSessions">View All Sessions:</A></DT>
    <DD>A tabular report on all sessions organized by track.  Key information on each session is visible from the top level and a link takes you down into the details for any session.</DD>
    <DT><A HREF="CommentOnSessions.php">Session Comments</A></DT>
    <DD>Add comments and feedback specifically for Sessions.</DD>

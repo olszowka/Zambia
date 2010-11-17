@@ -50,7 +50,7 @@
                         header("Location: ".$_SESSION['return_to_page']); /* Redirect browser */
                         }
                     else {
-                        header("Location: genreport.php?reportid=91"); /* Redirect browser */
+                        header("Location: genreport.php?reportname=ViewAllSessions"); /* Redirect browser */
                         }
                 exit();
                 }
