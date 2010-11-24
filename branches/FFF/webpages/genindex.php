@@ -27,11 +27,15 @@ EOD;
       ## Retrieve query
       list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
-      ## Hand-add "All Reports" and "Grids" entry for now.
+      ## Hand-add "All Reports", "Search", "My Flow", and "Grids" entry for now.
       $rows++;
       $report_array[$rows]['Indicies']="<A HREF=manualGRIDS.php>Grids</A>";
       $rows++;
+      $report_array[$rows]['Indicies']="<A HREF=personalflow.php>My Flow</A>";
+      $rows++;
       $report_array[$rows]['Indicies']="<A HREF=genreport.php>All Reports</A>";
+      $rows++;
+      $report_array[$rows]['Indicies']="<A HREF=searchreport.php>Search</A>";
 
       ## Page Rendering
       topofpagereport($title,$description,$additionalinfo);

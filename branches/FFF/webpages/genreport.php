@@ -1,7 +1,6 @@
 <?php
     require_once('StaffCommonCode.php');
     global $link;
-    $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
     $showreport=0;
@@ -66,11 +65,13 @@ EOD;
       list($returned_reports,$unused_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
       ## Fix reference problem
-      $report_array[1]['reportquery']=str_replace('$ConStartDatim',$ConStartDatim,$report_array[1]['reportquery']);
+      $report_array[1]['reportquery']=str_replace('$ConStartDatim',CON_START_DATIM,$report_array[1]['reportquery']);
+      $report_array[1]['reportquery']=str_replace('$GohBadgeList',GOH_BADGE_LIST,$report_array[1]['reportquery']);
 
       ## Retrieve secondary query
       list($rows,$header_array,$class_array)=queryreport($report_array[1]['reportquery'],$link,$report_array[1]['reporttitle'],$report_array[1]['reportdescription'],$reportid);
       $report_array[1]['reportadditionalinfo'].="<P><A HREF=\"genreport.php?reportid=$reportid&csv=y\" target=_blank>csv</A> file</P>\n";
+      $report_array[1]['reportadditionalinfo'].="<P>Add this report to your Personal Flow.</P>\n";
       if ($returned_reports > 1) {$report_array[1]['reportadditionalinfo'].="<P>Number of matches: $rows</P>\n";}
 
       ## Page Rendering
