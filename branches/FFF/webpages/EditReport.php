@@ -50,7 +50,6 @@ function SubmitNewReport () {
     $query.=mysql_real_escape_string(stripslashes($reportdescription))."','";
     $query.=mysql_real_escape_string(stripslashes($reportadditionalinfo))."','";
     $query.=mysql_real_escape_string(stripslashes($reportquery))."')";
-    echo $query;
     if (!mysql_query($query,$link)) {
         $message=$query."<BR>Error updating database.  Database not updated.";
         echo "<P class=\"errmsg\">".$message."\n";
