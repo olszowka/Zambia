@@ -14,7 +14,7 @@ SELECT
     USING (bioeditstatusid)
     ORDER BY display_order;
 EOD;
-// Participants.interested: 1=yes; 2=no; 0=left blank; null=never hit 'save'
+// Participants.interested: 1=yes; 2=no; 3=invited; 4=suggested; 0=left blank; null=never hit 'save'
     if (($result=mysql_query($query,$link))===false) {
         $message=$query."<BR>\nError retrieving data from database.\n";
         RenderError($title,$message);

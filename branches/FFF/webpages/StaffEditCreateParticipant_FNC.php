@@ -46,6 +46,8 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
                     <OPTION value="0" <?php if ($participant_arr["interested"]=="0") echo "selected";?> >Did not answer</OPTION>
                     <OPTION value="1" <?php if ($participant_arr["interested"]=="1") echo "selected";?> >Yes</OPTION>
                     <OPTION value="2" <?php if ($participant_arr["interested"]=="2") echo "selected";?> >No</OPTION>
+                    <OPTION value="3" <?php if ($participant_arr["interested"]=="3") echo "selected";?> >Invited</OPTION>
+                    <OPTION value="4" <?php if ($participant_arr["interested"]=="4") echo "selected";?> >Suggested</OPTION>
                     </SELECT>
                 </DIV>
             <DIV class="denseform">
