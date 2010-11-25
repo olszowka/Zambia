@@ -39,11 +39,11 @@ function SubmitEditReport () {
 
 function SubmitNewReport () {
     global $link;
-    $reportname = $_POST["reportname"];
-    $reporttitle = $_POST["reporttitle"];
-    $reportdescription = $_POST["reportdescription"];
-    $reportadditionalinfo = $_POST["reportadditionalinfo"];
-    $reportquery = $_POST["reportquery"];
+    $reportname = htmlspecialchars_decode($_POST["reportname"]);
+    $reporttitle = htmlspecialchars_decode($_POST["reporttitle"]);
+    $reportdescription = htmlspecialchars_decode($_POST["reportdescription"]);
+    $reportadditionalinfo = htmlspecialchars_decode($_POST["reportadditionalinfo"]);
+    $reportquery = htmlspecialchars_decode(refrom($_POST["reportquery"]));
     $query = "INSERT INTO Reports (reportname,reporttitle,reportdescription,reportadditionalinfo,reportquery) VALUES ('";
     $query.=mysql_real_escape_string($reportname)."','";
     $query.=mysql_real_escape_string($reporttitle)."','";
