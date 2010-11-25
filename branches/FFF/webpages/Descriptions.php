@@ -29,6 +29,7 @@ SELECT
     GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
     S.sessionid as Sessionid,
     concat('<A NAME=\"',S.sessionid,'\"></A>',S.title) as Title,
+    S.secondtitle AS Subtitle,
     concat('<P>',S.progguiddesc,'</P>') as Description
   FROM
       Sessions S
@@ -55,6 +56,9 @@ EOD;
     echo "<DL>\n";
     for ($i=1; $i<=$elements; $i++) {
       echo sprintf("<P><DT><B>%s</B>",$element_array[$i]['Title']);
+      if ($element_array[$i]['Subtitle']) {
+        echo sprintf("&mdash; %s",$element_array[$i]['Subtitle']);
+      }
       if ($element_array[$i]['Start Time']) {
 	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Start Time']);
       }

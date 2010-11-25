@@ -38,7 +38,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             <INPUT type="hidden" name="name" value="<?php echo htmlspecialchars($name,ENT_COMPAT);?>">
             <INPUT type="hidden" name="email" value="<?php echo htmlspecialchars($email,ENT_COMPAT);?>">
             <!-- The pubno field is no longer used on the form, but the code expects it.-->
-            <INPUT type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT)."\">";?>
+            <INPUT type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT); ?>">
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
@@ -65,9 +65,8 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </SELECT></SPAN>
                 </DIV>
             <DIV class="denseform">
-                <SPAN><LABEL for="title">Title: </LABEL><INPUT type=text size="50" name="title" value="<?php
-                    echo htmlspecialchars($session["title"],ENT_COMPAT)."\">";
-                    ?>&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="title">Title: </LABEL><INPUT type=text size="50" name="title"
+                    value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT); ?>">&nbsp;&nbsp;</SPAN>
                 <SPAN id="sinvguest"><LABEL for="invguest">Invited Guests Only? </LABEL>
                     <INPUT type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?>
                     name="invguest">&nbsp;&nbsp;</SPAN>
@@ -82,20 +81,24 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </SPAN>
 		<?php } ?>
                 </DIV>
+            <DIV class="denseform">
+                <SPAN><LABEL for="secondtitle">Subtitle: </LABEL><INPUT type=text size="50" name="secondtitle" 
+                    value="<?php echo htmlspecialchars($session["secondtitle"],ENT_COMPAT) ?>">&nbsp;&nbsp;</SPAN>
+                </DIV>
 <?php
         if (strtoupper(BILINGUAL)=="TRUE") {
                 echo "            <DIV class=\"denseform\">\n";
-                echo "                 <SPAN><LABEL for=\"secondtitle\">".SECOND_TITLE_CAPTION.": </LABEL>";
-                echo "<INPUT type=text size=\"50\" name=\"secondtitle\" value=\"";
-                echo htmlspecialchars($session["secondtitle"],ENT_COMPAT)."\">&nbsp;&nbsp;</SPAN>\n";
+                echo "                 <SPAN><LABEL for=\"altlangtitle\">".ALT_LANG_TITLE_CAPTION.": </LABEL>";
+                echo "<INPUT type=text size=\"50\" name=\"altlangtitle\" value=\"";
+                echo htmlspecialchars($session["altlangtitle"],ENT_COMPAT)."\">&nbsp;&nbsp;</SPAN>\n";
                 echo "                 <SPAN><LABEL for=\"languagestatusid\">Session Language: </LABEL><SELECT name=\"languagestatusid\">";
                 populate_select_from_table("LanguageStatuses", $session["languagestatusid"], "SELECT", FALSE);
                 echo "</SELECT>\n                    </SPAN>\n";
                 echo "                </DIV>\n";
                 }
             else {
-                echo "            <INPUT type=\"hidden\" name=\"secondtitle\" value=\"";
-                echo htmlspecialchars($session["secondtitle"],ENT_COMPAT)."\">";
+	      //echo "            <INPUT type=\"hidden\" name=\"altlangtitle\" value=\"";
+	      //echo htmlspecialchars($session["altlangtitle"],ENT_COMPAT)."\">";
                 echo "            <INPUT type=\"hidden\" name=\"languagestatusid\" value=\"";
                 echo htmlspecialchars($session["languagestatusid"],ENT_COMPAT)."\">";
                 }
