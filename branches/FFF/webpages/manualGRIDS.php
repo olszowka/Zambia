@@ -47,6 +47,6 @@ foreach ($body_array as $y_element) {
 
 ## Page Rendering
 topofpagereport($title,$description,$additionalinfo);
-renderhtmlreport($rows,$header_array,$grid_array);
+renderhtmlreport($rows,$header_array,$grid_array,1);
 
 ?>

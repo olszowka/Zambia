@@ -1,14 +1,12 @@
 <?php
     require_once('StaffCommonCode.php');
     global $link;
-    $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $ProgramEmail=PROGRAM_EMAIL;
 
     ## LOCALIZATIONS
     $_SESSION['return_to_page']="personalflow.php";
     $title="Personal Flow Reports";
     $description="<P>Here is a list of all the reports, that you have added to your personal flow, that are available to be generated during this phase.</P>\n";
-    $additionalinfo="";
+    $additionalinfo="<P><A HREF=EditPersonalFlows.php>Change</A> the ordering of this page.";
 
     $query = <<<EOD
 SELECT
@@ -30,5 +28,5 @@ EOD;
 
     ## Page Rendering
     topofpagereport($title,$description,$additionalinfo);
-    renderhtmlreport($rows,$header_array,$report_array);
+    renderhtmlreport($rows,$header_array,$report_array,1);
 ?>

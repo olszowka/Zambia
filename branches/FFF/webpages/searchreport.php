@@ -56,5 +56,5 @@ EOD;
 
       ## Page Rendering
       echo "<HR>\n";
-      renderhtmlreport($rows,$header_array,$report_array);
+      renderhtmlreport($rows,$header_array,$report_array,1);
 ?>

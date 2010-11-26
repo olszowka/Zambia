@@ -314,7 +314,7 @@ function topofpagecsv($filename) {
 }
 
 // Produce the HTML body version of the information gathered in tables.
-function renderhtmlreport($rows,$header_array,$element_array) {
+function renderhtmlreport($rows,$header_array,$element_array,$islast) {
   $headers="";
   foreach ($header_array as $header_name) {
     $headers.="<TH>";
@@ -333,17 +333,19 @@ function renderhtmlreport($rows,$header_array,$element_array) {
     echo "</TR>\n";
   }
   echo "</TABLE>";
-  if ($_SESSION['role'] == "Brainstorm") {
-    brainstorm_footer();
-  }
-  elseif ($_SESSION['role'] == "Participant") {
-    participant_footer();
-  }
-  elseif ($_SESSION['role'] == "Staff") {
-    staff_footer();
-  }
-  elseif ($_SESSION['role'] == "Posting") {
-    posting_footer();
+  if ($islast==1) {
+    if ($_SESSION['role'] == "Brainstorm") {
+      brainstorm_footer();
+    }
+    elseif ($_SESSION['role'] == "Participant") {
+      participant_footer();
+    }
+    elseif ($_SESSION['role'] == "Staff") {
+      staff_footer();
+    }
+    elseif ($_SESSION['role'] == "Posting") {
+      posting_footer();
+    }
   }
 }
 
@@ -487,7 +489,7 @@ SELECT
     timestamp DESC
 EOD;
   list($rows,$header_array,$notes_array)=queryreport($query,$link,"Notes on Participant","","");
-  renderhtmlreport($rows,$header_array,$notes_array);
+  renderhtmlreport($rows,$header_array,$notes_array,1);
 }
 
 function create_participant ($participant_arr) {
@@ -674,5 +676,195 @@ function edit_participant ($participant_arr) {
   $message="Database updated successfully.<BR>";
   echo "<P class=\"regmsg\">".$message."\n";
 }    
+
+function remove_flow_report ($flowid,$table,$title,$description) {
+  global $link;
+
+  ## Establish the table name
+  $tablename=$table."Flow";
+
+  ## Establish the table element or fail
+  if ($table=="Group") {
+    $tableelement="gflowid";
+  } elseif ($table=="Personal") {
+    $tableelement="pflowid";
+  } else {
+    $message="<P>Error finding table $tablename.  Database not updated.</P>\n<P>";
+    RenderError($title,$message);
+    exit ();
+  }
+
+  ## Set up the query
+  $query="DELETE FROM $tablename where $tableelement=$flowid";
+
+  ## Execute the query and test the results
+  if (($result=mysql_query($query,$link))===false) {
+    $message="<P>Error updating $tablename table.  Database not updated.</P>\n<P>";
+    $message.=$query;
+    RenderError($title,$message);
+    exit ();
+  }
+}
+
+function add_flow_report ($addreport,$addphase,$table,$group,$title,$description) {
+  global $link;
+  $mybadgeid=$_SESSION['badgeid'];
+
+  ## Get phaseid list
+  $query="SELECT phaseid FROM Phases ORDER BY phaseid";
+
+  ## Retrieve query
+  list($phasecount,$unneeded_array_a,$phase_array)=queryreport($query,$link,$title,$description,0);
+
+  ## Build the limits
+  $firstphase=$phase_array[1]['phaseid'];
+  $lastphase=$phase_array[$phasecount]['phaseid'];
+
+  ## Set the phase, if it is within the phaseid list
+  $phasecheck="";
+  if (($addphase<=$lastphase) AND ($addphase>=$firstphase)) {
+    $phasecheck="phaseid='$addphase'";
+  } else {
+    $phasecheck="phaseid is NULL";
+  }
+
+  ## Establish the table name
+  $tablename=$table."Flow";
+
+  ## Establish the table element or fail
+  if ($table=="Group") {
+    $torder="gfloworder";
+    $tname="gflowname";
+    $cname=$group;
+    $tid="gflowid";
+  } elseif ($table=="Personal") {
+    $torder="pfloworder";
+    $tname="badgeid";
+    $cname=$mybadgeid;
+    $tid="pflowid";
+  } else {
+    $message="<P>Error finding table $tablename.  Database not updated.</P>\n<P>";
+    RenderError($title,$message);
+    exit ();
+  }
+
+  ## Get the last element number, to increment
+  $query="SELECT $torder AS floworder FROM $tablename where $tname='$cname' AND $phasecheck ORDER BY $torder DESC LIMIT 0,1";
+
+  ## Execute the query, test the results and assign the array values
+  if (($result=mysql_query($query,$link))===false) {
+    $message="<P>Error retrieving data from database.</P>\n<P>";
+    $message.=$query;
+    RenderError($title,$message);
+    exit ();
+  }
+  $floworder_array[1]=mysql_fetch_assoc($result);
+
+  ## Increment so we don't have redundant keys
+  $nextfloworder=$floworder_array[1]['floworder']+1;
+
+  ## Insert query
+  if ($phasecheck!="phaseid is NULL") {
+    $query="INSERT INTO $tablename (reportid,$tname,$torder,phaseid) VALUES ($addreport,'$cname',$nextfloworder,$addphase)";
+  } else {
+    $query="INSERT INTO $tablename (reportid,$tname,$torder) VALUES ($addreport,'$cname',$nextfloworder)";
+  }
+
+  ## Execute query
+  if (!mysql_query($query,$link)) {
+    $message=$query."<BR>Error updating $tablename database.  Database not updated.";
+    RenderError($title,$message);
+    exit ();
+  }
+}
+
+function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
+  global $link;
+ 
+  ## Establish the table name;
+  $tablename=$table."Flow";
+
+  ## Estabilsh the table elements, or fail;
+  if ($table=="Group") {
+    $torder="gfloworder";
+    $tname="gflowname";
+    $tid="gflowid";
+  } elseif ($table=="Personal") {
+    $torder="pfloworder";
+    $tname="badgeid";
+    $tid="pflowid";
+  } else {
+    $message="<P>Error finding table $tablename.  Database not updated.</P>\n<P>";
+    RenderError($title,$message);
+    exit ();
+  }
+
+  ## Get element from table;
+  $query="SELECT $torder,$tname,phaseid FROM $tablename WHERE $tid=$flowid";
+  list($phaserows,$phaseheader_array,$phasereport_array)=queryreport($query,$link,$title,$description,0);
+
+  ## Set the current flow order number;
+  $corder=$phasereport_array[1][$torder];
+  $cname=$phasereport_array[1][$tname];
+
+  ## Determine the next flow order number, depending on $direction;
+  if ($direction=="Up") {
+    $norder=$corder-1;
+    if ($norder<1) {
+      $message="<P>You cannot have an order number less than 1.</P>\n";
+      RenderError($title,$message);
+      exit ();
+    }
+  } elseif ($direction="Down") {
+    $norder=$corder+1;
+  } else {
+    $message="<P>You have chosen an inappropriate direction: $direction.</P>\n";
+    RenderError($title,$message);
+    exit ();
+  }
+
+  ## Determine if there is a phaseid attached to this particular flow element;
+  if (isset($phasereport_array[1]['phaseid'])) {
+    $phase=$phasereport_array[1]['phaseid'];
+    $phasecheck="phaseid='$phase'";
+  } else {
+    $phasecheck="phaseid is NULL";
+  }
+
+  ## Get element to be swapped with from table, based on current element floworder and $norder
+  $query="SELECT $tid FROM $tablename WHERE $torder=$norder AND $tname='$cname' AND $phasecheck LIMIT 0,1";
+  if (($result=mysql_query($query,$link))===false) {
+    $message="<P>Error retrieving data from database.</P>\n<P>";
+    $message.=$query;
+    RenderError($title,$message);
+    exit ();
+  }
+
+  ## Swap the elements, checking for errors each time
+  $query1="UPDATE $tablename set $torder=$norder where $tid=$flowid";
+
+  ## Execute the query and test the results
+  if (($result1=mysql_query($query1,$link))===false) {
+    $message="<P>Error updating $tablename table.  Database not updated.</P>\n<P>";
+    $message.=$query;
+    RenderError($title,$message);
+    exit ();
+  }
+
+  ## If there is nothing to swap with, simply stop here.
+  if (1==($row=mysql_num_rows($result))) {
+    $replace_array[1]=mysql_fetch_assoc($result);
+    $rtid=$replace_array[1][$tid];
+    $query="UPDATE $tablename set $torder=$corder where $tid=$rtid";
+
+    ## Execute the query and test the results;
+    if (($result=mysql_query($query,$link))===false) {
+      $message="<P>Error updating $tablename table.  Database not updated.</P>\n<P>";
+      $message.=$query;
+      RenderError($title,$message);
+      exit ();
+    }
+  }
+}
 
 ?>

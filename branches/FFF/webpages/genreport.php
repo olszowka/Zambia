@@ -9,6 +9,11 @@
     $title="General Report Generator";
     $additionalinfo="";
 
+    ## Check for addtion
+    if (isset($_POST['addto'])) {
+      add_flow_report($_POST['addto'],$_POST['addphase'],"Personal","",$title,$description);
+    }
+
     ## Switch on which way this is called
     if (!$reportname) {
       $_SESSION['return_to_page']="genreport.php?reportid=$reportid";
@@ -40,12 +45,13 @@ EOD;
 
       ## Page Rendering
       topofpagereport($title,$description,$additionalinfo);
-      renderhtmlreport($rows,$header_array,$report_array);
+      renderhtmlreport($rows,$header_array,$report_array,1);
       } else {
 
       $query = <<<EOD
 SELECT
     reportname,
+    reportid,
     reporttitle,
     reportdescription,
     reportadditionalinfo,
@@ -62,26 +68,37 @@ EOD;
       }
 
       ## Retrieve query
-      list($returned_reports,$unused_array,$report_array)=queryreport($query,$link,$title,$description,0);
+      list($returned_reports,$reportnumber_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
-      ## Fix reference problem
-      $report_array[1]['reportquery']=str_replace('$ConStartDatim',CON_START_DATIM,$report_array[1]['reportquery']);
-      $report_array[1]['reportquery']=str_replace('$GohBadgeList',GOH_BADGE_LIST,$report_array[1]['reportquery']);
+      for ($i=1; $i<=$returned_reports; $i++) {
+	## Fix reference problem
+	$report_array[$i]['reportquery']=str_replace('$ConStartDatim',CON_START_DATIM,$report_array[$i]['reportquery']);
+	$report_array[$i]['reportquery']=str_replace('$GohBadgeList',GOH_BADGE_LIST,$report_array[$i]['reportquery']);
 
-      ## Retrieve secondary query
-      list($rows,$header_array,$class_array)=queryreport($report_array[1]['reportquery'],$link,$report_array[1]['reporttitle'],$report_array[1]['reportdescription'],$reportid);
-      $report_array[1]['reportadditionalinfo'].="<P><A HREF=\"genreport.php?reportid=$reportid&csv=y\" target=_blank>csv</A> file</P>\n";
-      $report_array[1]['reportadditionalinfo'].="<P>Add this report to your Personal Flow.</P>\n";
-      if ($returned_reports > 1) {$report_array[1]['reportadditionalinfo'].="<P>Number of matches: $rows</P>\n";}
+        ## Retrieve secondary query
+        list($rows,$header_array,$class_array)=queryreport($report_array[$i]['reportquery'],$link,$report_array[$i]['reporttitle'],$report_array[$i]['reportdescription'],$reportid);
+        $report_array[$i]['reportadditionalinfo'].="<P><A HREF=\"genreport.php?reportid=".$report_array[$i]['reportid']."&csv=y\" target=_blank>csv</A> file</P>\n";
+        $report_array[$i]['reportadditionalinfo'].="<P><FORM name=\"addto\" method=POST action=\"genreport.php?reportid=".$report_array[$i]['reportid']."\">";
+        $report_array[$i]['reportadditionalinfo'].="<INPUT type=\"hidden\" name=\"addto\" value=\"".$report_array[$i]['reportid']."\">";
+        $report_array[$i]['reportadditionalinfo'].=" <INPUT type=submit value=\"Add\">";
+        $report_array[$i]['reportadditionalinfo'].=" this report to your Personal Flow. (If you wish, put in the phase number: ";
+        $report_array[$i]['reportadditionalinfo'].="<LABEL for=\"addphase\" ID=\"addphase\"></LABEL>";
+        $report_array[$i]['reportadditionalinfo'].="<INPUT type=\"text\" name=\"addphase\" size=\"1\">.)";
+        $report_array[$i]['reportadditionalinfo'].="</FORM></P>\n";
+        if ($returned_reports > 1) {$report_array[$i]['reportadditionalinfo'].="<P>Report $i of $returned_reports</P>\n";}
 
-      ## Page Rendering
-      if ($_GET["csv"]=="y") {
-        topofpagecsv($report_array[1]['reportname'].".csv");
-        rendercsvreport($rows,$header_array,$class_array);
-        } else {
-        topofpagereport($report_array[1]['reporttitle'],$report_array[1]['reportdescription'],$report_array[1]['reportadditionalinfo']);
-        renderhtmlreport($rows,$header_array,$class_array);
-        }
+        ## Page Rendering
+        if ($_GET["csv"]=="y") {
+          topofpagecsv($report_array[$i]['reportname'].".csv");
+          rendercsvreport($rows,$header_array,$class_array);
+          } else {
+          topofpagereport($report_array[$i]['reporttitle'],$report_array[$i]['reportdescription'],$report_array[$i]['reportadditionalinfo']);
+	  if ($i==$returned_reports) {
+            renderhtmlreport($rows,$header_array,$class_array,1);
+	    } else {
+            renderhtmlreport($rows,$header_array,$class_array,0);
+          }
+	}
       }
-
+    }
 ?>

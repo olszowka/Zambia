@@ -27,19 +27,17 @@ EOD;
       ## Retrieve query
       list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
-      ## Hand-add "All Reports", "Search", "My Flow", and "Grids" entry for now.
-      $rows++;
-      $report_array[$rows]['Indicies']="<A HREF=manualGRIDS.php>Grids</A>";
-      $rows++;
-      $report_array[$rows]['Indicies']="<A HREF=personalflow.php>My Flow</A>";
-      $rows++;
-      $report_array[$rows]['Indicies']="<A HREF=genreport.php>All Reports</A>";
-      $rows++;
-      $report_array[$rows]['Indicies']="<A HREF=searchreport.php>Search</A>";
+      ## Hand-add "All Reports", "Search", "My Flow", "Edit", and "Grids" entry for now.
+      $header_array[2]='Tools';
+      $report_array[1]['Tools']="<A HREF=genreport.php>All Reports</A>";
+      $report_array[2]['Tools']="<A HREF=personalflow.php>My Flow</A>";
+      $report_array[3]['Tools']="<A HREF=manualGRIDS.php>Grids</A>";
+      $report_array[4]['Tools']="<A HREF=searchreport.php>Search</A>";
+      $report_array[5]['Tools']="<A HREF=EditGroupFlows.php>Edit</A>";
 
       ## Page Rendering
       topofpagereport($title,$description,$additionalinfo);
-      renderhtmlreport($rows,$header_array,$report_array);
+      renderhtmlreport($rows,$header_array,$report_array,1);
       } else {
 
       $title="$gflowname Reports";
@@ -65,6 +63,6 @@ EOD;
 
       ## Page Rendering
       topofpagereport($title,$description,$additionalinfo);
-      renderhtmlreport($rows,$header_array,$report_array);
+      renderhtmlreport($rows,$header_array,$report_array,1);
       }
 ?>
