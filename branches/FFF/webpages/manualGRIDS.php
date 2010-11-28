@@ -8,8 +8,8 @@ $additionalinfo="<P>The type of grid is listed as the headers and the area of in
 $additionalinfo.="The choice of color or not is inside each grid element.</P>\n";
 $additionalinfo.="<P>Also useful is the <A HREF=StaffBios.php>Bios for Presenters</A> (<A HREF=Bios.php>public version</A>),\n";
 $additionalinfo.="the <A HREF=StaffDescriptions.php>Descriptions of scheduled Precis</A> (<A HREF=Descriptions.php>public version</A>),\n";
-$additionalinfo.="the <A HREF=StaffPostgrid.php>Grid</A>, (<A HREF=StaffPostvolgrid.php>with volunteer</A> or <A HREF=Postgrid.php>public version</A>),\n";
-$additionalinfo.="and the <A HREF=StaffSchedule.php>Scheduled Precis</A> (<A HREF=Schedule.php>public version</A>) in time order.</P>\n";
+$additionalinfo.="the <A HREF=StaffSchedule.php>Scheduled Precis</A> (<A HREF=Schedule.php>public version</A>) in time order,\n";
+$additionalinfo.="and the <A HREF=Postgrid.php>public version</A> of the Grids.</P>\n";
 
 ## Replacement for the query
 $how_array['Description']="";

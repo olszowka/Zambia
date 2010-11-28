@@ -9,7 +9,7 @@
     $description="<P>Schedule for all sessions.</P>\n";
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
     $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, or visit the\n";
-    $additionalinfo.="<A HREF=\"StaffPostgrid.php\">grid</A>.</P>\n";
+    $additionalinfo.="<A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
     $indicies="PROGWANTS=1, GRIDSWANTS=1";
     $Grid_Spacer=GRID_SPACER;
 

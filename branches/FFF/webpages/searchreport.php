@@ -1,8 +1,6 @@
 <?php
     require_once('StaffCommonCode.php');
     global $link;
-    $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-    $ProgramEmail=PROGRAM_EMAIL;
 
     ## LOCALIZATIONS
     $searchstring1=$_GET["searchstring1"];
@@ -18,7 +16,7 @@
     $title="Search for report";
     $description="<P>Search for a report.</P>\n";
     $additionalinfo="<P>Please put in the field you want to search for (\"ANDed\"), so it can generate the appropriate list of reports.</P>";
-    $additionalinfo.="<P>If a Div/Area Head would like any of their reports tweaked, email to $ProgramEmail and let us know.</P>\n";
+    $additionalinfo.="<P>If there is a report to be tweaked or added, email <A HREF=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</A> and let us know.</P>\n";
 
     ## Page Rendering
     topofpagereport($title,$description,$additionalinfo);
