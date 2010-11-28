@@ -6,7 +6,7 @@
     $_SESSION['return_to_page']="EditPersonalFlows.php";
     $title="Edit Personal Flow Reports";
     $description="<P>Edit the order of your personal flow, generally and for each phase.</P>\n";
-    $additionalinfo="<P><A HREF=personalflow.php>Return</A> to your Personal Flow.</P>";
+    $additionalinfo="<P><A HREF=genreport.php?reportname=personalflow>Return</A> to your Personal Flow.</P>";
     $mybadgeid=$_SESSION['badgeid'];
 
     if (isset($_POST['addto'])) {

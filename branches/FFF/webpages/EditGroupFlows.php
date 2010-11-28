@@ -121,7 +121,7 @@ SELECT
   ORDER BY
     R.reportid
 EOD;
-    echo "<P>Query: ".$query."</P>";
+
     ## Retrieve query
     list($fullrows,$fullheader_array,$fullreport_array)=queryreport($query,$link,$title,$description,0);
 
