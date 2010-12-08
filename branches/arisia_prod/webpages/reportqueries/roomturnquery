@@ -1,0 +1,26 @@
+TITLE='Room Turns'
+DESCRIPTION='List of all Sessions with track or type of "room turn"'
+HOTELWANTS=1
+QUERY='
+SELECT
+            DATE_FORMAT(ADDTIME("2011-01-14 00:00:00",starttime),"%a %l:%i %p") AS "Start Time",
+            CONCAT("<A HREF=\"MaintainRoomSched.php?selroom=",roomid,"\">",roomname,"</A>") AS "Room",
+            CONCAT("<A HREF=\"StaffAssignParticipants.php?selsess=",sessionid,"\">",sessionid,"</A>") AS "Session",
+            CONCAT("<A HREF=\"EditSession.php?id=",sessionid,"\">",title,"</A>") AS "Title",
+            typename AS "Type",
+            trackname AS "Track"
+    FROM
+            Schedule
+        JOIN
+            Sessions USING (sessionid)
+        JOIN        
+            Rooms USING (roomid)
+        JOIN
+            Types USING (typeid)
+        JOIN
+            Tracks USING (trackid)
+    WHERE
+        typeid=3 OR
+        trackid=14
+    ORDER BY
+        starttime;'

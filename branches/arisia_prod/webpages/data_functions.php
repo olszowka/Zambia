@@ -134,7 +134,7 @@ function set_session_defaults() {
             $session["duration"]=" 60";
             }
         else {
-            $session["duration"]=" 1:00";
+            $session["duration"]=" 1:15";
             } 
     $session["atten"]="";
     $session["kids"]=2; // "Kids Welcome"

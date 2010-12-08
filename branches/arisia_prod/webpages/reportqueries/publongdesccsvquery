@@ -1,6 +1,5 @@
 TITLE='CSV - Session Characteristics plus long description'
 DESCRIPTION='For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description [On&nbsp;Demand]'
-PUBSWANTS=1
 CSVSWANTS=1
 GENCSV=0
 QUERY=" "

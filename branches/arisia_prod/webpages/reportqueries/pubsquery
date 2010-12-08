@@ -4,8 +4,8 @@ PUBSWANTS=1
 GENCSV=0
 QUERY="
      select S.sessionid, 
-            DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',starttime),'%a') as Day, 
-            DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',starttime),'%l:%i %p') as 'Time', 
+            DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',starttime),'%a') as Day, 
+            DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',starttime),'%l:%i %p') as 'Time', 
             concat(if(left(duration,2)=00, '', 
                       if(left(duration,1)=0, 
                          concat(right(left(duration,2),1), 'hr '),

@@ -3,7 +3,7 @@ DESCRIPTION='What is happening in FastTrack'
 FASTTRACKWANTS=1
 QUERY="
 SELECT
-            DATE_FORMAT(ADDTIME('2010-01-15 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time',
+            DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time',
             S.duration,
             R.roomname,
             S.title,

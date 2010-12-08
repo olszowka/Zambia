@@ -6,7 +6,7 @@ QUERY="
             S.Title, 
             concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', 
                 R.roomname,'</a>') as Roomname,
-            DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time' 
+            DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time' 
        from Sessions S, 
             Rooms R, 
             Schedule SCH, 

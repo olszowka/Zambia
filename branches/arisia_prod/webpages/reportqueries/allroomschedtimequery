@@ -5,7 +5,7 @@ EVENTSWANTS=1
 GOHWANTS=1
 QUERY="
 select
-         DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
+         DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
          concat(if(left(duration,2)=00, '', if(left(duration,1)=0,
            concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))),
            if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0,

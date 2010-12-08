@@ -16,7 +16,7 @@ umask 022
 
 #mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD -e '\. fixnames'
 
-for x in ${SRCDIR}/conflictnotinterquery; do
+for x in ${SRCDIR}/pocketprogramcsvquery; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
   eval `cat $x`
   echo $x

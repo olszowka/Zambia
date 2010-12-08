@@ -1,9 +1,8 @@
 TITLE='Preliminary Schedule'
-PUBSWANTS=1
 PROGWANTS=1
 DESCRIPTION='Below is the preliminary panel schedule.  Please keep in mind that is it still changing as we recieve feedback from our panelists.  If you have any comments please contact us at <?php echo PROGRAM_EMAIL?> .'
 QUERY="
-    select  DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',  
+    select  DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',  
             trackname, 
             concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
                  S.sessionid,'</a>') as Sessionid,

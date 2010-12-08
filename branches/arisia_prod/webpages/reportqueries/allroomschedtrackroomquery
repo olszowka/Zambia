@@ -8,7 +8,7 @@ select
         Trackname,
         concat('<a href=MaintainRoomSched.php?selroom=',R.roomid,'>', R.roomname,'</a>') as Roomname,
         Function,
-        DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
+        DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
         Duration,
         concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>',
                 S.sessionid,'</a>') as Sessionid,

@@ -29,7 +29,7 @@ SELECT
     WHERE
         R.roomid in
         (SELECT DISTINCT roomid FROM Schedule SCH JOIN ParticipantOnSession USING (sessionid)
-	 WHERE badgeid in ('7768', '96666', '96667', '96668', '10909'));
+	 WHERE badgeid in ('97525', '97528', '9511', '97526'));
 EOD;
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
@@ -69,7 +69,7 @@ EOD;
     $query.=" JOIN Rooms R USING (roomid)";
     $query.=" WHERE S.sessionid in ";
     $query.=" (SELECT DISTINCT sessionid FROM ParticipantOnSession ";
-    $query.=" WHERE badgeid IN ('7768', '96666', '96667', '96668', '10909')) ";
+    $query.=" WHERE badgeid IN ('97525', '97528', '9511', '97526')) ";
     $query.=" GROUP BY SCH.starttime ORDER BY SCH.starttime;";
     // echo "<BR>Query:<BR>$query<BR>\n"; // for debug only
     if (($result=mysql_query($query,$link))===false) {

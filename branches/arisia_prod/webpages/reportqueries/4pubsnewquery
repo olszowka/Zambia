@@ -1,6 +1,5 @@
 TITLE='Pubs - Session Characteristics plus long description'
 DESCRIPTION='For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description'
-PUBSWANTS=1
 GENCSV=1
 QUERY="
    select S.sessionid, 
@@ -11,7 +10,7 @@ QUERY="
           kidscatname, 
           title, 
           roomname, 
-          DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),
+          DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',starttime),
                       '%a %l:%i %p') as 'Start Time', 
           concat('(', if(left(duration,2)=00, '', if(left(duration,1)=0,
             concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))),

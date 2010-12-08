@@ -3,7 +3,7 @@ DESCRIPTION='Just things in TV room'
 ARISIATVWANTS=1
 QUERY="
 select
-        DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
+        DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',starttime),'%a %l:%i %p') as 'Start Time',
         duration,
         trackname, 
         S.sessionid,

@@ -1,6 +1,5 @@
 TITLE='Pubs - Session Characteristics plus long description'
 DESCRIPTION='For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description'
-PUBSWANTS=1
 GENCSV=0
 QUERY="
    select S.sessionid, 

@@ -11,13 +11,13 @@ select
        (if (X.assigned is NULL,' ','yes')) as 'Assigned?', 
        (if (moderator is NULL or moderator=0,' ','yes')) as 'Moderator?', 
        concat('<a href=MaintainRoomSched.php?selroom=',Y.roomid,'>', Y.roomname,'</a>') as Roomname,
-       DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',Y.starttime),'%a %l:%i %p') as 'Start Time' 
+       DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',Y.starttime),'%a %l:%i %p') as 'Start Time' 
   from (    select PI.badgeid, PI.pubsname, PI.sessionid, POS.sessionid as assigned, moderator, title, trackname 
               from (    select T.trackname, S.title, S.sessionid, P.badgeid, P.pubsname 
                           from Tracks T, ParticipantSessionInterest PSI, 
                                Participants P, Sessions S
                          where S.trackid=T.trackid and P.interested=1 
-			   and P.badgeid in ('4352', '6282', '6752', '93571')
+			   and P.badgeid in ('97525', '97528', '9511', '97526')
                            and P.badgeid=PSI.badgeid and S.sessionid=PSI.sessionid ) PI 
                    left join ParticipantOnSession POS 
                           on POS.badgeid=PI.badgeid and POS.sessionid=PI.sessionid) X 
@@ -25,5 +25,5 @@ select
                                 from Schedule SCH, Rooms R 
                                where R.roomid=SCH.roomid) as Y 
                           on X.sessionid=Y.sessionid 
-          order by P.badgeid;"
+          order by Pubsname;"
 
