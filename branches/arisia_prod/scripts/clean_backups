@@ -1,0 +1,13 @@
+#!/bin/sh
+
+days=${1:-7}
+
+cln="/home/trg/Backup"
+
+for x in $cln ; do
+  if [ -d $x ] ; then
+    find $x -mtime +$days | xargs --no-run-if-empty rm
+  else
+    echo "$x not found... skipping"
+  fi
+done

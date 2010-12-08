@@ -1,0 +1,7 @@
+TITLE='GOH Grid'
+DESCRIPTION='Display unabridged schedule of all events with any GOHs participanting with rooms on horizontal axis and time on vertical. This includes all items marked "Do Not Print" or "Staff Only". [On&nbsp;Demand]'
+GOHWANTS=1
+GRIDSWANTS=1
+QUERY=' '
+MIGRATED=true
+
