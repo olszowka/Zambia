@@ -7,8 +7,8 @@ SELECT
             CONCAT("<A HREF=\"MaintainRoomSched.php?selroom=",roomid,"\">",roomname,"</A>") AS "Room",
             CONCAT("<A HREF=\"StaffAssignParticipants.php?selsess=",sessionid,"\">",sessionid,"</A>") AS "Session",
             CONCAT("<A HREF=\"EditSession.php?id=",sessionid,"\">",title,"</A>") AS "Title",
-            typename AS "Type",
-            trackname AS "Track"
+            roomsetname,
+            servicenotes
     FROM
             Schedule
         JOIN
@@ -16,9 +16,7 @@ SELECT
         JOIN        
             Rooms USING (roomid)
         JOIN
-            Types USING (typeid)
-        JOIN
-            Tracks USING (trackid)
+            RoomSets USING (roomsetid)
     WHERE
         typeid=3 OR
         trackid=14
