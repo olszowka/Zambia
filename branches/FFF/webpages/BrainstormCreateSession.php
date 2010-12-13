@@ -1,6 +1,6 @@
 <?php
-    require ('BrainstormCommonCode.php');
-    require ('BrainstormRenderCreateSession.php');
+    require_once ('BrainstormCommonCode.php');
+    require_once ('BrainstormRenderCreateSession.php');
     global $email, $name, $badgeid, $session;
     get_name_and_email($name, $email);
     // error_log("badgeid: $badgeid; name: $name; email: $email"); // for debugging only

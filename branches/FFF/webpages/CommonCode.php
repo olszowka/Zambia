@@ -196,14 +196,17 @@ function brainstorm_header($title) {
   echo "<hr>\n\n";
   if (isset($_SESSION['badgeid'])) {
     echo "<table class=\"tabhead\">\n";
-    echo "  <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>\n";
-    echo "  <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>\n";
+    echo "  <col width=8%><col width=8%><col width=8%><col width=8%><col width=8%>\n";
+    echo "  <col width=8%><col width=10%><col width=10%><col width=8%><col width=8%>\n";
+    echo "  <col width=8%><col width=8%>\n";
     echo "  <tr class=\"tabrow\">\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     maketab("Welcome",1,"BrainstormWelcome.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     maketab("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormCreateSession.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     maketab("Search Sessions",1,"BrainstormSearchSession.php");
+    echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
+    maketab("Suggest a Presenter",may_I('BrainstormSubmit'),"BrainstormSuggestPresenter.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     if(may_I('Participant')) { 
       maketab("Participants View",may_I('Participant'),"welcome.php"); 
@@ -212,7 +215,7 @@ function brainstorm_header($title) {
     if(may_I('Staff')) { 
       maketab("Staff View",may_I('Staff'),"StaffPage.php");
       }
-    echo"  </tr>\n  <tr class=\"tabrows\">\n    <td class=\"tabblocks border0020\" colspan=10>\n         View sessions proposed to date:</td>\n  </tr>";
+    echo"  </tr>\n  <tr class=\"tabrows\">\n    <td class=\"tabblocks border0020\" colspan=12>\n         View sessions proposed to date:</td>\n  </tr>";
     echo "</td>\n  </tr>\n  <tr class=\"tabrows\">\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     maketab("All Proposals",1,"BrainstormReportAll.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
@@ -221,7 +224,7 @@ function brainstorm_header($title) {
     maketab("Reviewed",1,"BrainstormReportReviewed.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     maketab("Likely to Occur",1,"BrainstormReportLikely.php");
-    echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
+    echo "</td>\n    <td class=\"tabblocks border0020\" colspan=4>\n       ";
     maketab("Scheduled",1,"BrainstormReportScheduled.php");
     echo "</td>\n  </tr>\n</table>\n";
     echo "<table class=\"header\">\n  <tr>\n    <td style=\"height:5px\"></td>\n  </tr>\n";
