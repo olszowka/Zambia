@@ -12,9 +12,12 @@
     require_once('ParticipantHeader.php');
     participant_header($title);
 
+//<FORM method=POST action="SearchMySessions1.php">
+//<FORM method=POST action="SearchMySessionsScheduled.php">
 ?>
 
-<FORM method=POST action="SearchMySessionsScheduled.php">
+
+<FORM method=POST action="SearchMySessions1.php">
   <table>
     <COL><COL><COL><COL><COL>
     <tr> <!-- trow -->

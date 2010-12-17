@@ -12,9 +12,15 @@
 	<P class="regmsg"><?php echo $message; ?></P>
 	<?php } ?>
 <?php
-    $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
-    $chint=($participant["interested"]==0);
-    if (may_I('BrainstormSubmit')) { ?>
+  //    $chpw1=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
+  //    $chpw=($participant["password"]=="c79bdf421714f5087fc34b7c538b6807");
+  //    $chint=($participant["interested"]==0);
+  //  $mayi=(in_array('BrainstormSubmit',$_SESSION['permission_set']));
+  //echo "<P>chpw ". $chpw ." chpw1 ".$chpw1." chint ".$chint." mayi ".$mayi.":<PRE>".Print_r($_SESSION['permission_set'])."</PRE></P>\n";
+    if (may_I('BrainstormSubmit')) {
+      if (file_exists("../Local/Verbiage/BrainstormWelcome_0")) {
+	echo file_get_contents("../Local/Verbiage/BrainstormWelcome_0");
+      } else { ?>
 <p> Here you can submit new suggestions or look at existing ideas for 
 panels, events, movies, films, presentations, speeches, concerts, etc.  
 <p> As suggestions come in and we read through them, we will rework 
@@ -39,13 +45,19 @@ everything will make it.   We do save good ideas for future conventions.
            echo '<li> <a href="welcome.php">Return To Participant View</a>';
            }
       echo "</ul>\n";
-      } // end of if brainstorming permitted
-   else { // Brainstorming not permitted ?>
+      } // end of local words
+    } // end of if brainstorming permitted
+   else { // Brainstorming not permitted
+     if (file_exists("../Local/Verbiage/BrainstormWelcome_1")) {
+       echo file_get_contents("../Local/Verbiage/BrainstormWelcome_1");
+     } else { ?>
 <P> We are not accepting suggestions at this time for <?php echo CON_NAME;?>.
 <P> You may still use the "Search Sessions" tab to view the sessions which have been selected and to read their precis.  Note,
  many of these sessions will still not be scheduled if there is too little participant interest or if a suitable location and time
  slot is not available. </P> 
-<?php } //end of if brainstorming not permitted ?>
+<?php 
+     } // end of local words
+   } //end of if brainstorming not permitted ?>
 <p> Thank you and we look forward to reading your suggestions.
 
 <p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </P>

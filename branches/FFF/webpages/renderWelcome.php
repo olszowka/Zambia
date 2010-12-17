@@ -14,17 +14,28 @@
         }
     $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
     $chint=($participant["interested"]==0);
-    if (may_I('postcon')) { ?>
-<P>Thank you for your participation in Arisia '10.  With your help it was a great con.  We look forward 
+    if (may_I('postcon')) { 
+      if (file_exists("../Local/Verbiage/Welcome_0")) {
+	echo file_get_contents("../Local/Verbiage/Welcome_0");
+      } else {
+?>
+<P>Thank you for your participation in the <?php echo CON_NAME> event.  With your help it was a great con.  We look forward 
 to your participation again next year.</P>
-<P>We will post instructions for participating in brainstorming for Arisia '11 soon.</P>
-<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--Arisia Program and Events Committees</P>
+<P>We will post instructions for participating in brainstorming for the next event soon.</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--Program and Events Committees</P>
 <?php
     participant_footer();
     exit();
-    } ?>
+      }
+    }
+    if (file_exists("../Local/Verbiage/Welcome_1")) {
+      echo file_get_contents("../Local/Verbiage/Welcome_1");
+    } else {
+?>
 
 <p><h3> Please check back often as more options will become available as we get closer to the convention. </h3>
+
+<?php } ?>
 
 <P> Dear
 <?php echo $congoinfo["firstname"]; echo " "; echo $congoinfo["lastname"]; ?>,
@@ -57,6 +68,11 @@ to your participation again next year.</P>
       </DIV>
     </DIV>
   </FORM>
+<?php
+    if (file_exists("../Local/Verbiage/Welcome_2")) {
+      echo file_get_contents("../Local/Verbiage/Welcome_2");
+    } else {
+?>
   <p> Use the "My Profile" tab to:
     <ul>
       <li> Check your contact information. </li>
@@ -66,61 +82,94 @@ CON_NAME; ?>. </li>
       <li> Enter a short and long bio for <?php echo CON_NAME; ?> web and program book publications.</li>
     </ul>
 
-<?php if (may_I('search_panels')) { ?>
+<?php }
+if (may_I('search_panels')) {
+    if (file_exists("../Local/Verbiage/Welcome_3")) {
+      echo file_get_contents("../Local/Verbiage/Welcome_3");
+    } else {
+?>
   <p> Use the "Search Panels" tab to:
     <ul>
       <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
       <li> Indicate panels you would like to participate on. </li>
     </ul>
-<?php } else { ?>
+<?php 
+   }
+} else { ?>
   <p> The "Search Panels" tab is currently unavailable.  Check back later.
 <?php } ?>
 
-<?php if (may_I('my_panel_interests')) { ?>
+<?php if (may_I('my_panel_interests')) {
+    if (file_exists("../Local/Verbiage/Welcome_4")) {
+      echo file_get_contents("../Local/Verbiage/Welcome_4");
+    } else {
+?>
   <p> Use the "My Panel Interests" tab to:
     <ul>
       <li> See what selections you have made for panels. </li>
       <li> Alter or give more information about your selections . </li>
       <li> Rank the preference of your selections . </li>
     </ul>
-<?php } else { ?>
+<?php }
+} else { ?>
   <p> The "My Panel Interests" tab is currently unavailable.  Check back later.
 <?php } ?>
 
-<?php if (may_I('my_schedule')) { ?>
+<?php if (may_I('my_schedule')) { 
+    if (file_exists("../Local/Verbiage/Welcome_5")) {
+      echo file_get_contents("../Local/Verbiage/Welcome_5");
+    } else {
+?>
   <p> Use the "My Schedule" tab to:
     <ul>
       <li> See what you have been scheduled to do at con. 
       <li> If there are issues, conflict or questions please email us at 
 <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
     </ul>
-<?php } else { ?>
+<?php }
+} else { ?>
   <p> The "My Schedule" tab is currently unavailable.  Check back later.
 <?php } ?>
 
-<?php if (may_I('my_gen_int_write')) { ?>
+<?php if (may_I('my_gen_int_write')) { 
+    if (file_exists("../Local/Verbiage/Welcome_6")) {
+      echo file_get_contents("../Local/Verbiage/Welcome_6");
+    } else {
+?>
   <p> Use the "My General Interests" tab to:  
     <ul>
       <li> Describe the kinds of panels you are interested in.  </li>
       <li> Suggest the people you would like to work with.  </li>
     </ul>
-<?php } else { ?>
+<?php }
+} else { 
+    if (file_exists("../Local/Verbiage/Welcome_7")) {
+      echo file_get_contents("../Local/Verbiage/Welcome_7");
+    } else {
+?>
   <p> Use the "My General Interests" tab to:  
     <ul>
       <li> See what you previously entered as your interests. 
       <li> This is currently read only as con is approaching.  If you need to make a change here, please email us:  <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
     </ul>
-<?php } ?>
+<?php }
+} ?>
 
-<?php if (may_I('BrainstormSubmit')) { ?>
+<?php if (may_I('BrainstormSubmit')) { 
+    if (file_exists("../Local/Verbiage/Welcome_8")) {
+      echo file_get_contents("../Local/Verbiage/Welcome_8");
+    } else {
+?>
   <p> Use the "Suggest a Session" tab to:  
     <ul>
       <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
       <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner. 
     </ul>
-<?php } else { ?>
+<?php }
+} else { ?>
   <p> The "Suggest a Session" tab is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
-<?php } ?>
+<?php }
+} ?>
 
 </ol>
 

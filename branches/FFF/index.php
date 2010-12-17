@@ -29,6 +29,11 @@ echo "<H2>Check out the below links to learn about the great programming we will
   <LI><A HREF="webpages/Schedule.php">Schedule</A></LI>
   <LI><A HREF="webpages/Bios.php">Presenter Bios</A></LI>
   <LI><A HREF="webpages/">Presenter Login</A></LI>
+  <LI><FORM name="submitform" method="POST" action="webpages/doLogin.php">
+  <INPUT type="hidden" name="badgeid" value="0">
+  <INPUT type="hidden" name="passwd" value="submit">
+  <INPUT type="submit" name="submit" value="Suggest a Session">
+  </FORM>
 </UL>
 <?php
 if (file_exists($FooterTemplateFile)) {

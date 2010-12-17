@@ -6,7 +6,7 @@ require_once('email_functions.php');
 require_once('db_functions.php');
 require_once('render_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
-require_once(SWIFT_DIRECTORY."/swift_required.php");
+//require_once(SWIFT_DIRECTORY."/swift_required.php");
 global $title, $message, $link;
 if (isset($_POST['sendto'])) { // page has been visited before
 // restore previous values to form
@@ -31,6 +31,7 @@ if (!$result=mysql_query($query,$link)) {
     }
 $emailto=mysql_fetch_array($result,MYSQL_ASSOC);
 $query=$emailto['emailtoquery'];
+$query="SELECT DISTINCT P.pubsname, C.firstname, C.lastname, C.email, C.badgename FROM CongoDump C, Participants P, ParticipantOnSession POS WHERE C.badgeid=P.badgeid AND C.badgeid=POS.badgeid";
 if (!$result=mysql_query($query,$link)) {
     db_error($title,$query,$staff=true); // outputs messages regarding db error
     exit(0);
@@ -46,6 +47,7 @@ if (!$result=mysql_query($query,$link)) {
     exit(0);
     }
 $emailfrom=mysql_result($result,0);
+$emailfrom="NELA Programming <Nela.Program@gmail.com>";
 $x=$email['sendcc'];
 $query="SELECT emailaddress FROM EmailCC where emailccid=$x";
 if (!$result=mysql_query($query,$link)) {
@@ -53,6 +55,7 @@ if (!$result=mysql_query($query,$link)) {
     exit(0);
     }
 $emailcc=mysql_result($result,0);
+$emailcc="";
 $goodCount=0;
 $badCount=0;
 unset($arrayOfGood);
