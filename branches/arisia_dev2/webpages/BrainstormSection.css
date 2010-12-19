@@ -1,0 +1,32 @@
+@import "Common.css";
+
+BODY {
+     background-image: url("images/brainstormheadbg.png");
+     background-repeat: repeat-x;
+     }
+
+H1.head {
+     color: #B08B59;
+     }
+
+TD.head {
+     background-color: white;
+     text-align: center
+     }
+
+TD.form1 {
+     text-align: left
+     }
+
+/* Just overridding the small number of settings needed
+to customize tabs for Participants */
+.usabletab {
+        background: #B08B59;
+}
+
+span.mousedovertab a:visited {
+        color: #B08B59;
+}
+span.mousedovertab a:link {
+        color: #B08B59;
+}

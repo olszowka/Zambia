@@ -1,0 +1,7 @@
+TITLE='Unabridged Complete Grid'
+DESCRIPTION='Display complete schedule of all rooms with rooms on horizontal axis and time on vertical. This includes all items marked "Do Not Print" or "Staff Only". [On&nbsp;Demand]'
+PROGWANTS=1
+GRIDSWANTS=1
+QUERY=' '
+MIGRATED=true
+
