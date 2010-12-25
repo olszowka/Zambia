@@ -5,19 +5,19 @@
     $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
-    $_SESSION['return_to_page']="StaffDescriptions.php";
-    $title="Session Descriptions";
-    $description="<P>Descriptions for all sessions.</P>\n";
-    $additionalinfo="<P>Click on the time to visit the session's <A HREF=\"StaffSchedule.php\">timeslot</A>,\n";
+    $_SESSION['return_to_page']="StaffTracks.html";
+    $title="Event Tracks Schedule";
+    $description="<P>Track Schedules for all sessions.</P>\n";
+    $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
     $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, the track name to visit the particular\n";
     $additionalinfo.="<A HREF=\"StaffTracks.php\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
+    $additionalinfo.="<P>Click on the <I>(iCal)</i> next to the track name to have an iCal Calendar sent to your machine for automatic inclusion.</P>";
 
-    /* This query grabs everything necessary for the descriptions to be printed. */
+    /* This query grabs everything necessary for the schedule to be printed. */
     $query = <<<EOD
 SELECT
     if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffBios.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
-    GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffSchedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') SEPARATOR ', ') as 'Start Time',
-    GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffTracks.php#',T.trackname,'\">',T.trackname,'</A>')) as 'Track',
+    concat('<A HREF=\"StaffSchedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN
         concat(date_format(duration,'%i'),'min')
@@ -28,10 +28,9 @@ SELECT
       END AS Duration,
     GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
     S.sessionid as Sessionid,
-    concat('<A NAME=\"',S.sessionid,'\"></A>',S.title) as Title,
-    S.secondtitle AS Subtitle,
-    concat('<P>Web: ',S.progguiddesc,'</P>') as 'Web Description',
-    concat('<P>Book: ',S.pocketprogtext,'</P>') as 'Book Description'
+    GROUP_CONCAT(DISTINCT concat('<A NAME=\"',T.trackname,'\">',T.trackname,'</A> <A HREF=StaffTrackScheduleIcal.php?trackid=',T.trackid,'><I>(iCal)</I></A>')) as 'Track',
+    concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
+    concat('<P>',S.progguiddesc,'</P>') as Description
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
@@ -47,34 +46,29 @@ SELECT
   GROUP BY
     sessionid
   ORDER BY
-    S.title
+    T.trackname,
+    SCH.starttime,
+    R.display_order
 EOD;
 
     ## Retrieve query
     list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description,0);
 
-    /* Printing body.  Uses the page-init then creates the Descriptions. */
+    /* Printing body.  Uses the page-init then creates the Schedule. */
     topofpagereport($title,$description,$additionalinfo);
     echo "<DL>\n";
+    $printtrack="";
     for ($i=1; $i<=$elements; $i++) {
-      echo sprintf("<P><DT><B>%s</B>",$element_array[$i]['Title']);
-      if ($element_array[$i]['Subtitle']) {
-        echo sprintf("&mdash; %s",$element_array[$i]['Subtitle']);
+      if ($element_array[$i]['Track'] != $printtrack) {
+        $printtrack=$element_array[$i]['Track'];
+	echo sprintf("</DL><P>&nbsp;</P>\n<HR><H3>%s</H3>\n<DL>\n",$printtrack);
       }
-      if ($element_array[$i]['Track']) {
-	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Track']);
-      }
-      if ($element_array[$i]['Start Time']) {
-	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Start Time']);
-      }
-      if ($element_array[$i]['Duration']) {
-	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Duration']);
-      }
+      echo sprintf("<P><DT><B>%s</B> &mdash; %s &mdash; <i>%s</i>",
+        $element_array[$i]['Title'],$element_array[$i]['Start Time'],$element_array[$i]['Duration']);
       if ($element_array[$i]['Roomname']) {
 	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Roomname']);
       }
-      echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Web Description']);
-      echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Book Description']);
+      echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Description']);
       if ($element_array[$i]['Participants']) {
 	echo sprintf("<i>%s</i>",$element_array[$i]['Participants']);
       }

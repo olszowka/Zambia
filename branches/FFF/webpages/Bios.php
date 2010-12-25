@@ -2,16 +2,16 @@
     require_once('PostingCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+    $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
     $_SESSION['return_to_page']="Bios.php";
     $title="Bios for Presenters";
     $description="<P>List of all Presenters biographical information.</P>\n";
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.php\">description</A>,\n";
-    $additionalinfo.="the time to visit the <A HREF=\"Schedule.php\">timeslot</A>, or visit the\n";
-    $additionalinfo.="<A HREF=\"Postgrid.php\">grid</A>.</P>\n";
-    $indicies="POSTWANTS=1";
-    $Grid_Spacer=GRID_SPACER;
+    $additionalinfo.="the time to visit the <A HREF=\"Schedule.php\">timeslot</A>, the track name to visit the particular\n";
+    $additionalinfo.="<A HREF=\"Tracks.php\">track</A>, or visit the <A HREF=\"Postgrid.php\">grid</A>.</P>\n";
+    $additionalinfo.="<P>To get an iCal calendar of all the classes of this Presenter, click on the <H6>(Fan iCal)</H6> after their Bio entry.</P>";
 
     /* This complex query grabs the name, class information, and editedbio (if there is one)
        Most, if not all of the formatting is done within the query, as opposed to in
@@ -20,7 +20,8 @@
 SELECT
     concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',
     GROUP_CONCAT(DISTINCT concat('<DT><A HREF=\"Descriptions.php#',S.sessionid,'\">',S.title,'</A>',
-    if((moderator=1),'(m)',''), ' &mdash; ',
+       if((moderator=1),'(m)',''), ' &mdash; ',
+       '<A HREF=\"Tracks.php#',T.trackname,'\">',T.trackname,'</A> &mdash; ',
        concat('<A HREF=\"Schedule.php#',
               DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',
               DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>'), ' &mdash; ',
@@ -38,6 +39,7 @@ SELECT
       Sessions S
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
+    JOIN Tracks T USING (trackid)
     LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
     LEFT JOIN Participants P ON POS.badgeid=P.badgeid
   WHERE
@@ -69,6 +71,7 @@ EOD;
 	echo sprintf("%s",$element_array[$i]['Bio']);
       }
       echo sprintf("\n<DL>\n  <i>%s</i>\n</DL></P>\n",$element_array[$i]['Title']);
+      echo sprintf("\n<P><H6><A HREF=\"PostScheduleIcal.php?pubsname=%s\">(Fan iCal)</A></H6></P>",$element_array[$i]['pubsname']);
       echo "</TD>\n</TR>\n</TABLE>\n";
     }
     posting_footer();

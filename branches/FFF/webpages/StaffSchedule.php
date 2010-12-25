@@ -2,16 +2,15 @@
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+    $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
     $_SESSION['return_to_page']="StaffSchedule.php";
     $title="Event Schedule";
     $description="<P>Schedule for all sessions.</P>\n";
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
-    $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, or visit the\n";
-    $additionalinfo.="<A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
-    $indicies="PROGWANTS=1, GRIDSWANTS=1";
-    $Grid_Spacer=GRID_SPACER;
+    $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, the track name to visit the particular\n";
+    $additionalinfo.="<A HREF=\"StaffTracks.php\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
 
     /* This query grabs everything necessary for the schedule to be printed. */
     if (strtoupper(DOUBLE_SCHEDULE)=="TRUE") {
@@ -29,12 +28,14 @@ SELECT
       END AS Duration,
     R.roomname as Roomname,
     S.sessionid as Sessionid,
+    concat('<A HREF=\"StaffTracks.php#',T.trackname,'\">',T.trackname,'</A>')) as 'Track',
     concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
     concat('<P>',S.progguiddesc,'</P>') as Description
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
+    JOIN Tracks T USING (trackid)
     LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
     LEFT JOIN Participants P ON POS.badgeid=P.badgeid
   WHERE
@@ -61,12 +62,14 @@ SELECT
       END AS Duration,
     GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
     S.sessionid as Sessionid,
+    GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffTracks.php#',T.trackname,'\">',T.trackname,'</A>')) as 'Track',
     concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
     concat('<P>',S.progguiddesc,'</P>') as Description
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
+    JOIN Tracks T USING (trackid)
     LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
     LEFT JOIN Participants P ON POS.badgeid=P.badgeid
   WHERE
@@ -93,8 +96,8 @@ EOD;
         $printtime=$element_array[$i]['Start Time'];
 	echo sprintf("</DL><P>&nbsp;</P>\n<HR><H3>%s</H3>\n<DL>\n",$printtime);
       }
-      echo sprintf("<P><DT><B>%s</B> &mdash; <i>%s</i>",
-		   $element_array[$i]['Title'],$element_array[$i]['Duration']);
+      echo sprintf("<P><DT><B>%s</B> &mdash; %s &mdash; <i>%s</i>",
+        $element_array[$i]['Title'],$element_array[$i]['Track'],$element_array[$i]['Duration']);
       if ($element_array[$i]['Roomname']) {
 	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Roomname']);
       }

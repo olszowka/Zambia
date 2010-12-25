@@ -2,16 +2,16 @@
     require_once('StaffCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+    $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
     $_SESSION['return_to_page']="StaffBios.php";
     $title="Bios for Presenters";
     $description="<P>List of all Presenters biographical information.</P>\n";
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
-    $additionalinfo.="the time to visit the <A HREF=\"StaffSchedule.php\">timeslot</A>, or visit the\n";
-    $additionalinfo.="<A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
-    $indicies="PROGWANTS=1, GRIDSWANTS=1";
-    $Grid_Spacer=GRID_SPACER;
+    $additionalinfo.="the time to visit the <A HREF=\"StaffSchedule.php\">timeslot</A>, the track name to visit the particular\n";
+    $additionalinfo.="<A HREF=\"StaffTracks.php\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
+    $additionalinfo.="<P>To get an iCal calendar of all the classes of this Presenter, click on the <H6>(Fan iCal)</H6> after their Bio entry.</P>";
 
     /* This complex query grabs the name, class information, and editedbio (if there is one)
        Most, if not all of the formatting is done within the query, as opposed to in
@@ -20,7 +20,8 @@
 SELECT
     concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',
     GROUP_CONCAT(DISTINCT concat('<DT><A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>',
-    if((moderator=1),'(m)',''), ' &mdash; ',
+       if((moderator=1),'(m)',''), ' &mdash; ',
+       '<A HREF=\"StaffTracks.php#',T.trackname,'\">',T.trackname,'</A> &mdash; ',
        concat('<A HREF=\"StaffSchedule.php#',
               DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',
               DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>'), ' &mdash; ',
@@ -33,11 +34,13 @@ SELECT
            concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
          END,'</DT>') SEPARATOR ' ') as Title,
     if ((P.editedbio is NULL),' ',P.editedbio) as Bio,
-    P.pubsname
+    P.pubsname,
+    P.badgeid
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
+    JOIN Tracks T USING (trackid)
     LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
     LEFT JOIN Participants P ON POS.badgeid=P.badgeid
   WHERE
@@ -69,6 +72,7 @@ EOD;
 	echo sprintf("%s",$element_array[$i]['Bio']);
       }
       echo sprintf("\n<DL>\n  <i>%s</i>\n</DL></P>\n",$element_array[$i]['Title']);
+      echo sprintf("\n<P><H6><A HREF=\"MyScheduleIcal.php?badgeid=%s\">(Fan iCal)</A></H6></P>",$element_array[$i]['badgeid']);
       echo "</TD>\n</TR>\n</TABLE>\n";
     }
     staff_footer();
