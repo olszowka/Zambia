@@ -1,5 +1,4 @@
 <?php 
-  header("Content-Type: text/Calendar");
   require_once ("CommonCode.php");
   require_once ("CommonIcal.php");
   global $link;
@@ -11,18 +10,41 @@
   $DBHostname=DBHOSTNAME;
   $url=CON_URL;
   $dtstamp=date('Ymd').'T'.date('His');
-  if (isset($_GET['badgeid'])) {
-    $badgeid=$_GET['badgeid'];
-  } elseif (isset($_POST['badgeid'])) {
-    $badgeid=$_POST['badgeid'];
-  } else {
-    $badgeid=$_SESSION['badgeid'];
-  }
+  $title="Track iCal generation page";
+  $description="<P>Please select from the below list.</P>";
+  $additionalinfo="";
+  $trackid="";
 
-  ## First query, to establish the schedarray, from which we need 
+  ## Header query, to list the tracks
   $query= <<<EOD
 SELECT
-    POS.sessionid,
+    DISTINCT concat("<A HREF=TrackScheduleIcal.php?trackid=",T.trackid,">",T.trackname,"</A>") AS "Tracks"
+  FROM
+      Tracks T,
+      Schedule SCH,
+      Sessions S
+  WHERE
+    S.trackid=T.trackid
+  ORDER BY
+    trackname
+EOD;
+
+  list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description,0);
+
+  if (isset($_GET['trackid'])) {
+    $trackid=$_GET['trackid'];
+  } elseif (isset($_POST['trackid'])) {
+    $trackid=$_POST['trackid'];
+  } else {
+    topofpagereport($title,$description,$additionalinfo);
+    renderhtmlreport($rows,$header_array,$report_array,1);
+    exit();
+  }
+
+  ## First query, to establish the schedarray for the schedule elements to put into the calendar
+  $query= <<<EOD
+SELECT
+    S.sessionid,
     trackname,
     title,
     roomname,
@@ -30,14 +52,12 @@ SELECT
     DATE_FORMAT(ADDTIME('$ConStartDatim', starttime),'%Y%m%dT%H%i%s') AS dtstart,
     DATE_FORMAT(ADDTIME(ADDTIME('$ConStartDatim', starttime), duration), '%Y%m%dT%H%i%s') AS dtend
   FROM
-      ParticipantOnSession POS,
       Sessions S,
       Rooms R,
       Schedule SCH,
       Tracks T
   WHERE
-    badgeid="$badgeid" and
-    POS.sessionid = S.sessionid and
+    T.trackid="$trackid" and
     R.roomid = SCH.roomid and
     S.sessionid = SCH.sessionid and
     S.trackid = T.trackid
@@ -45,16 +65,27 @@ SELECT
     starttime
 EOD;
     if (($result=mysql_query($query,$link))===false) {
-        echo "An Error occured:\n";
-        echo "$result\n$link\n$query\n Error retrieving data from database.\n";
+        staff_header($title);
+        echo "<P>An Error occured:\n";
+        echo "$result\n$link\n$query\n Error retrieving data from database.</P>\n";
+	staff_footer();
         exit();
         }
-    $schdrows=mysql_num_rows($result);
+    if (0==($schdrows=mysql_num_rows($result))) {
+        topofpagereport($title,$description,$additionalinfo);
+        renderhtmlreport($rows,$header_array,$report_array,1);
+        exit();
+    }
     for ($i=1; $i<=$schdrows; $i++) {
         list($schdarray[$i]["sessionid"],$schdarray[$i]["trackname"],
             $schdarray[$i]["title"],$schdarray[$i]["roomname"],$schdarray[$i]["progguiddesc"],
             $schdarray[$i]["dtstart"],$schdarray[$i]["dtend"])=mysql_fetch_array($result, MYSQL_NUM);
         }
+  $filename=str_replace(" ","_",$schdarray[$i-1]["trackname"]);
+//  $filename=$schedarray;
+//  $filename="2";
+
+    ## Second query establishes the people in a particular schedule element.
     $query= <<<EOD
 SELECT
     POS.sessionid,
@@ -72,15 +103,17 @@ SELECT
     POS.sessionid in (SELECT
                           sessionid 
                         FROM
-                            ParticipantOnSession
-                        WHERE badgeid='$badgeid')
+                            Sessions
+                        WHERE trackid='$trackid')
   ORDER BY
     sessionid,
     moderator DESC
 EOD;
     if (!$result=mysql_query($query,$link)) {
+        staff_header($title);
         echo "An Error occured:\n";
         echo "$result\n$link\n$query\n Error retrieving data from database.\n";
+        staff_footer();
         exit();
         }
     $partrows=mysql_num_rows($result);
@@ -90,25 +123,7 @@ EOD;
              $partarray[$i]["aidedecamp"])=mysql_fetch_array($result, MYSQL_NUM);
         }
 
-  $query=<<<EOD
-SELECT
-    pubsname
-  FROM
-      Participants
-  WHERE
-    badgeid='$badgeid'
-EOD;
-    if (!$result=mysql_query($query,$link)) {
-        echo "An Error occured:\n";
-        echo "$result\n$link\n$query\n Error retrieving data from database.\n";
-        exit();
-        }
-    $partnamerow=mysql_num_rows($result);
-    for ($i=1; $i<=$partnamerow; $i++) {
-        list($partname[$i]["pubsname"])=mysql_fetch_array($result, MYSQL_NUM);
-        }
-
-  $filename=str_replace(" ","_",$partname[1]["pubsname"]);
+  header("Content-Type: text/Calendar");
   header("Content-Disposition: inline; filename=$filename-calendar.ics");
   echo add_ical_header();
 
@@ -148,7 +163,7 @@ EOD;
     echo "DTEND;TZID=America/New_York:".$schdarray[$i]["dtend"]."\n"; 
     echo "DESCRIPTION:".$schdarray[$i]["progguiddesc"]."\\n\\n ";
     for ($j=1; $j<=$partrows; $j++) {
-        if ($partarray[$j]["sessionid"]!=$schdarray[$i]["sessionid"]) {
+         if ($partarray[$j]["sessionid"]!=$schdarray[$i]["sessionid"]) {
             continue;
             }
         echo $partarray[$j]["pubsname"];
