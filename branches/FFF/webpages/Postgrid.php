@@ -31,9 +31,9 @@ EOD;
     list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description,0);
 
     ## Set up the header cells
-    $header_cells="<TR><TH>Time</TH>";
+    $header_cells="<TR><TH class=\"border2222\">&nbsp;&nbsp;Class&nbsp;&nbsp;Time&nbsp;&nbsp;</TH>";
     for ($i=1; $i<=$rooms; $i++) {
-        $header_cells.="<TH>";
+        $header_cells.="<TH class=\"border2222\">";
         $header_cells.=$header_array[$i]["roomname"];
         $header_cells.="</TH>";
         }
@@ -44,7 +44,7 @@ EOD;
     $query = <<<EOD
 SELECT
       S.sessionid,
-      GROUP_CONCAT(concat("<A HREF=\"Bios.php#",P.pubsname,"\">",P.pubsname,"</A>") SEPARATOR ", ") as allpubsnames
+      GROUP_CONCAT(concat("<A HREF=\"Bios.php#",P.pubsname,"\">",P.pubsname,"</A>",if((POS.moderator=1),'(m)','')) SEPARATOR ", ") as allpubsnames
     FROM
       Sessions S
     JOIN
@@ -137,9 +137,18 @@ EOD;
         $refskiprow=0;
         for ($i=1; $i<=$rooms; $i++) {
             $j=$header_array[$i]['roomname'];
-            if ($grid_array[$time]["$j htmlcellcolor"]!="") {$skiprow++;}
-            if ($grid_array[$time]["$j sessionid"]!="") {$refskiprow++;}
-	    }
+            if ($grid_array[$time]["$j htmlcellcolor"]!="") {
+	        $skiprow++;
+                if ($grid_array[$time]["$j sessionid"]!="") {
+                    $grid_array[$time]["$j cellclass"]="border1101d";
+                    $refskiprow++;
+                    } else {
+                    $grid_array[$time]["$j cellclass"]="border0101d";
+                    }
+                } else {
+                $grid_array[$time]["$j cellclass"]="border1111";
+                }
+            }
         if ($skiprow == 0) {$grid_array[$time]['blocktime'] = "Skip";}
         if ($refskiprow != 0) {
             $k=$grid_array[$time]['blocktime'];
@@ -158,35 +167,37 @@ EOD;
     for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {
         if ($skipaccum == 1) { 
             if ($skipinit != 0) {echo "</TABLE>\n";} else {$skipinit++;}
-            echo "<TABLE BORDER=1>";
+            echo "<TABLE class=\"border1111\">";
             echo $header_cells;
 	    }
 	if ($grid_array[$i]['blocktime'] == "Skip") {
             $skipaccum++;
             } else {
-            echo sprintf("<TR><TD>%s</TD>\n",$grid_array[$i]['blocktime']);
+            echo sprintf("<TR><TD class=\"border1111\">%s</TD>\n",$grid_array[$i]['blocktime']);
             for ($j=1; $j<=$rooms; $j++) {
-                $z=$header_array[$j]['roomname'];
-                $y=$grid_array[$i]["$z htmlcellcolor"]; //cell background color
-                $x=$grid_array[$i]["$z sessionid"]; //sessionid
-                if ($y!="") {
-                    echo sprintf("<TD BGCOLOR=\"%s\">",$y);
-                    $y = $grid_array[$i]["$z title"]; //title
-                    if ($y!="") {
-                        echo sprintf("<A HREF=\"Descriptions.php#%s\">%s</A>",$x,$y);
+                $header_roomname=$header_array[$j]['roomname'];
+                $bgcolor=$grid_array[$i]["$header_roomname htmlcellcolor"]; //cell background color
+                $cellclass=$grid_array[$i]["$header_roomname cellclass"]; //cell edge state
+		if ($cellclass == "") {$cellclass="border1111";}
+                $sessionid=$grid_array[$i]["$header_roomname sessionid"]; //sessionid
+                $title=$grid_array[$i]["$header_roomname title"]; //title
+                $duration=substr($grid_array[$i]["$header_roomname duration"],0,-3); // duration; drop ":00" representing seconds off the end
+                $presenters=$presenters_array[$sessionid]; //presenters
+                if (substr($duration,0,1)=="0") {$duration = substr($duration,1,999);} // drop leading "0"
+                if ($bgcolor!="") {
+                    echo sprintf("<TD BGCOLOR=\"%s\" CLASS=\"%s\">",$bgcolor,$cellclass);
+                    if ($title!="") {
+                        echo sprintf("<A HREF=\"Descriptions.php#%s\">%s</A>",$sessionid,$title);
                         }
-                    $y = substr($grid_array[$i]["$z duration"],0,-3); // duration; drop ":00" representing seconds off the end
-                    if (substr($y,0,1)=="0") {$y = substr($y,1,999);} // drop leading "0"
-                    if ($y!="") {
-                        echo sprintf(" (%s)",$y);
+                    if ($duration!="") {
+                        echo sprintf(" (%s)",$duration);
                         }
-                    $y=$presenters_array[$x]; //presenters
-                    if ($y!="") {
-                        echo sprintf("<br>\n%s",$y);
+                    if ($presenters!="") {
+                        echo sprintf("<br>\n%s",$presenters);
                         }
                     }
                 else
-                    { echo "<TD>&nbsp;"; } 
+                    { echo "<TD class=\"border1111\">&nbsp;"; } 
                 echo "</TD>\n";
                 }
                 echo "</TR>\n";

@@ -76,7 +76,7 @@ EOD;
         if ($element_array[$i]['Bio'] != ' ') {
           echo sprintf("%s",$element_array[$i]['Bio']);
         }
-        echo sprintf(" <A HREF=\"MyScheduleIcal.php?badgeid=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['badgeid']);
+        echo sprintf(" <A HREF=\"PostScheduleIcal.php?pubsname=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['pubsname']);
       }
       echo sprintf("<DT>%s",$element_array[$i]['Title']);
       if ($element_array[$i]['Subtitle'] !='') {
