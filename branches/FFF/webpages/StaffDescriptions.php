@@ -11,6 +11,7 @@
     $additionalinfo="<P>Click on the time to visit the session's <A HREF=\"StaffSchedule.php\">timeslot</A>,\n";
     $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, the track name to visit the particular\n";
     $additionalinfo.="<A HREF=\"StaffTracks.php\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
+    $additionalinfo.="<P>Click on the (iCal) tag to download the iCal calendar for the particular activity you want added to your calendar.</P>\n";
 
     /* This query grabs everything necessary for the descriptions to be printed. */
     $query = <<<EOD
@@ -30,6 +31,7 @@ SELECT
     S.sessionid as Sessionid,
     concat('<A NAME=\"',S.sessionid,'\"></A>',S.title) as Title,
     S.secondtitle AS Subtitle,
+    concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
     concat('<P>Web: ',S.progguiddesc,'</P>') as 'Web Description',
     concat('<P>Book: ',S.pocketprogtext,'</P>') as 'Book Description'
   FROM
@@ -58,8 +60,8 @@ EOD;
     echo "<DL>\n";
     for ($i=1; $i<=$elements; $i++) {
       echo sprintf("<P><DT><B>%s</B>",$element_array[$i]['Title']);
-      if ($element_array[$i]['Subtitle']) {
-        echo sprintf("&mdash; %s",$element_array[$i]['Subtitle']);
+      if ($element_array[$i]['Subtitle'] !='') {
+        echo sprintf(": %s",$element_array[$i]['Subtitle']);
       }
       if ($element_array[$i]['Track']) {
 	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Track']);
@@ -73,6 +75,7 @@ EOD;
       if ($element_array[$i]['Roomname']) {
 	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Roomname']);
       }
+      echo sprintf("&mdash; %s",$element_array[$i]['iCal']);
       echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Web Description']);
       echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Book Description']);
       if ($element_array[$i]['Participants']) {

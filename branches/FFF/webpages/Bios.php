@@ -11,7 +11,8 @@
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.php\">description</A>,\n";
     $additionalinfo.="the time to visit the <A HREF=\"Schedule.php\">timeslot</A>, the track name to visit the particular\n";
     $additionalinfo.="<A HREF=\"Tracks.php\">track</A>, or visit the <A HREF=\"Postgrid.php\">grid</A>.</P>\n";
-    $additionalinfo.="<P>To get an iCal calendar of all the classes of this Presenter, click on the <H6>(Fan iCal)</H6> after their Bio entry.</P>";
+    $additionalinfo.="<P>To get an iCal calendar of all the classes of this Presenter, click on the (Fan iCal) after their\n";
+    $additionalinfo.="Bio entry, or the (iCal) after the particular activity, to create a calendar for just that activity.</P>\n";
 
     /* This complex query grabs the name, class information, and editedbio (if there is one)
        Most, if not all of the formatting is done within the query, as opposed to in
@@ -19,20 +20,21 @@
     $query = <<<EOD
 SELECT
     concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',
-    GROUP_CONCAT(DISTINCT concat('<DT><A HREF=\"Descriptions.php#',S.sessionid,'\">',S.title,'</A>',
-       if((moderator=1),'(m)',''), ' &mdash; ',
-       '<A HREF=\"Tracks.php#',T.trackname,'\">',T.trackname,'</A> &mdash; ',
-       concat('<A HREF=\"Schedule.php#',
-              DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',
-              DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>'), ' &mdash; ',
-       CASE 
-         WHEN HOUR(duration) < 1 THEN
-           concat(date_format(duration,'%i'),'min')
-         WHEN MINUTE(duration)=0 THEN
-           concat(date_format(duration,'%k'),'hr')
-         ELSE
-           concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
-         END,'</DT>') SEPARATOR ' ') as Title,
+    concat('<A HREF=\"Descriptions.php#',S.sessionid,'\"><B>',S.title,'</B></A>') AS Title,
+    S.secondtitle AS Subtitle,
+    if((moderator=1),' (m)','') AS Moderator,
+    concat('<A HREF=\"Tracks.php#',T.trackname,'\">',T.trackname,'</A>') AS Track,
+    concat('<A HREF=\"Schedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') AS 'Start Time',
+    CASE 
+      WHEN HOUR(duration) < 1 THEN
+        concat(date_format(duration,'%i'),'min')
+      WHEN MINUTE(duration)=0 THEN
+        concat(date_format(duration,'%k'),'hr')
+      ELSE
+        concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+      END AS Duration,
+    R.roomname as Roomname,
+    concat('<A HREF=PrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
     if ((P.editedbio is NULL),' ',P.editedbio) as Bio,
     P.pubsname
   FROM
@@ -47,8 +49,6 @@ SELECT
     POS.volunteer=0 AND
     POS.introducer=0 AND
     POS.aidedecamp=0
-  GROUP BY
-    Participants
   ORDER BY
     P.pubsname
 EOD;
@@ -58,21 +58,46 @@ EOD;
 
     /* Printing body.  Uses the page-init then creates the bio page. */
     topofpagereport($title,$description,$additionalinfo);
+    $printparticipant="";
     for ($i=1; $i<=$elements; $i++) {
-      $picture=sprintf("../Local/Participant_Images/%s.jpg",$element_array[$i]['pubsname']);
-      if (file_exists($picture)) {
-	echo "<TABLE>\n<TR>\n<TD width=310>";
-	echo sprintf("<img width=300 src=\"%s\"</TD>\n<TD>",$picture);
-      } else {
-	echo "<TABLE>\n<TR>\n<TD>";
+      if ($element_array[$i]['Participants'] != $printparticipant) {
+        if ($printparticipant != "") {
+          echo "    </TD>\n  </TR>\n</TABLE>\n";
+        }
+        $printparticipant=$element_array[$i]['Participants'];
+        $picture=sprintf("../Local/Participant_Images/%s.jpg",$element_array[$i]['pubsname']);
+        if (file_exists($picture)) {
+          echo "<TABLE>\n  <TR>\n    <TD width=310>";
+          echo sprintf("<img width=300 src=\"%s\"</TD>\n<TD>",$picture);
+        } else {
+          echo "<TABLE>\n  <TR>\n    <TD>";
+        }
+        echo sprintf("<P><B>%s</B>",$element_array[$i]['Participants']);
+        if ($element_array[$i]['Bio'] != ' ') {
+          echo sprintf("%s",$element_array[$i]['Bio']);
+        }
+        echo sprintf(" <A HREF=\"MyScheduleIcal.php?badgeid=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['badgeid']);
       }
-      echo sprintf("<P><B>%s</B> ",$element_array[$i]['Participants']);
-      if ($element_array[$i]['Bio'] != ' ') {
-	echo sprintf("%s",$element_array[$i]['Bio']);
+      echo sprintf("<DT>%s",$element_array[$i]['Title']);
+      if ($element_array[$i]['Subtitle'] !='') {
+        echo sprintf(": %s",$element_array[$i]['Subtitle']);
       }
-      echo sprintf("\n<DL>\n  <i>%s</i>\n</DL></P>\n",$element_array[$i]['Title']);
-      echo sprintf("\n<P><H6><A HREF=\"PostScheduleIcal.php?pubsname=%s\">(Fan iCal)</A></H6></P>",$element_array[$i]['pubsname']);
-      echo "</TD>\n</TR>\n</TABLE>\n";
+      if ($element_array[$i]['Moderator']) {
+        echo sprintf("%s",$element_array[$i]['Moderator']);
+      }
+      if ($element_array[$i]['Track']) {
+	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Track']);
+      }
+      if ($element_array[$i]['Start Time']) {
+	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Start Time']);
+      }
+      if ($element_array[$i]['Duration']) {
+	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Duration']);
+      }
+      if ($element_array[$i]['Roomname']) {
+	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Roomname']);
+      }
+      echo sprintf("&mdash; %s</DT>\n",$element_array[$i]['iCal']);
     }
     posting_footer();
 

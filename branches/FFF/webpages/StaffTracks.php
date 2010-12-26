@@ -11,7 +11,8 @@
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
     $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, the track name to visit the particular\n";
     $additionalinfo.="<A HREF=\"StaffTracks.php\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
-    $additionalinfo.="<P>Click on the <I>(iCal)</i> next to the track name to have an iCal Calendar sent to your machine for automatic inclusion.</P>";
+    $additionalinfo.="<P>Click on the <I>(iCal)</i> next to the track name to have an iCal Calendar sent to your machine for\n";
+    $additionalinfo.="automatic inclusion, and the (iCal) next to the particular activity for one of that activity.</P>";
 
     /* This query grabs everything necessary for the schedule to be printed. */
     $query = <<<EOD
@@ -29,6 +30,7 @@ SELECT
     GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
     S.sessionid as Sessionid,
     GROUP_CONCAT(DISTINCT concat('<A NAME=\"',T.trackname,'\">',T.trackname,'</A> <A HREF=StaffTrackScheduleIcal.php?trackid=',T.trackid,'><I>(iCal)</I></A>')) as 'Track',
+    concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
     concat('<P>',S.progguiddesc,'</P>') as Description
   FROM
@@ -68,6 +70,7 @@ EOD;
       if ($element_array[$i]['Roomname']) {
 	echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Roomname']);
       }
+      echo sprintf("&mdash; %s",$element_array[$i]['iCal']);
       echo sprintf("</DT>\n<DD>%s",$element_array[$i]['Description']);
       if ($element_array[$i]['Participants']) {
 	echo sprintf("<i>%s</i>",$element_array[$i]['Participants']);

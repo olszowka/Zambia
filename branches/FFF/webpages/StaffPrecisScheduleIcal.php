@@ -10,31 +10,30 @@
   $DBHostname=DBHOSTNAME;
   $url=CON_URL;
   $dtstamp=date('Ymd').'T'.date('His');
-  $title="Track iCal generation page";
+  $title="Precis iCal generation page";
   $description="<P>Please select from the below list.</P>";
   $additionalinfo="";
   $trackid="";
 
-  ## Header query, to list the tracks
+  ## Header query, to list the Sessions
   $query= <<<EOD
 SELECT
-    DISTINCT concat("<A HREF=StaffTrackScheduleIcal.php?trackid=",T.trackid,">",T.trackname,"</A>") AS "Tracks"
+    DISTINCT concat("<A HREF=StaffPrecisScheduleIcal.php?sessionid=",S.sessionid,">",S.title,"</A>") AS "Precis"
   FROM
-      Tracks T,
       Schedule SCH,
       Sessions S
   WHERE
-    S.trackid=T.trackid
+    S.sessionid=SCH.sessionid
   ORDER BY
-    trackname
+    S.title
 EOD;
 
   list($rows,$header_array,$report_array)=queryreport($query,$link,$title,$description,0);
 
-  if (isset($_GET['trackid'])) {
-    $trackid=$_GET['trackid'];
-  } elseif (isset($_POST['trackid'])) {
-    $trackid=$_POST['trackid'];
+  if (isset($_GET['sessionid'])) {
+    $sessionid=$_GET['sessionid'];
+  } elseif (isset($_POST['sessionid'])) {
+    $sessionid=$_POST['sessionid'];
   } else {
     topofpagereport($title,$description,$additionalinfo);
     renderhtmlreport($rows,$header_array,$report_array,1);
@@ -57,7 +56,7 @@ SELECT
       Schedule SCH,
       Tracks T
   WHERE
-    T.trackid="$trackid" and
+    S.sessionid="$sessionid" and
     R.roomid = SCH.roomid and
     S.sessionid = SCH.sessionid and
     S.trackid = T.trackid
@@ -81,9 +80,7 @@ EOD;
             $schdarray[$i]["title"],$schdarray[$i]["roomname"],$schdarray[$i]["progguiddesc"],
             $schdarray[$i]["dtstart"],$schdarray[$i]["dtend"])=mysql_fetch_array($result, MYSQL_NUM);
         }
-  $filename=str_replace(" ","_",$schdarray[$i-1]["trackname"]);
-//  $filename=$schedarray;
-//  $filename="2";
+  $filename=str_replace(" ","_",$schdarray[$i-1]["title"]);
 
     ## Second query establishes the people in a particular schedule element.
     $query= <<<EOD
@@ -100,11 +97,7 @@ SELECT
     JOIN CongoDump CD USING(badgeid)
     JOIN Participants P USING(badgeid)
   WHERE
-    POS.sessionid in (SELECT
-                          sessionid 
-                        FROM
-                            Sessions
-                        WHERE trackid='$trackid')
+    POS.sessionid='$sessionid'
   ORDER BY
     sessionid,
     moderator DESC
