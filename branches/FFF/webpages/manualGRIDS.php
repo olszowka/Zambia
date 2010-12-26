@@ -9,6 +9,7 @@ $additionalinfo.="The choice of color or not is inside each grid element.</P>\n"
 $additionalinfo.="<P>Also useful is the <A HREF=StaffBios.php>Bios for Presenters</A> (<A HREF=Bios.php>public version</A>),\n";
 $additionalinfo.="the <A HREF=StaffDescriptions.php>Descriptions of scheduled Precis</A> (<A HREF=Descriptions.php>public version</A>),\n";
 $additionalinfo.="the <A HREF=StaffSchedule.php>Scheduled Precis</A> (<A HREF=Schedule.php>public version</A>) in time order,\n";
+$additionalinfo.="the <A HREF=StaffTracks.php>Tracks</A> (<A HREF=Tracks.php>public version</A>) by track name,\n";
 $additionalinfo.="and the <A HREF=Postgrid.php>public version</A> of the Grids.</P>\n";
 
 ## Replacement for the query

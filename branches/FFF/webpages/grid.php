@@ -88,8 +88,9 @@
     $additionalinfo.="the session id to edit the session's participants; or\n";
     $additionalinfo.="the title to edit the session.</P>\n";
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
-    $additionalinfo.=" the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, or the time to visit that section of";
-    $additionalinfo.=" the <A HREF=\"StaffSchedule.php\">schedule</A>.  <A HREF=\"manualGRIDS.php\">Pick</A> another grid.</P>\n";
+    $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, the time to visit that section of";
+    $additionalinfo.=" the <A HREF=\"StaffSchedule.php\">schedule</A>, or the track name to see all the classes\n";
+    $additionalinfo.="by <A HREF=\"StaffTracks.php\">track</A>.  <A HREF=\"manualGRIDS.php\">Pick</A> another grid.</P>\n";
     $Grid_Spacer=GRID_SPACER;
 
     /* This query returns the room names for an array. 

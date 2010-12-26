@@ -2,16 +2,16 @@
     require_once('PostingCommonCode.php');
     global $link;
     $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+    $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 
     ## LOCALIZATIONS
     $_SESSION['return_to_page']="Postgrid.php";
     $title="Sessions Grid";
     $description="<P>Grid of all sessions.</P>\n";
     $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.php\">description</A>,\n";
-    $additionalinfo.=" the presenter to visit their <A HREF=\"Bios.php\">bio</A>, or the time to visit that section of";
-    $additionalinfo.=" the <A HREF=\"Schedule.php\">schedule</A>.</P>\n";
-    $indicies="POSTWANTS=1";
-    $Grid_Spacer=GRID_SPACER;
+    $additionalinfo.="the presenter to visit their <A HREF=\"Bios.php\">bio</A>, the time to visit that section of\n";
+    $additionalinfo.="the <A HREF=\"Schedule.php\">schedule</A>, or the track name to see all the classes\n";
+    $additionalinfo.="by <A HREF=\"Tracks.php\">track</A>.</P>\n";
 
     /* This query returns the room names for an array. */
     $query = <<<EOD
