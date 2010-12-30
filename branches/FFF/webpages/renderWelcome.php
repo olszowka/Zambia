@@ -19,7 +19,7 @@
 	echo file_get_contents("../Local/Verbiage/Welcome_0");
       } else {
 ?>
-<P>Thank you for your participation in the <?php echo CON_NAME> event.  With your help it was a great con.  We look forward 
+<P>Thank you for your participation in the <?php echo CON_NAME; ?> event.  With your help it was a great con.  We look forward 
 to your participation again next year.</P>
 <P>We will post instructions for participating in brainstorming for the next event soon.</P>
 <P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--Program and Events Committees</P>
@@ -168,8 +168,7 @@ if (may_I('search_panels')) {
 <?php }
 } else { ?>
   <p> The "Suggest a Session" tab is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
-<?php }
-} ?>
+<?php } ?>
 
 </ol>
 
