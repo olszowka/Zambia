@@ -31,7 +31,6 @@ if (!$result=mysql_query($query,$link)) {
     }
 $emailto=mysql_fetch_array($result,MYSQL_ASSOC);
 $query=$emailto['emailtoquery'];
-$query="SELECT DISTINCT P.pubsname, C.firstname, C.lastname, C.email, C.badgename FROM CongoDump C, Participants P, ParticipantOnSession POS WHERE C.badgeid=P.badgeid AND C.badgeid=POS.badgeid";
 if (!$result=mysql_query($query,$link)) {
     db_error($title,$query,$staff=true); // outputs messages regarding db error
     exit(0);
@@ -47,15 +46,13 @@ if (!$result=mysql_query($query,$link)) {
     exit(0);
     }
 $emailfrom=mysql_result($result,0);
-$emailfrom="NELA Programming <Nela.Program@gmail.com>";
 $x=$email['sendcc'];
-$query="SELECT emailaddress FROM EmailCC where emailccid=$x";
+$query="SELECT emailccaddress FROM EmailCC where emailccid=$x";
 if (!$result=mysql_query($query,$link)) {
     db_error($title,$query,$staff=true); // outputs messages regarding db error
     exit(0);
     }
 $emailcc=mysql_result($result,0);
-$emailcc="";
 $goodCount=0;
 $badCount=0;
 unset($arrayOfGood);

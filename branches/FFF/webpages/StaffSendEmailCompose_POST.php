@@ -25,7 +25,6 @@ if (!$result=mysql_query($query,$link)) {
     }
 $emailto=mysql_fetch_array($result,MYSQL_ASSOC);
 $query=$emailto['emailtoquery'];
-$query="SELECT DISTINCT P.pubsname, C.firstname, C.lastname, C.email, C.badgename FROM CongoDump C, Participants P, ParticipantOnSession POS WHERE C.badgeid=P.badgeid AND C.badgeid=POS.badgeid";
 if (!$result=mysql_query($query,$link)) {
     db_error($title,$query,$staff=true); // outputs messages regarding db error
     exit(0);
@@ -46,7 +45,6 @@ if (!$result=mysql_query($query,$link)) {
     exit(0);
     }
 $emailverify['emailfrom']=mysql_result($result,0);
-$emailverify['emailfrom']="NELA Programming <Nela.Program@gmail.com>";
 $repl_list=array($recipientinfo[0]['badgeid'],$recipientinfo[0]['firstname'],$recipientinfo[0]['lastname']);
 $repl_list=array_merge($repl_list,array($recipientinfo[0]['email'],$recipientinfo[0]['pubsname'],$recipientinfo[0]['badgename']));
 $emailverify['body']=str_replace($subst_list,$repl_list,$email['body']);
