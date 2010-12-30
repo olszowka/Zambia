@@ -175,7 +175,6 @@ $i=0;
 $modid=0;
 $volid=0;
 $intid=0;
-$aidid=0;
 while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     if ($bigarray[$i]["moderator"]==1) {
         $modid=$bigarray[$i]["badgeid"];
@@ -185,9 +184,6 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
         }
     if ($bigarray[$i]["introducer"]==1) {
         $intid=$bigarray[$i]["badgeid"];
-        }
-    if ($bigarray[$i]["aidedecamp"]==1) {
-        $aidid=$bigarray[$i]["badgeid"];
         }
     $i++;
     }
@@ -203,31 +199,38 @@ echo "<LABEL for=\"introducer\">No Introducer Assigned</LABEL>";
 echo "<TABLE>\n";
 for ($i=0;$i<$numrows;$i++) {
     echo "   <TR>\n";
-    echo "      <TD class=\"vatop\"><INPUT type=\"checkbox\" name=\"asgn".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["posbadgeid"])?"checked":"")." value=\"1\"></TD>";
-    echo "      <TD class=\"vatop lrpad\">Assigned</TD>";
-    echo "<INPUT type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["badgeid"]."\">";
-    echo "<INPUT type=\"hidden\" name=\"wasasgn".$bigarray[$i]["badgeid"]."\" value=\"";
-    echo ((isset($bigarray[$i]["posbadgeid"]))?1:0)."\">";
-    echo "         </TD>\n";
+    echo "      <TD class=\"vatop\">\n";
+    echo "        <INPUT type=\"checkbox\" name=\"asgn".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["posbadgeid"])?"checked":"")." value=\"1\">\n";
+    echo "        <LABEL for=\"asgn\">Assigned</LABEL></TD>\n";
+    echo "        <INPUT type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["badgeid"]."\">\n";
+    echo "        <INPUT type=\"hidden\" name=\"wasasgn".$bigarray[$i]["badgeid"]."\" value=\"";
+    echo ((isset($bigarray[$i]["posbadgeid"]))?1:0)."\">\n";
+    echo "      </TD>\n";
     echo "      <TD class=\"vatop\">".$bigarray[$i]["badgeid"]."</TD>\n";
     echo "      <TD class=\"vatop\">".$bigarray[$i]["pubsname"]."</TD>\n";
     echo "      <TD class=\"vatop\">Rank: ".$bigarray[$i]["rank"]."</TD>\n";
     echo "      <TD class=\"vatop\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
     echo "      </TR>\n";
     echo "   <TR>\n";
-    echo "      <TD class=\"vatop\" vcenter><INPUT type=\"radio\" name=\"moderator\" id=\"moderator\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["moderator"])?"checked":"")."><br>\n";
-    echo "      <INPUT type=\"radio\" name=\"volunteer\" id=\"volunteer\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["volunteer"])?"checked":"")."><br>\n";
-    echo "      <INPUT type=\"radio\" name=\"introducer\" id=\"introducer\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["introducer"])?"checked":"")."><br>\n";
-    echo "      <INPUT type=\"checkbox\" name=\"aidedecamp\" id=\"aidedecamp\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["aidedecamp"])?"checked":"")." value=\"1\"></TD>\n";
-    echo "      <TD class=\"vatop lrpad\">Moderator<br>\n";
-    echo "      Volunteer<br>\n";
-    echo "      Introducer<br>\n";
-    echo "      Assisting</TD>\n";
+    echo "      <TD class=\"vatop\" vcenter>";
+    echo "        <INPUT type=\"radio\" name=\"moderator\" id=\"moderator\" value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["moderator"])?"checked":"").">\n";
+    echo "        <LABEL for=\"moderator\">Moderator<br></LABEL>";
+    echo "        <INPUT type=\"radio\" name=\"volunteer\" id=\"volunteer\" value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["volunteer"])?"checked":"").">\n";
+    echo "        <LABEL for=\"volunteer\">Volunteer<br></LABEL>";
+    echo "        <INPUT type=\"radio\" name=\"introducer\" id=\"introducer\" value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["introducer"])?"checked":"").">\n";
+    echo "        <LABEL for=\"introducer\">Introducer<br></LABEL>";
+    echo "        <INPUT type=\"checkbox\" name=\"aidedecamp".$bigarray[$i]["badgeid"]."\" ";
+    echo "id=\"aidedecamp".$bigarray[$i]["badgeid"]."\" ".(($bigarray[$i]["aidedecamp"])?"checked":"")." value=\"1\">\n";
+    echo "        <LABEL for=\"aidedecamp\">Assisting<br></LABEL>";
+    echo "        <INPUT type=\"hidden\" name=\"wasaidedecamp".$bigarray[$i]["badgeid"]."\" value=\"";
+    echo (($bigarray[$i]["aidedecamp"])?1:0)."\">\n";
+    echo "        <INPUT type=\"checkbox\" name=\"unlist".$bigarray[$i]["badgeid"]."\" ";
+    echo "id=\"unlist".$bigarray[$i]["badgeid"]."\" value=\"1\">\n";
+    echo "        <LABEL for=\"unlist\">Not Interested</LABEL></TD>";
     echo "      <TD colspan=4 class=\"border1111 lrpad\">".htmlspecialchars($bigarray[$i]["comments"]);
     echo "</TD>\n";
     echo "      </TR>\n";
@@ -239,7 +242,6 @@ echo "<INPUT type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasmodid\" value=\"$modid\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasvolid\" value=\"$volid\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasintid\" value=\"$intid\">\n";
-echo "<INPUT type=\"hidden\" name=\"wasaidid\" value=\"$aidid\">\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
 echo "<HR>\n";
 echo "<DIV><LABEL for=\"asgnpart\">Assign participant not indicated as interested or invited.</LABEL><BR>\n";
