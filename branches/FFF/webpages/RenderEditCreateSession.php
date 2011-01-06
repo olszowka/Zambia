@@ -121,12 +121,12 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <DIV class="thinbox">
             <TABLE><COL width="100"><COL>
                 <TR>
-                    <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Web Description:</LABEL></TD>
+		    <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Web Description (<?php echo MIN_DESC_LEN."-".MAX_DESC_LEN ?>):</LABEL></TD>
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" 
                             ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 <TR>
-                    <TD class="txtalbl"><LABEL class="dense" for="pocketprogtext">Program Book Description:</LABEL></TD>
+                    <TD class="txtalbl"><LABEL class="dense" for="pocketprogtext">Program Book Description (<?php echo MIN_PROG_DESC_LEN."-".MAX_PROG_DESC_LEN ?>):</LABEL></TD>
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="pocketprogtext" 
                             ><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
