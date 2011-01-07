@@ -22,7 +22,7 @@
 
     $query = <<<EOD
 SELECT
-        DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',starttime),'%a %l:%i %p') as 'starttime',
+        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'starttime',
         CASE
             WHEN HOUR(S.duration) < 1 THEN CONCAT(DATE_FORMAT(S.duration,'%i'),'min')
             WHEN MINUTE(S.duration)=0 THEN CONCAT(DATE_FORMAT(S.duration,'%k'),'hr')

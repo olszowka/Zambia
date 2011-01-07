@@ -6,7 +6,7 @@
     if (!$result=mysql_query($query,$link)) {
     	require_once('StaffHeader.php');
     	require_once('StaffFooter.php');
-    	$title="Full Participant Schedule for the Program Packet Merge";
+    	$title="Full Room Schedule by room then time -- Get CSV";
     	staff_header($title);
     	$message=$query."<BR>Error querying database. Unable to continue.<BR>";
         echo "<P class\"errmsg\">".$message."\n";
@@ -15,30 +15,29 @@
         }
     $query=<<<EOD
 SELECT
-        POS.badgeid,
-        P.pubsname,
-        GROUP_CONCAT(
-            DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p')," ",
+            R.roomname,
+            R.function,
+            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time', 
             CASE
                 WHEN HOUR(S.duration) < 1 THEN CONCAT(DATE_FORMAT(S.duration,'%i'),'min')
                 WHEN MINUTE(S.duration)=0 THEN CONCAT(DATE_FORMAT(S.duration,'%k'),'hr')
                 ELSE CONCAT(DATE_FORMAT(S.duration,'%k'),'hr ',DATE_FORMAT(S.duration,'%i'),'min')
-                END," ",
-            R.roomname, "-",
+                END AS 'duration',
+            T.Trackname,
+            S.sessionid,
             S.title,
-            IF(moderator=1,'(M)','')
-            ORDER BY SCH.starttime
-            SEPARATOR "\n") panelinfo
+            GROUP_CONCAT(CONCAT(P.pubsname,' (',P.badgeid,')') SEPARATOR '; ') AS 'Participants' 
     FROM
-            Participants P
-       JOIN ParticipantOnSession POS USING (badgeid)
-       JOIN Sessions S USING (sessionid)
+            Sessions S
        JOIN Schedule SCH USING (sessionid)
        JOIN Rooms R USING (roomid)
+  LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
+  LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+  LEFT JOIN Tracks T ON T.trackid=S.trackid
     GROUP BY
-        P.badgeid
+            SCH.scheduleid 
     ORDER BY
-        P.pubsname
+            R.roomname, SCH.starttime
 EOD;
     if (!$result=mysql_query($query,$link)) {
     	require_once('StaffHeader.php');
@@ -60,9 +59,9 @@ EOD;
         staff_footer();
         exit(); 
     	}
-    header('Content-disposition: attachment; filename=progpacketmerge.csv');
+    header('Content-disposition: attachment; filename=allroomsched.csv');
     header('Content-type: text/csv');
-    echo "badgeid,pubs name,panel info\n";
+    echo "Room Name, Room Function, Start Time, Duration, Track, Session ID, Title, Participants\n";
     while ($row= mysql_fetch_array($result, MYSQL_NUM)) {
     	$betweenValues=false;
     	foreach ($row as $value) {

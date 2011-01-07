@@ -1,0 +1,7 @@
+TITLE='CSV - Assigned Session by Participant [On&nbsp;Demand]'
+DESCRIPTION='Shows who has been assigned to each session ordered by badgeid.'
+MIGRATED=1
+PROGWANTS=1
+CSVONLY=0
+GENCSV=0
+QUERY=""
