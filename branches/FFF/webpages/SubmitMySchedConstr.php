@@ -44,8 +44,8 @@
                         $partAvail["availstartday_$i"]=1;
                         $partAvail["availendday_$i"]=1;
                         }
-                    $starttime=(($partAvail["availstartday_$i"]-1)*24+$partAvail["availstarttime_$i"]-1).":00:00";
-                    $endtime=(($partAvail["availendday_$i"]-1)*24+$partAvail["availendtime_$i"]-1).":00:00";
+                    $starttime=(($partAvail["availstartday_$i"]-1)*24+bcdiv($partAvail["availstarttime_$i"]-1,"2",0)).(bcmod($partAvail["availstarttime_$i"]-1,"2")?":30:00":":00:00");
+                    $endtime=(($partAvail["availendday_$i"]-1)*24+bcdiv($partAvail["availendtime_$i"]-1,"2",0)).(bcmod($partAvail["availendtime_$i"]-1,"2")?":30:00":":00:00");
                     $query = "REPLACE ParticipantAvailabilityTimes set ";
                     $query .="badgeid=\"$badgeid\",availabilitynum=$i,starttime=\"$starttime\",endtime=\"$endtime\"";
                     if (!mysql_query($query,$link)) {

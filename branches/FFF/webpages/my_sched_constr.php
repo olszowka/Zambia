@@ -18,13 +18,15 @@
     while (isset($partAvail["starttimestamp_$i"])) {
         //error_log("zambia-my_sched got here.i $i");
         //availstartday, availendday: day1 is 1st day of con
-        //availstarttime, availendtime: measured in whole 1-24 hours only, 0 is unset; 1 is midnight beginning of day
+        //availstarttime, availendtime: measured in half hour increments 1-24 hours, 0 is unset; 1 is midnight beginning of day
     	$x=parse_mysql_time($partAvail["starttimestamp_$i"]);
     	$partAvail["availstartday_$i"]=$x["day"]+1;
-    	$partAvail["availstarttime_$i"]=$x["hour"]+1;
+    	$partAvail["availstarttime_$i"]=($x["hour"]*2)+1;
+        if ($x["minute"]=="30") {$partAvail["availstarttime_$i"]++;}
     	$x=parse_mysql_time($partAvail["endtimestamp_$i"]);
     	$partAvail["availendday_$i"]=$x["day"]+1;
-    	$partAvail["availendtime_$i"]=$x["hour"]+1;
+    	$partAvail["availendtime_$i"]=($x["hour"]*2)+1;
+        if ($x["minute"]=="30") {$partAvail["availendtime_$i"]++;}
         $i++;
     	}
     require ('renderMySchedConstr.php');

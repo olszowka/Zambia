@@ -69,7 +69,7 @@ guidance when scheduling your panels.</p>
   </tr> <!-- header row  -->
 <?php
 //  Notes on variables:
-//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are measured in 1-24 whole hours
+//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are measured in 1-48 half hour increments
 //     0 is unset, 1 is midnight beginning of day
     for ($i=1; $i<=AVAILABILITY_ROWS; $i++) {
         echo "  <TR> <!-- Row $i -->\n";
