@@ -153,7 +153,7 @@ function validate_session() {
     $i=strlen($session["title"]);
     if ($i<MIN_TITLE_LEN||$i>MAX_TITLE_LEN) {
         $messages.="Title is $i characters long.  Please edit it to between";
-        $message.="<B>".MIN_TITLE_LEN."</B> and <B>".MAX_TITLE_LEN."</B> characters.<BR>\n";
+        $messages.=" <B>".MIN_TITLE_LEN."</B> and <B>".MAX_TITLE_LEN."</B> characters long.<BR>\n";
         $flag=false;
         }
     $i=strlen($session["pocketprogtext"]);
