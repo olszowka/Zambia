@@ -11,7 +11,7 @@ $description="<P>Grid of all sessions.</P>\n";
 $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.php\">description</A>,\n";
 $additionalinfo.="the presenter to visit their <A HREF=\"Bios.php\">bio</A>, the time to visit that section of\n";
 $additionalinfo.="the <A HREF=\"Schedule.php\">schedule</A>, or the track name to see all the classes\n";
-$additionalinfo.="by <A HREF=\"Tracks.php\">track</A>.  (<A HREF=\"Postgrid-wide.php\">Switch indices</A>)</P>\n";
+$additionalinfo.="by <A HREF=\"Tracks.php\">track</A>. (<A HREF=\"Postgrid.php\">Switch indices</A>)</P>\n";
 
 /* This query returns the room names for an array, to be used as
  headers, and keys for other arrays.*/
@@ -169,18 +169,13 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
 /* This should also make generating the iCal that much easier, when
  that code is added */
 $element_row=1;
-$newtableline=1;
-$breakon[$newtableline]=1;
 for ($i=1; $i<=$rooms; $i++) { $header_rooms[$i]=$header_array[$i]['roomname']; }
 array_unshift($header_rooms,"Class Time");
-for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {
-  if ($grid_array[$i]['blocktime'] == "Skip") {
-    if ($breakon[$newtableline] != $element_row) { $breakon[++$newtableline] = $element_row; }
-  } else {
-    $element_array[$element_row]["Class Time"] = sprintf("<TD class=\"border1111\">%s</TD>\n",$grid_array[$i]['blocktime']);
-    for ($j=1; $j<=$rooms; $j++) {
+for ($j=1; $j<=$rooms; $j++) {
+  $element_array[$element_row]["Room Name"] = sprintf("<TD class=\"border1111\">%s</TD>\n",$header_array[$j]['roomname']);
+  for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {
       $header_roomname=$header_array[$j]['roomname'];
-      $element_col=$header_roomname;
+      $element_col=$grid_array[$i]['blocktime'];
       $bgcolor=$grid_array[$i]["$header_roomname htmlcellcolor"]; //cell background color
       $cellclass=$grid_array[$i]["$header_roomname cellclass"]; //cell edge state
       if ($cellclass == "") {$cellclass="border1111";}
@@ -205,8 +200,6 @@ for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {
     }
     $element_row++;
   }
- }
-$breakon[++$newtableline] = $element_row;
 
 ## Page Rendering
 /* Check for the csv variable, to see if we should be dropping a table,
@@ -216,11 +209,11 @@ $breakon[++$newtableline] = $element_row;
  all the way back to the top, and it gives a nice visual break. */
 if ($_GET["csv"]=="y") {
   topofpagecsv("grid.csv");
-  rendercsvreport($element_row,$header_rooms,$element_array);
+  rendercsvreport($element_row,$header_time,$element_array);
  } else {
   topofpagereport($title,$description,$additionalinfo);
-  for ($i=1; $i<$newtableline; $i++) {
-    rendergridreport($breakon[$i],$breakon[$i+1]-1,$header_rooms,$element_array);
+  for ($i=1; $i<=count($header_time); $i = ($i + 11)) {
+    rendergridreport(1,$element_row,array_merge(array_slice($header_time,0,1), array_slice($header_time,$i,11)),$element_array);
     echo $additionalinfo;
   }
   posting_footer();

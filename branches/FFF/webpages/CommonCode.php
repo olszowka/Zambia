@@ -50,7 +50,7 @@
     }
 
 /* functions to put the headers in place.  Probably should be generalized more,
-   than specifically pre-scripting it, the way we do. */
+ than specifically pre-scripting it, the way we do. */
 
 function posting_header($title) {
   $ConName=CON_NAME; // make it a variable so it can be substituted
@@ -285,7 +285,10 @@ function brainstorm_footer() {
   echo "\n\n</body>\n</html>\n";
   }
 
-//Top of page reporting, simplified by the pieces above for HTML pages
+/* Top of page reporting, simplified by the foo_header functions
+ for HTML pages.  It takes the title, description and any
+ additional information, and puts it all in the right place
+ depending on the SESSION variable.*/
 function topofpagereport($title,$description,$info) {
   if ($_SESSION['role'] == "Brainstorm") {
     brainstorm_header($title);
@@ -306,7 +309,8 @@ function topofpagereport($title,$description,$info) {
   
 }
 
-//Top of page reporting, simplified by the pieces above for CSV pages
+/* Top of page reporting, for CSV pages.  It takes only the filename
+ as an input, and spits out the CSV headers. */
 function topofpagecsv($filename) {
   header("Expires: 0");
   header("Cache-control: private");
@@ -316,7 +320,12 @@ function topofpagecsv($filename) {
   header("Content-disposition: attachment; filename=$filename");
 }
 
-// Produce the HTML body version of the information gathered in tables.
+/* Produce the HTML body version of the information gathered in tables.
+ It takes 4 inputs, the number of rows, the header array, the elements
+ that go into the table, and if this table is the last thing on a page.
+ the switch for the close on how it is called doesn't quite work yet,
+ and might want to be simplified out, depending on the calling page to
+ do the right thing, dropping it to 3 variables. */
 function renderhtmlreport($rows,$header_array,$element_array,$islast) {
   $headers="";
   foreach ($header_array as $header_name) {
@@ -352,12 +361,18 @@ function renderhtmlreport($rows,$header_array,$element_array,$islast) {
   }
 }
 
-// Produce the CSV body version of the information gathered in tables.
+/* Produce the CSV body version of the information gathered in tables.
+ It takes in three variables, the number of rows, the header array,
+ and the elements that go in the table.  It then strips out all of the
+ unwanted characters (html tags, extraneous returns, and other bits)
+ and outputs the comma seperated information.*/
 function rendercsvreport($rows,$header_array,$element_array) {
   $headers="";
+  $spacestr=array('\\n','\n','\\r','\r','&nbsp;');
+  $newstr=array(' ',' ',' ',' ',' ');
   foreach ($header_array as $header_name) {
     $headers.="\"";
-    $headers.=$header_name;
+    $headers.=strip_tags(trim(str_replace($spacestr,$newstr,$header_name)));
     $headers.="\",";
   }
   $headers = substr($headers, 0, -1);
@@ -366,7 +381,7 @@ function rendercsvreport($rows,$header_array,$element_array) {
     $rowinfo="";
     foreach ($header_array as $header_name) {
       $rowinfo.="\"";
-      $rowinfo.=$element_array[$i][$header_name];
+      $rowinfo.=strip_tags(trim(str_replace($spacestr,$newstr,$element_array[$i][$header_name])));
       $rowinfo.="\",";
     }
     $rowinfo=substr($rowinfo, 0, -1);
@@ -374,7 +389,35 @@ function rendercsvreport($rows,$header_array,$element_array) {
   }
 }
 
-// Pull the informaiton requested by the queries
+/* This function presumes multiple calls on the same array informaition.
+ It takes in 4 elements, the start and end row for a table, of the series
+ of tables, the headers which go in every table, and the full array, from
+ which the subset is used.  It then prints them nicely. */
+function rendergridreport($startrows,$endrows,$header_array,$element_array) {
+  $headers="";
+  foreach ($header_array as $header_name) {
+    $headers.="<TH class=\"border2222\">";
+    $headers.=$header_name;
+    $headers.="</TH>\n";
+  }
+  echo "<P><TABLE cellspacing=0 border=1 class=\"border1111\">";
+  echo "<TR>" . $headers . "</TR>";
+  for ($i=$startrows; $i<=$endrows; $i++) {
+    echo "<TR>";
+    foreach ($header_array as $header_name) {
+      echo $element_array[$i][$header_name];
+    }
+    echo "</TR>\n";
+  }
+  echo "</TABLE></P>";
+}
+
+
+/* Pull the information from the databas for a report.  This should be
+ checked with, and possibly unified with other functions in db_functions
+ file.  It takes the query and link to do the pull, title and description
+ in case there is an error, or just no information, and a reportid, so
+ the report can be edited if there is a query error in the report. */
 function queryreport($query,$link,$title,$description,$reportid) {
   if (($result=mysql_query($query,$link))===false) {
     $message="<P>Error retrieving data from database.</P>\n<P>";
@@ -397,7 +440,9 @@ function queryreport($query,$link,$title,$description,$reportid) {
   return array ($rows,$header_array,$element_array);
 }
 
-// Show a list of participants to select from, generated from all participants.
+/* Show a list of participants to select from, generated from all participants.
+ Each list is ordered by the sorting key, for html-based and visual-based
+ searching. */
 function select_participant ($selpartid, $returnto) {
   global $link;
   $query0="SELECT P.badgeid, CD.lastname, CD.firstname, CD.badgename, P.pubsname FROM Participants P, CongoDump CD ";
@@ -439,7 +484,7 @@ function select_participant ($selpartid, $returnto) {
   echo "     <OPTION value=0 ".(($selpartid==0)?"selected":"").">Select Participant (Firstname)</OPTION>\n";
   while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($firstnameresult, MYSQL_NUM)) {
     echo "     <OPTION value=\"".$partid."\" ".(($selpartid==$partid)?"selected":"");
-    echo ">".htmlspecialchars($lastname).", ".htmlspecialchars($firstname);
+    echo ">".htmlspecialchars($firstname)." ".htmlspecialchars($lastname);
     echo " (".htmlspecialchars($badgename)."/".htmlspecialchars($pubsname).") - ".$partid."</OPTION>\n";
   }
   echo "</SELECT></DIV>\n";
@@ -448,8 +493,8 @@ function select_participant ($selpartid, $returnto) {
   echo "     <OPTION value=0 ".(($selpartid==0)?"selected":"").">Select Participant (Pubsname)</OPTION>\n";
   while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($pubsnameresult, MYSQL_NUM)) {
     echo "     <OPTION value=\"".$partid."\" ".(($selpartid==$partid)?"selected":"");
-    echo ">".htmlspecialchars($lastname).", ".htmlspecialchars($firstname);
-    echo " (".htmlspecialchars($badgename)."/".htmlspecialchars($pubsname).") - ".$partid."</OPTION>\n";
+    echo ">".htmlspecialchars($pubsname)."/".htmlspecialchars($badgename);
+    echo " (".htmlspecialchars($lastname).", ".htmlspecialchars($firstname).") - ".$partid."</OPTION>\n";
   }
   echo "</SELECT></DIV>\n";
   echo "<P>&nbsp;\n";
@@ -457,7 +502,7 @@ function select_participant ($selpartid, $returnto) {
   echo "</FORM>\n";
 }
 
-//Used to add a note on a participant as part of flow, and allowing for participant change.
+/* Used to add a note on a participant as part of flow, and allowing for participant change. */
 function submit_participant_note ($note, $partid) {
   global $link;
   $query = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
@@ -473,7 +518,8 @@ function submit_participant_note ($note, $partid) {
   echo "<P class=\"regmsg\">".$message."\n";
 }
 
-//Pull the notes for a participant
+/* Pull the notes for a participant, in reverse order. */
+// I'm no longer sure why the below is here ...
 //"SELECT PR.pubsname, PB.pubsname, N.timestamp, N.note FROM NotesOnParticipants N, Participants PR, Participants PB WHERE N.rbadgeid=PR.badgeid AND N.badgeid=PB.badgeid;
 function show_participant_notes ($partid) {
   global $link;
@@ -495,6 +541,7 @@ EOD;
   renderhtmlreport($rows,$header_array,$notes_array,1);
 }
 
+/* create_participant and edit_participant functions.  Need more doc. */
 function create_participant ($participant_arr) {
   global $link;
   $error_status=false;
@@ -680,6 +727,8 @@ function edit_participant ($participant_arr) {
   echo "<P class=\"regmsg\">".$message."\n";
 }    
 
+/* Three flow report functions.  They are remove, add, and delta rank.
+ Need more header doc */
 function remove_flow_report ($flowid,$table,$title,$description) {
   global $link;
 
