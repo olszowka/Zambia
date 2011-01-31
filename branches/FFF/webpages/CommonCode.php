@@ -502,6 +502,37 @@ function select_participant ($selpartid, $returnto) {
   echo "</FORM>\n";
 }
 
+/* Generic insert takes five variables: link, title, Table, array of elements, array of values */
+function submit_table_element ($link, $title, $table, $element_array, $value_array) {
+  foreach ($element_array as $element) {$element_string.=mysql_real_escape_string(stripslashes($element)).",";}
+  foreach ($value_array as $value) {$value_string.="'".mysql_real_escape_string(stripslashes($value))."',";}
+  $element_string=substr($element_string,0,-1);
+  $value_string=substr($value_string,0,-1);
+  $query= "INSERT INTO $table ($element_string) VALUES ($value_string)";
+  if (!mysql_query($query,$link)) {
+    $message_error=$query."<BR>Error updating $table.  Database not updated.";
+    RenderError($title,$message_error);
+    exit;
+  }
+  $message="Database updated successfully.<BR>";
+  echo "<P class=\"regmsg\">".$message."\n";
+}
+
+/* Generic update takes six variables: link, title, Table, paired array of updates,
+ which field to match on, and value of the match. */
+function update_table_element ($link, $title, $table, $pairedvalue_array, $match_field, $match_value) {
+  foreach ($pairedvalue_array as $pairedvalue) {$pairedvalue_string.=$pairedvalue.",";}
+  $pairedvalue_string=substr($pairedvalue_string,0,-1);
+  $query="UPDATE $table set $pairedvalue_string where $match_field = '$match_value'";
+  if (!mysql_query($query,$link)) {
+    $message_error=$query."<BR>Error updating $table.  Database not updated.";
+    RenderError($title,$message_error);
+    exit;
+  }
+  $message="Database updated successfully.<BR>";
+  echo "<P class=\"regmsg\">".$message."\n";
+}
+
 /* Used to add a note on a participant as part of flow, and allowing for participant change. */
 function submit_participant_note ($note, $partid) {
   global $link;

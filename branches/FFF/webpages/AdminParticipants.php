@@ -80,7 +80,11 @@ list($interested, $pubsname)= mysql_fetch_array($result, MYSQL_NUM);
 </FORM>
 <BR>
 <HR>
-<DIV class="sectionheader"><A HREF=StaffEditCreateParticipant.php?action=edit&partid=<?php echo $selpartid;?>>Edit <?php echo htmlspecialchars($pubsname); ?> Further</A></DIV>
+<DIV class="sectionheader">
+<A HREF=StaffEditCreateParticipant.php?action=edit&partid=<?php echo $selpartid;?>>Edit <?php echo htmlspecialchars($pubsname); ?> Further</A> ::
+<A HREF=ClassIntroPrint.php?individual=<?php echo $selpartid;?>>Print Intros for <?php echo htmlspecialchars($pubsname); ?></A> ::
+<A HREF=SchedulePrint.php?individual=<?php echo $selpartid;?>>Print Schedule for <?php echo htmlspecialchars($pubsname); ?></A>
+</DIV>
 <?php
 // Show previous notes added, for references, and end page
 show_participant_notes ($selpartid);
