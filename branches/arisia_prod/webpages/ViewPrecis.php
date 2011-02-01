@@ -11,21 +11,23 @@
     if ($showlinks=="1") {
             $showlinks=true;
             }
-    elseif ($showlinks="0") {
+        elseif ($showlinks="0") {
             $showlinks=false;
             }
-   $statusidlist=get_idlist_from_db("SessionStatuses","statusid","statusname","'Brainstorm','Edit Me','Vetted'");
-   $typeidlist="";
-   $trackidlist="";
-   $sessionid="";
-    if (retrieve_select_from_db($trackdlist,$statusidlist,$typeidlist,$sessionid)==0) {
-       staff_header($title);
-       echo "<p> If you have any questions please contact ";
-       echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> </p>\n";
-       RenderPrecis($result,$showlinks);
-       staff_footer();
-       exit();
-       }
+    $statusidlist=get_idlist_from_db("SessionStatuses","statusid","statusname","'Brainstorm','Edit Me','Vetted'");
+    $typeidlist="";
+    $trackidlist="";
+    $sessionid="";
+    $divisionid="";
+    $searchtitle="";
+    if (retrieve_select_from_db($trackdlist,$statusidlist,$typeidlist,$sessionid,$divisionid,$searchtitle)==0) {
+        staff_header($title);
+        echo "<p> If you have any questions please contact ";
+        echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> </p>\n";
+        RenderPrecis($result,$showlinks);
+        staff_footer();
+        exit();
+        }
     $message_error="Error retrieving from database. ".$message2;
     RenderError($title,$message_error);
 ?> 

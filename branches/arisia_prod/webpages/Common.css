@@ -335,6 +335,22 @@ LABEL.dense {
     margin-bottom: 10px;
     }
 
+TR.regform {
+    height: 2.5em;
+    }
+
+SELECT.regform2, INPUT.regform2, SPAN.regform2 {
+    vertical-align: center;
+    margin-bottom: 0.5 em;
+    margin-left: 0 em;
+    }
+
+TD.regform3 {
+    vertical-align: center;
+    padding-bottom: 0.5 em;
+    margin-bottom: 0.5 em
+    }
+
 .denseformrow {
     font-size: 85%;
     margin-bottom: 5px;

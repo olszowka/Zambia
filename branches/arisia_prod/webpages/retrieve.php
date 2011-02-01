@@ -1,5 +1,5 @@
 <?php
-function retrieve_select_from_db($trackidlist,$statusidlist,$typeidlist,$sessionid){
+function retrieve_select_from_db($trackidlist,$statusidlist,$typeidlist,$sessionid,$divisionid,$searchtitle){
     global $result;
     global $link, $message2; 
     require_once('db_functions.php');
@@ -26,7 +26,17 @@ function retrieve_select_from_db($trackidlist,$statusidlist,$typeidlist,$session
     if (($sessionid!=0) and ($sessionid!='')) {
          $query.=" AND Sessions.sessionid = $sessionid";
          }
-//error_log("retrieve: $query");
+
+    if (($divisionid!=0) and ($divisionid!='')) {
+         $query.=" AND Sessions.divisionid = $divisionid";
+         }
+
+    if ($searchtitle!='') {
+         $searchtitle=mysql_real_escape_string($searchtitle,$link);
+         $query.=" AND Sessions.title like \"%$searchtitle%\"";
+         }
+    //error_log("retrieve: $query");
+    //echo($query." <BR>\n");
     prepare_db();
     $result=mysql_query($query,$link);
     if (!$result) {
