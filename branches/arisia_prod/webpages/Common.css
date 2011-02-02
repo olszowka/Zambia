@@ -1,5 +1,84 @@
 /* . are classes */
 /* # are ids and must be unique in a page*/
+
+/* This section is part of the CSS refactor 1 Feb 2011 PBO*/
+
+.newform {
+	margin: 0;
+	font-family: Verdana, Arial;
+	font-size: 0.9em;
+	}
+
+.newformdiv { /* keep label, control, and note together */
+	display: inline-block;
+	margin-top: 0.6em;
+	margin-bottom: 0.6em;
+	margin-left: 0.5em;
+	margin-right: 1.5em;
+	}
+
+.newformbuttondiv {
+	margin-top: 0.6em;
+	margin-left: 0.5em;
+	text-align: center;
+	}
+
+.newforminputspan {
+	}
+
+.newformlabelspan {
+	}
+
+.newformselectspan {
+	}
+
+.newforminput {
+	}
+
+.newformlabel {
+	}
+
+.newformselect {
+	}
+
+.newformbutton {
+	text-align: center;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	background-color:DarkGrey;
+	}
+
+.newformbutton:hover {
+	background-color:Gainsboro;
+	}
+
+.newoverviewtext {
+	/* DIV */
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	margin-left: 0.5em;
+	margin-right: 0;
+	}
+	
+.newcommandlink {
+	/* DIV */
+	margin-top: 0.8em;
+	margin-bottom: 0.3em;
+	margin-left: 0.5em;
+	margin-right: 0;
+	}
+	
+.newcommanddescription {
+	/* DIV */
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	margin-left: 0.5em;
+	margin-right: 0;
+	}
+
+/* Everything below this section is not part of the CSS refactor 1 Feb 2011 PBO*/
 * {
     margin: 0;
     padding: 0;
