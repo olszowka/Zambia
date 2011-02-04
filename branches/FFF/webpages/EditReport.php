@@ -102,6 +102,7 @@ if (!$Sresult=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
+echo "<P>A report has to be in a <A HREF=EditGroupFlows.php>Group</A> to work.</P>\n";
 echo "<FORM name=\"selreportform\" method=POST action=\"EditReport.php\">\n";
 echo "<DIV><LABEL for=\"selreport\">Select Report</LABEL>\n";
 echo "<SELECT name=\"selreport\">\n";

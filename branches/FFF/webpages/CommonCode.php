@@ -402,16 +402,17 @@ function rendergridreport($startrows,$endrows,$header_array,$element_array) {
     $headers.=$header_name;
     $headers.="</TH>\n";
   }
-  echo "<P><TABLE cellspacing=0 border=1 class=\"border1111\">";
-  echo "<TR>" . $headers . "</TR>";
+  $gridstring="<P><TABLE cellspacing=0 border=1 class=\"border1111\">";
+  $gridstring.="<TR>" . $headers . "</TR>";
   for ($i=$startrows; $i<=$endrows; $i++) {
-    echo "<TR>";
+    $gridstring.="<TR>";
     foreach ($header_array as $header_name) {
-      echo $element_array[$i][$header_name];
+      $gridstring.=$element_array[$i][$header_name];
     }
-    echo "</TR>\n";
+    $gridstring.="</TR>\n";
   }
-  echo "</TABLE></P>";
+  $gridstring.="</TABLE></P>";
+  return($gridstring);
 }
 
 

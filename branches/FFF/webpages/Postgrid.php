@@ -12,6 +12,8 @@ $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"
 $additionalinfo.="the presenter to visit their <A HREF=\"Bios.php\">bio</A>, the time to visit that section of\n";
 $additionalinfo.="the <A HREF=\"Schedule.php\">schedule</A>, or the track name to see all the classes\n";
 $additionalinfo.="by <A HREF=\"Tracks.php\">track</A>.  (<A HREF=\"Postgrid-wide.php\">Switch indices</A>)</P>\n";
+$additionalinfo.="<P>If you wish to have a copy printed, please download the <A HREF=Postgrid.php?print_p=y>Rooms\n";
+$additionalinfo.="x Times</A> or <A HREF=Postgrid-wide.php?print_p=y>Times x Rooms</A> version.</P>\n";
 
 /* This query returns the room names for an array, to be used as
  headers, and keys for other arrays.*/
@@ -217,10 +219,38 @@ $breakon[++$newtableline] = $element_row;
 if ($_GET["csv"]=="y") {
   topofpagecsv("grid.csv");
   rendercsvreport($element_row,$header_rooms,$element_array);
+ } elseif ($_GET["print_p"]=="y") {
+  require_once('../tcpdf/config/lang/eng.php');
+  require_once('../tcpdf/tcpdf.php');
+  $logo="../../../images/nelaLogoHeader.gif";
+  $pdf = new TCPDF('p', 'mm', 'letter', true, 'UTF-8', false);
+  $pdf->SetCreator('Zambia');
+  $pdf->SetAuthor('Programming Team');
+  $pdf->SetTitle('Grid');
+  $pdf->SetSubject('Programming Grid');
+  $pdf->SetKeywords('Zambia, Presenters, Volunteers, Programming, Grid');
+  $pdf->SetHeaderData($logo, 70, CON_NAME, "nelaonline.org/Zambia-FFF36");
+  $pdf->setHeaderFont(Array("helvetica", '', 10));
+  $pdf->setFooterFont(Array("helvetica", '', 8));
+  $pdf->SetDefaultMonospacedFont("courier");
+  $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+  $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+  $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+  $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+  $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+  $pdf->setLanguageArray($l);
+  $pdf->setFontSubsetting(true);
+  $pdf->SetFont('helvetica', '', 6, '', true);
+  for ($i=1; $i<$newtableline; $i++) {
+    $gridstring=rendergridreport($breakon[$i],$breakon[$i+1]-1,$header_rooms,$element_array);
+    $pdf->AddPage();
+    $pdf->writeHTML($gridstring, true, false, true, false, '');
+  }
+  $pdf->Output(CON_NAME.'-grid.pdf', 'I');
  } else {
   topofpagereport($title,$description,$additionalinfo);
   for ($i=1; $i<$newtableline; $i++) {
-    rendergridreport($breakon[$i],$breakon[$i+1]-1,$header_rooms,$element_array);
+    echo rendergridreport($breakon[$i],$breakon[$i+1]-1,$header_rooms,$element_array);
     echo $additionalinfo;
   }
   posting_footer();
