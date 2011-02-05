@@ -1,5 +1,10 @@
 <?php
-require_once('StaffCommonCode.php');
+require_once('CommonCode.php');
+if (may_I("Staff")) {
+  require_once('StaffCommonCode.php');
+  } else {
+  require_once('PartCommonCode.php');
+  }
 require_once('../tcpdf/config/lang/eng.php');
 require_once('../tcpdf/tcpdf.php');
 //require_once('Test_PDF.php');
@@ -12,6 +17,9 @@ $title="Class Introduction Printing";
 $logo="../../../images/nelaLogoHeader.gif";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
+
+## If the individual isn't a staff member, only serve up their schedule information
+if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
 
 $description="<P>A way to <A HREF=\"ClassIntroPrint.php?print_p=T";
 if ($individual != "") {$description.="&individual=$individual";}

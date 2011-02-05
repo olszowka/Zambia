@@ -50,6 +50,26 @@ EOD;
     $row=mysql_fetch_array($result, MYSQL_NUM);
     $regmessage=$row[0];
 
+    // Get the number of pannels the participant is introducing
+    $query = <<<EOD
+SELECT
+    count(*) 
+  FROM
+      ParticipantOnSession POS,
+      Schedule SCH
+  WHERE
+    POS.sessionid=SCH.sessionid and
+    POS.introducer=1 and
+    badgeid=$badgeid 
+EOD;
+    if (!$result=mysql_query($query,$link)) {
+        $message.=$query."<BR>Error querying database.<BR>";
+        RenderError($title,$message);
+        exit();
+        }
+    $row=mysql_fetch_array($result, MYSQL_NUM);
+    $intro_p=$row[0];
+
     // Get the number of pannels the participant is on
     $query = <<<EOD
 SELECT
@@ -228,7 +248,7 @@ EOD;
 
     ## Begin the presentation of the information
     participant_header($title);
-    echo "<P>Below is the list of all the panels for which you are scheduled.  If you need any changes\n";
+    echo "<P>Below is the list of all the schedule elements for which you are scheduled.  If you need any changes\n";
     echo "to this schedule please contact <A HREF=\"mailto:$ProgramEmail\">$ProgramEmail</A>.</P>\n";
     echo "<P>In order to put together the entire schedule, we had to schedule some panels outside of\n";
     echo "the times that certain panelists requested.  If this happened to you, we would love to have\n";
@@ -242,7 +262,12 @@ EOD;
     echo "<A HREF=\"./my_sessions2.php\">\"My Panel Interests\"</A> tab).  That will expose it to other\n";
     echo "panelists who can then email or call you as appropriate to discuss the panel in advance.  If you\n";
     echo "check back in a day or two you may find other panelists' information.</P>\n";
-    echo "<P><A HREF=\"MyScheduleIcal.php\">Here</A> is an iCal (Calendar standard) calendar of your schedule.</P>\n";
+    echo "<P><A HREF=\"MyScheduleIcal.php\">Here</A> is an iCal (Calendar standard) calendar of your schedule.\n";
+    echo "<A HREF=\"SchedulePrint.php?print_p=T\">Print</A> a PDF of your schedule.\n";
+    if ($intro_p > 0) {
+      echo "<A HREF=\"ClassIntroPrint.php\">Print</A> a PDF of all of your class and panel introductions.\n";
+      }
+    echo "</P>\n";
     echo "<P>Your registration status is <SPAN class=\"hilit\">$regmessage.</SPAN></P>\n";
     if ($pcommentrows > 0) {
       echo "<P>General <A HREF=#genfeedback>Feedback</A> received about or for you.\n</P>";
