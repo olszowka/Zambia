@@ -111,7 +111,7 @@ EOD;
 SELECT
     POS.sessionid,
     trackname,
-    title,
+    S.title,
     roomname,
     pocketprogtext,
     progguiddesc,
@@ -126,19 +126,46 @@ SELECT
       END
       AS Duration,
     persppartinfo,
-    notesforpart
+    notesforpart,
+    concat(if((servicenotes!=''),servicenotes,""),
+           if(((servicenotes!='') AND (servicelist!='')),", ",""),
+           if((servicelist!=''),servicelist,''),
+           if((((servicenotes!='') OR (servicelist!='')) AND (featurelist!='')),", ",""),
+           if((featurelist!=''),featurelist,'')) AS Needed
   FROM
-      ParticipantOnSession POS,
-      Sessions S,
-      Rooms R,
-      Schedule SCH,
-      Tracks T
+      Schedule SCH
+    JOIN Sessions S USING (sessionid)
+    JOIN ParticipantOnSession POS USING (sessionid)
+    JOIN Rooms R USING (roomid)
+    JOIN Tracks T USING (trackid)
+    LEFT JOIN (SELECT
+           S.sessionid, 
+           title,
+           GROUP_CONCAT(DISTINCT servicename SEPARATOR ', ') as 'servicelist'
+         FROM
+             Sessions S, 
+             SessionHasService SS, 
+             Services SE
+         WHERE
+           S.sessionid=SS.sessionid and
+           SE.serviceid=SS.serviceid
+         GROUP BY
+           S.sessionid) X USING (sessionid)
+    LEFT JOIN (SELECT
+           S.sessionid, 
+           title,
+           GROUP_CONCAT(DISTINCT featurename SEPARATOR ', ') as 'featurelist'
+         FROM
+             Sessions S, 
+             SessionHasFeature SF, 
+             Features F
+         WHERE
+           S.sessionid=SF.sessionid and
+           F.featureid=SF.featureid
+         GROUP BY
+           S.sessionid) Y USING (sessionid)
   WHERE
-    badgeid="$badgeid" and
-    POS.sessionid = S.sessionid and
-    R.roomid = SCH.roomid and
-    S.sessionid = SCH.sessionid and
-    S.trackid = T.trackid
+    badgeid="$badgeid"
   ORDER BY
     starttime
 EOD;
@@ -242,14 +269,24 @@ EOD;
         echo "    <TD>&nbsp;</TD>\n";
         echo "    <TD colspan=6 class=\"border0010\">Book: ".htmlspecialchars($schdarray[$i]["pocketprogtext"])."</TD>\n";
         echo "  </TR>\n";
-        echo "  <TR>\n";
-        echo "    <TD>&nbsp;</TD>\n";
-        echo "    <TD colspan=6 class=\"border0010\">".htmlspecialchars($schdarray[$i]["persppartinfo"])."</TD>\n";
-        echo "  </TR>\n";
-        echo "  <TR>\n";
-        echo "    <TD>&nbsp;</TD>\n";
-        echo "    <TD colspan=6 class=\"border0010\">".htmlspecialchars($schdarray[$i]["notesforpart"])."</TD>\n";
-        echo "  </TR>\n";
+        if ($schdarray[$i]["persppartinfo"] != "") {
+          echo "  <TR>\n";
+          echo "    <TD>&nbsp;</TD>\n";
+          echo "    <TD colspan=6 class=\"border0010\">Requirements: ".htmlspecialchars($schdarray[$i]["persppartinfo"])."</TD>\n";
+          echo "  </TR>\n";
+          }
+        if ($schdarray[$i]["notesforpart"] != "") {
+          echo "  <TR>\n";
+          echo "    <TD>&nbsp;</TD>\n";
+          echo "    <TD colspan=6 class=\"border0010\">Participant notes: ".htmlspecialchars($schdarray[$i]["notesforpart"])."</TD>\n";
+          echo "  </TR>\n";
+          }
+        if ($schdarray[$i]["Needed"] != "") {
+          echo "  <TR>\n";
+          echo "    <TD>&nbsp;</TD>\n";
+          echo "    <TD colspan=6 class=\"border0010\">Support requests: ".htmlspecialchars($schdarray[$i]["Needed"])."</TD>\n";
+          echo "  </TR>\n";
+          }
         echo "  <TR>\n";
         echo "    <TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
         echo "  <TR>\n";
