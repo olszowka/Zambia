@@ -25,7 +25,7 @@ staff_header($title);
   <DD id="labels">Print up sticky-lables to go on a folder or envelope for everyone.</DD>
   <DT id="letters"><A HREF="WelcomeLettersPrint.php">Welcome Letters</A></DT>
   <DD id="letters">Preview and then print the Welcome Letters for Presenters, Volunteers, and folks who are doing both.</DD>
-  <DT id="feedback"><A HREF="FridayFeedback.php">Friday</A>::<A HREF="SaturdayFeedback-1.php">Saturday Morning</A>::<A HREF="SaturdayFeedback-2.php">Saturday Evening</A>::<A HREF="SundayFeedback.php">Sunday</A></DT>
+  <DT id="feedback"><A HREF="Feedback.php?selday=Friday">Friday</A>::<A HREF="Feedback.php?selday=Saturday Early">Saturday Early</A>::<A HREF="Feedback.php?selday=Saturday Late">Saturday Late</A>::<A HREF="Feedback.php?selday=Sunday">Sunday</A></DT>
   <DD id="feedback">Feedback forms for Friday, Saturday (both), and Sunday to be printed, probably on different colour paper, for easier sorting.</DD>
 </DL>
 <?php staff_footer(); ?>

@@ -143,7 +143,7 @@ for ($i=1; $i<=$classcount; $i++) {
 
   // Generic header info.
   $printstring = "<P>&nbsp;</P><P>$name, this is the information for:</P>";
-  $printstring.= "<P><TABLE border=\"1\" cellspacing=\"3\" cellpadding=;\"4\">";
+  $printstring.= "<P><TABLE border=\"1\" cellspacing=\"3\" cellpadding=\"4\">";
   $printstring.= "<TR><TD colspan=\"2\"><H2>$classname</H2></TD><TD><H2>$starttime</H2></TD><TD><H2>$roomname</H2></TD></TR>";
   $printstring.= "<TR><TD>30 minute<br>headcount</TD><TD></TD><TD>60 minute<br>headcount</TD><TD></TD></TR></TABLE></P>";
   $printstring.= "<P>Introduction:</P>";
