@@ -100,9 +100,11 @@ function staff_header($title) {
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
     maketab("Manage Participants &amp; Schedule",1,"StaffManageParticipants.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
-    maketab("Participant View",1,"welcome.php");
+    maketab("Printing",1,"PreconPrinting.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
     maketab("TimeCards",1,"VolunteerManage.php");
+    echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
+    maketab("Participant View",1,"welcome.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
     maketab("Brainstorm View",may_I('public_login'),"BrainstormWelcome.php");
     echo "</td>\n    </tr>\n  </table>\n";
