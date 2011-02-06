@@ -7,7 +7,6 @@ if (may_I("Staff")) {
   }
 require_once('../tcpdf/config/lang/eng.php');
 require_once('../tcpdf/tcpdf.php');
-//require_once('Test_PDF.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
@@ -26,7 +25,15 @@ if ($individual != "") {$description.="&individual=$individual";}
 $description.="\">print</A> the appropriate Class/Panel introduction(s).</P>\n<hr>\n";
 
 // Document information
-$pdf = new TCPDF('p', 'mm', 'letter', true, 'UTF-8', false);
+class MYPDF extends TCPDF {
+  public function Footer() {
+    $this->SetY(-15);
+    $this->SetFont("helvetica", 'I', 8);
+    $this->Cell(0, 10, "Copyright 2011 New England Leather Alliance, a Coalition Partner of NCSF and a subscribing organization of CARAS", 'T', 1, 'C');
+  }
+}
+
+$pdf = new MYPDF('p', 'mm', 'letter', true, 'UTF-8', false);
 $pdf->SetCreator('Zambia');
 $pdf->SetAuthor('Programming Team');
 $pdf->SetTitle('Volunteer Introduction Sheets');

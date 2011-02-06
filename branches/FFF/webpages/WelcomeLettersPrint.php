@@ -11,8 +11,8 @@ global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
 ## LOCALIZATIONS
-$_SESSION['return_to_page']="SchedulePrint.php";
-$title="Schedule Printing";
+$_SESSION['return_to_page']="WelcomeLettersPrint.php";
+$title="Welcome Letters Printing";
 $logo="../../../images/nelaLogoHeader.gif";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
@@ -20,9 +20,9 @@ $individual=$_GET['individual'];
 ## If the individual isn't a staff member, only serve up their schedule information
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
 
-$description="<P>A way to <A HREF=\"SchedulePrint.php?print_p=T";
+$description="<P>A way to <A HREF=\"WelcomeLettersPrint.php?print_p=T";
 if ($individual != "") {$description.="&individual=$individual";}
-$description.="\">print</A> the appropriate schedule";
+$description.="\">print</A> the appropriate Welcome letter";
 if ($individual == "") {$description.="s";}
 $description.=".</P>\n<hr>\n";
 
@@ -38,9 +38,9 @@ class MYPDF extends TCPDF {
 $pdf = new MYPDF('p', 'mm', 'letter', true, 'UTF-8', false);
 $pdf->SetCreator('Zambia');
 $pdf->SetAuthor('Programming Team');
-$pdf->SetTitle('Personal Schedule Information');
-$pdf->SetSubject('Schedules for each individual.');
-$pdf->SetKeywords('Zambia, Presenters, Volunteers, Schedules');
+$pdf->SetTitle('Welcome Letters');
+$pdf->SetSubject('Welcome Letters for our Participants');
+$pdf->SetKeywords('Zambia, Presenters, Volunteers, Welcome Letters');
 $pdf->SetHeaderData($logo, 70, CON_NAME, "nelaonline.org/Zambia-FFF36");
 $pdf->setHeaderFont(Array("helvetica", '', 10));
 $pdf->setFooterFont(Array("helvetica", '', 8));
@@ -52,73 +52,58 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->setLanguageArray($l);
 $pdf->setFontSubsetting(true);
-$pdf->SetFont('times', '', 12, '', true);
+$pdf->SetFont('freesans', '', 12, '', true);
 
-/* This query returns the badgeid, email, pubsname, and permroleid for
- the participants who are either Presenters or Volunteers The
+/* This query returns the  pubsname, and permroleid for the participants
+ who are either Presenters or Volunteers who are attending.  The
  UserHasPermissionRole is 3=Presenter 5=Volunteer, if this changes in
  the database, it should change here and other places, as well.  The
  individual switch lets us work from the premise of printing just one
  person's information. */
 $query = <<<EOD
 SELECT 
-    DISTINCT CONCAT(S.title, 
-        if((moderator=1),' (moderating)',''), 
-        if ((aidedecamp=1),' (assisting)',''), 
-        if((volunteer=1),' (outside wristband checker)',''), 
-        if((introducer=1),' (announcer/inside room attendant)',''),
-        ' - ',
-        DATE_FORMAT(ADDTIME('2010-02-12 00:00:00',starttime),'%a %l:%i %p'),
-        ' - ',
-        CASE
-          WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
-          WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
-          ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
-          END,
-        ' in room ',
-	roomname) as Title,
-    P.pubsname
+    P.pubsname,
+    GROUP_CONCAT(UP.permroleid) as Role
   FROM
-      Sessions S
-    JOIN Schedule SCH USING (sessionid)
-    JOIN Rooms R USING (roomid)
-    LEFT JOIN ParticipantOnSession POS USING (sessionid)
-    LEFT JOIN Participants P USING (badgeid)
-    LEFT JOIN UserHasPermissionRole UP USING (badgeid)
+      Participants P
+    JOIN UserHasPermissionRole UP USING (badgeid)
   WHERE
-    (UP.permroleid=5 or
-     UP.permroleid=3)
+    (UP.permroleid=5 OR
+     UP.permroleid=3) AND
+    P.interested=1
+
 EOD;
 if ($individual) {$query.=" and
-    POS.badgeid='$individual'";}
+    P.badgeid='$individual'";}
 $query.="
+  GROUP BY
+    P.pubsname
   ORDER BY
-    starttime";
+    P.pubsname";
 
 ## Retrieve query
-list($rows,$schedule_header,$schedule_array)=queryreport($query,$link,$title,$description,0);
+list($rows,$participant_header,$participant_array)=queryreport($query,$link,$title,$description,0);
 
 if ($print_p =="") {topofpagereport($title,$description,$additionalinfo);}
-for ($i=1; $i<=$rows; $i++) {
-  $name=$schedule_array[$i]['pubsname'];
-  $participant_array[$name]['name']=$schedule_array[$i]['pubsname'];
-  $participant_array[$name]['schedule'].="<P>".$schedule_array[$i]['Title']."</P>";
- }
-
-// Reorder so they are alphabetical by the pubsname (keys)
-ksort($participant_array);
 
 foreach ($participant_array as $participant) {
   // Generic header info.
-  $printstring = "<P>&nbsp;</P><P>Greetings ".$participant['name'].",</P>";
+  $printstring = "<P>&nbsp;</P><P>Dear ".$participant['pubsname'].",</P>";
 
-  // Pull in the intro-blurb.
-  if (file_exists("../Local/Verbiage/Schedule_Blurb_0")) {
-    $printstring.= file_get_contents("../Local/Verbiage/Schedule_Blurb_0");
+  // Determine what letter.
+  if (($participant['Role'] == "5,3") OR ($participant['Role'] == "3,5")) {
+    if (file_exists("../Local/Verbiage/Welcome_Letter_Presenters_and_Volunteers_0")) {
+      $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Presenters_and_Volunteers_0");
+    }
+  } elseif ($participant['Role'] == "5") {
+    if (file_exists("../Local/Verbiage/Welcome_Letter_Volunteers_0")) {
+      $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Volunteers_0");
+    }
+  } elseif ($participant['Role'] == "3") {
+    if (file_exists("../Local/Verbiage/Welcome_Letter_Presenters_0")) {
+      $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Presenters_0");
+    }
   }
-
-  // Add the schedule.
-  $printstring.= $participant['schedule'];
 
   // Display, with the option of printing.
   if ($print_p == "") {
@@ -133,9 +118,9 @@ if ($print_p == "") {
   staff_footer();
  } else {
   if ($individual != "") {
-    $pdf->Output('Schedule'.$name.'.pdf', 'I');
+    $pdf->Output('WelcomeLetterFor'.$participant_array[1]['pubsname'].'.pdf', 'I');
   } else {
-    $pdf->Output('ScheduleAll.pdf', 'I');
+    $pdf->Output('AllWelcomeLetters.pdf', 'I');
   }
  }
 
