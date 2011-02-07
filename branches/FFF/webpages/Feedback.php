@@ -2,7 +2,6 @@
 require_once('StaffCommonCode.php');
 require_once('../tcpdf/config/lang/eng.php');
 require_once('../tcpdf/tcpdf.php');
-require_once('tmp_chart-3.php');
 
 /* Global Variables */
 global $link;
@@ -31,7 +30,22 @@ if ($selday=="Friday") {
   $dayname="Sunday";
   $time_start=200000;
   $time_end=400000;
+ } else {
+  $title="Feedback Page";
+  $description="<P>Please select the day you wish to generate the feedback form for:</P>\n";
+  topofpagereport($title,$description,$additionalinfo);
+?>
+<UL>
+  <LI><A HREF="Feedback.php?selday=Friday">Friday</A>
+  <LI><A HREF="Feedback.php?selday=Saturday Early">Saturday Early</A>
+  <LI><A HREF="Feedback.php?selday=Saturday Late">Saturday Late</A>
+  <LI><A HREF="Feedback.php?selday=Sunday">Sunday</A>
+</UL>
+<?php
+  staff_footer();
+  exit();
  }
+  
 
 $title=CON_NAME." $dayname Feedback";
 $description="<P>Please, indicate the $dayname class you are offering feedback on.</P>\n";
