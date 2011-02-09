@@ -85,7 +85,8 @@ function render_send_email($email,$message_warning) {
     echo "<P>Available substitutions:</P>\n";
     echo "<TABLE><TR><TD>\$BADGEID\$</TD><TD>\$EMAILADDR\$</TD></TR>\n";
     echo "<TR><TD>\$FIRSTNAME\$</TD><TD>\$PUBNAME\$</TD></TR>\n";
-    echo "<TR><TD>\$LASTNAME\$</TD><TD>\$BADGENAME\$</TD></TR></TABLE>\n";
+    echo "<TR><TD>\$LASTNAME\$</TD><TD>\$BADGENAME\$</TD></TR>\n";
+    echo "<TR><TD>\$SCHEDULE\$</TD><TD></TD></TR></TABLE>\n";
     staff_footer();
     }
 

@@ -22,7 +22,7 @@ if ($_POST['navigate']!='send') {
     }
 // Queue email to be sent into db.  Cron job will actually send it at a pace not to trigger outgoing spam filters. 
 $title="Staff Send Email";
-$subst_list=array("\$BADGEID\$","\$FIRSTNAME\$","\$LASTNAME\$","\$EMAILADDR\$","\$PUBNAME\$","\$BADGENAME\$");
+$subst_list=array("\$BADGEID\$","\$FIRSTNAME\$","\$LASTNAME\$","\$EMAILADDR\$","\$PUBNAME\$","\$BADGENAME\$","\$SCHEDULE\$");
 $email=get_email_from_post();
 $query="SELECT emailtoquery FROM EmailTo where emailtoid=".$email['sendto'];
 if (!$result=mysql_query($query,$link)) {
@@ -40,6 +40,55 @@ while ($recipientinfo[$i]=mysql_fetch_array($result,MYSQL_ASSOC)) {
     $i++;
     }
 $recipient_count=$i;
+for ($i=0; $i<$recipient_count; $i++) {
+
+  // variablized for substitution
+  $individual=$recipientinfo[$i]['badgeid'];
+
+  /* This query pulls the schedule information for an individual, and
+   then collects it, and stuffs it into a single variable, for
+   expansion later. */
+  $query = <<<EOD
+SELECT 
+    DISTINCT CONCAT(S.title, 
+        if((moderator=1),' (moderating)',''), 
+        if ((aidedecamp=1),' (assisting)',''), 
+        if((volunteer=1),' (outside wristband checker)',''), 
+        if((introducer=1),' (announcer/inside room attendant)',''),
+        ' - ',
+        DATE_FORMAT(ADDTIME('2010-02-12 00:00:00',starttime),'%a %l:%i %p'),
+        ' - ',
+        CASE
+          WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
+          WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
+          ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+          END,
+        ' in room ',
+	roomname) as Title,
+    P.pubsname
+  FROM
+      Sessions S
+    JOIN Schedule SCH USING (sessionid)
+    JOIN Rooms R USING (roomid)
+    LEFT JOIN ParticipantOnSession POS USING (sessionid)
+    LEFT JOIN Participants P USING (badgeid)
+    LEFT JOIN UserHasPermissionRole UP USING (badgeid)
+  WHERE
+    (UP.permroleid=5 or
+     UP.permroleid=3) and
+    POS.badgeid='$individual'
+  ORDER BY
+    starttime
+
+EOD;
+
+  // Retrieve query
+  list($rows,$schedule_header,$schedule_array)=queryreport($query,$link,$title,$description,0);
+  for ($j=1; $j<=$rows; $j++) {
+    $recipientinfo[$i]['schedule'].=$schedule_array[$j]['Title']."
+";
+  }
+ }
 $query="SELECT emailfromaddress FROM EmailFrom where emailfromid=".$email['sendfrom'];
 if (!$result=mysql_query($query,$link)) {
     db_error($title,$query,$staff=true); // outputs messages regarding db error
@@ -68,7 +117,8 @@ for ($i=0; $i<$recipient_count; $i++) {
              $goodCount++;
              $arrayOfGood[]=array('badgeid'=>$recipientinfo[$i]['badgeid'],'name'=>$name,'email'=>$recipientinfo[$i]['email']);
              $repl_list=array($recipientinfo[$i]['badgeid'],$recipientinfo[$i]['firstname'],$recipientinfo[$i]['lastname']);
-             $repl_list=array_merge($repl_list,array($recipientinfo[$i]['email'],$recipientinfo[$i]['pubsname'],$recipientinfo[$i]['badgename']));
+             $repl_list=array_merge($repl_list,array($recipientinfo[$i]['email'],$recipientinfo[$i]['pubsname']));
+	     $repl_list=array_merge($repl_list,array($recipientinfo[$i]['badgename'],$recipientinfo[$i]['schedule']));
              $emailverify['body']=str_replace($subst_list,$repl_list,$email['body']);
              $query="INSERT INTO EmailQueue (emailqueueid, emailto, emailfrom, emailcc, emailsubject, body, status) ";
              // to address
