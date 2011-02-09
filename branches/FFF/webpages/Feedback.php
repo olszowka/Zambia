@@ -181,5 +181,4 @@ if ($print_p =="") {
   $pdf->writeHTMLCell($w=0, $h=0, $x=PDF_MARGIN_LEFT, $y=144, $printstring, $border=0, $ln=true, $fill=false, $reseth=true, $align='', $autopadding=true);
   $pdf->Output($dayname.'Feedback.pdf', 'I');
  }
-
 ?>
