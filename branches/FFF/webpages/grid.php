@@ -49,7 +49,7 @@ if ($_SESSION['role']=="Participant") {
   $nocolor="n";
  }
 
-/* Title/header hacking so everything is switched, and easily readable. */
+// Title/header hacking so everything is switched, and easily readable.
 // Defaults
 $allprint="excludes";
 $tallprint="";
