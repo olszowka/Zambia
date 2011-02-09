@@ -158,8 +158,8 @@ for ($i=1; $i<=$questioncount; $i++) {
  }
 $printstring.="</TABLE></P><hr>";
 $printstring1.="</TABLE></P>\n<hr>\n";
-$printstring.="<P>Other Comments:";
-$printstring1.="<P>Other Comments:</P>";
+$printstring.="<P>Other comments/ideas/questions/feedback about the class or the flea:";
+$printstring1.="<P>Other comments/ideas/questions/feedback about the class or the flea:</P>";
 
 // Test data
 $info['q1']="12";

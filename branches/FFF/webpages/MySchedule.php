@@ -262,6 +262,9 @@ EOD;
     echo "<A HREF=\"./my_sessions2.php\">\"My Panel Interests\"</A> tab).  That will expose it to other\n";
     echo "panelists who can then email or call you as appropriate to discuss the panel in advance.  If you\n";
     echo "check back in a day or two you may find other panelists' information.</P>\n";
+    echo "<P>You can also take a look at all that is going on by <A HREF=\"StaffSchedule.php\">timeslot</A>,\n";
+    echo "<A HREF=\"StaffDescriptions.php\">descriptions</A>, <A HREF=\"StaffTracks.php\">tracks</A>, visit the\n";
+    echo "<A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>, or people's <A HREF=\"StaffBios.php\">bio</A>.</P>\n";
     echo "<P><A HREF=\"MyScheduleIcal.php\">Here</A> is an iCal (Calendar standard) calendar of your schedule.\n";
     echo "<A HREF=\"SchedulePrint.php?print_p=T\">Print</A> a PDF of your schedule.\n";
     if ($intro_p > 0) {
