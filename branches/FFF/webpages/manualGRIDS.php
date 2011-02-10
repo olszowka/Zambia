@@ -12,7 +12,7 @@ $additionalinfo.="the <A HREF=StaffSchedule.php>Scheduled Precis</A> (<A HREF=Sc
 $additionalinfo.="the <A HREF=StaffTracks.php>Tracks</A> (<A HREF=Tracks.php>public version</A>) by track name,\n";
 $additionalinfo.="and the <A HREF=Postgrid.php>public version</A> of the Grids.</P>\n";
 
-## Replacement for the query
+// Replacement for the query
 $how_array['Description']="";
 $how_array['Start Time']="starttime=y";
 $how_array['Start Time<br>Unabridged']="starttime=y&unpublished=y";
@@ -46,8 +46,8 @@ foreach ($body_array as $y_element) {
   }
 }
 
-## Page Rendering
+// Page Rendering
 topofpagereport($title,$description,$additionalinfo);
-renderhtmlreport($rows,$header_array,$grid_array,1);
-
+echo renderhtmlreport(1,$rows,$header_array,$grid_array);
+correct_footer();
 ?>

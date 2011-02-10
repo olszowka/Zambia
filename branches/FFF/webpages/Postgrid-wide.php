@@ -211,7 +211,7 @@ for ($j=1; $j<=$rooms; $j++) {
  all the way back to the top, and it gives a nice visual break. */
 if ($_GET["csv"]=="y") {
   topofpagecsv("grid.csv");
-  rendercsvreport($element_row,$header_time,$element_array);
+  echo rendercsvreport(1,$element_row,$header_time,$element_array);
  } elseif ($_GET["print_p"]=="y") {
   require_once('../tcpdf/config/lang/eng.php');
   require_once('../tcpdf/tcpdf.php');

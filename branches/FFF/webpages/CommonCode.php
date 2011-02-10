@@ -324,45 +324,50 @@ function topofpagecsv($filename) {
   header("Content-disposition: attachment; filename=$filename");
 }
 
+/* Footer choice, for html pages.  Select the correct footer,
+ dependant on role.  This could probably just have the above footer
+ functions, rolled into this, for simplicity sake. */
+function correct_footer() {
+  if ($_SESSION['role'] == "Brainstorm") {
+    brainstorm_footer();
+  }
+  elseif ($_SESSION['role'] == "Participant") {
+    participant_footer();
+  }
+  elseif ($_SESSION['role'] == "Staff") {
+    staff_footer();
+  }
+  elseif ($_SESSION['role'] == "Posting") {
+    posting_footer();
+  }
+}
+
 /* Produce the HTML body version of the information gathered in tables.
  It takes 4 inputs, the number of rows, the header array, the elements
  that go into the table, and if this table is the last thing on a page.
  the switch for the close on how it is called doesn't quite work yet,
  and might want to be simplified out, depending on the calling page to
  do the right thing, dropping it to 3 variables. */
-function renderhtmlreport($rows,$header_array,$element_array,$islast) {
+function renderhtmlreport($startrows,$endrows,$header_array,$element_array) {
   $headers="";
   foreach ($header_array as $header_name) {
     $headers.="<TH>";
     $headers.=$header_name;
     $headers.="</TH>\n";
   }
-  echo "<TABLE BORDER=1>";
-  echo "<TR>" . $headers . "</TR>";
-  for ($i=1; $i<=$rows; $i++) {
-    echo "<TR>";
+  $htmlstring ="<TABLE BORDER=1>";
+  $htmlstring.="<TR>" . $headers . "</TR>";
+  for ($i=$startrows; $i<=$endrows; $i++) {
+    $htmlstring.="<TR>";
     foreach ($header_array as $header_name) {
-      echo "<TD>";
-      echo $element_array[$i][$header_name];
-      echo "</TD>\n";
+      $htmlstring.="<TD>";
+      $htmlstring.=$element_array[$i][$header_name];
+      $htmlstring.="</TD>\n";
     }
-    echo "</TR>\n";
+    $htmlstring.="</TR>\n";
   }
-  echo "</TABLE>";
-  if ($islast==1) {
-    if ($_SESSION['role'] == "Brainstorm") {
-      brainstorm_footer();
-    }
-    elseif ($_SESSION['role'] == "Participant") {
-      participant_footer();
-    }
-    elseif ($_SESSION['role'] == "Staff") {
-      staff_footer();
-    }
-    elseif ($_SESSION['role'] == "Posting") {
-      posting_footer();
-    }
-  }
+  $htmlstring.="</TABLE>";
+  return($htmlstring);
 }
 
 /* Produce the CSV body version of the information gathered in tables.
@@ -370,7 +375,7 @@ function renderhtmlreport($rows,$header_array,$element_array,$islast) {
  and the elements that go in the table.  It then strips out all of the
  unwanted characters (html tags, extraneous returns, and other bits)
  and outputs the comma seperated information.*/
-function rendercsvreport($rows,$header_array,$element_array) {
+function rendercsvreport($startrows,$endrows,$header_array,$element_array) {
   $headers="";
   $spacestr=array('\\n','\n','\\r','\r','&nbsp;');
   $newstr=array(' ',' ',' ',' ',' ');
@@ -380,8 +385,8 @@ function rendercsvreport($rows,$header_array,$element_array) {
     $headers.="\",";
   }
   $headers = substr($headers, 0, -1);
-  echo "$headers\n";
-  for ($i=1; $i<=$rows; $i++) {
+  $csvstring ="$headers\n";
+  for ($i=$startrows; $i<=$endrows; $i++) {
     $rowinfo="";
     foreach ($header_array as $header_name) {
       $rowinfo.="\"";
@@ -389,8 +394,9 @@ function rendercsvreport($rows,$header_array,$element_array) {
       $rowinfo.="\",";
     }
     $rowinfo=substr($rowinfo, 0, -1);
-    echo "$rowinfo\n";
+    $csvstring.="$rowinfo\n";
   }
+  return($csvstring);
 }
 
 /* This function presumes multiple calls on the same array informaition.
@@ -574,7 +580,8 @@ SELECT
     timestamp DESC
 EOD;
   list($rows,$header_array,$notes_array)=queryreport($query,$link,"Notes on Participant","","");
-  renderhtmlreport($rows,$header_array,$notes_array,1);
+  echo renderhtmlreport(1,$rows,$header_array,$notes_array);
+  correct_footer();
 }
 
 /* create_participant and edit_participant functions.  Need more doc. */
