@@ -28,14 +28,38 @@ participant_header($title);
   <div id="update_section">
     <div class="divlistbox">
       <span class="spanlabcb">I am interested and able to participate in 
-programming for <?php echo CON_NAME; ?>&nbsp;</span>
+programming<BR>for <?php echo CON_NAME; ?>&nbsp;</span>
       <?php $int=$participant['interested']; ?>
-      <span class="spanvalcb"><SELECT name=interested class="yesno">
-            <OPTION value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp</OPTION>
+      <span class="spanvalcb"><SELECT name="interested" class="yesno">
+            <OPTION value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp;</OPTION>
             <OPTION value=1 <?php if ($int==1) {echo "selected";} ?> >Yes</OPTION>
             <OPTION value=2 <?php if ($int==2) {echo "selected";} ?> >No</OPTION></SELECT>
           </span>
       </div>
+<?php
+    if (ENABLE_SHARE_EMAIL_QUESTION===TRUE) {
+    ?>
+        <div class="divlistbox">
+            <span class="spanlabcb">I give permission for <?php echo CON_NAME; ?> to share
+                my<BR>email address with other participants</span>
+    <?php $int=$participant['share_email']; ?>
+            <span class="spanvalcb"><SELECT name="share_email" class="yesno">
+                <OPTION value="null" <?php if ($int==="") {echo "selected";} ?> >&nbsp;</OPTION>
+                <OPTION value="0" <?php if ($int==="0") {echo "selected";} ?> >No</OPTION>
+                <OPTION value="1" <?php if ($int==="1") {echo "selected";} ?> >Yes</OPTION></SELECT>
+                </span>
+            </div>
+<?php
+    }
+    else { // share_email_question not enabled
+    ?>
+    <INPUT type="hidden" name="share_email" value="<?php
+    $int=$participant['share_email'];
+    if ($int=="") $int="null";
+    echo $int."\">\n";
+    }
+    if (ENABLE_BESTWAY_QUESTION===TRUE) {
+    ?>
     <div id="bestway">
       <span class="spanlabcb">Preferred mode of contact&nbsp;</span>
       <div id="bwbuttons">
@@ -65,6 +89,16 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
           </div>
         </div>
       </div>
+<?php
+    }
+    else { // bestway_question not enabled
+    ?>
+    <INPUT type="hidden" name="bestway" value="<?php
+    $int=$participant['bestway'];
+    if ($int=="") $int="null";
+    echo $int."\">\n";
+    }
+    ?>
     <div class="password">
       <span class="password2">Change Password&nbsp;</span>
       <span class="value"><INPUT type="password" size="10" name="password"></span>
@@ -74,7 +108,46 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
       <span class="value"><INPUT type="password" size="10" name="cpassword"></span>
       </div>
     </div>
-    <DIV >
+<?php if (!(may_I('EditBio'))) { // no permission to edit bio
+          echo "<P class=\"errmsg\">At this time, you may not edit either your biography or your name for publication.  They have already gone to print.</P>\n";
+          }
+echo "<BR>\n";
+echo "Your name as you wish to have it published&nbsp;&nbsp;";
+echo "<INPUT type=\"text\" size=\"20\" name=\"pubsname\" ";
+echo "value=\"".htmlspecialchars($participant["pubsname"],ENT_COMPAT)."\"";
+if (!(may_I('EditBio'))) { // no permission to edit bio
+    echo " readonly";
+    }
+echo "><BR><BR>\n";
+$bio=MAX_BIO_LEN;
+$progbio=MAX_PROG_BIO_LEN;
+if (ENABLE_DISTINCT_PROG_BIO===TRUE) {
+		echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your web-based biography ($bio characters or fewer):</LABEL><BR>\n";
+		echo "Note: Your web-based biography will appear immediately following your name on the web page.<BR>\n";	
+		}
+	else {
+		echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your biography ($bio characters or fewer):</LABEL><BR>\n";
+		echo "Note: Your biography will appear immediately following your name in the program.<BR>\n";			
+		} 
+echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
+if (!(may_I('EditBio'))) { // no permission to edit bio
+    echo " readonly";
+    }
+echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>\n<BR>\n";
+if (ENABLE_DISTINCT_PROG_BIO===TRUE) {
+		echo "<LABEL class=\"spanlabcb\" for=\"progbio\">Your program guide biography ($progbio characters or fewer):</LABEL><BR>\n";
+		echo "Note: Your program guide biography will appear immediately following your name in the program book.<BR>\n";
+		echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"progbio\"";
+		if (!(may_I('EditBio'))) { // no permission to edit progbio
+		    echo " readonly";
+		    }
+		echo ">".htmlspecialchars($participant["progbio"],ENT_COMPAT)."</TEXTAREA>";
+		}
+	else {
+		echo "<INPUT type=\"hidden\" name=\"progbio\" value=\"".htmlspecialchars($participant["progbio"],ENT_COMPAT)."\"/>\n"; 
+		}
+ ?> 
+   <DIV >
   <div id="congo_section" class="border2222">
     <div class="congo_table">
      <div class="congo_data">
@@ -122,40 +195,11 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
       </div>
       <?php } ?>
   </div>
-  <P class="congo-note">Please confirm your contact information.  If it is 
-not correct, contact <A href="mailto:<?php echo 
-REG_EMAIL; ?>">registration</a> with your 
-current information. This data is downloaded periodically from the registration database, and should be correct within a week.
+  <P class="congo-note"><? echo $RegistrationUpdateMessage;
+// define $RegistrationUpdateMessage in db_name.php
+ ?></P>
 </div>
-<HR>
-<?php if (!(may_I('EditBio'))) { // no permission to edit bio
-          echo "<P class=\"errmsg\">At this time, you may not edit either your biography or your name for publication.  They have already gone to print.</P>\n";
-          }
-echo "<BR>\n";
-echo "Your name as you wish to have it published&nbsp;&nbsp;";
-echo "<INPUT type=\"text\" size=\"20\" name=\"pubsname\" ";
-echo "value=\"".htmlspecialchars($participant["pubsname"],ENT_COMPAT)."\"";
-if (!(may_I('EditBio'))) { // no permission to edit bio
-    echo " readonly";
-    }
-echo "><BR><BR>\n";
-$bio=MAX_BIO_LEN;
-$progbio=MAX_PROG_BIO_LEN;
-echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your web-based biography ($bio characters or fewer):</LABEL><BR>\n";
-echo "Note: Your web-based biography will appear immediately following your name on the web page.<BR>\n";
-echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
-if (!(may_I('EditBio'))) { // no permission to edit bio
-    echo " readonly";
-    }
-echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>\n<BR>\n";
-echo "<LABEL class=\"spanlabcb\" for=\"progbio\">Your program guide biography ($progbio characters or fewer):</LABEL><BR>\n";
-echo "Note: Your program guide biography will appear immediately following your name in the program book.<BR>\n";
-echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"progbio\"";
-if (!(may_I('EditBio'))) { // no permission to edit progbio
-    echo " readonly";
-    }
-echo ">".htmlspecialchars($participant["progbio"],ENT_COMPAT)."</TEXTAREA>"; ?>
         <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
         <INPUT type="hidden" name="pubsnameold" value="<?php echo htmlspecialchars($pubsnameold,ENT_COMPAT); ?>">
     </form>
-<?php participant_footer() ?>
+<?php participant_footer(); ?>
