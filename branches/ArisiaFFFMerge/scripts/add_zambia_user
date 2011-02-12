@@ -1,0 +1,90 @@
+#!/bin/sh
+
+infile=""
+admin=0
+staff=0
+presenter=0
+brainstorm=0
+volunteer=0
+aidedecamp=0
+
+INITIALUSERPASSWD='4cb9c8a8048fd02294477fcb1a41191a'  # aka 'changeme'
+# if you want to replace this, you'll need to md5 the string. 
+# note that there is a web tool for staff to reset passwords.
+
+echo $admin $staff $presenter $brainstorm $volunteer $aidedecamp
+
+usage () {
+    echo "
+Usage: `basename "$0"` [-a] [-s] [-p] [-b] [-v] [-c] FILENAME
+
+This script takes a file in the below format and generate the mysql to load into zambia: 
+badgeid|badgename|firstname|lastname|phone|email|postaddress|regtype
+and it takes at least one role.  You can select multiple roles, by
+selecting multiple options.
+
+-a  Administrator
+-s  Staff
+-p  Presenter
+-b  Brainstorm
+-v  Volunteer
+-c  Aide-de-Camp
+"
+}
+
+[ "$#" -lt 1 ] && usage && exit -1
+
+while getopts "aspbvc" Option; do
+    case "$Option" in
+        a) admin=1 ;;
+        s) staff=1 ;;
+        p) presenter=1 ;;
+        b) brainstorm=1 ;;
+        v) volunteer=1 ;;
+        c) aidedecamp=1 ;;
+        *) usage; exit -1 ;;
+    esac
+done
+shift $(( $OPTIND - 1 ))
+
+echo $admin $staff $presenter $brainstorm $volunteer $aidedecamp
+
+infile="$1"
+! [ -f "$infile" ] && echo Error, file not found \"$infile\"  && usage && exit -1
+
+if (( $admin+$staff+$presenter+$brainstorm+$volunteer+$aidedecamp < 1 )) ; then
+    echo "At least one role needs to be selected." && usage && exit -1
+fi
+
+IFS='|'
+cat $infile | while read badgeid badgename firstname lastname phone email postaddress regtype  
+do 
+  echo "insert into CongoDump set badgeid=\"$badgeid\";"
+  echo "update CongoDump set lastname=\"$lastname\", firstname=\"$firstname\", phone=\"$phone\", email=\"$email\", postaddress=\"$postaddress\", regtype=\"$regtype\" where badgeid=\"$badgeid\";"
+  echo "insert into Participants set badgeid=\"$badgeid\", password=\"$INITIALUSERPASSWD\";"
+
+  if (( $admin > 0 )); then 
+      echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=1;"
+  fi
+  if (( $staff > 0 )); then 
+      echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=2;"
+  fi
+  if (( $presenter > 0 )); then 
+      echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=3;"
+  fi
+  if (( $brainstorm > 0 )) ; then 
+      echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=4;"
+  fi
+  if (( $volunteer > 0 )); then 
+      echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=5;"
+  fi
+  if (( $aidedecamp > 0 )); then 
+      echo "insert into UserHasPermissionRole set badgeid=\"$badgeid\", permroleid=6;"
+  fi
+done
+
+exit 
+# ok, the following 2 lines can be put directly into 
+#the DATAFILE and they will work. 
+1|staff1|First|Staff|781-555-1212|someone@somewhere.com|123 First Street\\\\Arlington, MA 02474|
+2|part1|First|Participant|617-555-1212|someoneelse@somewhereelse.com|123 Fifth Street\\\\Boston, MA 02100|

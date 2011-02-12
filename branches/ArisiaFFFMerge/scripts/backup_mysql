@@ -1,0 +1,10 @@
+#!/bin/sh
+
+SOURCEDIR=$1
+DATE=`/bin/date +%Y%m%d`
+DBHOSTNAME=`cat $SOURCEDIR/Local/db_name.php | awk -F'"' '/DBHOSTNAME/ {print $4}'`
+DATABASE=`cat $SOURCEDIR/Local/db_name.php | awk -F'"' '/DBDB/ {print $4}'`
+DBUSERNAME=`cat $SOURCEDIR/Local/db_name.php | awk -F'"' '/DBUSERID/ {print $4}'`
+DBPASSWORD=`cat $SOURCEDIR/Local/db_name.php | awk -F'"' '/DBPASSWORD/ {print $4}'`
+
+/usr/bin/mysqldump -h$DBHOSTNAME -u$DBUSERNAME -p$DBPASSWORD $DATABASE > $SOURCEDIR/Local/Data_Backup/checkpoint_$DATE.dump

@@ -1,0 +1,1341 @@
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `BioEditStatuses`
+--
+
+DROP TABLE IF EXISTS `BioEditStatuses`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `BioEditStatuses` (
+  `bioeditstatusid` int(11) NOT NULL auto_increment,
+  `bioeditstatusname` varchar(60) default NULL,
+  `display_order` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`bioeditstatusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `BioEditStatuses`
+--
+
+LOCK TABLES `BioEditStatuses` WRITE;
+/*!40000 ALTER TABLE `BioEditStatuses` DISABLE KEYS */;
+INSERT INTO `BioEditStatuses` VALUES (1,'Needs editing and translation',1),(2,'Editing done--needs translation',2),(3,'Translation done--needs editing',3),(4,'Editing and translation done',4);
+/*!40000 ALTER TABLE `BioEditStatuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CommentsOnParticipants`
+--
+
+DROP TABLE IF EXISTS `CommentsOnParticipants`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `CommentsOnParticipants` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `rbadgeid` varchar(15) NOT NULL default '',
+  `cn` int(11) NOT NULL auto_increment,
+  `commenter` text,
+  `comment` text,
+  PRIMARY KEY  (`cn`),
+  KEY `badgeid` (`badgeid`),
+  KEY `rbadgeid` (`rbadgeid`),
+  CONSTRAINT `CommentsOnParticipants_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `CommentsOnParticipants`
+--
+
+LOCK TABLES `CommentsOnParticipants` WRITE;
+/*!40000 ALTER TABLE `CommentsOnParticipants` DISABLE KEYS */;
+/*!40000 ALTER TABLE `CommentsOnParticipants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CommentsOnProgramming`
+--
+
+DROP TABLE IF EXISTS `CommentsOnProgramming`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `CommentsOnProgramming` (
+  `rbadgeid` varchar(15) NOT NULL default '',
+  `cn` int(11) NOT NULL auto_increment,
+  `commenter` text,
+  `comment` text,
+  PRIMARY KEY  (`cn`),
+  KEY `rbadgeid` (`rbadgeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `CommentsOnProgramming`
+--
+
+LOCK TABLES `CommentsOnProgramming` WRITE;
+/*!40000 ALTER TABLE `CommentsOnProgramming` DISABLE KEYS */;
+/*!40000 ALTER TABLE `CommentsOnProgramming` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CommentsOnSessions`
+--
+
+DROP TABLE IF EXISTS `CommentsOnSessions`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `CommentsOnSessions` (
+  `sessionid` int(11) NOT NULL default '0',
+  `rbadgeid` varchar(15) NOT NULL default '',
+  `cn` int(11) NOT NULL auto_increment,
+  `commenter` text,
+  `comment` text,
+  PRIMARY KEY  (`cn`),
+  KEY `sessionid` (`sessionid`),
+  KEY `rbadgeid` (`rbadgeid`),
+  CONSTRAINT `CommentsOnSessions_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `CommentsOnSessions`
+--
+
+LOCK TABLES `CommentsOnSessions` WRITE;
+/*!40000 ALTER TABLE `CommentsOnSessions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `CommentsOnSessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CongoDump`
+--
+
+DROP TABLE IF EXISTS `CongoDump`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `CongoDump` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `firstname` varchar(30) default NULL,
+  `lastname` varchar(40) default NULL,
+  `badgename` varchar(51) default NULL,
+  `phone` varchar(100) default NULL,
+  `email` varchar(100) default NULL,
+  `postaddress1` varchar(100) default NULL,
+  `postaddress2` varchar(100) default NULL,
+  `postcity` varchar(50) default NULL,
+  `poststate` varchar(25) default NULL,
+  `postzip` varchar(10) default NULL,
+  `postcountry` varchar(25) default NULL,
+  `regtype` varchar(40) default NULL,
+  PRIMARY KEY  (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `CongoDump`
+--
+
+LOCK TABLES `CongoDump` WRITE;
+/*!40000 ALTER TABLE `CongoDump` DISABLE KEYS */;
+/*!40000 ALTER TABLE `CongoDump` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Divisions`
+--
+
+DROP TABLE IF EXISTS `Divisions`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Divisions` (
+  `divisionid` int(11) NOT NULL auto_increment,
+  `divisionname` varchar(30) default NULL,
+  `display_order` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`divisionid`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Divisions`
+--
+
+LOCK TABLES `Divisions` WRITE;
+/*!40000 ALTER TABLE `Divisions` DISABLE KEYS */;
+INSERT INTO `Divisions` VALUES (1,'Other',5),(2,'Programming',1),(3,'Events',2),(4,'Fixed Functions',3),(5,'Hotel',4),(6,'Unspecified',6),(7,'Volunteer',7);
+/*!40000 ALTER TABLE `Divisions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EmailQueue`
+--
+
+DROP TABLE IF EXISTS `EmailQueue`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `EmailQueue` (
+  `emailqueueid` int(11) NOT NULL auto_increment,
+  `emailto` varchar(255) default NULL,
+  `emailfrom` varchar(255) default NULL,
+  `emailcc` varchar(255) default NULL,
+  `emailsubject` varchar(255) default NULL,
+  `body` text,
+  `status` int(11) NOT NULL,
+  `emailtimestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`emailqueueid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `EmailQueue`
+--
+
+LOCK TABLES `EmailQueue` WRITE;
+/*!40000 ALTER TABLE `EmailQueue` DISABLE KEYS */;
+/*!40000 ALTER TABLE `EmailQueue` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Features`
+--
+
+DROP TABLE IF EXISTS `Features`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Features` (
+  `featureid` int(11) NOT NULL auto_increment,
+  `featurename` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`featureid`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Features`
+--
+
+LOCK TABLES `Features` WRITE;
+/*!40000 ALTER TABLE `Features` DISABLE KEYS */;
+INSERT INTO `Features` VALUES (1,'Power (110)',6),(2,'Power (special)',7),(3,'Internet',4),(4,'Cable TV',1),(5,'Fridge',3),(6,'Running Water',8),(7,'Window',12),(8,'Sound Isolation',10),(9,'Fixed Table',2),(10,'Mirror',5),(11,'Toilet',11),(12,'Shower/Bath',9);
+/*!40000 ALTER TABLE `Features` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `GroupFlow`
+--
+
+DROP TABLE IF EXISTS `GroupFlow`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `GroupFlow` (
+  `gflowid` int(11) NOT NULL auto_increment,
+  `reportid` int(11) NOT NULL default '0',
+  `gflowname` varchar(15) NOT NULL default '',
+  `gfloworder` int(11) NOT NULL default '0',
+  `phaseid` int(11) default NULL,
+  PRIMARY KEY  (`gflowid`),
+  KEY `GroupFlow_ibfk_1` (`reportid`),
+  CONSTRAINT `GroupFlow_ibfk_1` FOREIGN KEY (`reportid`) REFERENCES `Reports` (`reportid`)
+) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `GroupFlow`
+--
+
+LOCK TABLES `GroupFlow` WRITE;
+/*!40000 ALTER TABLE `GroupFlow` DISABLE KEYS */;
+INSERT INTO `GroupFlow` VALUES (1,1,'Pubs',1,NULL),(2,1,'Prog',1,NULL),(3,2,'Conflict',1,NULL),(4,2,'Reg',1,NULL),(5,3,'Prog',2,NULL),(6,3,'Events',1,NULL),(7,4,'Prog',3,NULL),(8,5,'Prog',4,NULL),(9,6,'Pubs',2,NULL),(10,7,'Prog',5,NULL),(11,7,'Events',2,NULL),(12,8,'Prog',6,NULL),(13,8,'Conflict',2,NULL),(14,9,'Pubs',3,NULL),(15,10,'Prog',7,NULL),(16,11,'Conflict',3,NULL),(17,11,'Prog',8,NULL),(18,12,'Prog',9,NULL),(19,13,'Prog',10,NULL),(20,14,'Conflict',4,NULL),(21,15,'Pubs',4,NULL),(22,16,'Prog',11,NULL),(23,17,'Gaming',1,NULL),(24,18,'Fasttrack',1,NULL),(25,19,'Prog',12,NULL),(26,19,'Events',3,NULL),(27,19,'Goh',1,NULL),(28,20,'Prog',13,NULL),(29,20,'Events',4,NULL),(30,20,'Tech',1,NULL),(31,20,'Hotel',1,NULL),(32,21,'Prog',14,NULL),(33,22,'Conflict',5,NULL),(34,23,'Prog',15,NULL),(35,24,'Prog',16,NULL),(36,24,'Events',5,NULL),(37,24,'Goh',2,NULL),(38,25,'Conflict',6,NULL),(39,26,'Conflict',7,NULL),(40,27,'Prog',17,NULL),(41,28,'Goh',3,NULL),(42,28,'Prog',18,NULL),(43,29,'Arisiatv',1,NULL),(44,30,'Prog',19,NULL),(45,30,'Events',6,NULL),(46,30,'Goh',4,NULL),(47,31,'Goh',5,NULL),(48,31,'Prog',20,NULL),(49,32,'Prog',21,NULL),(50,33,'Prog',22,NULL),(51,34,'Prog',23,NULL),(52,34,'Events',7,NULL),(53,35,'Pubs',5,NULL),(54,36,'Pubs',6,NULL),(55,37,'Prog',24,NULL),(56,37,'Events',8,NULL),(57,37,'Goh',6,NULL),(58,37,'Pubs',7,NULL),(59,38,'Conflict',8,NULL),(60,38,'Reg',2,NULL),(61,39,'Prog',25,NULL),(62,39,'Events',9,NULL),(63,39,'Goh',7,NULL),(64,40,'Prog',26,NULL),(65,41,'Conflict',9,NULL),(66,42,'Pubs',8,NULL),(67,43,'Prog',27,NULL),(68,43,'Events',10,NULL),(69,44,'Prog',28,NULL),(70,45,'Conflict',10,NULL),(71,46,'Pubs',9,NULL),(72,46,'Prog',29,NULL),(73,47,'Prog',30,NULL),(74,47,'Events',11,NULL),(75,47,'Tech',2,NULL),(76,47,'Hotel',2,NULL),(77,48,'Conflict',11,NULL),(78,49,'Pubs',10,NULL),(79,50,'Conflict',12,NULL),(80,50,'Prog',31,NULL),(81,51,'Prog',32,NULL),(82,51,'Events',12,NULL),(83,51,'Reg',3,NULL),(84,52,'Conflict',13,NULL),(85,53,'Prog',33,NULL),(86,53,'Events',13,NULL),(87,54,'Prog',34,NULL),(88,54,'Events',14,NULL),(89,55,'Prog',35,NULL),(90,56,'Pubs',11,NULL),(91,57,'Conflict',14,NULL),(92,58,'Prog',36,NULL),(93,58,'Goh',8,NULL),(94,59,'Prog',37,NULL),(95,59,'Events',15,NULL),(96,59,'Tech',3,NULL),(97,59,'Hotel',3,NULL),(98,60,'Fasttrack',2,NULL),(99,61,'Prog',38,NULL),(100,62,'Pubs',12,NULL),(101,62,'Prog',39,NULL),(102,63,'Prog',40,NULL),(103,64,'Prog',41,NULL),(104,65,'Conflict',15,NULL),(105,66,'Prog',42,NULL),(106,67,'Prog',43,NULL),(107,68,'Pubs',13,NULL),(108,69,'Prog',44,NULL),(109,70,'Conflict',16,NULL),(110,70,'Reg',4,NULL),(111,71,'Conflict',17,NULL),(112,72,'Prog',45,NULL),(113,73,'Gaming',2,NULL),(114,73,'Prog',46,NULL),(115,74,'Conflict',18,NULL),(116,75,'Conflict',19,NULL),(117,75,'Reg',5,NULL),(118,76,'Pubs',14,NULL),(119,77,'Prog',47,NULL),(120,77,'Events',16,NULL),(121,77,'Tech',4,NULL),(122,77,'Hotel',4,NULL),(123,78,'Prog',48,NULL),(124,78,'Events',17,NULL),(125,78,'Reg',6,NULL),(126,79,'Prog',49,NULL),(127,79,'Events',18,NULL),(128,79,'Tech',5,NULL),(129,79,'Hotel',5,NULL),(130,80,'Fasttrack',3,NULL),(131,81,'Admin',1,NULL),(132,82,'Prog',50,NULL),(133,82,'Events',19,NULL),(134,82,'Reg',7,NULL),(135,83,'Conflict',20,NULL),(136,84,'Prog',51,NULL),(137,84,'Events',20,NULL),(138,84,'Pubs',15,NULL),(139,85,'Prog',52,NULL),(140,86,'Prog',53,NULL),(141,87,'Pubs',16,NULL);
+/*!40000 ALTER TABLE `GroupFlow` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `KidsCategories`
+--
+
+DROP TABLE IF EXISTS `KidsCategories`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `KidsCategories` (
+  `kidscatid` int(11) NOT NULL auto_increment,
+  `kidscatname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`kidscatid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `KidsCategories`
+--
+
+LOCK TABLES `KidsCategories` WRITE;
+/*!40000 ALTER TABLE `KidsCategories` DISABLE KEYS */;
+INSERT INTO `KidsCategories` VALUES (1,'Not Allowed',1);
+/*!40000 ALTER TABLE `KidsCategories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `LanguageStatuses`
+--
+
+DROP TABLE IF EXISTS `LanguageStatuses`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `LanguageStatuses` (
+  `languagestatusid` int(11) NOT NULL auto_increment,
+  `languagestatusname` varchar(30) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`languagestatusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `LanguageStatuses`
+--
+
+LOCK TABLES `LanguageStatuses` WRITE;
+/*!40000 ALTER TABLE `LanguageStatuses` DISABLE KEYS */;
+INSERT INTO `LanguageStatuses` VALUES (1,'English',1),(2,'French',2),(3,'Bilingual',3);
+/*!40000 ALTER TABLE `LanguageStatuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantAvailability`
+--
+
+DROP TABLE IF EXISTS `ParticipantAvailability`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ParticipantAvailability` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `maxprog` int(11) default NULL,
+  `preventconflict` varchar(255) default NULL,
+  `otherconstraints` varchar(255) default NULL,
+  `numkidsfasttrack` int(11) default NULL,
+  PRIMARY KEY  (`badgeid`),
+  CONSTRAINT `ParticipantAvailability_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ParticipantAvailability`
+--
+
+LOCK TABLES `ParticipantAvailability` WRITE;
+/*!40000 ALTER TABLE `ParticipantAvailability` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantAvailability` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantAvailabilityDays`
+--
+
+DROP TABLE IF EXISTS `ParticipantAvailabilityDays`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ParticipantAvailabilityDays` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `day` smallint(6) NOT NULL default '0',
+  `maxprog` int(11) default NULL,
+  PRIMARY KEY  (`badgeid`,`day`),
+  UNIQUE KEY `badgeid` (`badgeid`,`day`),
+  CONSTRAINT `ParticipantAvailabilityDays_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ParticipantAvailabilityDays`
+--
+
+LOCK TABLES `ParticipantAvailabilityDays` WRITE;
+/*!40000 ALTER TABLE `ParticipantAvailabilityDays` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantAvailabilityDays` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantAvailabilityTimes`
+--
+
+DROP TABLE IF EXISTS `ParticipantAvailabilityTimes`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ParticipantAvailabilityTimes` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `availabilitynum` int(11) NOT NULL default '0',
+  `starttime` time default NULL,
+  `endtime` time default NULL,
+  PRIMARY KEY  (`badgeid`,`availabilitynum`),
+  CONSTRAINT `ParticipantAvailabilityTimes_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ParticipantAvailabilityTimes`
+--
+
+LOCK TABLES `ParticipantAvailabilityTimes` WRITE;
+/*!40000 ALTER TABLE `ParticipantAvailabilityTimes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantAvailabilityTimes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantHasRole`
+--
+
+DROP TABLE IF EXISTS `ParticipantHasRole`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ParticipantHasRole` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `roleid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`badgeid`,`roleid`),
+  KEY `roleid` (`roleid`),
+  CONSTRAINT `ParticipantHasRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantHasRole_ibfk_2` FOREIGN KEY (`roleid`) REFERENCES `Roles` (`roleid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ParticipantHasRole`
+--
+
+LOCK TABLES `ParticipantHasRole` WRITE;
+/*!40000 ALTER TABLE `ParticipantHasRole` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantHasRole` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantInterests`
+--
+
+DROP TABLE IF EXISTS `ParticipantInterests`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ParticipantInterests` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `yespanels` text,
+  `nopanels` text,
+  `yespeople` text,
+  `nopeople` text,
+  `otherroles` text,
+  PRIMARY KEY  (`badgeid`),
+  CONSTRAINT `ParticipantInterests_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ParticipantInterests`
+--
+
+LOCK TABLES `ParticipantInterests` WRITE;
+/*!40000 ALTER TABLE `ParticipantInterests` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantInterests` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantOnSession`
+--
+
+DROP TABLE IF EXISTS `ParticipantOnSession`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ParticipantOnSession` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `sessionid` int(11) NOT NULL default '0',
+  `moderator` tinyint(4) default '0',
+  `volunteer` tinyint(4) default '0',
+  `introducer` tinyint(4) default '0',
+  `aidedecamp` tinyint(4) default '0',
+  `ts` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`badgeid`,`sessionid`),
+  KEY `sessionid` (`sessionid`),
+  CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ParticipantOnSession`
+--
+
+LOCK TABLES `ParticipantOnSession` WRITE;
+/*!40000 ALTER TABLE `ParticipantOnSession` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantOnSession` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantSessionInterest`
+--
+
+DROP TABLE IF EXISTS `ParticipantSessionInterest`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ParticipantSessionInterest` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `sessionid` int(11) NOT NULL default '0',
+  `rank` int(11) default NULL,
+  `willmoderate` tinyint(1) default NULL,
+  `comments` text,
+  PRIMARY KEY  (`badgeid`,`sessionid`),
+  KEY `sessionid` (`sessionid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_3` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_4` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ParticipantSessionInterest`
+--
+
+LOCK TABLES `ParticipantSessionInterest` WRITE;
+/*!40000 ALTER TABLE `ParticipantSessionInterest` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantSessionInterest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantSuggestions`
+--
+
+DROP TABLE IF EXISTS `ParticipantSuggestions`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ParticipantSuggestions` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `paneltopics` text,
+  `otherideas` text,
+  `suggestedguests` text,
+  PRIMARY KEY  (`badgeid`),
+  CONSTRAINT `ParticipantSuggestions_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ParticipantSuggestions`
+--
+
+LOCK TABLES `ParticipantSuggestions` WRITE;
+/*!40000 ALTER TABLE `ParticipantSuggestions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantSuggestions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Participants`
+--
+
+DROP TABLE IF EXISTS `Participants`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Participants` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `password` varchar(32) default NULL,
+  `bestway` varchar(12) default NULL,
+  `interested` tinyint(1) default NULL,
+  `bio` text,
+  `editedbio` text,
+  `scndlangbio` text,
+  `bioeditstatusid` int(11) NOT NULL default '1',
+  `biolockedby` varchar(15) default NULL,
+  `pubsname` varchar(50) default NULL,
+  PRIMARY KEY  (`badgeid`),
+  KEY `bioeditstatusid` (`bioeditstatusid`),
+  CONSTRAINT `Participants_fkey1` FOREIGN KEY (`bioeditstatusid`) REFERENCES `BioEditStatuses` (`bioeditstatusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Participants`
+--
+
+LOCK TABLES `Participants` WRITE;
+/*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PatchLog`
+--
+
+DROP TABLE IF EXISTS `PatchLog`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `PatchLog` (
+  `patchname` varchar(50) default NULL,
+  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `PatchLog`
+--
+
+LOCK TABLES `PatchLog` WRITE;
+/*!40000 ALTER TABLE `PatchLog` DISABLE KEYS */;
+INSERT INTO `PatchLog` VALUES ('2010-06-12 Rollup all previous patches through #30','2010-06-12 05:06:16');
+/*!40000 ALTER TABLE `PatchLog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PermissionAtoms`
+--
+
+DROP TABLE IF EXISTS `PermissionAtoms`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `PermissionAtoms` (
+  `permatomid` int(11) NOT NULL auto_increment,
+  `permatomtag` varchar(20) NOT NULL default '',
+  `elementid` int(11) default NULL,
+  `page` varchar(30) default NULL,
+  `notes` text,
+  PRIMARY KEY  (`permatomid`),
+  UNIQUE KEY `taginx` (`permatomtag`,`elementid`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `PermissionAtoms`
+--
+
+LOCK TABLES `PermissionAtoms` WRITE;
+/*!40000 ALTER TABLE `PermissionAtoms` DISABLE KEYS */;
+INSERT INTO `PermissionAtoms` VALUES (1,'Staff',NULL,'renderWelcome','Enables staff menu link'),(2,'Administrator',NULL,'many','Use to be determined'),(3,'Participant',NULL,'many','Use to be determined'),(4,'EditBio',NULL,'renderMyContact','Allow write to biography on my contact page'),(5,'my_availability',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(6,'search_panels',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(7,'my_panel_interests',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(8,'my_schedule',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),(9,'my_suggestions_write',NULL,'MySuggestions','Enables write access to the form elements on the page MySuggestions.'),(10,'my_gen_int_write',NULL,'MyGeneralInterests','Enables write access to the form elements on the page My General Interests'),(11,'BrainstormSubmit',NULL,'EditCreateSession','Brainstorm user can create session'),(12,'BS_sear_sess',NULL,'SearchSessions','Brainstorm user can view sessions'),(13,'public_login',NULL,'Login','Brainstorm user can log in'),(14,'SendEmail',NULL,'StaffManageParticipants','Access to Send email set of pages'),(15,'postcon',NULL,'renderWelcome','Forces participant welcome page to display only post con message.');
+/*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PermissionRoles`
+--
+
+DROP TABLE IF EXISTS `PermissionRoles`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `PermissionRoles` (
+  `permroleid` int(11) NOT NULL auto_increment,
+  `permrolename` varchar(100) default NULL,
+  `notes` text,
+  PRIMARY KEY  (`permroleid`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `PermissionRoles`
+--
+
+LOCK TABLES `PermissionRoles` WRITE;
+/*!40000 ALTER TABLE `PermissionRoles` DISABLE KEYS */;
+INSERT INTO `PermissionRoles` VALUES (1,'Administrator','Use to be determined'),(2,'Staff','Can access staff pages'),(3,'Participant','Use to be determined'),(4,'Brainstorm','Use for Brainstorm pages'),(5,'P-Volunteer','Programming Volunteer Staff'),(6,'G-Volunteer','General Volunteers');
+/*!40000 ALTER TABLE `PermissionRoles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Permissions`
+--
+
+DROP TABLE IF EXISTS `Permissions`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Permissions` (
+  `permissionid` int(11) NOT NULL auto_increment,
+  `permatomid` int(11) NOT NULL default '0',
+  `phaseid` int(11) default '0' COMMENT 'null indicates all phases',
+  `permroleid` int(11) default '0' COMMENT 'null indicates not applicable',
+  `badgeid` int(11) default '0' COMMENT 'null indicates not applicable',
+  PRIMARY KEY  (`permissionid`),
+  UNIQUE KEY `unique1` (`permatomid`,`phaseid`,`permroleid`,`badgeid`),
+  KEY `FK_Permissions` (`phaseid`),
+  KEY `FK_PRoles` (`permroleid`),
+  CONSTRAINT `Permissions_ibfk_1` FOREIGN KEY (`permatomid`) REFERENCES `PermissionAtoms` (`permatomid`),
+  CONSTRAINT `Permissions_ibfk_2` FOREIGN KEY (`phaseid`) REFERENCES `Phases` (`phaseid`),
+  CONSTRAINT `Permissions_ibfk_3` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 4096 kB';
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Permissions`
+--
+
+LOCK TABLES `Permissions` WRITE;
+/*!40000 ALTER TABLE `Permissions` DISABLE KEYS */;
+INSERT INTO `Permissions` VALUES (1,1,NULL,2,NULL),(2,3,1,3,NULL),(25,3,5,5,NULL),(3,4,2,2,NULL),(4,4,2,3,NULL),(5,5,3,2,NULL),(6,5,3,3,NULL),(22,5,3,5,NULL),(9,6,4,2,NULL),(10,6,4,3,NULL),(11,7,4,2,NULL),(12,7,4,3,NULL),(13,8,5,2,NULL),(14,8,5,3,NULL),(23,8,5,5,NULL),(7,10,3,2,NULL),(8,10,3,3,NULL),(15,12,7,2,NULL),(17,12,7,3,NULL),(19,12,7,4,NULL),(20,13,7,4,NULL),(16,14,7,2,NULL),(18,14,7,3,NULL),(21,14,7,4,NULL);
+/*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PersonalFlow`
+--
+
+DROP TABLE IF EXISTS `PersonalFlow`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `PersonalFlow` (
+  `pflowid` int(11) NOT NULL auto_increment,
+  `reportid` int(11) NOT NULL default '0',
+  `badgeid` varchar(15) NOT NULL default '',
+  `pfloworder` int(11) NOT NULL default '0',
+  `phaseid` int(11) default NULL,
+  PRIMARY KEY  (`pflowid`),
+  KEY `PersonalFlow_ibfk_1` (`reportid`),
+  KEY `PersonalFlow_ibfk_2` (`badgeid`),
+  CONSTRAINT `PersonalFlow_ibfk_1` FOREIGN KEY (`reportid`) REFERENCES `Reports` (`reportid`),
+  CONSTRAINT `PersonalFlow_ibfk_2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `PersonalFlow`
+--
+
+LOCK TABLES `PersonalFlow` WRITE;
+/*!40000 ALTER TABLE `PersonalFlow` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PersonalFlow` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Phases`
+--
+
+DROP TABLE IF EXISTS `Phases`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Phases` (
+  `phaseid` int(11) NOT NULL auto_increment,
+  `phasename` varchar(100) default NULL,
+  `current` tinyint(1) default '0',
+  `notes` text,
+  PRIMARY KEY  (`phaseid`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Phases`
+--
+
+LOCK TABLES `Phases` WRITE;
+/*!40000 ALTER TABLE `Phases` DISABLE KEYS */;
+INSERT INTO `Phases` VALUES (1,'Invitation',0,'Welcome, My Profile, My Suggestions and My General Interests'),(2,'Edit Bio',0,'Parts. have write access to their biography'),(3,'Availability',0,'Add on My Availability'),(4,'Panel Sign Up',0,'Add on Search Panels and My Panel Interests'),(5,'Show Schedule',0,'Add on My Schedule'),(6,'Suggestions',0,'Allow write access to My Suggestions and My General Interests.'),(7,'Brainstorm',0,'Special brainstorm pages are accessible.'),(8,'Post Con',1,'Participants see only the post con message and can\'t do anything.');
+/*!40000 ALTER TABLE `Phases` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PubCharacteristics`
+--
+
+DROP TABLE IF EXISTS `PubCharacteristics`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `PubCharacteristics` (
+  `pubcharid` int(11) NOT NULL auto_increment,
+  `pubcharname` varchar(30) default NULL,
+  `pubchartag` varchar(10) default NULL,
+  `display_order` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`pubcharid`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `PubCharacteristics`
+--
+
+LOCK TABLES `PubCharacteristics` WRITE;
+/*!40000 ALTER TABLE `PubCharacteristics` DISABLE KEYS */;
+INSERT INTO `PubCharacteristics` VALUES (1,'35mm','35mm',1),(2,'16mm','16mm',2),(3,'dubbed','dubbed',3),(4,'anime','anime',4);
+/*!40000 ALTER TABLE `PubCharacteristics` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PubStatuses`
+--
+
+DROP TABLE IF EXISTS `PubStatuses`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `PubStatuses` (
+  `pubstatusid` int(11) NOT NULL auto_increment,
+  `pubstatusname` varchar(12) default NULL,
+  `display_order` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`pubstatusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `PubStatuses`
+--
+
+LOCK TABLES `PubStatuses` WRITE;
+/*!40000 ALTER TABLE `PubStatuses` DISABLE KEYS */;
+INSERT INTO `PubStatuses` VALUES (1,'Prog Staff',1),(2,'Public',2),(3,'Do not print',3),(4,'Volunteer',4);
+/*!40000 ALTER TABLE `PubStatuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `RegTypes`
+--
+
+DROP TABLE IF EXISTS `RegTypes`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `RegTypes` (
+  `regtype` varchar(40) NOT NULL default '',
+  `message` varchar(100) default NULL,
+  PRIMARY KEY  (`regtype`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `RegTypes`
+--
+
+LOCK TABLES `RegTypes` WRITE;
+/*!40000 ALTER TABLE `RegTypes` DISABLE KEYS */;
+INSERT INTO `RegTypes` VALUES (' AdultFull-Comp |','Registered and Comp\'ed'),('Adult-Promo','Registered'),('Adult-Rollover','Registered'),('Adult-RolloverC','Registered and Comp\'ed'),('Adult-YearAhead','Registered'),('AdultFull','Registered'),('AdultFull-Comp','Registered and Comp\'ed'),('AdultFull-Pre-1','Registered'),('AdultFull-Pre-2','Registered'),('AdultFull-Pre1','Registered'),('AdultFull-Pre2','Registered'),('EarnedComp','Registered and Comp\'ed'),('ElfComp','Registered and Comp\'ed'),('EventComp-Full','Registered and Comp\'ed'),('GamingComp','Registered and Comp\'ed'),('ProgramComp','Registered and Comp\'ed'),('Promotional','Registered'),('Student','Registered'),('YearAhead','Registered');
+/*!40000 ALTER TABLE `RegTypes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Reports`
+--
+
+DROP TABLE IF EXISTS `Reports`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Reports` (
+  `reportid` int(11) NOT NULL auto_increment,
+  `reportname` varchar(30) NOT NULL default '',
+  `reporttitle` text,
+  `reportdescription` text,
+  `reportadditionalinfo` text,
+  `reportquery` text,
+  PRIMARY KEY  (`reportid`),
+  KEY `reportname` (`reportname`)
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Reports`
+--
+
+LOCK TABLES `Reports` WRITE;
+/*!40000 ALTER TABLE `Reports` DISABLE KEYS */;
+INSERT INTO `Reports` VALUES (1,'finalschedbreif','Schedule','<P>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule.</P>\n','','SELECT\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    roomname, \n    trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title\n  FROM\n      Sessions S, \n      Schedule SCH, \n      Tracks T, \n      Rooms R \n  WHERE\n    R.roomid=SCH.roomid and\n    T.trackid=S.trackid and\n    SCH.sessionid = S.sessionid and\n    S.pubstatusid = 2\n  ORDER BY\n    SCH.starttime,\n    T.trackname'),(2,'conflictpartintnotcomp','Conflict Report - Interested Participants that wont comp','<P>Comps are limited to participants on 3 or more panels.  These folks are on less than 3 scheduled panels.</P>\n','','SELECT\n    P.badgeid, \n    P.pubsname, \n    if (X.Schd is NULL, 0, X.Schd) Schd, \n    if (Y.Intr is NULL, 0, Y.Intr) Intr\n  FROM\n      CongoDump C, \n      Participants P \n    LEFT JOIN (SELECT\n                   POS.badgeid, \n                   count(POS.sessionid) Schd\n                 FROM\n                     ParticipantOnSession POS,\n                     Schedule\n                 WHERE\n                   S.sessionid=POS.sessionid\n                 GROUP BY\n                   POS.badgeid) X on P.badgeid=X.badgeid \n    LEFT JOIN (SELECT\n                   PSI.badgeid, \n                   count(PSI.sessionid) as Intr\n                 FROM\n                     ParticipantSessionInterest PSI\n                 GROUP BY\n                     PSI.badgeid) Y on Y.badgeid=P.badgeid\n  WHERE\n    C.badgeid=P.badgeid and\n    interested=1 and\n    C.regtype is NULL \n  HAVING\n    Schd < 3\n  ORDER BY\n    Intr DESC,\n    cast(C.badgeid as unsigned)'),(3,'assignedsession','Assigned Session by Session','<P>Shows who has been assigned to each session. (Sorted by track and then sessionid.)</P>\n','','SELECT \n    Trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    P.pubsname,\n    if ((moderator=1), \'Yes\', \' \') as \'Moderator\',\n    Statusname \n  FROM\n      ParticipantOnSession POS,\n      Sessions S,\n      Participants P,\n      Tracks T,\n      SessionStatuses SS\n  WHERE\n    POS.badgeid=P.badgeid and\n    POS.sessionid=S.sessionid and\n    T.trackid=S.trackid and\n    S.statusid=SS.statusid \n  ORDER BY\n    trackname, \n    S.sessionid'),(4,'participantinterestedcount','Participant Interested Count','<P>Show the number of people that are interested in attending.</P>\n','<P>Interested, 1=yes, 2=no, 0=did not pick, NULL=did not hit save.</P>','SELECT\n    P.Interested as \"Interest Flag\",\n    count(P.badgeid) as Count\n  FROM\n      Participants P \n  GROUP BY\n    P.interested'),(5,'schedpartavail','Participant availablity','<P>When they said they were available.</P>\n','','SELECT\n        P.badgeid, P.pubsname, \n        DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') AS \'Start Time\', \n        DATE_FORMAT(ADDTIME(\'$ConStartDatim\',endtime),\'%a %l:%i %p\') AS \'End Time\',\n        PA.otherconstraints,\n        PA.preventconflict\n    FROM\n        Participants AS P LEFT JOIN\n        ParticipantAvailabilityTimes AS PAT USING (badgeid)\n        JOIN ParticipantAvailability PA USING (badgeid)\n    WHERE\n        P.interested=1\n    ORDER BY\n        CAST(P.badgeid AS UNSIGNED),starttime'),(6,'panelmerge','CSV -- Report for Program Panel Merge','<P>sessionid,room,start time,duration,track,title,participants</P>\n','','SELECT\n    S.sessionid, \n    R.roomname AS room, \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\') AS \'start time\', \n    CASE\n      WHEN HOUR(S.duration) < 1 THEN\n        concat(date_format(S.duration,\'%i\'),\'min\')\n      WHEN MINUTE(S.duration)=0 THEN\n        concat(date_format(S.duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(S.duration,\'%k\'),\'hr \',date_format(S.duration,\'%i\'),\'min\')\n      END AS duration,\n    T.trackname AS track, \n    S.title, \n    group_concat(P.pubsname, if(POS.moderator=1,\'(m)\',\'\') ORDER BY POS.moderator DESC SEPARATOR \', \') AS participants,\n    PUB.pubstatusname AS status\n  FROM\n      Sessions S\n    JOIN Schedule SCH USING(sessionid)\n    JOIN Rooms R USING(roomid)\n    JOIN Tracks T USING(trackid)\n    JOIN PubStatuses PUB USING(pubstatusid)\n    LEFT JOIN ParticipantOnSession POS USING(sessionid)\n    LEFT JOIN Participants P USING(badgeid)\n  GROUP BY\n    S.sessionid\n  ORDER BY\n    SCH.starttime'),(7,'sessionedithistoryall','Session Edit History Report - All','<P>For each session, show the entire edit history.</P>\n','','SELECT\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    T.trackname as \'Track\', \n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    SS.statusname as \'Current<BR>Status\',\n    timestamp as \'When\', \n    concat(name,\' (\', email_address,\') \') as \'Who\', \n    concat(SEC.description, \' \',SS2.statusname) as \'What\' \n  FROM\n      Sessions S, \n      Tracks T, \n      SessionStatuses SS, \n      SessionEditHistory SEH, \n      SessionEditCodes SEC, \n      SessionStatuses SS2 \n  WHERE\n    S.trackid=T.trackid and\n    S.statusid = SS.statusid and\n    S.sessionid = SEH.sessionid and\n    SEH.sessioneditcode=SEC.sessioneditcode and\n    SS2.statusid=SEH.statusid and\n    S.statusid >= 1 and\n    S.statusid <= 7\n  ORDER BY\n    S.sessionid, \n    SEH.timestamp'),(8,'partbio','Conflict Report - Participant Bio in conflict','<P>Show the badgeid, pubsname and bio for each participant who indicated he is attending.</P>\n','','SELECT\n    P.badgeid, \n    P.pubsname, \n    P.editedbio \n  FROM\n      Participants P\n  WHERE\n    P.interested=1\n  ORDER BY\n    substring_index(pubsname,\" \",-1)'),(9,'progpacketmerge','Full Participant Schedule for the Program Packet Merge','<P>pubsname, (day, time, duration, room, mod)</P>\n','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>\n','SELECT\n    POS.badgeid,\n    pubsname,\n    group_concat(roomname,\'\",\"\',\n		 DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\'),\'\",\"\',\n		 concat(\'(\', \n                        CASE \n                          WHEN HOUR(duration) < 1 THEN \n                            concat(date_format(duration,\'%i\'),\'min\') \n                          WHEN MINUTE(duration)=0 THEN \n                            concat(date_format(duration,\'%k\'),\'hr\') \n                          ELSE\n                            concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n                        END\n			,\')\'),\'\",\"\',\n		 trackname,\'\",\"\',\n		 title,\'\",\"\',\n		 if(moderator=1,\'M\',\'\'),\'\",\"\'\n		 ORDER BY starttime) AS panelinfo \n  FROM\n      Participants P,\n      Rooms R,\n      Sessions S,\n      Schedule SCH,\n      ParticipantOnSession POS,\n      CongoDump C,\n      Tracks T\n  WHERE\n    P.badgeid=C.badgeid and\n    S.sessionid=SCH.sessionid and\n    POS.sessionid=S.sessionid and\n    POS.badgeid=C.badgeid and\n    T.trackid=S.trackid and\n    SCH.roomid = R.roomid and\n    SCH.sessionid = S.sessionid\n  GROUP BY\n    badgeid\n  ORDER BY\n    pubsname'),(10,'sessioninterestpart','Session Interest by participant (all info)','<P>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report.  (All data included including for invited sessions.) order by participant.</P>\n','','SELECT \n    P.badgeid BadgeID, \n    P.pubsname, \n    T.trackname Track, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\') as \'Start Time\',\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    I.rank Rank, \n    I.comments Comments \n  FROM\n      Participants as P, \n      ParticipantSessionInterest as I, \n      Tracks as T,\n      Sessions as S\n      left join Schedule SCH \n      on S.sessionid=SCH.sessionid \n  WHERE\n    P.badgeid=I.badgeid and\n    S.sessionid=I.sessionid and \n    T.trackid=S.trackid \n  ORDER BY\n    cast(P.badgeid as unsigned) '),(11,'conflictpartbio','Conflict Report - Participant Bio in conflict','<P>Show the badgeid, pubsname and both bio entries for each participant who indicated he is attending.</P>\n','','SELECT\n    P.badgeid, \n    P.pubsname, \n    P.bio,\n    P.editedbio \n  FROM\n      Participants P\n  WHERE\n    P.interested=1 and\n    P.bio!=P.editedbio\n  ORDER BY\n    substring_index(pubsname,\" \",-1)'),(12,'intvschedpanel','Interest v Schedule - sorted by track, then title','<P>Show who is interested in each panel and if they are assigned to it.  Also show the scheduling information.</P>\n','','SELECT\n    X.trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',X.sessionid,\'>\', X.sessionid,\'</a>\') as Sessionid,\n    X.title, \n    X.badgeid, \n    X.pubsname,  \n    (if (X.assigned is NULL,\'no\',\'yes\')) as \'Assigned?\', \n    concat(\'<a href=MaintainRoomSched.php?selroom=\',Y.roomid,\'>\', Y.roomname,\'</a>\') as Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Y.starttime),\'%a %l:%i %p\') as \'Start Time\' \n  FROM\n      (SELECT\n           PI.badgeid,\n           PI.pubsname,\n           PI.sessionid,\n           POS.sessionid as assigned,\n           title,\n           trackname \n         FROM\n             (SELECT\n                  T.trackname,\n                  S.title,\n                  S.sessionid,\n                  P.badgeid,\n                  P.pubsname \n               FROM\n                   Tracks T,\n                   ParticipantSessionInterest PSI, \n                   Participants P,\n                   Sessions S\n               WHERE\n                 S.trackid=T.trackid and\n                 P.interested=1 and\n                 P.badgeid=PSI.badgeid and\n                 S.sessionid=PSI.sessionid ) PI \n                   left join ParticipantOnSession POS \n                          on POS.badgeid=PI.badgeid and POS.sessionid=PI.sessionid) X \n           LEFT JOIN (SELECT\n                          SCH.starttime,\n                          R.roomname,\n                          R.roomid,\n                          SCH.sessionid \n                       FROM \n                           Schedule SCH,\n                           Rooms R \n                       WHERE\n                           R.roomid=SCH.roomid) as Y on X.sessionid=Y.sessionid \n  ORDER BY\n    X.trackname,\n    X.title'),(13,'sessioncomment','Session Commentary','<P>Comments recorded for Sessions.  <A HREF=\"CommentOnSessions.php\">(Add a comment)</A></P>\n','','SELECT\n    S.title,\n    COS.commenter,\n    COS.comment\n  FROM\n      Sessions S \n    JOIN\n      CommentsOnSessions COS USING (sessionid)\n  ORDER BY\n    S.title'),(14,'conflictpickypeople','Conflict Report - Picky people','<P>Show who the picky people do not want to be on a panel with and who they are on panels with.</P>\n','','SELECT \n    X.b AS badgeid, \n    X.pn AS pubsname, \n    X.no AS nopeople, \n    X.tn AS track, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',X.s,\'>\', X.s,\'</a>\') AS Sessionid, \n    X.sn AS sessionname, \n    group_concat(DISTINCT P2.pubsname,concat(\' (\',P2.badgeid,\')\') SEPARATOR \', \') AS \'others on this panel\' \n  FROM \n      (SELECT\n            PI.badgeid as b,\n            P.pubsname as pn,\n            S.sessionid as s,\n            nopeople as no,\n            title as sn,\n            trackname as tn \n          FROM\n              ParticipantInterests PI,\n              ParticipantOnSession PS, \n              Sessions S,\n              Participants P,\n              Tracks T \n          WHERE\n            T.trackid=S.trackid and\n            S.sessionid=PS.sessionid and\n            PS.badgeid=PI.badgeid and\n            P.badgeid=PI.badgeid and\n            (nopeople is not null and nopeople!=\'\')) X, \n      Participants P2,\n      ParticipantOnSession PSO \n  WHERE\n    X.s=PSO.sessionid and P2.badgeid=PSO.badgeid \n  GROUP BY\n    X.s \n  ORDER BY\n    cast(X.b as unsigned)'),(15,'publongdesc','CSV - Session Characteristics plus long description','<P>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description.</P>\n','','SELECT\n    S.sessionid,\n    T.trackname AS track,\n    TY.typename AS type,\n    DV.divisionname AS division,\n    PS.pubstatusname AS \'publication status\',\n    S.pubsno,\n    group_concat(PC.pubcharname SEPARATOR \' \') AS \'publication characteristics\',\n    K.kidscatname AS \'kids category\',\n    S.title,\n    S.progguiddesc as description\n  FROM\n      Schedule SCH\n    JOIN Sessions S USING(sessionid)\n    JOIN Tracks T USING(trackid)\n    JOIN Types TY USING(typeid)\n    JOIN Divisions DV USING(divisionid)\n    JOIN PubStatuses PS USING(pubstatusid)\n    JOIN KidsCategories K USING(kidscatid)\n    LEFT JOIN SessionHasPubChar SHPC USING(sessionid)\n    LEFT JOIN PubCharacteristics PC USING(pubcharid)\n  WHERE \n    PS.pubstatusname = \'Public\'\n  GROUP BY\n    scheduleid'),(16,'sessioninterestpartcount','Session Interest Counts by Participant','<P>Just how many panels did each participant sign up for anyway?</P>\n','','SELECT\n    P.Badgeid, \n    P.Pubsname, \n    count(sessionid) as Interested \n  FROM\n      Participants P \n    LEFT JOIN ParticipantSessionInterest PSI on P.badgeid=PSI.badgeid \n  WHERE\n    P.interested=1 \n  GROUP BY\n    cast(P.badgeid as unsigned)'),(17,'gameroomshedroom','Gaming Schedule','<P>All Gaming and Gaming Panels.  All these reports include both.</P>\n','','SELECT\n    roomname AS Room,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') AS \'Start Time\',\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE \n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    title AS Title,\n    pocketprogtext AS Description,\n    group_concat(\' \',pubsname,\' (\',P.badgeid,\')\') as \'Participants\'\n  FROM\n      Schedule SCH\n    JOIN Sessions S USING (sessionid)\n    JOIN Rooms R USING (roomid)\n    JOIN Tracks USING (trackid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid\n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n  WHERE \n    trackname in (\'Gaming\')\n  GROUP BY\n    SCH.scheduleid\n  ORDER BY\n    R.roomname,\n    SCH.starttime'),(18,'kidfasttracksched4con','FastTrack Schedule (for con)','<P>What is happening in FastTrack - The At-Con Version.</P>\n','','SELECT\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\') as \'Start Time\',\n    R.roomname,\n    S.title,\n    group_concat(concat(P.pubsname,\' (\',P.badgeid,\')\') SEPARATOR \', \') as \'Participants\'\n  FROM\n      Schedule SCH\n    JOIN Rooms R USING(roomid)\n    JOIN Sessions S USING(sessionid)\n    JOIN Tracks TR USING(trackid)\n    LEFT JOIN ParticipantOnSession POS USING(sessionid)\n    LEFT JOIN Participants P USING(badgeid)\n  WHERE\n    TR.trackname=\'FAST TRACK\'\n  GROUP BY\n    SCH.scheduleid\n  ORDER BY\n    SCH.starttime'),(19,'allroomschedtime','Full Room Schedule by time then room','<P>Lists all Sessions Scheduled in all Rooms (includes \"Public\", \"Do Not Print\" and \"Staff Only\").</P>\n','','SELECT\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',\n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    Function,\n    Trackname,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',title,\'</a>\') as Title,\n    PS.pubstatusname as PubStatus,\n    group_concat(\' \',P.pubsname,\' (\',P.badgeid,\')\') as \'Participants\'\n  FROM\n      Schedule SCH\n    JOIN Sessions S USING (sessionid)\n    JOIN Rooms R USING (roomid)\n    JOIN PubStatuses PS USING (pubstatusid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid\n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n    LEFT JOIN Tracks T ON T.trackid=S.trackid\n  GROUP BY\n    SCH.scheduleid\n  ORDER BY\n    SCH.starttime,\n    R.roomname'),(20,'thsessionservicesservice','Session Services by Service','<P>Which Session needs which Services? (Sorted by service then time.)</P>\n','','SELECT\n    X.Servicename as Service,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    Roomname,\n    Trackname, \n    X.Sessionid,\n    concat(\'<a href=EditSession.php?id=\',X.sessionid,\'>\',X.title,\'</a>\') Title\n  FROM\n      (SELECT\n           duration, \n           trackname, \n           S.sessionid,\n           title,\n           servicename \n         FROM\n             Tracks T, \n             Sessions S, \n             SessionHasService SF, \n             Services F \n         WHERE\n           T.trackid=S.trackid and\n           S.sessionid=SF.sessionid and\n           F.serviceid=SF.serviceid) X,\n      Rooms R, \n      Schedule SCH \n  WHERE\n    X.sessionid=SCH.sessionid and\n    SCH.roomid=R.roomid \n  ORDER BY\n    X.servicename, \n    starttime,\n    roomname'),(21,'sessioninterestcount','Session Interest Report (counts)','<P>For each session, show number of participants who have put it on their interest list. (Excludes invited guest sessions.)</P>\n','','SELECT\n    T.trackname as Track, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as \'Session<BR>ID\',\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    count(PSI.badgeid) as \'Number<BR>of<BR>Participants\' \n  FROM\n      Sessions AS S \n    JOIN Tracks AS T ON S.trackid=T.trackid \n    LEFT JOIN ParticipantSessionInterest AS PSI ON S.sessionid=PSI.sessionid \n  WHERE\n    T.selfselect=1 and\n    statusid in (2,3,7) \n  GROUP BY\n    T.trackid, \n    S.sessionid \n  ORDER BY\n    T.display_order, \n    S.sessionid'),(22,'conflictunder3assigned','Conflict Report - Scheduled Programming sessions without enough people','<P>This report runs against scheduled sessions in division program only.   If these are panels, you need at least 3 people.  All other types require at least 1.</P>\n','','SELECT\n    T.trackname, \n    Y.typename,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid, \n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    if(X.assigned is NULL, 0, X.assigned) assigned, concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname\n  FROM\n      Sessions  S\n    LEFT JOIN (SELECT\n                   S1.sessionid, count(badgeid) assigned \n                 FROM\n                     Sessions S1 ,\n                     ParticipantOnSession POS \n                 WHERE\n                     S1.sessionid=POS.sessionid\n                 GROUP BY\n                     S1.sessionid ) X on S.sessionid=X.sessionid,\n      Schedule SCH,\n      Tracks T,\n      Types Y,\n      Divisions D,\n      Rooms R\n  WHERE\n    S.sessionid=SCH.sessionid and\n    S.trackid=T.trackid and\n    S.typeid=Y.typeid and\n    S.divisionid=D.divisionid and\n    SCH.roomid=R.roomid and\n    S.statusid=3 and\n    D.divisionname=\'Programming\' and\n    ((Y.typename = \'Panel\' and assigned<3) or\n     (Y.typename != \'Panel\'  and assigned<1) or\n     assigned is NULL)\n  ORDER BY\n    T.trackname,\n    S.sessionid'),(23,'invitation','Invited Guest Report','<P>For each invited guest session, list the participants who have been invited (and have not deleted the invitation.)</P>\n','','SELECT\n    T.trackname as Track,\n    concat(\"<a href=EditSession.php?id=\",S.sessionid,\">\",S.sessionid,\"</a>\") as \"Session<BR>ID\",\n    S.title as Title,\n    PSI.badgeid as BadgeId,\n    P.pubsname as Pubsname\n  FROM\n      Sessions S\n    JOIN Tracks T ON S.trackid=T.trackid\n    LEFT JOIN ParticipantSessionInterest PSI ON S.sessionid=PSI.sessionid\n    LEFT JOIN Participants P on PSI.badgeid=P.badgeid\n  WHERE\n    T.selfselect=1 and\n    S.invitedguest=1 and\n    statusid=2\n  ORDER BY\n    T.display_order,\n    S.sessionid'),(24,'allroomschedtrackroom','Full Room Schedule by track then room then time','<P>Lists all Sessions Scheduled in all Rooms.</P>\n','','SELECT\n    Trackname,\n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,\n    Function,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    group_concat(\' \',pubsname,\' (\',P.badgeid,\')\') as \'Participants\'\n  FROM\n      Schedule SCH\n    JOIN Sessions S USING (sessionid)\n    JOIN Rooms R USING (roomid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid\n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n    LEFT JOIN Tracks T ON T.trackid=S.trackid\n  GROUP BY\n    SCH.scheduleid\n  ORDER BY\n    T.trackname,\n    R.roomname,\n    SCH.starttime'),(25,'conflictschedassn','Conflict Report - Assigned v. Scheduled issue','<P>These are sessions that are either in the grid and have no one assigned or the have people assigned and are not in the grid.</P>\n','','SELECT\n    trackname,\n    typename,\n    divisionname,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid, \n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',title,\'</a>\') Title,\n    if ((SCH.sessionid is NULL), \'no room\', concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\')) in_grid, \n    if ((num_assigned is NULL), 0, num_assigned) as num_assigned,\n    if ((num_int is NULL), 0, num_int) as num_int\n  FROM\n      Tracks T, \n      Types Y,\n      Divisions D,\n      Sessions S \n    LEFT JOIN Schedule SCH on S.sessionid=SCH.sessionid \n    LEFT JOIN (SELECT\n                   sessionid, \n                   count(badgeid) as num_assigned \n                 FROM\n                     ParticipantOnSession \n                 GROUP BY\n                     sessionid) A on A.sessionid=S.sessionid \n    LEFT JOIN (SELECT\n                   sessionid,\n                   count(badgeid) as num_int \n                 FROM\n                     ParticipantSessionInterest\n                 GROUP BY\n                     sessionid) B on B.sessionid=S.sessionid\n    LEFT JOIN Rooms R on R.roomid=SCH.roomid \n  WHERE\n    T.trackid=S.trackid and\n    Y.typeid=S.typeid and\n    D.divisionid=S.divisionid\n  HAVING \n    (in_grid=\'no room\' and num_assigned>0) or\n    (in_grid!=\'no room\' and (num_assigned<1 or num_assigned is NULL))\n  ORDER BY\n    num_assigned DESC,\n    in_grid'),(26,'conflictpartdup','Conflict Report - Participant Double Booked','<P>Find all instances where a participant is scheduled to be in two or more places at once.</P>\n','<P>Click on the session id to edit the session\'s volunteer or announcer.</P>','SELECT\n    concat(P.pubsname, \'(\', P.badgeid, \')\') as Participant,\n    \' \',\n    TA.trackname as \'Track A\', \n    concat(\'<a href=MaintainRoomSched.php?selroom=\',RA.roomid,\'>\', RA.roomname,\'</a>\') as \'Room A\', \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',Asess,\'>\', Asess,\'</a>\') as \'Session ID A\', \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Astart),\'%a %l:%i %p\') as \'Start Time A\', \n    left(Adur,5) as \'Dur A\',\n    \' \',\n    TB.trackname as \'Track B\', \n    concat(\'<a href=MaintainRoomSched.php?selroom=\',RB.roomid,\'>\', RB.roomname,\'</a>\') as \'Room B\', \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',Bsess,\'>\', Bsess,\'</a>\') as \'Session ID B\', \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Bstart),\'%a %l:%i %p\') as \'Start Time B\',\n    left(Bdur,5) as \'Dur B\'\n  FROM\n      Rooms RA, \n      Rooms RB, \n      Tracks TA, \n      Tracks TB, \n      Participants P,\n      (SELECT\n          POSA.badgeid, \n          SCHA.roomid AS Aroom, \n          SCHA.sessionid AS Asess, \n          SCHA.starttime AS Astart, \n          ADDTIME(SCHA.starttime, SA.duration) AS Aend, \n          SA.trackid AS Atrack, \n	  SA.duration AS Adur,\n          SCHB.sessionid AS Bsess, \n          SCHB.roomid AS Broom, \n          SCHB.starttime AS Bstart, \n          ADDTIME(SCHB.starttime, SB.duration) AS Bend, \n          SB.trackid AS Btrack,\n	  SB.duration AS Bdur\n        FROM ParticipantOnSession POSA, \n            ParticipantOnSession POSB, \n            Schedule SCHA, \n            Schedule SCHB, \n            Sessions SA, \n            Sessions SB \n        WHERE\n          POSA.sessionid = SA.sessionid and\n          SCHA.sessionid=POSA.sessionid and\n          POSB.sessionid = SB.sessionid and\n          SCHB.sessionid=POSB.sessionid and\n          POSA.badgeid=POSB.badgeid and\n          (SCHA.starttime<SCHB.starttime or \n           (SCHA.starttime=SCHB.starttime and \n            SCHA.sessionid<SCHB.sessionid)) and\n          ADDTIME(SCHA.starttime, SA.duration)>SCHB.starttime and\n          POSA.sessionid<>POSB.sessionid) as Foo \n  WHERE\n    Aroom=RA.roomid and\n    P.badgeid=Foo.badgeid and\n    Broom=RB.roomid and\n    TA.trackid=Atrack and\n    TB.trackid=Btrack\n  ORDER BY\n    cast(P.badgeid as unsigned), \n    Astart'),(27,'prognamesannvolprog','Program Participant Number, Names, Contact, and Involvement','<P>Full listing of the names and contact, and how many classes, as a Program Participant, Announcer or Volunteer they are involved in.  Replaces 4progthankyounotereport\'s non-csv version.</P>\n','','SELECT\n    P.badgeid, \n    P.pubsname, \n    C.firstname, \n    C.lastname, \n    C.email, \n    SCH.sessioncount as \'Total involvement\', \n    SCH.volcount as \'Volunteer Sessions\',\n    SCH.anncount as \'Announcer Sessions\',\n    (SCH.sessioncount-SCH.volcount-SCH.anncount) as \'Program Sessions\' \n  FROM\n      CongoDump as C, \n      Participants as P \n    LEFT JOIN (SELECT\n                   POS1.badgeid as badgeid , \n                   count(SCH1.sessionid) as sessioncount,\n                   sum(if(volunteer=1,1,0)) as volcount,\n                   sum(if(announcer=1,1,0)) as anncount\n                 FROM\n                     ParticipantOnSession POS1, \n                     Schedule SCH1, \n                     Sessions S, \n                     Tracks T \n               WHERE\n                 POS1.sessionid=SCH1.sessionid and\n                 SCH1.sessionid=S.sessionid and\n                 S.trackid=T.trackid \n               GROUP BY\n                 POS1.badgeid) as SCH on P.badgeid=SCH.badgeid \n  WHERE \n    SCH.sessioncount is not NULL and\n    C.badgeid=P.badgeid \n  GROUP BY\n    (P.badgeid) \n  ORDER BY\n    cast(P.badgeid as unsigned)'),(28,'gohintvschedulepanel','Interest v Schedule - sorted by GoHs','<P>For each GoH, show which panels (but not Events) they are interested in,  and if they are assigned to it.  Also show the scheduling information.</P>\n','','SELECT \n    concat(X.pubsname, \' (\', X.badgeid, \')\') as Pubsname,\n    X.trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',X.sessionid,\'>\', X.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',X.sessionid,\'>\',X.title,\'</a>\') as Title,\n    (if (X.assigned is NULL,\' \',\'yes\')) as \'Assigned?\', (if (moderator is NULL or moderator=0,\' \',\'yes\')) as \'Moderator?\', concat(\'<a href=MaintainRoomSched.php?selroom=\',Y.roomid,\'>\', Y.roomname,\'</a>\') as Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Y.starttime),\'%a %l:%i %p\') as \'Start Time\' \n  FROM \n      (SELECT\n           PI.badgeid,\n           PI.pubsname,\n           PI.sessionid,\n           POS.sessionid as assigned,\n           moderator,\n           title,\n           trackname \n         FROM\n             (SELECT\n                  T.trackname,\n                  S.title,\n                  S.sessionid,\n                  P.badgeid,\n                  P.pubsname \n               FROM\n                   Tracks T,\n                   ParticipantSessionInterest PSI, \n                   Participants P,\n                   Sessions S\n               WHERE\n                 S.trackid=T.trackid and\n                 P.interested=1 and\n		 P.badgeid in $GohBadgeList and\n                 P.badgeid=PSI.badgeid and \n                 S.sessionid=PSI.sessionid) PI \n           LEFT JOIN ParticipantOnSession POS on POS.badgeid=PI.badgeid and POS.sessionid=PI.sessionid) X \n    LEFT JOIN (SELECT\n                   SCH.starttime,\n                   R.roomname,\n                   R.roomid,\n                   SCH.sessionid \n                FROM\n                    Schedule SCH,\n                    Rooms R \n                WHERE\n                  R.roomid=SCH.roomid) as Y on X.sessionid=Y.sessionid\n  ORDER BY\n    badgeid'),(29,'arisiatvroomsched','Arisia TV by time.','<P>Just things in TV room.</P>\n','','SELECT\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    trackname, \n    S.sessionid,\n    title,\n    group_concat(\' \',pubsname,\' (\',P.badgeid,\')\') as \'Participants\'\n  FROM\n      Tracks T,\n      Rooms R,\n      Sessions S,\n      Schedule SCH\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid = POS.sessionid\n    LEFT JOIN Participants P ON POS.badgeid = P.badgeid\n  WHERE\n    T.trackid = S.trackid and\n    SCH.roomid = R.roomid and\n    SCH.sessionid = S.sessionid and\n    roomname in (\'ArisiaTV\')\n  GROUP BY\n    SCH.sessionid\n  ORDER BY\n    SCH.starttime'),(30,'allroomschedtrack','Full Room Schedule by track then time.','<P>Lists all Sessions Scheduled in all Rooms.</P>\n','','SELECT\n    Trackname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,\n    Function,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    group_concat(\' \',pubsname,\' (\',P.badgeid,\')\') as \'Participants\'\n  FROM\n      Schedule SCH\n    JOIN Sessions S USING (sessionid)\n    JOIN Rooms R USING (roomid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid\n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n    LEFT JOIN Tracks T ON T.trackid=S.trackid\n  GROUP BY\n    SCH.scheduleid\n  ORDER BY \n    T.trackname,\n    SCH.starttime'),(31,'gohschedule','GoH Schedule','<P>The GoH schedules.</P>\n','','SELECT \n    G.pubsname, \n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS duration,\n      trackname, \n      concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid, \n      concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',title,\'</a>\') title,\n      if ((S.pubstatusid=1), \'S-O\', if((S.pubstatusid=3), \'DNP\', \' \')) as \'Pubs Status\',\n      if ((moderator=1), \'Yes\', \' \') as \'moderator\'\n  FROM\n      Sessions S\n    JOIN Schedule SCH USING (sessionid)\n    JOIN Rooms R USING (roomid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid \n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n    LEFT JOIN Tracks T ON T.trackid=S.trackid\n    JOIN Participants G ON G.badgeid = POS.badgeid\n  WHERE\n    G.badgeid in $GohBadgeList\n  ORDER BY\n    G.pubsname,\n    SCH.starttime'),(32,'participantinterests','Participant Interests','<P>What is that participant interested in?</P>\n','','SELECT\n    P.badgeid,\n    P.pubsname,\n    yespanels as \"New Panel Ideas\",\n    nopanels as \"Panel Not Interested\",\n    yespeople,\n    nopeople,\n    otherroles \n  FROM\n      ParticipantInterests PI, \n      Participants P\n  WHERE\n    P.badgeid=PI.badgeid'),(33,'sessioninterest','Session Interest Report (all info)','<P>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report.  (All data included including for invited sessions.)</P>\n','','SELECT\n    T.trackname as \'Track\',\n    CONCAT(\'<A HREF=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</A>\') as Sessionid,\n    CONCAT(\'<A HREF=EditSession.php?id=\',S.sessionid,\'>\',title,\'</A>\') as title,\n    P.pubsname,\n    P.badgeid as \'BadgeID\',\n    PSI.rank as \'Rank\',\n    PSI.willmoderate as \'Mod?\',\n    PSI.comments as \'Comments\'\n  FROM\n      Participants P,\n      ParticipantSessionInterest PSI,\n      Sessions S,\n      Tracks T\n  WHERE\n    P.badgeid=PSI.badgeid AND\n    S.sessionid=PSI.sessionid AND\n    T.trackid=S.trackid\n  ORDER BY\n    T.trackname,\n    title'),(34,'assignedsessionbypart','Assigned Session by Participant','<P>Shows who has been assigned to each session ordered by badgeid.</P>\n','','SELECT\n    P.Badgeid, \n    P.Pubsname, \n    if ((moderator=1), \'Yes\', \' \') as \'Moderator\',\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',Sessions.sessionid,\'>\', Sessions.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',Sessions.sessionid,\'>\',Sessions.title,\'</a>\') Title\n  FROM\n      ParticipantOnSession, \n      Sessions, \n      Participants P\n  WHERE\n    ParticipantOnSession.badgeid=P.badgeid and\n    ParticipantOnSession.sessionid=Sessions.sessionid \n  ORDER BY\n    cast(P.badgeid as unsigned)'),(35,'pubs','Report for Pubs','<P>Report for Paul\'s Pocket Program.</P>\n','','SELECT\n    S.sessionid, \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a\') as Day, \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%l:%i %p\') as \'Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    roomname, \n    trackname as TRACK, \n    typename as TYPE,\n    K.kidscatname,\n    title, \n    progguiddesc as \'Long Text\', \n    group_concat(\' \',pubsname, if (moderator=1,\' (m)\',\'\')) as \'PARTIC\' \n  FROM \n      Rooms R, \n      KidsCategories K,\n      Sessions S, \n      Tracks T,\n      Types Ty, \n      Schedule SCH \n    LEFT JOIN ParticipantOnSession POS on SCH.sessionid=POS.sessionid \n    LEFT JOIN Participants P on POS.badgeid=P.badgeid\n  WHERE\n    R.roomid = SCH.roomid and\n    K.kidscatid=S.kidscatid and\n    SCH.sessionid = S.sessionid and\n    T.trackid=S.trackid and\n    S.typeid=Ty.typeid and\n    S.pubstatusid = 2\n  GROUP BY\n    SCH.sessionid \n  ORDER BY\n    SCH.starttime, \n    R.roomname'),(36,'pubssched','Schedule report for Pubs','<P>Lists all Sessions Scheduled in all Rooms.</P>\n','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>\n','SELECT\n    S.sessionid,\n    R.roomname, \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\') as \'Start Time\', \n    CASE \n      WHEN HOUR(duration) < 1 THEN \n        concat(date_format(duration,\'%i\'),\'min\') \n      WHEN MINUTE(duration)=0 THEN \n        concat(date_format(duration,\'%k\'),\'hr\') \n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    T.trackname,\n    S.title, \n    PS.pubstatusname\n  FROM \n      Sessions S\n    JOIN Schedule SCH using (sessionid)\n    JOIN Rooms R using (roomid)\n    JOIN Tracks T using (trackid)\n    JOIN PubStatuses PS using (pubstatusid) \n  ORDER BY\n    SCH.starttime, \n    R.roomname'),(37,'assignedsessionbypartdiff','Differential Assigned Session by Participant','<P>Recent changes to whom has been assigned to each session ordered by time, then badgeid.</P>\n','','SELECT\n    P.badgeid, \n    P.pubsname, \n    Sessions.sessionid as SessionId, \n    title, \n    if ((moderator=1), \'Yes\', \' \') as \'moderator\',\n    POS.ts as changed\n  FROM\n      ParticipantOnSession POS, \n      Sessions, \n      Participants P \n  WHERE\n    POS.badgeid=P.badgeid and\n    POS.sessionid=Sessions.sessionid and\n    POS.ts>\'2009-1-7 13:50:00\'\n  ORDER BY\n    POS.ts,\n    cast(P.badgeid as unsigned)'),(38,'conflictpartnums','Conflict Report - Participant Number of Sessions','<P>Compare number of sessions participants requested with the number of which they were assigned.</P>\n','','SELECT\n    PA.badgeid, \n    P.pubsname, \n    if ((fridaymaxprog is NULL), \'<div style=background:lightgray;>-</div>\',concat(\'<div style=background:lightgray;>\',fridaymaxprog,\'</div>\')) as \'Fri Reqd.\', \n    if ((frisched is NULL), \'-\', frisched) as \'Fri Asgnd.\', \n    if ((saturdaymaxprog is NULL), \'<div style=background:lightgray;>-</div>\',concat(\'<div style=background:lightgray;>\',saturdaymaxprog,\'</div>\')) as \'Sat Reqd.\', \n    if ((satsched is NULL), \'-\', satsched) as \'Sat Asgnd.\', \n    if ((sundaymaxprog is NULL), \'<div style=background:lightgray;>-</div>\',concat(\'<div style=background:lightgray;>\',sundaymaxprog,\'</div>\')) as \'Sun Reqd.\', \n    if ((sunsched is NULL), \'-\', sunsched) as \'Sun Asgnd.\', \n    if ((mondaymaxprog is NULL), \'<div style=background:lightgray;>-</div>\',concat(\'<div style=background:lightgray;>\',mondaymaxprog,\'</div>\')) as \'Mon Reqd.\', \n    if ((monsched is NULL), \'-\', monsched) as \'Mon Asgnd.\', \n    if ((maxprog is NULL), \'<div style=background:lightgray;>-</div>\',concat(\'<div style=background:lightgray;>\',maxprog,\'</div>\')) as \'Total Reqd.\', \n    if ((totsched is NULL), \'-\', totsched) as \'Tot Asgnd.\'\n  FROM\n      ParticipantAvailability PA,  \n      Participants P \n    LEFT JOIN (SELECT\n                   badgeid, \n                   sum(if(starttime<\'24:00:00\',1,0)) as frisched, \n                   sum(if((starttime>=\'24:00:00\' && starttime<\'48:00:00\'),1,0)) as satsched, \n                   sum(if((starttime>=\'48:00:00\' && starttime<\'72:00:00\'),1,0)) as sunsched, \n                   sum(if(starttime>=\'72:00:00\',1,0)) as monsched, \n                   count(*) as totsched \n                 FROM\n                     (SELECT\n                          POS.badgeid, \n                          POS.sessionid, \n                          SCH.starttime \n                        FROM\n                            ParticipantOnSession POS, \n                            Schedule SCH \n                        WHERE\n                          POS.sessionid=SCH.sessionid) as FOO\n                 GROUP BY\n                   badgeid) as BAR on P.badgeid=BAR.badgeid \n    LEFT JOIN (SELECT \n                   badgeid,\n                   sum(if(day=1,maxprog,0)) as fridaymaxprog,\n                   sum(if(day=2,maxprog,0)) as saturdaymaxprog,\n                   sum(if(day=3,maxprog,0)) as sundaymaxprog,\n                   sum(if(day=4,maxprog,0)) as mondaymaxprog\n                 FROM\n                     ParticipantAvailabilityDays\n                 GROUP BY\n                     badgeid) as PAD on P.badgeid = PAD.badgeid\n  WHERE \n    PA.badgeid = P.badgeid and\n    P.interested=1 \n  ORDER BY\n    cast(PA.badgeid as unsigned)'),(39,'allroomsched','Full Room Schedule by room then time.','<P>Lists all Sessions Scheduled in all Rooms.</P>\n','','SELECT \n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,\n    Function, \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    Trackname,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    group_concat(\' \',P.pubsname,\' (\',P.badgeid,\')\') as \'Participants\' \n  FROM\n      Sessions S\n    JOIN Schedule SCH USING (sessionid)\n    JOIN Rooms R USING (roomid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid\n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n    LEFT JOIN Tracks T ON T.trackid=S.trackid\n  GROUP BY\n    SCH.scheduleid \n  ORDER BY \n    R.roomname, \n    SCH.starttime'),(40,'sessionnotes','Session Notes','<P>Interesting info on a Session for sessions whose status is one of EditMe, Brainstorm, Vetted, Assigned, or Scheduled.</P>\n','','SELECT\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as \'Session<BR>id\',\n    Trackname, \n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    if (invitedguest,\'yes\',\'no\') as \'Invited Guest?\',\n    servicenotes as \'Hotel and Tech notes\', \n    notesforprog as \'Notes for Programming\' \n  FROM\n      Tracks T, \n      Sessions S, \n      SessionStatuses SS \n  WHERE\n    T.trackid=S.trackid and\n    SS.statusid=S.statusid and\n    SS.statusname in (\'EditMe\', \'Brainstorm\', \'Vetted\', \'Assigned\', \'Scheduled\') and\n    (invitedguest=1 or notesforprog is not NULL or servicenotes is not NULL)\n  ORDER BY\n   S.sessionid'),(41,'conflictsessdup','Conflict Report - Duplicate Session','<P>Lists all sessions scheduled more than once.</P>\n','','SELECT\n    S.Sessionid, \n    S.Title, \n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', \n    R.roomname,\'</a>\') as Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\') as \'Start Time\' \n  FROM\n      Sessions S, \n      Rooms R, \n      Schedule SCH, \n      (SELECT\n           sessionid, \n           count(*) as mycount \n         FROM\n             Schedule \n         GROUP BY\n             sessionid \n         HAVING\n             mycount>1) X \n  WHERE\n    S.sessionid=X.sessionid and\n    S.sessionid=SCH.sessionid and\n    R.roomid = SCH.roomid\n  ORDER BY\n    S.sessionid'),(42,'pubsnew','Pubs - Session Characteristics plus long description','<P>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description.</P>\n','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>\n','SELECT\n    S.sessionid, \n    trackname, \n    typename, \n    divisionname, \n    pubcharname, \n    kidscatname, \n    title, \n    roomname, \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime), \'%a %l:%i %p\') as \'Start Time\', \n    CASE \n      WHEN HOUR(duration) < 1 THEN \n        concat(date_format(duration,\'%i\'),\'min\') \n      WHEN MINUTE(duration)=0 THEN \n        concat(date_format(duration,\'%k\'),\'hr\') \n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END as duration,\n    if(group_concat(\' \',pubsname) is NULL,\'\',group_concat(\' \',pubsname)) as \'Participants\' ,\n    progguiddesc as \'Long Description\'\n  FROM\n      Tracks T, \n      Types Ty, \n      Divisions D, \n      PubStatuses PS, \n      KidsCategories K, \n      Rooms R, \n      Sessions S \n    LEFT JOIN SessionHasPubChar SHPC ON S.sessionid=SHPC.sessionid \n    LEFT JOIN PubCharacteristics PC ON SHPC.pubcharid=PC.pubcharid, \n      Schedule SCH \n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid \n    LEFT JOIN CongoDump C ON POS.badgeid=C.badgeid \n    LEFT JOIN Participants P ON C.badgeid=P.badgeid\n  WHERE \n    S.trackid=T.trackid and\n    S.typeid=Ty.typeid and\n    S.divisionid=D.divisionid and\n    S.pubstatusid=PS.pubstatusid and\n    PS.pubstatusname = \'Public\' and\n    S.kidscatid=K.kidscatid and\n    S.sessionid=SCH.sessionid and\n    R.roomid=SCH.roomid\n  GROUP BY\n    S.sessionid'),(43,'sessionedit','Session Edit History Report','<P>Show the most recent edit activity for each session (sorted by time).</P>\n','','SELECT\n    SEH2.timestamp as \"When\",\n    concat(\"<a href=StaffAssignParticipants.php?selsess=\",S.sessionid,\">\", S.sessionid,\"</a>\") as Sessionid,\n    T.trackname as \"Track\", \n    concat(\"<a href=EditSession.php?id=\",S.sessionid,\">\",S.title,\"</a>\") Title,\n    SS.statusname as \"Current<BR>Status\", \n    concat(SEH1.name,\" (\",SEH1.email_address,\")\") as \"Who\", \n    SEC.description as \"What\"\n  FROM\n      Sessions S, \n      Tracks T, \n      SessionStatuses SS, \n      SessionEditHistory SEH1, \n      SessionEditCodes SEC, \n      (SELECT\n           SEH3.sessionid, \n           Max(SEH3.timestamp) as timestamp \n         FROM\n             SessionEditHistory SEH3 \n         GROUP BY\n           SEH3.sessionid) SEH2 \n  WHERE\n    S.trackid=T.trackid and\n    S.sessionid = SEH1.sessionid and\n    S.sessionid = SEH2.sessionid and\n    SEH1.timestamp = SEH2.timestamp and\n    S.statusid = SS.statusid and\n    SEH1.sessioneditcode = SEC.sessioneditcode and\n    S.statusid >= 1 and\n    S.statusid <= 7 \n  ORDER BY\n    SEH2.timestamp Desc'),(44,'intvschedpanelnames','Interest v Schedule - sorted by pubsname','<P>Show who is interested in each panel and if they are assigned to it.  Also show the scheduling information (sorted by pubsname).</P>\n','','SELECT \n    concat(X.pubsname, \'(\', X.badgeid, \')\') as Pubsname,\n    X.trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',X.sessionid,\'>\', X.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',X.sessionid,\'>\',X.title,\'</a>\') Title,\n    X.rank as Rank,\n    (if (X.assigned is NULL,\' \',\'yes\')) as \'Asgn?\', \n    (if (moderator is NULL or moderator=0,\' \',\'yes\')) as \'Mod?\', \n    concat(\'<a href=MaintainRoomSched.php?selroom=\',Y.roomid,\'>\', Y.roomname,\'</a>\') as Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Y.starttime),\'%a %l:%i %p\') as \'Start Time\' \n    FROM \n        (SELECT\n             PI.badgeid,\n             PI.pubsname,\n             PI.sessionid,\n             POS.sessionid as assigned,\n             moderator,\n             title,\n             trackname,\n             rank\n           FROM\n               (SELECT\n                    T.trackname,\n                    S.title,\n                    S.sessionid,\n                    P.badgeid,\n                    P.pubsname,\n                    PSI.rank\n                 FROM\n                     Tracks T,\n                     ParticipantSessionInterest PSI, \n                     Participants P,\n                     Sessions S\n                 WHERE\n                   S.trackid=T.trackid and\n                   P.interested=1 and\n                   P.badgeid=PSI.badgeid and\n                   S.sessionid=PSI.sessionid ) PI \n             LEFT JOIN ParticipantOnSession POS on POS.badgeid=PI.badgeid and POS.sessionid=PI.sessionid) X \n      LEFT JOIN (SELECT\n                     SCH.starttime,\n		     R.roomname,\n		     R.roomid,\n		     SCH.sessionid \n                   FROM\n                       Schedule SCH,\n                       Rooms R \n                   WHERE\n                     R.roomid=SCH.roomid) as Y on X.sessionid=Y.sessionid \n  ORDER BY\n    substring_index(pubsname,\' \',-1),\n    pubsname,\n    trackname'),(45,'conflictnomod','Conflict Report - Sessions with no moderator','<P>Panels need a moderator.  Other activities may not.  Think before you jump.  (This is limited to items in the schedule which have at least one participant.)</P>\n','<P>Click on the session id to edit the session\'s moderator.</P>\n','SELECT\n    typename as \'Type\',\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>(\', S.sessionid,\')</a> \',title) as \'Title\'\n  FROM\n      Sessions S \n    JOIN \n      Types T USING (typeid) \n    LEFT JOIN\n      (SELECT\n           sessionid,                \n           count(*) as parts,\n           sum(if(moderator=1,1,0)) as mods\n         FROM ParticipantOnSession\n         GROUP BY sessionid) X USING (sessionid)\n  WHERE \n    X.parts>0 AND\n    X.mods=0\n  ORDER BY\n    S.sessionid'),(46,'prelimschedbrief','Preliminary Schedule','<P>Preliminary panel schedule.</P>\n','<P>Please keep in mind that is it still changing as\n','SELECT\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',  \n    trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title\n  FROM\n      Sessions S, \n      Schedule SCH, \n      Tracks T \n  WHERE\n    T.trackid=S.trackid and\n    SCH.sessionid = S.sessionid and\n    trackname not in $removed_tracks\n  ORDER BY\n    T.trackname, \n    SCH.starttime'),(47,'thsessionservices','Session Services','<P>Which Session needs which Services? (Sorted by room then time.)</P>\n','','SELECT\n    Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    Trackname, \n    X.Sessionid,\n    concat(\'<a href=EditSession.php?id=\',X.sessionid,\'>\',X.title,\'</a>\') Title,\n    X.Servicename \n  FROM\n      (SELECT\n           trackname, \n           S.sessionid, \n           title,\n           duration,\n           servicename \n        FROM\n            Tracks T, \n            Sessions S, \n            SessionHasService SF, \n            Services F \n        WHERE\n          T.trackid=S.trackid and\n          S.sessionid=SF.sessionid and\n          F.serviceid=SF.serviceid) X, \n      Rooms R, \n      Schedule SCH\n  WHERE\n    X.sessionid=SCH.sessionid and\n    SCH.roomid=R.roomid \n  ORDER BY\n    roomname, \n    starttime;'),(48,'conflictnotattending','Conflict Report - not attending people that are on panels.','<P>If the interested field is set to 2, pull them off the panel.  If the interested field is set otherwise, escalate to a div-head.</P>\n','','SELECT\n    P.badgeid, \n    P.pubsname, \n    S.sessionid, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as sessionid,\n    P.interested \n  FROM\n      Sessions S, \n      Schedule SCH, \n      Participants P, \n      ParticipantOnSession POS \n  WHERE\n    P.badgeid=POS.badgeid and\n    SCH.sessionid=S.sessionid and\n    SCH.sessionid=POS.sessionid and\n    P.interested!=1\n  ORDER BY\n    P.badgeid'),(49,'progpanelmerge','Full Participant Schedule for the Program Packet Merge','<P>sessionid, room, starttime, duration, (badgeid, pubsname, mod)</P>\n','','SELECT\n    POS.sessionid, \n    roomname, \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') starttime, \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    trackname, \n    title, \n    group_concat( pubsname, \' MAKEMEACOMMA \', if(moderator=1,\'M\',\'\'), \' MAKEMEACOMMA \' order by moderator, pubsname) panelinfo,\n    pubstatusname\n  FROM \n      Rooms R, \n      Sessions S, \n      Schedule SCH \n    LEFT JOIN ParticipantOnSession POS on SCH.sessionid=POS.sessionid\n    LEFT JOIN CongoDump C on C.badgeid=POS.badgeid\n    LEFT JOIN Participants P on P.badgeid=POS.badgeid,\n      Tracks T,\n      PubStatuses PUB\n  WHERE\n    S.sessionid=SCH.sessionid and\n    POS.sessionid=S.sessionid and\n    T.trackid=S.trackid and\n    SCH.roomid = R.roomid and\n    SCH.sessionid = S.sessionid and\n    PUB.pubstatusid = S.pubstatusid\n  GROUP BY\n    POS.sessionid \n  ORDER BY\n    pubsname'),(50,'conflictnoannvol','Conflict Report - Sessions with no volunteer or announcer','<P>Classes and Panels need a volunteer and announcer.  Others may not.  Think before you jump.</P>\n','<P>Click on the session id to edit the session\'s volunteer or announcer.</P>\n','SELECT\n    typename as \'Type\',\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>(\', S.sessionid,\')</a> \',title) as \'Title\', \n    concat(DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\')) as \'StartTime\',\n    GROUP_CONCAT(DISTINCT if((POS.volunteer=1),P.pubsname,\'\') SEPARATOR \' \') as \'Volunteer\', \n    GROUP_CONCAT(DISTINCT if((POS.announcer=1),P.pubsname,\'\') SEPARATOR \'\') as \'Announcer\' \n  FROM\n      Sessions S \n    LEFT JOIN\n      ParticipantOnSession POS on S.sessionid=POS.sessionid, \n      Types T, \n      Participants P,\n      Schedule SCH\n  WHERE \n    S.sessionid=SCH.sessionid and\n    T.typeid=S.typeid AND \n    P.badgeid=POS.badgeid AND\n    S.statusid=3\n  GROUP BY\n    S.sessionid\n  ORDER BY\n    typename,\n    SCH.starttime,\n    S.sessionid'),(51,'congoinfo','Congo Info (all info).','<P>Shows the information retreived from Congo.</P>\n','','SELECT\n    badgename,\n    badgeid,\n    regtype,\n    lastname,\n    firstname,\n    phone,\n    email,\n    postaddress\n  FROM\n      CongoDump\n  WHERE\n    badgeid is not NULL\n  ORDER BY\n    badgename'),(52,'conflictfewassigned','Conflict Report - Sessions with under 4 people assigned','<P>Not all of these are actually conflict, you want to think about them.</P>\n','','SELECT\n    trackname,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    title,\n    count(badgeid) assigned\n  FROM\n          Sessions S\n      LEFT JOIN ParticipantOnSession POS on S.sessionid=POS.sessionid,\n      Tracks T\n  WHERE\n    T.trackid=S.trackid and\n    S.statusid=3 AND\n    POS.volunteer=0 AND\n    POS.announcer=0\n  GROUP BY\n    sessionid having assigned<4\n  ORDER BY\n    trackname,\n    S.sessionid'),(53,'assignedsessioncounts','Assigned Session by Session (counts)','<P>How many people are assinged to each session? (Sorted by track then sessionid.)</P>\n','','SELECT \n    Trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',Sessions.sessionid,\'>\', Sessions.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',Sessions.sessionid,\'>\',Sessions.title,\'</a>\') Title,\n    Statusname, \n    count(badgeid) as NumAssigned \n  FROM\n      ParticipantOnSession, \n      Sessions, \n      Tracks, \n      SessionStatuses  \n  WHERE\n    ParticipantOnSession.sessionid=Sessions.sessionid and\n    Tracks.trackid=Sessions.trackid and\n    Sessions.statusid=SessionStatuses.statusid\n  GROUP BY\n    sessionid \n  ORDER BY\n    trackname,\n    sessionid'),(54,'assignedmoderator','Assigned Moderator by Session','<P>Shows who has been assigned to moderate each session (sorted by track then sessionid).</P>\n','','SELECT\n    Trackname,\n    P.Pubsname, \n    P.Badgeid, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',title,\'</a>\') as Title,\n    Statusname \n  FROM\n      ParticipantOnSession, \n      Sessions S, \n      Participants P,\n      Tracks, \n      SessionStatuses \n  WHERE\n    ParticipantOnSession.badgeid=P.badgeid and\n    ParticipantOnSession.sessionid=S.sessionid and\n    Tracks.trackid=S.trackid and\n    S.statusid=SessionStatuses.statusid and\n    moderator=1 \n  ORDER BY\n    trackname, \n    S.sessionid'),(55,'programcomment','Overall Program Commentary','<P>Comments recorded overall for Programming.  <A HREF=\"CommentOnProgramming.php\">(Add a comment)</A></P>\n','','SELECT\n    COP.commenter,\n    COP.comment\n  FROM\n      CommentsOnProgramming COP'),(56,'palm','CSV -- Report for uploading to PDA\'s','<P>StartTime, Duration, Room, Track, Title, Participants</P>\n','','SELECT\n            DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a\') AS Day,\n            DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%l:%i %p\') AS \'Start Time\',\n            left(duration,5) AS Duration,\n	    roomname AS \'Room Name\',\n            trackname as Track,\n            Title,\n            if(group_concat(pubsname) is NULL,\'\',group_concat(pubsname SEPARATOR \', \')) as Participants\n    FROM\n            Rooms R\n       JOIN Schedule SCH USING (roomid)\n       JOIN Sessions S USING (sessionid)\n  LEFT JOIN Tracks T USING (trackid)\n  LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid\n  LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n    WHERE\n            S.pubstatusid = 2\n    GROUP BY\n            SCH.sessionid\n    ORDER BY\n            SCH.starttime, R.roomname'),(57,'conflictschedsched','Conflict Report - Schedule but not','<P>These are sessions that are either in the grid and not set as scheduled or they are set as scheduled and not in the grid.</P>\n','','SELECT\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    if ((SCH.sessionid is NULL),\'no\',\'yes\') in_grid, \n    if(statusid=3,\'yes\',\'no\') status_sched \n  FROM\n      Sessions S \n    LEFT JOIN Schedule SCH on S.sessionid=SCH.sessionid \n  HAVING\n    (in_grid=\'no\' and status_sched=\'yes\') or\n    (in_grid=\'yes\' and status_sched=\'no\')'),(58,'allpartschedbyparttime','Full Participant Schedule by time','<P>The schedule sorted by participant.</P>\n','','SELECT \n    if ((P.pubsname is NULL), \' \', concat(\' \',P.pubsname,\' (\',P.badgeid,\')\')) as \'Participants\', \n    if ((moderator=1),\'moderator\', \' \') as Moderator,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,\n    Function, \n    Trackname,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title\n  FROM \n      Sessions S\n    JOIN Schedule SCH USING (sessionid)\n    JOIN Rooms R USING (roomid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid \n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid \n    LEFT JOIN Tracks T ON T.trackid=S.trackid \n  WHERE\n    S.typeid not in (10, 12)\n  ORDER BY\n    cast(P.badgeid as unsigned),\n    SCH.starttime'),(59,'thsessionfeature','Session Features','<P>Which Session needs which Features? (Sorted by room then time.)</P>\n','','SELECT\n    Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n      Trackname, \n      X.Sessionid,\n      concat(\'<a href=EditSession.php?id=\',X.sessionid,\'>\',X.title,\'</a>\') Title,\n      X.Featurename \n    FROM\n        (SELECT\n	     duration,\n             trackname,\n             S.sessionid,\n             title,\n             featurename \n           FROM\n               Sessions S, \n               SessionHasFeature SF, \n               Features F, \n               Tracks T \n           WHERE\n             T.trackid=S.trackid and\n             S.sessionid=SF.sessionid and\n             F.featureid=SF.featureid) X,\n        Rooms R, \n        Schedule SCH \n  WHERE\n    X.sessionid=SCH.sessionid and\n    SCH.roomid=R.roomid \n  ORDER BY\n    roomname, \n    starttime'),(60,'kidfasttracksched','FastTrack Schedule (easy troubleshooting)','<P>What is happening in FastTrack.</P>\n','','SELECT\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\') as \'Start Time\',\n    CASE\n      WHEN HOUR(S.duration) < 1 THEN\n        concat(date_format(S.duration,\'%i\'),\'min\')\n      WHEN MINUTE(S.duration)=0 THEN\n        concat(date_format(S.duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(S.duration,\'%k\'),\'hr \',date_format(S.duration,\'%i\'),\'min\')\n      END AS Duration,\n    R.roomname,\n    S.title,\n    group_concat(concat(P.pubsname,\' (\',P.badgeid,\')\') SEPARATOR \', \') as \'Participants\'\n  FROM\n      Schedule SCH\n    JOIN Rooms R USING(roomid)\n    JOIN Sessions S USING(sessionid)\n    JOIN Tracks TR USING(trackid)\n    LEFT JOIN ParticipantOnSession POS USING(sessionid)\n    LEFT JOIN Participants P USING(badgeid)\n  WHERE\n    TR.trackname=\'FAST TRACK\'\n  GROUP BY\n    SCH.scheduleid\n  ORDER BY\n    SCH.starttime'),(61,'participantroles','Participant Roles','<P>What Roles is a participant willing to take?</P>\n','','SELECT\n    P.badgeid,\n    P.pubsname,\n    rolename \n  FROM\n      Participants P,\n      ParticipantHasRole PR,\n      Roles \n  WHERE\n    P.badgeid=PR.badgeid and\n    PR.roleid=Roles.roleid \n  ORDER BY\n    cast(P.badgeid as unsigned)'),(62,'finalschedbreifdiff','Schedule - brief diff','<P>Recent changes to the PUBLIC Panel, Events, Film, Anime, Video and Arisia TV schedule.</P>\n','<P>This has a hard-coded \"date\" $change_since_date from which it determines \"recent\".  This should probably be a vector value from today.','SELECT\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    roomname, \n    trackname, \n    title,\n    S.ts as changed\n  FROM\n      Sessions S, \n      Schedule SCH, \n      Tracks T, \n      Rooms R\n  WHERE\n    R.roomid=SCH.roomid and\n    T.trackid=S.trackid and\n    SCH.sessionid = S.sessionid and\n    S.pubstatusid = 2 and\n    S.ts > $change_since_date\n  ORDER BY S.ts, \n    SCH.starttime,\n    T.trackname'),(63,'allassigned','All Sessions that are assigned','<P>Who is assigned to what.</P>\n','','SELECT\n    trackname as Trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    group_concat(\' \',P.pubsname,\' (\',P.badgeid,\')\') as \'Participants\',\n    GROUP_CONCAT(DISTINCT if((POS.moderator=1),P.pubsname,\'\') SEPARATOR \' \') as \'Moderator\', \n    GROUP_CONCAT(DISTINCT if((POS.volunteer=1),P.pubsname,\'\') SEPARATOR \' \') as \'Volunteer\', \n    GROUP_CONCAT(DISTINCT if((POS.announcer=1),P.pubsname,\'\') SEPARATOR \'\') as \'Announcer\' \n  FROM\n      Sessions S, \n      Participants P, \n      ParticipantOnSession POS, \n      Tracks \n  WHERE\n    P.badgeid=POS.badgeid AND\n    POS.sessionid=S.sessionid AND\n    Tracks.trackid=S.trackid \n  GROUP BY\n    S.sessionid \n  ORDER BY\n    Trackname,\n    S.sessionid'),(64,'participantnumpanel','Participant Number of Pannels and Constraints','<P>How many panels does each person want to be on and the other constraints they indicated.</P>\n','','SELECT\n    P.badgeid,\n    P.pubsname,\n    interested,\n    Friday,\n    Saturday,\n    Sunday,\n    Monday,\n    maxprog,\n    preventconflict,\n    otherconstraints\n  FROM\n      ParticipantAvailability PA, Participants P\n    LEFT JOIN (SELECT\n	           badgeid,\n	           sum(if(day=1,maxprog,0)) as Friday,\n                   sum(if(day=2,maxprog,0)) as Saturday,\n                   sum(if(day=3,maxprog,0)) as Sunday,\n	           sum(if(day=4,maxprog,0)) as Monday\n                 FROM\n	             ParticipantAvailabilityDays\n                 GROUP BY badgeid) PADQ ON P.badgeid = PADQ.badgeid\n  WHERE\n    P.badgeid=PA.badgeid\n  ORDER BY\n    cast(P.badgeid as unsigned)'),(65,'conflictroomdup','Conflict Report - Room Schedule Overlaps.','<P>Find any pairs of sessions whose times overlap in the same room.</P>\n','','SELECT\n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,\n    SA.title as \'Title A\',\n    Asess as \'Sessionid A\',\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Astart),\'%a %l:%i %p\') as \'Start Time A\',\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Aend),\'%a %l:%i %p\') as \'End Time A\',\n    SB.title as \'Title B\',\n    Bsess as \'Sessionid B\',\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Bstart),\'%a %l:%i %p\') as \'Start Time B\',\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',Bend),\'%a %l:%i %p\') as \'End Time B\'\n  FROM\n      Sessions SA,\n      Sessions SB,\n      Rooms R,\n      (SELECT\n           A.roomid,\n           A.sessionid as Asess,\n           A.starttime as Astart,\n           ADDTIME(A.starttime, SA.duration) as Aend,\n           B.sessionid as Bsess,\n           B.starttime as Bstart,\n           ADDTIME(B.starttime, SB.duration) as Bend\n         FROM\n             Schedule A,\n             Schedule B,\n             Sessions SA,\n             Sessions SB\n         WHERE\n           A.roomid = B.roomid and\n           A.starttime<=B.starttime and\n           ADDTIME(A.starttime, SA.duration)>B.starttime and\n           A.sessionid<>B.sessionid and\n           A.sessionid=SA.sessionid and\n           B.sessionid=SB.sessionid) as Foo\n  WHERE\n    Foo.roomid = R.roomid and\n    Foo.Asess=SA.sessionid and\n    Foo.Bsess=SB.sessionid'),(66,'participantcomment','Participant Commentary','<P>Comments recorded for Participants. <A HREF=\"CommentOnParticipants.php\">(Add a comment)</A></P>\n','','SELECT\n    P.pubsname,\n    COP.commenter,\n    COP.comment\n  FROM\n      Participants P \n    JOIN\n      CommentsOnParticipants COP USING (badgeid)\n  ORDER BY\n    P.pubsname'),(67,'progannvol','Program Announcers and Volunteers Assigned hours','<P>Prefered name, firstname, lastname, mailing address, count of scheduled sessions.</P>\n','','SELECT\n    P.badgeid, \n    P.pubsname, \n    C.firstname, \n    C.lastname, \n    C.email, \n    SCH.sessioncount as \'Total involvement\', \n    SCH.volcount as \'Volunteer Sessions\',\n    SCH.anncount as \'Announcer Sessions\',\n    (SCH.sessioncount-SCH.volcount-SCH.anncount) as \'Program Sessions\' \n  FROM\n      CongoDump as C,\n      UserHasPermissionRole as UP,\n      Participants as P \n    LEFT JOIN\n      (SELECT\n           POS1.badgeid as badgeid , \n           count(SCH1.sessionid) as sessioncount,\n           sum(if(volunteer=1,1,0)) as volcount,\n           sum(if(announcer=1,1,0)) as anncount\n         FROM\n             ParticipantOnSession POS1, \n             Schedule SCH1, \n             Sessions S, \n             Tracks T \n         WHERE\n           POS1.sessionid=SCH1.sessionid and\n           SCH1.sessionid=S.sessionid and\n           S.trackid=T.trackid \n         GROUP BY\n           POS1.badgeid) as SCH on P.badgeid=SCH.badgeid \n  WHERE \n    UP.permroleid=5 and\n    C.badgeid=P.badgeid and\n    C.badgeid=UP.badgeid\n  GROUP BY\n    (P.badgeid) \n  ORDER BY \n    cast(P.badgeid as unsigned)'),(68,'benpalm','Report for Ben and the palm.','<P>StartTime Duration Room Track Title Participants.</P>\n','','SELECT\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a\') as \'Day\',\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%l:%i %p\') as \'Start Time\',\n    concat(\'(\',left(duration,5),\')\') Length,\n    Roomname,\n    trackname as Track,\n    Title,\n    if(group_concat(pubsname) is NULL,\'\',group_concat(pubsname SEPARATOR \', \')) as \'Participants\'\n  FROM\n      Rooms R\n    JOIN Schedule SCH USING (roomid)\n    JOIN Sessions S USING (sessionid)\n    LEFT JOIN Tracks T USING (trackid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid\n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n  WHERE\n    S.pubstatusid = 2\n  GROUP BY\n    SCH.sessionid\n  ORDER BY\n    SCH.starttime,\n    R.roomname'),(69,'sessionintassncounts','Assigned, Interested and Not-scheduled Report','<P>These are sessions that are in need of a home in the schedule.</P>\n','','SELECT\n    if ((num_int is NULL), 0, num_int) as Intr,\n    if ((num_assigned is NULL), 0, num_assigned) as Assn,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid, \n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',title,\'</a>\') Title,\n    trackname, \n    typename\n  FROM\n      Tracks T, \n      Types Y,\n      Divisions D,\n      Sessions S \n    LEFT JOIN Schedule SCH on S.sessionid=SCH.sessionid \n    LEFT JOIN (SELECT\n                   sessionid, \n                   count(badgeid) as num_assigned \n                 FROM\n	             ParticipantOnSession \n                 GROUP BY\n                   sessionid) A on A.sessionid=S.sessionid \n    LEFT JOIN (SELECT\n                   sessionid, count(badgeid) as num_int \n                 FROM\n	             ParticipantSessionInterest\n                 GROUP BY\n                   sessionid) B on B.sessionid=S.sessionid\n    LEFT JOIN Rooms R on R.roomid=SCH.roomid \n  WHERE\n    T.trackid=S.trackid and\n    Y.typeid=S.typeid and\n    D.divisionid=S.divisionid and\n    D.divisionname = \'Programming\' and\n    SCH.sessionid is NULL\n  HAVING\n    Intr>=4\n  ORDER BY\n    Intr DESC,\n    Assn DESC'),(70,'conflictnotreg','Conflict Report - Not Registered','<P>This is a report of participants sorted by number of panels they are on that are actually running, with some registration information.  It is useful for cons that comp program participants based on a minimum number of panels.  In this case, this report helps make sure people get their comps.  Also, participants who have not earned a comp may need some kind of consideration.</P>\n','','SELECT\n    P.badgeid, \n    P.pubsname, \n    if ((regtype is NULL), \' \', regtype) as \'regtype\', \n    if ((assigned is NULL), \'0\', assigned) as \'assigned\'\n  FROM\n      CongoDump C,\n      Participants P \n    left join (SELECT\n                   POS.badgeid, \n                   count(POS.sessionid) as assigned \n                 FROM\n                     ParticipantOnSession POS,\n                     Schedule S\n                 WHERE\n                   S.sessionid=POS.sessionid \n                 GROUP BY\n                   badgeid) X on P.badgeid=X.badgeid \n  WHERE\n    C.badgeid=P.badgeid and\n    interested!=2 \n  ORDER BY \n    regtype, \n    cast(assigned as unsigned) desc,\n    substring_index(pubsname,\' \',-1)'),(71,'conflictpartatime','Conflict Report - Participants Scheduled Outside Available Times','<P>Show all participant-sessions scheduled outside set of times participant has listed as being available.</P>\n','','SELECT \n    FOO.badgeid, \n    P.pubsname, \n    TR.trackname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',FOO.sessionid,\'>\', FOO.sessionid,\'</a>\') as Sessionid, \n    concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname, \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',FOO.starttime),\'%a %l:%i %p\') as \'Start Time\', \n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',FOO.endtime),\'%a %l:%i %p\') as \'End Time\', \n    FOO.hours as \'Ttl. Hours Avail.\' \n  FROM \n      (SELECT\n           SCHD.badgeid, \n           SCHD.trackid, \n           SCHD.sessionid, \n           SCHD.starttime, \n           SCHD.endtime, \n           SCHD.roomid, \n           PAT.availabilitynum, \n           HRS.hours \n         FROM\n             (SELECT\n                  POS.badgeid, \n                  SCH.sessionid, \n                  SCH.starttime, \n	          SCH.roomid, \n	          ADDTIME(SCH.starttime,S.duration) as endtime, \n	          S.trackid \n                FROM\n                    Schedule SCH, \n                    ParticipantOnSession POS, \n	            Sessions S \n                WHERE\n                  SCH.sessionid = POS.sessionid and\n                  SCH.sessionid = S.sessionid) as SCHD \n           LEFT JOIN ParticipantAvailabilityTimes PAT on SCHD.badgeid = PAT.badgeid and\n             SCHD.starttime>=PAT.starttime and\n             SCHD.endtime<=PAT.endtime \n           LEFT JOIN (SELECT\n                          badgeid,\n                          sum(hour(subtime(endtime,starttime))) as hours \n                        FROM\n                            ParticipantAvailabilityTimes \n                        GROUP BY\n		          badgeid) as HRS on SCHD.badgeid=HRS.badgeid \n                        HAVING\n                          PAT.availabilitynum is null) as FOO, \n    Tracks TR, \n    Participants P, \n    Rooms R \n  WHERE\n    FOO.badgeid = P.badgeid and\n    FOO.trackid = TR.trackid and\n    FOO.roomid = R.roomid \n  HAVING\n    FOO.hours is not NULL \n  ORDER BY\n    cast(FOO.badgeid as unsigned)'),(72,'participantsuggestions','Participant Suggestions','<P>What is did each participant suggest?</P>\n','<P>This form originally had a index of \"DELETEME\" should it be removed?</P>','SELECT\n    P.badgeid,\n    P.pubsname,\n    paneltopics,\n    otherideas,\n    suggestedguests \n  FROM\n      ParticipantSuggestions as PS, \n      Participants as P\n  WHERE\n    P.badgeid=PS.badgeid'),(73,'gameroomshedtime','Gaming Schedule by time then room','<P>Just things in track gaming (gaming and gaming panels).</P>\n','','SELECT\n    roomname,\n    function,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',\n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    trackname,\n    S.sessionid,\n    title,\n    group_concat(\' \', pubsname,\' (\',P.badgeid,\')\') as \'Participants\'\n  FROM\n      Schedule SCH\n    JOIN Sessions S USING (sessionid)\n    JOIN Rooms R USING (roomid)\n    JOIN Tracks USING (trackid)\n    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid\n    LEFT JOIN Participants P ON POS.badgeid=P.badgeid\n  WHERE\n    trackname in (\'Gaming\')\n  GROUP BY\n    SCH.scheduleid\n  ORDER BY\n    SCH.starttime,\n    R.roomname'),(74,'conflictmanyassigned','Conflict Report - Sessions with over 5 people assigned.','<P>Not all of these are actually conflict, you want to think about them.</P>\n','','SELECT\n    Trackname,\n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,\n    Title,\n    count(badgeid) as Assigned\n  FROM\n      Sessions S \n    LEFT JOIN ParticipantOnSession POS on S.sessionid=POS.sessionid,\n      Tracks T \n  WHERE\n    T.trackid=S.trackid and\n    S.statusid=3\n  GROUP BY\n    sessionid HAVING Assigned>5\n  ORDER BY\n    trackname,\n    S.sessionid'),(75,'conflictunknownregtype','Conflict Report - Unknown RegTypes','<P>Congo RegTypes that Zambia does not recognize.</P>\n','','SELECT\n    distinct(C.regtype)\n  FROM\n      CongoDump C \n    LEFT JOIN RegTypes R on C.regtype=R.regtype\n  WHERE\n    R.regtype is NULL and\n    C.regtype is not NULL\n  ORDER BY\n    C.Regtype'),(76,'pubsbio','Pubs - Participant Bio and pubname','<P>Show the badgeid, pubsname and bio for each participant who is on at least one scheduled session.</P>\n','','SELECT\n    P.badgeid,\n    CD.lastname,\n    CD.firstname,\n    CD.badgename,\n    P.pubsname,\n    P.bio\n  FROM\n      Participants P\n    JOIN CongoDump CD USING (badgeid)\n    JOIN (SELECT\n	      DISTINCT(badgeid)\n            FROM\n	        ParticipantOnSession POS,\n                Schedule SCH\n            WHERE\n	      POS.sessionid=SCH.sessionid) as X using (badgeid)\n  ORDER BY\n    IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,\' \',-1)),\n    CD.firstname'),(77,'thsessiontechnotes','Session Tech and Hotel notes','<P>What notes are in on this panel for tech and hotel? (Sorted by room then time.)</P>\n','','SELECT\n    Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start&nbsp;Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    Trackname, \n    S.Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    Servicenotes \n  FROM\n      Tracks T, \n      Sessions S, \n      Rooms R, \n      Schedule SCH \n  WHERE\n    T.trackid=S.trackid and\n    S.sessionid=SCH.sessionid and\n    SCH.roomid=R.roomid and\n    S.servicenotes!=\' \' \n  ORDER BY\n    Roomname, \n    Starttime'),(78,'name','Name Report','<P>Maps badgeid, pubsname, badgename and first and last name together (includes every record in the database regardless of status).</P>\n','','SELECT\n    C.badgeid,\n    P.pubsname,\n    C.badgename,\n    C.lastname,\n    C.firstname \n  FROM\n      CongoDump C,\n      Participants P \n  WHERE\n    C.badgeid=P.badgeid and \n    P.badgeid is not NULL \n  ORDER BY\n    IF(instr(P.pubsname,C.lastname)>0,C.lastname,substring_index(P.pubsname,\' \',-1)),\n    C.firstname'),(79,'thsessionroomsets','Session roomsets','<P>What roomsets are we using (Sorted by Room then Time.)</P>\n','','SELECT\n    Roomname,\n    DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', \n    CASE\n      WHEN HOUR(duration) < 1 THEN\n        concat(date_format(duration,\'%i\'),\'min\')\n      WHEN MINUTE(duration)=0 THEN\n        concat(date_format(duration,\'%k\'),\'hr\')\n      ELSE\n        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')\n      END AS Duration,\n    Trackname, \n    S.Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,\n    Roomsetname \n  FROM\n      RoomSets RS, \n      Tracks T, \n      Sessions S, \n      Rooms R, \n      Schedule SCH \n  WHERE\n    T.trackid=S.trackid and\n    S.sessionid=SCH.sessionid and\n    SCH.roomid=R.roomid and\n    RS.roomsetid=S.roomsetid \n  ORDER BY\n    roomname, \n    starttime'),(80,'kidcount','Participant Kid Count','<P>How many kids did the participants say they are bringing for Fast Track?</P>\n','','SELECT\n    P.Badgeid, \n    Pubsname, \n    Numkidsfasttrack  \n  FROM\n      Participants P, \n      ParticipantAvailability PA \n  WHERE\n      P.badgeid=PA.badgeid\n  ORDER BY\n      Numkidsfasttrack DESC'),(81,'staffmembers','Staff Members','<P>List Staff Members and their privileges.</P>\n','','SELECT\n      badgeid as Badgeid,\n      if(P.pubsname is null or P.pubsname = \'\',concat(firstname,\' \',lastname),P.pubsname) as Name,\n      if (password=\'4cb9c8a8048fd02294477fcb1a41191a\',\'changme\',\'OK\') as Password,\n      group_concat(permrolename SEPARATOR \', \') as Privileges\n    FROM\n        Participants P\n            JOIN CongoDump using (badgeid)\n            JOIN UserHasPermissionRole using (badgeid)\n            JOIN PermissionRoles using (permroleid)\n    WHERE badgeid in \n          (SELECT DISTINCT badgeid FROM UserHasPermissionRole where permroleid=2)\n    GROUP BY badgeid, name, password'),(82,'namechanges','Name Report - Changes','<P>(in progress... try back in a bit). Do these folks want to update thier badgenames?   The pubsname and badgename don\'t match.   Report shows badgeid, pubsname, badgename, firstname and lastname.</P>\n','','SELECT\n    C.badgeid,\n    P.pubsname,\n    C.badgename,\n    C.lastname,\n    C.firstname \n  FROM\n      CongoDump C,\n      Participants P \n  WHERE\n    C.badgeid=P.badgeid and\n    P.badgeid is not NULL \n  ORDER BY\n    P.pubsname and\n    strcmp(C.badgename, P.pubsname) and\n    C.badgename=P.pubsname,\n    P.pubsname'),(83,'conflictnotinter','Conflict Report - people on panels they are not interested in','<P>This can happen two ways: Either someone used the feature at the bottom of the assign page to do this deliberately or the participant removed his or her interest after being assigned.</P>\n','','SELECT\n    POS.Badgeid, \n    P.Pubsname, \n    concat(\'<a href=StaffAssignParticipants.php?selsess=\',POS.sessionid,\'>\', POS.sessionid,\'</a>\') as Sessionid,\n    concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title\n  FROM\n      Sessions S,\n      Participants P, \n      ParticipantOnSession POS\n    left join ParticipantSessionInterest PSI ON POS.badgeid=PSI.badgeid and POS.sessionid=PSI.sessionid \n  WHERE\n    P.badgeid=POS.badgeid and\n    POS.sessionid = S.sessionid and\n    PSI.sessionid is NULL'),(84,'attending','Attending Query (all info)','<P>Shows who has responded and if they are attending.  (Interested, 1=yes, 2=no, 0=did not pick, blank=did not hit save.)</P>\n','','SELECT\n    P.pubsname,\n    P.badgeid,\n    P.interested,\n    P.bestway \n  FROM\n      Participants P \n  ORDER BY\n    P.pubsname'),(85,'progthankyounote','Program Participant Thank you note query','<P>prefered name, firstname, lastname, mailing address, count of scheduled sessions (for only some tracks!)</P>\n','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>\n','SELECT\n    P.badgeid, \n    P.pubsname, \n    C.firstname, \n    C.lastname, \n    C.email, \n    SCH.sessioncount as \'Total involvement\', \n    SCH.volcount as \'Volunteer Sessions\',\n    SCH.anncount as \'Announcer Sessions\',\n    (SCH.sessioncount-SCH.volcount-SCH.anncount) as \'Program Sessions\' \n  FROM\n      CongoDump as C, \n      Participants as P \n    LEFT JOIN (SELECT\n                   POS1.badgeid as badgeid , \n                   count(SCH1.sessionid) as sessioncount,\n                   sum(if(volunteer=1,1,0)) as volcount,\n                   sum(if(announcer=1,1,0)) as anncount\n                 FROM\n                     ParticipantOnSession POS1, \n                     Schedule SCH1, \n                     Sessions S, \n                     Tracks T \n               WHERE POS1.sessionid=SCH1.sessionid and\n                     SCH1.sessionid=S.sessionid and\n                     S.trackid=T.trackid\n               GROUP BY\n                     POS1.badgeid) as SCH on P.badgeid=SCH.badgeid \n  WHERE\n    SCH.sessioncount is not NULL and\n    C.badgeid=P.badgeid \n  GROUP BY\n    (P.badgeid) \n  ORDER BY\n    cast(P.badgeid as unsigned)'),(86,'partpicky','Participants With People to Avoid','<P>Show the badgeid, pubsname and list of people to avoid for each participant who indicated he is attending and listed people with whom he does not want to share a panel.</P>\n','','SELECT\n    PI.badgeid,\n    P.pubsname,\n    PI.nopeople\n  FROM\n      ParticipantInterests PI\n    JOIN Participants P USING (badgeid)\n  WHERE\n    P.interested=1 and\n    (nopeople is not null and nopeople!=\'\')\n  ORDER BY\n    substring_index(pubsname,\' \',-1)'),(87,'pubswhoisonwhich','Pubs - Who is on Which Session','<P>Show the badgeid, pubsname and session info for each participant that are on at least one scheduled session.</P>\n','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>\n','SELECT\n    P.badgeid, \n    P.pubsname, \n    s as Sessions \n  FROM\n      (SELECT \n           distinct(badgeid), \n           group_concat(\' \',POS.sessionid, if (moderator=1,\' (m)\',\'\')) as s\n         FROM\n             ParticipantOnSession POS, \n             Schedule SCH \n         WHERE\n             POS.sessionid=SCH.sessionid \n         GROUP BY\n             badgeid) as X, \n      Participants P\n  WHERE\n    P.badgeid=X.badgeid');
+/*!40000 ALTER TABLE `Reports` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Roles`
+--
+
+DROP TABLE IF EXISTS `Roles`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Roles` (
+  `roleid` int(11) NOT NULL auto_increment,
+  `rolename` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`roleid`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Roles`
+--
+
+LOCK TABLES `Roles` WRITE;
+/*!40000 ALTER TABLE `Roles` DISABLE KEYS */;
+INSERT INTO `Roles` VALUES (1,'Other',-1),(2,'Reading my own works',3),(3,'Autographing',4),(4,'Reading others works',5),(5,'Performing',6),(6,'Running workshops',7),(7,'Leading discussions',8),(8,'Running games',9),(9,'Running a Loungue',10),(10,'Panel Moderator',2),(11,'Improv',11),(12,'Storytelling',12),(13,'Volunteer',13);
+/*!40000 ALTER TABLE `Roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `RoomHasSet`
+--
+
+DROP TABLE IF EXISTS `RoomHasSet`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `RoomHasSet` (
+  `roomid` int(11) NOT NULL default '0',
+  `roomsetid` int(11) NOT NULL default '0',
+  `capacity` int(11) default NULL,
+  PRIMARY KEY  (`roomid`,`roomsetid`),
+  KEY `roomsetid` (`roomsetid`),
+  CONSTRAINT `RoomHasSet_ibfk_1` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`),
+  CONSTRAINT `RoomHasSet_ibfk_2` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `RoomHasSet`
+--
+
+LOCK TABLES `RoomHasSet` WRITE;
+/*!40000 ALTER TABLE `RoomHasSet` DISABLE KEYS */;
+/*!40000 ALTER TABLE `RoomHasSet` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `RoomSets`
+--
+
+DROP TABLE IF EXISTS `RoomSets`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `RoomSets` (
+  `roomsetid` int(11) NOT NULL auto_increment,
+  `roomsetname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`roomsetid`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `RoomSets`
+--
+
+LOCK TABLES `RoomSets` WRITE;
+/*!40000 ALTER TABLE `RoomSets` DISABLE KEYS */;
+INSERT INTO `RoomSets` VALUES (1,'Open/Lounge',15),(2,'Round Table',17),(3,'Classroom',11),(4,'Unspecified',99),(5,'Theater',21),(6,'Self Service',19),(7,'Dance + Chairs',3),(8,'Dance + Tables',5),(9,'Circle of Chairs',1),(10,'Board Seating',30),(11,'Risers + Chairs',7),(12,'Special',40);
+/*!40000 ALTER TABLE `RoomSets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Rooms`
+--
+
+DROP TABLE IF EXISTS `Rooms`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Rooms` (
+  `roomid` int(11) NOT NULL auto_increment,
+  `roomname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  `height` varchar(100) default NULL,
+  `dimensions` varchar(100) default NULL,
+  `area` varchar(100) default NULL,
+  `function` varchar(100) default NULL,
+  `floor` varchar(50) default NULL,
+  `notes` text,
+  `opentime1` time default NULL,
+  `closetime1` time default NULL,
+  `opentime2` time default NULL,
+  `closetime2` time default NULL,
+  `opentime3` time default NULL,
+  `closetime3` time default NULL,
+  PRIMARY KEY  (`roomid`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Rooms`
+--
+
+LOCK TABLES `Rooms` WRITE;
+/*!40000 ALTER TABLE `Rooms` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Rooms` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Schedule`
+--
+
+DROP TABLE IF EXISTS `Schedule`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Schedule` (
+  `scheduleid` int(11) NOT NULL auto_increment,
+  `sessionid` int(11) NOT NULL default '0',
+  `roomid` int(11) NOT NULL default '0',
+  `starttime` time NOT NULL default '00:00:00',
+  PRIMARY KEY  (`scheduleid`),
+  KEY `sessionid` (`sessionid`),
+  KEY `roomid` (`roomid`),
+  CONSTRAINT `Schedule_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `Schedule_ibfk_2` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`)
+) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Schedule`
+--
+
+LOCK TABLES `Schedule` WRITE;
+/*!40000 ALTER TABLE `Schedule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Schedule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Services`
+--
+
+DROP TABLE IF EXISTS `Services`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Services` (
+  `serviceid` int(11) NOT NULL auto_increment,
+  `servicename` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`serviceid`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Services`
+--
+
+LOCK TABLES `Services` WRITE;
+/*!40000 ALTER TABLE `Services` DISABLE KEYS */;
+INSERT INTO `Services` VALUES (1,'DVD Player',3),(2,'VHS Tape Player',21),(3,'Projector (Computer)',9),(4,'CD Player',1),(5,'Sound',17),(6,'TV',19),(7,'Projector (Video)',10),(8,'Food',5),(9,'Flip Chart',4),(10,'Gopher',6),(11,'Lights',7),(12,'Power Strips',8),(13,'Slide Carousel',12),(14,'Risers',11);
+/*!40000 ALTER TABLE `Services` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionEditCodes`
+--
+
+DROP TABLE IF EXISTS `SessionEditCodes`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `SessionEditCodes` (
+  `sessioneditcode` int(11) NOT NULL auto_increment,
+  `description` varchar(40) default NULL,
+  `display_order` int(11) NOT NULL default '1',
+  PRIMARY KEY  (`sessioneditcode`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `SessionEditCodes`
+--
+
+LOCK TABLES `SessionEditCodes` WRITE;
+/*!40000 ALTER TABLE `SessionEditCodes` DISABLE KEYS */;
+INSERT INTO `SessionEditCodes` VALUES (1,'Created in brainstorm',1),(2,'Created in staff create session',2),(3,'Unknown edit',3);
+/*!40000 ALTER TABLE `SessionEditCodes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionEditHistory`
+--
+
+DROP TABLE IF EXISTS `SessionEditHistory`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `SessionEditHistory` (
+  `sessionid` int(11) NOT NULL default '0',
+  `badgeid` varchar(15) default NULL,
+  `name` varchar(40) default NULL,
+  `email_address` varchar(75) default NULL,
+  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `sessioneditcode` int(11) NOT NULL default '0',
+  `statusid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sessionid`,`timestamp`),
+  KEY `FK_SessionEditHistory` (`badgeid`),
+  KEY `FK_SessionEditCodes` (`sessioneditcode`),
+  KEY `FK_SessionEditHistory4` (`statusid`),
+  CONSTRAINT `SessionEditHistory_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionEditHistory_ibfk_2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `SessionEditHistory_ibfk_3` FOREIGN KEY (`sessioneditcode`) REFERENCES `SessionEditCodes` (`sessioneditcode`),
+  CONSTRAINT `SessionEditHistory_ibfk_4` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 8192 kB';
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `SessionEditHistory`
+--
+
+LOCK TABLES `SessionEditHistory` WRITE;
+/*!40000 ALTER TABLE `SessionEditHistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionEditHistory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionHasFeature`
+--
+
+DROP TABLE IF EXISTS `SessionHasFeature`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `SessionHasFeature` (
+  `sessionid` int(11) NOT NULL default '0',
+  `featureid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sessionid`,`featureid`),
+  KEY `featureid` (`featureid`),
+  CONSTRAINT `SessionHasFeature_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionHasFeature_ibfk_2` FOREIGN KEY (`featureid`) REFERENCES `Features` (`featureid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `SessionHasFeature`
+--
+
+LOCK TABLES `SessionHasFeature` WRITE;
+/*!40000 ALTER TABLE `SessionHasFeature` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionHasFeature` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionHasPubChar`
+--
+
+DROP TABLE IF EXISTS `SessionHasPubChar`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `SessionHasPubChar` (
+  `sessionid` int(11) NOT NULL default '0',
+  `pubcharid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sessionid`,`pubcharid`),
+  KEY `Fkey2` (`pubcharid`),
+  CONSTRAINT `Fkey1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `Fkey2` FOREIGN KEY (`pubcharid`) REFERENCES `PubCharacteristics` (`pubcharid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `SessionHasPubChar`
+--
+
+LOCK TABLES `SessionHasPubChar` WRITE;
+/*!40000 ALTER TABLE `SessionHasPubChar` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionHasPubChar` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionHasService`
+--
+
+DROP TABLE IF EXISTS `SessionHasService`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `SessionHasService` (
+  `sessionid` int(11) NOT NULL default '0',
+  `serviceid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sessionid`,`serviceid`),
+  KEY `serviceid` (`serviceid`),
+  CONSTRAINT `SessionHasService_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionHasService_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `Services` (`serviceid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `SessionHasService`
+--
+
+LOCK TABLES `SessionHasService` WRITE;
+/*!40000 ALTER TABLE `SessionHasService` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionHasService` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionStatuses`
+--
+
+DROP TABLE IF EXISTS `SessionStatuses`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `SessionStatuses` (
+  `statusid` int(11) NOT NULL auto_increment,
+  `statusname` varchar(50) default NULL,
+  `validate` tinyint(4) NOT NULL default '0',
+  `may_be_scheduled` tinyint(4) NOT NULL default '0',
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`statusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `SessionStatuses`
+--
+
+LOCK TABLES `SessionStatuses` WRITE;
+/*!40000 ALTER TABLE `SessionStatuses` DISABLE KEYS */;
+INSERT INTO `SessionStatuses` VALUES (1,'Brainstorm',0,0,4),(2,'Vetted',1,1,6),(3,'Scheduled',1,1,14),(4,'Dropped',0,0,18),(5,'Cancelled',0,0,20),(6,'Edit Me',0,0,1),(7,'Assigned',1,1,10),(8,'duplicate',0,0,30),(9,'WasScheduled',0,0,40),(10,'WasNotScheduled',0,0,42);
+/*!40000 ALTER TABLE `SessionStatuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Sessions`
+--
+
+DROP TABLE IF EXISTS `Sessions`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Sessions` (
+  `sessionid` int(11) NOT NULL auto_increment,
+  `trackid` int(11) NOT NULL default '0',
+  `typeid` int(11) NOT NULL default '0',
+  `divisionid` int(11) NOT NULL default '0',
+  `pubstatusid` int(11) default '0',
+  `languagestatusid` int(11) default '1',
+  `pubsno` varchar(50) default NULL,
+  `title` varchar(100) default NULL,
+  `secondtitle` varchar(100) default NULL,
+  `pocketprogtext` text,
+  `progguiddesc` text,
+  `persppartinfo` text,
+  `duration` time default NULL,
+  `estatten` int(11) default NULL,
+  `kidscatid` int(11) NOT NULL default '0',
+  `signupreq` tinyint(1) default NULL,
+  `roomsetid` int(11) NOT NULL default '0',
+  `notesforpart` text,
+  `servicenotes` text,
+  `statusid` int(11) NOT NULL default '0',
+  `notesforprog` text,
+  `warnings` tinyint(1) default NULL,
+  `invitedguest` tinyint(1) default '0',
+  `ts` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`sessionid`),
+  KEY `trackid` (`trackid`),
+  KEY `typeid` (`typeid`),
+  KEY `kidscatid` (`kidscatid`),
+  KEY `roomsetid` (`roomsetid`),
+  KEY `statusid` (`statusid`),
+  KEY `Sessions_ibfk_7` (`divisionid`),
+  KEY `Sessions_ibfk_6` (`pubstatusid`),
+  KEY `languagestatusid` (`languagestatusid`),
+  CONSTRAINT `Sessions_ibfk_1` FOREIGN KEY (`trackid`) REFERENCES `Tracks` (`trackid`),
+  CONSTRAINT `Sessions_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `Types` (`typeid`),
+  CONSTRAINT `Sessions_ibfk_3` FOREIGN KEY (`kidscatid`) REFERENCES `KidsCategories` (`kidscatid`),
+  CONSTRAINT `Sessions_ibfk_4` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`),
+  CONSTRAINT `Sessions_ibfk_5` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`),
+  CONSTRAINT `Sessions_ibfk_6` FOREIGN KEY (`pubstatusid`) REFERENCES `PubStatuses` (`pubstatusid`),
+  CONSTRAINT `Sessions_ibfk_7` FOREIGN KEY (`divisionid`) REFERENCES `Divisions` (`divisionid`),
+  CONSTRAINT `Sessions_ibfk_8` FOREIGN KEY (`languagestatusid`) REFERENCES `LanguageStatuses` (`languagestatusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Sessions`
+--
+
+LOCK TABLES `Sessions` WRITE;
+/*!40000 ALTER TABLE `Sessions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Times`
+--
+
+DROP TABLE IF EXISTS `Times`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Times` (
+  `timeindex` int(11) NOT NULL default '0',
+  `timetext` char(10) default NULL,
+  `display_order` int(11) default NULL,
+  PRIMARY KEY  (`timeindex`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Times`
+--
+
+LOCK TABLES `Times` WRITE;
+/*!40000 ALTER TABLE `Times` DISABLE KEYS */;
+INSERT INTO `Times` VALUES (1,'00:00a',1),(2,'1:00a',2),(3,'2:00a',3),(4,'3:00a',4),(5,'4:00a',5),(6,'5:00a',6),(7,'6:00a',7),(8,'7:00a',8),(9,'8:00a',9),(10,'9:00a',10),(11,'10:00a',11),(12,'11:00a',12),(13,'noon',13),(14,'1:00p',14),(15,'2:00p',15),(16,'3:00p',16),(17,'4:00p',17),(18,'5:00p',18),(19,'6:00p',19),(20,'7:00p',20),(21,'8:00p',21),(22,'9:00p',22),(23,'10:00p',23),(24,'11:00p',24);
+/*!40000 ALTER TABLE `Times` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Tracks`
+--
+
+DROP TABLE IF EXISTS `Tracks`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Tracks` (
+  `trackid` int(11) NOT NULL auto_increment,
+  `trackname` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  `selfselect` tinyint(1) default NULL,
+  PRIMARY KEY  (`trackid`)
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Tracks`
+--
+
+LOCK TABLES `Tracks` WRITE;
+/*!40000 ALTER TABLE `Tracks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Tracks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Types`
+--
+
+DROP TABLE IF EXISTS `Types`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `Types` (
+  `typeid` int(11) NOT NULL auto_increment,
+  `typename` varchar(50) default NULL,
+  `display_order` int(11) default NULL,
+  `selfselect` tinyint(1) default NULL,
+  `htmlcellcolor` varchar(8) NOT NULL default '#FFFFFF',
+  PRIMARY KEY  (`typeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `Types`
+--
+
+LOCK TABLES `Types` WRITE;
+/*!40000 ALTER TABLE `Types` DISABLE KEYS */;
+INSERT INTO `Types` VALUES (1,'Panel',1,1,'#99FF99'),(2,'Class',2,0,'#CC99FF'),(4,'Presentation',4,0,'#33FFFF'),(5,'Author Reading',5,1,'#FFFF66'),(8,'Lounge',7,0,'#99FFFF'),(9,'SIG/BOF/MnG',8,0,'#FFE4C0'),(10,'Social',10,0,'#FFE4C0'),(11,'EVENT',11,0,'#CCCCCC'),(12,'Performance',12,0,'#CCCCCC'),(13,'Set-up',13,0,'#AAAAAA');
+/*!40000 ALTER TABLE `Types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `UserHasPermissionRole`
+--
+
+DROP TABLE IF EXISTS `UserHasPermissionRole`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `UserHasPermissionRole` (
+  `badgeid` varchar(15) NOT NULL default '',
+  `permroleid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`badgeid`,`permroleid`),
+  KEY `FK_UserHasPermissionRole` (`permroleid`),
+  CONSTRAINT `UserHasPermissionRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `UserHasPermissionRole_ibfk_2` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `UserHasPermissionRole`
+--
+
+LOCK TABLES `UserHasPermissionRole` WRITE;
+/*!40000 ALTER TABLE `UserHasPermissionRole` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserHasPermissionRole` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2010-06-11 23:37:50
