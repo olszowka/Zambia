@@ -1,7 +1,7 @@
 <?php
 // Function prepare_db()
 // Opens database channel
-include ('../Local/db_name.php');
+include ('db_name.php');
 
 function prepare_db() {
     global $link;
