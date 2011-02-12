@@ -3,4 +3,4 @@ ALTER TABLE Participants
       ADD COLUMN progbio text AFTER bio,
       ADD COLUMN progeditedbio text AFTER editedbio,
       ADD COLUMN progscndlangbio text AFTER scndlangbio;
-INSERT INTO PatchLog (patchname) VALUES ('32_progguide_additions.sql');
+INSERT INTO PatchLog (patchname) VALUES ('36_progguide_additions.sql');

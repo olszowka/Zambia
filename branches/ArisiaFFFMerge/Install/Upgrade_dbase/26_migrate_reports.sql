@@ -8,7 +8,7 @@ CREATE TABLE `Reports` (
   `reportquery` text,
   PRIMARY KEY  (`reportid`),
   KEY `reportname` (`reportname`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE `PersonalFlow` (
   `pflowid` INT(11) NOT NULL auto_increment,
   `reportid` INT(11) NOT NULL default '0',
@@ -18,7 +18,7 @@ CREATE TABLE `PersonalFlow` (
   PRIMARY KEY  (`pflowid`),
   CONSTRAINT `PersonalFlow_ibfk_1` FOREIGN KEY (`reportid`) REFERENCES `Reports` (`reportid`),
   CONSTRAINT `PersonalFlow_ibfk_2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE `GroupFlow` (
   `gflowid` INT(11) NOT NULL auto_increment,
   `reportid` INT(11) NOT NULL default '0',
@@ -27,7 +27,7 @@ CREATE TABLE `GroupFlow` (
   `phaseid` INT(11) default NULL,
   PRIMARY KEY  (`gflowid`), 
   CONSTRAINT `GroupFlow_ibfk_1` FOREIGN KEY (`reportid`) REFERENCES `Reports` (`reportid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO PatchLog (patchname) VALUES ('26_migrate_reports.sql');
 INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('finalschedbreif','Schedule','<P>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule.</P>
 ','','SELECT

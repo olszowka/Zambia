@@ -4,7 +4,7 @@ CREATE TABLE `BioEditStatuses` (
   `bioeditstatusname` varchar(60) DEFAULT NULL,
   `display_order` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY  (`bioeditstatusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO BioEditStatuses
         (bioeditstatusid,bioeditstatusname,display_order)
     VALUES

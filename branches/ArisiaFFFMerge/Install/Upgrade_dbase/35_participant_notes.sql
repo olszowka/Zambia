@@ -10,5 +10,5 @@ CREATE TABLE `NotesOnParticipants` (
   KEY `rbadgeid` (`rbadgeid`),
   CONSTRAINT `NotesOnParticipants_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `NotesOnParticipants_ibfk_2` FOREIGN KEY (`rbadgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-INSERT INTO PatchLog (patchname) VALUES ('31_participant_notes.sql');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO PatchLog (patchname) VALUES ('35_participant_notes.sql');
