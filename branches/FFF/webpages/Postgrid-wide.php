@@ -222,7 +222,7 @@ if ($_GET["csv"]=="y") {
   $pdf->SetTitle('Grid');
   $pdf->SetSubject('Programming Grid');
   $pdf->SetKeywords('Zambia, Presenters, Volunteers, Programming, Grid');
-  $pdf->SetHeaderData($logo, 70, CON_NAME, "nelaonline.org/Zambia-FFF36");
+  $pdf->SetHeaderData($logo, 70, CON_NAME, CON_URL);
   $pdf->setHeaderFont(Array("helvetica", '', 10));
   $pdf->setFooterFont(Array("helvetica", '', 8));
   $pdf->SetDefaultMonospacedFont("courier");

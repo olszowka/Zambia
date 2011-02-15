@@ -41,7 +41,7 @@ $pdf->SetAuthor('Programming Team');
 $pdf->SetTitle('Personal Schedule Information');
 $pdf->SetSubject('Schedules for each individual.');
 $pdf->SetKeywords('Zambia, Presenters, Volunteers, Schedules');
-$pdf->SetHeaderData($logo, 70, CON_NAME, "nelaonline.org/Zambia-FFF36");
+$pdf->SetHeaderData($logo, 70, CON_NAME, CON_URL);
 $pdf->setHeaderFont(Array("helvetica", '', 10));
 $pdf->setFooterFont(Array("helvetica", '', 8));
 $pdf->SetDefaultMonospacedFont("courier");

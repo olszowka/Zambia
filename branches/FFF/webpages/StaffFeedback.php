@@ -126,7 +126,7 @@ $pdf->SetAuthor('Programming Team');
 $pdf->SetTitle('Volunteer Introduction Sheets');
 $pdf->SetSubject('Introductions for the Classes and Panels');
 $pdf->SetKeywords('Zambia, Presenters, Volunteers, Introductions, Intros');
-$pdf->SetHeaderData($logo, 70, CON_NAME, "nelaonline.org/Zambia-FFF36");
+$pdf->SetHeaderData($logo, 70, CON_NAME, CON_URL);
 $pdf->setHeaderFont(Array("helvetica", '', 10));
 $pdf->setFooterFont(Array("helvetica", '', 8));
 $pdf->SetDefaultMonospacedFont("courier");

@@ -113,7 +113,7 @@ if ($_GET["csv"]=="y") {
   $pdf->SetTitle('Logistics Grid');
   $pdf->SetSubject('Logistics Grid');
   $pdf->SetKeywords('Zambia, Rooms, Logistics, Services, Features, Tech Notes, Grid');
-  $pdf->SetHeaderData($logo, 70, CON_NAME, "nelaonline.org/Zambia-FFF36");
+  $pdf->SetHeaderData($logo, 70, CON_NAME, CON_URL);
   $pdf->setHeaderFont(Array("helvetica", '', 10));
   $pdf->setFooterFont(Array("helvetica", '', 8));
   $pdf->SetDefaultMonospacedFont("courier");

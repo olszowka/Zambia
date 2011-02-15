@@ -41,7 +41,7 @@ $pdf->SetAuthor('Programming Team');
 $pdf->SetTitle('Welcome Letters');
 $pdf->SetSubject('Welcome Letters for our Participants');
 $pdf->SetKeywords('Zambia, Presenters, Volunteers, Welcome Letters');
-$pdf->SetHeaderData($logo, 70, CON_NAME, "nelaonline.org/Zambia-FFF36");
+$pdf->SetHeaderData($logo, 70, CON_NAME, CON_URL);
 $pdf->setHeaderFont(Array("helvetica", '', 10));
 $pdf->setFooterFont(Array("helvetica", '', 8));
 $pdf->SetDefaultMonospacedFont("courier");
