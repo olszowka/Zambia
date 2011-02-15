@@ -3,6 +3,7 @@ require_once('PostingCommonCode.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
+$ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="Bios.php";
@@ -82,7 +83,9 @@ for ($i=1; $i<=$elements; $i++) {
     if ($element_array[$i]['Bio'] != ' ') {
       echo sprintf("%s",$element_array[$i]['Bio']);
     }
-    echo sprintf(" <A HREF=\"PostScheduleIcal.php?pubsname=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['pubsname']);
+    if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
+      echo sprintf(" <A HREF=\"PostScheduleIcal.php?pubsname=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['pubsname']);
+    }
   }
   echo sprintf("<DT>%s",$element_array[$i]['Title']);
   if ($element_array[$i]['Subtitle'] !='') {

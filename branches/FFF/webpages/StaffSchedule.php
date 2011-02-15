@@ -7,6 +7,7 @@ if (may_I("Staff")) {
  }
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+$ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="StaffSchedule.php";
