@@ -41,7 +41,6 @@ function SubmitCommentOnSessions () {
     $commenter = $_POST["commenter"];
     $comment = $_POST["comment"];
     $sessionid = $_POST["sessionid"];
-    $title = stripslashes($_POST["title"]);
     $query = "INSERT INTO CommentsOnSessions (sessionid,rbadgeid,commenter,comment) VALUES ('";
     $query.=$sessionid."','";
     $query.=$_SESSION['badgeid']."','";
