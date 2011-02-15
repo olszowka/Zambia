@@ -9,11 +9,11 @@ require_once('../../tcpdf/config/lang/eng.php');
 require_once('../../tcpdf/tcpdf.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+$logo=CON_LOGO; // make it a variable so it can be substituted
 
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="WelcomeLettersPrint.php";
 $title="Welcome Letters Printing";
-$logo="LogoHeader.gif";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
 

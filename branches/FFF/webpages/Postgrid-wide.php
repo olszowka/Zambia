@@ -3,6 +3,7 @@ require_once('PostingCommonCode.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
+$logo=CON_LOGO; // make it a variable so it can be substituted
 
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="Postgrid-wide.php";
@@ -215,7 +216,6 @@ if ($_GET["csv"]=="y") {
  } elseif ($_GET["print_p"]=="y") {
   require_once('../../tcpdf/config/lang/eng.php');
   require_once('../../tcpdf/tcpdf.php');
-  $logo="LogoHeader.gif";
   $pdf = new TCPDF('l', 'mm', 'letter', true, 'UTF-8', false);
   $pdf->SetCreator('Zambia');
   $pdf->SetAuthor('Programming Team');

@@ -15,7 +15,12 @@ $description="<P>Schedule for all sessions.</P>\n";
 $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
 $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>, the track name to visit the particular\n";
 $additionalinfo.="<A HREF=\"StaffTracks.php\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n"; 
-$additionalinfo.="<P>Click on the (iCal) tag to download the iCal calendar for the particular activity you want added to your calendar.</P>\n";
+if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
+  $additionalinfo.="<P>Click on the (iCal) tag to download the iCal calendar for the particular activity you want added to your calendar.</P>\n";
+ }
+if (strtotime($ConStartDatim) < time()) {
+  $additionalinfo.="<P>Click on the (Feedback) tag to give us feedback on a particular scheduled event.</P>\n";
+ }
 
 /* This query grabs everything necessary for the schedule to be printed. */
 if (strtoupper(DOUBLE_SCHEDULE)=="TRUE") {
@@ -37,6 +42,7 @@ SELECT
     concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
     S.secondtitle AS Subtitle,
     concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
+    concat('<A HREF=StaffFeedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
     concat(S.progguiddesc,'</P>') as 'Web Description',
     concat(S.pocketprogtext,'</P>') as 'Book Description'
   FROM
@@ -74,6 +80,7 @@ SELECT
     concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
     S.secondtitle AS Subtitle,
     concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
+    concat('<A HREF=StaffFeedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
     concat(S.progguiddesc,'</P>') as 'Web Description',
     concat(S.pocketprogtext,'</P>') as 'Book Description'
   FROM
@@ -120,7 +127,12 @@ for ($i=1; $i<=$elements; $i++) {
   if ($element_array[$i]['Roomname']) {
     echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Roomname']);
   }
-  echo sprintf("&mdash; %s",$element_array[$i]['iCal']);
+  if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
+    echo sprintf("&mdash; %s",$element_array[$i]['iCal']);
+  }
+  if (strtotime($ConStartDatim) < time()) {
+    echo sprintf("&mdash; %s",$element_array[$i]['Feedback']);
+  }
   if ($_SESSION['role']=="Participant") {
     echo sprintf("</DT>\n<DD><P>%s",$element_array[$i]['Web Description']);
   } else {

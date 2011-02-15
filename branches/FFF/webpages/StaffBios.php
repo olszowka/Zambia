@@ -8,15 +8,20 @@ if (may_I("Staff")) {
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
-## LOCALIZATIONS
+// LOCALIZATIONS
 $_SESSION['return_to_page']="StaffBios.php";
 $title="Bios for Presenters";
 $description="<P>List of all Presenters biographical information.</P>\n";
 $additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
 $additionalinfo.="the time to visit the <A HREF=\"StaffSchedule.php\">timeslot</A>, the track name to visit the particular\n";
 $additionalinfo.="<A HREF=\"StaffTracks.php\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
-$additionalinfo.="<P>To get an iCal calendar of all the classes of this Presenter, click on the (Fan iCal) after their\n";
-$additionalinfo.="Bio entry, or the (iCal) after the particular activity, to create a calendar for just that activity.</P>\n";
+if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
+  $additionalinfo.="<P>To get an iCal calendar of all the classes of this Presenter, click on the (Fan iCal) after their\n";
+  $additionalinfo.="Bio entry, or the (iCal) after the particular activity, to create a calendar for just that activity.</P>\n";
+ }
+if (strtotime($ConStartDatim) < time()) {
+  $additionalinfo.="<P>Click on the (Feedback) tag to give us feedback on a particular scheduled event.</P>\n";
+ }
 
 /* This complex query grabs the name, class information, editedbio, and progeditedbio (if they exist)
  Most, if not all of the formatting is done within the query, as opposed to in
@@ -39,6 +44,7 @@ SELECT
       END AS Duration,
     R.roomname as Roomname,
     concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
+    concat('<A HREF=StaffFeedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
     if ((P.editedbio is NULL),' ',P.editedbio) as Bio,
     if ((P.progeditedbio is NULL),' ',P.progeditedbio) as PubsBio,
     P.pubsname,
@@ -93,7 +99,9 @@ for ($i=1; $i<=$elements; $i++) {
 	echo sprintf("%s",$element_array[$i]['PubsBio']);
       }
     }
-    echo sprintf(" <A HREF=\"MyScheduleIcal.php?badgeid=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['badgeid']);
+    if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
+      echo sprintf(" <A HREF=\"MyScheduleIcal.php?badgeid=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['badgeid']);
+    }
   }
   echo sprintf("<DT>%s",$element_array[$i]['Title']);
   if ($element_array[$i]['Subtitle'] !='') {
@@ -114,11 +122,12 @@ for ($i=1; $i<=$elements; $i++) {
   if ($element_array[$i]['Roomname']) {
     echo sprintf("&mdash; <i>%s</i>",$element_array[$i]['Roomname']);
   }
-  echo sprintf("&mdash; %s</DT>\n",$element_array[$i]['iCal']);
+  if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
+    echo sprintf("&mdash; %s",$element_array[$i]['iCal']);
+  }
+  if (strtotime($ConStartDatim) < time()) {
+    echo sprintf("&mdash; %s",$element_array[$i]['Feedback']);
+  }
  }
-if ($_SESSION['role']=="Participant") {
-  participant_footer();
- } else {
-  staff_footer();
- }
+correct_footer();
 

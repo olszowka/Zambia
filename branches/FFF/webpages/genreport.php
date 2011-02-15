@@ -186,7 +186,7 @@ EOD;
     } elseif ($_GET["print_p"]=="y") {
         require_once('../../tcpdf/config/lang/eng.php');
         require_once('../../tcpdf/tcpdf.php');
-	$logo="LogoHeader.gif";
+	$logo=CON_LOGO;
 	$pdf = new TCPDF('p', 'mm', 'letter', true, 'UTF-8', false);
 	$pdf->SetCreator('Zambia');
 	$pdf->SetAuthor('Programming Team');

@@ -1,16 +1,21 @@
 <?php
-require_once('StaffCommonCode.php');
+require_once('CommonCode.php');
+if (may_I("Staff")) {
+  require_once('StaffCommonCode.php');
+  } else {
+  require_once('PartCommonCode.php');
+  }
 require_once('../../tcpdf/config/lang/eng.php');
 require_once('../../tcpdf/tcpdf.php');
 
 /* Global Variables */
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+$logo=CON_LOGO; // make it a variable so it can be substituted
 
 // LOCALIZATIONS
 $NumOfColumns=3; // Number of columns at the top of the page.
-$_SESSION['return_to_page']="Feedback.php";
-$logo="LogoHeader.gif";
+$_SESSION['return_to_page']="StaffFeedback.php";
 $print_p=$_GET['print_p'];
 $formstring="";
 
@@ -91,10 +96,10 @@ if ($selday=="Friday") {
   topofpagereport($title,$description,$additionalinfo);
 ?>
 <UL>
-  <LI><A HREF="Feedback.php?selday=Friday">Friday</A>
-  <LI><A HREF="Feedback.php?selday=Saturday Early">Saturday Early</A>
-  <LI><A HREF="Feedback.php?selday=Saturday Late">Saturday Late</A>
-  <LI><A HREF="Feedback.php?selday=Sunday">Sunday</A>
+  <LI><A HREF="StaffFeedback.php?selday=Friday">Friday</A>
+  <LI><A HREF="StaffFeedback.php?selday=Saturday Early">Saturday Early</A>
+  <LI><A HREF="StaffFeedback.php?selday=Saturday Late">Saturday Late</A>
+  <LI><A HREF="StaffFeedback.php?selday=Sunday">Sunday</A>
 </UL>
 <?php
   correct_footer();
@@ -103,13 +108,13 @@ if ($selday=="Friday") {
   
 
 $title=CON_NAME." $dayname Feedback";
-$description="<P>Please, indicate the $dayname class you are offering feedback on.</P>\n";
-$additionalinfo="<P><A HREF=\"Feedback.php?selday=$selday&print_p=y\">Printable</A> version.</P>\n";
+$description="<P>Not sure which class?  Check the <A HREF=StaffDescriptions.php>descriptions</A>, <A HREF=StaffBios.php>bios</A>, <A HREF=StaffSchedule.php>timeslots</A>, or <A HREF=StaffTracks.php>tracks</A> pages.</P>";
+$additionalinfo="<P><A HREF=\"StaffFeedback.php?selday=$selday&print_p=y\">Printable</A> version.</P>\n";
 $additionalinfo.="<P>Done with this time block?  Pick a different one:</P>\n";
-$additionalinfo.="<UL>\n  <LI><A HREF=\"Feedback.php?selday=Friday\">Friday</A>\n";
-$additionalinfo.="  <LI><A HREF=\"Feedback.php?selday=Saturday Early\">Saturday Early</A>\n";
-$additionalinfo.="  <LI><A HREF=\"Feedback.php?selday=Saturday Late\">Saturday Late</A>\n";
-$additionalinfo.="  <LI><A HREF=\"Feedback.php?selday=Sunday\">Sunday</A></UL>\n";
+$additionalinfo.="<UL>\n  <LI><A HREF=\"StaffFeedback.php?selday=Friday\">Friday</A>\n";
+$additionalinfo.="  <LI><A HREF=\"StaffFeedback.php?selday=Saturday Early\">Saturday Early</A>\n";
+$additionalinfo.="  <LI><A HREF=\"StaffFeedback.php?selday=Saturday Late\">Saturday Late</A>\n";
+$additionalinfo.="  <LI><A HREF=\"StaffFeedback.php?selday=Sunday\">Sunday</A></UL>\n";
 
 // Document information
 class MYPDF extends TCPDF {
@@ -173,7 +178,7 @@ $NumPerColumn=ceil($elements/$NumOfColumns);
 /* Printing body. */
 $printstring="<TABLE border=\"0\" cellpadding=\"4\"><TR><TD colspan=\"$NumOfColumns\" align=\"center\">Please, indicate the $dayname class you are offering feedback on.</TD></TR>";
 $printstring.="<TR><TD>";
-$formstring.="<FORM name=\"feedbackform\" method=POST action=\"Feedback.php?selday=$selday\">\n";
+$formstring.="<FORM name=\"feedbackform\" method=POST action=\"StaffFeedback.php?selday=$selday\">\n";
 if ($sessionid!="") {
   $formstring.="<INPUT type=\"hidden\" name=\"selsess\" value=\"".$element_array[1]['sessionid']."\">\n";
   $formstring.="<P>Feedback on ".$element_array[1]['title']." (".$element_array[1]['time'].")</P>\n";

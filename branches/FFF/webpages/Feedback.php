@@ -99,7 +99,7 @@ if ($selday=="Friday") {
   
 
 $title=CON_NAME." $dayname Feedback";
-$description="<P>Not sure which class?  Check the <A HREF=Descriptions.php>descriptions</A>, <A HREF=Schedule.php>timeslots</A>, or <A HREF=Tracks.php>tracks</A> pages.</P>";
+$description="<P>Not sure which class?  Check the <A HREF=Descriptions.php>descriptions</A>, <A HREF=Bios.php>bios</A>, <A HREF=Schedule.php>timeslots</A>, or <A HREF=Tracks.php>tracks</A> pages.</P>";
 $additionalinfo="<P>Done with this time block?  Pick a different one:</P>\n";
 $additionalinfo.="<UL>\n  <LI><A HREF=\"Feedback.php?selday=Friday\">Friday</A>\n";
 $additionalinfo.="  <LI><A HREF=\"Feedback.php?selday=Saturday Early\">Saturday Early</A>\n";
