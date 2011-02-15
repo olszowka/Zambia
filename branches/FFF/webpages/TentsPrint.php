@@ -6,7 +6,6 @@ global $link;
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="TentsPrint.php";
-$logo="../../../images/nelaLogoHeader.gif";
 $title="Tents Print";
 $description="<P>Tents for Printing.</P>\n";
 

@@ -184,9 +184,9 @@ EOD;
       topofpagecsv($report_array[$i]['reportname'].".csv");
       echo rendercsvreport(1,$rows,$header_array,$class_array);
     } elseif ($_GET["print_p"]=="y") {
-        require_once('../tcpdf/config/lang/eng.php');
-	require_once('../tcpdf/tcpdf.php');
-	$logo="../../../images/nelaLogoHeader.gif";
+        require_once('../../tcpdf/config/lang/eng.php');
+        require_once('../../tcpdf/tcpdf.php');
+	$logo="LogoHeader.gif";
 	$pdf = new TCPDF('p', 'mm', 'letter', true, 'UTF-8', false);
 	$pdf->SetCreator('Zambia');
 	$pdf->SetAuthor('Programming Team');

@@ -213,9 +213,9 @@ if ($_GET["csv"]=="y") {
   topofpagecsv("grid.csv");
   echo rendercsvreport(1,$element_row,$header_time,$element_array);
  } elseif ($_GET["print_p"]=="y") {
-  require_once('../tcpdf/config/lang/eng.php');
-  require_once('../tcpdf/tcpdf.php');
-  $logo="../../../images/nelaLogoHeader.gif";
+  require_once('../../tcpdf/config/lang/eng.php');
+  require_once('../../tcpdf/tcpdf.php');
+  $logo="LogoHeader.gif";
   $pdf = new TCPDF('l', 'mm', 'letter', true, 'UTF-8', false);
   $pdf->SetCreator('Zambia');
   $pdf->SetAuthor('Programming Team');

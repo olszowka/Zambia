@@ -5,15 +5,15 @@ if (may_I("Staff")) {
   } else {
   require_once('PartCommonCode.php');
   }
-require_once('../tcpdf/config/lang/eng.php');
-require_once('../tcpdf/tcpdf.php');
+require_once('../../tcpdf/config/lang/eng.php');
+require_once('../../tcpdf/tcpdf.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="SchedulePrint.php";
 $title="Schedule Printing";
-$logo="../../../images/nelaLogoHeader.gif";
+$logo="LogoHeader.gif";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
 

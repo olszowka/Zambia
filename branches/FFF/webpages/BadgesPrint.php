@@ -6,7 +6,6 @@ global $link;
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="BadgesPrint.php";
-$logo="../../../images/nelaLogoHeader.gif";
 $title="Badge Print";
 $description="<P>Badges for Printing.</P>\n";
 
