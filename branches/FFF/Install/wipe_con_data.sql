@@ -2,17 +2,25 @@
 -- it is used to build the script for building an empty dbase
 drop table save;
 drop table Roomtemp;
+truncate table EmailQueue;
 truncate table UserHasPermissionRole;
 truncate table ParticipantAvailability;
 truncate table ParticipantAvailabilityTimes;
+truncate table ParticipantAvailabilityDays;
 truncate table ParticipantHasRole;
 truncate table ParticipantInterests;
 truncate table ParticipantOnSession;
 truncate table ParticipantSessionInterest;
 truncate table ParticipantSuggestions;
+truncate table TimeCard;
 truncate table Participants;
 truncate table CongoDump;
 truncate table Schedule;
+truncate table NotesOnParticipants;
+truncate table Feedback;
+truncate table CommentsOnProgramming;
+truncate table CommentsOnParticipants;
+truncate table CommentsOnSessions;
 truncate table SessionHasFeature;
 truncate table SessionHasService;
 truncate table SessionEditHistory;
