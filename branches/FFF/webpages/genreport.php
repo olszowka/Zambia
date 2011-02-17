@@ -74,7 +74,7 @@ EOD;
   $basereportid=$report_array[1]['reportid'];
   $mybadgeid=$_SESSION['badgeid'];
 
-  // Get the personal flow previous and next
+  /*  // Get the personal flow previous and next
   $query = <<<EOD
 SELECT
     DISTINCT reportid
@@ -82,16 +82,17 @@ SELECT
       PersonalFlow
       LEFT JOIN Phases USING (phaseid)
   WHERE
-    badgeid=$mybadgeid AND
+    badgeid='$mybadgeid' AND
     phaseid is null OR
     current = TRUE
   ORDER BY
     pfloworder
 EOD;
 
+  echo "<P>$query</P>";
   // Retrieve query
   list($pflowrows,$pflowheader_array,$pflow_array)=queryreport($query,$link,$title,$description,0);
-
+    print_r($pflow_array);
   // Start with a blank $personal, walk the array, set the previous and next
   $personal="Personal Flow: ";
   for ($i=1; $i<=$pflowrows; $i++) {
@@ -105,7 +106,7 @@ EOD;
     }
   }
   if ($personal=="Personal Flow: ") {$personal="";}
-
+  */
   // Get the Groups that this report is part of
   $query = <<<EOD
 SELECT
