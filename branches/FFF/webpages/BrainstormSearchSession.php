@@ -37,7 +37,10 @@
   </tr>
 </table>
 
-<P>Clicking Search without making any selections will display all panels.
+<P>Clicking Search without making any selections will display all panels.</P>
+<?php if (file_exists("../Local/Verbiage/BrainstormSearchSession_0")) {
+    echo file_get_contents("../Local/Verbiage/BrainstormSearchSession_0");
+?>
 </FORM>
 </BODY>
 </HTML>

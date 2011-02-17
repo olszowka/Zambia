@@ -126,6 +126,7 @@ function participant_header($title) {
   require_once ("javascript_functions.php");
   global $badgeid;
   $ConName=CON_NAME; // make it a variable so it can be substituted
+  $ConUrl=CON_URL; // make it a variable so it can be substituted
 
   echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/strict.dtd\">\n";
   echo "<html xmlns=\"http://www.w3.org/TR/xhtml1/transitional\">\n";
@@ -137,6 +138,7 @@ function participant_header($title) {
   echo "</head>\n";
   echo "<body>\n";
   echo "<H1 class=\"head\">Zambia&ndash;The $ConName Scheduling Tool</H1>\n";
+  echo "<H1 class=\"head\">Return to the <A HREF=\"http://$ConUrl\">$ConName</A> website</H1>\n";
   echo "<hr>\n\n";
   if (isset($_SESSION['badgeid'])) {
     echo "<table class=\"tabhead\">\n";
