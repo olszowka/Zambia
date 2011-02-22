@@ -126,6 +126,51 @@ for ($i=1; $i<=$ccommentrows; $i++) {
   $ccomment_array[$tmp_array['sessionid']].="    <br>\n    --\n    <br>\n    <PRE>".fix_slashes($tmp_array['comment'])."</PRE>";
  }
 
+// Check the existance of feedback in Feedback
+$query = <<<EOD
+SELECT
+    feedbackid,
+    sessionid
+  FROM
+      Feedback
+  WHERE
+    sessionid in (SELECT
+                      sessionid 
+                    FROM
+                        ParticipantOnSession
+                    WHERE badgeid='$badgeid')
+EOD;
+if (!$result=mysql_query($query,$link)) {
+  $message.=$query."<BR>Error querying database.<BR>";
+  RenderError($title,$message);
+  exit();
+ }
+
+$feedbackcount=mysql_num_rows($result);
+for ($i=1; $i<=$feedbackcount; $i++) {
+  $tmp_array=mysql_fetch_assoc($result);
+  $feedback_p[$tmp_array['sessionid']]++;
+ }
+
+// Get the questions, in questionid order
+$query = <<<EOD
+SELECT
+    questionid,
+    questiontext
+  FROM
+      QuestionsForSurvey
+  ORDER BY
+    questionid
+EOD;
+// Retrieve query
+list($questions,$questionheader_array,$question_array)=queryreport($query,$link,$title,$description,0);
+
+//build key
+$key="";
+for ($i=1; $i<=$questions; $i++) {
+  $key.="Q: ".$question_array[$i]['questionid']. " &mdash; " .$question_array[$i]['questiontext']. "<br>\n";
+ }
+
 // Build the schedule of classes into schdarray
 $query = <<<EOD
 SELECT
@@ -202,7 +247,12 @@ for ($i=1; $i<=$schdrows; $i++) {
   $feedback_file=sprintf("../Local/Feedback/%s.jpg",$schdarray[$i]["sessionid"]);
   if (file_exists($feedback_file)) {
     $schdarray[$i]["feedbackgraph"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Feedback graph from surveys:<br>";
-    $schdarray[$i]["feedbackgraph"].="<img src=\"$feedback_file\"></TD>  </TR>\n";
+    $schdarray[$i]["feedbackgraph"].="<img src=\"$feedback_file\"></TD>\n  </TR>\n";
+  }
+  if ($feedback_p[$schdarray[$i]["sessionid"]] > 0) {
+    $schdarray[$i]["autofeedbackgraph"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Feedback graph from surveys:<br>";
+    $schdarray[$i]["autofeedbackgraph"].="<img alt=\"$key\" src=\"ChartFeedback.php?sessionid=".$schdarray[$i]["sessionid"]."\"></TD>\n  </TR>\n";
+    $schdarray[$i]["autofeedbackgraph"].="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6>$key</TD>\n  </TR>\n";
   }
   if ($ccomment_array[$schdarray[$i]["sessionid"]]) {
     $schdarray[$i]["feedbackwritten"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Written feedback from surveys:\n";
@@ -359,6 +409,7 @@ for ($i=1; $i<=$schdrows; $i++) {
     echo "  </TR>\n";
   }
   echo $schdarray[$i]["feedbackgraph"];
+  echo $schdarray[$i]["autofeedbackgraph"];
   echo $schdarray[$i]["feedbackwritten"];
   echo "  <TR>\n    <TD colspan=7 class=\"border0020\">&nbsp;</TD>\n  </TR>\n";
   echo "  <TR>\n    <TD colspan=7 class=\"border0000\">&nbsp;</TD>\n  </TR>\n";
