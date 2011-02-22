@@ -17,7 +17,7 @@
     $password = stripslashes($_POST['passwd']);
     $result=mysql_query("Select password from Participants where badgeid='".$badgeid."'",$link);
     if (!$result) {
-    	$message="Incorrect badgeid or password.";
+    	$message="Incorrect BadgeID or Password - please be aware that BadgeID and Password are case sensitive and try again.";
         require ('login.php');
 	exit();
 	}
@@ -26,7 +26,7 @@
     //echo $badgeid."<BR>".$dbpassword."<BR>".$password."<BR>".md5($password);
     //exit(0);
     if (md5($password)!=$dbpassword) {
-    	$message="Incorrect badgeid or password.";
+    	$message="Incorrect BadgeID or Password - please be aware that BadgeID and Password are case sensitive and try again.";
         require ('login.php');
 	exit(0);
 	}

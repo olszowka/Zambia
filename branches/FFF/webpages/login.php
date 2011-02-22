@@ -27,6 +27,12 @@ participant_header($title);
       <td colspan="2" align="center"> <input type="submit" name="submit" value="Login"> </td>
     </tr>
   </table>
-<p id="brainstorm-login-hint"> <b>Brainstorm</b> users: if you want to submit ideas for panels, please enter "brainstorm" for your Badge ID and use the last name of the author of the Foundation series as your password (in all lowercase). </p>
-</form>
-<?php participant_footer(); ?>
+<?php
+if (file_exists("../Local/Verbiage/login_0")) {
+  echo file_get_contents("../Local/Verbiage/login_0");
+ } else {
+  echo "<P id=\"brainstorm-login-hint\"> <b>Brainstorm</b> users: if you want to submit ideas for panels, please enter \"brainstorm\" for your Badge ID and use the last name of the author of the Foundation series as your password (in all lowercase). </P>\n";
+ }
+echo "</form>\n";
+correct_footer();
+ ?>

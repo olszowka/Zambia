@@ -61,18 +61,18 @@ function posting_header($title) {
   echo "<head>\n";
   echo "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=latin-1\">\n";
   echo "  <title>Zambia -- $ConName -- $title</title>\n";
-  if ((file_exists($HeaderTemplateFile)) and ($title != "Sessions Grid")) {
+  if (file_exists($HeaderTemplateFile)) {
     readfile($HeaderTemplateFile);
     } else {
     echo "  <link rel=\"stylesheet\" href=\"Common.css\" type=\"text/css\">\n";
     echo "</head>\n";
     echo "<body>\n";
     echo "<H1 class=\"head\">The information for $ConName</H1>\n";
+    echo "<H1 class=\"head\">Return to the <A HREF=\"http://$ConUrl\">$ConName</A> website</H1>\n";
     echo "<hr>\n\n";
     echo "<H2 class=\"head\">$title</H2>\n";
     }
   }
-
 
 function staff_header($title) {
   require_once ("javascript_functions.php");
@@ -89,6 +89,7 @@ function staff_header($title) {
   echo "</head>\n";
   echo "<body>\n";
   echo "<H1 class=\"head\">Zambia&ndash;The $ConName Scheduling Tool</H1>\n";
+  echo "<H1 class=\"head\">Return to the <A HREF=\"http://$ConUrl\">$ConName</A> website</H1>\n";
   echo "<hr>\n\n";
   if (isset($_SESSION['badgeid'])) {
     echo "  <table class=\"tabhead\">\n    <tr class=\"tabrow\">\n      <td class=\"tabblocks border0020\">\n          ";
@@ -120,7 +121,6 @@ function staff_header($title) {
     }
   echo "  </table>\n\n<H2 class=\"head\">$title</H2>\n";
   }
-
 
 function participant_header($title) {
   require_once ("javascript_functions.php");
@@ -199,6 +199,7 @@ function brainstorm_header($title) {
   echo "</head>\n";
   echo "<body leftmargin=\"0\" topmargin=\"0\" marginheight=\"0\" marginwidth=\"0\">\n";
   echo "<H1 class=\"head\">Zambia&ndash;The $ConName Scheduling Tool</H1>\n";
+  echo "<H1 class=\"head\">Return to the <A HREF=\"http://$ConUrl\">$ConName</A> website</H1>\n";
   echo "<hr>\n\n";
   if (isset($_SESSION['badgeid'])) {
     echo "<table class=\"tabhead\">\n";

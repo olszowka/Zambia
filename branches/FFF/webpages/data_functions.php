@@ -125,12 +125,7 @@ function set_session_defaults() {
     $session["featdest"]="";
     $session["servdest"]="";
     $session["pubchardest"]="";
-    if (DURATION_IN_MINUTES=="TRUE") { // Migrate to db_name.php
-            $session["duration"]=" 90";
-            }
-        else {
-            $session["duration"]=" 1:30";
-            } 
+    $session["duration"]=DEFAULT_DURATION;
     $session["atten"]="";
     $session["kids"]=1; // "Kids Not Allowed"
     $session["signup"]=false; // leave checkbox blank initially
