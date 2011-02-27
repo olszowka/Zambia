@@ -30,9 +30,9 @@
             list($foo,$yespanels,$nopanels,$yespeople,$nopeople, $otherroles)=mysql_fetch_array($result, MYSQL_NUM);
             $newrow=false;
             }
-    $query="Select PHR.badgeid, R.roleid, R.rolename from Roles as R left join (Select badgeid, ";
-    $query.="roleid from ParticipantHasRole where badgeid=\"".$badgeid."\") as PHR ";
-    $query.="on R.roleid=PHR.roleid order by R.display_order";
+    $query="Select PHA.badgeid, PA.activityid, PA.activityname from ParticipantActivities as PA left join (Select badgeid, ";
+    $query.="activityid from ParticipantHasActivity where badgeid=\"".$badgeid."\") as PHA ";
+    $query.="on PA.activityid=PHA.activityid order by PA.display_order";
     $result=mysql_query($query,$link);
     if (!$result) {
         $message2=mysql_error($link);
@@ -42,7 +42,7 @@
         }
     $rolerows=mysql_num_rows($result);
     for ($i=0; $i<$rolerows; $i++) {
-        list($rolearray[$i]["badgeid"],$rolearray[$i]["roleid"],$rolearray[$i]["rolename"])=mysql_fetch_array($result, MYSQL_NUM);
+        list($rolearray[$i]["badgeid"],$rolearray[$i]["activityid"],$rolearray[$i]["activityname"])=mysql_fetch_array($result, MYSQL_NUM);
         }
     //print_r($rolearray);
     //exit(0);

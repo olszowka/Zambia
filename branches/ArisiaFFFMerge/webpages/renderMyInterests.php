@@ -66,9 +66,9 @@ function renderMyInterests ($title, $error, $message) {
         echo ">\n";
         echo "                <INPUT type=hidden name=\"diddorole".$i."\" value=\"";
         echo ((isset($rolearray[$i]["badgeid"]))?1:0)."\">\n";
-        echo "                <INPUT type=hidden name=\"roleid".$i."\" value=\"".$rolearray[$i]["roleid"]."\">\n";
-        echo "                <INPUT type=hidden name=\"rolename".$i."\" value=\"".$rolearray[$i]["rolename"]."\">\n";
-        echo "                <LABEL for=\"willdorole".$i."\">".$rolearray[$i]["rolename"]."</LABEL>\n";
+        echo "                <INPUT type=hidden name=\"roleid".$i."\" value=\"".$rolearray[$i]["activityid"]."\">\n";
+        echo "                <INPUT type=hidden name=\"rolename".$i."\" value=\"".$rolearray[$i]["activityname"]."\">\n";
+        echo "                <LABEL for=\"willdorole".$i."\">".$rolearray[$i]["activityname"]."</LABEL>\n";
         echo "                </DIV>\n";
         if (($i+1)>=$rolerows) {
             echo "            <DIV class=\"tab-cell\">&nbsp;</DIV>\n";
@@ -86,9 +86,9 @@ function renderMyInterests ($title, $error, $message) {
         echo ">\n";
         echo "                <INPUT type=hidden name=\"diddorole".($i+1)."\" value=\"";
         echo ((isset($rolearray[$i+1]["badgeid"]))?1:0)."\">\n";
-        echo "                <INPUT type=hidden name=\"roleid".($i+1)."\" value=\"".$rolearray[$i+1]["roleid"]."\">\n";
-        echo "                <INPUT type=hidden name=\"rolename".($i+1)."\" value=\"".$rolearray[$i+1]["rolename"]."\">\n";
-        echo "                <LABEL for=\"willdorole".($i+1)."\">".$rolearray[$i+1]["rolename"]."</LABEL>\n";
+        echo "                <INPUT type=hidden name=\"roleid".($i+1)."\" value=\"".$rolearray[$i+1]["activityid"]."\">\n";
+        echo "                <INPUT type=hidden name=\"rolename".($i+1)."\" value=\"".$rolearray[$i+1]["activityname"]."\">\n";
+        echo "                <LABEL for=\"willdorole".($i+1)."\">".$rolearray[$i+1]["activityname"]."</LABEL>\n";
         echo "                </DIV>\n";
         echo "            </DIV>\n";
         }
@@ -102,11 +102,11 @@ function renderMyInterests ($title, $error, $message) {
         echo " disabled";
         }
     echo ">\n";
-    echo "                <INPUT type=hidden name=\"roleid0\" value=\"".$rolearray[0]["roleid"]."\">\n";
-    echo "                <INPUT type=hidden name=\"rolename0\" value=\"".$rolearray[0]["rolename"]."\">\n";
+    echo "                <INPUT type=hidden name=\"roleid0\" value=\"".$rolearray[0]["activityid"]."\">\n";
+    echo "                <INPUT type=hidden name=\"rolename0\" value=\"".$rolearray[0]["activityname"]."\">\n";
     echo "                <INPUT type=hidden name=\"diddorole0\" value=\"";
     echo ((isset($rolearray[0]["badgeid"]))?1:0)."\">\n";
-    echo "                <LABEL for=\"willdorole0\">".$rolearray[0]["rolename"]."  (Please describe below.) </LABEL>\n";
+    echo "                <LABEL for=\"willdorole0\">".$rolearray[0]["activityname"]."  (Please describe below.) </LABEL>\n";
     echo "                </DIV><!-- end table cell -->\n";
     echo "                <DIV class=\"tab-cell\">&nbsp;</DIV>\n";
     echo "            </DIV><!-- end table row -->\n";

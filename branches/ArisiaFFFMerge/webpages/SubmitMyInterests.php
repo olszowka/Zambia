@@ -20,8 +20,8 @@
         if (isset($_POST["willdorole".$i])) {
             $rolearray[$i]["badgeid"]=$badgeid;
             }
-        $rolearray[$i]["roleid"]=$_POST["roleid".$i];
-        $rolearray[$i]["rolename"]=$_POST["rolename".$i];
+        $rolearray[$i]["activityid"]=$_POST["roleid".$i];
+        $rolearray[$i]["activityname"]=$_POST["rolename".$i];
         $rolearray[$i]["diddorole"]=$_POST["diddorole".$i];
         }
     if ($newrow) {
@@ -53,7 +53,7 @@
             }
     for ($i=0; $i<$rolerows; $i++) {
         if (isset($rolearray[$i]["badgeid"])&&($rolearray[$i]["diddorole"]==0)) {
-            $query="INSERT INTO ParticipantHasRole set badgeid=\"".$badgeid."\", roleid=".$rolearray[$i]["roleid"]."";
+            $query="INSERT INTO ParticipantHasActivity set badgeid=\"".$badgeid."\", activityid=".$rolearray[$i]["activityid"]."";
             if (!mysql_query($query,$link)) {
                 $message=$query."<BR>Error inserting into database.  Database not updated.";
                 RenderError($title,$message);
@@ -61,8 +61,8 @@
                 }
             }
         if ((!isset($rolearray[$i]["badgeid"]))&&($rolearray[$i]["diddorole"]==1)) {
-            $query="DELETE FROM ParticipantHasRole WHERE badgeid=\"".$badgeid."\" and ";
-            $query.="roleid=".$rolearray[$i]["roleid"];
+            $query="DELETE FROM ParticipantHasActivity WHERE badgeid=\"".$badgeid."\" and ";
+            $query.="activityid=".$rolearray[$i]["activityid"];
             if (!mysql_query($query,$link)) {
                 $message=$query."<BR>Error deleting from database.  Database not updated.";
                 RenderError($title,$message);
