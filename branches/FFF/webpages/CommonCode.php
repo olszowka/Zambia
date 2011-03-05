@@ -433,6 +433,7 @@ function rendergridreport($startrows,$endrows,$header_array,$element_array) {
  in case there is an error, or just no information, and a reportid, so
  the report can be edited if there is a query error in the report. */
 function queryreport($query,$link,$title,$description,$reportid) {
+  mysql_query("SET group_concat_max_len = 9216;",$link);
   if (($result=mysql_query($query,$link))===false) {
     $message="<P>Error retrieving data from database.</P>\n<P>";
     if ($reportid !=0) {
