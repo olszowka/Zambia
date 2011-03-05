@@ -176,7 +176,7 @@ $query = <<<EOD
 SELECT
     POS.sessionid,
     trackname,
-    S.title,
+    concat(S.title, if(estatten,concat(" (estimated attendance: ",estatten,")"),'')) as title,
     roomname,
     pocketprogtext,
     progguiddesc,

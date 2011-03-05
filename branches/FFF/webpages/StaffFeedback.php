@@ -48,7 +48,7 @@ if ((isset($_POST["selsess"])) && ($_POST["selsess"]!=0)) {
     exit;
   }
   if ((isset($_POST['classcomment'])) && ($_POST['classcomment']!="")) {
-    $query="INSERT INTO CommentsOnSessions (sessionid,rbadgeid,commenter,comment) VALUES (".$_POST['selsess'].",0,'Annonymous','".mysql_real_escape_string($_POST['classcomment'])."')";
+    $query="INSERT INTO CommentsOnSessions (sessionid,rbadgeid,commenter,comment) VALUES (".$_POST['selsess'].",0,'Annonymous','".mysql_real_escape_string(stripslashes($_POST['classcomment']))."')";
     if (!mysql_query($query,$link)) {
       $message_error=$query."<BR>Error updating $table.  Database not updated.";
       RenderError($title,$message_error);
@@ -56,7 +56,7 @@ if ((isset($_POST["selsess"])) && ($_POST["selsess"]!=0)) {
     }
   }
   if ((isset($_POST['progcomment'])) && ($_POST['progcomment']!="")) {
-    $query="INSERT INTO CommentsOnProgramming (rbadgeid,commenter,comment) VALUES (0,'Annonymous','".mysql_real_escape_string($_POST['progcomment'])."')";
+    $query="INSERT INTO CommentsOnProgramming (rbadgeid,commenter,comment) VALUES (0,'Annonymous','".mysql_real_escape_string(stripslashes($_POST['progcomment']))."')";
     if (!mysql_query($query,$link)) {
       $message_error=$query."<BR>Error updating $table.  Database not updated.";
       RenderError($title,$message_error);
@@ -240,19 +240,9 @@ $formstring.="<BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Sen
 $formstring.="</FORM>\n";
 $printstring.="<P>Other comments/ideas/questions/feedback about the class or the flea:";
 
-// Test data
-$info['q1']="12";
-$info['q2']="30";
-$info['q3']="21";
-$info['q4']="40";
-$info['q5']="52";
-
 if ($print_p =="") {
   topofpagereport($title,$description,$additionalinfo);
   echo $formstring;
-  //echo "<img border=\"0\" src=\"tmp_chart-4.php?sessionid=$sessionid\">";
-  //echo "<img border=\"0\" src=\"tmp_chart-3.php?graphvalues=".$info."\">";
-  //echo "<img border=\"0\" src=\"thermometer.php?Current=3000&Goal=10000&Width=60&Height=150&Font=1\">";
   correct_footer();
  } else {
   $pdf->AddPage();

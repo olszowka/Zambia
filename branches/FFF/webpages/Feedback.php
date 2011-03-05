@@ -39,7 +39,7 @@ if ((isset($_POST["selsess"])) && ($_POST["selsess"]!=0)) {
     exit;
   }
   if ((isset($_POST['classcomment'])) && ($_POST['classcomment']!="")) {
-    $query="INSERT INTO CommentsOnSessions (sessionid,rbadgeid,commenter,comment) VALUES (".$_POST['selsess'].",0,'Annonymous','".mysql_real_escape_string($_POST['classcomment'])."')";
+    $query="INSERT INTO CommentsOnSessions (sessionid,rbadgeid,commenter,comment) VALUES (".$_POST['selsess'].",0,'Annonymous','".mysql_real_escape_string(stripslashes($_POST['classcomment']))."')";
     if (!mysql_query($query,$link)) {
       $message_error=$query."<BR>Error updating $table.  Database not updated.";
       RenderError($title,$message_error);
@@ -47,7 +47,7 @@ if ((isset($_POST["selsess"])) && ($_POST["selsess"]!=0)) {
     }
   }
   if ((isset($_POST['progcomment'])) && ($_POST['progcomment']!="")) {
-    $query="INSERT INTO CommentsOnProgramming (rbadgeid,commenter,comment) VALUES (0,'Annonymous','".mysql_real_escape_string($_POST['progcomment'])."')";
+    $query="INSERT INTO CommentsOnProgramming (rbadgeid,commenter,comment) VALUES (0,'Annonymous','".mysql_real_escape_string(stripslashes($_POST['progcomment']))."')";
     if (!mysql_query($query,$link)) {
       $message_error=$query."<BR>Error updating $table.  Database not updated.";
       RenderError($title,$message_error);
