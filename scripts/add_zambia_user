@@ -1,7 +1,8 @@
 #!/bin/sh
 # this script takes a file in the below format 
 # and generate the mysql to load into zambia: 
-# badgeid|badgename|firstname|lastname|phone|email|postaddress|regtype
+# badgeid|badgename|firstname|lastname|phone|email|postaddress1|postaddress2|postcity|poststate|postzip|postcountry|regtype
+# only fields badgeid and badgename are required
 
 DATAFILE='foo'
 
@@ -11,11 +12,11 @@ INITIALUSERPASSWD='4cb9c8a8048fd02294477fcb1a41191a'  # aka 'changeme'
 
 
 IFS='|'
-cat foo | while read badgeid badgename firstname lastname phone email postaddress regtype  
+cat foo | while read badgeid badgename firstname lastname phone email postaddress1 postaddress2 postcity poststate postzip postcountry regtype  
 do 
-  echo "insert into CongoDump set badgeid=\"$badgeid\";"
-  echo "update CongoDump set lastname=\"$lastname\", firstname=\"$firstname\", phone=\"$phone\", email=\"$email\", postaddress=\"$postaddress\", regtype=\"$regtype\" where badgeid=\"$badgeid\";"
-  echo "insert into Participants set badgeid=\"$badgeid\", password=\"$INITIALUSERPASSWD\";"
+  echo "replace CongoDump (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype)"
+  echo "values(\"$badgeid\", \"$firstname\", \"$lastname\", \"$badgename\", \"$phone\", \"$email\", \"$postaddress1\", \"$postaddress2\", \"$postcity\", \"$poststate\", \"$postzip\", \"$postcountry\", \"$regtype\" );"
+  echo "replace Participants (badgeid, password) values (\"$badgeid\", \"$INITIALUSERPASSWD\");"
 
 # permroleid of 1 means administrator, 2 means staff, 3 means participant, 4 means brainstorm... 
 # you'll want to pick and choose
@@ -27,5 +28,5 @@ done
 exit 
 # ok, the following 2 lines can be put directly into 
 #the DATAFILE and they will work. 
-1|staff1|First|Staff|781-555-1212|someone@somewhere.com|123 First Street\\\\Arlington, MA 02474|
-2|part1|First|Participant|617-555-1212|someoneelse@somewhereelse.com|123 Fifth Street\\\\Boston, MA 02100|
+1|staff1|First|Staff|781-555-1212|someone@somewhere.com|123 First Street||Arlington|MA|02474||
+2|part1|First|Participant|617-555-1212|someoneelse@somewhereelse.com|123 Fifth Street|Apt. 2|Boston|MA|02101|USA|Comped
