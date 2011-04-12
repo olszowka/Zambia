@@ -8,7 +8,8 @@ CREATE TABLE ParticipantRoles (
 	is_published TINYINT,
 	is_unique TINYINT,
 	is_self_nominated TINYINT,
-    check_conflicts TINYINT) ENGINE=INNODB DEFAULT CHARSET=utf8;
+    check_conflicts TINYINT,
+    interest_is_ranked TINYINT) ENGINE=INNODB DEFAULT CHARSET=utf8;
 CREATE TABLE SessionRoleDefaults (
 	typeid INT NOT NULL,
 	roleid INT NOT NULL,
