@@ -1,15 +1,16 @@
 <?php
-$title="Task List Update";
 require_once('StaffCommonCode.php');
+$title="Task List Update";
+$description="Return to the <A HREF=\"genreport.php?reportname=tasklistdisplay\">Task List Report</A></P>";
 
-staff_header($title);
+topofpagereport($title,$description,$additionalinfo);
 
 // Submit the task, if there was one, when this was called
 if (isset($_POST["activitynotes"])) {
   if ($_POST["activityid"] == "-1") {
-    $element_array=array('activity','activitynotes','badgeid','targettime','donestate');
-    $value_array=array($_POST['activity'],$_POST['activitynotes'],$_POST['assignedid'],$_POST['targettime'],"N");
-    //    $value_array=array($_POST['activity'],$_POST['activitynotes'],"123",$_POST['targettime'],"N");
+    $element_array=array('activity','activitynotes','badgeid','activitystart','targettime','donestate');
+    $value_array=array($_POST['activity'],$_POST['activitynotes'],$_POST['assignedid'],$_POST['activitystart'],$_POST['targettime'],"N");
+    //    $value_array=array($_POST['activity'],$_POST['activitynotes'],"123",$_POST['activitystart'],$_POST['targettime'],"N");
     submit_table_element($link, $title, "TaskList", $element_array, $value_array);
   } else {
     if ($_POST['donestate']=="Y") {
@@ -19,7 +20,7 @@ if (isset($_POST["activitynotes"])) {
 	$donetime=",donetime=CURRENT_DATE";
       }
     } else { $donetime=""; }
-    $pairedvalue_array=array("activitynotes='".$_POST['activitynotes']."'","badgeid='".$_POST['assignedid']."'","targettime='".$_POST['targettime']."'","donestate='".$_POST['donestate']."'".$donetime);
+    $pairedvalue_array=array("activitynotes='".$_POST['activitynotes']."'","badgeid='".$_POST['assignedid']."'","activitystart='".$_POST['activitystart']."'","targettime='".$_POST['targettime']."'","donestate='".$_POST['donestate']."'".$donetime);
     $match_field="activityid";
     $match_value=$_POST['activityid'];
     update_table_element($link, $title, "TaskList", $pairedvalue_array, $match_field, $match_value);
@@ -126,6 +127,8 @@ EOD;
   <INPUT type="text" size="25" name="activity" id="activity">
   <LABEL for="activitynotes">Note:</LABEL>
   <TEXTAREA name="activitynotes" rows=6 cols=72><?php echo $activitynotes ?></TEXTAREA>
+  <LABEL for="activitystart">Targeted Start Time: (eg: 2038-10-12)</LABEL>
+  <INPUT type="text" size=10 name="activitystart" id="activitystart" value="<?php echo htmlspecialchars($activitystart) ?>">
   <LABEL for="targettime">Targeted Completion Time: (eg: 2038-12-12)</LABEL>
   <INPUT type="text" size=10 name="targettime" id="tartettime" value="<?php echo htmlspecialchars($targettime) ?>">
 </DIV>
@@ -142,6 +145,7 @@ SELECT
     activity,
     activitynotes,
     badgeid,
+    activitystart,
     targettime,
     donestate,
     donetime
@@ -157,6 +161,7 @@ EOD;
   $activity=$task_array[1]['activity'];
   $activitynotes=$task_array[1]['activitynotes'];
   $assignedid=$task_array[1]['badgeid'];
+  $activitystart=$task_array[1]['activitystart'];
   $targettime=$task_array[1]['targettime'];
   $donestate=$task_array[1]['donestate'];
   $donetime=$task_array[1]['donetime'];
@@ -206,6 +211,8 @@ EOD;
 <LABEL for"activity">Task:</LABEL><?php echo $activity ?>
   <LABEL for="activitynotes">Note:</LABEL>
   <TEXTAREA name="activitynotes" rows=6 cols=72><?php echo $activitynotes ?></TEXTAREA>
+  <LABEL for="activitystart">Targeted Start Time: (eg: 2038-10-12)</LABEL>
+  <INPUT type="text" size=10 name="activitystart" id="activitystart" value="<?php echo htmlspecialchars($activitystart) ?>">
   <LABEL for="targettime">Targeted Completion Time: (eg: 2038-12-12)</LABEL>
   <INPUT type="text" size=10 name="targettime" id="targettime" value="<?php echo htmlspecialchars($targettime) ?>">
   <?php if ($donestate=="Y") { ?>
@@ -226,5 +233,5 @@ EOD;
 
 <?php
  }
-staff_footer();
+correct_footer();
 ?>
