@@ -54,6 +54,7 @@
 
 function posting_header($title) {
   $ConName=CON_NAME; // make it a variable so it can be substituted
+  $ConUrl=CON_URL; // make it a variable so it can be substituted
   $HeaderTemplateFile="../Local/HeaderTemplate.html";
 
   echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/strict.dtd\">\n";
@@ -77,6 +78,7 @@ function posting_header($title) {
 function staff_header($title) {
   require_once ("javascript_functions.php");
   $ConName=CON_NAME; // make it a variable so it can be substituted
+  $ConUrl=CON_URL; // make it a variable so it can be substituted
 
   echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/strict.dtd\">\n";
   echo "<html xmlns=\"http://www.w3.org/TR/xhtml1/transitional\">\n";
@@ -185,6 +187,7 @@ function participant_header($title) {
 function brainstorm_header($title) {
   require_once ("javascript_functions.php");
   $ConName=CON_NAME; // make it a variable so it can be substituted
+  $ConUrl=CON_URL; // make it a variable so it can be substituted
 
   echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/strict.dtd\">\n";
   echo "<html xmlns=\"http://www.w3.org/TR/xhtml1/transitional\">\n";

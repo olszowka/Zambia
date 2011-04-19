@@ -40,9 +40,9 @@ echo "<H2>Check out the below links to give us/see your feedback and learn about
 <?php if ($nowis < $constart) { ?>
   <LI><A HREF="webpages/">Presenter Login</A></LI>
   <LI><FORM name="submitform" method="POST" action="webpages/doLogin.php">
-  <INPUT type="hidden" name="badgeid" value="1">
+  <INPUT type="hidden" name="badgeid" value="100">
   <INPUT type="hidden" name="passwd" value="submit">
-  <INPUT type="submit" name="submit" value="Suggest a Session">
+  <INPUT type="submit" name="submit" value="Suggest a Session/Presenter">
   </FORM>
 <?php } else { ?>
   <LI><A HREF="webpages/Feedback.php">Feedback</A></LI>
