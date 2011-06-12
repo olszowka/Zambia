@@ -10,7 +10,7 @@
   <title>Zambia -- <?php echo $title ?></title>
   <link rel="stylesheet" href="BrainstormSection.css" type="text/css">
   <meta name="keywords" content="Questionnaire">
-  <?php javascript_for_edit_session(); javascript_pretty_buttons(); mousescripts(); ?>
+  <?php load_javascript(); ?>
 
 </head>
 <body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
