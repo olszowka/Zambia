@@ -1,0 +1,37 @@
+TITLE='Assigned, Interested and Not-scheduled Report'
+DESCRIPTION='These are sessions that are in need of a home in the schedule'
+PROGWANTS=1
+
+QUERY="
+       select
+               if ((num_int is NULL), 0, num_int) as Intr,
+               if ((num_assigned is NULL), 0, num_assigned) as Assn,
+               concat('<a href=StaffAssignParticipants.php?selsess=',S.sessionid,'>', S.sessionid,'</a>') as Sessionid, 
+               concat('<a href=EditSession.php?id=',S.sessionid,'>',title,'</a>') Title,
+               trackname, 
+               typename
+	from Tracks T, 
+             Types Y,
+             Divisions D,
+	     Sessions S 
+             left join Schedule SCH 
+                    on S.sessionid=SCH.sessionid 
+             left join (  select sessionid, 
+                                 count(badgeid) as num_assigned 
+                            from ParticipantOnSession 
+                        group by sessionid) A 
+ 	            on A.sessionid=S.sessionid 
+             left join (  select sessionid, count(badgeid) as num_int 
+                            from ParticipantSessionInterest
+                        group by sessionid) B
+                     on B.sessionid=S.sessionid
+             left join Rooms R 
+                    on R.roomid=SCH.roomid 
+	where T.trackid=S.trackid 
+          and Y.typeid=S.typeid
+          and D.divisionid=S.divisionid
+          and D.divisionname = 'Programming'
+          and SCH.sessionid is NULL
+       having Intr>=4
+     order by Intr desc, Assn desc
+      ;"
