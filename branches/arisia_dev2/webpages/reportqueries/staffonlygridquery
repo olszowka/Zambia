@@ -1,7 +1,0 @@
-TITLE='Staff Only Grid'
-DESCRIPTION='Display only the items that are "Staff-Only" or "Do-Not-Publish" with rooms on horizontal axis and time on vertical. [On&nbsp;Demand]'
-PROGWANTS=1
-GRIDSWANTS=1
-QUERY=' '
-MIGRATED=true
-

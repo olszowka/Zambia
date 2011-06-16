@@ -1,7 +1,0 @@
-TITLE='Published Event Grid'
-DESCRIPTION='Display published event schedule with rooms on horizontal axis and time on vertical. This excludes any item marked "Do Not Print" or "Staff Only". [On&nbsp;Demand]'
-PROGWANTS=1
-GRIDSWANTS=1
-QUERY=' '
-MIGRATED=true
-
