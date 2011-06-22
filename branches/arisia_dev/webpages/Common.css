@@ -844,44 +844,39 @@ OL, UL {
         background-image: none;
         color: white;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 12pt;
-        height: 19px;
+        font-size: 11pt;
+        height: 18px;
 }
 .mousedovertab {
         background: white;
         background-image: none;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 12pt;
-        height: 19px;
+        font-size: 11pt;
+        height: 18px;
 }
 .unusabletab {
         background: #606060;
         background-image: none;
         color: white;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 12pt;
-        height: 19px;
+        font-size: 11pt;
+        height: 18px;
 }
 /* definitions for the table at the top of the pages */
 TABLE.tabhead {
     border-collapse: collapse;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: .3em;
-    margin-bottom: 0px;
+    margin: 0px;
     width: 100%;
     border: 0px;
     padding: 0px;
     }
-TR.tabrows {
-   margin-left: 0px;
-   margin-right: 0px;
-   margin-top: 0px;
-   margin-bottom: 0px;
+TR.tabrow {
+   margin: 0px;
    border: 0px; 
    padding: 0px;
    }
 TD.tabblocks {
+	padding-top: 3px;
     background: #808080;
     color: white;
     }
