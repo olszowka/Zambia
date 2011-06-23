@@ -8,6 +8,11 @@
 	font-family: Verdana, Arial;
 	font-size: 0.9em;
 	}
+	
+input[readonly], textarea[readonly] {
+	background-color: lightGray;
+	color: #808080;
+	}
 
 .newformdiv { /* keep label, control, and note together */
 	display: inline-block;
@@ -15,12 +20,18 @@
 	margin-bottom: 0.6em;
 	margin-left: 0.5em;
 	margin-right: 1.5em;
+	font-family: Verdana, Arial;
+	font-size: 0.9em;
 	}
 
 .newformbuttondiv {
 	margin-top: 0.6em;
 	margin-left: 0.5em;
 	text-align: center;
+	}
+
+.newformnote {
+	font-weight: bold;
 	}
 
 .newforminputspan {
@@ -154,6 +165,70 @@ H4 {
     margin-right: 5em
     }
 
+DIV.dialog, SPAN.dialog {
+	font-family: Verdana, Arial;
+    font-size: 0.75em;
+	}
+	
+DIV.action, SPAN.action {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	color: blue;
+	background-color: white;
+	}
+
+DIV.resultBox {
+	font-family: Verdana, Arial;
+	font-size: 10pt;
+	color: DarkGreen;
+	background-color: white;
+	border: 1px solid DimGray;
+	margin: 2em 10em 2em 10em;
+	min-height: 4em;
+	padding: 0.5em;
+	}
+
+DIV.actionB, SPAN.actionB {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	font-style:italic;
+	color: teal;
+	background-color: white;
+	}
+
+DIV.action_hover, SPAN.action_hover {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	color: yellow;
+	background-color: black;
+	cursor: pointer;
+	}
+
+DIV.actionB_hover, SPAN.actionB_hover {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	font-style:italic;
+	color: orange;
+	background-color: black;
+	cursor: pointer;
+	}
+	
+div.emptyResult, span.emptyResult {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	color: black;
+	background-color: white;
+}
+
+div.beforeResult, span.beforeResult {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	font-style:italic;
+	color: LightSteelBlue;
+	background-color: white;
+	}
+	
+
 .Welcome {
     font-weight: bold;
     font-size: 80%;
@@ -219,7 +294,6 @@ DT {
     }
 
 TABLE.login {
-    align: center;
     text-align: center;
     border: 1px;
     padding: 10px;
@@ -251,12 +325,13 @@ TH {
 P.errmsg {
     color: red;
     font-weight: 700;
+	font-size: 1.2em;
     }
 
 P.regmsg {
     color: #33FF00;
     font-weight: 700;
-    font-size: 200%;
+    font-size: 1.2em;
     text-align: center;
     }
 
@@ -412,22 +487,6 @@ LABEL.dense {
     margin-left: 10px;
     margin-top: 5px;
     margin-bottom: 10px;
-    }
-
-TR.regform {
-    height: 2.5em;
-    }
-
-SELECT.regform2, INPUT.regform2, SPAN.regform2 {
-    vertical-align: center;
-    margin-bottom: 0.5 em;
-    margin-left: 0 em;
-    }
-
-TD.regform3 {
-    vertical-align: center;
-    padding-bottom: 0.5 em;
-    margin-bottom: 0.5 em
     }
 
 .denseformrow {
@@ -810,9 +869,15 @@ BUTTON {
     background-color: #C0C0C0;
     padding: 0.5 em
     }
-    
-.SubmitButton {
+
+button.SubmitButton {
     background-color: #C0C0C0;
+	padding: 0.2em;
+    }
+
+button.ActionButton {
+	font-size: 10pt;
+	padding: 5pt;
     }
     
 .SubmitDiv {
@@ -864,7 +929,6 @@ OL, UL {
 }
 /* definitions for the table at the top of the pages */
 TABLE.tabhead {
-    border-collapse: collapse;
     margin: 0px;
     width: 100%;
     border: 0px;
@@ -877,6 +941,8 @@ TR.tabrow {
    }
 TD.tabblocks {
 	padding-top: 3px;
+	padding-bottom: 0;
+	margin-bottom: 0;
     background: #808080;
     color: white;
     }
@@ -887,22 +953,32 @@ TD.head {
  * these are used to override the browser's default decoration on
  * links
  */
+span.usabletab span.unusabletab span.mousedovertab {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	vertical-align: bottom;
+	}
+
 span.usabletab a:link {
-        color: white;
-        text-decoration: none;
-}
+	color: white;
+	text-decoration: none;
+	}
+	
 span.usabletab a:visited {
-        color: white;
-        text-decoration: none;
-}
+	color: white;
+	text-decoration: none;
+	}
+
 span.mousedovertab a:link {
-        color: #002985;
-        text-decoration: none;
-}
+	color: #002985;
+	text-decoration: none;
+	}
+
 span.mousedovertab a:visited {
-        color: #002985;
-        text-decoration: none;
-}
+	color: #002985;
+	text-decoration: none;
+	}
+
 /*
  * attributes of the images used to draw the borders of the tabs
  */

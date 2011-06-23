@@ -6,15 +6,18 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Zambia -- <?php echo $title ?></title>
-  <link rel="stylesheet" href="StaffSection.css" type="text/css" />
-
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Zambia -- <?php echo $title ?></title>
+	<link rel="stylesheet" href="StaffSection.css" type="text/css" />
+	<link rel="stylesheet" href="jquery/jquery-ui-1.8.13.custom.css" type="text/css" />
 </head>
 <body>
+	<script type="text/javascript">
+		var thisPage="<?php echo $title; ?>";
+	</script>
 <?php
-	load_jquery();
 	load_javascript();
+	load_jquery();
 ?>
 <h1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</h1>
 <?php if (isset($_SESSION['badgeid'])) { ?>
