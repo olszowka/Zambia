@@ -1,4 +1,38 @@
 <?php
+
+function mysql_query_XML($query_array) {
+	global $link, $message_error;
+	$xml = new DomDocument("1.0", "UTF-8");
+	$doc = $xml->createElement("doc");
+	$doc = $xml->appendChild($doc);
+	foreach ($query_array as $queryName => $query) {
+		if (!$result=mysql_query_with_error_handling($query))
+			return(FALSE);
+		$queryNode = $xml->createElement("query");
+		$queryNode = $doc->appendChild($queryNode);
+		$queryNode->setAttribute("queryName", mb_convert_encoding($queryName,"UTF-8","ISO-8859-1"));
+		while($row = mysql_fetch_assoc($result)) {
+			$rowNode = $xml->createElement("row");
+			$rowNode = $queryNode->appendChild($rowNode);
+			foreach ($row as $fieldname => $fieldvalue) {
+				$rowNode->setAttribute($fieldname, mb_convert_encoding($fieldvalue,"UTF-8","ISO-8859-1"));
+				}
+			}
+
+		}
+	return ($xml);
+	}
+
+function mysql_query_with_error_handling($query) {
+	global $link, $message_error;
+	$result = mysql_query($query,$link);
+	if (!$result) {
+		$message_error=$query."<br/>".mysql_error($link)."<br/>";
+		error_log($message_error);
+		}
+	return $result;
+	}
+
 // Function prepare_db()
 // Opens database channel
 include ('db_name.php');
@@ -12,23 +46,18 @@ function prepare_db() {
 // The table SessionEditHistory has a timestamp column which is automatically set to the
 // current timestamp by MySQL. 
 function record_session_history($sessionid, $badgeid, $name, $email, $editcode, $statusid) {
-    global $link, $message_error;
+	global $link, $message_error;
 	$name=mysql_real_escape_string($name,$link);
 	$email=mysql_real_escape_string($email,$link);
-    $query='';
-    $query.="INSERT INTO SessionEditHistory SET ";
-    $query.="sessionid=$sessionid, ";
-    $query.="badgeid='$badgeid', ";
-    $query.="name='$name', ";
-    $query.="email_address='$email', ";
-    $query.="sessioneditcode=$editcode, ";
-    $query.="statusid=$statusid";
-    $result = mysql_query($query,$link);
-    if (!$result) {
-        $message_error=$query."<BR>\n".mysql_error($link);
-        return $result;
-        }
-    return(true);
+	$query='';
+	$query.="INSERT INTO SessionEditHistory SET ";
+	$query.="sessionid=$sessionid, ";
+	$query.="badgeid='$badgeid', ";
+	$query.="name='$name', ";
+	$query.="email_address='$email', ";
+	$query.="sessioneditcode=$editcode, ";
+	$query.="statusid=$statusid";
+	return (mysql_query_with_error_handling($query));
     }
 // Function get_name_and_email(&$name, &$email)
 // Gets name and email from db if they are available and not already set
@@ -48,27 +77,15 @@ function get_name_and_email(&$name, &$email) {
     if (may_I('Staff') || may_I('Participant')) { //name and email should be found in db if either set
         $query="SELECT pubsname from Participants where badgeid='$badgeid'";
         //error_log($query); //for debugging only
-        $result=mysql_query($query,$link);
-        if (!$result) {
-            $message_error=$query."<BR> ";
-            $message_error.=mysql_error($link)."<BR> ";
-            $message_error.="Error reading from database. No further execution possible.<BR> ";
-            error_log($message_error);
-            return(FALSE);
-            }
+		if (!$result=mysql_query_with_error_handling($query))
+			return(FALSE);
         $name=mysql_result($result, 0);
         if ($name=='') {
             $name=' '; //if name is null or '' in db, set to ' ' so it won't appear unpopulated in query above
             }
         $query="SELECT badgename,email from CongoDump where badgeid='$badgeid'";
-        $result=mysql_query($query,$link);
-        if (!$result) {
-            $message_error=$query."<BR> ";
-            $message_error.=mysql_error($link)."<BR> ";
-            $message_error.="Error reading from database. No further execution possible.<BR> ";
-            error_log($message_error);
-            return(FALSE);
-            }
+		if (!$result=mysql_query_with_error_handling($query))
+			return(FALSE);
         if ($name==' ') {
             $name=mysql_result($result, 0, 0);
             } // name will be ' ' if pubsname is null.  In that case use badgename.
@@ -95,14 +112,17 @@ function populate_select_from_table($table_name, $default_value, $option_0_text,
         elseif ($default_flag) {
             echo "<OPTION value=\"0\">$option_0_text</OPTION>\n";
             }            
-    $result=mysql_query("Select * from $table_name order by display_order",$link);
+    $query="Select * from $table_name order by display_order";
+	if (!$result=mysql_query_with_error_handling($query))
+		return(FALSE);
     while (list($option_value,$option_name) = mysql_fetch_array($result, MYSQL_NUM)) {
         echo "<OPTION value=\"$option_value\"";
         if ($option_value==$default_value)
             echo " selected";
         echo ">$option_name</OPTION>\n";
         }
-    }
+	return(TRUE);
+	}
 
 // Function populate_select_from_query(...)
 // Reads parameters (see below) and a specified query for the db.
