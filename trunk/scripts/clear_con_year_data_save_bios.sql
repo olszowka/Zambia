@@ -1,6 +1,7 @@
 /* This MySQL script will clear out all the data from a Zambia database for a single year's con, but
    leave all configuration and past year data in place. This will also save the bios in table PreviousParticipants
-   for use in following year.*/
+   for use in following year.  Note, table PreviousParticipants is used by Congo interface script, but
+   not by Zambia per se.*/
 TRUNCATE TABLE PreviousParticipants;
 INSERT INTO PreviousParticipants (badgeid, bio) SELECT badgeid, bio FROM Participants;
 TRUNCATE TABLE Schedule;
