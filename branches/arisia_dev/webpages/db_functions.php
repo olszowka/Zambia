@@ -619,12 +619,12 @@ EOD;
         $message_error=$query."<BR>\n returned $rows rows.";
         return (-2);
         }
-    $partAvailarray=mysql_fetch_array($result, MYSQL_NUM);
-    $partAvail["badgeid"]=$partAvailarray[0];
-    $partAvail["maxprog"]=$partAvailarray[1];
-    $partAvail["preventconflict"]=$partAvailarray[2];
-    $partAvail["otherconstraints"]=$partAvailarray[3];
-    $partAvail["numkidsfasttrack"]=$partAvailarray[4];
+    $partAvailarray=mysql_fetch_array($result, MYSQL_ASSOC);
+    $partAvail["badgeid"]=$partAvailarray["badgeid"];
+    $partAvail["maxprog"]=$partAvailarray["maxprog"];
+    $partAvail["preventconflict"]=$partAvailarray["preventconflict"];
+    $partAvail["otherconstraints"]=$partAvailarray["otherconstraints"];
+    $partAvail["numkidsfasttrack"]=$partAvailarray["numkidsfasttrack"];
 
     if (CON_NUM_DAYS>1) {
         $query="SELECT badgeid, day, maxprog FROM ParticipantAvailabilityDays where badgeid=\"$badgeid\"";
@@ -637,14 +637,17 @@ EOD;
             unset($partAvail["maxprogday$i"]);
             }
         if (mysql_num_rows($result)>0) {
-            while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
-                $i=$row[1];
-                $partAvail["maxprogday$i"]=$row[2];
+            while ($row=mysql_fetch_array($result, MYSQL_ASSOC)) {
+                $i=$row["day"];
+                $partAvail["maxprogday$i"]=$row["maxprog"];
                 }
             }
         }
-    $query="SELECT badgeid, availabilitynum, starttime, endtime FROM ParticipantAvailabilityTimes ";
-    $query.="where badgeid=\"$badgeid\" order by starttime";
+    $query= <<<EOD
+SELECT badgeid, availabilitynum, DATE_FORMAT(starttime,'%T') AS starttime, 
+	DATE_FORMAT(endtime,'%T') AS endtime FROM ParticipantAvailabilityTimes
+	WHERE badgeid="$badgeid" ORDER BY starttime;
+EOD;
     $result=mysql_query($query,$link);
     if (!$result) {
         $message_error=$query."<BR>\n".mysql_error($link);
@@ -655,9 +658,9 @@ EOD;
         unset($partAvail["endtimestamp_$i"]);
         }
     $i=1;
-    while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
-        $partAvail["starttimestamp_$i"]=$row[2];
-        $partAvail["endtimestamp_$i"]=$row[3];
+    while ($row=mysql_fetch_array($result, MYSQL_ASSOC)) {
+        $partAvail["starttimestamp_$i"]=$row["starttime"];
+        $partAvail["endtimestamp_$i"]=$row["endtime"];
         $i++;
         }
     return (0);

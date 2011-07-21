@@ -68,9 +68,13 @@ guidance when scheduling your panels.</p>
     <td> End Time </td> 
   </tr> <!-- header row  -->
 <?php
+$xsl = new DomDocument;
+$xsl->load('xsl/ScheduleConstrSelect.xsl');
+$xslt = new XsltProcessor();
+$xslt->importStylesheet($xsl);
 //  Notes on variables:
-//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are measured in 1-24 whole hours
-//     0 is unset, 1 is midnight beginning of day
+//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are indexes into table Times
+//     0 is unset
     for ($i=1; $i<=AVAILABILITY_ROWS; $i++) {
         echo "  <TR> <!-- Row $i -->\n";
         if (CON_NUM_DAYS>1) {
@@ -86,7 +90,11 @@ guidance when scheduling your panels.</p>
             }
         echo "    <TD><SELECT name=\"availstarttime_$i\">\n";
         $timeindex=(isset($partAvail["availstarttime_$i"]))?$partAvail["availstarttime_$i"]:0;
-        populate_select_from_table("Times", $timeindex, "", true);
+		// use XSLT to render <option> tags
+		$variablesNode->setAttribute("option","start");
+		$variablesNode->setAttribute("index",$timeindex);
+		echo ($xslt->transformToXML($timesXML));
+		// end XSLT
         echo "        </SELECT></TD>\n";
         echo "    <TD> Until </TD>\n";
         if (CON_NUM_DAYS>1) {
@@ -102,7 +110,11 @@ guidance when scheduling your panels.</p>
             }
         echo "    <TD><SELECT name=\"availendtime_$i\">\n";
         $timeindex=(isset($partAvail["availendtime_$i"]))?$partAvail["availendtime_$i"]:0;
-        populate_select_from_table("Times", $timeindex, "", true);
+		// use XSLT to render <option> tags
+		$variablesNode->setAttribute("option","end");
+		$variablesNode->setAttribute("index",$timeindex);
+		echo ($xslt->transformToXML($timesXML));
+		// end XSLT
         echo "        </SELECT></TD>\n";
         echo "    </TR>\n";
         }

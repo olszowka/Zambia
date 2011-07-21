@@ -4,7 +4,9 @@
     global $partAvail,$availability;
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
+	require ('my_sched_constr_func.php');
     get_participant_availability_from_post();
+	retrieve_timesXML();
     $status=validate_participant_availability(); /* return true if OK.  Store error messages in
         global $messages */
             for ($i = 1; $i <= AVAILABILITY_ROWS; $i++) {
@@ -44,8 +46,26 @@
                         $partAvail["availstartday_$i"]=1;
                         $partAvail["availendday_$i"]=1;
                         }
-                    $starttime=(($partAvail["availstartday_$i"]-1)*24+$partAvail["availstarttime_$i"]-1).":00:00";
-                    $endtime=(($partAvail["availendday_$i"]-1)*24+$partAvail["availendtime_$i"]-1).":00:00";
+
+					//echo($timesXML->saveXML());
+					$time = $timesXPath->evaluate("string(query/row[@timeid='".$partAvail["availstarttime_$i"]."']/@timevalue)");
+					$nextday = $timesXPath->evaluate("string(query/row[@timeid='".$partAvail["availstarttime_$i"]."']/@next_day)");
+					$findit = strpos($time,':');
+					$hour = substr($time,0,$findit);
+					var_dump($hour);
+					echo("<BR>");
+					$restOfTime = substr($time,$findit);
+					var_dump($restOfTime);
+					$starttime = (($partAvail["availstartday_$i"]-1+$nextday)*24+$hour).$restOfTime;
+					
+					$time = $timesXPath->evaluate("string(query/row[@timeid='".$partAvail["availendtime_$i"]."']/@timevalue)");
+					$nextday = $timesXPath->evaluate("string(query/row[@timeid='".$partAvail["availendtime_$i"]."']/@next_day)");
+					//var_dump($time);
+					$findit = strpos($time,':');
+					$hour = substr($time,0,$findit);
+					$restOfTime = substr($time,$findit);
+					$endtime = (($partAvail["availendday_$i"]-1+$nextday)*24+$hour).$restOfTime;
+
                     $query = "REPLACE ParticipantAvailabilityTimes set ";
                     $query .="badgeid=\"$badgeid\",availabilitynum=$i,starttime=\"$starttime\",endtime=\"$endtime\"";
                     if (!mysql_query($query,$link)) {
@@ -89,16 +109,19 @@
                 RenderError($title,$message_error);
                 exit();
                 }
-            $i=0;
-            while ($partAvail["availtimes"][$i]) {
-                $x=parse_mysql_time($partAvail["availtimes"][$i][2]);
-                $availability[$i]["startday"]=$x["day"];
-                $availability[$i]["starttime"]=$x["hour"];
-                $x=parse_mysql_time($partAvail["availtimes"][$i][3]);
-                $availability[$i]["endday"]=$x["day"];
-                $availability[$i]["endtime"]=$x["hour"];
-                $i++;
-                }
+		    $i=1;
+		    while (isset($partAvail["starttimestamp_$i"])) {
+		        //error_log("zambia-my_sched got here.i $i");
+		        //availstartday, availendday: day1 is 1st day of con
+		        //availstarttime, availendtime: 0 is unset; other is index into Times table
+		    	$x=convert_timestamp_to_timeindex($partAvail["starttimestamp_$i"],true);
+		    	$partAvail["availstartday_$i"]=$x["day"];
+		    	$partAvail["availstarttime_$i"]=$x["hour"];
+		    	$x=convert_timestamp_to_timeindex($partAvail["endtimestamp_$i"],false);
+		    	$partAvail["availendday_$i"]=$x["day"];
+		    	$partAvail["availendtime_$i"]=$x["hour"];
+		        $i++;
+		    	}
             $message="Database updated successfully.";
             unset($message_error);
             }

@@ -45,7 +45,7 @@ function get_nameemail_from_post(&$name, &$email) {
 // the $partavail global variable with it.
 //
 // Notes on variables:
-// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are just 1-24 whole hours, 0 for unset; 1 is midnight start of day 
+// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are indexes into Times table, 0 for unset; 
 //
 function get_participant_availability_from_post() {
     global $partAvail;
