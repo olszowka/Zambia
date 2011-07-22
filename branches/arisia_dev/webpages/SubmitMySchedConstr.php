@@ -52,10 +52,10 @@
 					$nextday = $timesXPath->evaluate("string(query/row[@timeid='".$partAvail["availstarttime_$i"]."']/@next_day)");
 					$findit = strpos($time,':');
 					$hour = substr($time,0,$findit);
-					var_dump($hour);
-					echo("<BR>");
+					//var_dump($hour);
+					//echo("<BR>");
 					$restOfTime = substr($time,$findit);
-					var_dump($restOfTime);
+					//var_dump($restOfTime);
 					$starttime = (($partAvail["availstartday_$i"]-1+$nextday)*24+$hour).$restOfTime;
 					
 					$time = $timesXPath->evaluate("string(query/row[@timeid='".$partAvail["availendtime_$i"]."']/@timevalue)");
