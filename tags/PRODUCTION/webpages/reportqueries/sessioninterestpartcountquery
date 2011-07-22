@@ -1,3 +1,0 @@
-TITLE='Session Interest Counts by Participant'
-DESCRIPTION='Just how many panels did each participant sign up for anyway?'
-QUERY='select CongoDump.badgeid, badgename, lastname, firstname, count(sessionid) as interested from CongoDump, ParticipantSessionInterest where CongoDump.badgeid=ParticipantSessionInterest.badgeid group by CongoDump.badgeid;'
