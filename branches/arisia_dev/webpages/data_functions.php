@@ -1,4 +1,11 @@
 <?php
+function showCustomText($pre,$tag,$post) {
+	global $customTextArray;
+	if (strlen($x = $customTextArray[$tag])>0) {
+		echo $pre.$x.$post;
+		}
+	}
+
 // Function conv_min2hrsmin()
 // Input is unchecked form input in minutes
 // Output is string in MySql time format

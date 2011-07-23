@@ -33,6 +33,20 @@ function mysql_query_with_error_handling($query) {
 	return $result;
 	}
 
+function populateCustomTextArray() {
+	global $customTextArray,$title;
+	//echo "<BR>Title:".$title.":<BR>\n";
+	if (isset($customTextArray))
+		array_splice($customTextArray,1); //should clear out $customTextArray
+	$query = "SELECT tag, textcontents FROM CustomText WHERE page = \"".$title."\";";
+	if (!$result=mysql_query_with_error_handling($query))
+		return(FALSE);
+	while($row = mysql_fetch_assoc($result)) {
+		$customTextArray[$row["tag"]] = $row["textcontents"];
+		}
+	return true;
+	}	
+
 // Function prepare_db()
 // Opens database channel
 include ('db_name.php');
@@ -43,6 +57,8 @@ function prepare_db() {
     if ($link===false) return (false);
     return (mysql_select_db(DBDB,$link));
     }
+
+
 // The table SessionEditHistory has a timestamp column which is automatically set to the
 // current timestamp by MySQL. 
 function record_session_history($sessionid, $badgeid, $name, $email, $editcode, $statusid) {

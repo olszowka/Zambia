@@ -113,7 +113,7 @@ echo "><BR><BR>\n";
 echo "<INPUT type=\"hidden\" name=\"pubsnameold\" value=\"".htmlspecialchars($pubsnameold,ENT_COMPAT)."\">";
 $bio=MAX_BIO_LEN;
 echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your biography ($bio characters or fewer):</LABEL><BR>\n";
-echo "Note: Your biography will appear immediately following your name in the program.<BR>\n";
+showCustomText("<div style=\"width:500px\">","biography_note","</div>");
 echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
 if (!(may_I('EditBio'))) { // no permission to edit bio
     echo " readonly";
