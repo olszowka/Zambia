@@ -74,9 +74,9 @@ lang="en" xml:lang="en">
 
 <h1 class="title">Setting Up Zambia from Scratch</h1>
 
-
+<p>Zambia is a piece of Con Management Software.  This document is a "How To" guide to help set up your Zambia FFF-branch instance from scratch for your convention.  This is still a work in progress.<br/>
 <h2>Abstract:<br></h2><p>Zambia is a piece of Con Management Software.  This document is a "How To" guide to help set up your Zambia FFF-branch instance from scratch for your convention.  This is still a work in progress.</p>
-
+</p>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -192,7 +192,7 @@ text editing program<br/>
 <colgroup><col align="left" /><col align="left" />
 </colgroup>
 <thead>
-<tr><th scope="col">Acronym or term</th><th scope="col">Definition</th></tr>
+<tr><th scope="col">Acronym or Term</th><th scope="col">Definition</th></tr>
 </thead>
 <tbody>
 <tr><td>precis</td><td>An element in your schedule.  Could be a class, panel, gathering, party, room-coverage, lounge, or whatever else you might have on your schedule</td></tr>
@@ -280,7 +280,7 @@ Zambia administrator email.<br/>
 Brainstorm email.<br/>
 </li>
 <li>
-Programmin email.<br/>
+Programming email.<br/>
 </li>
 <li>
 Registration email.<br/>
@@ -305,7 +305,7 @@ Logo for the con (gif, png, etc.)<br/>
 <li id="sec-1_2_3_3">Very useful information <br/>
 <ul>
 <li>
-Guests of Honor badgelist (if you have specific featured Guests of Honor, the badgeids get listed here.)<br/>
+Guests of Honor badgelist (if you have specific featured Guests of Honor, the badgeids get listed here, comma seperated.)<br/>
 </li>
 <li>
 Prefered total number of sessions upper limit (so your presenters don't oversubscribe themselves 5 is good default for a 3-4 day con.)<br/>
@@ -314,7 +314,7 @@ Prefered total number of sessions upper limit (so your presenters don't oversubs
 Prefered daily number of sessions upper limit (3 is a good default.)<br/>
 </li>
 <li>
-Availabilty Records (starting number of "availability" fields to render in the "when I am available" form, 8 is a godo default)<br/>
+Availabilty Records (starting number of "availability" fields to render in the "when I am available" form, 8 is a goto default)<br/>
 </li>
 </ul>
 
@@ -355,10 +355,10 @@ Maximum precis title character length (50 as a good default.)<br/>
 <li id="sec-1_2_3_5">Other interesting settings <br/>
 <ul>
 <li>
-Are kids avaiable (This should most probably be set to "FALSE", it is a hold-over from backwards compatibility.)<br/>
+Are kids avaiable (This should probably be set to "FALSE", it is a hold-over from backwards compatibility.)<br/>
 </li>
 <li>
-Is this a bilingual event (This should probably be set to "FALSE" due to it's lack of complete support across the system, and the next few ignored.)<br/>
+Is this a bilingual event (This should probably be set to "FALSE" due to it's lack of complete support across the system, and the next few elements in this list, ignored.)<br/>
 </li>
 <li>
 What the second language is.<br/>
@@ -446,7 +446,7 @@ starting the install process.<br/>
 
 <p>This is where you will put your standard footer, that will be<br/>
 below all the public pages, to customize the look and feel to<br/>
-macth your event's presentation.<br/>
+match your event's presentation.<br/>
 </p></div>
 
 </div>
@@ -455,9 +455,9 @@ macth your event's presentation.<br/>
 <h3 id="sec-3_3"><span class="section-number-3">3.3</span> HeaderTemplate.html </h3>
 <div class="outline-text-3" id="text-3_3">
 
-<p>This is where yo will put your standard header, that will be<br/>
+<p>This is where you will put your standard header, that will be<br/>
 above all the public pages, to customize the look and feel to<br/>
-macth your event's presentation.<br/>
+match your event's presentation.<br/>
 </p></div>
 
 </div>
@@ -468,7 +468,7 @@ macth your event's presentation.<br/>
 
 <p>If you choose to have images of your participants with their<br/>
 bios, make this directory, and any pictures that match the<br/>
-badgename of the participant, will be put next to the bios.<br/>
+badgename of the participant will be put next to the bios.<br/>
 </p></div>
 
 </div>
@@ -490,41 +490,41 @@ replace the default text.  Some examples of these files are:<br/>
 
 
 <p><br/>
-<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span> Here you can submit new suggestions or look at existing ideas for
+<pre class="example">&lt;P&gt; Here you can submit new suggestions or look at existing ideas for
 panels, Meet and Greets, Special Interest Groups, Birds Of a Feathers,
-Author Readings, and Author Signings.<span style="color: #98fb98;">&lt;/P&gt;</span>
-<span style="color: #98fb98;">&lt;P&gt;</span> As suggestions come in and we read through them, we will rework
+Author Readings, and Author Signings.&lt;/P&gt;
+&lt;P&gt; As suggestions come in and we read through them, we will rework
 them, combine similar ideas into a single item, split large ones into
 pieces that will fit in their alloted time, etc.  Please expect the
-suggestions you submit to evolve over time.<span style="color: #98fb98;">&lt;/P&gt;</span>
-<span style="color: #98fb98;">&lt;P&gt;</span> Also, please note that we always have more suggestions than are
+suggestions you submit to evolve over time.&lt;/P&gt;
+&lt;P&gt; Also, please note that we always have more suggestions than are
 physically possible with the space and time we have, so not everything
-will make it.  We do save good ideas for future conventions.<span style="color: #98fb98;">&lt;/P&gt;</span>
-<span style="color: #98fb98;">&lt;UL&gt;</span> 
-  <span style="color: #98fb98;">&lt;LI&gt;</span> <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormSearchSession.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">Search</span><span style="color: #00ffff;">&lt;/A&gt;</span> for similar
+will make it.  We do save good ideas for future conventions.&lt;/P&gt;
+&lt;UL&gt; 
+  &lt;LI&gt; &lt;A HREF="BrainstormSearchSession.php"&gt;Search&lt;/A&gt; for similar
   ideas or get inspiration.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Email <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"mailto:program@ourcon.org"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">
-  program@ourcon.org</span><span style="color: #00ffff;">&lt;/A&gt;</span> to suggest modifications on existing
+  &lt;LI&gt; Email &lt;A HREF="mailto:program@ourcon.org"&gt;
+  program@ourcon.org&lt;/A&gt; to suggest modifications on existing
   suggestion.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormCreateSession.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">Enter a panel, MnG, SIG,
-  BOF, et al suggestion.</span><span style="color: #00ffff;">&lt;/A&gt;</span>
-  <span style="color: #98fb98;">&lt;LI&gt;</span> <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormSuggestPresenter.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">Enter a suggestion for
-  a Presenter.</span><span style="color: #00ffff;">&lt;/A&gt;</span>
-  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportAll.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">All</span><span style="color: #00ffff;">&lt;/A&gt;</span>
+  &lt;LI&gt; &lt;A HREF="BrainstormCreateSession.php"&gt;Enter a panel, MnG, SIG,
+  BOF, et al suggestion.&lt;/A&gt;
+  &lt;LI&gt; &lt;A HREF="BrainstormSuggestPresenter.php"&gt;Enter a suggestion for
+  a Presenter.&lt;/A&gt;
+  &lt;LI&gt; See the list of &lt;A HREF="BrainstormReportAll.php"&gt;All&lt;/A&gt;
   suggestions (we've seen some and not see others).
-  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportUnseen.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">New</span><span style="color: #00ffff;">&lt;/A&gt;</span>
+  &lt;LI&gt; See the list of &lt;A HREF="BrainstormReportUnseen.php"&gt;New&lt;/A&gt;
   suggestions that have been entered recently (may not be fit for
   young eyes, we haven't see these yet).
-  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportReviewed.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">
-  Reviewed</span><span style="color: #00ffff;">&lt;/A&gt;</span> suggestions we are currently working through.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportLikely.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">Likely to
-  Occur</span><span style="color: #00ffff;">&lt;/A&gt;</span> suggestions we are or will allow participants to sign up
+  &lt;LI&gt; See the list of &lt;A HREF="BrainstormReportReviewed.php"&gt;
+  Reviewed&lt;/A&gt; suggestions we are currently working through.
+  &lt;LI&gt; See the list of &lt;A HREF="BrainstormReportLikely.php"&gt;Likely to
+  Occur&lt;/A&gt; suggestions we are or will allow participants to sign up
   for.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportScheduled.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">
-  Scheduled</span><span style="color: #00ffff;">&lt;/A&gt;</span> suggestions.  These are very likely to happen at con.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Email <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"mailto:vols@ourcon.org"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">vols@ourcon.org</span><span style="color: #00ffff;">&lt;/A&gt;</span> to
+  &lt;LI&gt; See the list of &lt;A HREF="BrainstormReportScheduled.php"&gt;
+  Scheduled&lt;/A&gt; suggestions.  These are very likely to happen at con.
+  &lt;LI&gt; Email &lt;A HREF="mailto:vols@ourcon.org"&gt;vols@ourcon.org&lt;/A&gt; to
   volunteer to help process these ideas.
-<span style="color: #98fb98;">&lt;/UL&gt;</span>
+&lt;/UL&gt;
 </pre>
 
 
@@ -540,7 +540,7 @@ will make it.  We do save good ideas for future conventions.<span style="color: 
 
 
 <p><br/>
-<pre class="src src-html">and before I introduce our speaker, let me ask, How many of you are
+<pre class="example">and before I introduce our speaker, let me ask, How many of you are
 new?  Well, let me tell you, you are in for one heck of a ride.&lt;br
 </pre>
 
@@ -557,11 +557,11 @@ new?  Well, let me tell you, you are in for one heck of a ride.&lt;br
 
 
 <p><br/>
-<pre class="src src-html">Welcome to the Cirucs Fantastique.  We really appreciate all your
+<pre class="example">Welcome to the Circus Fantastique.  We really appreciate all your
 efforts to make this weekend go so well.  Below is your schedule for
 the weekend.  If you have any questions, please, do not hesitate to
 find our staff in the Green Room, or whomever our point-person is at
-that time.  <span style="color: #98fb98;">&lt;/P&gt;&lt;P&gt;</span>I hope you will have all the fun you can!<span style="color: #98fb98;">&lt;hr&gt;</span>
+that time.  &lt;/P&gt;&lt;P&gt;I hope you will have all the fun you can!&lt;hr&gt;
 </pre>
 
 
@@ -577,38 +577,38 @@ that time.  <span style="color: #98fb98;">&lt;/P&gt;&lt;P&gt;</span>I hope you w
 
 
 <p><br/>
-<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span> Please note the tabs above.  One of them will take you to your
+<pre class="example">&lt;P&gt; Please note the tabs above.  One of them will take you to your
 participant view.  Another will allow you to manage Sessions.  Note
 that Sessions is the generic term we are using for all Events,
-Classes, Panels, BOF/SIG/MnG, other activities, etc. <span style="color: #98fb98;">&lt;/P&gt;</span>
+Classes, Panels, BOF/SIG/MnG, other activities, etc. &lt;/P&gt;
 
-<span style="color: #98fb98;">&lt;P&gt;</span>Current roles:
-<span style="color: #98fb98;">&lt;UL&gt;</span>
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Pre-con Logistics: That tall guy, with the 'stash
-  <span style="color: #98fb98;">&lt;LI&gt;</span>At-con Logistics: Bill(1)
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Speaker Liaison: Kat (with a "K")
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Assistant Speaker Liaison: Bill(2)
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Volunteer Captain: Cat
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Assistant Volunteer Captain: The Other Cat
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Green Room Czar: Tim
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Point People: Helium 1, Helium 2, and the Stupid But Cute.
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Schedule Wranglers: The group as a whole
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Technical support: Will
-  <span style="color: #98fb98;">&lt;LI&gt;</span>(Tentative) Technical Support: Nyot
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Bio/copy editing: Rupert
-<span style="color: #98fb98;">&lt;/UL&gt;&lt;/P&gt;</span>
+&lt;P&gt;Current roles:
+&lt;UL&gt;
+  &lt;LI&gt;Pre-con Logistics: That tall guy, with the 'stash
+  &lt;LI&gt;At-con Logistics: Bill(1)
+  &lt;LI&gt;Speaker Liaison: Kat (with a "K")
+  &lt;LI&gt;Assistant Speaker Liaison: Bill(2)
+  &lt;LI&gt;Volunteer Captain: Cat
+  &lt;LI&gt;Assistant Volunteer Captain: The Other Cat
+  &lt;LI&gt;Green Room Czar: Tim
+  &lt;LI&gt;Point People: Helium 1, Helium 2, and the Stupid But Cute.
+  &lt;LI&gt;Schedule Wranglers: The group as a whole
+  &lt;LI&gt;Technical support: Will
+  &lt;LI&gt;(Tentative) Technical Support: Nyot
+  &lt;LI&gt;Bio/copy editing: Rupert
+&lt;/UL&gt;&lt;/P&gt;
 
-<span style="color: #98fb98;">&lt;P&gt;</span>The general flow of sessions over time is: <span style="color: #98fb98;">&lt;UL&gt;</span> <span style="color: #98fb98;">&lt;LI&gt;</span>Brainstorm -
+&lt;P&gt;The general flow of sessions over time is: &lt;UL&gt; &lt;LI&gt;Brainstorm -
 New session idea put in to the system by one of our brainstorm
 users. The idea may or may not be sane or good.  It could be too big
 or too small or duplicative.
 
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Edit Me - New session idea that a participant or staff member
+  &lt;LI&gt;Edit Me - New session idea that a participant or staff member
 entered.  An idea entered by a brainstorm user that is non-offensive
 should be moved to this status.  These are still rough and may well
 have issues.  Still could be duplicates.
 
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Vetted - A real session that we would like to see happen.  At
+  &lt;LI&gt;Vetted - A real session that we would like to see happen.  At
 this point the language should be fairly close to final in the
 description. Spell checking and grammar checking should have happened.
 It needs have publication status, a type, kid category, division and a
@@ -618,14 +618,14 @@ This is the minimal status that participants are allowed to sign up
 for.  Avoid duplicates (however the list is still approximately 3
 times what will actually run).
 
-  <span style="color: #98fb98;">&lt;LI&gt;</span>Assigned - Session has participants assigned to it.
+  &lt;LI&gt;Assigned - Session has participants assigned to it.
 
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Scheduled - Session is in the schedule (do not set this by hand
+  &lt;LI&gt; Scheduled - Session is in the schedule (do not set this by hand
 as the tool actually sets this for you when you schedule it in a
 room!)  The language needs to match what you want to see
-<span style="color: #98fb98;">&lt;b&gt;</span><span style="font-weight: bold;">published</span><span style="color: #98fb98;">&lt;/b&gt;</span>.
+&lt;b&gt;published&lt;/b&gt;.
 
-<span style="color: #98fb98;">&lt;/UL&gt;</span>
+&lt;/UL&gt;
 </pre>
 
 
@@ -641,70 +641,70 @@ room!)  The language needs to match what you want to see
 
 
 <p><br/>
-<pre class="src src-html"><span style="color: #98fb98;">&lt;UL&gt;</span>
-<span style="color: #98fb98;">&lt;H3&gt;</span><span style="font-weight: bold;">Introducer: (in room)</span><span style="color: #98fb98;">&lt;/H3&gt;</span>
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Sign in at the Green Room, so we know everything is covered.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Collect anything needful, like handouts and blank surveys, or
+<pre class="example">&lt;UL&gt;
+&lt;H3&gt;Introducer: (in room)&lt;/H3&gt;
+  &lt;LI&gt; Sign in at the Green Room, so we know everything is covered.
+  &lt;LI&gt; Collect anything needful, like handouts and blank surveys, or
   if it is the first class of the day, the signs, from the Green Room.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Be at class 10 minutes early (at the actual end of the previous
+  &lt;LI&gt; Be at class 10 minutes early (at the actual end of the previous
   class).
-  <span style="color: #98fb98;">&lt;LI&gt;</span> You may, if you wish, pre-stage surveys on people's seats for
+  &lt;LI&gt; You may, if you wish, pre-stage surveys on people's seats for
   when they arrive.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> At the beginning of class, move to the front of the room and do
+  &lt;LI&gt; At the beginning of class, move to the front of the room and do
   the introduction.  The Con Blurb and the speaker(s) bio(s) as
   provided.
-  <span style="color: #98fb98;">&lt;UL&gt;</span>
-    <span style="color: #98fb98;">&lt;LI&gt;</span>NOTE: A board member or member of the organizing team may step
+  &lt;UL&gt;
+    &lt;LI&gt;NOTE: A board member or member of the organizing team may step
     forward to do the introduction, in which case, please hand them
     the paper to do it off of.
-  <span style="color: #98fb98;">&lt;/UL&gt;</span>
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Take the head count of the class (twice) and write them in the
+  &lt;/UL&gt;
+  &lt;LI&gt; Take the head count of the class (twice) and write them in the
   spots provided on the introduction paper.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Be in the back of the room during class so:
-  <span style="color: #98fb98;">&lt;UL&gt;</span>
-     <span style="color: #98fb98;">&lt;LI&gt;</span> When the Runner comes to check on the room, you can let them
+  &lt;LI&gt; Be in the back of the room during class so:
+  &lt;UL&gt;
+     &lt;LI&gt; When the Runner comes to check on the room, you can let them
      know if there is anything needed.
-     <span style="color: #98fb98;">&lt;LI&gt;</span> If there is vending in the class, you might need to mind the
+     &lt;LI&gt; If there is vending in the class, you might need to mind the
      table, while the presenter is presenting, if they don't already
      have someone assisting them.
-     <span style="color: #98fb98;">&lt;LI&gt;</span> Using the signs provided, give the 10 minute, 5 minute, and
+     &lt;LI&gt; Using the signs provided, give the 10 minute, 5 minute, and
      Done warnings.
-     <span style="color: #98fb98;">&lt;LI&gt;</span> Hand out/collect surveys and pencils at the end of class.
-  <span style="color: #98fb98;">&lt;/UL&gt;</span>
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Do the hand-off to the next Introducer, which includes the
+     &lt;LI&gt; Hand out/collect surveys and pencils at the end of class.
+  &lt;/UL&gt;
+  &lt;LI&gt; Do the hand-off to the next Introducer, which includes the
   blank surveys and the signs.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Return the filled out surveys collected folded in the class
+  &lt;LI&gt; Return the filled out surveys collected folded in the class
   sheet, when you are checking in at the end of your stint.
-<span style="color: #98fb98;">&lt;H3&gt;</span><span style="font-weight: bold;">Volunteer: (outside room)</span><span style="color: #98fb98;">&lt;/H3&gt;</span>
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Check that people coming into the room have the correct
+&lt;H3&gt;Volunteer: (outside room)&lt;/H3&gt;
+  &lt;LI&gt; Check that people coming into the room have the correct
   wristbands.  If they do not, politely send them to registration (if
   it is open) to get them.  If there is an issue, notify the point
   person.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Stay at the door during class to ensure that excessive ins and
+  &lt;LI&gt; Stay at the door during class to ensure that excessive ins and
   outs don't occur.
-<span style="color: #98fb98;">&lt;H3&gt;</span><span style="font-weight: bold;">Runner: (all over con)</span><span style="color: #98fb98;">&lt;/H3&gt;</span>
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Ensure that every class room has what it needs.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Ensure that that A/V and supply needs of a class are met prior
+&lt;H3&gt;Runner: (all over con)&lt;/H3&gt;
+  &lt;LI&gt; Ensure that every class room has what it needs.
+  &lt;LI&gt; Ensure that that A/V and supply needs of a class are met prior
   to it beginning.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> You can quietly and respectfully bring any supplies into the
+  &lt;LI&gt; You can quietly and respectfully bring any supplies into the
   room as a class is going on, and make sure the Introducer knows what
   was delivered.
-<span style="color: #98fb98;">&lt;H3&gt;</span><span style="font-weight: bold;">Green Room: (green room)</span><span style="color: #98fb98;">&lt;/H3&gt;</span>
+&lt;H3&gt;Green Room: (green room)&lt;/H3&gt;
 The green room is a space designated for Presenters, Programming
 Volunteers, Panelists, and Assistants only.  While you are welcome to
 hang out there, it is also the Programming Team's Ground Zero, so, you
 might be pressed into service.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Assist the Program Participants, including disseminating their
+  &lt;LI&gt; Assist the Program Participants, including disseminating their
   packets as necessary.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Check in and out the Introducers and Volunteers as they come on
+  &lt;LI&gt; Check in and out the Introducers and Volunteers as they come on
   and off their stints.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Make sure all necessary supplies are available for the
+  &lt;LI&gt; Make sure all necessary supplies are available for the
   volunteers as they arrive for check in, including any handouts.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Be available to collect the surveys, etc as they arrive.
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Stay in the room and hang out with everyone!
-  <span style="color: #98fb98;">&lt;LI&gt;</span> Be in contact with the Programming Point Person for any
+  &lt;LI&gt; Be available to collect the surveys, etc as they arrive.
+  &lt;LI&gt; Stay in the room and hang out with everyone!
+  &lt;LI&gt; Be in contact with the Programming Point Person for any
   problem.
-<span style="color: #98fb98;">&lt;/UL&gt;</span>
+&lt;/UL&gt;
 </pre>
 
 
@@ -720,16 +720,16 @@ might be pressed into service.
 
 
 <p><br/>
-<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span>Dude!
+<pre class="example">&lt;P&gt;Dude!
 
-<span style="color: #98fb98;">&lt;P&gt;</span>Thanks for helping us, man.  You really came through.  Like,
+&lt;P&gt;Thanks for helping us, man.  You really came through.  Like,
 everyone learned bags of info, and your flow was rad!
 
-<span style="color: #98fb98;">&lt;P&gt;</span>Every hand was good, yours were great!  High-five!
+&lt;P&gt;Every hand was good, yours were great!  High-five!
 
-<span style="color: #98fb98;">&lt;P&gt;</span>Dude!
+&lt;P&gt;Dude!
 
-<span style="color: #98fb98;">&lt;P&gt;</span>The org-folk.
+&lt;P&gt;The org-folk.
 </pre>
 
 
@@ -745,7 +745,7 @@ everyone learned bags of info, and your flow was rad!
 
 
 <p><br/>
-<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span>We would like to express our gratitude for your contribution to the
+<pre class="example">&lt;P&gt;We would like to express our gratitude for your contribution to the
 Ancient Order of the Spies Convention.  Your expertise, wisdom,
 experience, and willingness to share your knowledge are critical
 elements in what will make our event a success.  We here at Opsidec do
@@ -754,7 +754,7 @@ secretive/spying/hiding people, but we must also rely on support from
 generous allies such as yourself.  Your time and effort are much
 appreciated, and are a benefit to all in this lifestyle.
 
-<span style="color: #98fb98;">&lt;P&gt;</span>You contribution is helping us to create an event in which any and
+&lt;P&gt;You contribution is helping us to create an event in which any and
 all people can learn and access information that they may not have
 available to them in their general life.  This process is crucial to
 expand knowledge and support throughout our cities and also throughout
@@ -763,9 +763,9 @@ atmosphere that truly fosters our community.  Thank you again for your
 participation in the Ancient Order of the Spies Convention.  Your
 addition to this event is an advantage to all.
 
-<span style="color: #98fb98;">&lt;P&gt;</span>With much gratitude,
+&lt;P&gt;With much gratitude,
 
-<span style="color: #98fb98;">&lt;P&gt;</span>Opsidec Limited Organizers
+&lt;P&gt;Opsidec Limited Organizers
 </pre>
 
 
@@ -781,7 +781,7 @@ addition to this event is an advantage to all.
 
 
 <p><br/>
-<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span>We would like to express our gratitude for your contribution to the
+<pre class="example">&lt;P&gt;We would like to express our gratitude for your contribution to the
 Con of your Dreams.  Your willingness to share your time and energy
 are critical elements in what will make our event a success.  We here
 at Dream Productions do all we can to create a safe and inviting
@@ -789,7 +789,7 @@ environment for all sleapers, but we must also rely on support from
 generous allies such as yourself.  Your effort is much appreciated,
 and is a benefit to all in this lifestyle.
 
-<span style="color: #98fb98;">&lt;P&gt;</span>You contribution is helping us to create an event in which any and
+&lt;P&gt;You contribution is helping us to create an event in which any and
 all people can learn and access information that they may not have
 available to them in their general life.  This process is crucial to
 expand knowledge and support throughout our cities and also throughout
@@ -798,9 +798,9 @@ atmosphere that truly fosters our community.  Thank you again for your
 participation in the Con of your Dreams.  Your addition to this event
 is an advantage to all.
 
-<span style="color: #98fb98;">&lt;P&gt;</span>With much gratitude,
+&lt;P&gt;With much gratitude,
 
-<span style="color: #98fb98;">&lt;P&gt;</span>The Programming Team
+&lt;P&gt;The Programming Team
 </pre>
 
 
@@ -899,7 +899,7 @@ Log into the database: (it should ask you for your MySQL root password) <br/>
 
 
 <p><br/>
-<pre class="src src-html">mysql -h*DBHOSTNAME* -p -u root
+<pre class="example">mysql -h*DBHOSTNAME* -p -u root
 </pre>
 
 
@@ -913,7 +913,7 @@ Create your database:<br/>
 
 
 <p><br/>
-<pre class="src src-html">create database DBNAME;
+<pre class="example">create database DBNAME;
 </pre>
 
 
@@ -927,7 +927,7 @@ Grant <b>DBUSERNAME</b> user access with the password of <b>DBPASSWORD</b>:<br/>
 
 
 <p><br/>
-<pre class="src src-html">grant all on DBNAME.* to 'DBUSERNAME'@'MYHOST' identified by 'DBPASSOWRD';
+<pre class="example">grant all on DBNAME.* to 'DBUSERNAME'@'MYHOST' identified by 'DBPASSOWRD';
 grant lock tables on DBNAME.* to 'DBUSERNAME'@'MYHOST';
 </pre>
 
@@ -942,7 +942,7 @@ Reset the privilages<br/>
 
 
 <p><br/>
-<pre class="src src-html">flush privileges;
+<pre class="example">flush privileges;
 </pre>
 
 
@@ -960,7 +960,7 @@ Reset the privilages<br/>
 <p>change directories until you are in the Install directory, then:<br/>
 </p>
 <p><br/>
-<pre class="src src-html">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./EmptyDbase.dump
+<pre class="example">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./EmptyDbase.dump
 </pre>
 
 
@@ -1056,25 +1056,25 @@ customized for your convention.<br/>
 One set of tables that you might be updating across the life of this<br/>
 instance of Zambia is the Reports table.  As people generate useful<br/>
 reports, they do tend to get shared.  We hope that, should you<br/>
-develope noteworthy reports, you share them back with the community<br/>
+develop noteworthy reports, you share them back with the community<br/>
 at large, as well.<br/>
 </p>
 <p><br/>
 Loading such reports are often as simple as:<br/>
 </p>
 <p><br/>
-<pre class="src src-html">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./NewReports.sql
+<pre class="example">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./NewReports.sql
 </pre>
 
 
 
 
 
-Sharing them is as simple as, say exporting your new report called<br/>
+Sharing them is as simple as, say, exporting your new report called<br/>
 <i>voltimepanelists</i>:<br/>
 </p>
 <p><br/>
-<pre class="src src-html">echo "SELECT * FROM Reports WHERE reportname='voltimepanelists';" | 
+<pre class="example">echo "SELECT * FROM Reports WHERE reportname='voltimepanelists';" | 
 mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &gt; ./NewReports.sql
 </pre>
 
@@ -1098,7 +1098,7 @@ mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &gt; ./NewReports.sql
 <div class="outline-text-3" id="text-7_1">
 
 <p>If you are going to be using Zambia and not some other registration<br/>
-pacage, you are going to need access to the program, to begin<br/>
+package, you are going to need access to the program, to begin<br/>
 adding the people who are going to be working with the system.<br/>
 </p>
 <p><br/>
@@ -1109,7 +1109,7 @@ directory.<br/>
 <p><br/>
 </p>
 <p><br/>
-<pre class="src src-html">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./Inital_Users.sql
+<pre class="example">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./Inital_Users.sql
 </pre>
 
 
@@ -1146,7 +1146,7 @@ added.<br/>
 From congo, do:<br/>
 </p>
 <p><br/>
-<pre class="src src-html">export_program_participants_congo.sql
+<pre class="example">export_program_participants_congo.sql
 </pre>
 
 
@@ -1191,7 +1191,7 @@ list is probably the first thing you wish to do.<br/>
 <p><br/>
 </p>
 <p><br/>
-<pre class="src src-html">YourWebPath/webpages/genreport.php?reportname=tasklistdisplay
+<pre class="example">YourWebPath/webpages/genreport.php?reportname=tasklistdisplay
 </pre>
 
 
@@ -1234,7 +1234,7 @@ sure.<br/>
 The script is invoked as:<br/>
 </p>
 <p><br/>
-<pre class="src src-html">backup_mysql /your/path/to/Zambia-FFF/instance
+<pre class="example">backup_mysql /your/path/to/Zambia-FFF/instance
 </pre>
 
 

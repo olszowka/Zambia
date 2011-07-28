@@ -72,7 +72,7 @@
 #+ATTR_LaTeX: longtable width=\textwidth align=|p{3.5cm}|p{13.4cm}|
 #+ATTR_HTML: border="1" rules="all" frame="all"
 |-----------------+--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Acronym or term | Definition                                                                                                                                       |
+| Acronym or Term | Definition                                                                                                                                       |
 |-----------------+--------------------------------------------------------------------------------------------------------------------------------------------------|
 | precis          | An element in your schedule.  Could be a class, panel, gathering, party, room-coverage, lounge, or whatever else you might have on your schedule |
 | LAMP            | Linux + Apache + MySQL + PHP/Perl/Python                                                                                                         |
@@ -104,17 +104,17 @@
      + Con name.
      + Zambia administrator email.
      + Brainstorm email.
-     + Programmin email.
+     + Programming email.
      + Registration email.
      + Number of days the con will run (code works for 1-8 currently.)
      + Date and time the con will start (In the format of yyyy-mm-dd HH:MM:DD for parsing purposes.  Suggested 00:00:00 for the start time.)
      + URL of the con (without the leading http:// in the URL.)
      + Logo for the con (gif, png, etc.)
 **** Very useful information
-     + Guests of Honor badgelist (if you have specific featured Guests of Honor, the badgeids get listed here.)
+     + Guests of Honor badgelist (if you have specific featured Guests of Honor, the badgeids get listed here, comma seperated.)
      + Prefered total number of sessions upper limit (so your presenters don't oversubscribe themselves 5 is good default for a 3-4 day con.)
      + Prefered daily number of sessions upper limit (3 is a good default.)
-     + Availabilty Records (starting number of "availability" fields to render in the "when I am available" form, 8 is a godo default)
+     + Availabilty Records (starting number of "availability" fields to render in the "when I am available" form, 8 is a goto default)
 **** Description minimums and maximums
      + Maximum web biography character length (Some cons have a different limits for what is on the web, and what is in the book, 3000 characters is a good starting default.)
      + Maximum book biography character length (if there isn't a difference in the limit, set to the same as above.)
@@ -125,8 +125,8 @@
      + Minimum precis title character length (You need a precis title of at least this long to be acceptable, 5 as a good default.)
      + Maximum precis title character length (50 as a good default.)
 **** Other interesting settings
-     + Are kids avaiable (This should most probably be set to "FALSE", it is a hold-over from backwards compatibility.)
-     + Is this a bilingual event (This should probably be set to "FALSE" due to it's lack of complete support across the system, and the next few ignored.)
+     + Are kids avaiable (This should probably be set to "FALSE", it is a hold-over from backwards compatibility.)
+     + Is this a bilingual event (This should probably be set to "FALSE" due to it's lack of complete support across the system, and the next few elements in this list, ignored.)
      + What the second language is.
      + Title caption in second language.
      + Description caption in second language.
@@ -161,15 +161,15 @@
 ** FooterTemplate.html
      This is where you will put your standard footer, that will be
      below all the public pages, to customize the look and feel to
-     macth your event's presentation.
+     match your event's presentation.
 ** HeaderTemplate.html
-     This is where yo will put your standard header, that will be
+     This is where you will put your standard header, that will be
      above all the public pages, to customize the look and feel to
-     macth your event's presentation.
+     match your event's presentation.
 ** Participant_Images
      If you choose to have images of your participants with their
      bios, make this directory, and any pictures that match the
-     badgename of the participant, will be put next to the bios.
+     badgename of the participant will be put next to the bios.
 ** Verbiage
      If you wish to customize what is put forth to your participants,
      many of the pages allow for customization.  The list of them will
@@ -220,7 +220,7 @@ new?  Well, let me tell you, you are in for one heck of a ride.<br
 #+end_src
 *** Schedule_Blurb_0
 #+begin_src html :exports both :results silent
-Welcome to the Cirucs Fantastique.  We really appreciate all your
+Welcome to the Circus Fantastique.  We really appreciate all your
 efforts to make this weekend go so well.  Below is your schedule for
 the weekend.  If you have any questions, please, do not hesitate to
 find our staff in the Green Room, or whomever our point-person is at
@@ -506,7 +506,7 @@ is an advantage to all.
   One set of tables that you might be updating across the life of this
   instance of Zambia is the Reports table.  As people generate useful
   reports, they do tend to get shared.  We hope that, should you
-  develope noteworthy reports, you share them back with the community
+  develop noteworthy reports, you share them back with the community
   at large, as well.
 
   Loading such reports are often as simple as:
@@ -514,7 +514,7 @@ is an advantage to all.
     mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME < ./NewReports.sql
 #+end_src
 
-  Sharing them is as simple as, say exporting your new report called
+  Sharing them is as simple as, say, exporting your new report called
   /voltimepanelists/:
 #+begin_src html :exports both :results silent
     echo "SELECT * FROM Reports WHERE reportname='voltimepanelists';" | 
@@ -524,7 +524,7 @@ is an advantage to all.
 * Account creation
 ** Standalone
    If you are going to be using Zambia and not some other registration
-   pacage, you are going to need access to the program, to begin
+   package, you are going to need access to the program, to begin
    adding the people who are going to be working with the system.
 
    Currently the easiest way to do so is to add the first three users,

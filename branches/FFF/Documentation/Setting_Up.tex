@@ -94,7 +94,7 @@ Zambia is a piece of Con Management Software.  This document is a ``How To'' gui
 \begin{longtable}{|p{3.5cm}|p{13.4cm}|}
 \caption{Acronyms and Definitions} \label{tbl:acronymsdefinitions}\\
 \hline
- Acronym or term  &  Definition                                                                                                                                       \\
+ Acronym or Term  &  Definition                                                                                                                                       \\
 \hline
 \endhead
 \hline\multicolumn{2}{r}{Continued on next page}\
@@ -148,7 +148,7 @@ Zambia is a piece of Con Management Software.  This document is a ``How To'' gui
 \item Con name.
 \item Zambia administrator email.
 \item Brainstorm email.
-\item Programmin email.
+\item Programming email.
 \item Registration email.
 \item Number of days the con will run (code works for 1-8 currently.)
 \item Date and time the con will start (In the format of yyyy-mm-dd HH:MM:DD for parsing purposes.  Suggested 00:00:00 for the start time.)
@@ -160,10 +160,10 @@ Zambia is a piece of Con Management Software.  This document is a ``How To'' gui
 \item Very useful information
 \label{sec-1_2_3_3}%
 \begin{itemize}
-\item Guests of Honor badgelist (if you have specific featured Guests of Honor, the badgeids get listed here.)
+\item Guests of Honor badgelist (if you have specific featured Guests of Honor, the badgeids get listed here, comma seperated.)
 \item Prefered total number of sessions upper limit (so your presenters don't oversubscribe themselves 5 is good default for a 3-4 day con.)
 \item Prefered daily number of sessions upper limit (3 is a good default.)
-\item Availabilty Records (starting number of ``availability'' fields to render in the ``when I am available'' form, 8 is a godo default)
+\item Availabilty Records (starting number of ``availability'' fields to render in the ``when I am available'' form, 8 is a goto default)
 \end{itemize}
 
 
@@ -184,8 +184,8 @@ Zambia is a piece of Con Management Software.  This document is a ``How To'' gui
 \item Other interesting settings
 \label{sec-1_2_3_5}%
 \begin{itemize}
-\item Are kids avaiable (This should most probably be set to ``FALSE'', it is a hold-over from backwards compatibility.)
-\item Is this a bilingual event (This should probably be set to ``FALSE'' due to it's lack of complete support across the system, and the next few ignored.)
+\item Are kids avaiable (This should probably be set to ``FALSE'', it is a hold-over from backwards compatibility.)
+\item Is this a bilingual event (This should probably be set to ``FALSE'' due to it's lack of complete support across the system, and the next few elements in this list, ignored.)
 \item What the second language is.
 \item Title caption in second language.
 \item Description caption in second language.
@@ -232,19 +232,19 @@ Zambia is a piece of Con Management Software.  This document is a ``How To'' gui
 
      This is where you will put your standard footer, that will be
      below all the public pages, to customize the look and feel to
-     macth your event's presentation.
+     match your event's presentation.
 \subsection{HeaderTemplate.html}
 \label{sec-3_3}
 
-     This is where yo will put your standard header, that will be
+     This is where you will put your standard header, that will be
      above all the public pages, to customize the look and feel to
-     macth your event's presentation.
+     match your event's presentation.
 \subsection{Participant\_{}Images}
 \label{sec-3_4}
 
      If you choose to have images of your participants with their
      bios, make this directory, and any pictures that match the
-     badgename of the participant, will be put next to the bios.
+     badgename of the participant will be put next to the bios.
 \subsection{Verbiage}
 \label{sec-3_5}
 
@@ -303,7 +303,7 @@ new?  Well, let me tell you, you are in for one heck of a ride.<br
 \label{sec-3_5_3}
 
 \begin{verbatim}
-Welcome to the Cirucs Fantastique.  We really appreciate all your
+Welcome to the Circus Fantastique.  We really appreciate all your
 efforts to make this weekend go so well.  Below is your schedule for
 the weekend.  If you have any questions, please, do not hesitate to
 find our staff in the Green Room, or whomever our point-person is at
@@ -633,7 +633,7 @@ mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME < ./EmptyDbase.dump
   One set of tables that you might be updating across the life of this
   instance of Zambia is the Reports table.  As people generate useful
   reports, they do tend to get shared.  We hope that, should you
-  develope noteworthy reports, you share them back with the community
+  develop noteworthy reports, you share them back with the community
   at large, as well.
 
   Loading such reports are often as simple as:
@@ -643,7 +643,7 @@ mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME < ./NewReports.sql
 
 
 
-  Sharing them is as simple as, say exporting your new report called
+  Sharing them is as simple as, say, exporting your new report called
   \emph{voltimepanelists}:
 \begin{verbatim}
 echo "SELECT * FROM Reports WHERE reportname='voltimepanelists';" | 
@@ -655,7 +655,7 @@ mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME > ./NewReports.sql
 \label{sec-7_1}
 
    If you are going to be using Zambia and not some other registration
-   pacage, you are going to need access to the program, to begin
+   package, you are going to need access to the program, to begin
    adding the people who are going to be working with the system.
 
    Currently the easiest way to do so is to add the first three users,
