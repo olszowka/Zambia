@@ -1,4 +1,4 @@
-## This script adds a new table to support the custom text mechanism
+## This script creates two tables to support the new participant credentials info tracking
 CREATE TABLE `Credentials` (
 	`credentialid` int(11) NOT NULL auto_increment,
 	`credentialname` varchar(100),
