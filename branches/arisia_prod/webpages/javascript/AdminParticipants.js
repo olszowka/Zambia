@@ -34,6 +34,8 @@ function chooseParticipant(badgeid) {
 	document.getElementById("pname").value = document.getElementById("pnameSPAN_" + badgeid).innerHTML;
 	document.getElementById("pname").readOnly = false;
 	originalInterested = document.getElementById("interestedHID_" + badgeid).value;
+	if (originalInterested=="")
+		originalInterested = 0;
 	document.getElementById("interested").value = originalInterested;
 	document.getElementById("interested").disabled = false;
 	document.getElementById("bio").value = document.getElementById("bioHID_" + badgeid).value;

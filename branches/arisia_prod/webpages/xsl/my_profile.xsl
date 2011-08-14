@@ -24,7 +24,7 @@
                 <span class="inputhadlabel"><select id="interested" name="interested" class="yesno" onchange="myProfile.anyChange('interested');"
                     onkeyup="myProfile.anyChange('interested')">
                     <option value="0">
-                        <xsl:if test="$interested=0">
+                        <xsl:if test="$interested=0 or !$interested">
                             <xsl:attribute name="selected">selected</xsl:attribute>
                         </xsl:if>
                         <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></option>
