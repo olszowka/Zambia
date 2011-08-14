@@ -1,4 +1,22 @@
 <?php
+function showCustomText($pre,$tag,$post) {
+	global $customTextArray;
+	if (strlen($x = $customTextArray[$tag])>0) {
+		echo $pre.$x.$post;
+		}
+	}
+	
+function appendCustomTextArrayToXML($xmlDoc) {
+	global $customTextArray;
+	$customTextNode = $xmlDoc->createElement("customText");
+	$docNode = $xmlDoc->getElementsByTagName("doc")->item(0);
+	$customTextNode = $docNode->appendChild($customTextNode);
+	foreach ($customTextArray as $tag => $customTextValue) {
+		$customTextNode->setAttribute($tag,$customTextValue);
+		}
+	return $xmlDoc;
+	}
+
 // Function conv_min2hrsmin()
 // Input is unchecked form input in minutes
 // Output is string in MySql time format
@@ -45,7 +63,7 @@ function get_nameemail_from_post(&$name, &$email) {
 // the $partavail global variable with it.
 //
 // Notes on variables:
-// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are just 1-24 whole hours, 0 for unset; 1 is midnight start of day 
+// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are indexes into Times table, 0 for unset; 
 //
 function get_participant_availability_from_post() {
     global $partAvail;

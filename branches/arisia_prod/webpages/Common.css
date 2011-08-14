@@ -8,6 +8,16 @@
 	font-family: Verdana, Arial;
 	font-size: 0.9em;
 	}
+	
+input[readonly], textarea[readonly] {
+	background-color: lightGray;
+	color: #808080;
+	}
+
+textarea.readonly {
+     background-color: lightgray;
+     color: #808080;
+     }
 
 .newformdiv { /* keep label, control, and note together */
 	display: inline-block;
@@ -15,12 +25,18 @@
 	margin-bottom: 0.6em;
 	margin-left: 0.5em;
 	margin-right: 1.5em;
+	font-family: Verdana, Arial;
+	font-size: 0.9em;
 	}
 
 .newformbuttondiv {
 	margin-top: 0.6em;
 	margin-left: 0.5em;
 	text-align: center;
+	}
+
+.newformnote {
+	font-weight: bold;
 	}
 
 .newforminputspan {
@@ -79,12 +95,14 @@
 	}
 
 /* Everything below this section is not part of the CSS refactor 1 Feb 2011 PBO*/
+/*
 * {
     margin: 0;
     padding: 0;
     font-family: Arial;
     font-size: 1em;
     }
+*/
 
 BODY {
     font-family: Verdana, Arial;
@@ -154,6 +172,70 @@ H4 {
     margin-right: 5em
     }
 
+DIV.dialog, SPAN.dialog {
+	font-family: Verdana, Arial;
+    font-size: 0.75em;
+	}
+	
+DIV.action, SPAN.action {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	color: blue;
+	background-color: white;
+	}
+
+DIV.resultBox {
+	font-family: Verdana, Arial;
+	font-size: 10pt;
+	color: DarkGreen;
+	background-color: white;
+	border: 1px solid DimGray;
+	margin: 2em 10em 2em 10em;
+	min-height: 4em;
+	padding: 0.5em;
+	}
+
+DIV.actionB, SPAN.actionB {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	font-style:italic;
+	color: teal;
+	background-color: white;
+	}
+
+DIV.action_hover, SPAN.action_hover {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	color: yellow;
+	background-color: black;
+	cursor: pointer;
+	}
+
+DIV.actionB_hover, SPAN.actionB_hover {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	font-style:italic;
+	color: orange;
+	background-color: black;
+	cursor: pointer;
+	}
+	
+div.emptyResult, span.emptyResult {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	color: black;
+	background-color: white;
+}
+
+div.beforeResult, span.beforeResult {
+	font-family: Verdana, Arial;
+	font-size: 9pt;
+	font-style:italic;
+	color: LightSteelBlue;
+	background-color: white;
+	}
+	
+
 .Welcome {
     font-weight: bold;
     font-size: 80%;
@@ -219,7 +301,6 @@ DT {
     }
 
 TABLE.login {
-    align: center;
     text-align: center;
     border: 1px;
     padding: 10px;
@@ -248,22 +329,24 @@ TH {
     padding-right: 0.2em
     }
 
-P.errmsg {
+P.errmsg, SPAN.errmsg {
     color: red;
-    font-weight: 700;
+    font-weight: bold;
+	font-size: 1.2em;
     }
 
 P.regmsg {
     color: #33FF00;
-    font-weight: 700;
-    font-size: 200%;
+    font-weight: bold;
+    font-size: 1.2em;
     text-align: center;
     }
 
-TEXTAREA.readonly {
-     background-color: lightgray;
-     color: #808080;
-     }
+SPAN.regmsg {
+	color: #00AA44;
+    font-weight: bold;
+    font-size: 1.2em;
+	}
 
 .emphasis {
      font-weight: bold;
@@ -345,11 +428,6 @@ TEXTAREA.readonly {
     padding-left: 3em;
     }
 
-.note {
-     margin-left: 3em;
-     font-size: 120%;
-     }
-
 .congo-note {
     font-size: 120%;
     max-width: 35em;
@@ -362,7 +440,7 @@ select, input {
     }
 
 select.yesno {
-    width: 4em
+    width: 60px;
     }
 
 
@@ -412,22 +490,6 @@ LABEL.dense {
     margin-left: 10px;
     margin-top: 5px;
     margin-bottom: 10px;
-    }
-
-TR.regform {
-    height: 2.5em;
-    }
-
-SELECT.regform2, INPUT.regform2, SPAN.regform2 {
-    vertical-align: center;
-    margin-bottom: 0.5 em;
-    margin-left: 0 em;
-    }
-
-TD.regform3 {
-    vertical-align: center;
-    padding-bottom: 0.5 em;
-    margin-bottom: 0.5 em
     }
 
 .denseformrow {
@@ -619,51 +681,55 @@ TD.regform3 {
     display: table;
     }
 
-#bestway {
-    display: table-row;
-    height: 30px;
-    }
-
-#bwbuttons {
-    display: table-cell;
-    }
-
-#bwemail, #bwpmail, #bwphone {
-    display: inline;
-    width: 100%;
-    }
-
 .my_contact {
     font-size: 60%;
     }
 
-#bestway input[type="radio"]{
-    font-size: 60%;
+.userFormDiv, .userFormTXT, .userFormINPTXT {
+	font-family: verdana, arial;
+	font-size: 15px;
+	}
+
+.note {
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+    width: 30em;
+	}
+
+.noteWLfPad {
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+    width: 31em;
+	padding-left:1em;
+	}
+
+.labelNinput {
+    margin-bottom: 1em;
+	padding-left:1em;
     }
 
-#bestway label {
-    display: inline;
-    position: static;
-    text-align: left;
-    height: 1em;
-    font-family: Arial;
-    font-weight: bold;
-    color: #004080;
-    text-decoration : none;
+.widelabel {
+    display: inline-block;
+    width: 30em;
+    word-wrap: break-word;
+    vertical-align:top;
     }
 
-.divlistbox {
-    display: table-row;
-    height: 45px;
+.inputhadlabel {
+    padding-left: 0.5em;
+    vertical-align: top;
     }
+
+.verticalRadioButs {
+    display: inline-block;
+    }
+
+.checkboxList {
+	padding-left:3em;
+	}
 
 .padbot0p5 {
     padding-bottom: .5em;
-    }
-
-.spanvalcb {
-    display: table-cell;
-    padding-left: 5px;
     }
 
 .radiohead {
@@ -675,6 +741,16 @@ TD.regform3 {
     text-align: "&nbsp;";*/
     padding-left: 0;
     }
+
+.hiddenWarning {
+	display: none;
+	}
+	
+.revealedWarning {
+	display: inline;
+	color: red;
+	font-weight: bold;
+	}
 
 .password {
     display: table-row;
@@ -808,16 +884,39 @@ TD#smallspacer {
     
 BUTTON {
     background-color: #C0C0C0;
-    padding: 0.5 em
+    padding: 0.5em;
     }
-    
-.SubmitButton {
+
+button.SubmitButton {
     background-color: #C0C0C0;
+	padding: 0.2em;
+    }
+
+button.SubmitButtonNew {
+	font-family: verdana, arial;
+	font-size: 15px;
+    background-color: #C0C0C0;
+	width: 100%;
+    }
+
+button.ActionButton {
+	font-size: 10pt;
+	padding: 5pt;
     }
     
 .SubmitDiv {
     text-align: right;
     margin-right: 5em
+    }
+
+.SubmitDivNew {
+    width: 100%;
+    }
+
+.SubmitDiv2New {
+    width: 10em;
+	margin-left: auto;
+	margin-right: auto;
     }
     
 OL, UL {
@@ -844,44 +943,40 @@ OL, UL {
         background-image: none;
         color: white;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 12pt;
-        height: 19px;
+        font-size: 11pt;
+        height: 18px;
 }
 .mousedovertab {
         background: white;
         background-image: none;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 12pt;
-        height: 19px;
+        font-size: 11pt;
+        height: 18px;
 }
 .unusabletab {
         background: #606060;
         background-image: none;
         color: white;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 12pt;
-        height: 19px;
+        font-size: 11pt;
+        height: 18px;
 }
 /* definitions for the table at the top of the pages */
 TABLE.tabhead {
-    border-collapse: collapse;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: .3em;
-    margin-bottom: 0px;
+    margin: 0px;
     width: 100%;
     border: 0px;
     padding: 0px;
     }
-TR.tabrows {
-   margin-left: 0px;
-   margin-right: 0px;
-   margin-top: 0px;
-   margin-bottom: 0px;
+TR.tabrow {
+   margin: 0px;
    border: 0px; 
    padding: 0px;
    }
 TD.tabblocks {
+	padding-top: 3px;
+	padding-bottom: 0;
+	margin-bottom: 0;
     background: #808080;
     color: white;
     }
@@ -892,22 +987,32 @@ TD.head {
  * these are used to override the browser's default decoration on
  * links
  */
+span.usabletab span.unusabletab span.mousedovertab {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	vertical-align: bottom;
+	}
+
 span.usabletab a:link {
-        color: white;
-        text-decoration: none;
-}
+	color: white;
+	text-decoration: none;
+	}
+	
 span.usabletab a:visited {
-        color: white;
-        text-decoration: none;
-}
+	color: white;
+	text-decoration: none;
+	}
+
 span.mousedovertab a:link {
-        color: #002985;
-        text-decoration: none;
-}
+	color: #002985;
+	text-decoration: none;
+	}
+
 span.mousedovertab a:visited {
-        color: #002985;
-        text-decoration: none;
-}
+	color: #002985;
+	text-decoration: none;
+	}
+
 /*
  * attributes of the images used to draw the borders of the tabs
  */

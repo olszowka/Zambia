@@ -196,6 +196,9 @@ function validate_session() {
 // Reads global $partAvail and performs tests.
 // If a test fails, then the global $message is populated
 // with the HTML of an error message.
+// This validation code assumes the times in Times table for start and end are
+// strictly monoticially increasing with the index--start and end are part of same
+// monotonic sequence.
 //
 function validate_participant_availability() {
     global $partAvail, $messages;

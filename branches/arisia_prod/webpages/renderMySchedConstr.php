@@ -6,47 +6,47 @@ if (!isset($daymap)) {
 ?>
 
 <?php if ($message_error!="") { ?>
-    <P class="errmsg"><?php echo $message_error; ?></P>
+    <p class="errmsg"><?php echo $message_error; ?></p>
     <?php } ?>
 <?php if ($message!="") { ?>
-    <P class="regmsg"><?php echo $message; ?></P>
+    <p class="regmsg"><?php echo $message; ?></p>
     <?php } ?>
-<DIV id=constraint>
+<div id=constraint>
 <//?php print_r($partAvail);?>
-<FORM name="constrform" method=POST action="SubmitMySchedConstr.php">
+<form name="constrform" method=POST action="SubmitMySchedConstr.php">
 
-    <H2>Number of program items I'm willing to participate in:</H2>
+    <h2>Number of Program Items I'm Willing to Participate In:</h2>
 <p> Please indicate the maximum number of panels you are willing to be on.  
 You may indicate a total for each day as well as an overall maximum for 
-the whole con.  Please note that the tool limits you to <?php echo PREF_TTL_SESNS_LMT;?> or fewer 
+the whole con.  Please note that Zambia limits you to <?php echo PREF_TTL_SESNS_LMT;?> or fewer 
 total sessions and <?php echo PREF_DLY_SESNS_LMT;?> each day.  There is no need for the numbers to add up.  We'll use this 
 for guidance when assigning and scheduling panels. </p>
-            <DIV class="regform">
-                <SPAN><LABEL for="maxprog">Preferred Total Number of Panels &nbsp;</LABEL><INPUT type="text" size=3 name="maxprog" 
-                     value="<?php echo $partAvail["maxprog"];?>">&nbsp;&nbsp;</SPAN></DIV>
+            <div class="regform">
+                <span><label for="maxprog">preferred total number of panels &nbsp;</label><input type="text" size=3 name="maxprog" 
+                     value="<?php echo $partavail["maxprog"];?>">&nbsp;&nbsp;</span></div>
 <?php
 // Don't ask about day limits at all if only 1 day con
           if (CON_NUM_DAYS>1) {
 // 1st row on page contains up to 4 days of inputs
-              echo "<DIV class=\"regform\">\n";
+              echo "<div class=\"regform\">\n";
               for ($i=1; $i<=min(4,CON_NUM_DAYS); $i++) {
                   $D=$daymap["long"][$i];
-                  echo "<SPAN><LABEL for=\"maxprogday$i\">$D maximum &nbsp;</LABEL>\n";
+                  echo "<span><label for=\"maxprogday$i\">$D maximum &nbsp;</label>\n";
                   $N=$partAvail["maxprogday$i"];
-                  echo "    <INPUT id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>&nbsp;&nbsp;&nbsp;&nbsp;</SPAN>\n";
+                  echo "    <input id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>&nbsp;&nbsp;&nbsp;&nbsp;</span>\n";
                   }
-              echo "</DIV>\n";
+              echo "</div>\n";
               }
 // 2nd row on page contains up to 4 more if needed
           if (CON_NUM_DAYS>4) {
-              echo "<DIV class=\"regform\">\n";
+              echo "<div class=\"regform\">\n";
               for ($i=5; $i<=CON_NUM_DAYS; $i++) {
                   $D=$daymap["long"][$i];
-                  echo "<SPAN><LABEL for=\"maxprogday$i\">$D maximum &nbsp;</LABEL>\n";
+                  echo "<span><label for=\"maxprogday$i\">$D maximum &nbsp;</label>\n";
                   $N=$partAvail["maxprogday$i"];
-                  echo "    <INPUT id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>&nbsp;&nbsp;</SPAN>\n";
+                  echo "    <input id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>&nbsp;&nbsp;</span>\n";
                   }
-              echo "</DIV>\n";
+              echo "</div>\n";
               }
 ?>
 <hr>
@@ -68,57 +68,69 @@ guidance when scheduling your panels.</p>
     <td> End Time </td> 
   </tr> <!-- header row  -->
 <?php
+$xsl = new DomDocument;
+$xsl->load('xsl/ScheduleConstrSelect.xsl');
+$xslt = new XsltProcessor();
+$xslt->importStylesheet($xsl);
 //  Notes on variables:
-//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are measured in 1-24 whole hours
-//     0 is unset, 1 is midnight beginning of day
+//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are indexes into table Times
+//     0 is unset
     for ($i=1; $i<=AVAILABILITY_ROWS; $i++) {
-        echo "  <TR> <!-- Row $i -->\n";
+        echo "  <tr> <!-- Row $i -->\n";
         if (CON_NUM_DAYS>1) {
-            echo "    <TD><SELECT name=\"availstartday_$i\">\n";
+            echo "    <td><select name=\"availstartday_$i\">\n";
             $sel = isset($partAvail["availstartday_$i"])?"":" selected";
-            echo "        <OPTION value=0$sel>&nbsp;</OPTION>\n";
+            echo "        <option value=0$sel>&nbsp;</option>\n";
             for ($j=1; $j<=CON_NUM_DAYS; $j++) {
                 $sel = ($partAvail["availstartday_$i"]==$j)?" selected":"";
                 $day = $daymap["long"][$j];
-                echo "        <OPTION value=$j $sel>$day</OPTION>\n";
+                echo "        <option value=$j $sel>$day</option>\n";
                 }
-            echo "        </SELECT></TD>\n";
+            echo "        </select></td>\n";
             }
-        echo "    <TD><SELECT name=\"availstarttime_$i\">\n";
+        echo "    <td><select name=\"availstarttime_$i\">\n";
         $timeindex=(isset($partAvail["availstarttime_$i"]))?$partAvail["availstarttime_$i"]:0;
-        populate_select_from_table("Times", $timeindex, "", true);
-        echo "        </SELECT></TD>\n";
-        echo "    <TD> Until </TD>\n";
+		// use XSLT to render <option> tags
+		$variablesNode->setAttribute("option","start");
+		$variablesNode->setAttribute("index",$timeindex);
+		echo ($xslt->transformToXML($timesXML));
+		// end XSLT
+        echo "        </select></td>\n";
+        echo "    <td> Until </td>\n";
         if (CON_NUM_DAYS>1) {
-            echo "    <TD><SELECT name=\"availendday_$i\">\n";
+            echo "    <td><select name=\"availendday_$i\">\n";
              $sel = isset($partAvail["availendday_$i"])?"":" selected";
-            echo "        <OPTION value=0$sel>&nbsp;</OPTION>\n";
+            echo "        <option value=0$sel>&nbsp;</option>\n";
             for ($j=1; $j<=CON_NUM_DAYS; $j++) {
                 $sel = ($partAvail["availendday_$i"]==$j)?" selected":"";
                 $day = $daymap["long"][$j];
-                echo "        <OPTION value=$j $sel>$day</OPTION>\n";
+                echo "        <option value=$j $sel>$day</option>\n";
                 }
-            echo "        </SELECT></TD>\n";
+            echo "        </select></td>\n";
             }
-        echo "    <TD><SELECT name=\"availendtime_$i\">\n";
+        echo "    <td><select name=\"availendtime_$i\">\n";
         $timeindex=(isset($partAvail["availendtime_$i"]))?$partAvail["availendtime_$i"]:0;
-        populate_select_from_table("Times", $timeindex, "", true);
-        echo "        </SELECT></TD>\n";
-        echo "    </TR>\n";
+		// use XSLT to render <option> tags
+		$variablesNode->setAttribute("option","end");
+		$variablesNode->setAttribute("index",$timeindex);
+		echo ($xslt->transformToXML($timesXML));
+		// end XSLT
+        echo "        </select></td>\n";
+        echo "    </tr>\n";
         }
 ?>
 </table>
+<?php showCustomText("<div>","note_after_times","</div>"); ?>
+<hr style="margin-top:5px">
 
-<hr>
+<div id="conflict">
+    <div class="sectionheader">Please don't schedule me for a panel that conflicts with:</DIV>
 
-<DIV id="conflict">
-    <DIV class="sectionheader">Please don't schedule me for a panel that conflicts with:</DIV>
-
-    <DIV class="entries">
-    <TEXTAREA name="preventconflict" rows=3 cols=72><?php
-        echo htmlspecialchars($partAvail["preventconflict"],ENT_NOQUOTES);?></TEXTAREA>
-        </DIV>
-    </DIV>
+    <div class="entries">
+    <textarea name="preventconflict" rows=3 cols=72><?php
+        echo htmlspecialchars($partAvail["preventconflict"],ENT_NOQUOTES);?></textarea>
+        </div>
+    </div>
 
 <?php
     if (MY_AVAIL_KIDS===TRUE) {
@@ -129,17 +141,17 @@ guidance when scheduling your panels.</p>
         }
     ?>
 
-<DIV id="otherconstraints">
-    <DIV class="sectionheader">Other constraints or conflicts that we should know about?</DIV>
-    <DIV class="entries">
-        <TEXTAREA name="otherconstraints" rows=3 cols=72><?php
-            echo htmlspecialchars($partAvail["otherconstraints"],ENT_NOQUOTES);?></TEXTAREA>
-        </DIV>
-    </DIV>
+<div id="otherconstraints">
+    <div class="sectionheader">Other constraints or conflicts that we should know about?</div>
+    <div class="entries">
+        <textarea name="otherconstraints" rows=3 cols=72><?php
+            echo htmlspecialchars($partAvail["otherconstraints"],ENT_NOQUOTES);?></textarea>
+        </div>
+    </div>
 
-<DIV class="submit">
-    <DIV id="submit"><BUTTON class="SubmitButton" type=submit value="Save">Save</BUTTON></DIV>
-    </DIV>
-</FORM>
-</DIV>
+<div class="submit">
+    <div id="submit"><button class="SubmitButton" type=submit value="Save">Save</button></div>
+    </div>
+</form>
+</div>
 <?php participant_footer(); ?>

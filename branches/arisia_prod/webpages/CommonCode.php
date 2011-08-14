@@ -14,9 +14,18 @@
         };
     if (isLoggedIn()==false and !isset($logging_in)) {
 	    $message="Session expired. Please log in again.";
+		if (isset($_GET["ajax_request_action"]) || isset($_POST["ajax_request_action"])) {
+			RenderErrorAjax("Session expired. Please <a HREF=\"index.php\">log in</a> again.");
+			exit();
+			}
 	    require ('login.php');
 	    exit();
-    };
+    	};
+    if (!populateCustomTextArray()) {
+		$message_error="Failed to retrieve custom text. ".$message_error;
+        RenderError($title,$message_error);
+        exit();
+		}
 
     // function to generate a clickable tab.
     // 'text' contains the text that should appear in the tab.

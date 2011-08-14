@@ -1,21 +1,25 @@
 <?php
-    function staff_header($title) {
-      require_once ("javascript_functions.php");
+	function staff_header($title) {
+	require_once ("javascript_functions.php");
 ?>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/strict.dtd">
-<html xmlns="http://www.w3.org/TR/xhtml1/transitional">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Zambia -- <?php echo $title ?></title>
-  <link rel="stylesheet" href="StaffSection.css" type="text/css">
-  <?php javascript_for_edit_session();
-        mousescripts(); ?>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Zambia -- <?php echo $title ?></title>
+	<link rel="stylesheet" href="StaffSection.css" type="text/css" />
+	<link rel="stylesheet" href="jquery/jquery-ui-1.8.13.custom.css" type="text/css" />
 </head>
 <body>
-<H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>
-<hr>
-
+	<script type="text/javascript">
+		var thisPage="<?php echo $title; ?>";
+	</script>
+<?php
+	load_javascript();
+	load_jquery();
+?>
+<h1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</h1>
 <?php if (isset($_SESSION['badgeid'])) { ?>
   <table class="tabhead">
     <tr class="tabrow">
@@ -46,7 +50,7 @@
             </td>
           <td class="Welcome">Welcome <?php echo $_SESSION['badgename']; ?>
             </td>
-          <td><A class="logout" HREF="logout.php">&nbsp;Logout&nbsp;</A>
+          <td><a class="logout" HREF="logout.php">&nbsp;Logout&nbsp;</a>
             </td>
           <td width="25">&nbsp;
             </td>
@@ -57,5 +61,5 @@
 <?php } ?>
   </table>
 
-<H2 class="head"><?php echo $title ?></H2>
+<h2 class="head"><?php echo $title ?></h2>
 <?php } ?>

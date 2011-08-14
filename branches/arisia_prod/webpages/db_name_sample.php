@@ -12,6 +12,8 @@ define("REG_EMAIL","registration@somewhere.net");
 define("CON_NUM_DAYS",5); // code works for 1 - 8
 define("CON_START_DATIM","2009-08-06 00:00:00"); // Intended for use by report scripts; currently used by static
         // grids only (just a checkin test)
+define("DAY_CUTOFF_HOUR",8) // times before this hour (of 0-23) are considered previous day
+		// used for Participant Availability only
 define("SMTP_ADDRESS","smtp-out.netbusters.com");
 define("SWIFT_DIRECTORY","/home/zambia_admin/Swift/"); //location of installed swift library
 define("PREF_TTL_SESNS_LMT",10); // Input data verification limit for preferred total number of sessions
@@ -19,8 +21,8 @@ define("PREF_DLY_SESNS_LMT",5); // Input data verification limit for preferred d
 define("AVAILABILITY_ROWS",8); // Number of rows of availability records to render
 define("MAX_BIO_LEN",1000); // Maximum length (in characters) permitted for participant biographies
 define("MY_AVAIL_KIDS","FALSE"); // Enables questions regarding no. of kids in Fasttrack on "My Availability"
-define("ENABLE_SHARE_EMAIL_QUESTION",TRUE); // Enables question regarding sharing participant email address
-define("ENABLE_BESTWAY_QUESTION",FALSE); // Enables question regarding best way to contact participant
+define("ENABLE_SHARE_EMAIL_QUESTION",true); // Enables question regarding sharing participant email address
+define("ENABLE_BESTWAY_QUESTION",false); // Enables question regarding best way to contact participant
 define("BILINGUAL","TRUE"); // Triggers extra fields in Session and "My General Interests"
 define("SECOND_LANG","FRENCH");
 define("SECOND_TITLE_CAPTION","Titre en fran&ccedil;ais");
