@@ -5,6 +5,9 @@ $(document).ready(function() {
 		case "Administer Participants":
 			initializeAdminParticipants();
 			break;
+		case "My Profile":
+			myProfile.initialize();
+			break;
 		default:
 			window.status="Ready."
 		}

@@ -14,6 +14,11 @@ input[readonly], textarea[readonly] {
 	color: #808080;
 	}
 
+textarea.readonly {
+     background-color: lightgray;
+     color: #808080;
+     }
+
 .newformdiv { /* keep label, control, and note together */
 	display: inline-block;
 	margin-top: 0.6em;
@@ -90,12 +95,14 @@ input[readonly], textarea[readonly] {
 	}
 
 /* Everything below this section is not part of the CSS refactor 1 Feb 2011 PBO*/
+/*
 * {
     margin: 0;
     padding: 0;
     font-family: Arial;
     font-size: 1em;
     }
+*/
 
 BODY {
     font-family: Verdana, Arial;
@@ -322,23 +329,24 @@ TH {
     padding-right: 0.2em
     }
 
-P.errmsg {
+P.errmsg, SPAN.errmsg {
     color: red;
-    font-weight: 700;
+    font-weight: bold;
 	font-size: 1.2em;
     }
 
 P.regmsg {
     color: #33FF00;
-    font-weight: 700;
+    font-weight: bold;
     font-size: 1.2em;
     text-align: center;
     }
 
-TEXTAREA.readonly {
-     background-color: lightgray;
-     color: #808080;
-     }
+SPAN.regmsg {
+	color: #00AA44;
+    font-weight: bold;
+    font-size: 1.2em;
+	}
 
 .emphasis {
      font-weight: bold;
@@ -420,11 +428,6 @@ TEXTAREA.readonly {
     padding-left: 3em;
     }
 
-.note {
-     margin-left: 3em;
-     font-size: 120%;
-     }
-
 .congo-note {
     font-size: 120%;
     max-width: 35em;
@@ -437,7 +440,7 @@ select, input {
     }
 
 select.yesno {
-    width: 4em
+    width: 60px;
     }
 
 
@@ -678,51 +681,55 @@ LABEL.dense {
     display: table;
     }
 
-#bestway {
-    display: table-row;
-    height: 30px;
-    }
-
-#bwbuttons {
-    display: table-cell;
-    }
-
-#bwemail, #bwpmail, #bwphone {
-    display: inline;
-    width: 100%;
-    }
-
 .my_contact {
     font-size: 60%;
     }
 
-#bestway input[type="radio"]{
-    font-size: 60%;
+.userFormDiv, .userFormTXT, .userFormINPTXT {
+	font-family: verdana, arial;
+	font-size: 15px;
+	}
+
+.note {
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+    width: 30em;
+	}
+
+.noteWLfPad {
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+    width: 31em;
+	padding-left:1em;
+	}
+
+.labelNinput {
+    margin-bottom: 1em;
+	padding-left:1em;
     }
 
-#bestway label {
-    display: inline;
-    position: static;
-    text-align: left;
-    height: 1em;
-    font-family: Arial;
-    font-weight: bold;
-    color: #004080;
-    text-decoration : none;
+.widelabel {
+    display: inline-block;
+    width: 30em;
+    word-wrap: break-word;
+    vertical-align:top;
     }
 
-.divlistbox {
-    display: table-row;
-    height: 45px;
+.inputhadlabel {
+    padding-left: 0.5em;
+    vertical-align: top;
     }
+
+.verticalRadioButs {
+    display: inline-block;
+    }
+
+.checkboxList {
+	padding-left:3em;
+	}
 
 .padbot0p5 {
     padding-bottom: .5em;
-    }
-
-.spanvalcb {
-    display: table-cell;
-    padding-left: 5px;
     }
 
 .radiohead {
@@ -734,6 +741,16 @@ LABEL.dense {
     text-align: "&nbsp;";*/
     padding-left: 0;
     }
+
+.hiddenWarning {
+	display: none;
+	}
+	
+.revealedWarning {
+	display: inline;
+	color: red;
+	font-weight: bold;
+	}
 
 .password {
     display: table-row;
@@ -867,12 +884,19 @@ TD#smallspacer {
     
 BUTTON {
     background-color: #C0C0C0;
-    padding: 0.5 em
+    padding: 0.5em;
     }
 
 button.SubmitButton {
     background-color: #C0C0C0;
 	padding: 0.2em;
+    }
+
+button.SubmitButtonNew {
+	font-family: verdana, arial;
+	font-size: 15px;
+    background-color: #C0C0C0;
+	width: 100%;
     }
 
 button.ActionButton {
@@ -883,6 +907,16 @@ button.ActionButton {
 .SubmitDiv {
     text-align: right;
     margin-right: 5em
+    }
+
+.SubmitDivNew {
+    width: 100%;
+    }
+
+.SubmitDiv2New {
+    width: 10em;
+	margin-left: auto;
+	margin-right: auto;
     }
     
 OL, UL {

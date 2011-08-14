@@ -14,6 +14,10 @@
         };
     if (isLoggedIn()==false and !isset($logging_in)) {
 	    $message="Session expired. Please log in again.";
+		if (isset($_GET["ajax_request_action"]) || isset($_POST["ajax_request_action"])) {
+			RenderErrorAjax("Session expired. Please <a HREF=\"index.php\">log in</a> again.");
+			exit();
+			}
 	    require ('login.php');
 	    exit();
     	};

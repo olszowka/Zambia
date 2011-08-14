@@ -14,8 +14,10 @@ function mysql_query_XML($query_array) {
 		while($row = mysql_fetch_assoc($result)) {
 			$rowNode = $xml->createElement("row");
 			$rowNode = $queryNode->appendChild($rowNode);
+			//print_r($row);
 			foreach ($row as $fieldname => $fieldvalue) {
-				$rowNode->setAttribute($fieldname, mb_convert_encoding($fieldvalue,"UTF-8","ISO-8859-1"));
+				if ($fieldvalue!="" && $fieldvalue!==null)
+					$rowNode->setAttribute($fieldname, mb_convert_encoding($fieldvalue,"UTF-8","ISO-8859-1"));
 				}
 			}
 
@@ -571,7 +573,7 @@ function retrieve_participant_from_db($badgeid) {
 // global array $participant
 //
 function getCongoData($badgeid) {
-    global $message_error,$message2,$congoinfo,$link;
+    global $message_error,$message2,$congoinfo,$link,$participant;
     $query= <<<EOD
 SELECT
         badgeid,

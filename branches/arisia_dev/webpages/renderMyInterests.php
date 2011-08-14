@@ -34,7 +34,7 @@ function renderMyInterests ($title, $error, $message) {
     echo "        </DIV>\n";
     echo "    </DIV>\n";
     echo "<DIV>\n";
-    echo "    <DIV><LABEL for=\"yespeople\"><p>People with whom I'd like to be on a panel:</p></LABEL></DIV>\n";
+    echo "    <DIV><LABEL for=\"yespeople\"><p>People with whom I'd like to be on a panel: (Leave blank for none.)</p></LABEL></DIV>\n";
     echo "    <DIV><TEXTAREA name=\"yespeople\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
@@ -43,7 +43,7 @@ function renderMyInterests ($title, $error, $message) {
     echo "        </DIV>\n";
     echo "    </DIV>\n";
     echo "<DIV>\n";
-    echo "    <DIV><LABEL for=\"nopeople\"><p>People with whom I'd rather not be on a panel:</p></LABEL></DIV>\n";
+    echo "    <DIV><LABEL for=\"nopeople\"><p>People with whom I'd rather not be on a panel: (Leave blank for none.)</p></LABEL></DIV>\n";
     echo "    <DIV><TEXTAREA name=\"nopeople\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";

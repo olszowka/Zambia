@@ -78,6 +78,10 @@ EOD;
 EOD;
 			}
 	$xml=mysql_query_XML($query);
+    if (!$xml) {
+        echo $message_error;
+        exit();
+        }
 	$xsl = new DomDocument;
 	$xsl->load('xsl/AdminParticipants.xsl');
 	$xslt = new XsltProcessor();

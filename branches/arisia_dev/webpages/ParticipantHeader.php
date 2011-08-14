@@ -13,7 +13,13 @@
 
 </head>
 <body>
-<?php load_javascript(); ?>
+<script type="text/javascript">
+	var thisPage="<?php echo $title; ?>";
+</script>
+<?php
+load_javascript();
+load_jquery();
+?>
 <h1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</h1> 
 <?php if (isset($_SESSION['badgeid'])) { ?>
   <table class="tabhead">

@@ -13,24 +13,24 @@ if (isset($pubsname)) {
              }
         }
 participant_header($title);
-?>
 
-<?php if ($message_error!="") { ?>
-	<P class="errmsg"><?php echo $message_error; ?></P>
-	<?php } ?>
-<?php if ($message!="") { ?>
-	<P class="regmsg"><?php echo $message; ?></P>
-	<?php } ?>
-<FORM name="partform" method=POST action="SubmitMyContact.php">
+if ($message_error!="") { 
+	echo "<P class=\"errmsg\">".$message_error."</P>";
+	}
+if ($message!="") {
+	echo "<P class=\"regmsg\">".$message."</P>";
+	}
+?>
+<form name="partform" method=POST action="SubmitMyContact.php">
     <div id="update_section">
         <div class="divlistbox">
             <span class="spanlabcb">I am interested and able to participate in 
-programming<BR>for <?php echo CON_NAME; ?>&nbsp;</span>
+programming<br>for <?php echo CON_NAME; ?>&nbsp;</span>
      <?php $int=$participant['interested']; ?>
             <span class="spanvalcb"><SELECT name="interested" class="yesno">
-                <OPTION value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp;</OPTION>
-                <OPTION value=1 <?php if ($int==1) {echo "selected";} ?> >Yes</OPTION>
-                <OPTION value=2 <?php if ($int==2) {echo "selected";} ?> >No</OPTION></SELECT>
+                <option value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp;</option>
+                <option value=1 <?php if ($int==1) {echo "selected";} ?> >Yes</option>
+                <option value=2 <?php if ($int==2) {echo "selected";} ?> >No</option></select>
                 </span>
             </div>
 <?php
@@ -119,7 +119,9 @@ if (!(may_I('EditBio'))) { // no permission to edit bio
     echo " readonly";
     }
 echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>"; ?>
-        <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
+<div>
+	<div>Please indicate if you are any of the following:<div>
+        <div class="submitdiv"><button class="submitbutton" type="submit" name="submit" >Update</button></div>
     <div id="congo_section" class="border2222">
         <div class="congo_table">
             <div class="congo_data">

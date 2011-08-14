@@ -5,6 +5,17 @@ function showCustomText($pre,$tag,$post) {
 		echo $pre.$x.$post;
 		}
 	}
+	
+function appendCustomTextArrayToXML($xmlDoc) {
+	global $customTextArray;
+	$customTextNode = $xmlDoc->createElement("customText");
+	$docNode = $xmlDoc->getElementsByTagName("doc")->item(0);
+	$customTextNode = $docNode->appendChild($customTextNode);
+	foreach ($customTextArray as $tag => $customTextValue) {
+		$customTextNode->setAttribute($tag,$customTextValue);
+		}
+	return $xmlDoc;
+	}
 
 // Function conv_min2hrsmin()
 // Input is unchecked form input in minutes
