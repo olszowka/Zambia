@@ -154,8 +154,7 @@ function participant_header($title) {
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     maketab("My Panel Interests",may_I('my_panel_interests'),"PartPanelInterests.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
-    echo "<!-- XXX this should have a may_I -->\n       ";
-    maketab("My General Interests",1,"my_interests.php");
+    maketab("My General Interests",may_I('my_gen_int_write'),"my_interests.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     if (may_I('Staff')) { 
       maketab("Staff View",may_I('Staff'),"StaffPage.php"); 

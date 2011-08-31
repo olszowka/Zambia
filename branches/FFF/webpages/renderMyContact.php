@@ -94,6 +94,10 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
       <span class="value"><?php echo $congoinfo["badgename"]; ?></span>
       </div>
     <div class="congo_data">
+      <span class="label">Publications Name&nbsp;</span>
+      <span class="value"><?php echo $participant["pubsname"]; ?></span>
+      </div>
+    <div class="congo_data">
       <span class="label">Phone Info&nbsp;</span>
       <span class="value"><?php echo $congoinfo["phone"]; ?></span>
       </div>
@@ -111,10 +115,12 @@ programming for <?php echo CON_NAME; ?>&nbsp;</span>
       <span class="value"><?php echo $congoinfo["postaddress2"]; ?></span>
       </div>
       <?php } ?>
+<?php if ((strlen($congoinfo['postcity'])>0) or (strlen($congoinfo['poststate'])>0) or (strlen($congoinfo['postzip'])>0)) { ?>      
     <div class="congo_data">
       <span class="label">&nbsp;</span>
       <span class="value"><?php echo "{$congoinfo['postcity']}, {$congoinfo['poststate']} {$congoinfo['postzip']}"; ?></span>
       </div>
+      <?php } ?>
 <?php if (strlen($congoinfo['postcountry'])>0) { ?>      
     <div class="congo_data">
       <span class="label">&nbsp;</span>
@@ -127,34 +133,30 @@ not correct, contact <A href="mailto:<?php echo
 REG_EMAIL; ?>">registration</a> with your 
 current information. This data is downloaded periodically from the registration database, and should be correct within a week.
 </div>
-<HR>
-<?php if (!(may_I('EditBio'))) { // no permission to edit bio
-          echo "<P class=\"errmsg\">At this time, you may not edit either your biography or your name for publication.  They have already gone to print.</P>\n";
-          }
-echo "<BR>\n";
-echo "Your name as you wish to have it published&nbsp;&nbsp;";
-echo "<INPUT type=\"text\" size=\"20\" name=\"pubsname\" ";
-echo "value=\"".htmlspecialchars($participant["pubsname"],ENT_COMPAT)."\"";
-if (!(may_I('EditBio'))) { // no permission to edit bio
-    echo " readonly";
-    }
-echo "><BR><BR>\n";
+
+<?php
 $bio=MAX_BIO_LEN;
 $progbio=MAX_PROG_BIO_LEN;
-echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your web-based biography ($bio characters or fewer):</LABEL><BR>\n";
-echo "Note: Your web-based biography will appear immediately following your name on the web page.<BR>\n";
-echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\"";
-if (!(may_I('EditBio'))) { // no permission to edit bio
-    echo " readonly";
-    }
-echo ">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>\n<BR>\n";
-echo "<LABEL class=\"spanlabcb\" for=\"progbio\">Your program guide biography ($progbio characters or fewer):</LABEL><BR>\n";
-echo "Note: Your program guide biography will appear immediately following your name in the program book.<BR>\n";
-echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"progbio\"";
-if (!(may_I('EditBio'))) { // no permission to edit progbio
-    echo " readonly";
-    }
-echo ">".htmlspecialchars($participant["progbio"],ENT_COMPAT)."</TEXTAREA>"; ?>
+if (may_I('EditBio')) {
+  echo "<HR>\n<BR>\n";
+  echo "Your name as you wish to have it published&nbsp;&nbsp;";
+  echo "<INPUT type=\"text\" size=\"20\" name=\"pubsname\" ";
+  echo "value=\"".htmlspecialchars($participant["pubsname"],ENT_COMPAT)."\"><BR><BR>\n";
+  echo "<LABEL class=\"spanlabcb\" for=\"bio\">Your web-based biography ($bio characters or fewer):</LABEL><BR>\n";
+  echo "Note: Your web-based biography will appear immediately following your name on the web page.<BR>\n";
+  echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>\n<BR>\n";
+  echo "<LABEL class=\"spanlabcb\" for=\"progbio\">Your program guide biography ($progbio characters or fewer):</LABEL><BR>\n";
+  echo "Note: Your program guide biography will appear immediately following your name in the program book.<BR>\n";
+  echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"progbio\">".htmlspecialchars($participant["progbio"],ENT_COMPAT)."</TEXTAREA>";
+} else {
+  if (strlen($participant["bio"])>0) {
+    echo "\n<P>Web-based Bio: ".$participant["pubsname"].htmlspecialchars($participant["bio"],ENT_COMPAT)."</P>\n";
+  }
+  if (strlen($participant["progbio"])>0) {
+    echo "\n<P>Program guide Bio: ".$participant["pubsname"].htmlspecialchars($participant["progbio"],ENT_COMPAT)."</P>\n";
+  }
+}
+?>
         <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
         <INPUT type="hidden" name="pubsnameold" value="<?php echo htmlspecialchars($pubsnameold,ENT_COMPAT); ?>">
     </form>
