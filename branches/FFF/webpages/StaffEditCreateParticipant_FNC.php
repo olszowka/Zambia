@@ -5,7 +5,7 @@
     //     participant_arr: array with all data of record to edit or defaults for create
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
-function RenderEditCreateParticipant ($action, $participant_arr, $message1, $message2) {
+function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, $message1, $message2) {
     if (strlen($message1)>0) {
       echo "<P id=\"message1\"><font color=red>Message: ".$message1."</font></P>\n";
     }
@@ -69,20 +69,22 @@ function RenderEditCreateParticipant ($action, $participant_arr, $message1, $mes
 	    <DIV class="denseform">
 		<SPAN><LABEL for="permroleid">Level of participation (At least one must be selected):</LABEL>
                     <?php 
-                        for ($i=2; $i<=5; $i++) {
+			for ($i=2; $i<=count($permrole_arr); $i++) {
 			  $pos = strpos($participant_arr['permroleid_list'],"$i");
-			  if($pos === false) {
-			    echo "<INPUT type=\"hidden\" name=\"waspermroleid".$i."\" value=\"not\">";
-			  } else {
-			    echo "<INPUT type=\"hidden\" name=\"waspermroleid".$i."\" value=\"indeed\">";
-			    $check["$i"]="checked";
+			  if (may_I($permrole_arr[$i]["permrolename"])) {
+			    if ((($permrole_arr[$i]["permrolename"]=="Participant") and (may_I("Liaison"))) or ($permrole_arr[$i]["permrolename"]!="Participant")) {
+			      if($pos === false) {
+			        echo "<INPUT type=\"hidden\" name=\"waspermroleid".$i."\" value=\"not\">\n";
+                                echo "<INPUT type=\"checkbox\" name=\"permroleid".$i."\" value=\"checked\">".$permrole_arr[$i]["permrolenotes"]."\n";
+			      } else {
+			        echo "<INPUT type=\"hidden\" name=\"waspermroleid".$i."\" value=\"indeed\">\n";
+                                echo "<INPUT type=\"checkbox\" name=\"permroleid".$i."\" value=\"checked\" checked>".$permrole_arr[$i]["permrolenotes"]."\n";
+			      }
+			    }
 			  }
-			} ?>
+			} 
+                    ?>
 		    <INPUT type="hidden" name="permroleid_list" value="<?php echo $participant_arr['permroleid_list']; ?>">
-                    <INPUT type="checkbox" name="permroleid3" value="checked" <?php if ($check["3"] == "checked") {echo "checked";}; ?>>Presenter</OPTION>
-                    <INPUT type="checkbox" name="permroleid5" value="checked" <?php if ($check["5"] == "checked") {echo "checked";}; ?>>Volunteer</OPTION>
-                    <INPUT type="checkbox" name="permroleid4" value="checked" <?php if ($check["4"] == "checked") {echo "checked";}; ?>>Brainstorm</OPTION>
-                    <INPUT type="checkbox" name="permroleid2" value="checked" <?php if ($check["2"] == "checked") {echo "checked";}; ?>>Staff</OPTION>
 		    </SPAN>
                 </DIV>
             <DIV class="denseform">

@@ -20,10 +20,14 @@ $_SESSION['return_to_page']="manualGRIDS.php";
  lack of background color of the cells. Default color beginonly gives
  the short version of the grid, not broken by time demarcation,
  showing start times only, with no day-breaks progselect limits to the
- programming items/rooms only eventselect limits to the events
- items/rooms only fasttrack limits to the Fast Track items/rooms only
- (the above three should exclude each other) goh limits to the goh
- involved programs only
+ programming items/rooms only volselect limits to the volunteer
+ items/rooms only regselect limits to the registration items/rooms
+ only saleselect limits to the sales items/rooms only vendselect
+ limits to the vendor items/rooms only watchselect limits to the watch
+ items/rooms only logselect limits to the logistic items/rooms only
+ eventselect limits to the events items/rooms only fasttrack limits to
+ the Fast Track items/rooms only (the above several should exclude each
+ other) goh limits to the goh involved programs only
 */
 $unpub="n";
 $unpub=$_GET['unpublished'];
@@ -32,6 +36,12 @@ $filled=$_GET['timefilled'];
 $nocolor=$_GET['nocolor'];
 $beginonly=$_GET['starttime'];
 $progselect=$_GET['programming'];
+$volselect=$_GET['volunteer'];
+$regselect=$_GET['registration'];
+$saleselect=$_GET['sales'];
+$vendselect=$_GET['vending'];
+$watchselect=$_GET['watch'];
+$logselect=$_GET['logistics'];
 $eventselect=$_GET['events'];
 $fasttrackselect=$_GET['fasttrack'];
 $goh=$_GET['goh'];
@@ -41,6 +51,12 @@ if ($_SESSION['role']=="Participant") {
   $unpub="n";
   $staffonly="n";
   $progselect="n";
+  $volselect="n";
+  $regselect="n";
+  $saleselect="n";
+  $vendselect="n";
+  $watchselect="n";
+  $logelect="n";
   $eventselect="n";
   $fastrtactselect=="n";
   $filled="n";
@@ -73,6 +89,24 @@ if ($staffonly=="y") {
  }
 if ($progselect=="y") {
   $typeprint="Programming ";
+ }
+if ($volselect=="y") {
+  $typeprint="Volunteer ";
+ }
+if ($regselect=="y") {
+  $typeprint="Registration ";
+ }
+if ($saleselect=="y") {
+  $typeprint="Sales ";
+ }
+if ($vendselect=="y") {
+  $typeprint="Vending ";
+ }
+if ($watchselect=="y") {
+  $typeprint="Watch ";
+ }
+if ($logselect=="y") {
+  $typeprint="Logistics/Tech ";
  }
 if ($eventselect=="y") {
   $typeprint="Events ";
@@ -122,8 +156,14 @@ $Grid_Spacer=GRID_SPACER;
 $query ="SELECT R.roomname, R.roomid";
 $query.=" FROM Rooms R";
 $query.=" WHERE";
-if ($progselect=="y") {$query.=" R.function like '%rogram%' AND";}
-if ($eventselect=="y") {$query.=" R.function like '%vent%' AND";}
+if ($progselect=="y") {$query.=" R.function like '%program%' AND";}
+if ($volselect=="y") {$query.=" R.function like '%volunteer%' AND";}
+if ($regselect=="y") {$query.=" R.function like '%registration%' AND";}
+if ($saleselect=="y") {$query.=" R.function like '%sale%' AND";}
+if ($vendselect=="y") {$query.=" R.function like '%vendor%' AND";}
+if ($watchselect=="y") {$query.=" R.function like '%watch%' AND";}
+if ($logselect=="y") {$query.=" R.function like '%program%' AND";}
+if ($eventselect=="y") {$query.=" R.function like '%event%' AND";}
 if ($fasttrackselect=="y") {$query.=" R.function like '%Fast Track%' AND";}
 $query.=" R.roomid in (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid)";
 if ($goh=="y") {$query.=" JOIN ParticipantOnSession USING (sessionid) WHERE badgeid in $GohBadgeList AND";} else {$query.=" WHERE";}
@@ -219,8 +259,14 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
   $query.=" WHERE";
   if ($unpub!="y") {$query.=" S.pubstatusid = 2 AND";}
   if ($staffonly=="y") {$query.=" S.pubstatusid != 2 AND";}
-  if ($progselect=="y") {$query.=" R.function like '%rogram%' AND";}
-  if ($eventselect=="y") {$query.=" R.function like '%vent%' AND";}
+  if ($progselect=="y") {$query.=" R.function like '%program%' AND";}
+  if ($volselect=="y") {$query.=" R.function like '%volunteer%' AND";}
+  if ($regselect=="y") {$query.=" R.function like '%registration%' AND";}
+  if ($saleselect=="y") {$query.=" R.function like '%sale%' AND";}
+  if ($vendselect=="y") {$query.=" R.function like '%vendor%' AND";}
+  if ($watchselect=="y") {$query.=" R.function like '%watch%' AND";}
+  if ($logselect=="y") {$query.=" R.function like '%program%' AND";}
+  if ($eventselect=="y") {$query.=" R.function like '%event%' AND";}
   if ($fasttrackselect=="y") {$query.=" R.function like '%Fast Track%' AND";}
   if ($goh=="y") {$query.=" S.sessionid in (SELECT DISTINCT sessionid from ParticipantOnSession WHERE badgeid IN $GohBadgeList) AND";}
   if ($beginonly=="y") {

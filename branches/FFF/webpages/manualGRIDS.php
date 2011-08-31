@@ -29,6 +29,12 @@ $type_array['Fast Track']="fasttrack=y&";
 $type_array['Event']="events=y&";
 $type_array['GoH']="goh=y&";
 $type_array['Programming']="programming=y&";
+$type_array['Volunteer']="volunteer=y&";
+$type_array['Registration']="registration=y&";
+$type_array['Sales']="sales=y&";
+$type_array['Vending']="vending=y&";
+$type_array['Watch']="watch=y&";
+$type_array['Logistics/Tech']="logistics=y&";
 
 //build the returned array
 $header_array=array_keys($how_array);

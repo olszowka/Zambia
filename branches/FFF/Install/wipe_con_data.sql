@@ -1,7 +1,7 @@
 -- this script can be run to wipe any con specific data out of a dbase
 -- it is used to build the script for building an empty dbase
-drop table save;
-drop table Roomtemp;
+-- drop table save;
+-- drop table Roomtemp;
 truncate table EmailQueue;
 truncate table UserHasPermissionRole;
 truncate table ParticipantAvailability;
@@ -12,6 +12,10 @@ truncate table ParticipantInterests;
 truncate table ParticipantOnSession;
 truncate table ParticipantSessionInterest;
 truncate table ParticipantSuggestions;
+truncate table NotesOnParticipants;
+truncate table TaskList;
+truncate table PersonalFlow;
+truncate table SessionEditHistory;
 truncate table TimeCard;
 truncate table NotesOnParticipants;
 truncate table SessionEditHistory;

@@ -131,6 +131,7 @@
      + Title caption in second language.
      + Description caption in second language.
      + Biography caption in second language.
+     + Default Duration of the classes.
      + Duration in Minutes (Should probably be "FALSE": TRUE: in mmm; False: in hh:mm - affects session edit/create page only, not reports.)
      + Grid Spacer (The time divisions in the fixed grid produced, in seconds.  For example 1800 is 60 sec/min and 30 min, and a good default.)
 **** The rest of the file should not have to change.

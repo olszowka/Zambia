@@ -122,6 +122,7 @@ function staff_header($title) {
     echo "      </td>\n    </tr>\n";
     }
   echo "  </table>\n\n<H2 class=\"head\">$title</H2>\n";
+  //  echo "Permissions: ".print_r($_SESSION['permission_set'])."\n";
   }
 
 function participant_header($title) {
@@ -592,7 +593,7 @@ EOD;
 }
 
 /* create_participant and edit_participant functions.  Need more doc. */
-function create_participant ($participant_arr) {
+function create_participant ($participant_arr,$permrole_arr) {
   global $link;
   $error_status=false;
   // Commented out, becuase some people have short names
@@ -652,17 +653,11 @@ function create_participant ($participant_arr) {
   $query2.= "'".mysql_real_escape_string($participant_arr['postzip'])."',";
   $query2.= "'".mysql_real_escape_string($participant_arr['regtype'])."');";
   $query3 = "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ";
-  if ($participant_arr["permroleid2"]=="checked") {
-    $query3.="('".$newbadgeid."','2'),";
-  }
-  if ($participant_arr["permroleid3"]=="checked") {
-    $query3.="('".$newbadgeid."','3'),";
-  }
-  if ($participant_arr["permroleid4"]=="checked") {
-    $query3.="('".$newbadgeid."','4'),";
-  }
-  if ($participant_arr["permroleid5"]=="checked") {
-    $query3.="('".$newbadgeid."','5'),";
+  for ($i=2; $i<=count($permrole_arr); $i++) {
+    $perm="permroleid".$i;
+    if ($participant_arr[$perm]=="checked") {
+      $query3.="('".$newbadgeid."','".$i."'),";
+    }
   }
   $query3=rtrim($query3,',');
   $query4 = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
@@ -693,7 +688,7 @@ function create_participant ($participant_arr) {
   echo "<P class=\"regmsg\">".$message."\n";
 }
 
-function edit_participant ($participant_arr) {
+function edit_participant ($participant_arr,$permrole_arr) {
   global $link;
   $error_status=false;
 
@@ -735,7 +730,7 @@ function edit_participant ($participant_arr) {
   $query3.=$participant_arr['partid']."','";
   $query3.=$_SESSION['badgeid']."','";
   $query3.=mysql_real_escape_string($participant_arr['note'])."')";
-  for ($i=2; $i<=5; $i++) {
+  for ($i=2; $i<=count($permrole_arr); $i++) {
     $perm="permroleid".$i;
     $wperm="waspermroleid".$i;
     if (isset ($participant_arr[$perm])) {

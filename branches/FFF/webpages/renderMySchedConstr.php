@@ -53,11 +53,12 @@ for guidance when assigning and scheduling panels. </p>
 
 <!-- SCHEDULE availability times -->
 <H2>Times I Am Available</H2>
+
 <p> For each day you will be attending <?php echo CON_NAME; ?>, please 
-indicate the times when you will be available as a program panelist.  
-Entering a single time for the whole con is fine.  Splitting a day into 
-multiple time slots also is fine.  Keep in mind we will be using this as 
-guidance when scheduling your panels.</p>
+indicate the times when you will be available.  Entering a single time
+for the whole con is fine.  Splitting a day into multiple time slots
+also is fine.  Keep in mind we will be using this as guidance when
+scheduling you.</p>
 
 <table>
   <tr> <!-- row one -->
@@ -112,7 +113,7 @@ guidance when scheduling your panels.</p>
 <hr>
 
 <DIV id="conflict">
-    <DIV class="sectionheader">Please don't schedule me for a panel that conflicts with:</DIV>
+    <DIV class="sectionheader">Please don't schedule me for a time that conflicts with:</DIV>
 
     <DIV class="entries">
     <TEXTAREA name="preventconflict" rows=3 cols=72><?php
