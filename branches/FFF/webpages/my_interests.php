@@ -1,8 +1,8 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="My General Interests";
-    require ('PartCommonCode.php'); // initialize db; check login;
-    require_once('ParticipantHeader.php');
+    // initialize db, check login, set $badgeid from session
+    require_once('PartCommonCode.php');
     require_once('renderMyInterests.php');
     // set $badgeid from session
     $result=mysql_query("SELECT * FROM ParticipantInterests where badgeid=\"".$badgeid."\"",$link);

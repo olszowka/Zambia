@@ -1,4 +1,5 @@
 <?php
+require_once('CommonCode');
 
 // Render Error reporting
 function StaffRenderError ($title, $message) {
@@ -12,8 +13,6 @@ function StaffRenderError ($title, $message) {
     }
 
 function PartRenderError ($title, $message) {
-    require_once('ParticipantHeader.php');
-    require_once('ParticipantFooter.php');
     participant_header($title);
     echo "<P id=\"errmsg\">".$message."</P>\n";
     participant_footer();

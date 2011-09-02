@@ -2,14 +2,14 @@
     global $participant,$message_error,$message2,$congoinfo;
     global $partAvail,$availability;
     $title="Search Panels";
-    require ('PartCommonCode.php'); // initialize db; check login;
-    //                                  set $badgeid from session
+    // initialize db, check login, set $badgeid from session
+    require_once('PartCommonCode.php');
+
     if (!may_I('search_panels')) {
         $message_error="You do not currently have permission to view this page.<BR>\n";
         RenderError($title,$message_error);
         exit();
         }
-    require_once('ParticipantHeader.php');
     participant_header($title);
 
 //<FORM method=POST action="SearchMySessions1.php">

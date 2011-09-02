@@ -1,8 +1,8 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     $title="My Interests";
-    require ('PartCommonCode.php'); // initialize db; check login;
-    require_once('ParticipantHeader.php');
+    // initialize db; check login; set $badgeid from session
+    require_once('PartCommonCode.php');
     require_once('renderMyInterests.php');
     if (!may_I('my_gen_int_write')) {
         $message="Currently, you do not have write access to this page.\n";
