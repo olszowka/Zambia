@@ -1,5 +1,5 @@
 <?php
-require_once('CommonCode');
+require_once('CommonCode.php');
 
 // Render Error reporting
 function StaffRenderError ($title, $message) {

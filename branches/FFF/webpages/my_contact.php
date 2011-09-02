@@ -198,6 +198,12 @@ if (may_I('EditBio')) {
   if (strlen($participant["progeditedbio"])>0) {
     echo "\n<P>Program guide Bio: ".$participant["pubsname"].htmlspecialchars($participant["progeditedbio"],ENT_COMPAT)."</P>\n";
   }
+// Block to pass the various matching values, if there is to be no bio edits.
+?>
+        <INPUT type="hidden" name="pubsname" value="<?php echo htmlspecialchars($waspubname,ENT_COMPAT); ?>">
+        <INPUT type="hidden" name="bio" value="<?php echo htmlspecialchars($participant['bio'],ENT_COMPAT); ?>">
+        <INPUT type="hidden" name="progbio" value="<?php echo htmlspecialchars($participant['progbio'],ENT_COMPAT); ?>">
+<?php
 }
 
 // Block to pass the submit button and the various old values
