@@ -29,11 +29,16 @@ function mysql_query_with_error_handling($query) {
 	global $link, $message_error;
 	$result = mysql_query($query,$link);
 	if (!$result) {
-		$message_error=$query."<br/>".mysql_error($link)."<br/>";
+		$message_error .= $query."<br/>".mysql_error($link)."<br/>";
 		error_log($message_error);
 		}
 	return $result;
 	}
+	
+function rollback() { 
+	global $link, $message_error;
+    mysql_query_with_error_handling("ROLLBACK",$link);
+    }
 
 function populateCustomTextArray() {
 	global $customTextArray,$title;
