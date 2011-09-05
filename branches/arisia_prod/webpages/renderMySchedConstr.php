@@ -23,7 +23,7 @@ total sessions and <?php echo PREF_DLY_SESNS_LMT;?> each day.  There is no need 
 for guidance when assigning and scheduling panels. </p>
             <div class="regform">
                 <span><label for="maxprog">preferred total number of panels &nbsp;</label><input type="text" size=3 name="maxprog" 
-                     value="<?php echo $partavail["maxprog"];?>">&nbsp;&nbsp;</span></div>
+                     value="<?php echo $partAvail["maxprog"];?>">&nbsp;&nbsp;</span></div>
 <?php
 // Don't ask about day limits at all if only 1 day con
           if (CON_NUM_DAYS>1) {
