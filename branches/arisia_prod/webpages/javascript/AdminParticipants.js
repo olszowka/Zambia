@@ -63,7 +63,8 @@ function doSearchPartsBUTN() {
 		dataType: "html",
 		data: ({ searchString : x,
 				ajax_request_action : "perform_search" }),
-		success: writeSearchResults
+		success: writeSearchResults,
+		type: "POST"
 		});
 }
 
@@ -184,7 +185,8 @@ function updateBUTN() {
 		url: "SubmitAdminParticipants.php",
 		dataType: "html",
 		data: postdata,
-		success: showUpdateResults
+		success: showUpdateResults,
+		type: "POST"
 		});
 }
 

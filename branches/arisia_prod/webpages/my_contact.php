@@ -45,7 +45,7 @@ EOD;
 	$xslt = new XsltProcessor();
 	$xslt->importStylesheet($xsl);
 	$html = $xslt->transformToXML($resultXML);
-	echo(preg_replace("!<(div|iframe|script|textarea)([^>]*?)/>!s", "<$1$2></$1>", $html));
+	echo(mb_ereg_replace("!<(div|iframe|script|textarea)([^>]*?)/>!s", "<$1$2></$1>", $html));
 	// some browsers does not support empty div, iframe, script and textarea tags
 	participant_footer();
 ?>

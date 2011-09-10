@@ -3,12 +3,12 @@ require_once('db_functions.php');
 require_once('StaffCommonCode.php');
 function update_participant() {
     global $link,$message_error;
-    $partid = $_GET["badgeid"];
-    $password = $_GET["password"];
-    $bio = stripslashes($_GET["bio"]);
-    $pubsname = stripslashes($_GET["pname"]);
-    $staffnotes = stripslashes($_GET["staffnotes"]);
-    $interested = $_GET["interested"];
+    $partid = $_POST["badgeid"];
+    $password = $_POST["password"];
+    $bio = stripslashes($_POST["bio"]);
+    $pubsname = stripslashes($_POST["pname"]);
+    $staffnotes = stripslashes($_POST["staffnotes"]);
+    $interested = $_POST["interested"];
     $query = "UPDATE Participants SET ";
     if ($password) {
         $query.="password=\"".md5($password)."\", ";
@@ -25,7 +25,7 @@ function update_participant() {
     if ($interested) {
         $query.="interested=".mysql_real_escape_string($interested).", ";
         }
-	$query = substr($query,0,-2); //drop two characters at end: ", "
+	$query = mb_substr($query,0,-2); //drop two characters at end: ", "
     $query.=" WHERE badgeid=\"".mysql_real_escape_string($partid)."\"";
     if (!mysql_query_with_error_handling($query)) {
         echo "<p class=\"errmsg\">".$message_error."</p>";
@@ -44,7 +44,7 @@ function update_participant() {
     }
 
 function perform_search() {
-	$searchString = mysql_real_escape_string(stripslashes($_GET["searchString"]));
+	$searchString = mysql_real_escape_string(stripslashes($_POST["searchString"]));
 	if ($searchString=="")
 		exit();
 	if (is_numeric($searchString)) {
@@ -96,7 +96,7 @@ EOD;
 	exit();
 }
 // Start here.  Should be AJAX requests only
-if (!$ajax_request_action=$_GET["ajax_request_action"])
+if (!$ajax_request_action=$_POST["ajax_request_action"])
 	exit();
 switch ($ajax_request_action) {
 	case "perform_search":

@@ -10,14 +10,14 @@ function mysql_query_XML($query_array) {
 			return(FALSE);
 		$queryNode = $xml->createElement("query");
 		$queryNode = $doc->appendChild($queryNode);
-		$queryNode->setAttribute("queryName", mb_convert_encoding($queryName,"UTF-8","ISO-8859-1"));
+		$queryNode->setAttribute("queryName", $queryName);
 		while($row = mysql_fetch_assoc($result)) {
 			$rowNode = $xml->createElement("row");
 			$rowNode = $queryNode->appendChild($rowNode);
 			//print_r($row);
 			foreach ($row as $fieldname => $fieldvalue) {
 				if ($fieldvalue!="" && $fieldvalue!==null)
-					$rowNode->setAttribute($fieldname, mb_convert_encoding($fieldvalue,"UTF-8","ISO-8859-1"));
+					$rowNode->setAttribute($fieldname, $fieldvalue);
 				}
 			}
 
@@ -61,8 +61,11 @@ include ('db_name.php');
 function prepare_db() {
     global $link;
     $link = mysql_connect(DBHOSTNAME,DBUSERID,DBPASSWORD);
-    if ($link===false) return (false);
-    return (mysql_select_db(DBDB,$link));
+    if ($link===false)
+		return (false);
+	if (!mysql_select_db(DBDB,$link))
+		return (false);
+    return (mysql_set_charset("utf8",$link));
     }
 
 
