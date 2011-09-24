@@ -39,13 +39,13 @@ EOD;
 	$optionsNode->setAttribute("enableBioEdit",may_I('EditBio'));
 	participant_header($title);
 	$resultXML = appendCustomTextArrayToXML($resultXML);
-	echo($resultXML->saveXML());
+	//echo($resultXML->saveXML()); //for debugging only
 	$xsl = new DomDocument;
 	$xsl->load('xsl/my_profile.xsl');
 	$xslt = new XsltProcessor();
 	$xslt->importStylesheet($xsl);
 	$html = $xslt->transformToXML($resultXML);
-	echo(mb_ereg_replace("!<(div|iframe|script|textarea)([^>]*?)/>!s", "<$1$2></$1>", $html));
+	echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
 	// some browsers does not support empty div, iframe, script and textarea tags
 	participant_footer();
 ?>
