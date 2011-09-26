@@ -75,6 +75,10 @@ staff_header($title);
 	<div class="newformlabel"><label for="staffnotes" class="newformlabel">Staff notes re. participant:</label></div>
 	<div class="newforminput"><textarea id="staffnotes" rows="4" cols="80" readonly="readonly" onchange="textChange('snotes');" onkeyup="textChange('snotes');"></textarea></div>
 	</div>
+<div class="newformdiv">
+	<div class="newformlabel"><span class="newformspan">Participant roles:</span></div>
+	<div class="newforminput"><div id="partRoles" class="divbox" style="height: 4em; width: 25em; overflow: auto"></div></div>
+	</div>
 <div style="margin-left: 1em; margin-right: 1em">
 	<button class="ActionButton" type="button" id="updateBUTN" onclick="updateBUTN();" disabled="disabled">Update</button>
 </div>

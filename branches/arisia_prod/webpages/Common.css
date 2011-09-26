@@ -58,7 +58,7 @@ textarea.readonly {
 	}
 
 .newformbutton {
-	text-align: center;
+text-align: center;
 	padding-top: 0.3em;
 	padding-bottom: 0.3em;
 	padding-right: 1.5em;
@@ -467,6 +467,12 @@ select.yesno {
     padding: 2px;
     margin: 2px;
     }
+
+.divbox {
+	border: 1px solid gray;
+	padding: 2px;
+	margin: 2px;
+	}
 
 .thinbox2 {
     border: 1px solid black;
@@ -1021,4 +1027,14 @@ IMG.tabborder {
         height: 14px; 
         width: 10px;
 }
-/* End of settings needed make the tabs work */   
+/* End of settings needed make the tabs work */
+TABLE.report {
+	border: 1px solid black;
+}
+TH.report {
+	border: 1px solid black;
+}
+TD.report {
+	border: 1px solid black;
+	vertical-align: top;
+}

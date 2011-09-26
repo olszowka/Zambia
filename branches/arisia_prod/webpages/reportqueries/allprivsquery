@@ -1,0 +1,7 @@
+TITLE='List all users and their permission roles'
+DESCRIPTION='pubsname, (day, time, duration, room, mod)'
+MIGRATED=1
+ADMINWANTS=1
+CSVONLY=0
+GENCSV=0
+QUERY=""

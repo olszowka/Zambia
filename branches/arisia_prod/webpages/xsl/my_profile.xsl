@@ -151,7 +151,7 @@
                     </input>
                 </span>
             <div class="labelNinput">
-                <div class="widelabel"><label for="bio">Your biography (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer):</label></div>
+                <div class="widelabel"><label for="bio">Your biography (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer including spaces):</label></div>
                 <xsl:if test="$bioNote">
                     <div class="note"><xsl:value-of select="$bioNote" disable-output-escaping="yes"/></div>
                 </xsl:if>
