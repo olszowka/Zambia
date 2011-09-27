@@ -1,8 +1,12 @@
 TITLE='Attending Query (all info)'
-DESCRIPTION='Shows who has responded and if they are attending. (Interested, 1=yes, 2=no, 0=did not pick, NULL=did not hit save)'
+DESCRIPTION='Shows who (of program participants only) has responded and if they are attending. (Interested, 1=yes, 2=no, 0=did not pick, NULL=did not hit save)'
 PROGWANTS=1
-EVENTSWANTS=1
 QUERY='
-	select P.pubsname, P.badgeid, P.interested, P.bestway 
-	from Participants P 
-	order by P.pubsname;'
+	SELECT P.pubsname, P.badgeid, P.interested, P.bestway 
+	    FROM
+	        Participants P
+	   JOIN UserHasPermissionRole UHPR USING (badgeid)
+        WHERE
+            UHPR.permroleid = 3
+    	ORDER BY
+        	P.pubsname;'
