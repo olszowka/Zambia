@@ -90,7 +90,8 @@ function myProfile() {
 			url: "SubmitMyContact.php",
 			dataType: "html",
 			data: postdata,
-			success: myProfile.showUpdateResults
+			success: myProfile.showUpdateResults,
+			type: "POST"
 			});			
 	}
 

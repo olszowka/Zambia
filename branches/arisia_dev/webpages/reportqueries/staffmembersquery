@@ -11,5 +11,6 @@ SELECT
             JOIN CongoDump using (badgeid)
             JOIN UserHasPermissionRole using (badgeid)
             JOIN PermissionRoles using (permroleid)
-    WHERE P.badgeid < '2' or P.badgeid in ('6499','53159')
+    WHERE
+		P.badgeid in (SELECT badgeid FROM UserHasPermissionRole WHERE permroleid = 2)
     GROUP BY badgeid, name, password;"

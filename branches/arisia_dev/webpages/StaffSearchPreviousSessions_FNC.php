@@ -164,7 +164,7 @@ function PerformPrevSessionSearch () {
     if ($SessionSearchParameters['currenttrack']!=0) {
         $query.=" TC.currenttrackid={$SessionSearchParameters['currenttrack']} AND";
         }
-    if ($previouscontrack!=0) {
+    if ($SessionSearchParameters['previouscontrack']!=0) {
             $query.=" PS.previoustrackid={$SessionSearchParameters['previoustrack']} AND";
             $query.=" PS.previousconid={$SessionSearchParameters['previouscon2']} AND";
             }
@@ -201,11 +201,6 @@ function PerformPrevSessionSearch () {
     Return(TRUE);
     } // End of PerformPrevSessionSearch()
     
-function rollback() { 
-    global $link;
-    mysql_query("ROLLBACK",$link);
-    }
-
 function RenderSearchPrevSessionResults() {
     global $result;
     while ($result_array[]=mysql_fetch_array($result,MYSQL_ASSOC));
@@ -260,26 +255,25 @@ function ProcessImportSessions() {
         	$query2.="        signupreq, roomsetid, notesforpart, servicenotes, statusid, \n";
         	$query2.="        notesforprog, warnings, invitedguest, ts) \n";
         	$query2.="    SELECT\n";
-        	$query2.="            NULL sessionid, TC.currenttrackid, PS.typeid, PS.divisionid, 2 pubstatusid, \n";
+        	$query2.="            NULL sessionid, COALESCE(TC.currenttrackid, 99), PS.typeid, PS.divisionid, 2 pubstatusid, \n";
         	$query2.="            PS.languagestatusid, NULL pubsno, PS.title, PS.secondtitle, PS.pocketprogtext, \n";
         	$query2.="            PS.progguiddesc, PS.persppartinfo, PS.duration, PS.estatten, PS.kidscatid, \n"; 
         	$query2.="            PS.signupreq, 99 roomsetid, NULL notesforpart, NULL servicenotes, 6 statusid, \n"; 
         	$query2.="            PS.notesforprog, NULL warnings, PS.invitedguest, NULL ts \n";
         	$query2.="        FROM\n";
-        	$query2.="            PreviousSessions PS JOIN\n";
+        	$query2.="            PreviousSessions PS LEFT JOIN\n";
         	$query2.="            TrackCompatibility TC USING (previousconid, previoustrackid)\n";
         	$query2.="        WHERE\n";
         	$query2.="            previousconid=$previousconid AND\n";
         	$query2.="            previoussessionid=$previoussessionid\n";
-        	$result=mysql_query($query1,$link);
+			//echo $query2;
+        	$result = mysql_query_with_error_handling($query1);
             if (!$result) {
-                $message_error=$query1."<BR>Error querying database.";
                 rollback();
                 Return(FALSE);
                 }
-        	$result=mysql_query($query2,$link);
+	        	$result = mysql_query_with_error_handling($query2);
             if (!$result) {
-                $message_error=$query2."<BR>Error querying database.";
                 rollback();
                 Return(FALSE);
                 }

@@ -34,6 +34,8 @@ function chooseParticipant(badgeid) {
 	document.getElementById("pname").value = document.getElementById("pnameSPAN_" + badgeid).innerHTML;
 	document.getElementById("pname").readOnly = false;
 	originalInterested = document.getElementById("interestedHID_" + badgeid).value;
+	if (originalInterested=="")
+		originalInterested = 0;
 	document.getElementById("interested").value = originalInterested;
 	document.getElementById("interested").disabled = false;
 	document.getElementById("bio").value = document.getElementById("bioHID_" + badgeid).value;
@@ -61,7 +63,8 @@ function doSearchPartsBUTN() {
 		dataType: "html",
 		data: ({ searchString : x,
 				ajax_request_action : "perform_search" }),
-		success: writeSearchResults
+		success: writeSearchResults,
+		type: "POST"
 		});
 }
 
@@ -182,7 +185,8 @@ function updateBUTN() {
 		url: "SubmitAdminParticipants.php",
 		dataType: "html",
 		data: postdata,
-		success: showUpdateResults
+		success: showUpdateResults,
+		type: "POST"
 		});
 }
 

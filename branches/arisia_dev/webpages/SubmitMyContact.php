@@ -5,10 +5,10 @@
 	global $message_error;
 	$password = false;
 	$pubsname = false;
-	//$foo = print_r($_GET,true);
+	//$foo = print_r($_POST,true);
 	//echo(preg_replace("/\n/","<BR>",$foo));
 	//exit;
-	if (($x=$_GET['ajax_request_action']) != "update_participant") {
+	if (($x=$_POST['ajax_request_action']) != "update_participant") {
 		$message_error="Invalid ajax_request_action: $x.  Database not updated.";
 		RenderErrorAjax($message_error);
 		exit();		
@@ -17,22 +17,22 @@
 	$query = "UPDATE Participants SET ";
 	$updateClause = "";
 	$query_end = " WHERE badgeid = $badgeid";
-	if (isset($_GET['interested'])) {
-		$x=$_GET['interested'];
+	if (isset($_POST['interested'])) {
+		$x=$_POST['interested'];
 		if ($x==1 || $x==2)
 				$updateClause.="interested=$x, ";
 			else
 				$updateClause.="interested=0, ";
 		}
-	if (isset($_GET['share_email'])) {
-		$x=$_GET['share_email'];
+	if (isset($_POST['share_email'])) {
+		$x=$_POST['share_email'];
 		if ($x==0 || $x==1)
 				$updateClause.="share_email=$x, ";
 			else
 				$updateClause.="share_email=null, ";
 		}			
-	if (isset($_GET['bestway'])) {
-		$x=$_GET['bestway'];
+	if (isset($_POST['bestway'])) {
+		$x=$_POST['bestway'];
 		if ($x=="Email" || $x=="Postal mail" || $x=="Phone")
 				$updateClause.="bestway=\"$x\", ";
 			else {
@@ -41,13 +41,13 @@
 				exit();
 				}
 		}
-	if (isset($_GET['password'])) {
-		$password = md5(stripslashes($_GET['password']));
+	if (isset($_POST['password'])) {
+		$password = md5(stripslashes($_POST['password']));
 		$updateClause.="password=\"$password\", ";
 		}
-	if (isset($_GET['pubsname']))
+	if (isset($_POST['pubsname']))
 		if ($may_edit_bio) {
-				$pubsname = stripslashes($_GET['pubsname']);
+				$pubsname = stripslashes($_POST['pubsname']);
 				$updateClause.="pubsname=\"".mysql_real_escape_string($pubsname)."\", ";
 				}
 			else {
@@ -55,9 +55,9 @@
 				RenderErrorAjax($message_error);
 				exit();
 				}
-	if (isset($_GET['bioText']))
+	if (isset($_POST['bioText']))
 		if ($may_edit_bio)
-				$updateClause.="bio=\"".mysql_real_escape_string(stripslashes($_GET['bioText']))."\", ";
+				$updateClause.="bio=\"".mysql_real_escape_string(stripslashes($_POST['bioText']))."\", ";
 			else {
 				$message_error="You may not update your biography at this time.  Database not updated.";
 				RenderErrorAjax($message_error);
@@ -67,10 +67,10 @@
 	$valuesClause2 = "";
 	$query3 = "DELETE FROM ParticipantHasCredential WHERE badgeid = $badgeid AND credentialid in (";
 	$credentialClause3 = "";
-	foreach ($_GET as $name => $value) {
-		if (substr($name,0,13)!="credentialCHK")
+	foreach ($_POST as $name => $value) {
+		if (mb_substr($name,0,13)!="credentialCHK")
 			continue;
-		$ccid = substr($name,13);
+		$ccid = mb_substr($name,13);
 		switch($value) {
 			case "true":
 				$valuesClause2 .= ($valuesClause2 ? ", " : "")."($badgeid, $ccid)";
@@ -91,7 +91,7 @@
 		exit();		
 		}
 	if ($updateClause) {
-		if (!mysql_query_with_error_handling($query.substr($updateClause,0,-2).$query_end)) {
+		if (!mysql_query_with_error_handling($query.mb_substr($updateClause,0,-2).$query_end)) {
 			RenderErrorAjax($message_error);
 			exit();
 			}

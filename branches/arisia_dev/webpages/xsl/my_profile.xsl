@@ -24,7 +24,7 @@
                 <span class="inputhadlabel"><select id="interested" name="interested" class="yesno" onchange="myProfile.anyChange('interested');"
                     onkeyup="myProfile.anyChange('interested')">
                     <option value="0">
-                        <xsl:if test="$interested=0">
+                        <xsl:if test="$interested=0 or not ($interested)">
                             <xsl:attribute name="selected">selected</xsl:attribute>
                         </xsl:if>
                         <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></option>
@@ -151,7 +151,7 @@
                     </input>
                 </span>
             <div class="labelNinput">
-                <div class="widelabel"><label for="bio">Your biography (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer):</label></div>
+                <div class="widelabel"><label for="bio">Your biography (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer including spaces):</label></div>
                 <xsl:if test="$bioNote">
                     <div class="note"><xsl:value-of select="$bioNote" disable-output-escaping="yes"/></div>
                 </xsl:if>
