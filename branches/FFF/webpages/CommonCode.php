@@ -551,6 +551,19 @@ function update_table_element ($link, $title, $table, $pairedvalue_array, $match
   echo "<P class=\"regmsg\">".$message."\n";
 }
 
+/* unfrom/refrom fix so that queries can be set as values in the various database entries */
+function unfrom ($transstring) {
+   $badfrom = array("FROM", "From", "from");
+   $goodfrom = array("UMFRAY", "Umfray", "umfray");
+   return str_replace ($badfrom, $goodfrom, $transstring);
+   }
+
+function refrom ($transstring) {
+   $badfrom = array("FROM", "From", "from");
+   $goodfrom = array("UMFRAY", "Umfray", "umfray");
+   return str_replace ($goodfrom, $badfrom, $transstring);
+   }
+
 /* Used to add a note on a participant as part of flow, and allowing for participant change. */
 function submit_participant_note ($note, $partid) {
   global $link;
