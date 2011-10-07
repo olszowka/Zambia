@@ -2,7 +2,7 @@
     require_once ('StaffCommonCode.php');
     require_once ('RenderSearchSessionResults.php');
     if ($_POST["track"] or $_POST["status"] or $_POST["type"] or $_POST["sessionid"]
-        or $_POST["divivionid"] or $_POST["searchtitle"]) {
+        or $_POST["divisionid"] or $_POST["searchtitle"]) {
             $status=$_POST["status"]; 
             $track=$_POST["track"];
             $type=$_POST["type"];

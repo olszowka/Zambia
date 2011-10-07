@@ -58,7 +58,7 @@
         <SPAN class="newformnotespan">(Leave blank for any)</SPAN>
         </DIV>
     <DIV class="newformdiv">
-        <SPAN class="newformlabelspan"><LABEL for="divisionid" class="newformlabel">Status:</LABEL></SPAN>
+        <SPAN class="newformlabelspan"><LABEL for="divisionid" class="newformlabel">Division:</LABEL></SPAN>
         <SPAN class="newformselectspan"><SELECT name="divisionid" class="newformselect">
             <?php populate_select_from_table("Divisions",0,"ANY",true); ?>
             </SELECT></SPAN>
