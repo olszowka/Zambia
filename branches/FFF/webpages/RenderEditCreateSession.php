@@ -122,12 +122,12 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             <TABLE><COL width="100"><COL>
                 <TR>
 		    <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Web Description (<?php echo MIN_DESC_LEN."-".MAX_DESC_LEN ?>):</LABEL></TD>
-                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="progguiddesc" 
+                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=80 rows=5 name="progguiddesc" 
                             ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 <TR>
                     <TD class="txtalbl"><LABEL class="dense" for="pocketprogtext">Program Book Description (<?php echo MIN_PROG_DESC_LEN."-".MAX_PROG_DESC_LEN ?>):</LABEL></TD>
-                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="pocketprogtext" 
+                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=80 name="pocketprogtext" 
                             ><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
 <?php
@@ -135,18 +135,38 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 echo "                <TR>\n";
                 echo "                    <TD class=\"txtalbl\"><LABEL class=\"dense\" for=\"altlangprogguiddesc\">";
                 echo SECOND_DESCRIPTION_CAPTION.": </LABEL></TD>\n";
-                echo "                    <TD class=\"txta\"><TEXTAREA class=\"textlabelarea\" cols=70 name=\"altlangprogguidedesc\">";
+                echo "                    <TD class=\"txta\"><TEXTAREA class=\"textlabelarea\" cols=80 name=\"altlangprogguidedesc\">";
                 echo htmlspecialchars($session["altlangproggidedesc"],ENT_NOQUOTES)."</TEXTAREA></TD>\n";
                 echo "                    </TR>\n";
                 }
 ?>
                 <TR id="trprospartinfo">
                     <TD class="txtalbl-last"><LABEL class="dense" for="persppartinfo">Prospective Participant Info:</LABEL></TD>
-                    <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=70 name="persppartinfo"
+                    <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=80 name="persppartinfo"
                             ><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 </TABLE>
             </DIV>
+            <DIV class="thinbox">
+            <TABLE><COL width="100"><COL>
+                <TR>
+                    <TD class="txtalbl"><LABEL class="dense" for="notesforpart">Notes for Participants:</LABEL></TD>
+                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=80 name="notesforpart"
+                            ><?php echo htmlspecialchars($session["notesforpart"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                <TR>
+                    <TD class="txtalbl"><LABEL class="dense" for="servnotes">Notes for Tech and Hotel:</LABEL></TD>
+                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=80 name="servnotes"
+                            ><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                <TR>
+                    <TD class="txtalbl-last"><LABEL class="dense" for="notesforprog">Notes for Programming Committee:</LABEL></TD>
+                    <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=80 rows=5 name="notesforprog"
+                            ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                </TABLE>
+		</DIV>
+        <HR class="withspace"><DIV class="thinbox">
         <TABLE><COL><COL>
         <TR>
         <TD class="nospace">
@@ -213,24 +233,6 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             $session["pubchardest"]); ?></SELECT>&nbsp;</TD>
         </DIV>
 </TR></TABLE>
-        <HR class="withspace"><DIV class="thinbox">
-            <TABLE><COL width="100"><COL>
-                <TR>
-                    <TD class="txtalbl"><LABEL class="dense" for="notesforpart">Notes for Participants:</LABEL></TD>
-                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="notesforpart"
-                            ><?php echo htmlspecialchars($session["notesforpart"],ENT_NOQUOTES);?></TEXTAREA></TD>
-                    </TR>
-                <TR>
-                    <TD class="txtalbl"><LABEL class="dense" for="servnotes">Notes for Tech and Hotel:</LABEL></TD>
-                    <TD class="txta"><TEXTAREA class="textlabelarea" cols=70 name="servnotes"
-                            ><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES);?></TEXTAREA></TD>
-                    </TR>
-                <TR>
-                    <TD class="txtalbl-last"><LABEL class="dense" for="notesforprog">Notes for Programming Committee:</LABEL></TD>
-                    <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=70 name="notesforprog"
-                            ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES);?></TEXTAREA></TD>
-                    </TR>
-                </TABLE>
             </DIV>
         <HR class="withspace">
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>

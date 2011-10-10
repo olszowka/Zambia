@@ -44,6 +44,7 @@ if (isset($_POST["selreport"])) { // reportid was passed probably from this form
 $query=<<<EOD
 SELECT
     reportid,
+    reportname,
     reporttitle,
     reportdescription
   FROM
@@ -70,7 +71,14 @@ echo "     <OPTION value=0";
 if ($selreportid==0) {echo " selected";}
 echo ">Select Report</OPTION>\n";
 echo "     <OPTION value=-1>New Report</OPTION>\n";
-while (list($reportid,$reporttitle,$reportdescription)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
+while (list($reportid,$reportname,$reporttitle,$reportdescription)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
+  if (is_numeric($selreportid)) {
+    echo "";
+   } else { 
+    if ($selreportid==$reportname) {
+      $selreportid=$reportid;
+   }
+  }
   echo "     <OPTION value=\"$reportid\"";
   if ($selreportid==$reportid) {echo " selected";}
   echo ">".htmlspecialchars($reporttitle).": ".htmlspecialchars($reportdescription)."</OPTION>\n";
