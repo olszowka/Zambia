@@ -784,6 +784,48 @@ function edit_participant ($participant_arr,$permrole_arr) {
   echo "<P class=\"regmsg\">".$message."\n";
 }    
 
+function get_emailto_from_permrole($permrolename,$link,$title,$description) {
+  /* Takes the permrolename and link, (and title and description, in
+     case of failure) and returns a valid email address */
+
+  // Get the email-to from the permrole
+  $query=<<<EOD
+SELECT
+    emailtoquery
+  FROM
+    EmailTo
+  WHERE
+    emailtodescription='$permrolename'
+EOD;
+
+  // presume there is only one match and return that, with the error report, if necessary
+  list($rows,$header_array,$emailtoquery_array)=queryreport($query,$link,$title,$description,0);
+  list($rows,$header_array,$emailto_array)=queryreport($emailtoquery_array[1]['emailtoquery'],$link,$title,$description,0);
+  return($emailto_array[1]['email']);
+}
+
+function send_fixed_email_info($emailto,$subject,$body,$link,$title,$description) {
+  /* Takes the emailto (which might be a permrolename), subject, body,
+     link (and title, and description in case of failure), resolve the
+     emailto, if it is a permrolename, use the default from, and no
+     cc, and add an entry to the email queue. */ 
+
+  // Check to see if it is just an email address, or the permrole to be expanded
+  if (!strpos($emailto,"@")) {
+    $newemailaddress=get_emailto_from_permrole($emailto,$link,$title,$description);
+    $newemailto="$emailto <$newemailaddress>";
+    $emailto=$newemailto;
+  }
+
+  // Insert into queue, the ADMIN_EMAIL is the from address, no cc address, status 1 to send
+  $element_array=array('emailto','emailfrom','emailcc','emailsubject','body','status');
+  $value_array=array($emailto, ADMIN_EMAIL, '',
+		     mysql_real_escape_string(stripslashes(htmlspecialchars_decode($subject))),
+		     mysql_real_escape_string(stripslashes(htmlspecialchars_decode($body))),
+		     1);
+  submit_table_element($link, $title, "EmailQueue", $element_array, $value_array);
+}
+
 /* Three flow report functions.  They are remove, add, and delta rank.
  Need more header doc */
 function remove_flow_report ($flowid,$table,$title,$description) {

@@ -10,8 +10,9 @@ topofpagereport($title,$description,$additionalinfo);
 // Submit the task, if there was one, when this was called
 if ((isset($_POST["agendaupdate"])) and ($_POST["agendaupdate"]!="")) {
   if ($_POST["agendaid"] == "-1") {
-    $element_array=array('agendaname','agenda','agendanotes','meetingtime');
+    $element_array=array('agendaname','permroleid','agenda','agendanotes','meetingtime');
     $value_array=array(mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendaname']))),
+		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['permroleid']))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agenda']))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendanotes']))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['meetingtime']))));
@@ -19,16 +20,20 @@ if ((isset($_POST["agendaupdate"])) and ($_POST["agendaupdate"]!="")) {
    } else {
     $pairedvalue_array=array("agendanotes='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendanotes'])))."'",
 			     "agendaname='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendaname'])))."'",
+			     "permroleid='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['permroleid'])))."'",
 			     "agenda='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agenda'])))."'",
 			     "meetingtime='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['meetingtime'])))."'");
     $match_field="agendaid";
     $match_value=$_POST['agendaid'];
     update_table_element($link, $title, "AgendaList", $pairedvalue_array, $match_field, $match_value);
    }
-}
-
-// Clear the agendaupdate value
-$agendaupdate="";
+  if ((isset($_POST["sendit"])) and ($_POST["sendit"]!="")) {
+    send_fixed_email_info($_POST['permrolename'],
+			  $_POST['permrolename'].": ".$_POST['agendaname'],
+			  $_POST['agenda']."\n<hr>\n".$_POST['agendanotes'],
+			  $link,$title,$description);
+   }
+ }
 
 // Carry over the task list element, from the form before, if they exist
 if (isset($_POST["agendaid"])) {
@@ -160,11 +165,18 @@ if ($permroleid==0) {echo " selected";}
 echo ">Select Group</OPTION>\n";
 for ($i=1; $i<=$permrows; $i++) {
   echo "     <OPTION value=\"".$perm_array[$i]['permroleid']."\"";
-  if ($perm_array[$i]['permroleid']==$permroleid) {echo " selected";}
+  if ($perm_array[$i]['permroleid']==$permroleid) {
+    echo " selected";
+    $permrolename=$perm_array[$i]['permrolename'];
+   }
   echo ">".$perm_array[$i]['permrolename']."</OPTION>\n";
   }
+echo "<INPUT type=\"hidden\" name=\"permrolename\" value=\"$permrolename\">";
 ?>
 </SELECT>
+<br>
+<LABEL for="sendit">E-mail the Agenda: </LABEL>
+<INPUT type="checkbox" name="sendit" id="sendit" value="Yes">
 </DIV>
 
 <BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>

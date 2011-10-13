@@ -3,17 +3,14 @@
 //   1) Beginning of send email flow -- start to specify parameters
 //   2) After verify -- 'back' can change parameters -- 'send' fire off email sending code
 require_once('email_functions.php');
-require_once('db_functions.php');
-require_once('render_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 global $title, $message, $link;
-if (isset($_POST['sendto'])) { // page has been visited before
-// restore previous values to form
-        $email=get_email_from_post();
-        }
-    else { // page hasn't just been visited
-        $email=set_email_defaults();
-        }
+
+if (isset($_POST['sendto'])) { // page has been visited before so restore previous values to form
+  $email=get_email_from_post();
+  } else { // page hasn't just been visited
+    $email=set_email_defaults();
+  }
 $message_warning="";
 if ($_POST['navigate']!='send') {
     render_send_email($email,$message_warning);
