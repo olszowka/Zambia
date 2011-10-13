@@ -1030,11 +1030,15 @@ IMG.tabborder {
 /* End of settings needed make the tabs work */
 TABLE.report {
 	border: 1px solid black;
-}
+	font-family: Arial;
+	font-size: 12px;
+	}
+
 TH.report {
 	border: 1px solid black;
-}
+	}
+
 TD.report {
 	border: 1px solid black;
 	vertical-align: top;
-}
+	}
