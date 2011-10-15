@@ -11,7 +11,7 @@
         <tr>
             <th class="report">Last name, first name</th>
             <th class="report">Name for Publications</th>
-            <th class="report">Badge Name</th>
+            <th class="report">Email address</th>
             <th class="report">Badge Id</th>
             <th class="report">Professional Qualifications</th>
         </tr>
@@ -23,7 +23,7 @@
     <tr>
         <td class="report"><xsl:value-of select="@name"/></td>
         <td class="report"><xsl:value-of select="@pubsname"/></td>
-        <td class="report"><xsl:value-of select="@badgename"/></td>
+        <td class="report"><xsl:value-of select="@email"/></td>
         <td class="report"><xsl:value-of select="@badgeid"/></td>
         <td class="report">
             <xsl:for-each select="/doc/query[@queryName = 'credentials']/row[@badgeid = $badgeid]">

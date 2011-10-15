@@ -11,7 +11,7 @@
         }
 	$queryArray["participants"]=<<<EOD
 	SELECT
-			CONCAT(CD.lastname,", ",CD.firstname) AS name, P.pubsname, CD.badgename,
+			CONCAT(CD.lastname,", ",CD.firstname) AS name, P.pubsname, CD.email,
 			CD.badgeid 
 		FROM
 				CongoDump CD
@@ -40,7 +40,7 @@ EOD;
 	staff_header($title);
 	date_default_timezone_set('US/Eastern');
 	echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-	echo "<P>List of all users with their permission roles</P>\n";
+	echo "<P>List of all \"interested\" participants and their self-reported professional qualifications.</P>\n";
 	//echo($resultXML->saveXML()); //for debugging only
 	$xsl = new DomDocument;
 	$xsl->load('xsl/profqualsreport.xsl');
