@@ -94,6 +94,7 @@ SELECT
             POS.moderator,
             P.badgeid,
             P.pubsname,
+			P.staff_notes,
             PSI.rank,
             PSI.willmoderate,
             PSI.comments
@@ -175,6 +176,10 @@ for ($i=0;$i<$numrows;$i++) {
     echo "      <TD colspan=4 class=\"border1111 lrpad\">".htmlspecialchars($bigarray[$i]["comments"]);
     echo "</TD>\n";
     echo "      </TR>\n";
+	if ($bigarray[$i]["staff_notes"]) {
+		echo "      <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan=\"4\">".htmlspecialchars($bigarray[$i]["staff_notes"]);
+		echo "</td></tr>\n";
+		}
     echo "   <TR><TD colspan=6>&nbsp;</TD></TR>\n";
     }
 echo "</TABLE>";
