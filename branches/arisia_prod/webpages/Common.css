@@ -789,10 +789,6 @@ TD#sessidtcell {
     padding-right: 0.5em
     }
      
-TD#smallspacer {
-    font-size: 50%
-    }
-     
 .smallspacer {
     font-size: 50%
     }
@@ -1042,3 +1038,5 @@ TD.report {
 	border: 1px solid black;
 	vertical-align: top;
 	}
+
+

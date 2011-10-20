@@ -54,10 +54,10 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
         echo "        <TD colspan=4 class=\"border0000\">".htmlspecialchars($session_interests[$i]['persppartinfo'],ENT_NOQUOTES)."</TD>\n";
         echo "        </TR>\n";
         echo "    <TR>\n";
-        echo "        <TD colspan=6 class=\"border0020\" id=\"smallspacer\">&nbsp;</TD>\n";
+        echo "        <TD colspan=6 class=\"border0020 smallspacer\" >&nbsp;</TD>\n";
         echo "        </TR>\n";
         echo "    <TR>\n";
-        echo "        <TD colspan=6 class=\"border0000\" id=\"smallspacer\">&nbsp;</TD>\n";
+        echo "        <TD colspan=6 class=\"border0000 smallspacer\">&nbsp;</TD>\n";
         echo "        </TR>\n";
 		$j++;
         }

@@ -9,7 +9,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Zambia -- <?php echo $title ?></title>
 	<link rel="stylesheet" href="StaffSection.css" type="text/css" />
-	<link rel="stylesheet" href="jquery/jquery-ui-1.8.13.custom.css" type="text/css" />
+	<link rel="stylesheet" href="jquery/jquery-ui-1.8.16.custom.css" type="text/css" />
 </head>
 <body>
 	<script type="text/javascript">

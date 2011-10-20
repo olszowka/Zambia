@@ -107,6 +107,8 @@ function initializeAdminParticipants() {
 		resizable: false,
 		draggable: true
 		});
+	$("#openSearchPartsBUTN").button();
+	$("#openSearchPartsBUTN").click(openSearchPartsBUTN);
 	$("#doSearchPartsBUTN").button();
 	$("#doSearchPartsBUTN").click(doSearchPartsBUTN);
 	$("#cancelSearchPartsBUTN").button();
