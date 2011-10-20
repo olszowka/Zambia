@@ -25,6 +25,8 @@ On this page you will find the online tools for managing Participants.</p>
    <DD>Use this tool to assign participants to a session and select moderator.</DD>
    <DT><A HREF="MaintainRoomSched.php">Maintain room schedule</A></DT>
    <DD>Assign sessions at particular times in a room.</DD>
+   <DT><A HREF="StaffMaintainSchedule.php">New Scheduler</A></DT>
+   <DD>Edit the schedule in a variety of ways.</DD>
 <?php if(may_I("SendEmail")) { ?>
    <DT><A HREF="StaffSendEmailCompose.php">Send Email to Participants</A></DT>
    <DD>Select a set of participants and send them a form letter.</DD>

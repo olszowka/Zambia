@@ -1,6 +1,6 @@
-var myProfile = new myProfile;
+var myProfile = new MyProfile;
 
-function myProfile() {
+function MyProfile() {
 	var dirtyInputArr = [];
 	var anyDirty = false;
 	var pw;

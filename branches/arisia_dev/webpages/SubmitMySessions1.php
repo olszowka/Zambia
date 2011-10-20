@@ -4,36 +4,39 @@
     require ('PartCommonCode.php'); //define database functions
     require ('PartPanelInterests_FNC.php');
     require ('PartPanelInterests_Render.php');
-    $maxrow=$_POST["maxrow"];
-    $delcount=0;
-    $dellist="";
-    for ($i=0;$i<=$maxrow;$i++) {
-        if (($_POST["checked".$i]==1)&&(!isset($_POST["int".$i]))) {
-            $dellist.=(($delcount==0)?"":",").$_POST["sessionid".$i];
-            $delcount++;
-            }
-        }
-    if ($delcount>0) {
-        $query="DELETE FROM ParticipantSessionInterest WHERE badgeid=\"".$badgeid."\" and sessionid in (";
-        $query.=$dellist.")";
-        if (!mysql_query($query,$link)) {
-            $message=$query."<BR>Error updating database.  Database not updated.";
-            RenderError($title,$message);
+    $delcount = 0;
+    $dellist = "";
+	if (!empty($_POST)) {
+		foreach ($_POST as $postName => $postValue) {
+			if (substr($postName,0,5) != "dirty")
+				continue;
+			$id = substr($postName,5);
+			if (isset($_POST["int".$id]))
+					$insarray[]=$id;
+				else {
+					$dellist .= $id.", ";
+					$delcount++;
+					}
+			}
+		}
+    if ($delcount > 0) {
+		$dellist = substr($dellist, 0, -2); //remove trailing ", "
+        $query = "DELETE FROM ParticipantSessionInterest WHERE badgeid=\"$badgeid\" AND sessionid in ($dellist)";
+        if (!mysql_query_with_error_handling($query)) {
+		    RenderError($title,$message_error);
             exit();
             }
         }
-    $inscount=0;
-    for ($i=0;$i<=$maxrow;$i++) {
-        if (($_POST["checked".$i]==0)&&(isset($_POST["int".$i]))) {
-            $query="INSERT INTO ParticipantSessionInterest set badgeid=".$badgeid.", sessionid=".$_POST["sessionid".$i];
-            if (!mysql_query($query,$link)) {
-                $message=$query."<BR>Error updating database.  Database not updated.";
-                RenderError($title,$message);
+	$inscount = count($insarray);
+	if ($inscount > 0) {
+		foreach ($insarray as $i => $id) {
+			$query="INSERT INTO ParticipantSessionInterest SET badgeid=\"$badgeid\", sessionid = $id";
+            if (!mysql_query_with_error_handling($query)) {
+			    RenderError($title,$message_error);
                 exit();
-                }
-            $inscount++;
-            }
-        }
+				}
+			}
+		}
     $message=""; 
     $error=false;
     if (($delcount==0)&&($inscount==0)) {

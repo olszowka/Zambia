@@ -153,6 +153,26 @@ H1, H2, H3 {
     text-align: center
     }
 
+.appTitle {
+	font-family: Verdana, Arial;
+	margin: 0;
+	font-size: 24px;
+	padding-top: 30px;
+	padding-bottom: 15px;
+	vertical-align: middle;
+	color: #106A22;
+	}
+
+.pageTitle {
+	font-family: Verdana, Arial;
+	margin: 0;
+	font-size: 20px;
+	padding: 0;
+	margin: 10px 0 10px 0;
+	vertical-align: middle;
+    text-decoration: underline;
+	}
+
 H1.head {
     font-family: Verdana;
     font-size: 150%;
@@ -236,7 +256,7 @@ div.beforeResult, span.beforeResult {
 	}
 	
 
-.Welcome {
+.Welcome, td.Welcome  {
     font-weight: bold;
     font-size: 80%;
     color: black;
@@ -244,6 +264,16 @@ div.beforeResult, span.beforeResult {
     text-align: right;
     padding-right: 2em;
     }
+
+span.Welcome {
+	font-weight: bold;
+    font-size: 80%;
+    color: black;
+    text-decoration: none;
+    text-align: right;
+    padding-right: 2em;
+	width: 100%;
+	}
 
 .TopmenuText {
     font-family: Arial;
@@ -292,6 +322,10 @@ A.logout:hover {
     font-weight: 800;
     }
     
+span.logout {
+	padding: 2px;
+	}
+
 DD {
     margin-left: 4em
     }
@@ -309,10 +343,6 @@ TABLE.login {
     margin-right: auto;
     }
 
-TR {
-    padding: 5px;
-    }
-
 img {
     border: 0px;
     margin: 0px;
@@ -320,7 +350,6 @@ img {
 
 TABLE {
     border-collapse: collapse;
-    margin: 10px;
     }
     
 TH {
@@ -780,6 +809,10 @@ TD {
     padding-right: 0.2em
     }
 
+.onepage TD, TD.onepage {
+	padding:0;
+	}
+
 TD.center {
     text-align: center;
     }
@@ -787,10 +820,6 @@ TD.center {
 TD#sessidtcell {
     vertical-align:top;
     padding-right: 0.5em
-    }
-     
-TD#smallspacer {
-    font-size: 50%
     }
      
 .smallspacer {
@@ -1038,3 +1067,70 @@ TD.report {
 	border: 1px solid black;
 	vertical-align: top;
 }
+.activeArea {
+	background-color:white;
+}
+.activeArea:hover {
+	background-color:#106a22;
+	color: white;
+}
+.onepage-titlebar {
+	border: 1px solid #106a22;
+	background: #ece8da url(images/ui-bg_gloss-wave_100_ece8da_500x100.png) 50% 50% repeat-x;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px; 
+	border-bottom-left-radius: 6px; 
+	border-bottom-right-radius: 6px;
+	text-align: center;
+}
+.onepage-title {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: Arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #106a22;
+}
+
+body.onepage {
+	margin: 0;
+	padding: 0;
+	font-family: arial;
+	font-size: 13px;
+	}
+
+#fullPageContainer {
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	height:auto;
+	width:auto;
+	margin:0;
+	padding:0
+	}
+
+div.topBand {
+	position: absolute;
+	top:0;
+	right:0;
+	left:0;
+	width:auto;
+	margin:0;
+	padding:0; 
+	}
+	
+div.secondaryFullWidthContainer {
+	position:absolute; 
+	right:0;
+	bottom:0;
+	left:0;
+	width:auto;
+	height:auto;
+	margin:0; 
+	}
+
+#mainContentContainer {
+	top:147px;
+	padding:2px;
+	}

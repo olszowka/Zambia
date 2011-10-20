@@ -27,7 +27,7 @@ staff_header($title);
 </div>
 <div class="resultBox" id="resultBoxDIV"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
 <div style="margin-left: 1em; margin-right: 1em">
-	<button class="ActionButton" type="button" id="openSearchPartsBUTN" onclick="openSearchPartsBUTN();">Search for participants</button>
+	<button type="button" id="openSearchPartsBUTN">Search for participants</button>
 </div>
 
 <div class="newformdiv">

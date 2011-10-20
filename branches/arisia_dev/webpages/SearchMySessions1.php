@@ -7,9 +7,9 @@
     $trackid=$_POST["track"];
     $titlesearch=stripslashes($_POST["title"]);
 // List of sessions that match search criteria 
-// Does not includes sessions in which participant is interested if they do match match search
+// Includes sessions in which participant is already interested if they do match match search
 // Use "My Panel Interests" page to just see everything in which you are interested
-    $query = <<<EOD
+    $queryArray["sessions"] = <<<EOD
 SELECT
         S.sessionid, T.trackname, S.title,
         CASE
@@ -41,22 +41,26 @@ SELECT
                      Y.selfselect=1
 EOD;
     if ($trackid!=0) {
-        $query.="                     AND S.trackid=$trackid\n";
+        $queryArray["sessions"].="                     AND S.trackid=$trackid\n";
         }
     if ($titlesearch!="") {
         $x=mysql_real_escape_string($titlesearch,$link);
-        $query.="                     AND S.title LIKE \"%$x%\"\n";
+        $queryArray["sessions"].="                     AND S.title LIKE \"%$x%\"\n";
         }
-    $query.=")\n";
-    if (!$result=mysql_query($query,$link)) {
-        $message=$query."<BR>Error querying database.<BR>";
-        RenderError($title,$message);
+    $queryArray["sessions"].=");";
+	$queryArray["may_I"] = "select ".(may_I('my_panel_interests') ? "1" : "0"). " AS my_panel_interests;";
+	if (($resultXML=mysql_query_XML($queryArray))===false) {
+	    RenderError($title,$message_error);
         exit();
         }
-    participant_header($title);
-    //echo $query."<BR>\n";
-    require ('RenderMySessions1.php');    
-    RenderMySessions1($result);
-    participant_footer();
-    exit();
+	participant_header($title);
+	//echo($resultXML->saveXML()); //for debugging only
+	$xsl = new DomDocument;
+	$xsl->load('xsl/SearchMySessions1.xsl');
+	$xslt = new XsltProcessor();
+	$xslt->importStylesheet($xsl);
+	$html = $xslt->transformToXML($resultXML);
+	echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+	// some browsers do not support empty div, iframe, script and textarea tags
+	participant_footer();
 ?>
