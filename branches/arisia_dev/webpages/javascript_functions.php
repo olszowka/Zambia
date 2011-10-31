@@ -14,7 +14,7 @@ function load_javascript() {
 <script src="javascript/AdminParticipants.js"></script>
 <script src="javascript/myProfile.js"></script>
 <script src="javascript/SearchMySessions1.js"></script>
-<!--<script src="javascript/staffMaintainSchedule.js"></script>-->
+<script src="javascript/staffMaintainSchedule.js"></script>
 <?php
 }
 ?>

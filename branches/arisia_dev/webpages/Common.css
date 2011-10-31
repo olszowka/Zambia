@@ -1082,6 +1082,7 @@ TD.report {
 	border-bottom-left-radius: 6px; 
 	border-bottom-right-radius: 6px;
 	text-align: center;
+	margin: 2px;
 }
 .onepage-title {
 	margin-left: auto;
@@ -1100,6 +1101,19 @@ body.onepage {
 	}
 
 #fullPageContainer {
+	position: absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	height:auto;
+	width:auto;
+	margin:0;
+	padding:0
+	}
+
+div.fullBlockContainer {
+	position: absolute;
 	top:0;
 	right:0;
 	bottom:0;
