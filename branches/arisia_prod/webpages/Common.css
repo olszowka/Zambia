@@ -1038,5 +1038,9 @@ TD.report {
 	border: 1px solid black;
 	vertical-align: top;
 	}
+	
+.report A {
+	color: #1c30b0;
+	}
 
 
