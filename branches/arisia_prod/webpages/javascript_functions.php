@@ -9,9 +9,10 @@ function load_jquery() {
 
 function load_javascript() {
 ?>
-<script src="javascript/mousescripts.js"></script>
-<script src="javascript/editCreateSession.js"></script>
 <script src="javascript/AdminParticipants.js"></script>
+<script src="javascript/editCreateSession.js"></script>
+<script src="javascript/MaintainRoomSched.js"></script>
+<script src="javascript/mousescripts.js"></script>
 <script src="javascript/myProfile.js"></script>
 <script src="javascript/SearchMySessions1.js"></script>
 <!--<script src="javascript/staffMaintainSchedule.js"></script>-->

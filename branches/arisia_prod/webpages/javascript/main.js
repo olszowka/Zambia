@@ -5,6 +5,9 @@ $(document).ready(function() {
 		case "Administer Participants":
 			initializeAdminParticipants();
 			break;
+		case "Maintain Room Schedule":
+			maintainRoomSched.initialize();
+			break;
 		case "My Profile":
 			myProfile.initialize();
 			break;
