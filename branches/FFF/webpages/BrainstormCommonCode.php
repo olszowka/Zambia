@@ -1,8 +1,5 @@
 <?php
     require_once('CommonCode.php');
-    require_once('error_functions.php');
-    require_once('BrainstormHeader.php');
-    require_once('BrainstormFooter.php');
     global $badgeid;
     $badgeid=$_SESSION['badgeid'];
     $_SESSION['role']="Brainstorm";
