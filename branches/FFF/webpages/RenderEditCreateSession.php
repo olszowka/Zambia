@@ -7,18 +7,23 @@
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateSession ($action, $session, $message1, $message2) {
     global $name, $email, $debug;
-    require_once("StaffHeader.php");
-    require_once("StaffFooter.php");
+    require_once("CommonCode.php");
     if ($action=="create") {
             $title="Add New Session";
+	    $description="<P>Saving an added session presumes you are going to add another new session next.</P>";
             }
         elseif ($action=="edit") {
             $title="Edit Session";
+            $description="<P>Hit either the top or the bottom \"Save\" button when you are done with your changes.</P>\n";
+	    $additionalinfo ="<P>Clicking on the session number will allow you to assign participants to your session.";
+	    $additionalinfo.=" A specific person's class should have their Invited Guests Only box checked so other";
+	    $additionalinfo.=" presenters won't be presented with the option of that class.</P>\n";
             }
         else {
             exit();
             }
-    staff_header($title);
+
+    topofpagereport($title,$description,$additionalinfo);
     
     // still inside function RenderAddCreateSession
     if (strlen($message1)>0) {

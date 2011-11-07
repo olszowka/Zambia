@@ -55,7 +55,7 @@ EOD;
 
 if (!$Sresult=mysql_query($query,$link)) {
   $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-  echo "<P class\"errmsg\">".$message."\n";
+  echo "<P class=\"errmsg\">".$message."\n";
   correct_footer();
   exit();
  }
