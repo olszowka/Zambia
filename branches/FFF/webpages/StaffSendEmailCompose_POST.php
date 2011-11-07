@@ -10,7 +10,7 @@ $title="Send Email (Step 2 - verify)";
 if (!isset($_POST['sendto'])) { // page has not been visited before
     $message_error="Expected POST data was missing.  This page is intended to be reached via a form.";
     $message_error.=" It will not work if you link to it directly.\n";
-    StaffRenderError ($title, $message_error);
+    RenderError ($title, $message_error);
     exit(0);
     }
 $email=get_email_from_post();

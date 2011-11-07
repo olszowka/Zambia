@@ -2,50 +2,28 @@
 require_once('CommonCode.php');
 
 // Render Error reporting
-function StaffRenderError ($title, $message) {
+function RenderError($title,$message) {
+  if ($_SESSION['role'] == "Brainstorm") {
+    brainstorm_header($title);
+    echo "<P id=\"errmsg\">".$message."</P>\n";
+    brainstorm_footer();
+  }
+  elseif ($_SESSION['role'] == "Participant") {
+    participant_header($title);
+    echo "<P id=\"errmsg\">".$message."</P>\n";
+    participant_footer();
+  }
+  elseif ($_SESSION['role'] == "Staff") {
     global $debug;
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
     staff_header($title);
     if (isset($debug)) echo $debug."<BR>\n";
     echo "<P id=\"errmsg\">".$message."</P>\n";
     staff_footer();
-    }
-
-function PartRenderError ($title, $message) {
-    participant_header($title);
-    echo "<P id=\"errmsg\">".$message."</P>\n";
-    participant_footer();
-    }
-
-function BrainstormRenderError ($title, $message) {
-    require_once('BrainstormHeader.php');
-    require_once('BrainstormFooter.php');
-    brainstorm_header($title);
-    echo "<P id=\"errmsg\">".$message."</P>\n";
-    brainstorm_footer();
-    }
-
-function PostingRenderError ($title, $message) {
-    require_once('PostingHeader.php');
-    require_once('PostingFooter.php');
+  }
+  elseif ($_SESSION['role'] == "Posting") {
     posting_header($title);
     echo "<P id=\"errmsg\">".$message."</P>\n";
     posting_footer();
-    }
-
-function RenderError($title,$message) {
-  if ($_SESSION['role'] == "Brainstorm") {
-    BrainstormRenderError($title,$message);
-  }
-  elseif ($_SESSION['role'] == "Participant") {
-    PartRenderError($title,$message);
-  }
-  elseif ($_SESSION['role'] == "Staff") {
-    StaffRenderError($title,$message);
-  }
-  elseif ($_SESSION['role'] == "Posting") {
-    PostingRenderError($title,$message);
   }
   else {
     // do something generic here (though this might be way too generic)
