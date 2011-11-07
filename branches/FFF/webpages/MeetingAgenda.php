@@ -27,12 +27,6 @@ if ((isset($_POST["agendaupdate"])) and ($_POST["agendaupdate"]!="")) {
     $match_value=$_POST['agendaid'];
     update_table_element($link, $title, "AgendaList", $pairedvalue_array, $match_field, $match_value);
    }
-  if ((isset($_POST["sendit"])) and ($_POST["sendit"]!="")) {
-    send_fixed_email_info($_POST['permrolename'],
-			  $_POST['permrolename'].": ".$_POST['agendaname'],
-			  $_POST['agenda']."\n<hr>\n".$_POST['agendanotes'],
-			  $link,$title,$description);
-   }
  }
 
 // Carry over the task list element, from the form before, if they exist
@@ -50,8 +44,7 @@ if (isset($_POST["agendaid"])) {
 $query=<<<EOD
 SELECT
     agendaid,
-    agendaname,
-    permrolename
+    concat(permrolename,": ",agendaname) as aname
   FROM
       AgendaList
     JOIN PermissionRoles USING (permroleid)
@@ -72,19 +65,8 @@ if (!$agendaresult=mysql_query($query,$link)) {
 <FORM name="agendalistselect" method=POST action="MeetingAgenda.php">
 <DIV><LABEL for="agendaid">Select Agenda</LABEL>
 <SELECT name="agendaid">
-
-<?php 
-echo "     <OPTION value=0";
-if ($agendaid==0) {echo " selected";}
-echo ">Select agenda</OPTION>\n";
-echo "     <OPTION value=-1>New Agenda</OPTION>\n";
-while (list($meetingid,$meetingname,$groupname)=mysql_fetch_array($agendaresult, MYSQL_NUM)) {
-  echo "     <OPTION value=\"$meetingid\"";
-  if ($agendaid==$meetingid) {echo " selected";}
-  echo ">$groupname: ".htmlspecialchars($meetingname)."</OPTION>\n";
-  }
-?>
-
+<OPTION value=-1>New Agenda</OPTION>
+<?php populate_select_from_query($query, $agendaid, "Select Agenda from the List Below", false); ?>
 </SELECT></DIV>
 <DIV class="SubmitDiv">
 <BUTTON class="SubmitButton" type="submit" name="submit" >Submit</BUTTON>
@@ -97,17 +79,6 @@ if ($agendaid==0) {
   correct_footer();
   exit();
  }
-
-// Get the permroleid mappings
-$query= <<<EOD
-SELECT
-    permroleid,
-    permrolename
-  FROM
-      PermissionRoles
-EOD;
-
-list($permrows,$permheader_array,$perm_array)=queryreport($query,$link,$title,$description,0);
 
 // Switch on if it is a new report or not
 if ($agendaid == "-1") {
@@ -150,33 +121,17 @@ EOD;
 <INPUT type="hidden" name="agendaid" value="<?php echo $agendaid; ?>">
 <INPUT type="hidden" name="agendaupdate" value="Yes">
 <LABEL for"agendaname">Agenda Name:</LABEL>
-<INPUT type="text" size="25" name="agendaname" id="agendaname" value="<?php echo htmlspecialchars($agendaname) ?>">
+<INPUT type="text" size="25" name="agendaname" id="agendaname" value="<?php echo htmlspecialchars($agendaname); ?>">
 <LABEL for="agenda">Agenda:</LABEL>
-<TEXTAREA name="agenda" rows=6 cols=72><?php echo $agenda ?></TEXTAREA>
+<TEXTAREA name="agenda" rows=6 cols=72><?php echo $agenda; ?></TEXTAREA>
 <LABEL for="agendanotes">Notes:</LABEL>
-<TEXTAREA name="agendanotes" rows=6 cols=72><?php echo $agendanotes ?></TEXTAREA>
+<TEXTAREA name="agendanotes" rows=6 cols=72><?php echo $agendanotes; ?></TEXTAREA>
 <LABEL for="meetingtime">Meeting Time: (eg: 2038-12-12)</LABEL>
-<INPUT type="text" size=10 name="meetingtime" id="meetingtime" value="<?php echo htmlspecialchars($meetingtime) ?>">
+<INPUT type="text" size=10 name="meetingtime" id="meetingtime" value="<?php echo htmlspecialchars($meetingtime); ?>">
 <LABEL for="permroleid">Select Meeting Group:</LABEL>
 <SELECT name="permroleid">
-<?php 
-echo "     <OPTION value=0";
-if ($permroleid==0) {echo " selected";}
-echo ">Select Group</OPTION>\n";
-for ($i=1; $i<=$permrows; $i++) {
-  echo "     <OPTION value=\"".$perm_array[$i]['permroleid']."\"";
-  if ($perm_array[$i]['permroleid']==$permroleid) {
-    echo " selected";
-    $permrolename=$perm_array[$i]['permrolename'];
-   }
-  echo ">".$perm_array[$i]['permrolename']."</OPTION>\n";
-  }
-echo "<INPUT type=\"hidden\" name=\"permrolename\" value=\"$permrolename\">";
-?>
+<?php $query="SELECT permroleid, permrolename FROM PermissionRoles" ; populate_select_from_query($query, $permroleid, "Select Meeting Group", false); ?>
 </SELECT>
-<br>
-<LABEL for="sendit">E-mail the Agenda: </LABEL>
-<INPUT type="checkbox" name="sendit" id="sendit" value="Yes">
 </DIV>
 
 <BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
