@@ -463,57 +463,32 @@ function queryreport($query,$link,$title,$description,$reportid) {
  searching. */
 function select_participant ($selpartid, $returnto) {
   global $link;
-  $query0="SELECT P.badgeid, CD.lastname, CD.firstname, CD.badgename, P.pubsname FROM Participants P, CongoDump CD ";
-  $query0.="where P.badgeid = CD.badgeid ORDER BY CD.lastname";
-  if (!$lastnameresult=mysql_query($query0,$link)) {
-    $message=$query0."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
-    exit();
-  }
-  $query1="SELECT P.badgeid, CD.lastname, CD.firstname, CD.badgename, P.pubsname FROM Participants P, CongoDump CD ";
-  $query1.="where P.badgeid = CD.badgeid ORDER BY CD.firstname";
-  if (!$firstnameresult=mysql_query($query1,$link)) {
-    $message=$query1."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
-    exit();
-  }
-  $query2="SELECT P.badgeid, CD.lastname, CD.firstname, CD.badgename, P.pubsname FROM Participants P, CongoDump CD ";
-  $query2.="where P.badgeid = CD.badgeid ORDER BY P.pubsname";
-  if (!$pubsnameresult=mysql_query($query2,$link)) {
-    $message=$query2."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
-    exit();
-  }
+
+  // lastname, firstname (badgename/pubsname) - partid
+  $query0="SELECT P.badgeid, concat(CD.lastname,', ',CD.firstname,' (',CD.badgename,'/',P.pubsname,') - ',P.badgeid) AS pname";
+  $query0.=" FROM Participants P, CongoDump CD WHERE P.badgeid = CD.badgeid ORDER BY CD.lastname";
+
+  // firstname lastname (badgename/pubsname) - partid
+  $query1="SELECT P.badgeid, concat(CD.firstname,' ',CD.lastname,' (',CD.badgename,'/',P.pubsname,') - ',P.badgeid) AS pname";
+  $query1.=" FROM Participants P, CongoDump CD WHERE P.badgeid = CD.badgeid ORDER BY CD.lastname";
+
+  // pubsname/badgename (lastname, firstname) - partid
+  $query2="SELECT P.badgeid, concat(P.pubsname,'/',CD.badgename,' (',CD.lastname,', ',CD.firstname,') - ',P.badgeid) AS pname";
+  $query2.=" FROM Participants P, CongoDump CD WHERE P.badgeid = CD.badgeid ORDER BY CD.lastname";
+
+  // Now give the choices
   echo "<FORM name=\"selpartform\" method=POST action=\"".$returnto."\">\n";
   echo "<DIV><LABEL for=\"partidl\">Select Participant (Lastname)</LABEL>\n";
   echo "<SELECT name=\"partidl\">\n";
-  echo "     <OPTION value=0 ".(($selpartid==0)?"selected":"").">Select Participant (Lastname)</OPTION>\n";
-  while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($lastnameresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$partid."\" ".(($selpartid==$partid)?"selected":"");
-    echo ">".htmlspecialchars($lastname).", ".htmlspecialchars($firstname);
-    echo " (".htmlspecialchars($badgename)."/".htmlspecialchars($pubsname).") - ".$partid."</OPTION>\n";
-  }
+  populate_select_from_query($query0, $selpartid, "Select Participant (Lastname)", true);
   echo "</SELECT></DIV>\n";
   echo "<DIV><LABEL for=\"partidf\">Select Participant (Firstname)</LABEL>\n";
   echo "<SELECT name=\"partidf\">\n";
-  echo "     <OPTION value=0 ".(($selpartid==0)?"selected":"").">Select Participant (Firstname)</OPTION>\n";
-  while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($firstnameresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$partid."\" ".(($selpartid==$partid)?"selected":"");
-    echo ">".htmlspecialchars($firstname)." ".htmlspecialchars($lastname);
-    echo " (".htmlspecialchars($badgename)."/".htmlspecialchars($pubsname).") - ".$partid."</OPTION>\n";
-  }
+  populate_select_from_query($query1, $selpartid, "Select Participant (Firstname)", true);
   echo "</SELECT></DIV>\n";
   echo "<DIV><LABEL for=\"partidp\">Select Participant (Pubsname) </LABEL>\n";
   echo "<SELECT name=\"partidp\">\n";
-  echo "     <OPTION value=0 ".(($selpartid==0)?"selected":"").">Select Participant (Pubsname)</OPTION>\n";
-  while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($pubsnameresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$partid."\" ".(($selpartid==$partid)?"selected":"");
-    echo ">".htmlspecialchars($pubsname)."/".htmlspecialchars($badgename);
-    echo " (".htmlspecialchars($lastname).", ".htmlspecialchars($firstname).") - ".$partid."</OPTION>\n";
-  }
+  populate_select_from_query($query2, $selpartid, "Select Participant (Pubsname)", true);
   echo "</SELECT></DIV>\n";
   echo "<P>&nbsp;\n";
   echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Submit</BUTTON></DIV>\n";
