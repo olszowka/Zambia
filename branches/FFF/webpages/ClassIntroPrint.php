@@ -10,6 +10,7 @@ require_once('../../tcpdf/tcpdf.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
+$BioDBName=BIODBNAME; // make it a variable so it can be substituted
 
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="ClassIntroPrint.php";
@@ -54,24 +55,25 @@ $pdf->SetFont('helvetica', '', 10, '', true);
 
 /* This query returns the pubsname, title of the class, Start time,
  Room Name, and Sessionid for Classes/Panels only at this time, for
- the Volunteer, who is announcing it.  The type is 1=panel 2=class, if
- this changes in the database, it should change here and other places,
- as well.  The individual switch allows us to print one person's
- information, as well. */
+ the Volunteer, who is announcing it.  This now uses the typename,
+ and we are looking for Panel and Class, if this changes, it should
+ change here and other places as well.  The individual switch allows
+ us to print one person's information, as well. */
 $query = <<<EOD
 SELECT
     P.pubsname, 
     S.title,
-    DATE_FORMAT(ADDTIME('2010-02-12 00:00:00',SCH.starttime), '%a %l:%i %p') as StartTime,
+    DATE_FORMAT(ADDTIME("$ConStartDatim",SCH.starttime), '%a %l:%i %p') as StartTime,
     R.roomname,
     S.sessionid,
-    S.typeid
+    T.typename
   FROM
       ParticipantOnSession POS, 
       Sessions S, 
       Participants P,
       Schedule SCH,
       Rooms R,
+      Types T,
       UserHasPermissionRole UP
   WHERE
     POS.badgeid=P.badgeid and
@@ -79,9 +81,10 @@ SELECT
     POS.sessionid=SCH.sessionid and
     SCH.roomid=R.roomid and
     POS.badgeid=UP.badgeid and
+    S.typeid=T.typeid and
     UP.permroleid=5 and
     POS.introducer=1 and
-    (S.typeid=1 OR S.typeid=2)
+    typename in ('Panel','Class')
 
 EOD;
 
@@ -99,13 +102,23 @@ list($classcount,$classcount_header,$classlist_array)=queryreport($query,$link,$
 $query1 = <<<EOD
 SELECT 
     P.pubsname,
-    P.editedbio,
+    BWE.biotext,
     S.sessionid,
     POS.moderator
   FROM
       Sessions S
     LEFT JOIN ParticipantOnSession POS ON S.sessionid=POS.sessionid
     LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+    LEFT JOIN (SELECT 
+                   badgeid,
+                   biotext
+                 FROM
+                     $BioDBName.Bios
+                   JOIN $BioDBName.BioTypes USING (biotypeid)
+                   JOIN $BioDBName.BioStates USING (biostateid)
+                 WHERE
+                   biotypename in ('web') AND
+	           biostatename in ('edited')) BWE on P.badgeid=BWE.badgeid
   WHERE
     POS.aidedecamp=0 AND
     POS.volunteer=0 AND
@@ -139,7 +152,7 @@ for ($i=1; $i<=$classcount; $i++) {
   $classname=$classlist_array[$i]['title'];
   $starttime=$classlist_array[$i]['StartTime'];
   $roomname=$classlist_array[$i]['roomname'];
-  $type=$classlist_array[$i]['typeid'];
+  $typename=$classlist_array[$i]['typename'];
 
   // Generic header info.
   $printstring = "<P>&nbsp;</P><P>$name, this is the information for:</P>";
@@ -157,12 +170,12 @@ for ($i=1; $i<=$classcount; $i++) {
   $bios="";
   for ($j=1; $j<=$presentercount; $j++) {
     if ($presenter_array[$j]['sessionid'] == $sessionid) {
-      if (($type == "1") AND ($presenter_array[$j]['moderator'] == "1")) {
+      if (($typename == "Panel") AND ($presenter_array[$j]['moderator'] == "1")) {
 	$bios="<P>I'd like to turn this over to ".$presenter_array[$j]['pubsname'];
         $bios.=", our moderator, for the $classname.</P>";
       }
-      if ($type == "2") {
-	$bios.="<P>".$presenter_array[$j]['pubsname']." ".htmlspecialchars($presenter_array[$j]['editedbio'])."</P>";
+      if ($typename == "Class") {
+	$bios.="<P>".$presenter_array[$j]['pubsname']." ".htmlspecialchars($presenter_array[$j]['biotext'])."</P>";
       }
     }
   }

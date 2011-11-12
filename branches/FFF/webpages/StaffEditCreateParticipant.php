@@ -1,6 +1,7 @@
 <?php
 require_once ('StaffCommonCode.php');
 require ('StaffEditCreateParticipant_FNC.php');
+
 if (isset($_GET['action'])) {
   $action=$_GET['action'];
  }
@@ -50,8 +51,28 @@ if ($action=="create") { //initialize participant array
 
   // If the information has already been added, and we are
   // on the return loop, add the Participant to the database.
-  if ((isset ($_POST["email"]) and $_POST["email"]!="")) {
+  if ((isset ($_POST['update'])) and ($_POST['update']=="Yes")) {
     create_participant ($_POST,$permrole_arr);
+  }
+
+  // Get a set of bioinfo, not for the info, but for the arrays.
+  $bioinfo=getBioData($_SESSION['badgeid']);
+
+  /* We are only updating the raw bios here, so only a 2-depth
+   search happens on biolang and biotypename. */
+  $biostate='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+  for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
+    for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
+
+      // Setup for keyname, to collapse all three variables into one passed name.
+      $biotype=$bioinfo['biotype_array'][$i];
+      $biolang=$bioinfo['biolang_array'][$j];
+      // $biostate=$bioinfo['biostate_array'][$k];
+      $keyname=$biotype."_".$biolang."_".$biostate."_bio";
+
+      // Clear the values.
+      $participant_arr[$keyname]="";
+    }
   }
 
   // Clear the values.
@@ -60,11 +81,8 @@ if ($action=="create") { //initialize participant array
   $participant_arr['bestway']=""; //null means hasn't logged in yet.
   $participant_arr['interested']=""; //null means hasn't logged in yet.
   $participant_arr['permroleid']=""; //null means hasn't logged in yet.
-  $participant_arr['bio']="";
-  $participant_arr['progbio']="";
   $participant_arr['altcontact']="";
   $participant_arr['prognotes']="";
-  $participant_arr['bioeditstatusid']=1; //not edited -- whatever is first step
   $participant_arr['pubsname']="";
   $participant_arr['firstname']="";
   $participant_arr['lastname']="";
@@ -77,7 +95,7 @@ if ($action=="create") { //initialize participant array
   $participant_arr['poststate']="";
   $participant_arr['postzip']="";
   RenderEditCreateParticipant($action,$participant_arr,$permrole_arr,$message_warn,$message_error);
-  staff_footer();
+  correct_footer();
  }
 
  else { // get participant array from database
@@ -104,13 +122,13 @@ if ($action=="create") { //initialize participant array
    
    //Stop page here if and individual has not yet been selected
    if ($selpartid==0) {
-     staff_footer();
+     correct_footer();
      exit();
    }
    
    //If we are on the loop with an update, update the database
    // with the current version of the information
-   if (isset ($_POST["email"])) {
+   if ((isset ($_POST['update'])) and ($_POST['update'] == "Yes")) {
      edit_participant ($_POST,$permrole_arr);
    }
 
@@ -133,8 +151,6 @@ SELECT
     CD.regtype,
     P.bestway,
     P.interested,
-    P.bio,
-    P.progbio,
     P.pubsname,
     P.altcontact,
     P.prognotes,
@@ -144,7 +160,7 @@ SELECT
     JOIN Participants P USING (badgeid)
     JOIN UserHasPermissionRole U USING (badgeid)
   WHERE
-    badgeid='$selpartid'
+    CD.badgeid='$selpartid'
 EOD;
    if (($result=mysql_query($query,$link))===false) {
      $message_error="Error retrieving data from database<BR>\n";
@@ -159,6 +175,26 @@ EOD;
      exit();
    }
    $participant_arr=mysql_fetch_array($result,MYSQL_ASSOC);
+
+   // Get a set of bioinfo, and map it to the appropriate $participant_arr.
+   $bioinfo=getBioData($selpartid);
+
+   /* We are only updating the raw bios here, so only a 2-depth
+    search happens on biolang and biotypename. */
+   $biostate='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+   for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
+     for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
+       
+       // Setup for keyname, to collapse all three variables into one passed name.
+       $biotype=$bioinfo['biotype_array'][$i];
+       $biolang=$bioinfo['biolang_array'][$j];
+       // $biostate=$bioinfo['biostate_array'][$k];
+       $keyname=$biotype."_".$biolang."_".$biostate."_bio";
+
+       // Clear the values.
+       $participant_arr[$keyname]=$bioinfo[$keyname];
+     }
+   }
    RenderEditCreateParticipant($action,$participant_arr,$permrole_arr,$message_warn,$message_error);
    // Show previous notes added, for references, and end page
    show_participant_notes ($selpartid);

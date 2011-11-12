@@ -2,7 +2,6 @@
 require_once('PostingCommonCode.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-$Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 
 // LOCALIZATIONS
@@ -20,9 +19,9 @@ if (strtotime($ConStartDatim) < time()) {
   $additionalinfo.="<P>Click on the (Feedback) tag to give us feedback on a particular scheduled event.</P>\n";
  }
 
-/* This complex query grabs the name, class information, and editedbio (if there is one)
+/* This complex query grabs the name, and class information.
  Most, if not all of the formatting is done within the query, as opposed to in
- the post-processing. */
+ the post-processing. The bio information is grabbed seperately. */
 $query = <<<EOD
 SELECT
     concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',
@@ -42,8 +41,8 @@ SELECT
     R.roomname as Roomname,
     concat('<A HREF=PrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=Feedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
-    if ((P.editedbio is NULL),' ',P.editedbio) as Bio,
-    P.pubsname
+    P.pubsname,
+    P.badgeid
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
@@ -72,17 +71,57 @@ for ($i=1; $i<=$elements; $i++) {
       echo "    </TD>\n  </TR>\n</TABLE>\n";
     }
     $printparticipant=$element_array[$i]['Participants'];
-    $picture=sprintf("../Local/Participant_Images/%s.jpg",$element_array[$i]['pubsname']);
-    if (file_exists($picture)) {
-      echo "<TABLE>\n  <TR>\n    <TD width=310>";
-      echo sprintf("<img width=300 src=\"%s\"</TD>\n<TD>",$picture);
-    } else {
-      echo "<TABLE>\n  <TR>\n    <TD>";
+    $bioinfo=getBioData($element_array[$i]['badgeid']);
+    /* Presenting the Web, URI and Picture pieces, in whatever
+       languages we have, grouping by language, then type.
+       Currently we are using edited as the state, at some
+       point we should move to good. */
+    $namecount=0;
+    $tablecount=0;
+    $biostate='edited'; // for ($l=0; $l<count($bioinfo['biostate_array']); $l++) {
+    for ($k=0; $k<count($bioinfo['biolang_array']); $k++) {
+      $bioout=array();
+      for ($j=0; $j<count($bioinfo['biotype_array']); $j++) {
+
+	// Setup for keyname, to collapse all three variables into one passed name.
+	$biotype=$bioinfo['biotype_array'][$j];
+	$biolang=$bioinfo['biolang_array'][$k];
+	// $biostate=$bioinfo['biostate_array'][$l];
+	$keyname=$biotype."_".$biolang."_".$biostate."_bio";
+
+	// Set up the useful pieces.
+	if (isset($bioinfo[$keyname])) {$bioout[$biotype]=$bioinfo[$keyname];}
+      }
+
+      // Still in the language switch, but have set the $bioout array.
+      if (isset($bioout['picture'])) {
+	if ($tablecount == 0) {
+	  echo "<TABLE>\n  <TR>\n    <TD width=310>";
+	  $tablecount++;
+	} else {
+	  echo "    </TD>\n  </TR>\n  <TR>\n    <TD width=310>";
+	}
+	echo sprintf("<img width=300 src=\"%s\"</TD>\n<TD>",$bioout['picture']);
+      } else {
+	if ($tablecount == 0) {
+	  echo "<TABLE>\n  <TR>\n    <TD>";
+	  $tablecount++;
+	}
+      }
+      if (isset($bioout['web'])) {
+	echo sprintf("<P><B>%s</B>%s</P>\n",$printparticipant,$bioout['web']);
+	$namecount++;
+      }
+      if (isset($bioout['uri'])) {
+	if ($namecount==0) {
+	  echo sprintf("<P><B>%s:</B><br>%s</P>\n",$printparticipant,$bioout['uri']);
+	} else {
+	  echo sprintf("<P>%s</P>\n",$bioout['uri']);
+	}
+      }
     }
-    echo sprintf("<P><B>%s</B>",$element_array[$i]['Participants']);
-    if ($element_array[$i]['Bio'] != ' ') {
-      echo sprintf("%s",$element_array[$i]['Bio']);
-    }
+    // If there were no bios
+    if ($namecount==0) { echo sprintf("<P><B>%s</B>",$printparticipant);}
     if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
       echo sprintf(" <A HREF=\"PostScheduleIcal.php?pubsname=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['pubsname']);
     }

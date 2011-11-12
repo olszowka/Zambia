@@ -517,7 +517,7 @@ function isLoggedIn() {
 function retrieve_participant_from_db($badgeid) {
     global $participant;
     global $link,$message2;
-    $result=mysql_query("SELECT pubsname, password, bestway, interested, bio, progbio, editedbio, progeditedbio, altcontact FROM Participants where badgeid='$badgeid'",$link);
+    $result=mysql_query("SELECT pubsname, password, interested  FROM Participants where badgeid='$badgeid'",$link);
     if (!$result) {
         $message2=mysql_error($link);
         return (-3);
@@ -733,31 +733,49 @@ function get_idlist_from_db($table_name,$id_col_name,$desc_col_name,$desc_col_ma
 //call with $badgeid='' to unlock based on user only
 
 function unlock_participant($badgeid) {
-    global $query,$link;
-    $query='UPDATE Participants SET biolockedby=NULL WHERE ';
-    if (isset($_SESSION['badgeid'])) {
-            $query.="biolockedby='".$_SESSION['badgeid']."'";
-            if ($badgeid!='') {
-                $query.=" or badgeid='$badgeid'";
-                }
-            }
-        else {
-            if ($badgeid!='') {
-                    $query.="badgeid='$badgeid'";
-                    }
-                else {
-                    return(0); //can't find anything to unlock
-                    }
-            }
-    //error_log("Zambia: unlock_participants: ".$query);
-    $result=mysql_query($query,$link);
-    if (!$result) {
-            return (-1);
-            }
-        else {
-            return (0);
-            }
+  global $query,$link;
+  $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+
+  $query="UPDATE $BioDBName.Bios SET biolockedby=NULL WHERE ";
+  if (isset($_SESSION['badgeid'])) {
+    $query.="biolockedby='".$_SESSION['badgeid']."'";
+    if ($badgeid!='') {
+      $query.=" and badgeid='$badgeid'";
     }
+  } else {
+    if ($badgeid!='') {
+      $query.="badgeid='$badgeid'";
+    } else {
+      return($query.": Nothing to unlock"); //can't find anything to unlock
+    }
+  }
+  //error_log("Zambia: unlock_participants: ".$query);
+  $result=mysql_query($query,$link);
+  if (!$result) {
+    return ($query.": -1");
+  } else {
+    return ($query.": 0");
+  }
+}
+
+function lock_participant($badgeid) {
+  global $query, $link;
+  $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+
+  //error_log("Zambia: lock_participant: ".$query);
+  $userbadgeid=$_SESSION['badgeid'];
+  $query="UPDATE $BioDBName.Bios SET biolockedby='$userbadgeid' WHERE biolockedby IS NULL and badgeid='$badgeid'";
+
+  $result=mysql_query($query,$link);
+  if (!$result) {
+    return (-1);
+  }
+  if (mysql_affected_rows($link) > 0) {
+    return (0);
+  } else {
+    return (-2);
+  }
+}
 
 // Function get_sstatus()
 // Populates the global sstatus array from the database

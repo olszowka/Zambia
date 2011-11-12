@@ -1,53 +1,53 @@
 <?php
-    require_once('Constants.php');
-    require_once('data_functions.php');
-    require_once('db_functions.php');
-    require_once('render_functions.php');
-    require_once('validation_functions.php');
-    require_once('php_functions.php');
-    require_once('error_functions.php');
+require_once('Constants.php');
+require_once('data_functions.php');
+require_once('db_functions.php');
+require_once('render_functions.php');
+require_once('validation_functions.php');
+require_once('php_functions.php');
+require_once('error_functions.php');
 
-    //set_session_timeout();
-    session_start();
-    if (prepare_db()===false) {
-        $message_error="Unable to connect to database.<BR>No further execution possible.";
-        RenderError($title,$message_error);
-        exit();
-        };
-    if (isLoggedIn()==false and !isset($logging_in)) {
-	    $message="Session expired. Please log in again.";
-	    require ('login.php');
-	    exit();
-    };
+//set_session_timeout();
+session_start();
+if (prepare_db()===false) {
+  $message_error="Unable to connect to database.<BR>No further execution possible.";
+  RenderError($title,$message_error);
+  exit();
+ };
+if (isLoggedIn()==false and !isset($logging_in)) {
+  $message="Session expired. Please log in again.";
+  require ('login.php');
+  exit();
+ };
 
-    // function to generate a clickable tab.
-    // 'text' contains the text that should appear in the tab.
-    // 'usable' indicates whether the tab is usable.
-    //
-    // if the tab is usable, its background and foreground color will
-    // be determined by the 'usabletab' class.  when the mouse is over the tab
-    // the background and foreground colors of the tab will be determined
-    // by the 'mousedovertab' class.
-    //
-    // if the tab is not usable, the tab will use class 'unusabletab'
-    
-    Function maketab($text,$usable,$url) {
-	if ($usable) {
-		echo '<SPAN class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
-		echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
-		echo '<A HREF="' . $url . '">' ;// XXX link needs to be quoted
-		echo $text;                     // XXX needs to be quoted
-		echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
-		echo '</SPAN>';
-	    }
-	else {
-		echo '<SPAN class="unusabletab">';
-		echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
-		echo $text;                     // XXX needs to be quoted
-		echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
-		echo '</SPAN>';
-	    }
-    }
+// function to generate a clickable tab.
+// 'text' contains the text that should appear in the tab.
+// 'usable' indicates whether the tab is usable.
+//
+// if the tab is usable, its background and foreground color will
+// be determined by the 'usabletab' class.  when the mouse is over the tab
+// the background and foreground colors of the tab will be determined
+// by the 'mousedovertab' class.
+//
+// if the tab is not usable, the tab will use class 'unusabletab'
+
+Function maketab($text,$usable,$url) {
+  if ($usable) {
+    echo '<SPAN class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
+    echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
+    echo '<A HREF="' . $url . '">' ;// XXX link needs to be quoted
+    echo $text;                     // XXX needs to be quoted
+    echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
+    echo '</SPAN>';
+  }
+  else {
+    echo '<SPAN class="unusabletab">';
+    echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
+    echo $text;                     // XXX needs to be quoted
+    echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
+    echo '</SPAN>';
+  }
+}
 
 /* functions to put the headers in place.  Probably should be generalized more,
  than specifically pre-scripting it, the way we do. */
@@ -64,7 +64,7 @@ function posting_header($title) {
   echo "  <title>Zambia -- $ConName -- $title</title>\n";
   if (file_exists($HeaderTemplateFile)) {
     readfile($HeaderTemplateFile);
-    } else {
+  } else {
     echo "  <link rel=\"stylesheet\" href=\"Common.css\" type=\"text/css\">\n";
     echo "</head>\n";
     echo "<body>\n";
@@ -72,8 +72,8 @@ function posting_header($title) {
     echo "<H1 class=\"head\">Return to the <A HREF=\"http://$ConUrl\">$ConName</A> website</H1>\n";
     echo "<hr>\n\n";
     echo "<H2 class=\"head\">$title</H2>\n";
-    }
   }
+}
 
 function staff_header($title) {
   require_once ("javascript_functions.php");
@@ -120,10 +120,10 @@ function staff_header($title) {
     echo "          <td><A class=\"logout\" HREF=\"logout.php\">&nbsp;Logout&nbsp;</A>\n            </td>\n";
     echo "          <td width=\"25\">&nbsp;\n            </td>\n          </tr>\n        </table>\n";
     echo "      </td>\n    </tr>\n";
-    }
+  }
   echo "  </table>\n\n<H2 class=\"head\">$title</H2>\n";
   //  echo "Permissions: ".print_r($_SESSION['permission_set'])."\n";
-  }
+}
 
 function participant_header($title) {
   require_once ("javascript_functions.php");
@@ -158,7 +158,7 @@ function participant_header($title) {
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     if (may_I('Staff')) { 
       maketab("Staff View",may_I('Staff'),"StaffPage.php"); 
-      }
+    }
     echo "</td>\n  </tr>\n  <tr class=\"tabrows\">\n    <td class=\"tabblocks border0020 smallspacer\">&nbsp;";
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     echo "<!-- XXX this should have a may_I -->\n       ";
@@ -180,9 +180,9 @@ function participant_header($title) {
     echo "          <td><A class=\"logout\" HREF=\"logout.php\">&nbsp;Logout&nbsp;</A></td>\n";
     echo "          <td width=\"25\">&nbsp;</td>\n        </tr>\n      </table>\n";
     echo "    </td>\n  </tr>\n";
-    }
-  echo "</table>\n\n<H2 class=\"head\">$title</H2>\n";
   }
+  echo "</table>\n\n<H2 class=\"head\">$title</H2>\n";
+}
 
 function brainstorm_header($title) {
   require_once ("javascript_functions.php");
@@ -220,11 +220,11 @@ function brainstorm_header($title) {
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     if(may_I('Participant')) { 
       maketab("Participants View",may_I('Participant'),"welcome.php"); 
-      }
+    }
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     if(may_I('Staff')) { 
       maketab("Staff View",may_I('Staff'),"StaffPage.php");
-      }
+    }
     echo"  </tr>\n  <tr class=\"tabrows\">\n    <td class=\"tabblocks border0020\" colspan=12>\n         View sessions proposed to date:</td>\n  </tr>";
     echo "</td>\n  </tr>\n  <tr class=\"tabrows\">\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     maketab("All Proposals",1,"BrainstormReportAll.php");
@@ -246,9 +246,9 @@ function brainstorm_header($title) {
     echo "          <td><A class=\"logout\" HREF=\"logout.php\">&nbsp;Logout&nbsp;</A></td>\n";
     echo "          <td width=\"25\">&nbsp;</td>\n        </tr>\n      </table>\n";
     echo "    </td>\n  </tr>\n";
-    }
-  echo "</table>\n\n<H2 class=\"head\">$title</H2>\n";
   }
+  echo "</table>\n\n<H2 class=\"head\">$title</H2>\n";
+}
 
 function posting_footer() {
   $ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
@@ -256,13 +256,13 @@ function posting_footer() {
 
   if (file_exists($FooterTemplateFile)) {
     readfile($FooterTemplateFile);
-    } else {
+  } else {
     echo "<hr>\n<P>If you have questions or wish to communicate an idea, please contact ";
     echo "<A HREF=\"mailto:$ProgramEmail\">$ProgramEmail</A>.\n</P>";
-    }
+  }
   include ('google_analytics.php');
   echo "\n\n</body>\n</html>\n";
-  }
+}
 
 function staff_footer() {
   $ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
@@ -272,7 +272,7 @@ function staff_footer() {
   echo "<A HREF=\"mailto:$ProgramEmail\">$ProgramEmail</A>.\n</P>";
   include ('google_analytics.php');
   echo "\n\n</body>\n</html>\n";
-  }
+}
 
 function participant_footer() {
   $ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
@@ -281,7 +281,7 @@ function participant_footer() {
   echo "<A HREF=\"mailto:$ProgramEmail\">$ProgramEmail</A>.\n</P>"; 
   include('google_analytics.php');
   echo "\n\n</body>\n</html>\n";
-  }
+}
 
 function brainstorm_footer() {
   $ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
@@ -293,7 +293,7 @@ function brainstorm_footer() {
   echo "<A HREF=\"mailto:$BrainstormEmail\">$BrainstormEmail</A>.</P>";
   include('google_analytics.php');
   echo "\n\n</body>\n</html>\n";
-  }
+}
 
 /* Top of page reporting, simplified by the foo_header functions
  for HTML pages.  It takes the title, description and any
@@ -316,7 +316,6 @@ function topofpagereport($title,$description,$info) {
   echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
   echo $description;
   echo $info;
-  
 }
 
 /* Top of page reporting, for CSV pages.  It takes only the filename
@@ -507,8 +506,8 @@ function submit_table_element ($link, $title, $table, $element_array, $value_arr
     RenderError($title,$message_error);
     exit;
   }
-  $message="Database updated successfully.<BR>";
-  echo "<P class=\"regmsg\">".$message."\n";
+  $message="Table $table updated successfully.<BR>";
+  return($message);
 }
 
 /* Generic update takes six variables: link, title, Table, paired array of updates,
@@ -522,8 +521,8 @@ function update_table_element ($link, $title, $table, $pairedvalue_array, $match
     RenderError($title,$message_error);
     exit;
   }
-  $message="Database updated successfully.<BR>";
-  echo "<P class=\"regmsg\">".$message."\n";
+  $message="Table $table updated successfully.<BR>";
+  return($message);
 }
 
 /* unfrom/refrom fix so that queries can be set as values in the various database entries */
@@ -582,23 +581,43 @@ EOD;
 /* create_participant and edit_participant functions.  Need more doc. */
 function create_participant ($participant_arr,$permrole_arr) {
   global $link;
+  $bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
+  if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
+  $bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted
+  if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
+  $bio_limit['name']=MIN_NAME_LEN; // make it a variable so it can be substituted
+  if (!is_numeric($bio_limit['name'])) {unset($bio_limit['book']);}
+
+  // Get a set of bioinfo, not for the info, but for the arrays.
+  $bioinfo=getBioData($_SESSION['badgeid']);
+
+  // Test constraints.
+
+  // Bios test moved into the add bios loop.
+
+  // Too short name.
   $error_status=false;
-  // Commented out, becuase some people have short names
-  /* if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < 5) OR
-      (strlen($participant_arr['badgename']) < 5) OR
-      (strlen($participant_arr['pubsname']) < 5)) {
-    $message_error="All name fields are required and minimum length is 5 characters.  <BR>\n";
-    $error_status=true;
-  } */
+  if (isset($bio_limit['name'])) {
+    if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < $bio_limit['name']) OR
+	(strlen($participant_arr['badgename']) < $bio_limit['name']) OR
+	(strlen($participant_arr['pubsname']) < $bio_limit['name'])) {
+      $message_error="All name fields are required and minimum length is ".$bio_limit['name']." characters.  <BR>\n";
+      echo "<P class=\"errmsg\">".$message_error."\n";
+      return;
+    }
+  }
+
+  // Invalid email address.
   if (!is_email($participant_arr['email'])) {
-    $message_error.="Email address is not valid.  <BR>\n";
-    $error_status=true;
+    $message_error="Email address: ".$participant_arr['email']." is not valid.  <BR>\n";
+    echo "<P class=\"errmsg\">".$message_error."\n";
+    return;
+
   }
-  if ($error_status) {
-    $message_error.="Database not updated.  <BR>\n";
-    exit();
-  }
-  $query = "SELECT MAX(badgeid) FROM Participants WHERE badgeid>='1' AND badgeid<68";
+
+  // Get next possible badgeid.
+  // WAS: "SELECT MAX(badgeid) FROM Participants WHERE badgeid>='1'";
+  $query = "SELECT badgeid FROM Participants ORDER BY ABS(badgeid) DESC LIMIT 1";
   $result=mysql_query($query,$link);
   if (!$result) {
     $message_error="Unrecoverable error updating database.  Database not updated.<BR>\n";
@@ -616,107 +635,175 @@ function create_participant ($participant_arr,$permrole_arr) {
   //error_log("Zambia: SubmitEditCreateParticipant.php: maxbadgeid: $maxbadgeid");
   sscanf($maxbadgeid,"%d",$x);
   $newbadgeid=sprintf("%d",$x+1); // convert to num; add 1; convert back to string
-  $query = "INSERT INTO Participants (badgeid, password, bestway, interested, bio, progbio, altcontact, prognotes, pubsname) VALUES (";
-  $query.= "'".mysql_real_escape_string($newbadgeid)."',";
-  $query.= "'".mysql_real_escape_string($participant_arr['password'])."',";
-  $query.= "'".mysql_real_escape_string($participant_arr['bestway'])."',";
-  $query.= (($participant_arr['interested']=='')?"NULL":$participant_arr['interested']).",";
-  $query.= "'".mysql_real_escape_string($participant_arr['bio'])."',";
-  $query.= "'".mysql_real_escape_string($participant_arr['progbio'])."',";
-  $query.= "'".mysql_real_escape_string($participant_arr['altcontact'])."',";
-  $query.= "'".mysql_real_escape_string($participant_arr['prognotes'])."',";
-  $query.= "'".mysql_real_escape_string($participant_arr['pubsname'])."');";
-  $query2 = "INSERT INTO CongoDump (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, regtype) VALUES (";
-  $query2.= "'".mysql_real_escape_string($newbadgeid)."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['firstname'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['lastname'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['badgename'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['phone'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['email'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['postaddress1'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['postaddress2'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['postcity'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['poststate'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['postzip'])."',";
-  $query2.= "'".mysql_real_escape_string($participant_arr['regtype'])."');";
-  $query3 = "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ";
+
+  // Create Participants entry.
+  $element_array = array('badgeid', 'password', 'bestway', 'interested', 'altcontact', 'prognotes', 'pubsname');
+  $value_array=array(mysql_real_escape_string($newbadgeid),
+                     mysql_real_escape_string($participant_arr['password']),
+                     mysql_real_escape_string($participant_arr['bestway']),
+                     (($participant_arr['interested']=='')?"NULL":$participant_arr['interested']),
+                     mysql_real_escape_string($participant_arr['altcontact']),
+                     mysql_real_escape_string($participant_arr['prognotes']),
+                     mysql_real_escape_string($participant_arr['pubsname']));
+  $message.=submit_table_element($link, $title, "Participants", $element_array, $value_array);
+
+  // Add Bios.
+  /* We are only updating the raw bios here, so only a 2-depth
+   search happens on biolang and biotypename. */
+  $biostate='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+  for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
+    for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
+
+      // Setup for keyname, to collapse all three variables into one passed name.
+      $biotype=$bioinfo['biotype_array'][$i];
+      $biolang=$bioinfo['biolang_array'][$j];
+      // $biostate=$bioinfo['biostate_array'][$k];
+      $keyname=$biotype."_".$biolang."_".$biostate."_bio";
+
+      // Clear the values.
+      $biotext=mysql_real_escape_string($participant_arr[$keyname]);
+      if ((isset($bio_limit[$biotype])) and (strlen($biotext)>$bio_limit[$biotype])) {
+	$message_error.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
+	$message_error.=" too long, the limit is ".$bio_limit[$biotype]." characters.";
+      } else {
+	$message.=update_bio_element($link,$title,$biotext,$newbadgeid,$biotype,$biolang,$biostate);
+      }
+    }
+  }
+
+  // Create CongoDump entry.
+  $element_array = array('badgeid', 'firstname', 'lastname', 'badgename', 'phone', 'email', 'postaddress1', 'postaddress2', 'postcity', 'poststate', 'postzip', 'regtype');
+  $value_array=array(mysql_real_escape_string($newbadgeid),
+		     mysql_real_escape_string($participant_arr['firstname']),
+		     mysql_real_escape_string($participant_arr['lastname']),
+		     mysql_real_escape_string($participant_arr['badgename']),
+		     mysql_real_escape_string($participant_arr['phone']),
+		     mysql_real_escape_string($participant_arr['email']),
+		     mysql_real_escape_string($participant_arr['postaddress1']),
+		     mysql_real_escape_string($participant_arr['postaddress2']),
+		     mysql_real_escape_string($participant_arr['postcity']),
+		     mysql_real_escape_string($participant_arr['poststate']),
+		     mysql_real_escape_string($participant_arr['postzip']),
+		     mysql_real_escape_string($participant_arr['regtype']));
+  $message.=submit_table_element($link, $title, "CongoDump", $element_array, $value_array);
+
+  // Submit a note about what was done.
+  $element_array = array('badgeid', 'rbadgeid', 'note');
+  $value_array=array(mysql_real_escape_string($newbadgeid),
+                     mysql_real_escape_string($_SESSION['badgeid']),
+                     mysql_real_escape_string($participant_arr['note']));
+  $message.=submit_table_element($link, $title, "NotesOnParticipants", $element_array, $value_array);
+
+  // Assign permissions.
+  $query = "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ";
   for ($i=2; $i<=count($permrole_arr); $i++) {
     $perm="permroleid".$i;
     if ($participant_arr[$perm]=="checked") {
-      $query3.="('".$newbadgeid."','".$i."'),";
+      $query.="('".$newbadgeid."','".$i."'),";
     }
   }
-  $query3=rtrim($query3,',');
-  $query4 = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
-  $query4.=$newbadgeid."','";
-  $query4.=$_SESSION['badgeid']."','";
-  $query4.=mysql_real_escape_string($participant_arr['note'])."')";
+  $query=rtrim($query,',');
   if (!mysql_query($query,$link)) {
-    $message_error=$query."<BR>Error updating CongoDump database.  Database not updated.";
+    $message_error=$query."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
     RenderError($title,$message_error);
     exit();
   }
-  if (!mysql_query($query2,$link)) {
-    $message_error=$query2."<BR>Error updating Participant database.  Database not updated.";
-    RenderError($title,$message_error);
-    exit();
-  }
-  if (!mysql_query($query3,$link)) {
-    $message_error=$query3."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
-    RenderError($title,$message_error);
-    exit();
-  }
-  if (!mysql_query($query4,$link)) {
-    $message_error=$query4."<BR>Error updating NotesOnParticipants database.  Database not updated.";
-    RenderError($title,$message_error);
-    exit();
-  }
+
+  // Make $message additive (.=) to get all the information
   $message="Database updated successfully with ".$participant_arr["badgename"].".<BR>";
   echo "<P class=\"regmsg\">".$message."\n";
 }
 
 function edit_participant ($participant_arr,$permrole_arr) {
   global $link;
-  $error_status=false;
+  $bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
+  if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
+  $bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted
+  if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
+  $bio_limit['name']=MIN_NAME_LEN; // make it a variable so it can be substituted
+  if (!is_numeric($bio_limit['name'])) {unset($bio_limit['book']);}
 
-  // Commented out, becuase some people have short names
-  /* if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < 5) OR
-      (strlen($participant_arr['badgename']) < 5) OR
-      (strlen($participant_arr['pubsname']) < 5)) {
-    $message_error="All name fields are required and minimum length is 5 characters.  <BR>\n";
-    $error_status=true;
-  } */
+  // Get a set of bioinfo, and compare below.
+  $bioinfo=getBioData($participant_arr['partid']);
+
+  // Test constraints.
+
+  // Too short name.
+  if (isset($bio_limit['name'])) {
+    if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < $bio_limit['name']) OR
+	(strlen($participant_arr['badgename']) < $bio_limit['name']) OR
+	(strlen($participant_arr['pubsname']) < $bio_limit['name'])) {
+      $message_error="All name fields are required and minimum length is ".$bio_limit['name']." characters.  <BR>\n";
+      echo "<P class=\"errmsg\">".$message_error."\n";
+      return;
+    }
+  }
+
+  // Invalid email.
   if (!is_email($participant_arr['email'])) {
-    $message="Email address: ".$participant_arr['email']." is not valid.  <BR>\n";
-    echo "<P class=\"errmsg\">".$message."\n";
+    $message_error="Email address: ".$participant_arr['email']." is not valid.  <BR>\n";
+    echo "<P class=\"errmsg\">".$message_error."\n";
     return;
   }
-  $query = "update Participants set ";
-  $query.= "bestway=\"".mysql_real_escape_string($participant_arr['bestway'])."\",";
-  $query.= "interested=\"".(($participant_arr['interested']=='')?"NULL":$participant_arr['interested'])."\",";
-  $query.= "bio=\"".mysql_real_escape_string($participant_arr['bio'])."\",";
-  $query.= "progbio=\"".mysql_real_escape_string($participant_arr['progbio'])."\",";
-  $query.= "altcontact=\"".mysql_real_escape_string($participant_arr['altcontact'])."\",";
-  $query.= "prognotes=\"".mysql_real_escape_string($participant_arr['prognotes'])."\",";
-  $query.= "pubsname=\"".mysql_real_escape_string($participant_arr['pubsname'])."\"";
-  $query.= " WHERE badgeid=\"".$participant_arr['partid']."\";";
-  $query2 = "update CongoDump set ";
-  $query2.= "firstname=\"".mysql_real_escape_string($participant_arr['firstname'])."\",";
-  $query2.= "lastname=\"".mysql_real_escape_string($participant_arr['lastname'])."\",";
-  $query2.= "badgename=\"".mysql_real_escape_string($participant_arr['badgename'])."\",";
-  $query2.= "phone=\"".mysql_real_escape_string($participant_arr['phone'])."\",";
-  $query2.= "email=\"".mysql_real_escape_string($participant_arr['email'])."\",";
-  $query2.= "postaddress1=\"".mysql_real_escape_string($participant_arr['postaddress1'])."\",";
-  $query2.= "postaddress2=\"".mysql_real_escape_string($participant_arr['postaddress2'])."\",";
-  $query2.= "postcity=\"".mysql_real_escape_string($participant_arr['postcity'])."\",";
-  $query2.= "poststate=\"".mysql_real_escape_string($participant_arr['poststate'])."\",";
-  $query2.= "postzip=\"".mysql_real_escape_string($participant_arr['postzip'])."\",";
-  $query2.= "regtype=\"".mysql_real_escape_string($participant_arr['regtype'])."\"";
-  $query2.= " WHERE badgeid=\"".$participant_arr['partid']."\";";
-  $query3 = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
-  $query3.=$participant_arr['partid']."','";
-  $query3.=$_SESSION['badgeid']."','";
-  $query3.=mysql_real_escape_string($participant_arr['note'])."')";
+
+  // Update Participants entry.
+  $pairedvalue_array=array("bestway='".mysql_real_escape_string($participant_arr['bestway'])."'",
+			   "interested='".(($participant_arr['interested']=='')?"NULL":$participant_arr['interested'])."'",
+			   "altcontact='".mysql_real_escape_string($participant_arr['altcontact'])."'",
+			   "prognotes='".mysql_real_escape_string($participant_arr['prognotes'])."'",
+			   "pubsname='".mysql_real_escape_string($participant_arr['pubsname'])."'");
+  $message.=update_table_element($link, $title, "Participants", $pairedvalue_array, "badgeid", $participant_arr['partid']);
+
+  // Update CongoDump entry.
+  $pairedvalue_array=array("firstname='".mysql_real_escape_string($participant_arr['firstname'])."'",
+			  "lastname='".mysql_real_escape_string($participant_arr['lastname'])."'",
+			  "badgename='".mysql_real_escape_string($participant_arr['badgename'])."'",
+			  "phone='".mysql_real_escape_string($participant_arr['phone'])."'",
+			  "email='".mysql_real_escape_string($participant_arr['email'])."'",
+			  "postaddress1='".mysql_real_escape_string($participant_arr['postaddress1'])."'",
+			  "postaddress2='".mysql_real_escape_string($participant_arr['postaddress2'])."'",
+			  "postcity='".mysql_real_escape_string($participant_arr['postcity'])."'",
+			  "poststate='".mysql_real_escape_string($participant_arr['poststate'])."'",
+			  "postzip='".mysql_real_escape_string($participant_arr['postzip'])."'",
+			  "regtype='".mysql_real_escape_string($participant_arr['regtype'])."'");
+  $message.=update_table_element($link, $title, "CongoDump", $pairedvalue_array, "badgeid", $participant_arr['partid']);
+
+  // Update/add Bios.
+  /* We are only updating the raw bios here, so only a 2-depth
+   search happens on biolang and biotypename. */
+  $biostate='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+  for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
+    for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
+
+      // Setup for keyname, to collapse all three variables into one passed name.
+      $biotype=$bioinfo['biotype_array'][$i];
+      $biolang=$bioinfo['biolang_array'][$j];
+      // $biostate=$bioinfo['biostate_array'][$k];
+      $keyname=$biotype."_".$biolang."_".$biostate."_bio";
+
+      // Clean up the posted string
+      $teststring=stripslashes(htmlspecialchars_decode($participant_arr[$keyname]));
+      $biostring=stripslashes(htmlspecialchars_decode($bioinfo[$keyname]));
+      
+      if ($teststring != $biostring) {
+	if ((isset($bio_limit[$biotype])) and (strlen($biotext)>$bio_limit[$biotype])) {
+	  $message_error.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
+	  $message_error.=" too long, the limit is ".$bio_limit[$biotype]." characters.";
+	} else {
+	  $message.=update_bio_element($link,$title,$teststring,$participant_arr['partid'],$biotype,$biolang,$biostate);
+	}
+      }
+    }
+  }
+
+  // Submit a note about what was done.
+  $element_array = array('badgeid', 'rbadgeid', 'note');
+  $value_array=array($participant_arr['partid'],
+                     $_SESSION['badgeid'],
+                     mysql_real_escape_string($participant_arr['note']));
+  $message.=submit_table_element($link, $title, "NotesOnParticipants", $element_array, $value_array);
+
+  // Update permissions
   for ($i=2; $i<=count($permrole_arr); $i++) {
     $perm="permroleid".$i;
     $wperm="waspermroleid".$i;
@@ -725,7 +812,7 @@ function edit_participant ($participant_arr,$permrole_arr) {
 	$queryl ="INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ";
         $queryl.="('".$participant_arr['partid']."','".$i."');";
         if (!mysql_query($queryl,$link)) {
-	  $message=$queryl."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
+	  $message.=$queryl."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
 	  echo "<P class=\"errmsg\">".$message."\n";
 	  return;
 	}
@@ -734,27 +821,14 @@ function edit_participant ($participant_arr,$permrole_arr) {
       $queryl ="DELETE FROM UserHasPermissionRole where ";
       $queryl.="badgeid=".$participant_arr['partid']." AND permroleid=".$i.";";
       if (!mysql_query($queryl,$link)) {
-	$message=$queryl."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
+	$message.=$queryl."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
 	echo "<P class=\"errmsg\">".$message."\n";
 	return;
       }
     }
   }
-  if (!mysql_query($query,$link)) {
-    $message=$query."<BR>Error updating Participants database.  Database not updated.";
-    echo "<P class=\"errmsg\">".$message."\n";
-    return;
-  }
-  if (!mysql_query($query2,$link)) {
-    $message=$query2."<BR>Error updating CongoDump database.  Database not updated.";
-    echo "<P class=\"errmsg\">".$message."\n";
-    return;
-  }
-  if (!mysql_query($query3,$link)) {
-    $message=$query3."<BR>Error updating NotesOnParticipants database.  Database not updated.";
-    echo "<P class=\"errmsg\">".$message."\n";
-    return;
-  }
+
+  // Make $message additive (.=) to get all the information
   $message="Database updated successfully.<BR>";
   echo "<P class=\"regmsg\">".$message."\n";
 }    
@@ -798,7 +872,7 @@ function send_fixed_email_info($emailto,$subject,$body,$link,$title,$description
 		     mysql_real_escape_string(stripslashes(htmlspecialchars_decode($subject))),
 		     mysql_real_escape_string(stripslashes(htmlspecialchars_decode($body))),
 		     1);
-  submit_table_element($link, $title, "EmailQueue", $element_array, $value_array);
+  $message.=submit_table_element($link, $title, "EmailQueue", $element_array, $value_array);
 }
 
 /* Three flow report functions.  They are remove, add, and delta rank.
@@ -991,6 +1065,133 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
       exit ();
     }
   }
+}
+
+/* These functions deal with the outside bios tables */
+
+/* Function getBioData($badgeid)
+ Reads Bios tables from db to populate returned array $bioinfo with the
+ key of biotypename_biolang_biostatename_bio and the value of biotext eg:
+ $bioinfo['web_en-us_raw_bio']='This bio is short and meaningless.'
+ Returns bioinfo;
+*/ 
+function getBioData($badgeid) {
+  global $message_error,$message2,$link;
+  $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+  $LanguageList=LANGUAGE_LIST; // make it a variable so it can be substituted
+  if ($LanguageList=="LANGUAGE_LIST") {unset($LanguageList);}
+
+  $query= <<<EOD
+SELECT
+    concat(biotypename,"_",biolang,"_",biostatename,"_bio") AS biokey,
+    biotext
+  FROM
+      $BioDBName.Bios
+    JOIN $BioDBName.BioTypes USING (biotypeid)
+    JOIN $BioDBName.BioStates USING (biostateid)
+  WHERE
+        badgeid="$badgeid"
+EOD;
+  $result=mysql_query($query,$link);
+  if (!$result) {
+    $message_error.=mysql_error($link)."\n<BR>Database Error.<BR>No further execution possible.";
+    RenderError($title,$message_error);
+    exit;
+  };
+  while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+    $bioinfo[$row['biokey']]=$row['biotext'];
+  }
+
+  // Get all current possible biolang
+  $query="SELECT DISTINCT(biolang) FROM $BioDBName.Bios";
+  if (isset($LanguageList)) {$query.=" WHERE biolang in $LanguageList";}
+  if (($result=mysql_query($query,$link))===false) {
+    $message_error.=$query."<BR>\nError retrieving biolang data from database.\n";
+    RenderError($title,$message_error);
+    exit();
+  }
+  while ($row=mysql_fetch_assoc($result)) {
+    $biolang_array[]=$row['biolang'];
+  }
+  $bioinfo['biolang_array']=$biolang_array;
+
+  // Get all current possible biotypenames
+  $query="SELECT DISTINCT(biotypename) FROM $BioDBName.BioTypes";
+  if (($result=mysql_query($query,$link))===false) {
+    $message_error.=$query."<BR>\nError retrieving biotypename data from database.\n";
+    RenderError($title,$message_error);
+    exit();
+  }
+  while ($row=mysql_fetch_assoc($result)) {
+    $biotype_array[]=$row['biotypename'];
+  }
+  $bioinfo['biotype_array']=$biotype_array;
+
+  // Get all current possible biostatenames
+  $query="SELECT DISTINCT(biostatename) FROM $BioDBName.BioStates";
+  if (($result=mysql_query($query,$link))===false) {
+    $message_error.=$query."<BR>\nError retrieving biotypename data from database.\n";
+    RenderError($title,$message_error);
+    exit();
+  }
+  while ($row=mysql_fetch_assoc($result)) {
+    $biostate_array[]=$row['biostatename'];
+  }
+  $bioinfo['biostate_array']=$biostate_array;
+
+  return($bioinfo);
+}
+
+/* Specific bio update takes seven variables: link, title, biotext,
+ badgeid, biotypename, biostatename, and biolang, and returns the
+ success message */
+function update_bio_element ($link, $title, $newbio, $badgeid, $biotypename, $biolang, $biostatename) {
+  $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+
+  // make sure it's clean
+  $biotext=mysql_real_escape_string($newbio,$link);
+
+  $query=<<<EOD
+UPDATE 
+    $BioDBName.Bios
+    INNER JOIN $BioDBName.BioTypes using (biotypeid)
+    INNER JOIN $BioDBName.BioStates using (biostateid)
+  SET
+    biotext='$biotext'
+  WHERE
+    badgeid='$badgeid' AND
+    biotypename in ('$biotypename') AND
+    biolang in ('$biolang') AND
+    biostatename in ('$biostatename')
+EOD;
+
+  if (!mysql_query($query,$link)) {
+    $message_error.=$query."<BR>Error updating the $biotypename $biolang $biostatename bio for $badgeid.  Database not updated.";
+    RenderError($title,$message_error);
+    exit;
+  }
+
+  if (mysql_affected_rows($link) == 0) {
+$query=<<<EOD
+INSERT INTO 
+    $BioDBName.Bios (badgeid, biotypeid, biostateid, biolang, biotext) 
+  VALUES 
+    ('$badgeid',
+     (SELECT biotypeid FROM nelaonli_FFFGen.BioTypes WHERE biotypename IN ('$biotypename')),
+     (SELECT biostateid FROM nelaonli_FFFGen.BioStates WHERE biostatename IN ('$biostatename')),
+     '$biolang',
+     '$biotext');
+EOD;
+
+    if (!mysql_query($query,$link)) {
+      $message_error.=$query."<BR>Error inserting the $biotypename $biolang $biostatename bio for $badgeid.  Database not updated.";
+      RenderError($title,$message_error);
+      exit;
+    }
+  }
+
+  $message.="Database updated successfully with bio.<BR>";
+  return ($message);
 }
 
 ?>

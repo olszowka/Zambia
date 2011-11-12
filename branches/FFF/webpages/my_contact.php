@@ -5,34 +5,135 @@ $title="My Profile";
 // initialize db, check login, set $badgeid from session
 require_once('PartCommonCode.php'); 
 
+//variables for substitution below
+$bio_limit['web']=MAX_BIO_LEN;
+if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
+$bio_limit['book']=MAX_PROG_BIO_LEN;
+if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
+
+// Get the congo information.
 if (getCongoData($badgeid)!=0) {
   RenderError($title,$message_error);
   exit();
 }
 
-// if the bio, progbio or pubsname is passed (updated) record them.
-if (isset($bio)) {
-  $participant["bio"]=$bio;
-}
-if (isset($progbio)) {
-  $participant["progbio"]=$progbio;
-}
-if (isset($pubsname)) {
-  $participant["pubsname"]=$pubsname;
+// Get the bio data, if there is any.
+$bioinfo=getBioData($badgeid);
+
+// Only do the following, if there was an update to the information.
+if (isset($_POST['update'])) {
+
+  /* We are only updating the raw bios here, so only a 2-depth
+   search happens on biolang and biotypename to see if they
+   were passed (updated) and record the update. */
+  $biostate='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+  for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
+    for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
+
+      // Setup for keyname, to collapse all three variables into one passed name.
+      $biotype=$bioinfo['biotype_array'][$i];
+      $biolang=$bioinfo['biolang_array'][$j];
+      // $biostate=$bioinfo['biostate_array'][$k];
+      $keyname=$biotype."_".$biolang."_".$biostate."_bio";
+
+      // clean up the passed information
+      $_POST[$keyname] = stripfancy(stripslashes($_POST[$keyname]));
+
+      /* If the bios are changed first reject the change if user is not allowed to edit bios now
+       and reject submitted bios that are too long otherwise update the bios directly now.*/
+      if ($_POST[$keyname]!=$bioinfo[$keyname]) {
+	if (!may_I('EditBio')) { 
+	  $message_error.="You may not update your bios for publication at this time.\n";
+	} elseif ((isset($bio_limit[$biotype])) and (strlen($_POST[$keyname])>$bio_limit[$biotype])) {
+	  $message_error.=ucfirst($biotype)." ($biolang) Biography is too long: ".(strlen($_POST[$keyname]))." characters, so it isn't updated.  Please edit.";
+	  $bioinfo[$keyname]=$_POST[$keyname];
+	} else {
+	  $x=mysql_real_escape_string($_POST[$keyname],$link);
+	  $message.=update_bio_element($link,$title,$x,$badgeid,$biotype,$biolang,$biostate);
+	  $bioinfo[$keyname]=$_POST[$keyname];
+	}
+      }
+    }
+  }
+
+  // if the passwords are there, and don't match, reject it.
+  $update_password=false;
+  if (($_POST['password']!="") OR ($_POST['cpassword']!="")) {
+    if ($_POST['password']==$_POST['cpassword']) {
+      $update_password=true;
+    } else {
+      $message_error.="Passwords do not match each other.  Passwords not updated.";
+    }
+  }
+
+  // If the pubsname is changed, update it.
+  $update_pubsname=false;
+  if ($_POST['pubsname']!=$participant['pubsname']) {
+    if (!may_I('EditBio')) {
+      $message_error.="You may not update your name for publication at this time.\n";
+    } else {
+      $update_pubsname=true;
+    }
+  }
+
+  // Begin the query:
+  $query_start="UPDATE Participants SET ";
+  $query="";
+
+  // ... add password ...
+  if ($update_password==true) {
+    $x = md5($_POST['password']);
+    if ($query!="") {$query.=", ";}
+    $query.="password=\"$x\"";
+    $_SESSION['password']=$x;
+  }
+
+  // ... add pubsname and update the session variable ...
+  if ($update_pubsname==true) {
+    $x=mysql_real_escape_string(stripslashes($_POST['pubsname']),$link);
+    if ($query!="") {$query.=", ";}
+    $query.="pubsname=\"$x\"";
+    $_SESSION['badgename']=$x;
+    $participant['pubsname']=$x;
+  }
+
+  // ... add bestway ...
+  if ($_POST['bestway']!=$participant['bestway']) {
+    if ($query!="") {$query.=", ";}
+    $query.="bestway=\"".$_POST['bestway']."\"";
+    $participant['bestway']=$_POST['bestway'];
+  }
+
+  // ... add interested.
+  if ($_POST['interested']!=$participant['interested']) {
+    if ($query!="") {$query.=", ";}
+    $query.="interested=\"".$_POST['interested']."\"";
+    $participant['interested']=$_POST['interested'];
+  }
+
+  // Check to see if we are actually doing anything, and if so, do it.
+  if ($query!="") {
+    $query_start.=$query;
+    $query=$query_start;
+    $query.=" WHERE badgeid=\"".$badgeid."\"";
+    if (!mysql_query($query,$link)) {
+      $message_error.=$query."<BR>Error updating database.  Database not updated.";
+      RenderError($title,$message_error);
+      exit();
+    }
+    $message.="Database updated successfully with participant information.";
+  }
 }
 
-// Set waspubsname before the possiblity of copying it from badgename
-$waspubsname=$participant["pubsname"];
-
-// if no pubsname, copy it from badgename
+// If no pubsname, copy it from badgename.
 if (strlen($participant["pubsname"])<1) {
   $participant["pubsname"]=$congoinfo["badgename"];
 }
 
-// Begin the page display
+// Begin the page display.
 participant_header($title);
 
-// Illuminate any errors
+// Illuminate any errors.
 if ($message_error!="") {
   echo "<P class=\"errmsg\">$message_error</P>";
 }
@@ -40,10 +141,10 @@ if ($message!="") {
   echo "<P class=\"regmsg\">$message</P>";
 }
 
-// Begin the form
+// Begin the form.
 ?>
 
-<FORM name="partform" method=POST action="SubmitMyContact.php">
+<FORM name="partform" method=POST action="my_contact.php">
   <div id="update_section">
     <div class="divlistbox">
       <span class="spanlabcb">I am interested and able to participate in 
@@ -58,46 +159,43 @@ if ($message!="") {
     <div id="bestway">
       <span class="spanlabcb">Preferred mode of contact&nbsp;</span>
       <div id="bwbuttons">
-<?php if (strlen($congoinfo['email'])>0) { ?>
-        <div id="bwemail">
-          <input name="bestway" id="bwemailRB" value="Email" type="radio"
-<?php
-    if ($participant["bestway"]=="Email") {echo " checked ";}
+<?php 
+/* For each of the possible ways to contact, email, altcontact, postal address, or phone
+ if the element exists in their file, offer it up as a possibility to be their preferred
+ means of contact, with whatever they have chosen before, as the checked choice. */
+if (strlen($congoinfo['email'])>0) {
+  echo "        <div id=\"bwemail\">\n";
+  echo "          <input name=\"bestway\" id=\"bwemailRB\" value=\"Email\" type=\"radio\"";
+  if ($participant["bestway"]=="Email") {echo " checked";}
+  echo">\n";
+  echo "          <label for=\"bwemailRB\">Email</label>\n";
+  echo "          </div>\n";
+}
+if (strlen($participant['altcontact'])>0) {
+  echo "        <div id=\"bwalt\">\n";
+  echo "          <input name=\"bestway\" id=\"bwaltRB\" value=\"AltContact\" type=\"radio\"";
+  if ($participant["bestway"]=="AltContact") {echo " checked";}
+  echo ">\n";
+  echo "          <label for=\"bwaltRB\">Alternative Contact</label>\n";
+  echo "          </div>\n";
+}
+if (strlen($congoinfo['postaddress1'])>0) {
+  echo "        <div id=\"bwpmail\">\n";
+  echo "          <input name=\"bestway\" id=\"bwpmailRB\" value=\"PostalMail\" type=\"radio\"";
+  if ($participant["bestway"]=="PostalMail") {echo " checked";}
+  echo">\n";
+  echo "          <label for=\"bwpmailRB\">Postal Mail</label>\n";
+  echo "          </div>\n";
+}
+if (strlen($congoinfo['phone'])>0) {
+  echo "        <div id=\"bwphone\">\n";
+  echo "          <input name=\"bestway\" id=\"bwphoneRB\" value=\"Phone\" type=\"radio\"";
+  if ($participant["bestway"]=="Phone") {echo " checked";}
+  echo ">\n";
+  echo "          <label for=\"bwphoneRB\">Phone</label>\n";
+  echo "          </div>\n";
+}
 ?>
-              >
-          <label for="bwemailRB">Email</label>
-          </div>
-<?php } ?>
-<?php if (strlen($participant['altcontact'])>0) { ?>
-        <div id="bwalt">
-          <input name="bestway" id="bwaltRB" value="AltContact" type="radio"
-<?php
-    if ($participant["bestway"]=="AltContact") {echo " checked ";}
-?>
-              >
-          <label for="bwaltRB">Alternative Contact</label>
-          </div>
-<?php } ?>
-<?php if (strlen($congoinfo['postaddress1'])>0) { ?>
-        <div id="bwpmail">
-          <input name="bestway" id="bwpmailRB" value="PostalMail" type="radio"
-<?php
-    if ($participant["bestway"]=="PostalMail") {echo " checked ";}
-?>
-              >
-          <label for="bwpmailRB">Postal Mail</label>
-          </div>
-<?php } ?>
-<?php if (strlen($congoinfo['phone'])>0) { ?>
-        <div id="bwphone">
-          <input name="bestway" id="bwphoneRB" value="Phone" type="radio"
-<?php
-    if ($participant["bestway"]=="Phone") {echo " checked ";}
-?>
-              >
-          <label for="bwphoneRB">Phone</label>
-          </div>
-<?php } ?>
         </div>
       </div>
     <div class="password">
@@ -174,45 +272,58 @@ current information. This data is downloaded periodically from the registration 
 </div>
 
 <?php
-// Deal with the bio information
-$bio=MAX_BIO_LEN;
-$progbio=MAX_PROG_BIO_LEN;
+/* Offer up the bio information, with, if it may be edited, the raw and the edited version, the raw in a text-box
+ able to be modified.  If it is too long, the changes are retained across the submission, so they can edit from
+ that, rather than starting from scratch, or what is actually in there.  If they go away, and come back, without
+ fixing it, then it will be restored to what is in the database.  Currently it is limited to just web and book
+ and not good, it should be broadended at some point.  If it may not be edited, it just offers up the edited bios
+ so they can be seen. */
 if (may_I('EditBio')) {
   echo "<HR>\n<BR>\n";
   echo "Your name as you wish to have it published&nbsp;&nbsp;";
   echo "<INPUT type=\"text\" size=\"20\" name=\"pubsname\" ";
   echo "value=\"".htmlspecialchars($participant["pubsname"],ENT_COMPAT)."\">\n";
-  echo "<P>Note: When you update your bio, please give us a few days for our editors to get back to you.</P>\n";
-  echo "<P>Web-based Bio: ".$participant["pubsname"].htmlspecialchars($participant["editedbio"],ENT_COMPAT)."</P>\n";
-  echo "<LABEL class=\"spanlabcb\" for=\"bio\">Change your web-based biography ($bio characters or fewer):</LABEL><BR>\n";
-  echo "Note: Your web-based biography will appear immediately following your name on the web page.<BR>\n";
-  echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"bio\">".htmlspecialchars($participant["bio"],ENT_COMPAT)."</TEXTAREA>\n<BR>\n";
-  echo "<P>Program guide Bio: ".$participant["pubsname"].htmlspecialchars($participant["progeditedbio"],ENT_COMPAT)."</P>\n";
-  echo "<LABEL class=\"spanlabcb\" for=\"progbio\">Change your program guide biography ($progbio characters or fewer):</LABEL><BR>\n";
-  echo "Note: Your program guide biography will appear immediately following your name in the program book.<BR>\n";
-  echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"progbio\">".htmlspecialchars($participant["progbio"],ENT_COMPAT)."</TEXTAREA>";
-} else {
-  if (strlen($participant["editedbio"])>0) {
-    echo "\n<P>Web-based Bio: ".$participant["pubsname"].htmlspecialchars($participant["editedbio"],ENT_COMPAT)."</P>\n";
-  }
-  if (strlen($participant["progeditedbio"])>0) {
-    echo "\n<P>Program guide Bio: ".$participant["pubsname"].htmlspecialchars($participant["progeditedbio"],ENT_COMPAT)."</P>\n";
-  }
-// Block to pass the various matching values, if there is to be no bio edits.
-?>
-        <INPUT type="hidden" name="pubsname" value="<?php echo htmlspecialchars($waspubname,ENT_COMPAT); ?>">
-        <INPUT type="hidden" name="bio" value="<?php echo htmlspecialchars($participant['bio'],ENT_COMPAT); ?>">
-        <INPUT type="hidden" name="progbio" value="<?php echo htmlspecialchars($participant['progbio'],ENT_COMPAT); ?>">
-<?php
+  echo "<P>Note: When you update your bio, please give us a few days for our editors to get back to you.\n";
+  echo "and your biography will appear immediately following your published name on the page.<BR>\n";
 }
 
-// Block to pass the submit button and the various old values
+/* We are only updating the raw bios here, so only a 2-depth
+ search happens on biolang and biotypename with the raw offered
+ up for editing and the edited offered up for comparison.  This
+ means two different keys keynameraw and keynameed are set up. */
+/* This is currently only 1-depth because we aren't searching on
+ biolang, just biotypename.  When it needs to be more flexible
+ for multiple languages, possibly a set list can be passed in. */
+$biostateraw='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+$biostateed='edited'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
+  for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
+
+    // Setup for keyname, to collapse all three variables into one passed name.
+    $biotype=$bioinfo['biotype_array'][$i];
+    $biolang=$bioinfo['biolang_array'][$j];
+    // $biostate=$bioinfo['biostate_array'][$k];
+    $keynameraw=$biotype."_".$biolang."_".$biostateraw."_bio";
+    $keynameed=$biotype."_".$biolang."_".$biostateed."_bio";
+
+    // If the edited bio exists, present it.
+    if (strlen($bioinfo[$keynameed])>0) {
+      echo "<P>".ucfirst($biotype)." ($biolang): ".$participant["pubsname"].htmlspecialchars($bioinfo[$keynameed],ENT_COMPAT)."</P>\n";
+  }
+
+    // If the user is allowed to edit their bio, present the raw version for editing.
+    if (may_I('EditBio')) {
+      echo "<LABEL class=\"spanlabcb\" for=\"$keynameraw\">Change your $biotype ($biolang) biographical information";
+      if (isset($bio_limit[$biotype])) {echo " (".$bio_limit[$biotype]." characters or fewer)";}
+      echo ":</LABEL><BR>\n";
+      echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"$keynameraw\">".htmlspecialchars($bioinfo[$keynameraw],ENT_COMPAT)."</TEXTAREA>\n<BR>\n";
+    }
+  }
+}
+
+// Block to pass the submit button and the notification that this isn't the first pass through the form.
 ?>
-        <DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
-        <INPUT type="hidden" name="waspubsname" value="<?php echo htmlspecialchars($waspubsname,ENT_COMPAT); ?>">
-        <INPUT type="hidden" name="wasbio" value="<?php echo htmlspecialchars($participant['bio'],ENT_COMPAT); ?>">
-        <INPUT type="hidden" name="wasprogbio" value="<?php echo htmlspecialchars($participant['progbio'],ENT_COMPAT); ?>">
-        <INPUT type="hidden" name="wasbestway" value="<?php echo $participant['bestway']; ?>">
-        <INPUT type="hidden" name="wasinterested" value="<?php echo $participant['interested']; ?>">
-    </form>
-<?php participant_footer() ?>
+<INPUT type="hidden" name="update" value="Yes">
+<DIV class="SubmitDiv"><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
+</form>
+<?php correct_footer(); ?>

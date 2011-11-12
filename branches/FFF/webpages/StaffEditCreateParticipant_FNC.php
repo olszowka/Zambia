@@ -6,6 +6,12 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, $message1, $message2) {
+    $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+    $bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
+    if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
+    $bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted
+    if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
+
     if (strlen($message1)>0) {
       echo "<P id=\"message1\"><font color=red>Message: ".$message1."</font></P>\n";
     }
@@ -14,12 +20,17 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
       exit(); // If there is a message2, then there is a fatal error.
     }
     //error_log("Zambia: ".print_r($participant_arr,TRUE));
+
+    //Get the bioinfo, not for the info, but for the arrays.
+    $bioinfo=getBioData($_SESSION['badgeid']);
+
   ?>
     <DIV class="formbox">
         <FORM name="partform" class="bb"  method=POST action="StaffEditCreateParticipant.php">
             <INPUT type="hidden" name="action" value="<?php echo htmlspecialchars($action,ENT_COMPAT);?>">
             <INPUT type="hidden" name="partid" value="<?php echo $participant_arr["badgeid"]; ?>">
             <INPUT type="hidden" name="password" value="<?php echo $participant_arr["password"]; ?>">
+            <INPUT type="hidden" name="update" value="Yes">
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
@@ -103,16 +114,32 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
                 <SPAN><LABEL for="postzip">Zip: </LABEL><INPUT type="text" size=10 name="postzip"
                      value="<?php echo htmlspecialchars($participant_arr["postzip"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 </DIV>
-            <DIV class="denseform">
-                <SPAN><LABEL for="bio" style="vertical-align: top">Web Biography<BR>(Limit <?php echo MAX_BIO_LEN;?> characters): </LABEL>
-                    <TEXTAREA class="textlabelarea" cols=70 name="bio" ><?php echo htmlspecialchars($participant_arr["bio"],ENT_NOQUOTES);?></TEXTAREA>
-                    </SPAN>
-                </DIV>
-            <DIV class="denseform">
-                <SPAN><LABEL for="progbio" style="vertical-align: top">Programming Book Biography<BR>(Limit <?php echo MAX_PROG_BIO_LEN;?> characters): </LABEL>
-                    <TEXTAREA class="textlabelarea" cols=70 name="progbio" ><?php echo htmlspecialchars($participant_arr["progbio"],ENT_NOQUOTES);?></TEXTAREA>
-                    </SPAN>
-                </DIV>
+<?php
+              /* We are only updating the raw bios here, so only a 2-depth
+               search happens on biolang and biotypename. */
+              $biostate='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+              for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
+		for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
+
+		  // Setup for keyname, to collapse all three variables into one passed name.
+		  $biotype=$bioinfo['biotype_array'][$i];
+		  $biolang=$bioinfo['biolang_array'][$j];
+		  // $biostate=$bioinfo['biostate_array'][$k];
+		  $keyname=$biotype."_".$biolang."_".$biostate."_bio";
+
+		  echo "            <DIV class=\"denseform\">\n";
+		  echo "                <SPAN><LABEL for=\"$keyname\" style=\"vertical-align: top\">";
+		  echo ucfirst($biotype)." ($biolang) Biography";
+		  if (isset($bio_limit[$biotype])) {
+		    echo "<BR>(Limit ".$bio_limit[$biotype]." characters)";
+		  }
+		  echo ": </LABEL>\n";
+		  echo "                    <TEXTAREA class=\"textlabelarea\" cols=70 name=\"$keyname\" >";
+		  echo htmlspecialchars($participant_arr[$keyname],ENT_NOQUOTES)."</TEXTAREA>\n";
+		  echo "                    </SPAN>\n";
+		  echo "                </DIV>\n";
+		}
+	      }?>
             <DIV class="denseform">
                 <SPAN><LABEL for="altcontact" style="vertical-align: top">Alternative ways to contact: </LABEL>
                     <TEXTAREA class="textlabelarea" cols=70 name="altcontact" ><?php echo htmlspecialchars($participant_arr["altcontact"],ENT_NOQUOTES);?></TEXTAREA>
