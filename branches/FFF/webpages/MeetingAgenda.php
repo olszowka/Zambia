@@ -5,8 +5,6 @@ global $link;
 $title="Meeting Agenda Update";
 $description="<P>Return to the <A HREF=\"genreport.php?reportname=meetingagendadisplay\">Meeting Agenda</A></P>";
 
-topofpagereport($title,$description,$additionalinfo);
-
 // Submit the task, if there was one, when this was called
 if ((isset($_POST["agendaupdate"])) and ($_POST["agendaupdate"]!="")) {
   if ($_POST["agendaid"] == "-1") {
@@ -16,7 +14,7 @@ if ((isset($_POST["agendaupdate"])) and ($_POST["agendaupdate"]!="")) {
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agenda']))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendanotes']))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['meetingtime']))));
-    submit_table_element($link, $title, "AgendaList", $element_array, $value_array);
+    $message.=submit_table_element($link, $title, "AgendaList", $element_array, $value_array);
    } else {
     $pairedvalue_array=array("agendanotes='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendanotes'])))."'",
 			     "agendaname='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendaname'])))."'",
@@ -25,7 +23,7 @@ if ((isset($_POST["agendaupdate"])) and ($_POST["agendaupdate"]!="")) {
 			     "meetingtime='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['meetingtime'])))."'");
     $match_field="agendaid";
     $match_value=$_POST['agendaid'];
-    update_table_element($link, $title, "AgendaList", $pairedvalue_array, $match_field, $match_value);
+    $message.=update_table_element($link, $title, "AgendaList", $pairedvalue_array, $match_field, $match_value);
    }
  }
 
@@ -54,11 +52,17 @@ SELECT
 EOD;
 
 if (!$agendaresult=mysql_query($query,$link)) {
-  $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-  echo "<P class\"errmsg\">".$message."\n";
-  correct_footer();
+  $message_error=$query."<BR>Error querying database. Unable to continue.<BR>";
+  RenderError($title,$message_error);
   exit();
  }
+
+// Begin the page
+topofpagereport($title,$description,$additionalinfo);
+
+// Any messages
+echo "<P class=\"errmsg\">$message_error</P>\n";
+echo "<P class=\"regmsg\">$message</P>\n";
 
 ?>
 

@@ -3,15 +3,13 @@ require_once('StaffCommonCode.php');
 $title="Task List Update";
 $description="Return to the <A HREF=\"genreport.php?reportname=tasklistdisplay\">Task List Report</A></P>";
 
-topofpagereport($title,$description,$additionalinfo);
-
 // Submit the task, if there was one, when this was called
 if (isset($_POST["activitynotes"])) {
   if ($_POST["activityid"] == "-1") {
     $element_array=array('activity','activitynotes','badgeid','activitystart','targettime','donestate');
     $value_array=array($_POST['activity'],$_POST['activitynotes'],$_POST['assignedid'],$_POST['activitystart'],$_POST['targettime'],"N");
     //    $value_array=array($_POST['activity'],$_POST['activitynotes'],"123",$_POST['activitystart'],$_POST['targettime'],"N");
-    submit_table_element($link, $title, "TaskList", $element_array, $value_array);
+    $message.=submit_table_element($link, $title, "TaskList", $element_array, $value_array);
   } else {
     if ($_POST['donestate']=="Y") {
       if (isset($_POST['donetime'])) {
@@ -23,7 +21,7 @@ if (isset($_POST["activitynotes"])) {
     $pairedvalue_array=array("activitynotes='".$_POST['activitynotes']."'","badgeid='".$_POST['assignedid']."'","activitystart='".$_POST['activitystart']."'","targettime='".$_POST['targettime']."'","donestate='".$_POST['donestate']."'".$donetime);
     $match_field="activityid";
     $match_value=$_POST['activityid'];
-    update_table_element($link, $title, "TaskList", $pairedvalue_array, $match_field, $match_value);
+    $message.=update_table_element($link, $title, "TaskList", $pairedvalue_array, $match_field, $match_value);
   }
  }
 
@@ -50,11 +48,17 @@ SELECT
 EOD;
 
 if (!$activityresult=mysql_query($query,$link)) {
-  $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-  echo "<P class\"errmsg\">".$message."\n";
-  staff_footer();
+  $message_error=$query."<BR>Error querying database. Unable to continue.<BR>";
+  RenderError($title,$message_error);
   exit();
  }
+
+// Begin the page
+topofpagereport($title,$description,$additionalinfo);
+
+// Any messages
+echo "<P class=\"errmsg\">$message_error</P>\n";
+echo "<P class=\"regmsg\">$message</P>\n";
 
 ?>
 
@@ -75,7 +79,7 @@ if (!$activityresult=mysql_query($query,$link)) {
 <?php
 // Stop page here if and individual has not yet been selected
 if ($activityid==0) {
-  staff_footer();
+  correct_footer();
   exit();
  }
 
@@ -103,7 +107,7 @@ EOD;
   if (!$nameresult=mysql_query($query0,$link)) {
     $message=$query0."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
+    correct_footer();
     exit();
   }
 
@@ -187,7 +191,7 @@ EOD;
   if (!$nameresult=mysql_query($query0,$link)) {
     $message=$query0."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
+    correct_footer();
     exit();
   }
 

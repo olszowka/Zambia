@@ -6,8 +6,6 @@ $title="Edit Reports";
 $description="<P>Use this page to edit reports.</P>\n";
 $additionalinfo="<P>A report has to be in a <A HREF=EditGroupFlows.php>Group</A> to work.</P>\n";
 
-topofpagereport($title,$description,$additionalinfo);
-
 // Submit the report, if there was one, when this is called
 if ((isset($_POST["reportupdate"])) and ($_POST["reportupdate"]!="")) {
   if ($_POST["selreport"] == "-1") {
@@ -17,14 +15,14 @@ if ((isset($_POST["reportupdate"])) and ($_POST["reportupdate"]!="")) {
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportdescription"]))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportadditionalinfo"]))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode(refrom($_POST["reportquery"])))));
-    submit_table_element($link, $title, "Reports", $element_array, $value_array);
+    $message.=submit_table_element($link, $title, "Reports", $element_array, $value_array);
   } else {
     $pairedvalue_array=array("reportdescription='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportdescription"])))."'",
 			     "reportadditionalinfo='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportadditionalinfo"])))."'",
 			     "reportquery='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode(refrom($_POST["reportquery"]))))."'");
     $match_field="reportid";
     $match_value=$_POST["selreport"];
-    update_table_element($link, $title, "Reports", $pairedvalue_array, $match_field, $match_value);
+    $message.=update_table_element($link, $title, "Reports", $pairedvalue_array, $match_field, $match_value);
   }
 }
 
@@ -54,11 +52,17 @@ SELECT
 EOD;
 
 if (!$Sresult=mysql_query($query,$link)) {
-  $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-  echo "<P class=\"errmsg\">".$message."\n";
-  correct_footer();
+  $message_error=$query."<BR>Error querying database. Unable to continue.<BR>";
+  RenderError($title,$message_error);
   exit();
  }
+
+// Begin the page
+topofpagereport($title,$description,$additionalinfo);
+
+// Any messages
+echo "<P class=\"errmsg\">$message_error</P>\n";
+echo "<P class=\"regmsg\">$message</P>\n";
 
 ?>
 
