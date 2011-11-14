@@ -26,8 +26,8 @@ if (strtotime($ConStartDatim) < time()) {
 /* This query grabs everything necessary for the descriptions to be printed. */
 $query = <<<EOD
 SELECT
-    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffBios.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
-    GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffSchedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') SEPARATOR ', ') as 'Start Time',
+    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffBios.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) AS 'Participants',
+    GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffSchedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') SEPARATOR ', ') AS 'Start Time',
     GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffTracks.php#',T.trackname,'\">',T.trackname,'</A>')) as 'Track',
     CASE
       WHEN HOUR(duration) < 1 THEN
@@ -37,14 +37,15 @@ SELECT
       ELSE
         concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
       END AS Duration,
-    GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
-    S.sessionid as Sessionid,
+    GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') AS Roomname,
+    S.estatten AS Attended,
+    S.sessionid AS Sessionid,
     concat('<A NAME=\"',S.sessionid,'\"></A>',S.title) as Title,
     S.secondtitle AS Subtitle,
     concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=StaffFeedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
-    concat(S.progguiddesc,'</P>') as 'Web Description',
-    concat(S.pocketprogtext,'</P>') as 'Book Description'
+    concat(S.progguiddesc,'</P>') AS 'Web Description',
+    concat(S.pocketprogtext,'</P>') AS 'Book Description'
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
@@ -65,6 +66,10 @@ EOD;
 
 // Retrieve query
 list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description,0);
+
+if (isset($_GET['feedback'])) {
+  $feedback_array=getFeedbackData("");
+ }
 
 /* Printing body.  Uses the page-init then creates the Descriptions. */
 topofpagereport($title,$description,$additionalinfo);
@@ -90,22 +95,35 @@ for ($i=1; $i<=$elements; $i++) {
     echo sprintf("&mdash; %s",$element_array[$i]['iCal']);
   }
   if (strtotime($ConStartDatim) < time()) {
+    if ($element_array[$i]['Attended']) {
+      echo sprintf("&mdash; About %s Attended",$element_array[$i]['Attended']);
+    }
     echo sprintf("&mdash; %s",$element_array[$i]['Feedback']);
   }
   if ($_SESSION['role']=="Participant") {
     echo sprintf("</DT>\n<DD><P>%s",$element_array[$i]['Web Description']);
   } else {
-    echo sprintf("</DT>\n<DD><P>Web: %s",$element_array[$i]['Web Description']);
-    echo sprintf("</DT>\n<DD><P>Book: %s",$element_array[$i]['Book Description']);
+    echo sprintf("  </DT>\n  <DD><P>Web: %s</P>\n",$element_array[$i]['Web Description']);
+    echo sprintf("  </DD>\n  <DD><P>Book: %s</P>\n",$element_array[$i]['Book Description']);
+    $feedback_file=sprintf("../Local/Feedback/%s.jpg",$element_array[$i]["Sessionid"]);
+    if ((file_exists($feedback_file)) and (isset($_GET['feedback']))) {
+      echo "  </DD>\n  <DD>Feedback graph from surveys:\n<br>\n";
+      echo sprintf ("<img src=\"%s\">\n<br>\n",$feedback_file);
+    }
+    if (isset($feedback_array['graph'][$element_array[$i]["Sessionid"]])) {
+      echo "  </DD>\n  <DD>Feedback graph from surveys:\n<br>\n";
+      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'],$feedback_array['key'],$element_array[$i]["Sessionid"]);
+    }
+    if ($feedback_array[$element_array[$i]["Sessionid"]]) {
+      echo "  </DD>\n    <DD>Written feedback from surveys:\n<br>\n";
+      echo sprintf("%s<br>\n",$feedback_array[$element_array[$i]["Sessionid"]]);
+    }
   }
   if ($element_array[$i]['Participants']) {
-    echo sprintf("<i>%s</i>",$element_array[$i]['Participants']);
+    echo sprintf("</DD>\n<DD><i>%s</i>",$element_array[$i]['Participants']);
   }
   echo "</DD></P>\n";
  }
 echo "</DL>\n";
-if ($_SESSION['role']=="Participant") {
-  participant_footer();
- } else {
-  staff_footer();
- }
+correct_footer();
+?>

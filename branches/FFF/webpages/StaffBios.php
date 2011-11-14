@@ -29,7 +29,7 @@ if (strtotime($ConStartDatim) < time()) {
  the post-processing. The bio information is grabbed seperately. */
 $query = <<<EOD
 SELECT
-    concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',
+    concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) AS 'Participants',
     concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\"><B>',S.title,'</B></A>') AS Title,
     S.secondtitle AS Subtitle,
     if((moderator=1),' (m)','') AS Moderator,
@@ -44,6 +44,8 @@ SELECT
         concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
       END AS Duration,
     R.roomname as Roomname,
+    S.estatten AS Attended,
+    S.sessionid AS Sessionid,
     concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=StaffFeedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
     P.pubsname,
@@ -66,6 +68,28 @@ EOD;
 
 // Retrieve query
 list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description,0);
+
+if (isset($_GET['feedback'])) {
+  $feedback_array=getFeedbackData("");
+ }
+
+// Gather the comments offered on presenters into pcomment_array
+$query = <<<EOD
+SELECT
+    badgeid,
+    comment
+  FROM
+      CommentsOnParticipants
+EOD;
+if (!$result=mysql_query($query,$link)) {
+  $message.=$query."<BR>Error querying database.<BR>";
+  RenderError($title,$message);
+  exit();
+ }
+
+while ($row=mysql_fetch_assoc($result)) {
+  $pcomment_array[$row['badgeid']].="    <br>\n    --\n    <br>\n    <PRE>".fix_slashes($row['comment'])."</PRE>";
+ }
 
 /* Printing body.  Uses the page-init then creates the bio page. */
 topofpagereport($title,$description,$additionalinfo);
@@ -101,7 +125,7 @@ for ($i=1; $i<=$elements; $i++) {
       // Still in the language switch, but have set the $bioout array.
       if (isset($bioout['picture'])) {
 	if ($tablecount == 0) {
-	  echo "<TABLE>\n  <TR>\n    <TD width=310>";
+	  echo "<TABLE>\n  <TR>\n    <TD valign=\"top\" width=310>";
 	  $tablecount++;
 	} else {
 	  echo "    </TD>\n  </TR>\n  <TR>\n    <TD width=310>";
@@ -132,6 +156,9 @@ for ($i=1; $i<=$elements; $i++) {
     }
     // If there were no bios
     if ($namecount==0) { echo sprintf("<P><B>%s</B>",$printparticipant);}
+    if ((isset($_GET['feedback'])) and ($pcomment_array[$element_array[$i]['badgeid']])) {
+      echo sprintf("<P> Feedback on Presenter: %s</P>\n",$pcomment_array[$element_array[$i]['badgeid']]);
+    }
     if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
       echo sprintf(" <A HREF=\"MyScheduleIcal.php?badgeid=%s\">(Fan iCal)</A></P>\n<P>",$element_array[$i]['badgeid']);
     }
@@ -159,8 +186,26 @@ for ($i=1; $i<=$elements; $i++) {
     echo sprintf("&mdash; %s",$element_array[$i]['iCal']);
   }
   if (strtotime($ConStartDatim) < time()) {
+    if ($element_array[$i]['Attended']) {
+      echo sprintf("&mdash; About %s Attended",$element_array[$i]['Attended']);
+    }
     echo sprintf("&mdash; %s",$element_array[$i]['Feedback']);
   }
- }
+  if ($_SESSION['role']=="Staff") {
+    $feedback_file=sprintf("../Local/Feedback/%s.jpg",$element_array[$i]["Sessionid"]);
+    if ((file_exists($feedback_file)) and (isset($_GET['feedback']))) {
+      echo "  </DD>\n  <DD>Feedback graph from surveys:\n<br>\n";
+      echo sprintf ("<img src=\"%s\">\n<br>\n",$feedback_file);
+    }
+    if (isset($feedback_array['graph'][$element_array[$i]["Sessionid"]])) {
+      echo "  </DD>\n  <DD>Feedback graph from surveys:\n<br>\n";
+      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'],$feedback_array['key'],$element_array[$i]["Sessionid"]);
+    }
+    if ($feedback_array[$element_array[$i]["Sessionid"]]) {
+      echo "  </DD>\n    <DD>Written feedback from surveys:\n<br>\n";
+      echo sprintf("%s<br>\n",$feedback_array[$element_array[$i]["Sessionid"]]);
+    }
+  }
+}
 correct_footer();
-
+?>

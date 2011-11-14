@@ -9,9 +9,30 @@ global $link;
 
 // LOCALIZATIONS
 $title="Picture of bar graph";
-$description="<P>If you are seeing this, as opposed to the picture, something went horribly wrong.</P>";
+$description="<P>If you are seeing this, as opposed to the picture, you came to this page, directly.</P>";
+$description.="<P>Please, choose a Precis to get feedback on.</P>";
 $possible_values=5;
-$sessionid=$_GET['sessionid'];
+
+if (isset($_POST['sessionid'])) {
+  $sessionid=$_POST['sessionid'];
+ } elseif (isset($_GET['sessionid'])) {
+  $sessionid=$_GET['sessionid'];
+ } else {
+  // This should only happen when calling this page directly, not when referenced inside an "img" tag.
+  topofpagereport($title,$description,$additionalinfo);
+  $query="SELECT DISTINCT(sessionid), title FROM Sessions JOIN Feedback using (sessionid) ORDER BY title";
+  echo "<FORM name=\"sessionidform\" method=POST action=\"ChartFeedback.php\">\n";
+  echo "<DIV><LABEL for=\"sessionid\">Select Session</LABEL>\n";
+  echo "  <SELECT name=\"sessionid\">\n";
+  populate_select_from_query($query,0,"Select Session",false);
+  echo "  </SELECT>\n</DIV>\n";
+  echo "<DIV class=\"SubmitDiv\">\n";
+  echo "  <BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Select Session</BUTTON>\n";
+  echo "</DIV>\n</FORM>\n";
+  correct_footer();
+  exit();
+ }
+
 
 //should match $possible_values
 $value_title[5]="Totally Agree";
