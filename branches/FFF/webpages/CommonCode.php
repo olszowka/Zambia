@@ -1194,4 +1194,91 @@ EOD;
   return ($message);
 }
 
+/* These three selects build session_array, list of comments associated with each class into
+ session_array['sessionid'] if there should be a graph for that sessionid into
+ session_array['graph']['sessionid'] and the key in session_array['key']
+ Returns session_array*/
+function getFeedbackData($badgeid) {
+  global $message_error,$message2,$link;
+  $query = <<<EOD
+SELECT
+    sessionid,
+    comment
+  FROM
+      CommentsOnSessions
+EOD;
+
+  if ($badgeid!="") {
+    $query.=<<<EOD
+  WHERE
+    sessionid in (SELECT
+                      sessionid 
+                    FROM
+                        ParticipantOnSession
+                    WHERE badgeid='$badgeid')
+EOD;
+  }
+
+  if (!$result=mysql_query($query,$link)) {
+    $message.=$query."<BR>Error querying database.<BR>";
+    RenderError($title,$message);
+    exit();
+  }
+
+  while ($row=mysql_fetch_assoc($result)) {
+    $session_array[$row['sessionid']].="    <br>\n    --\n    <br>\n    <PRE>".fix_slashes($row['comment'])."</PRE>";
+  }
+
+  // Check the existance of feedback in Feedback, and mark it in session_array['graph']['sessionid']
+  $query = <<<EOD
+SELECT
+    DISTINCT(sessionid)
+  FROM
+      Feedback
+EOD;
+
+  if ($badgeid!="") {
+    $query.=<<<EOD
+  WHERE
+    sessionid in (SELECT
+                      sessionid 
+                    FROM
+                        ParticipantOnSession
+                    WHERE badgeid='$badgeid')
+EOD;
+  }
+
+  if (!$result=mysql_query($query,$link)) {
+    $message.=$query."<BR>Error querying database.<BR>";
+    RenderError($title,$message);
+    exit();
+  }
+
+  while ($row=mysql_fetch_assoc($result)) {
+    $session_array['graph'][$row['sessionid']]++;
+  }
+
+  // Get the questions, in questionid order, and put them in session_array['key']
+  $query = <<<EOD
+SELECT
+    questionid,
+    questiontext
+  FROM
+      QuestionsForSurvey
+  ORDER BY
+    questionid
+EOD;
+  if (!$result=mysql_query($query,$link)) {
+    $message.=$query."<BR>Error querying database.<BR>";
+    RenderError($title,$message);
+    exit();
+  }
+
+  while ($row=mysql_fetch_assoc($result)) {
+    $session_array['key'].="Q: ".$row['questionid']. " &mdash; " .$row['questiontext']. "\n";
+  }
+
+  return($session_array);
+}
+
 ?>

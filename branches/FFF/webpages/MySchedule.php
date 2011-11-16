@@ -99,77 +99,8 @@ if (!$regmessage) {
   }
  }
 
-// Schedule information
-// Build the list of comments associated with each class and this participant into ccommentarray
-$query = <<<EOD
-SELECT
-    sessionid,
-    comment
-  FROM
-      CommentsOnSessions
-  WHERE
-    sessionid in (SELECT
-                      sessionid 
-                    FROM
-                        ParticipantOnSession
-                    WHERE badgeid='$badgeid')
-EOD;
-if (!$result=mysql_query($query,$link)) {
-  $message.=$query."<BR>Error querying database.<BR>";
-  RenderError($title,$message);
-  exit();
- }
-
-$ccommentrows=mysql_num_rows($result);
-for ($i=1; $i<=$ccommentrows; $i++) {
-  $tmp_array=mysql_fetch_assoc($result);
-  $ccomment_array[$tmp_array['sessionid']].="    <br>\n    --\n    <br>\n    <PRE>".fix_slashes($tmp_array['comment'])."</PRE>";
- }
-
-// Check the existance of feedback in Feedback
-$query = <<<EOD
-SELECT
-    feedbackid,
-    sessionid
-  FROM
-      Feedback
-  WHERE
-    sessionid in (SELECT
-                      sessionid 
-                    FROM
-                        ParticipantOnSession
-                    WHERE badgeid='$badgeid')
-EOD;
-if (!$result=mysql_query($query,$link)) {
-  $message.=$query."<BR>Error querying database.<BR>";
-  RenderError($title,$message);
-  exit();
- }
-
-$feedbackcount=mysql_num_rows($result);
-for ($i=1; $i<=$feedbackcount; $i++) {
-  $tmp_array=mysql_fetch_assoc($result);
-  $feedback_p[$tmp_array['sessionid']]++;
- }
-
-// Get the questions, in questionid order
-$query = <<<EOD
-SELECT
-    questionid,
-    questiontext
-  FROM
-      QuestionsForSurvey
-  ORDER BY
-    questionid
-EOD;
-// Retrieve query
-list($questions,$questionheader_array,$question_array)=queryreport($query,$link,$title,$description,0);
-
-//build key
-$key="";
-for ($i=1; $i<=$questions; $i++) {
-  $key.="Q: ".$question_array[$i]['questionid']. " &mdash; " .$question_array[$i]['questiontext']. "<br>\n";
- }
+// Get all the written feedback on the sessions, and the graph of the questions.
+$feedback_array=getFeedbackData($badgeid);
 
 // Build the schedule of classes into schdarray
 $query = <<<EOD
@@ -249,14 +180,14 @@ for ($i=1; $i<=$schdrows; $i++) {
     $schdarray[$i]["feedbackgraph"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Feedback graph from surveys:<br>";
     $schdarray[$i]["feedbackgraph"].="<img src=\"$feedback_file\"></TD>\n  </TR>\n";
   }
-  if ($feedback_p[$schdarray[$i]["sessionid"]] > 0) {
+  if (isset($feedback_array['graph'][$schdarray[$i]["sessionid"]])) {
     $schdarray[$i]["autofeedbackgraph"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Feedback graph from surveys:<br>";
-    $schdarray[$i]["autofeedbackgraph"].="<img alt=\"$key\" src=\"ChartFeedback.php?sessionid=".$schdarray[$i]["sessionid"]."\"></TD>\n  </TR>\n";
-    $schdarray[$i]["autofeedbackgraph"].="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6>$key</TD>\n  </TR>\n";
+    $schdarray[$i]["autofeedbackgraph"].="<img alt=\"".$feedback_array['key']." title=\"".$feedback_array['key']."\" src=\"ChartFeedback.php?sessionid=".$schdarray[$i]["sessionid"]."\"></TD>\n  </TR>\n";
+    $schdarray[$i]["autofeedbackgraph"].="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6>".$feedback_array['key']."</TD>\n  </TR>\n";
   }
-  if ($ccomment_array[$schdarray[$i]["sessionid"]]) {
+  if (isset($feedback_array[$schdarray[$i]["sessionid"]])) {
     $schdarray[$i]["feedbackwritten"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Written feedback from surveys:\n";
-    $schdarray[$i]["feedbackwritten"].=$ccomment_array[$schdarray[$i]["sessionid"]]."</TD>\n  </TR>\n";
+    $schdarray[$i]["feedbackwritten"].=$feedback_array[$schdarray[$i]["sessionid"]]."</TD>\n  </TR>\n";
   }
  }
 
@@ -318,9 +249,9 @@ if (file_exists("../Local/Verbiage/MySchedule_0")) {
  }
 echo "<P>You can also take a look at all that is going on by <A HREF=\"StaffSchedule.php\">timeslot</A>,\n";
 echo "<A HREF=\"StaffDescriptions.php\">descriptions</A>, <A HREF=\"StaffTracks.php\">tracks</A>, visit the\n";
-echo "<A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>, or people's <A HREF=\"StaffBios.php\">bio</A>.</P>\n";
+echo "<A HREF=\"grid.php?programming=y&unpublished=y\">grid</A>, or people's <A HREF=\"StaffBios.php\">bio</A>.</P>\n";
 echo "<P><A HREF=\"MyScheduleIcal.php\">Here</A> is an iCal (Calendar standard) calendar of your schedule.\n";
-echo "<A HREF=\"SchedulePrint.php?print_p=T\">Print</A> a PDF of your schedule.\n";
+echo "<A HREF=\"SchedulePrint.php?print_p=T&individual=".$_SESSION['badgeid']."\">Print</A> a PDF of your schedule.\n";
 if ($intro_p > 0) {
   echo "<A HREF=\"ClassIntroPrint.php\">Print</A> a PDF of all of your class and panel introductions.\n";
  }
