@@ -308,7 +308,7 @@ for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
 
     // If the edited bio exists, present it.
     if (strlen($bioinfo[$keynameed])>0) {
-      echo "<P>".ucfirst($biotype)." ($biolang): ".$participant["pubsname"].htmlspecialchars($bioinfo[$keynameed],ENT_COMPAT)."</P>\n";
+      echo "<P>".ucfirst($biotype)." ($biolang): ".$participant["pubsname"].$bioinfo[$keynameed]."</P>\n";
   }
 
     // If the user is allowed to edit their bio, present the raw version for editing.

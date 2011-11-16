@@ -67,6 +67,9 @@ if (isset($LanguageList)) {
   $query.=" AND biolang in $LanguageList";
  }
 
+// Give some semblance of order to the names
+$query.=" ORDER BY P.pubsname";
+
 if (($result=mysql_query($query,$link))===false) {
   $message_error.=$query."<BR>\nError retrieving data from database.\n";
   RenderError($title,$message_error);

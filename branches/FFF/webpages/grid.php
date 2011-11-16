@@ -143,6 +143,7 @@ $additionalinfo.="the presenter to visit their <A HREF=\"StaffBios.php\">bio</A>
 $additionalinfo.=" the <A HREF=\"StaffSchedule.php\">schedule</A>, or the track name to see all the classes\n";
 $additionalinfo.="by <A HREF=\"StaffTracks.php\">track</A>.  <A HREF=\"manualGRIDS.php\">Pick</A> another grid.</P>\n";
 $Grid_Spacer=GRID_SPACER;
+if (!is_numeric($Grid_Spacer)) {$Grid_Spacer=1800;}
 
 /* This query returns the room names for an array.  We might want to
  add the "unpub" and "staffonly" hacks here, to cull the unused rooms.
