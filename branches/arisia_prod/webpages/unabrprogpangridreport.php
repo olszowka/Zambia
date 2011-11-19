@@ -12,7 +12,7 @@
         staff_header($title);
         date_default_timezone_set('US/Eastern');
         echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-        echo "<P>Grid of all published program sessions as determined by function of room</P>\n";
+        echo "<P>Grid of all program panels as determined by division of session</P>\n";
         }
 
     function noresults() {
@@ -28,7 +28,7 @@ SELECT
             Rooms R
     WHERE
         R.roomid in
-        (SELECT DISTINCT roomid FROM Schedule SCH JOIN Sessions S using (sessionid) WHERE S.divisionid = 2)
+        (SELECT DISTINCT roomid FROM Schedule SCH JOIN Sessions S using (sessionid) WHERE S.typeid = 1 AND S.divisionid = 2)
     ORDER BY
         R.display_order;
 EOD;
@@ -81,7 +81,7 @@ EOD;
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.duration,\"\") SEPARATOR '') as \"%s\"",$x,$y);
         }
     $header_cells.="</tr>";
-    $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN Rooms R USING (roomid) WHERE S.pubstatusid = 2 AND S.divisionid = 2";
+    $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN Rooms R USING (roomid) WHERE S.typeid = 1 AND S.divisionid = 2";
     $query.=" GROUP BY SCH.starttime ORDER BY SCH.starttime;";
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
