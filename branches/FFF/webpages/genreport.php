@@ -2,6 +2,12 @@
 require_once('StaffCommonCode.php');
 global $link;
 
+$ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$GohBadgeList=GOH_BADGE_LIST; // make it a variable so it can be substituted
+$mybadgeid=$_SESSION['badgeid'];  // make it a simple variable so it can be substituted
+
 // LOCALIZATIONS
 $showreport=0;
 $reportid=$_GET["reportid"];
@@ -35,7 +41,7 @@ SELECT
     concat("<A HREF=genreport.php?reportid=",reportid,">",reporttitle,"</A> (<A HREF=genreport.php?reportid=",reportid,"&csv=y>csv</A>)") AS Title,
     reportdescription AS Description
   FROM
-      Reports
+      $ReportDB.Reports
   ORDER BY
     reportname
 EOD;
@@ -58,7 +64,7 @@ SELECT
     reportadditionalinfo,
     reportquery
   FROM
-      Reports
+      $ReportDB.Reports
   WHERE
 EOD;
 
@@ -74,7 +80,7 @@ EOD;
   $basereportid=$report_array[1]['reportid'];
   $mybadgeid=$_SESSION['badgeid'];
 
-  /*  // Get the personal flow previous and next
+  // Get the personal flow previous and next
   $query = <<<EOD
 SELECT
     DISTINCT reportid
@@ -83,37 +89,43 @@ SELECT
       LEFT JOIN Phases USING (phaseid)
   WHERE
     badgeid='$mybadgeid' AND
-    phaseid is null OR
-    current = TRUE
+    (phaseid is null OR
+     current = TRUE)
   ORDER BY
     pfloworder
 EOD;
 
-  echo "<P>$query</P>";
   // Retrieve query
-  list($pflowrows,$pflowheader_array,$pflow_array)=queryreport($query,$link,$title,$description,0);
-    print_r($pflow_array);
+  if (!$result=mysql_query($query,$link)) {
+    $message.=$query."<BR>Error querying database.<BR>";
+    RenderError($title,$message);
+    exit();
+  }
+
+  while ($row=mysql_fetch_assoc($result)) {
+    $pflow_array[]=$row['reportid'];
+  }
   // Start with a blank $personal, walk the array, set the previous and next
   $personal="Personal Flow: ";
-  for ($i=1; $i<=$pflowrows; $i++) {
-    if ($pflow_array[$i]['reportid']==$basereportid) {
+  for ($i=0; $i<count($pflow_array); $i++) {
+    if ($pflow_array[$i]==$basereportid) {
       if ($i > 1) {
-	$personal.="<A HREF=genreport.php?reportid=".$pflow_array[$i-1]['reportid'].">Prev</A> ";
+	$personal.="<A HREF=genreport.php?reportid=".$pflow_array[$i-1].">Prev</A> ";
       }
-      if ($i < $pflowrows) {
-	$personal.="<A HREF=genreport.php?reportid=".$pflow_array[$i+1]['reportid'].">Next</A>";
+      if ($i < count($pflow_array)-1) {
+	$personal.="<A HREF=genreport.php?reportid=".$pflow_array[$i+1].">Next</A>";
       }
     }
   }
   if ($personal=="Personal Flow: ") {$personal="";}
-  */
+
   // Get the Groups that this report is part of
   $query = <<<EOD
 SELECT
     GF.gflowname
   FROM
-      Reports R,
-      GroupFlow GF
+      $ReportDB.Reports R,
+      $ReportDB.GroupFlow GF
   WHERE
     R.reportid=GF.reportid AND
     R.reportid=$basereportid
@@ -131,7 +143,7 @@ EOD;
 SELECT
     DISTINCT reportid
   FROM
-      GroupFlow
+      $ReportDB.GroupFlow
       LEFT JOIN Phases USING (phaseid)
   WHERE
     gflowname='$cgroup' AND
@@ -161,10 +173,9 @@ EOD;
   }
 
   for ($i=1; $i<=$returned_reports; $i++) {
-    // Fix reference problem
-    $report_array[$i]['reportquery']=str_replace('$ConStartDatim',CON_START_DATIM,$report_array[$i]['reportquery']);
-    $report_array[$i]['reportquery']=str_replace('$GohBadgeList',GOH_BADGE_LIST,$report_array[$i]['reportquery']);
-    $report_array[$i]['reportquery']=str_replace('$_SESSION[\'badgeid\']',$_SESSION['badgeid'],$report_array[$i]['reportquery']);
+
+    // Fix references in the string so variables can be substituted in.
+    $report_array[$i]['reportquery']=eval("return<<<EOF\n".$report_array[$i]['reportquery']."\nEOF;\n");
 
     // Retrieve secondary query
     list($rows,$header_array,$class_array)=queryreport($report_array[$i]['reportquery'],$link,$report_array[$i]['reporttitle'],$report_array[$i]['reportdescription'],$reportid);

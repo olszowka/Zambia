@@ -2,7 +2,8 @@
 require_once('StaffCommonCode.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-$ProgramEmail=PROGRAM_EMAIL;
+$ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
 
 // LOCALIZATIONS
 $gflowname=$_GET["gflowname"];
@@ -20,7 +21,7 @@ if (!$gflowname) {
 SELECT
     DISTINCT concat("<A HREF=genindex.php?gflowname=",gflowname,">",gflowname," Reports</A>") AS Indicies
   FROM
-      GroupFlow
+      $ReportDB.GroupFlow
   ORDER BY
     gflowname
 EOD;
@@ -48,8 +49,8 @@ SELECT
     DISTINCT concat("<A HREF=genreport.php?reportid=",R.reportid,">",R.reporttitle,"</A> (<A HREF=genreport.php?reportid=",R.reportid,"&csv=y>csv</A>)") AS Title,
     R.reportdescription AS Description
   FROM
-    GroupFlow GF,
-    Reports R,
+    $ReportDB.GroupFlow GF,
+    $ReportDB.Reports R,
     Phases P
   WHERE
     GF.reportid=R.reportid and

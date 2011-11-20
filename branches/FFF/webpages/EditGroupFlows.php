@@ -1,6 +1,7 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="EditGroupFlows.php";
@@ -76,8 +77,8 @@ SELECT
     GF.gfloworder,
     if((GF.phaseid IS NULL),'ALL',P.phasename) as Phase
   FROM
-      GroupFlow GF,
-      Reports R,
+      $ReportDB.GroupFlow GF,
+      $ReportDB.Reports R,
       Phases P
   WHERE
     GF.reportid=R.reportid AND
@@ -95,8 +96,8 @@ SELECT
     $addto_query
     concat("<A HREF=genreport.php?reportid=",R.reportid,">",R.reporttitle,"</A>") AS Title
   FROM
-      Reports R
-    LEFT JOIN GroupFlow GF ON R.reportid=GF.reportid
+      $ReportDB.Reports R
+    LEFT JOIN $ReportDB.GroupFlow GF ON R.reportid=GF.reportid
   WHERE
     GF.reportid IS NULL
   ORDER BY
@@ -112,8 +113,8 @@ SELECT
     DISTINCT concat("<A HREF=genreport.php?reportid=",R.reportid,">",R.reporttitle,"</A>") AS Title,
     group_concat(GF.gflowname) AS Groups
   FROM
-      Reports R,
-      GroupFlow GF
+      $ReportDB.Reports R,
+      $ReportDB.GroupFlow GF
   WHERE
     R.reportid=GF.reportid
   GROUP BY

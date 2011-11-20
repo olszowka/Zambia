@@ -1,6 +1,7 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
 
 $title="Edit Reports";
 $description="<P>Use this page to edit reports.</P>\n";
@@ -15,14 +16,14 @@ if ((isset($_POST["reportupdate"])) and ($_POST["reportupdate"]!="")) {
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportdescription"]))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportadditionalinfo"]))),
 		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode(refrom($_POST["reportquery"])))));
-    $message.=submit_table_element($link, $title, "Reports", $element_array, $value_array);
+    $message.=submit_table_element($link, $title, "$ReportDB.Reports", $element_array, $value_array);
   } else {
     $pairedvalue_array=array("reportdescription='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportdescription"])))."'",
 			     "reportadditionalinfo='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportadditionalinfo"])))."'",
 			     "reportquery='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode(refrom($_POST["reportquery"]))))."'");
     $match_field="reportid";
     $match_value=$_POST["selreport"];
-    $message.=update_table_element($link, $title, "Reports", $pairedvalue_array, $match_field, $match_value);
+    $message.=update_table_element($link, $title, "$ReportDB.Reports", $pairedvalue_array, $match_field, $match_value);
   }
 }
 
@@ -46,7 +47,7 @@ SELECT
     reporttitle,
     reportdescription
   FROM
-      Reports
+      $ReportDB.Reports
   ORDER BY
     reportid
 EOD;
@@ -120,7 +121,7 @@ SELECT
     reportadditionalinfo,
     reportquery
   FROM
-      Reports
+      $ReportDB.Reports
   WHERE reportid='$selreportid'
 EOD;
 

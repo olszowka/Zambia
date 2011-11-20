@@ -1,7 +1,7 @@
 <?php
 global $participant,$message_error,$message2,$congoinfo;
 require_once('StaffCommonCode.php');
-$BioDBName=BIODBNAME; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
 $LanguageList=LANGUAGE_LIST; // make it a variable so it can be substituted
 if ($LanguageList=="LANGUAGE_LIST") {unset($LanguageList);}
 
@@ -45,9 +45,9 @@ SELECT
     biotext
   FROM
       Participants P
-    JOIN $BioDBName.Bios B USING (badgeid)
-    JOIN $BioDBName.BioTypes USING (biotypeid)
-    JOIN $BioDBName.BioStates USING (biostateid)
+    JOIN $BioDB.Bios B USING (badgeid)
+    JOIN $BioDB.BioTypes USING (biotypeid)
+    JOIN $BioDB.BioStates USING (biostateid)
     LEFT JOIN UserHasPermissionRole USING (badgeid)
     LEFT JOIN PermissionRoles USING (permroleid)
     LEFT JOIN Participants LB on B.biolockedby = LB.badgeid

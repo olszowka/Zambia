@@ -10,7 +10,7 @@ require_once('../../tcpdf/tcpdf.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
-$BioDBName=BIODBNAME; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
 
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="ClassIntroPrint.php";
@@ -113,9 +113,9 @@ SELECT
                    badgeid,
                    biotext
                  FROM
-                     $BioDBName.Bios
-                   JOIN $BioDBName.BioTypes USING (biotypeid)
-                   JOIN $BioDBName.BioStates USING (biostateid)
+                     $BioDB.Bios
+                   JOIN $BioDB.BioTypes USING (biotypeid)
+                   JOIN $BioDB.BioStates USING (biostateid)
                  WHERE
                    biotypename in ('web') AND
 	           biostatename in ('edited')) BWE on P.badgeid=BWE.badgeid

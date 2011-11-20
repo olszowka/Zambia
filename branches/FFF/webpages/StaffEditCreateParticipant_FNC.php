@@ -6,7 +6,6 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, $message1, $message2) {
-    $BioDBName=BIODBNAME; // make it a variable so it can be substituted
     $bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
     if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
     $bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted

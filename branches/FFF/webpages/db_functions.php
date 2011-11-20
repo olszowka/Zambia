@@ -734,9 +734,9 @@ function get_idlist_from_db($table_name,$id_col_name,$desc_col_name,$desc_col_ma
 
 function unlock_participant($badgeid) {
   global $query,$link;
-  $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
 
-  $query="UPDATE $BioDBName.Bios SET biolockedby=NULL WHERE ";
+  $query="UPDATE $BioDB.Bios SET biolockedby=NULL WHERE ";
   if (isset($_SESSION['badgeid'])) {
     $query.="biolockedby='".$_SESSION['badgeid']."'";
     if ($badgeid!='') {
@@ -760,11 +760,11 @@ function unlock_participant($badgeid) {
 
 function lock_participant($badgeid) {
   global $query, $link;
-  $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
 
   //error_log("Zambia: lock_participant: ".$query);
   $userbadgeid=$_SESSION['badgeid'];
-  $query="UPDATE $BioDBName.Bios SET biolockedby='$userbadgeid' WHERE biolockedby IS NULL and badgeid='$badgeid'";
+  $query="UPDATE $BioDB.Bios SET biolockedby='$userbadgeid' WHERE biolockedby IS NULL and badgeid='$badgeid'";
 
   $result=mysql_query($query,$link);
   if (!$result) {

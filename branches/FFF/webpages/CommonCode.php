@@ -64,6 +64,9 @@ function posting_header($title) {
   echo "  <title>Zambia -- $ConName -- $title</title>\n";
   if (file_exists($HeaderTemplateFile)) {
     readfile($HeaderTemplateFile);
+    echo "<H1 class=\"head\" align=\"center\">Return to the <A HREF=\"http://$ConUrl\">$ConName</A> website</H1>\n";
+    echo "<hr>\n\n";
+    echo "<H2 class=\"head\" align=\"center\">$title</H2>\n";
   } else {
     echo "  <link rel=\"stylesheet\" href=\"Common.css\" type=\"text/css\">\n";
     echo "</head>\n";
@@ -1077,7 +1080,7 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
 */ 
 function getBioData($badgeid) {
   global $message_error,$message2,$link;
-  $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
   $LanguageList=LANGUAGE_LIST; // make it a variable so it can be substituted
   if ($LanguageList=="LANGUAGE_LIST") {unset($LanguageList);}
 
@@ -1086,9 +1089,9 @@ SELECT
     concat(biotypename,"_",biolang,"_",biostatename,"_bio") AS biokey,
     biotext
   FROM
-      $BioDBName.Bios
-    JOIN $BioDBName.BioTypes USING (biotypeid)
-    JOIN $BioDBName.BioStates USING (biostateid)
+      $BioDB.Bios
+    JOIN $BioDB.BioTypes USING (biotypeid)
+    JOIN $BioDB.BioStates USING (biostateid)
   WHERE
         badgeid="$badgeid"
 EOD;
@@ -1103,7 +1106,7 @@ EOD;
   }
 
   // Get all current possible biolang
-  $query="SELECT DISTINCT(biolang) FROM $BioDBName.Bios";
+  $query="SELECT DISTINCT(biolang) FROM $BioDB.Bios";
   if (isset($LanguageList)) {$query.=" WHERE biolang in $LanguageList";}
   if (($result=mysql_query($query,$link))===false) {
     $message_error.=$query."<BR>\nError retrieving biolang data from database.\n";
@@ -1116,7 +1119,7 @@ EOD;
   $bioinfo['biolang_array']=$biolang_array;
 
   // Get all current possible biotypenames
-  $query="SELECT DISTINCT(biotypename) FROM $BioDBName.BioTypes";
+  $query="SELECT DISTINCT(biotypename) FROM $BioDB.BioTypes";
   if (($result=mysql_query($query,$link))===false) {
     $message_error.=$query."<BR>\nError retrieving biotypename data from database.\n";
     RenderError($title,$message_error);
@@ -1128,7 +1131,7 @@ EOD;
   $bioinfo['biotype_array']=$biotype_array;
 
   // Get all current possible biostatenames
-  $query="SELECT DISTINCT(biostatename) FROM $BioDBName.BioStates";
+  $query="SELECT DISTINCT(biostatename) FROM $BioDB.BioStates";
   if (($result=mysql_query($query,$link))===false) {
     $message_error.=$query."<BR>\nError retrieving biotypename data from database.\n";
     RenderError($title,$message_error);
@@ -1146,16 +1149,16 @@ EOD;
  badgeid, biotypename, biostatename, and biolang, and returns the
  success message */
 function update_bio_element ($link, $title, $newbio, $badgeid, $biotypename, $biolang, $biostatename) {
-  $BioDBName=BIODBNAME; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
 
   // make sure it's clean
   $biotext=mysql_real_escape_string($newbio,$link);
 
   $query=<<<EOD
 UPDATE 
-    $BioDBName.Bios
-    INNER JOIN $BioDBName.BioTypes using (biotypeid)
-    INNER JOIN $BioDBName.BioStates using (biostateid)
+    $BioDB.Bios
+    INNER JOIN $BioDB.BioTypes using (biotypeid)
+    INNER JOIN $BioDB.BioStates using (biostateid)
   SET
     biotext='$biotext'
   WHERE
@@ -1174,7 +1177,7 @@ EOD;
   if (mysql_affected_rows($link) == 0) {
 $query=<<<EOD
 INSERT INTO 
-    $BioDBName.Bios (badgeid, biotypeid, biostateid, biolang, biotext) 
+    $BioDB.Bios (badgeid, biotypeid, biostateid, biolang, biotext) 
   VALUES 
     ('$badgeid',
      (SELECT biotypeid FROM nelaonli_FFFGen.BioTypes WHERE biotypename IN ('$biotypename')),

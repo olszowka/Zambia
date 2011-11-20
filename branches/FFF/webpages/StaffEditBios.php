@@ -2,7 +2,7 @@
 require_once ('StaffCommonCode.php');
 
 global $link,$message_error,$message2;
-$BioDBName=BIODBNAME; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
 $bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
 if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
 $bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted
@@ -45,7 +45,7 @@ SELECT
     if(P.pubsname!="",P.pubsname,concat(firstname," ",lastname)) name 
   FROM 
       Participants P
-    JOIN $BioDBName.Bios B USING (badgeid)
+    JOIN $BioDB.Bios B USING (badgeid)
     JOIN CongoDump USING (badgeid)
     LEFT JOIN Participants LB on B.biolockedby = LB.badgeid
   WHERE

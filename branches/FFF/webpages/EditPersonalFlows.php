@@ -1,6 +1,8 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="EditPersonalFlows.php";
@@ -74,7 +76,7 @@ SELECT
     if((PF.phaseid IS NULL),'ALL',P.phasename) as Phase
   FROM
     PersonalFlow PF,
-    Reports R,
+    $ReportDB.Reports R,
     Phases P
   WHERE
     PF.badgeid=$mybadgeid AND
