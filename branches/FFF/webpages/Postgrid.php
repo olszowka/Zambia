@@ -20,15 +20,15 @@ $additionalinfo.="x Times</A> or <A HREF=Postgrid-wide.php?print_p=y>Times x Roo
  headers, and keys for other arrays.*/
 $query = <<<EOD
 SELECT
-        R.roomname,
-        R.roomid
+        roomname,
+        roomid
     FROM
-            Rooms R
+            Rooms
     WHERE
-        R.roomid in
-        (SELECT DISTINCT SCH.roomid FROM Schedule SCH JOIN Sessions S USING (sessionid) where pubstatusid=2)
+        roomid in
+        (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid) JOIN PubStatuses USING (pubstatusid) WHERE pubstatusname in ('Public'))
     ORDER BY
-    	  R.display_order;
+    	  display_order;
 EOD;
 
 ## Retrieve query
@@ -38,18 +38,16 @@ list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$de
  based on sessionid, and produces links for them. */
 $query = <<<EOD
 SELECT
-      S.sessionid,
-      GROUP_CONCAT(concat("<A HREF=\"Bios.php#",P.pubsname,"\">",P.pubsname,"</A>",if((POS.moderator=1),'(m)','')) SEPARATOR ", ") as allpubsnames
+      sessionid,
+      GROUP_CONCAT(concat("<A HREF=\"Bios.php#",pubsname,"\">",pubsname,"</A>",if((moderator=1),'(m)','')) SEPARATOR ", ") as allpubsnames
     FROM
-      Sessions S
-    JOIN
-      ParticipantOnSession POS USING (sessionid)
-    JOIN
-      Participants P USING (badgeid)
+      Sessions
+    JOIN ParticipantOnSession USING (sessionid)
+    JOIN Participants USING (badgeid)
     WHERE 
-      POS.volunteer=0 AND
-      POS.introducer=0 AND
-      POS.aidedecamp=0
+      volunteer=0 AND
+      introducer=0 AND
+      aidedecamp=0
     GROUP BY
       sessionid
     ORDER BY
@@ -114,8 +112,8 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
     $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,T.htmlcellcolor,\"\") SEPARATOR '') as \"%s htmlcellcolor\"",$x,$y);
   }
   $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid)";
-  $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid)";
-  $query.=" WHERE S.pubstatusid = 2 AND TIME_TO_SEC(SCH.starttime) <= $time";
+  $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid) JOIN PubStatuses PS USING (pubstatusid)";
+  $query.=" WHERE PS.pubstatusname in ('Public') AND TIME_TO_SEC(SCH.starttime) <= $time";
   $query.=" AND (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) >= ($time + $Grid_Spacer);";
   if (($result=mysql_query($query,$link))===false) {
     $message="Error retrieving data from database.<BR>";
@@ -249,7 +247,7 @@ if ($_GET["csv"]=="y") {
   $pdf->Output(CON_NAME.'-grid.pdf', 'I');
  } else {
   topofpagereport($title,$description,$additionalinfo);
-  for ($i=1; $i<$newtableline; $i++) {
+  for ($i=1; $i<$newtableline-1; $i++) {
     echo rendergridreport($breakon[$i],$breakon[$i+1]-1,$header_rooms,$element_array);
     echo $additionalinfo;
   }

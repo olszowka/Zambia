@@ -24,10 +24,22 @@ if (strtotime($ConStartDatim) < time()) {
   $additionalinfo.="<P>Click on the (Feedback) tag to give us feedback on a particular scheduled event.</P>\n";
  }
 
+// Generate the constraints on what is shown
+if (may_I('General')) {$pubstatus_array[]='\'Volunteer\'';}
+if (may_I('Programming')) {$pubstatus_array[]='\'Prog Staff\'';}
+if (may_I('Participant')) {$pubstatus_array[]='\'Public\'';}
+if (may_I('Events')) {$pubstatus_array[]='\'Event Staff\'';}
+if (may_I('Registration')) {$pubstatus_array[]='\'Reg Staff\'';}
+if (may_I('Watch')) {$pubstatus_array[]='\'Watch Staff\'';}
+if (may_I('Vendor')) {$pubstatus_array[]='\'Vendor Staff\'';}
+if (may_I('Sales')) {$pubstatus_array[]='\'Sales Staff\'';}
+if (may_I('Fasttrack')) {$pubstatus_array[]='\'Fast Track\'';}
+$pubstatus_string=implode(",",$pubstatus_array);
+
 /* This query grabs everything necessary for the schedule to be printed. */
 $query = <<<EOD
 SELECT
-    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffBios.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
+    if ((pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffBios.php#',pubsname,'\">',pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
     concat('<A HREF=\"StaffSchedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN
@@ -37,27 +49,28 @@ SELECT
       ELSE
         concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
       END AS Duration,
-    GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
-    S.estatten AS Attended,
-    S.sessionid as Sessionid,
-    GROUP_CONCAT(DISTINCT concat('<A NAME=\"',T.trackname,'\">',T.trackname,'</A> <A HREF=StaffTrackScheduleIcal.php?trackid=',T.trackid,'><I>(iCal)</I></A>')) as 'Track',
-    concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
-    concat('<A HREF=StaffFeedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
-    concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
-    concat(S.progguiddesc,'</P>') as 'Web Description',
-    concat(S.pocketprogtext,'</P>') as 'Book Description'
+    GROUP_CONCAT(DISTINCT roomname SEPARATOR ', ') as Roomname,
+    estatten AS Attended,
+    Sessionid,
+    GROUP_CONCAT(DISTINCT concat('<A NAME=\"',trackname,'\">',trackname,'</A> <A HREF=StaffTrackScheduleIcal.php?trackid=',trackid,'><I>(iCal)</I></A>')) as 'Track',
+    concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',sessionid,'>(iCal)</A>') AS iCal,
+    concat('<A HREF=StaffFeedback.php?sessionid=',sessionid,'>(Feedback)</A>') AS Feedback,
+    concat('<A HREF=\"StaffDescriptions.php#',sessionid,'\">',title,'</A>') as Title,
+    concat(progguiddesc,'</P>') as 'Web Description',
+    concat(pocketprogtext,'</P>') as 'Book Description'
   FROM
-      Sessions S
+      Sessions
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
     JOIN Tracks T USING (trackid)
-    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
-    LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+    LEFT JOIN ParticipantOnSession USING (sessionid)
+    LEFT JOIN Participants USING (badgeid)
+    JOIN PubStatuses USING (pubstatusid)
   WHERE
-    S.pubstatusid = 2 AND
-    POS.volunteer=0 AND
-    POS.introducer=0 AND
-    POS.aidedecamp=0
+    pubstatusname in ($pubstatus_string) AND
+    (volunteer=0 OR volunteer IS NULL) AND
+    (introducer=0 OR introducer IS NULL) AND
+    (aidedecamp=0 OR aidedecamp IS NULL)
   GROUP BY
     sessionid
   ORDER BY

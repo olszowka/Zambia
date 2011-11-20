@@ -24,6 +24,18 @@ if (strtotime($ConStartDatim) < time()) {
   $additionalinfo.="<P>Click on the (Feedback) tag to give us feedback on a particular scheduled event.</P>\n";
  }
 
+// Generate the constraints on what is shown
+if (may_I('General')) {$pubstatus_array[]='\'Volunteer\'';}
+if (may_I('Programming')) {$pubstatus_array[]='\'Prog Staff\'';}
+if (may_I('Participant')) {$pubstatus_array[]='\'Public\'';}
+if (may_I('Events')) {$pubstatus_array[]='\'Event Staff\'';}
+if (may_I('Registration')) {$pubstatus_array[]='\'Reg Staff\'';}
+if (may_I('Watch')) {$pubstatus_array[]='\'Watch Staff\'';}
+if (may_I('Vendor')) {$pubstatus_array[]='\'Vendor Staff\'';}
+if (may_I('Sales')) {$pubstatus_array[]='\'Sales Staff\'';}
+if (may_I('Fasttrack')) {$pubstatus_array[]='\'Fast Track\'';}
+$pubstatus_string=implode(",",$pubstatus_array);
+
 /* This complex query grabs the name, and class information.
  Most, if not all of the formatting is done within the query, as opposed to in
  the post-processing. The bio information is grabbed seperately. */
@@ -48,20 +60,20 @@ SELECT
     S.sessionid AS Sessionid,
     concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=StaffFeedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
-    P.pubsname,
-    P.badgeid
+    badgeid
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
     JOIN Tracks T USING (trackid)
-    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
-    LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+    LEFT JOIN ParticipantOnSession USING (sessionid)
+    LEFT JOIN Participants P USING (badgeid)
+    JOIN PubStatuses PS USING (pubstatusid)
   WHERE
-    P.badgeid AND
-    POS.volunteer=0 AND
-    POS.introducer=0 AND
-    POS.aidedecamp=0
+    PS.pubstatusname in ($pubstatus_string) AND
+    (volunteer=0 OR volunteer IS NULL) AND
+    (introducer=0 OR introducer IS NULL) AND
+    (aidedecamp=0 OR aidedecamp IS NULL)
   ORDER BY
     P.pubsname
 EOD;
@@ -207,5 +219,6 @@ for ($i=1; $i<=$elements; $i++) {
     }
   }
 }
+echo "    </TD>\n  </TR>\n</TABLE>\n";
 correct_footer();
 ?>

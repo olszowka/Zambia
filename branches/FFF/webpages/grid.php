@@ -31,6 +31,7 @@ $_SESSION['return_to_page']="manualGRIDS.php";
 */
 $unpub="n";
 $unpub=$_GET['unpublished'];
+$standard=$_GET['standard'];
 $staffonly=$_GET['staffonly'];
 $filled=$_GET['timefilled'];
 $nocolor=$_GET['nocolor'];
@@ -145,31 +146,57 @@ $additionalinfo.="by <A HREF=\"StaffTracks.php\">track</A>.  <A HREF=\"manualGRI
 $Grid_Spacer=GRID_SPACER;
 if (!is_numeric($Grid_Spacer)) {$Grid_Spacer=1800;}
 
-/* This query returns the room names for an array.  We might want to
- add the "unpub" and "staffonly" hacks here, to cull the unused rooms.
- There should be a better way to cull them, though.
+/* This query returns the room names for an array.  The "unpub" still
+ restricts it to the rooms this grid is about, and the "staffonly" is
+ often (but not always) redundant.
 
- R.roomid in (SELECT DISTINCT SCH.roomid FROM Schedule SCH JOIN
- Sessions S USING (sessionid) where pubstatusid=2) and, unless I do
- this in a phenominally better way, we can probably drop the "R." from
- this query.
+ The pubstatus_check is somewhat complicated, but
 */
-$query ="SELECT R.roomname, R.roomid";
-$query.=" FROM Rooms R";
+
+
+if ($progselect=="y") {
+  if ($staffonly=="y") {
+    $pubstatus_array[]="'Prog Staff'";
+  } else {
+    $pubstatus_array[]="'Prog Staff','Public'";
+  }
+}
+if ($logselect=="y") {
+  if ($staffonly=="y") {
+    $pubstatus_array[]="'Logistics'";
+  } else {
+    $pubstatus_array[]="'Logistics','Public'";
+  }
+}
+if ($volselect=="y") {$pubstatus_array[]="'Volunteer'";}
+if ($regselect=="y") {$pubstatus_array[]="'Reg Staff'";}
+if ($saleselect=="y") {$pubstatus_array[]="'Sales Staff'";}
+if ($vendselect=="y") {$pubstatus_array[]="'Vendor Staff'";}
+if ($watchselect=="y") {$pubstatus_array[]="'Watch Staff'";}
+if ($eventselect=="y") {$pubstatus_array[]="'Event Staff'";}
+if ($fasttrackselect=="y") {$pubstatus_array[]="'Fast Track'";}
+if (isset($pubstatus_array)) {
+  $pubstatus_string=implode(",",$pubstatus_array);
+  $pubstatus_check=" pubstatusname IN ($pubstatus_string)";
+ } else {
+  $pubstatus_check=" pubstatusname IN ('Public')";
+ }
+if ($standard=="y") {
+  if ($staffonly=="y") {
+    $pubstatus_check=" pubstatusname NOT IN ('Public')";
+  } elseif ($unpub=="y") {
+    $pubstatus_check=" pubstatusid > 0";
+  }
+}
+  
+
+$query ="SELECT roomname, roomid";
+$query.=" FROM Rooms";
 $query.=" WHERE";
-if ($progselect=="y") {$query.=" R.function like '%program%' AND";}
-if ($volselect=="y") {$query.=" R.function like '%volunteer%' AND";}
-if ($regselect=="y") {$query.=" R.function like '%registration%' AND";}
-if ($saleselect=="y") {$query.=" R.function like '%sale%' AND";}
-if ($vendselect=="y") {$query.=" R.function like '%vendor%' AND";}
-if ($watchselect=="y") {$query.=" R.function like '%watch%' AND";}
-if ($logselect=="y") {$query.=" R.function like '%program%' AND";}
-if ($eventselect=="y") {$query.=" R.function like '%event%' AND";}
-if ($fasttrackselect=="y") {$query.=" R.function like '%Fast Track%' AND";}
-$query.=" R.roomid in (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid)";
+$query.=" roomid in (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid) JOIN PubStatuses USING (pubstatusid)";
 if ($goh=="y") {$query.=" JOIN ParticipantOnSession USING (sessionid) WHERE badgeid in $GohBadgeList AND";} else {$query.=" WHERE";}
-if ($unpub=="y") {$query.=" pubstatusid > 0";} else {$query.=" pubstatusid=2";}
-$query.=") ORDER BY R.display_order";
+$query.=$pubstatus_check;
+$query.=") ORDER BY display_order";
 
 // Retrieve query
 list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description,0);
@@ -187,23 +214,21 @@ $header_cells.="</TR>";
 /* This set of queries finds the appropriate presenters for a class,
  based on sessionid, and produces links for them.
  To get the volunteers use the following instead/in addition to the GROUP_CONCAT line below:
- WHERE POS.volunteer=0 AND POS.introducer=0 AND POS.aidedecamp=0 removed
- GROUP_CONCAT(IF((POS.volunteer=1 OR POS.introducer=1 OR POS.aidedecamp=1),concat(P.pubsname,", "),"") SEPARATOR "") as allpubsnames
+ WHERE volunteer=0 AND introducer=0 AND aidedecamp=0 removed
+ GROUP_CONCAT(IF((volunteer=1 OR introducer=1 OR aidedecamp=1),concat(pubsname,", "),"") SEPARATOR "") as allpubsnames
 */
 
 $query = <<<EOD
 SELECT
-      S.sessionid,
-      GROUP_CONCAT(IF((POS.volunteer=0 AND POS.introducer=0 AND POS.aidedecamp=0),concat("<A HREF=\"StaffBios.php#",P.pubsname,"\">",P.pubsname,"</A>",if((POS.moderator=1),'(m), ',', ')),"") SEPARATOR "") as presentpubsnames,
-      GROUP_CONCAT(IF((POS.volunteer=1),concat(P.pubsname,"(v), "),"") SEPARATOR "") as volpubsnames,
-      GROUP_CONCAT(IF((POS.introducer=1),concat(P.pubsname,"(i), "),"") SEPARATOR "") as intpubsnames,
-      GROUP_CONCAT(IF((POS.aidedecamp=1),concat(P.pubsname,"(a), "),"") SEPARATOR "") as aidpubsnames
+      sessionid,
+      GROUP_CONCAT(IF((volunteer=0 AND introducer=0 AND aidedecamp=0),concat("<A HREF=\"StaffBios.php#",pubsname,"\">",pubsname,"</A>",if((moderator=1),'(m), ',', ')),"") SEPARATOR "") as presentpubsnames,
+      GROUP_CONCAT(IF((volunteer=1),concat(pubsname,"(v), "),"") SEPARATOR "") as volpubsnames,
+      GROUP_CONCAT(IF((introducer=1),concat(pubsname,"(i), "),"") SEPARATOR "") as intpubsnames,
+      GROUP_CONCAT(IF((aidedecamp=1),concat(pubsname,"(a), "),"") SEPARATOR "") as aidpubsnames
     FROM
-      Sessions S
-    JOIN
-      ParticipantOnSession POS USING (sessionid)
-    JOIN
-      Participants P USING (badgeid)
+      Sessions
+    JOIN ParticipantOnSession USING (sessionid)
+    JOIN Participants USING (badgeid)
     GROUP BY
       sessionid
     ORDER BY
@@ -223,15 +248,24 @@ $query="SELECT TIME_TO_SEC(starttime) as 'beginschedule' FROM Schedule ORDER BY 
 list($earliest,$unneeded_array_c,$grid_start_sec_array)=queryreport($query,$link,$title,$description,0);
 $grid_start_sec=$grid_start_sec_array[1]['beginschedule'];
 
-$query="SELECT (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) as 'endschedule' FROM Schedule SCH JOIN Sessions S USING (sessionid) ORDER BY endschedule DESC LIMIT 0,1";
+$query="SELECT (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) as 'endschedule' FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN PubStatuses USING (pubstatusid) where $pubstatus_check ORDER BY endschedule DESC LIMIT 0,1";
 list($latest,$unneeded_array_d,$grid_end_sec_array)=queryreport($query,$link,$title,$description,0);
 $grid_end_sec=$grid_end_sec_array[1]['endschedule'];
+
+/* This sets the unpub to all the classes in the chosen rooms, if it
+ isn't staffonly, and fixes the staffonly for the standard, which is
+ the only one not fixed above. */
+if (($unpub=="y") AND ($staffonly!="y")) {
+  $pubstatus_check=" pubstatusid > 0";
+ }
+if (($standard=="y") AND ($staffonly=="y")) {
+  $pubstatus_check=" pubstatusname NOT IN ('Public')";
+ }
 
 /* This complex set of queries fills in the header_cells and then puts
  the times, associated with each room along the row seperated out by
  the determinants above, by stepping along either in time intervals or
  as a whole, again, chosen above. */
-
 if ($beginonly=="y") {$grid_end_sec=$grid_start_sec;}
 $printrowscount=0;
 for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) {
@@ -257,25 +291,17 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
   }
   $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid)";
   $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid)";
+  $query.=" JOIN PubStatuses USING (pubstatusid)";
   $query.=" WHERE";
-  if ($unpub!="y") {$query.=" S.pubstatusid = 2 AND";}
-  if ($staffonly=="y") {$query.=" S.pubstatusid != 2 AND";}
-  if ($progselect=="y") {$query.=" R.function like '%program%' AND";}
-  if ($volselect=="y") {$query.=" R.function like '%volunteer%' AND";}
-  if ($regselect=="y") {$query.=" R.function like '%registration%' AND";}
-  if ($saleselect=="y") {$query.=" R.function like '%sale%' AND";}
-  if ($vendselect=="y") {$query.=" R.function like '%vendor%' AND";}
-  if ($watchselect=="y") {$query.=" R.function like '%watch%' AND";}
-  if ($logselect=="y") {$query.=" R.function like '%program%' AND";}
-  if ($eventselect=="y") {$query.=" R.function like '%event%' AND";}
-  if ($fasttrackselect=="y") {$query.=" R.function like '%Fast Track%' AND";}
   if ($goh=="y") {$query.=" S.sessionid in (SELECT DISTINCT sessionid from ParticipantOnSession WHERE badgeid IN $GohBadgeList) AND";}
+  $query.=$pubstatus_check." AND";
   if ($beginonly=="y") {
     $query.=" SCH.sessionid = S.sessionid GROUP BY SCH.starttime ORDER BY SCH.starttime";
   } else {
     $query.=" TIME_TO_SEC(SCH.starttime) <= $time";
     $query.=" AND (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) >= ($time + $Grid_Spacer);";
   }
+
   if (($result=mysql_query($query,$link))===false) {
     $message="Error retrieving data from database.<BR>";
     $message.=$query;
@@ -387,10 +413,5 @@ foreach ($printrows_array as $i) {
   }
 }
 echo "</TABLE>";
-if ($_SESSION['role']=="Participant") {
-  participant_footer();
- } else {
-  staff_footer();
- }
-
+correct_footer();
 ?>

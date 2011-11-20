@@ -20,15 +20,15 @@ $additionalinfo.="x Times</A> or <A HREF=Postgrid-wide.php?print_p=y>Times x Roo
  headers, and keys for other arrays.*/
 $query = <<<EOD
 SELECT
-        R.roomname,
-        R.roomid
+        roomname,
+        roomid
     FROM
-            Rooms R
+            Rooms
     WHERE
-        R.roomid in
-        (SELECT DISTINCT SCH.roomid FROM Schedule SCH JOIN Sessions S USING (sessionid) where pubstatusid=2)
+        roomid in
+        (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid) JOIN PubStatuses USING (pubstatusid) WHERE pubstatusname in ('Public'))
     ORDER BY
-    	  R.display_order;
+    	  display_order;
 EOD;
 
 ## Retrieve query
@@ -38,18 +38,16 @@ list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$de
  based on sessionid, and produces links for them. */
 $query = <<<EOD
 SELECT
-      S.sessionid,
-      GROUP_CONCAT(concat("<A HREF=\"Bios.php#",P.pubsname,"\">",P.pubsname,"</A>",if((POS.moderator=1),'(m)','')) SEPARATOR ", ") as allpubsnames
+      sessionid,
+      GROUP_CONCAT(concat("<A HREF=\"Bios.php#",pubsname,"\">",pubsname,"</A>",if((moderator=1),'(m)','')) SEPARATOR ", ") as allpubsnames
     FROM
-      Sessions S
-    JOIN
-      ParticipantOnSession POS USING (sessionid)
-    JOIN
-      Participants P USING (badgeid)
+      Sessions
+    JOIN ParticipantOnSession USING (sessionid)
+    JOIN Participants USING (badgeid)
     WHERE 
-      POS.volunteer=0 AND
-      POS.introducer=0 AND
-      POS.aidedecamp=0
+      volunteer=0 AND
+      introducer=0 AND
+      aidedecamp=0
     GROUP BY
       sessionid
     ORDER BY
@@ -103,6 +101,9 @@ $grid_end_sec=mysql_result($result,0);
  color of each class/grid element. */
 /* Probably should use queryreport to standardize gets.*/
 $header_time=array("Room Name");
+$header_count=1;
+$newtableline=1;
+$breakon[$newtableline]=1;
 for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) {
   $query="SELECT DATE_FORMAT(ADDTIME('$ConStartDatim',SEC_TO_TIME('$time')),'%a&nbsp;%l:%i&nbsp;%p') as 'blocktime'";
   for ($i=1; $i<=$rooms; $i++) {
@@ -114,8 +115,8 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
     $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,T.htmlcellcolor,\"\") SEPARATOR '') as \"%s htmlcellcolor\"",$x,$y);
   }
   $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid)";
-  $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid)";
-  $query.=" WHERE S.pubstatusid = 2 AND TIME_TO_SEC(SCH.starttime) <= $time";
+  $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid) JOIN PubStatuses PS USING (pubstatusid)";
+  $query.=" WHERE PS.pubstatusname in ('Public') AND TIME_TO_SEC(SCH.starttime) <= $time";
   $query.=" AND (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) >= ($time + $Grid_Spacer);";
   if (($result=mysql_query($query,$link))===false) {
     $message="Error retrieving data from database.<BR>";
@@ -155,12 +156,14 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
   }
   if ($skiprow == 0) {
     $grid_array[$time]['blocktime'] = "Skip";
+    if ($breakon[$newtableline] != $header_count) {$breakon[++$newtableline] = $header_count;}
   } else {
     if ($refskiprow != 0) {
       $k=$grid_array[$time]['blocktime'];
       $grid_array[$time]['blocktime']=sprintf("<A HREF=\"Schedule.php#%s\">%s</A>",$k,$k);
     }
     array_push($header_time,$grid_array[$time]['blocktime']);
+    $header_count++;
   }
  }
 
@@ -234,17 +237,35 @@ if ($_GET["csv"]=="y") {
   $pdf->setLanguageArray($l);
   $pdf->setFontSubsetting(true);
   $pdf->SetFont('helvetica', '', 6, '', true);
-  for ($i=1; $i<=count($header_time); $i = ($i + 16)) {
-    $gridstring=rendergridreport(1,$element_row,array_merge(array_slice($header_time,0,1), array_slice($header_time,$i,16)),$element_array);
-    $pdf->AddPage();
-    $pdf->writeHTML($gridstring, true, false, true, false, '');
+  for ($i=1; $i<$newtableline; $i++) {
+    for ($j=$breakon[$i]; $j<=$breakon[$i+1]; $j = ($j + 16)) {
+      if ($breakon[$i+1]-$j >= 16) {
+	$k = 16;
+      } else {
+	$k = $breakon[$i+1] - $j;
+      }
+      if ($k > 0) {
+	$gridstring=rendergridreport(1,$element_row,array_merge(array_slice($header_time,0,1), array_slice($header_time,$j,$k)),$element_array);
+	$pdf->AddPage();
+	$pdf->writeHTML($gridstring, true, false, true, false, '');
+      }
+    }
   }
   $pdf->Output(CON_NAME.'-grid-wide.pdf', 'I');
  } else {
   topofpagereport($title,$description,$additionalinfo);
-  for ($i=1; $i<=count($header_time); $i = ($i + 11)) {
-    echo rendergridreport(1,$element_row,array_merge(array_slice($header_time,0,1), array_slice($header_time,$i,11)),$element_array);
-    echo $additionalinfo;
+  for ($i=1; $i<$newtableline; $i++) {
+    for ($j=$breakon[$i]; $j<=$breakon[$i+1]; $j = ($j + 11)) {
+      if ($breakon[$i+1]-$j >= 11) {
+	$k = 11;
+      } else {
+	$k = $breakon[$i+1] - $j;
+      }
+      if ($k > 0) {
+	echo rendergridreport(1,$element_row,array_merge(array_slice($header_time,0,1), array_slice($header_time,$j,$k)),$element_array);
+	echo $additionalinfo;
+      }
+    }
   }
   posting_footer();
  }

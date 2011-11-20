@@ -23,7 +23,7 @@ if (strtotime($ConStartDatim) < time()) {
 /* This query grabs everything necessary for the schedule to be printed. */
 $query = <<<EOD
 SELECT
-    if ((P.pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"Bios.php#',P.pubsname,'\">',P.pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
+    if ((pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"Bios.php#',pubsname,'\">',pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
     concat('<A HREF=\"Schedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN
@@ -33,25 +33,26 @@ SELECT
       ELSE
         concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
       END AS Duration,
-    GROUP_CONCAT(DISTINCT R.roomname SEPARATOR ', ') as Roomname,
-    S.sessionid as Sessionid,
-    GROUP_CONCAT(DISTINCT concat('<A NAME=\"',T.trackname,'\">',T.trackname,'</A> <A HREF=TrackScheduleIcal.php?trackid=',T.trackid,'><I>(iCal)</I></A>')) as 'Track',
-    concat('<A HREF=PrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
-    concat('<A HREF=Feedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
-    concat('<A HREF=\"Descriptions.php#',S.sessionid,'\">',S.title,'</A>') as Title,
-    concat('<P>',S.progguiddesc,'</P>') as Description
+    GROUP_CONCAT(DISTINCT roomname SEPARATOR ', ') as Roomname,
+    Sessionid,
+    GROUP_CONCAT(DISTINCT concat('<A NAME=\"',trackname,'\">',trackname,'</A> <A HREF=TrackScheduleIcal.php?trackid=',trackid,'><I>(iCal)</I></A>')) as 'Track',
+    concat('<A HREF=PrecisScheduleIcal.php?sessionid=',sessionid,'>(iCal)</A>') AS iCal,
+    concat('<A HREF=Feedback.php?sessionid=',sessionid,'>(Feedback)</A>') AS Feedback,
+    concat('<A HREF=\"Descriptions.php#',sessionid,'\">',title,'</A>') as Title,
+    concat('<P>',progguiddesc,'</P>') as Description
   FROM
-      Sessions S
+      Sessions
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
     JOIN Tracks T USING (trackid)
-    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
-    LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+    LEFT JOIN ParticipantOnSession USING (sessionid)
+    LEFT JOIN Participants USING (badgeid)
+    JOIN PubStatuses USING (pubstatusid)
   WHERE
-    S.pubstatusid = 2 AND
-    POS.volunteer=0 AND
-    POS.introducer=0 AND
-    POS.aidedecamp=0
+    pubstatusname in ('Public') AND
+    volunteer=0 AND
+    introducer=0 AND
+    aidedecamp=0
   GROUP BY
     sessionid
   ORDER BY

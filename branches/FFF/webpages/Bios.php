@@ -24,11 +24,11 @@ if (strtotime($ConStartDatim) < time()) {
  the post-processing. The bio information is grabbed seperately. */
 $query = <<<EOD
 SELECT
-    concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) as 'Participants',
-    concat('<A HREF=\"Descriptions.php#',S.sessionid,'\"><B>',S.title,'</B></A>') AS Title,
-    S.secondtitle AS Subtitle,
+    concat('<A NAME=\"',pubsname,'\"></A>',pubsname) as 'Participants',
+    concat('<A HREF=\"Descriptions.php#',sessionid,'\"><B>',title,'</B></A>') AS Title,
+    secondtitle AS Subtitle,
     if((moderator=1),' (m)','') AS Moderator,
-    concat('<A HREF=\"Tracks.php#',T.trackname,'\">',T.trackname,'</A>') AS Track,
+    concat('<A HREF=\"Tracks.php#',trackname,'\">',trackname,'</A>') AS Track,
     concat('<A HREF=\"Schedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') AS 'Start Time',
     CASE 
       WHEN HOUR(duration) < 1 THEN
@@ -38,23 +38,24 @@ SELECT
       ELSE
         concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
       END AS Duration,
-    R.roomname as Roomname,
-    concat('<A HREF=PrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
-    concat('<A HREF=Feedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
-    P.pubsname,
-    P.badgeid
+    roomname as Roomname,
+    concat('<A HREF=PrecisScheduleIcal.php?sessionid=',sessionid,'>(iCal)</A>') AS iCal,
+    concat('<A HREF=Feedback.php?sessionid=',sessionid,'>(Feedback)</A>') AS Feedback,
+    pubsname,
+    badgeid
   FROM
-      Sessions S
-    JOIN Schedule SCH USING (sessionid)
-    JOIN Rooms R USING (roomid)
-    JOIN Tracks T USING (trackid)
-    LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
-    LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+      Sessions
+    JOIN Schedule USING (sessionid)
+    JOIN Rooms USING (roomid)
+    JOIN Tracks USING (trackid)
+    LEFT JOIN ParticipantOnSession USING (sessionid)
+    LEFT JOIN Participants P USING (badgeid)
+    JOIN PubStatuses USING (pubstatusid)
   WHERE
-    P.badgeid AND
-    POS.volunteer=0 AND
-    POS.introducer=0 AND
-    POS.aidedecamp=0
+    pubstatusname in ('Public') AND
+    volunteer=0 AND
+    introducer=0 AND
+    aidedecamp=0
   ORDER BY
     P.pubsname
 EOD;
