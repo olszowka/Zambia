@@ -150,9 +150,10 @@ if (!is_numeric($Grid_Spacer)) {$Grid_Spacer=1800;}
  restricts it to the rooms this grid is about, and the "staffonly" is
  often (but not always) redundant.
 
- The pubstatus_check is somewhat complicated, but
-*/
-
+ The pubstatus_check is somewhat complicated, but it switches on the
+ appropriate group set, and allows for mini-convention information.
+ Probably the most useful staff-only view is for logistics, for their
+ overlay of standard classes is probably otherwise complicated. */
 
 if ($progselect=="y") {
   if ($staffonly=="y") {
