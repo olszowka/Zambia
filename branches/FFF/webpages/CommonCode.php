@@ -887,7 +887,7 @@ function remove_flow_report ($flowid,$table,$title,$description) {
   $tablename=$table."Flow";
 
   ## Establish the table element or fail
-  if ($table=="Group") {
+  if (strpos($table,"Group")) {
     $tableelement="gflowid";
   } elseif ($table=="Personal") {
     $tableelement="pflowid";
@@ -935,7 +935,7 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
   $tablename=$table."Flow";
 
   ## Establish the table element or fail
-  if ($table=="Group") {
+  if (strpos($table,"Group")) {
     $torder="gfloworder";
     $tname="gflowname";
     $cname=$group;
@@ -988,7 +988,7 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
   $tablename=$table."Flow";
 
   ## Estabilsh the table elements, or fail;
-  if ($table=="Group") {
+  if (strpos($table,"Group")) {
     $torder="gfloworder";
     $tname="gflowname";
     $tid="gflowid";

@@ -10,19 +10,19 @@ $description="<P>Edit the order of the various group flows.</P>\n";
 $additionalinfo="<P><A HREF=genindex.php>Return</A> to the Group Flow choice page.</P>";
 
 if (isset($_POST['addto'])) {
-  add_flow_report($_POST['addto'],$_POST['addphase'],"Group",$_POST['togroup'],$title,$description);
+  add_flow_report($_POST['addto'],$_POST['addphase'],"$ReportDB.Group",$_POST['togroup'],$title,$description);
  }
 
 if (isset($_POST['unrank'])) {
-  remove_flow_report($_POST['unrank'],"Group",$title,$description);
+  remove_flow_report($_POST['unrank'],"$ReportDB.Group",$title,$description);
  }
 
 if (isset($_POST['upfrom'])) {
-  deltarank_flow_report($_POST['upfrom'],"Group","Up",$title,$description);
+  deltarank_flow_report($_POST['upfrom'],"$ReportDB.Group","Up",$title,$description);
  }
 
 if (isset($_POST['downfrom'])) {
-  deltarank_flow_report($_POST['downfrom'],"Group","Down",$title,$description);
+  deltarank_flow_report($_POST['downfrom'],"$ReportDB.Group","Down",$title,$description);
  }
 
 // Forms inserted into the query
