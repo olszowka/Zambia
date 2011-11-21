@@ -5,8 +5,8 @@ INSERT INTO `Phases` VALUES (6,'Brainstorm',1,'Special brainstorm pages are acce
 INSERT INTO `PermissionAtoms` VALUES (18,'Brainstorm',null,'BrainstormWelcome','Use for special brainstorm user and pages.');
 INSERT INTO `PermissionRoles` VALUES (5,'Brainstorm','Use for Brainstorm pages');
 INSERT INTO `Permissions` VALUES (21,18,6,5,null);
-INSERT INTO `Participants` (badgeid, pubsname, password, bestway, interested, bio)
- VALUES ('brainstorm',null,'ecf65a5d41056d7dd4d548e3ef200476',null,null,null);
+INSERT INTO `Participants` (badgeid, pubsname, password)
+ VALUES ('100','Brainstorm','ecf65a5d41056d7dd4d548e3ef200476');
 INSERT INTO `UserHasPermissionRole` VALUES ('brainstorm',5);
 INSERT INTO `Divisions` (divisionid, divisionname, display_order) VALUES (6, "Unspecified", 6);
 INSERT INTO `RoomSets` (roomsetid, roomsetname, display_order) VALUES (4, "Unspecified", 99);

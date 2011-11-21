@@ -1,5 +1,13 @@
-## This script does all the schema changes to support comments on both participants and classes.
-CREATE TABLE `Reports` (
+## This script creates the Reports table and prepopulates some
+## reports.
+## NOTE this should be applied to the Reports or General database, not to
+## the main one, so replace REPORTDB with your DB name.  If you are only
+## hosting one database (and not having your REPORTDB available to
+## multiple cons) you can remove all instances of "REPORTDB." below.
+## The PersonalFlow should be local to the year, so that is the only
+## one created in the base DB.
+
+CREATE TABLE REPORTDB.Reports (
   `reportid` INT(11) NOT NULL auto_increment,
   `reportname` varchar(30) NOT NULL default '',
   `reporttitle` text,
@@ -9,17 +17,17 @@ CREATE TABLE `Reports` (
   PRIMARY KEY  (`reportid`),
   KEY `reportname` (`reportname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE `PersonalFlow` (
+CREATE TABLE PersonalFlow (
   `pflowid` INT(11) NOT NULL auto_increment,
   `reportid` INT(11) NOT NULL default '0',
   `badgeid` varchar(15) NOT NULL default '',
   `pfloworder` INT(11) NOT NULL default '0',
   `phaseid` INT(11) default NULL,
   PRIMARY KEY  (`pflowid`),
-  CONSTRAINT `PersonalFlow_ibfk_1` FOREIGN KEY (`reportid`) REFERENCES `Reports` (`reportid`),
+  CONSTRAINT `GroupFlow_ibfk_1` FOREIGN KEY (`reportid`) REFERENCES `REPORTDB.Reports` (`reportid`)
   CONSTRAINT `PersonalFlow_ibfk_2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE `GroupFlow` (
+CREATE TABLE REPORTDB.GroupFlow (
   `gflowid` INT(11) NOT NULL auto_increment,
   `reportid` INT(11) NOT NULL default '0',
   `gflowname` varchar(15) NOT NULL default '',
@@ -29,7 +37,7 @@ CREATE TABLE `GroupFlow` (
   CONSTRAINT `GroupFlow_ibfk_1` FOREIGN KEY (`reportid`) REFERENCES `Reports` (`reportid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO PatchLog (patchname) VALUES ('26_migrate_reports.sql');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('finalschedbreif','Schedule','<P>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('finalschedbreif','Schedule','<P>Below is the Panel, Events, Film, Anime, Video and Arisia TV schedule.</P>
 ','','SELECT
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',
     CASE
@@ -57,7 +65,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     SCH.starttime,
     T.trackname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartintnotcomp','Conflict Report - Interested Participants that wont comp','<P>Comps are limited to participants on 3 or more panels.  These folks are on less than 3 scheduled panels.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartintnotcomp','Conflict Report - Interested Participants that wont comp','<P>Comps are limited to participants on 3 or more panels.  These folks are on less than 3 scheduled panels.</P>
 ','','SELECT
     P.badgeid, 
     P.pubsname, 
@@ -92,7 +100,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     Intr DESC,
     cast(C.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedsession','Assigned Session by Session','<P>Shows who has been assigned to each session. (Sorted by track and then sessionid.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedsession','Assigned Session by Session','<P>Shows who has been assigned to each session. (Sorted by track and then sessionid.)</P>
 ','','SELECT 
     Trackname, 
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,
@@ -114,7 +122,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     trackname, 
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantinterestedcount','Participant Interested Count','<P>Show the number of people that are interested in attending.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantinterestedcount','Participant Interested Count','<P>Show the number of people that are interested in attending.</P>
 ','<P>Interested, 1=yes, 2=no, 0=did not pick, NULL=did not hit save.</P>','SELECT
     P.Interested as "Interest Flag",
     count(P.badgeid) as Count
@@ -122,7 +130,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
       Participants P 
   GROUP BY
     P.interested');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('schedpartavail','Participant availablity','<P>When they said they were available.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('schedpartavail','Participant availablity','<P>When they said they were available.</P>
 ','','SELECT
         P.badgeid, P.pubsname, 
         DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') AS \'Start Time\', 
@@ -137,7 +145,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
         P.interested=1
     ORDER BY
         CAST(P.badgeid AS UNSIGNED),starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('panelmerge','CSV -- Report for Program Panel Merge','<P>sessionid,room,start time,duration,track,title,participants</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('panelmerge','CSV -- Report for Program Panel Merge','<P>sessionid,room,start time,duration,track,title,participants</P>
 ','','SELECT
     S.sessionid, 
     R.roomname AS room, 
@@ -166,7 +174,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     S.sessionid
   ORDER BY
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessionedithistoryall','Session Edit History Report - All','<P>For each session, show the entire edit history.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessionedithistoryall','Session Edit History Report - All','<P>For each session, show the entire edit history.</P>
 ','','SELECT
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,
     T.trackname as \'Track\', 
@@ -193,18 +201,57 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     S.sessionid, 
     SEH.timestamp');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('partbio','Conflict Report - Participant Bio in conflict','<P>Show the badgeid, pubsname and bio for each participant who indicated he is attending.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('partbio','Conflict Report - All Interested Participant Web/Book Bios','<P>Show the badgeid, pubsname, edited web bio, URI block and edited program book bio for each participant who indicated attendance.</P>
 ','','SELECT
-    P.badgeid, 
-    P.pubsname, 
-    P.editedbio 
+    DISTINCT(P.badgeid), 
+    concat('<A HREF=StaffEditCreateParticipant.php?action=edit&partid=',P.badgeid,'>',P.pubsname,'</A>') AS Pubsname, 
+    concat('<A HREF=StaffEditBios.php?badgeid=',P.badgeid,'>',BWE.biotext,'</A>') AS 'Web Bio',
+    concat('<A HREF=StaffEditBios.php?badgeid=',P.badgeid,'>',BUE.biotext,'</A>') AS 'URI Block',
+    concat('<A HREF=StaffEditBios.php?badgeid=',P.badgeid,'>',BBE.biotext,'</A>') AS 'Program Book Bio'
   FROM
       Participants P
+    LEFT JOIN (SELECT 
+                   badgeid,
+                   biotext
+                 FROM
+                     $BioDB.Bios
+                   JOIN $BioDB.BioTypes using (biotypeid)
+                   JOIN $BioDB.BioStates using (biostateid)
+                 WHERE
+                   biolang in ('en-us') AND
+                   biotypename in ('web') AND 
+                   biostatename in ('edited')) BWE USING (badgeid)
+    LEFT JOIN (SELECT 
+                   badgeid,
+                   biotext
+                 FROM
+                     $BioDB.Bios
+                   JOIN $BioDB.BioTypes using (biotypeid)
+                   JOIN $BioDB.BioStates using (biostateid)
+                 WHERE
+                   biolang in ('en-us') AND
+                   biotypename in ('book') AND 
+                   biostatename in ('edited')) BBE USING (badgeid)
+    LEFT JOIN (SELECT 
+                   badgeid,
+                   biotext
+                 FROM
+                     $BioDB.Bios
+                   JOIN $BioDB.BioTypes using (biotypeid)
+                   JOIN $BioDB.BioStates using (biostateid)
+                 WHERE
+                   biolang in ('en-us') AND
+                   biotypename in ('uri') AND 
+                   biostatename in ('edited')) BUE USING (badgeid)
+    JOIN UserHasPermissionRole USING (badgeid)
+    JOIN PermissionRoles USING (permroleid)
   WHERE
-    P.interested=1
+    P.interested=1 AND
+    (permrolename in ('Participant') or
+     permrolename like '%Super%')
   ORDER BY
     substring_index(pubsname," ",-1)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('progpacketmerge','Full Participant Schedule for the Program Packet Merge','<P>pubsname, (day, time, duration, room, mod)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('progpacketmerge','Full Participant Schedule for the Program Packet Merge','<P>pubsname, (day, time, duration, room, mod)</P>
 ','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>
 ','SELECT
     POS.badgeid,
@@ -245,7 +292,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     badgeid
   ORDER BY
     pubsname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioninterestpart','Session Interest by participant (all info)','<P>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report.  (All data included including for invited sessions.) order by participant.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioninterestpart','Session Interest by participant (all info)','<P>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report.  (All data included including for invited sessions.) order by participant.</P>
 ','','SELECT 
     P.badgeid BadgeID, 
     P.pubsname, 
@@ -276,20 +323,49 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     T.trackid=S.trackid 
   ORDER BY
     cast(P.badgeid as unsigned) ');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartbio','Conflict Report - Participant Bio in conflict','<P>Show the badgeid, pubsname and both bio entries for each participant who indicated he is attending.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartbio','Conflict Report - Participant Web Bio Different From Edited Version','<P>Show the pubsname and conflicting/missing web bio entries for each participant who indicated attendance.</P>
 ','','SELECT
-    P.badgeid, 
-    P.pubsname, 
-    P.bio,
-    P.editedbio 
+    DISTINCT(concat('<A HREF=StaffEditCreateParticipant.php?action=edit&partid=',badgeid,'>',pubsname,'</A>')) AS Pubsname, 
+    concat('<A HREF=StaffEditBios.php?badgeid=',badgeid,'>',BWR.biotext,'</A>') AS 'Presenter Generated Program Bio',
+    concat('<A HREF=StaffEditBios.php?badgeid=',badgeid,'>',BWE.biotext,'</A>') AS 'Staff Edited Program Bio'
   FROM
       Participants P
+    LEFT JOIN (SELECT 
+                   badgeid,
+                   bioid,
+                   biotext
+                 FROM
+                     $BioDB.Bios
+                   JOIN $BioDB.BioTypes using (biotypeid)
+                   JOIN $BioDB.BioStates using (biostateid)
+                 WHERE
+                   biolang in ('en-us') AND
+                   biotypename in ('web') AND 
+                   biostatename in ('raw')) BWR USING (badgeid)
+    LEFT JOIN (SELECT 
+                   badgeid,
+                   bioid,
+                   biotext
+                 FROM
+                     $BioDB.Bios
+                   JOIN $BioDB.BioTypes using (biotypeid)
+                   JOIN $BioDB.BioStates using (biostateid)
+                 WHERE
+                   biolang in ('en-us') AND
+                   biotypename in ('web') AND 
+                   biostatename in ('edited')) BWE USING (badgeid)
+    JOIN UserHasPermissionRole USING (badgeid)
+    JOIN PermissionRoles USING (permroleid)
   WHERE
-    P.interested=1 and
-    P.bio!=P.editedbio
+    P.interested=1 AND
+    (permrolename in ('Participant') or
+     permrolename like '%Super%') AND
+    (BWR.bioid IS NULL OR
+     BWE.bioid IS NULL OR
+     BWR.biotext != BWE.biotext) 
   ORDER BY
     substring_index(pubsname," ",-1)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('intvschedpanel','Interest v Schedule - sorted by track, then title','<P>Show who is interested in each panel and if they are assigned to it.  Also show the scheduling information.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('intvschedpanel','Interest v Schedule - sorted by track, then title','<P>Show who is interested in each panel and if they are assigned to it.  Also show the scheduling information.</P>
 ','','SELECT
     X.trackname, 
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',X.sessionid,\'>\', X.sessionid,\'</a>\') as Sessionid,
@@ -339,7 +415,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     X.trackname,
     X.title');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioncomment','Session Commentary','<P>Comments recorded for Sessions.  <A HREF=\"CommentOnSessions.php\">(Add a comment)</A></P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioncomment','Session Commentary','<P>Comments recorded for Sessions.  <A HREF=\"CommentOnSessions.php\">(Add a comment)</A></P>
 ','','SELECT
     S.title,
     COS.commenter,
@@ -350,7 +426,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
       CommentsOnSessions COS USING (sessionid)
   ORDER BY
     S.title');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpickypeople','Conflict Report - Picky people','<P>Show who the picky people do not want to be on a panel with and who they are on panels with.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpickypeople','Conflict Report - Picky people','<P>Show who the picky people do not want to be on a panel with and who they are on panels with.</P>
 ','','SELECT 
     X.b AS badgeid, 
     X.pn AS pubsname, 
@@ -387,7 +463,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     X.s 
   ORDER BY
     cast(X.b as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('publongdesc','CSV - Session Characteristics plus long description','<P>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('publongdesc','CSV - Session Characteristics plus long description','<P>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description.</P>
 ','','SELECT
     S.sessionid,
     T.trackname AS track,
@@ -413,7 +489,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     PS.pubstatusname = \'Public\'
   GROUP BY
     scheduleid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioninterestpartcount','Session Interest Counts by Participant','<P>Just how many panels did each participant sign up for anyway?</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioninterestpartcount','Session Interest Counts by Participant','<P>Just how many panels did each participant sign up for anyway?</P>
 ','','SELECT
     P.Badgeid, 
     P.Pubsname, 
@@ -425,7 +501,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     P.interested=1 
   GROUP BY
     cast(P.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('gameroomshedroom','Gaming Schedule','<P>All Gaming and Gaming Panels.  All these reports include both.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('gameroomshedroom','Gaming Schedule','<P>All Gaming and Gaming Panels.  All these reports include both.</P>
 ','','SELECT
     roomname AS Room,
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') AS \'Start Time\',
@@ -454,7 +530,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     R.roomname,
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('kidfasttracksched4con','FastTrack Schedule (for con)','<P>What is happening in FastTrack - The At-Con Version.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('kidfasttracksched4con','FastTrack Schedule (for con)','<P>What is happening in FastTrack - The At-Con Version.</P>
 ','','SELECT
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\') as \'Start Time\',
     R.roomname,
@@ -473,7 +549,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     SCH.scheduleid
   ORDER BY
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allroomschedtime','Full Room Schedule by time then room','<P>Lists all Sessions Scheduled in all Rooms (includes \"Public\", \"Do Not Print\" and \"Staff Only\").</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allroomschedtime','Full Room Schedule by time then room','<P>Lists all Sessions Scheduled in all Rooms (includes \"Public\", \"Do Not Print\" and \"Staff Only\").</P>
 ','','SELECT
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',
     concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,
@@ -504,7 +580,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     SCH.starttime,
     R.roomname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessionservicesservice','Session Services by Service','<P>Which Session needs which Services? (Sorted by service then time.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessionservicesservice','Session Services by Service','<P>Which Session needs which Services? (Sorted by service then time.)</P>
 ','','SELECT
     X.Servicename as Service,
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', 
@@ -545,7 +621,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     X.servicename, 
     starttime,
     roomname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioninterestcount','Session Interest Report (counts)','<P>For each session, show number of participants who have put it on their interest list. (Excludes invited guest sessions.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioninterestcount','Session Interest Report (counts)','<P>For each session, show number of participants who have put it on their interest list. (Excludes invited guest sessions.)</P>
 ','','SELECT
     T.trackname as Track, 
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as \'Session<BR>ID\',
@@ -564,7 +640,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     T.display_order, 
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictunder3assigned','Conflict Report - Scheduled Programming sessions without enough people','<P>This report runs against scheduled sessions in division program only.   If these are panels, you need at least 3 people.  All other types require at least 1.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictunder3assigned','Conflict Report - Scheduled Programming sessions without enough people','<P>This report runs against scheduled sessions in division program only.   If these are panels, you need at least 3 people.  All other types require at least 1.</P>
 ','','SELECT
     T.trackname, 
     Y.typename,
@@ -601,7 +677,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     T.trackname,
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('invitation','Invited Guest Report','<P>For each invited guest session, list the participants who have been invited (and have not deleted the invitation.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('invitation','Invited Guest Report','<P>For each invited guest session, list the participants who have been invited (and have not deleted the invitation.)</P>
 ','','SELECT
     T.trackname as Track,
     concat("<a href=EditSession.php?id=",S.sessionid,">",S.sessionid,"</a>") as "Session<BR>ID",
@@ -620,7 +696,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     T.display_order,
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allroomschedtrackroom','Full Room Schedule by track then room then time','<P>Lists all Sessions Scheduled in all Rooms.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allroomschedtrackroom','Full Room Schedule by track then room then time','<P>Lists all Sessions Scheduled in all Rooms.</P>
 ','','SELECT
     Trackname,
     concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,
@@ -650,7 +726,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     T.trackname,
     R.roomname,
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictschedassn','Conflict Report - Assigned v. Scheduled issue','<P>These are sessions that are either in the grid and have no one assigned or the have people assigned and are not in the grid.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictschedassn','Conflict Report - Assigned v. Scheduled issue','<P>These are sessions that are either in the grid and have no one assigned or the have people assigned and are not in the grid.</P>
 ','','SELECT
     trackname,
     typename,
@@ -691,8 +767,8 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     num_assigned DESC,
     in_grid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartdup','Conflict Report - Participant Double Booked','<P>Find all instances where a participant is scheduled to be in two or more places at once.</P>
-','<P>Click on the session id to edit the session\'s volunteer or announcer.</P>','SELECT
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartdup','Conflict Report - Participant Double Booked','<P>Find all instances where a participant is scheduled to be in two or more places at once.</P>
+','<P>Click on the session id to edit the volunteer or announcer.</P>','SELECT
     concat(P.pubsname, \'(\', P.badgeid, \')\') as Participant,
     \' \',
     TA.trackname as \'Track A\', 
@@ -752,7 +828,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     cast(P.badgeid as unsigned), 
     Astart');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('prognamesannvolprog','Program Participant Number, Names, Contact, and Involvement','<P>Full listing of the names and contact, and how many classes, as a Program Participant, Announcer or Volunteer they are involved in.  Replaces 4progthankyounotereport\'s non-csv version.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('prognamesannvolprog','Program Participant Number, Names, Contact, and Involvement','<P>Full listing of the names and contact, and how many classes, as a Program Participant, Announcer or Volunteer they are involved in.  Replaces the non-csv version of 4progthankyounotereport.</P>
 ','','SELECT
     P.badgeid, 
     P.pubsname, 
@@ -789,7 +865,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     (P.badgeid) 
   ORDER BY
     cast(P.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('gohintvschedulepanel','Interest v Schedule - sorted by GoHs','<P>For each GoH, show which panels (but not Events) they are interested in,  and if they are assigned to it.  Also show the scheduling information.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('gohintvschedulepanel','Interest v Schedule - sorted by GoHs','<P>For each GoH, show which panels (but not Events) they are interested in,  and if they are assigned to it.  Also show the scheduling information.</P>
 ','','SELECT 
     concat(X.pubsname, \' (\', X.badgeid, \')\') as Pubsname,
     X.trackname, 
@@ -837,7 +913,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
                   R.roomid=SCH.roomid) as Y on X.sessionid=Y.sessionid
   ORDER BY
     badgeid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('arisiatvroomsched','Arisia TV by time.','<P>Just things in TV room.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('arisiatvroomsched','Arisia TV by time.','<P>Just things in TV room.</P>
 ','','SELECT
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',
     CASE
@@ -868,7 +944,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     SCH.sessionid
   ORDER BY
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allroomschedtrack','Full Room Schedule by track then time.','<P>Lists all Sessions Scheduled in all Rooms.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allroomschedtrack','Full Room Schedule by track then time.','<P>Lists all Sessions Scheduled in all Rooms.</P>
 ','','SELECT
     Trackname,
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',
@@ -897,7 +973,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY 
     T.trackname,
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('gohschedule','GoH Schedule','<P>The GoH schedules.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('gohschedule','GoH Schedule','<P>The GoH schedules.</P>
 ','','SELECT 
     G.pubsname, 
     concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,
@@ -928,7 +1004,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     G.pubsname,
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantinterests','Participant Interests','<P>What is that participant interested in?</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantinterests','Participant Interests','<P>What is that participant interested in?</P>
 ','','SELECT
     P.badgeid,
     P.pubsname,
@@ -942,7 +1018,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
       Participants P
   WHERE
     P.badgeid=PI.badgeid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioninterest','Session Interest Report (all info)','<P>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report.  (All data included including for invited sessions.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessioninterest','Session Interest Report (all info)','<P>Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report.  (All data included including for invited sessions.)</P>
 ','','SELECT
     T.trackname as \'Track\',
     CONCAT(\'<A HREF=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</A>\') as Sessionid,
@@ -964,7 +1040,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     T.trackname,
     title');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedsessionbypart','Assigned Session by Participant','<P>Shows who has been assigned to each session ordered by badgeid.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedsessionbypart','Assigned Session by Participant','<P>Shows who has been assigned to each session ordered by badgeid.</P>
 ','','SELECT
     P.Badgeid, 
     P.Pubsname, 
@@ -980,7 +1056,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     ParticipantOnSession.sessionid=Sessions.sessionid 
   ORDER BY
     cast(P.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubs','Report for Pubs','<P>Report for Paul\'s Pocket Program.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubs','Report for Pubs','<P>Report for the Pocket Program.</P>
 ','','SELECT
     S.sessionid, 
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a\') as Day, 
@@ -1021,7 +1097,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     SCH.starttime, 
     R.roomname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubssched','Schedule report for Pubs','<P>Lists all Sessions Scheduled in all Rooms.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubssched','Schedule report for Pubs','<P>Lists all Sessions Scheduled in all Rooms.</P>
 ','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>
 ','SELECT
     S.sessionid,
@@ -1047,7 +1123,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     SCH.starttime, 
     R.roomname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedsessionbypartdiff','Differential Assigned Session by Participant','<P>Recent changes to whom has been assigned to each session ordered by time, then badgeid.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedsessionbypartdiff','Differential Assigned Session by Participant','<P>Recent changes to whom has been assigned to each session ordered by time, then badgeid.</P>
 ','','SELECT
     P.badgeid, 
     P.pubsname, 
@@ -1066,7 +1142,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     POS.ts,
     cast(P.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartnums','Conflict Report - Participant Number of Sessions','<P>Compare number of sessions participants requested with the number of which they were assigned.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartnums','Conflict Report - Participant Number of Sessions','<P>Compare number of sessions participants requested with the number of which they were assigned.</P>
 ','','SELECT
     PA.badgeid, 
     P.pubsname, 
@@ -1117,7 +1193,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     P.interested=1 
   ORDER BY
     cast(PA.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allroomsched','Full Room Schedule by room then time.','<P>Lists all Sessions Scheduled in all Rooms.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allroomsched','Full Room Schedule by room then time.','<P>Lists all Sessions Scheduled in all Rooms.</P>
 ','','SELECT 
     concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,
     Function, 
@@ -1146,7 +1222,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY 
     R.roomname, 
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessionnotes','Session Notes','<P>Interesting info on a Session for sessions whose status is one of EditMe, Brainstorm, Vetted, Assigned, or Scheduled.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessionnotes','Session Notes','<P>Interesting info on a Session for sessions whose status is one of EditMe, Brainstorm, Vetted, Assigned, or Scheduled.</P>
 ','','SELECT
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as \'Session<BR>id\',
     Trackname, 
@@ -1165,7 +1241,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     (invitedguest=1 or notesforprog is not NULL or servicenotes is not NULL)
   ORDER BY
    S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictsessdup','Conflict Report - Duplicate Session','<P>Lists all sessions scheduled more than once.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictsessdup','Conflict Report - Duplicate Session','<P>Lists all sessions scheduled more than once.</P>
 ','','SELECT
     S.Sessionid, 
     S.Title, 
@@ -1191,7 +1267,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     R.roomid = SCH.roomid
   ORDER BY
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubsnew','Pubs - Session Characteristics plus long description','<P>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubsnew','Pubs - Session Characteristics plus long description','<P>For Scheduled items ONLY. Show sessionid, track, type, divisionid, pubstatusid, pubno, pubchardest, kids, title, long description.</P>
 ','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>
 ','SELECT
     S.sessionid, 
@@ -1238,7 +1314,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     R.roomid=SCH.roomid
   GROUP BY
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessionedit','Session Edit History Report','<P>Show the most recent edit activity for each session (sorted by time).</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessionedit','Session Edit History Report','<P>Show the most recent edit activity for each session (sorted by time).</P>
 ','','SELECT
     SEH2.timestamp as "When",
     concat("<a href=StaffAssignParticipants.php?selsess=",S.sessionid,">", S.sessionid,"</a>") as Sessionid,
@@ -1271,7 +1347,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     S.statusid <= 7 
   ORDER BY
     SEH2.timestamp Desc');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('intvschedpanelnames','Interest v Schedule - sorted by pubsname','<P>Show who is interested in each panel and if they are assigned to it.  Also show the scheduling information (sorted by pubsname).</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('intvschedpanelnames','Interest v Schedule - sorted by pubsname','<P>Show who is interested in each panel and if they are assigned to it.  Also show the scheduling information (sorted by pubsname).</P>
 ','','SELECT 
     concat(X.pubsname, \'(\', X.badgeid, \')\') as Pubsname,
     X.trackname, 
@@ -1325,8 +1401,8 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     substring_index(pubsname,\' \',-1),
     pubsname,
     trackname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnomod','Conflict Report - Sessions with no moderator','<P>Panels need a moderator.  Other activities may not.  Think before you jump.  (This is limited to items in the schedule which have at least one participant.)</P>
-','<P>Click on the session id to edit the session\'s moderator.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnomod','Conflict Report - Sessions with no moderator','<P>Panels need a moderator.  Other activities may not.  Think before you jump.  (This is limited to items in the schedule which have at least one participant.)</P>
+','<P>Click on the session id to edit the moderator for the session.</P>
 ','SELECT
     typename as \'Type\',
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>(\', S.sessionid,\')</a> \',title) as \'Title\'
@@ -1346,7 +1422,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     X.mods=0
   ORDER BY
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('prelimschedbrief','Preliminary Schedule','<P>Preliminary panel schedule.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('prelimschedbrief','Preliminary Schedule','<P>Preliminary panel schedule.</P>
 ','<P>Please keep in mind that is it still changing as
 ','SELECT
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\',  
@@ -1364,7 +1440,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     T.trackname, 
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessionservices','Session Services','<P>Which Session needs which Services? (Sorted by room then time.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessionservices','Session Services','<P>Which Session needs which Services? (Sorted by room then time.)</P>
 ','','SELECT
     Roomname,
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', 
@@ -1404,7 +1480,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     roomname, 
     starttime;');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnotattending','Conflict Report - not attending people that are on panels.','<P>If the interested field is set to 2, pull them off the panel.  If the interested field is set otherwise, escalate to a div-head.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnotattending','Conflict Report - not attending people that are on panels.','<P>If the interested field is set to 2, pull them off the panel.  If the interested field is set otherwise, escalate to a div-head.</P>
 ','','SELECT
     P.badgeid, 
     P.pubsname, 
@@ -1423,7 +1499,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     P.interested!=1
   ORDER BY
     P.badgeid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('progpanelmerge','Full Participant Schedule for the Program Packet Merge','<P>sessionid, room, starttime, duration, (badgeid, pubsname, mod)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('progpanelmerge','Full Participant Schedule for the Program Packet Merge','<P>sessionid, room, starttime, duration, (badgeid, pubsname, mod)</P>
 ','','SELECT
     POS.sessionid, 
     roomname, 
@@ -1460,8 +1536,8 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     POS.sessionid 
   ORDER BY
     pubsname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnoannvol','Conflict Report - Sessions with no volunteer or announcer','<P>Classes and Panels need a volunteer and announcer.  Others may not.  Think before you jump.</P>
-','<P>Click on the session id to edit the session\'s volunteer or announcer.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnoannvol','Conflict Report - Sessions with no volunteer or announcer','<P>Classes and Panels need a volunteer and announcer.  Others may not.  Think before you jump.</P>
+','<P>Click on the session id to edit the volunteer or announcer.</P>
 ','SELECT
     typename as \'Type\',
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>(\', S.sessionid,\')</a> \',title) as \'Title\', 
@@ -1486,7 +1562,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     typename,
     SCH.starttime,
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('congoinfo','Congo Info (all info).','<P>Shows the information retreived from Congo.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('congoinfo','Congo Info (all info).','<P>Shows the information retreived from Congo.</P>
 ','','SELECT
     badgename,
     badgeid,
@@ -1502,7 +1578,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     badgeid is not NULL
   ORDER BY
     badgename');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictfewassigned','Conflict Report - Sessions with under 4 people assigned','<P>Not all of these are actually conflict, you want to think about them.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictfewassigned','Conflict Report - Sessions with under 4 people assigned','<P>Not all of these are actually conflict, you want to think about them.</P>
 ','','SELECT
     trackname,
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,
@@ -1522,7 +1598,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     trackname,
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedsessioncounts','Assigned Session by Session (counts)','<P>How many people are assinged to each session? (Sorted by track then sessionid.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedsessioncounts','Assigned Session by Session (counts)','<P>How many people are assinged to each session? (Sorted by track then sessionid.)</P>
 ','','SELECT 
     Trackname, 
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',Sessions.sessionid,\'>\', Sessions.sessionid,\'</a>\') as Sessionid,
@@ -1543,7 +1619,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     trackname,
     sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedmoderator','Assigned Moderator by Session','<P>Shows who has been assigned to moderate each session (sorted by track then sessionid).</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('assignedmoderator','Assigned Moderator by Session','<P>Shows who has been assigned to moderate each session (sorted by track then sessionid).</P>
 ','','SELECT
     Trackname,
     P.Pubsname, 
@@ -1566,13 +1642,13 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     trackname, 
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('programcomment','Overall Program Commentary','<P>Comments recorded overall for Programming.  <A HREF=\"CommentOnProgramming.php\">(Add a comment)</A></P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('programcomment','Overall Program Commentary','<P>Comments recorded overall for Programming.  <A HREF=\"CommentOnProgramming.php\">(Add a comment)</A></P>
 ','','SELECT
     COP.commenter,
     COP.comment
   FROM
       CommentsOnProgramming COP');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('palm','CSV -- Report for uploading to PDA\'s','<P>StartTime, Duration, Room, Track, Title, Participants</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('palm','CSV -- Report for uploading in PDA format','<P>StartTime, Duration, Room, Track, Title, Participants</P>
 ','','SELECT
             DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a\') AS Day,
             DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%l:%i %p\') AS \'Start Time\',
@@ -1594,7 +1670,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
             SCH.sessionid
     ORDER BY
             SCH.starttime, R.roomname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictschedsched','Conflict Report - Schedule but not','<P>These are sessions that are either in the grid and not set as scheduled or they are set as scheduled and not in the grid.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictschedsched','Conflict Report - Schedule but not','<P>These are sessions that are either in the grid and not set as scheduled or they are set as scheduled and not in the grid.</P>
 ','','SELECT
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,
     concat(\'<a href=EditSession.php?id=\',S.sessionid,\'>\',S.title,\'</a>\') Title,
@@ -1606,7 +1682,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   HAVING
     (in_grid=\'no\' and status_sched=\'yes\') or
     (in_grid=\'yes\' and status_sched=\'no\')');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allpartschedbyparttime','Full Participant Schedule by time','<P>The schedule sorted by participant.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allpartschedbyparttime','Full Participant Schedule by time','<P>The schedule sorted by participant.</P>
 ','','SELECT 
     if ((P.pubsname is NULL), \' \', concat(\' \',P.pubsname,\' (\',P.badgeid,\')\')) as \'Participants\', 
     if ((moderator=1),\'moderator\', \' \') as Moderator,
@@ -1636,7 +1712,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     cast(P.badgeid as unsigned),
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessionfeature','Session Features','<P>Which Session needs which Features? (Sorted by room then time.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessionfeature','Session Features','<P>Which Session needs which Features? (Sorted by room then time.)</P>
 ','','SELECT
     Roomname,
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', 
@@ -1676,7 +1752,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     roomname, 
     starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('kidfasttracksched','FastTrack Schedule (easy troubleshooting)','<P>What is happening in FastTrack.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('kidfasttracksched','FastTrack Schedule (easy troubleshooting)','<P>What is happening in FastTrack.</P>
 ','','SELECT
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',SCH.starttime),\'%a %l:%i %p\') as \'Start Time\',
     CASE
@@ -1703,7 +1779,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     SCH.scheduleid
   ORDER BY
     SCH.starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantroles','Participant Roles','<P>What Roles is a participant willing to take?</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantroles','Participant Roles','<P>What Roles is a participant willing to take?</P>
 ','','SELECT
     P.badgeid,
     P.pubsname,
@@ -1717,7 +1793,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     PR.roleid=Roles.roleid 
   ORDER BY
     cast(P.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('finalschedbreifdiff','Schedule - brief diff','<P>Recent changes to the PUBLIC Panel, Events, Film, Anime, Video and Arisia TV schedule.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('finalschedbreifdiff','Schedule - brief diff','<P>Recent changes to the PUBLIC Panel, Events, Film, Anime, Video and Arisia TV schedule.</P>
 ','<P>This has a hard-coded \"date\" $change_since_date from which it determines \"recent\".  This should probably be a vector value from today.','SELECT
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', 
     CASE
@@ -1746,7 +1822,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY S.ts, 
     SCH.starttime,
     T.trackname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allassigned','All Sessions that are assigned','<P>Who is assigned to what.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('allassigned','All Sessions that are assigned','<P>Who is assigned to what.</P>
 ','','SELECT
     trackname as Trackname, 
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,
@@ -1777,7 +1853,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     Trackname,
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantnumpanel','Participant Number of Pannels and Constraints','<P>How many panels does each person want to be on and the other constraints they indicated.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantnumpanel','Participant Number of Pannels and Constraints','<P>How many panels does each person want to be on and the other constraints they indicated.</P>
 ','','SELECT
     P.badgeid,
     P.pubsname,
@@ -1804,7 +1880,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     P.badgeid=PA.badgeid
   ORDER BY
     cast(P.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictroomdup','Conflict Report - Room Schedule Overlaps.','<P>Find any pairs of sessions whose times overlap in the same room.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictroomdup','Conflict Report - Room Schedule Overlaps.','<P>Find any pairs of sessions whose times overlap in the same room.</P>
 ','','SELECT
     concat(\'<a href=MaintainRoomSched.php?selroom=\',R.roomid,\'>\', R.roomname,\'</a>\') as Roomname,
     SA.title as \'Title A\',
@@ -1843,7 +1919,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     Foo.roomid = R.roomid and
     Foo.Asess=SA.sessionid and
     Foo.Bsess=SB.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantcomment','Participant Commentary','<P>Comments recorded for Participants. <A HREF=\"CommentOnParticipants.php\">(Add a comment)</A></P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantcomment','Participant Commentary','<P>Comments recorded for Participants. <A HREF=\"CommentOnParticipants.php\">(Add a comment)</A></P>
 ','','SELECT
     P.pubsname,
     COP.commenter,
@@ -1854,7 +1930,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
       CommentsOnParticipants COP USING (badgeid)
   ORDER BY
     P.pubsname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('progannvol','Program Announcers and Volunteers Assigned hours','<P>Prefered name, firstname, lastname, mailing address, count of scheduled sessions.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('progannvol','Program Announcers and Volunteers Assigned hours','<P>Prefered name, firstname, lastname, mailing address, count of scheduled sessions.</P>
 ','','SELECT
     P.badgeid, 
     P.pubsname, 
@@ -1894,7 +1970,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     (P.badgeid) 
   ORDER BY 
     cast(P.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('benpalm','Report for Ben and the palm.','<P>StartTime Duration Room Track Title Participants.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('benpalm','Report for Ben and the palm.','<P>StartTime Duration Room Track Title Participants.</P>
 ','','SELECT
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a\') as \'Day\',
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%l:%i %p\') as \'Start Time\',
@@ -1917,7 +1993,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     SCH.starttime,
     R.roomname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessionintassncounts','Assigned, Interested and Not-scheduled Report','<P>These are sessions that are in need of a home in the schedule.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('sessionintassncounts','Assigned, Interested and Not-scheduled Report','<P>These are sessions that are in need of a home in the schedule.</P>
 ','','SELECT
     if ((num_int is NULL), 0, num_int) as Intr,
     if ((num_assigned is NULL), 0, num_assigned) as Assn,
@@ -1956,7 +2032,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     Intr DESC,
     Assn DESC');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnotreg','Conflict Report - Not Registered','<P>This is a report of participants sorted by number of panels they are on that are actually running, with some registration information.  It is useful for cons that comp program participants based on a minimum number of panels.  In this case, this report helps make sure people get their comps.  Also, participants who have not earned a comp may need some kind of consideration.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnotreg','Conflict Report - Not Registered','<P>This is a report of participants sorted by number of panels they are on that are actually running, with some registration information.  It is useful for cons that comp program participants based on a minimum number of panels.  In this case, this report helps make sure people get their comps.  Also, participants who have not earned a comp may need some kind of consideration.</P>
 ','','SELECT
     P.badgeid, 
     P.pubsname, 
@@ -1982,7 +2058,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     regtype, 
     cast(assigned as unsigned) desc,
     substring_index(pubsname,\' \',-1)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartatime','Conflict Report - Participants Scheduled Outside Available Times','<P>Show all participant-sessions scheduled outside set of times participant has listed as being available.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictpartatime','Conflict Report - Participants Scheduled Outside Available Times','<P>Show all participant-sessions scheduled outside set of times participant has listed as being available.</P>
 ','','SELECT 
     FOO.badgeid, 
     P.pubsname, 
@@ -2040,7 +2116,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     FOO.hours is not NULL 
   ORDER BY
     cast(FOO.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantsuggestions','Participant Suggestions','<P>What is did each participant suggest?</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('participantsuggestions','Participant Suggestions','<P>What is did each participant suggest?</P>
 ','<P>This form originally had a index of \"DELETEME\" should it be removed?</P>','SELECT
     P.badgeid,
     P.pubsname,
@@ -2052,7 +2128,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
       Participants as P
   WHERE
     P.badgeid=PS.badgeid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('gameroomshedtime','Gaming Schedule by time then room','<P>Just things in track gaming (gaming and gaming panels).</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('gameroomshedtime','Gaming Schedule by time then room','<P>Just things in track gaming (gaming and gaming panels).</P>
 ','','SELECT
     roomname,
     function,
@@ -2083,7 +2159,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     SCH.starttime,
     R.roomname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictmanyassigned','Conflict Report - Sessions with over 5 people assigned.','<P>Not all of these are actually conflict, you want to think about them.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictmanyassigned','Conflict Report - Sessions with over 5 people assigned.','<P>Not all of these are actually conflict, you want to think about them.</P>
 ','','SELECT
     Trackname,
     concat(\'<a href=StaffAssignParticipants.php?selsess=\',S.sessionid,\'>\', S.sessionid,\'</a>\') as Sessionid,
@@ -2101,7 +2177,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     trackname,
     S.sessionid');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictunknownregtype','Conflict Report - Unknown RegTypes','<P>Congo RegTypes that Zambia does not recognize.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictunknownregtype','Conflict Report - Unknown RegTypes','<P>Congo RegTypes that Zambia does not recognize.</P>
 ','','SELECT
     distinct(C.regtype)
   FROM
@@ -2112,28 +2188,45 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     C.regtype is not NULL
   ORDER BY
     C.Regtype');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubsbio','Pubs - Participant Bio and pubname','<P>Show the badgeid, pubsname and bio for each participant who is on at least one scheduled session.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubsbio','Pubs - Participant Bio and pubname','<P>Show the badgeid, lastname, firstname, badgename, pubsname and book edited bio for each participant who is on at least one scheduled session.</P>
 ','','SELECT
-    P.badgeid,
+    concat('<A HREF=StaffEditCreateParticipant.php?action=edit&partid=',P.badgeid,'>',P.badgeid,'</A>') AS badgeid,
     CD.lastname,
     CD.firstname,
     CD.badgename,
     P.pubsname,
-    P.bio
+    concat('<A HREF=StaffEditBios.php?badgeid=',P.badgeid,'>',BBE.biotext,'</A>') AS 'Program Book Bio'
   FROM
       Participants P
+    LEFT JOIN (SELECT 
+                   badgeid,
+                   biotext
+                 FROM
+                     $BioDB.Bios
+                   JOIN $BioDB.BioTypes using (biotypeid)
+                   JOIN $BioDB.BioStates using (biostateid)
+                 WHERE
+                   biolang in ('en-us') AND
+                   biotypename in ('book') AND 
+                   biostatename in ('edited')) BBE USING (badgeid)
     JOIN CongoDump CD USING (badgeid)
     JOIN (SELECT
 	      DISTINCT(badgeid)
             FROM
-	        ParticipantOnSession POS,
-                Schedule SCH
+	        ParticipantOnSession POS
+              JOIN Schedule SCH USING (sessionid)
+              JOIN Sessions S USING (sessionid)
+              JOIN Types T USING (typeid)
             WHERE
-	      POS.sessionid=SCH.sessionid) as X using (badgeid)
+              typename in ('Panel', 'Class', 'Presentation', 'Author Reading', 'Lounge', 'Performance') AND
+	      POS.sessionid=SCH.sessionid AND
+              POS.volunteer=0 AND
+              POS.introducer=0 AND
+              POS.aidedecamp=0) as X using (badgeid)
   ORDER BY
     IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,\' \',-1)),
     CD.firstname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessiontechnotes','Session Tech and Hotel notes','<P>What notes are in on this panel for tech and hotel? (Sorted by room then time.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessiontechnotes','Session Tech and Hotel notes','<P>What notes are in on this panel for tech and hotel? (Sorted by room then time.)</P>
 ','','SELECT
     Roomname,
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start&nbsp;Time\', 
@@ -2162,7 +2255,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     Roomname, 
     Starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('name','Name Report','<P>Maps badgeid, pubsname, badgename and first and last name together (includes every record in the database regardless of status).</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('name','Name Report','<P>Maps badgeid, pubsname, badgename and first and last name together (includes every record in the database regardless of status).</P>
 ','','SELECT
     C.badgeid,
     P.pubsname,
@@ -2178,7 +2271,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     IF(instr(P.pubsname,C.lastname)>0,C.lastname,substring_index(P.pubsname,\' \',-1)),
     C.firstname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessionroomsets','Session roomsets','<P>What roomsets are we using (Sorted by Room then Time.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('thsessionroomsets','Session roomsets','<P>What roomsets are we using (Sorted by Room then Time.)</P>
 ','','SELECT
     Roomname,
     DATE_FORMAT(ADDTIME(\'$ConStartDatim\',starttime),\'%a %l:%i %p\') as \'Start Time\', 
@@ -2208,7 +2301,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
   ORDER BY
     roomname, 
     starttime');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('kidcount','Participant Kid Count','<P>How many kids did the participants say they are bringing for Fast Track?</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('kidcount','Participant Kid Count','<P>How many kids did the participants say they are bringing for Fast Track?</P>
 ','','SELECT
     P.Badgeid, 
     Pubsname, 
@@ -2220,7 +2313,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
       P.badgeid=PA.badgeid
   ORDER BY
       Numkidsfasttrack DESC');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('staffmembers','Staff Members','<P>List Staff Members and their privileges.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('staffmembers','Staff Members','<P>List Staff Members and their privileges.</P>
 ','','SELECT
       badgeid as Badgeid,
       if(P.pubsname is null or P.pubsname = \'\',concat(firstname,\' \',lastname),P.pubsname) as Name,
@@ -2234,7 +2327,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     WHERE badgeid in 
           (SELECT DISTINCT badgeid FROM UserHasPermissionRole where permroleid=2)
     GROUP BY badgeid, name, password');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('namechanges','Name Report - Changes','<P>(in progress... try back in a bit). Do these folks want to update thier badgenames?   The pubsname and badgename don\'t match.   Report shows badgeid, pubsname, badgename, firstname and lastname.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('namechanges','Name Report - Changes','<P>(in progress... try back in a bit). Do these folks want to update thier badgenames?   The pubsname and badgename do not match.   Report shows badgeid, pubsname, badgename, firstname and lastname.</P>
 ','','SELECT
     C.badgeid,
     P.pubsname,
@@ -2252,7 +2345,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     strcmp(C.badgename, P.pubsname) and
     C.badgename=P.pubsname,
     P.pubsname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnotinter','Conflict Report - people on panels they are not interested in','<P>This can happen two ways: Either someone used the feature at the bottom of the assign page to do this deliberately or the participant removed his or her interest after being assigned.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('conflictnotinter','Conflict Report - people on panels they are not interested in','<P>This can happen two ways: Either someone used the feature at the bottom of the assign page to do this deliberately or the participant removed his or her interest after being assigned.</P>
 ','','SELECT
     POS.Badgeid, 
     P.Pubsname, 
@@ -2267,7 +2360,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     P.badgeid=POS.badgeid and
     POS.sessionid = S.sessionid and
     PSI.sessionid is NULL');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('attending','Attending Query (all info)','<P>Shows who has responded and if they are attending.  (Interested, 1=yes, 2=no, 0=did not pick, blank=did not hit save.)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('attending','Attending Query (all info)','<P>Shows who has responded and if they are attending.  (Interested, 1=yes, 2=no, 0=did not pick, blank=did not hit save.)</P>
 ','','SELECT
     P.pubsname,
     P.badgeid,
@@ -2277,7 +2370,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
       Participants P 
   ORDER BY
     P.pubsname');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('progthankyounote','Program Participant Thank you note query','<P>prefered name, firstname, lastname, mailing address, count of scheduled sessions (for only some tracks!)</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('progthankyounote','Program Participant Thank you note query','<P>prefered name, firstname, lastname, mailing address, count of scheduled sessions (for only some tracks!)</P>
 ','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>
 ','SELECT
     P.badgeid, 
@@ -2314,7 +2407,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     (P.badgeid) 
   ORDER BY
     cast(P.badgeid as unsigned)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('partpicky','Participants With People to Avoid','<P>Show the badgeid, pubsname and list of people to avoid for each participant who indicated he is attending and listed people with whom he does not want to share a panel.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('partpicky','Participants With People to Avoid','<P>Show the badgeid, pubsname and list of people to avoid for each participant who indicated he is attending and listed people with whom he does not want to share a panel.</P>
 ','','SELECT
     PI.badgeid,
     P.pubsname,
@@ -2327,7 +2420,7 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
     (nopeople is not null and nopeople!=\'\')
   ORDER BY
     substring_index(pubsname,\' \',-1)');
-INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubswhoisonwhich','Pubs - Who is on Which Session','<P>Show the badgeid, pubsname and session info for each participant that are on at least one scheduled session.</P>
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('pubswhoisonwhich','Pubs - Who is on Which Session','<P>Show the badgeid, pubsname and session info for each participant that are on at least one scheduled session.</P>
 ','<P><a href=\"$scriptname?csv=y\" target=_blank>csv file</a></P>
 ','SELECT
     P.badgeid, 
@@ -2347,4 +2440,88 @@ INSERT INTO Reports (reportname, reporttitle, reportdescription, reportadditiona
       Participants P
   WHERE
     P.badgeid=X.badgeid');
-INSERT INTO `GroupFlow` (reportid, gflowname, gfloworder) VALUES (1,'Pubs',1),(1,'Prog',1),(2,'Conflict',1),(2,'Reg',1),(3,'Prog',2),(3,'Events',1),(4,'Prog',3),(5,'Prog',4),(6,'Pubs',2),(7,'Prog',5),(7,'Events',2),(8,'Prog',6),(8,'Conflict',2),(9,'Pubs',3),(10,'Prog',7),(11,'Conflict',3),(11,'Prog',8),(12,'Prog',9),(13,'Prog',10),(14,'Conflict',4),(15,'Pubs',4),(16,'Prog',11),(17,'Gaming',1),(18,'Fasttrack',1),(19,'Prog',12),(19,'Events',3),(19,'Goh',1),(20,'Prog',13),(20,'Events',4),(20,'Tech',1),(20,'Hotel',1),(21,'Prog',14),(22,'Conflict',5),(23,'Prog',15),(24,'Prog',16),(24,'Events',5),(24,'Goh',2),(25,'Conflict',6),(26,'Conflict',7),(27,'Prog',17),(28,'Goh',3),(28,'Prog',18),(29,'Arisiatv',1),(30,'Prog',19),(30,'Events',6),(30,'Goh',4),(31,'Goh',5),(31,'Prog',20),(32,'Prog',21),(33,'Prog',22),(34,'Prog',23),(34,'Events',7),(35,'Pubs',5),(36,'Pubs',6),(37,'Prog',24),(37,'Events',8),(37,'Goh',6),(37,'Pubs',7),(38,'Conflict',8),(38,'Reg',2),(39,'Prog',25),(39,'Events',9),(39,'Goh',7),(40,'Prog',26),(41,'Conflict',9),(42,'Pubs',8),(43,'Prog',27),(43,'Events',10),(44,'Prog',28),(45,'Conflict',10),(46,'Pubs',9),(46,'Prog',29),(47,'Prog',30),(47,'Events',11),(47,'Tech',2),(47,'Hotel',2),(48,'Conflict',11),(49,'Pubs',10),(50,'Conflict',12),(50,'Prog',31),(51,'Prog',32),(51,'Events',12),(51,'Reg',3),(52,'Conflict',13),(53,'Prog',33),(53,'Events',13),(54,'Prog',34),(54,'Events',14),(55,'Prog',35),(56,'Pubs',11),(57,'Conflict',14),(58,'Prog',36),(58,'Goh',8),(59,'Prog',37),(59,'Events',15),(59,'Tech',3),(59,'Hotel',3),(60,'Fasttrack',2),(61,'Prog',38),(62,'Pubs',12),(62,'Prog',39),(63,'Prog',40),(64,'Prog',41),(65,'Conflict',15),(66,'Prog',42),(67,'Prog',43),(68,'Pubs',13),(69,'Prog',44),(70,'Conflict',16),(70,'Reg',4),(71,'Conflict',17),(72,'Prog',45),(73,'Gaming',2),(73,'Prog',46),(74,'Conflict',18),(75,'Conflict',19),(75,'Reg',5),(76,'Pubs',14),(77,'Prog',47),(77,'Events',16),(77,'Tech',4),(77,'Hotel',4),(78,'Prog',48),(78,'Events',17),(78,'Reg',6),(79,'Prog',49),(79,'Events',18),(79,'Tech',5),(79,'Hotel',5),(80,'Fasttrack',3),(81,'Admin',1),(82,'Prog',50),(82,'Events',19),(82,'Reg',7),(83,'Conflict',20),(84,'Prog',51),(84,'Events',20),(84,'Pubs',15),(85,'Prog',52),(86,'Prog',53),(87,'Pubs',16);
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('personalflow','Personal Flow Reports','<P>Here is a list of all the reports, that you have added to your personal flow, that are available to be generated during this phase.</P>
+','<P><A HREF=EditPersonalFlows.php>Change</A> the ordering of this page.</P>
+','SELECT
+    DISTINCT concat("<A HREF=genreport.php?reportid=",reportid,">",reporttitle,"</A> (<A HREF=genreport.php?reportid=",reportid,"&csv=y>csv</A>)") AS Title,
+    reportdescription AS Description
+  FROM
+      PersonalFlow
+      JOIN $ReportDB.Reports USING (reportid)
+      LEFT JOIN Phases USING (phaseid)
+  WHERE
+    badgeid=$mybadgeid AND
+    phaseid is null OR
+    current = TRUE
+  ORDER BY
+    pfloworder');
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('ViewAllSessions','View All Sessions','<P>Shows all sessions, regardless of their status.</P>
+','','SELECT
+    concat(\'<A HREF=StaffAssignParticipants.php?selsess=\',sessionid,\'>\',sessionid,\'</A>\') AS \'Sess.<BR>ID\',
+    trackname AS Track,
+    concat(\'<A HREF=EditSession.php?id=\',sessionid,\'>\',title,\'</A>\') AS Title,
+    CASE
+      WHEN HOUR(duration) < 1 THEN
+        concat(date_format(duration,\'%i\'),\'min\')
+      WHEN MINUTE(duration)=0 THEN
+        concat(date_format(duration,\'%k\'),\'hr\')
+      ELSE
+        concat(date_format(duration,\'%k\'),\'hr \',date_format(duration,\'%i\'),\'min\')
+      END AS Duration,
+    estatten AS \'Est.<BR>Atten.\',
+    statusname AS Status
+  FROM
+      Sessions
+    JOIN Tracks USING (trackid)
+    JOIN SessionStatuses USING (statusid)
+  WHERE
+    statusname != \'Dropped\'
+  ORDER BY
+    trackname,
+    statusname');
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('tasklistdisplay','Display Task List','<P>Display the Task List.</P>
+','<P><A HREF="TaskListUpdate.php?activityid=-1">New</A> Task. (To update, click on the task name.)</P>
+','SELECT
+    CONCAT("<A HREF=TaskListUpdate.php?activityid=",activityid,">",activity,"</A>") as Tasks,
+    activitynotes as Notes,
+    pubsname as "Assigned",
+    targettime as "Due Date",
+    donestate "Complete?",
+    donetime "Finshed On"
+  FROM
+      TaskList
+    JOIN Participants USING (badgeid)');
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('meetingagendadisplay','Display Agendas','<P>Display Meeting Agendas.</P>
+','<P><A HREF="MeetingAgenda.php?agendaid=-1">New</A> Agenda. (To update, click on the Agenda name.)</P>
+','SELECT
+    CONCAT(permrolename,
+      ":<br><A HREF=MeetingAgenda.php?agendaid=",
+      agendaid,
+      ">",
+      agendaname,
+      "</A><br>On: ",
+      meetingtime,
+      "<br><A HREF=MeetingAgendaPrint.php?agendaid=",
+      agendaid,
+      ">(print)</A>") as "Agenda Name",
+    agenda as Agenda,
+    agendanotes as "Agenda Notes"
+  FROM
+      AgendaList
+    JOIN PermissionRoles using (permroleid)
+  ORDER BY
+    meetingtime, permrolename, agendaname');
+INSERT INTO REPORTDB.Reports (reportname, reporttitle, reportdescription, reportadditionalinfo, reportquery) VALUES ('emailtolist','Possible EmailTo Recipients','<P>This is a list of all the existing EmailTo Recipients</P>
+','<P><A HREF="StaffEmailToUpdate.php?emailtoid=-1">New</A> EmailTo query. (To update, click on the name.)</P>
+','SELECT
+    CONCAT("<A HREF=StaffEmailToUpdate.php?emailtoid=",
+      emailtoid,
+      ">",
+     emailtodescription,
+     "</A>") AS Name,
+    emailtoquery AS Query
+  FROM
+      EmailTo
+  ORDER BY
+    display_order');
+INSERT INTO REPORTDB.GroupFlow (reportid, gflowname, gfloworder) VALUES (1,'Pubs',1),(1,'Prog',1),(2,'Conflict',1),(2,'Reg',1),(3,'Prog',2),(3,'Events',1),(4,'Prog',3),(5,'Prog',4),(6,'Pubs',2),(7,'Prog',5),(7,'Events',2),(8,'Prog',6),(8,'Conflict',2),(9,'Pubs',3),(10,'Prog',7),(11,'Conflict',3),(11,'Prog',8),(12,'Prog',9),(13,'Prog',10),(14,'Conflict',4),(15,'Pubs',4),(16,'Prog',11),(17,'Gaming',1),(18,'Fasttrack',1),(19,'Prog',12),(19,'Events',3),(19,'Goh',1),(20,'Prog',13),(20,'Events',4),(20,'Tech',1),(20,'Hotel',1),(21,'Prog',14),(22,'Conflict',5),(23,'Prog',15),(24,'Prog',16),(24,'Events',5),(24,'Goh',2),(25,'Conflict',6),(26,'Conflict',7),(27,'Prog',17),(28,'Goh',3),(28,'Prog',18),(29,'Arisiatv',1),(30,'Prog',19),(30,'Events',6),(30,'Goh',4),(31,'Goh',5),(31,'Prog',20),(32,'Prog',21),(33,'Prog',22),(34,'Prog',23),(34,'Events',7),(35,'Pubs',5),(36,'Pubs',6),(37,'Prog',24),(37,'Events',8),(37,'Goh',6),(37,'Pubs',7),(38,'Conflict',8),(38,'Reg',2),(39,'Prog',25),(39,'Events',9),(39,'Goh',7),(40,'Prog',26),(41,'Conflict',9),(42,'Pubs',8),(43,'Prog',27),(43,'Events',10),(44,'Prog',28),(45,'Conflict',10),(46,'Pubs',9),(46,'Prog',29),(47,'Prog',30),(47,'Events',11),(47,'Tech',2),(47,'Hotel',2),(48,'Conflict',11),(49,'Pubs',10),(50,'Conflict',12),(50,'Prog',31),(51,'Prog',32),(51,'Events',12),(51,'Reg',3),(52,'Conflict',13),(53,'Prog',33),(53,'Events',13),(54,'Prog',34),(54,'Events',14),(55,'Prog',35),(56,'Pubs',11),(57,'Conflict',14),(58,'Prog',36),(58,'Goh',8),(59,'Prog',37),(59,'Events',15),(59,'Tech',3),(59,'Hotel',3),(60,'Fasttrack',2),(61,'Prog',38),(62,'Pubs',12),(62,'Prog',39),(63,'Prog',40),(64,'Prog',41),(65,'Conflict',15),(66,'Prog',42),(67,'Prog',43),(68,'Pubs',13),(69,'Prog',44),(70,'Conflict',16),(70,'Reg',4),(71,'Conflict',17),(72,'Prog',45),(73,'Gaming',2),(73,'Prog',46),(74,'Conflict',18),(75,'Conflict',19),(75,'Reg',5),(76,'Pubs',14),(77,'Prog',47),(77,'Events',16),(77,'Tech',4),(77,'Hotel',4),(78,'Prog',48),(78,'Events',17),(78,'Reg',6),(79,'Prog',49),(79,'Events',18),(79,'Tech',5),(79,'Hotel',5),(80,'Fasttrack',3),(81,'Admin',1),(82,'Prog',50),(82,'Events',19),(82,'Reg',7),(83,'Conflict',20),(84,'Prog',51),(84,'Events',20),(84,'Pubs',15),(85,'Prog',52),(86,'Prog',53),(87,'Pubs',16),(88,'My',1),(89,'Prog',54),(90,'Prog',55),(91,'Prog',56),(91,'Events',21),(91,'Pubs',17)(92,'Admin',2);
