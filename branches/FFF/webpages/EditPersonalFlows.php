@@ -3,6 +3,8 @@ require_once('StaffCommonCode.php');
 global $link;
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="EditPersonalFlows.php";

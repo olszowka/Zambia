@@ -736,6 +736,9 @@ function unlock_participant($badgeid) {
   global $query,$link;
   $BioDB=BIODB; // make it a variable so it can be substituted
 
+  // Tests for the substituted variables
+  if ($BioDB=="BIODB") {unset($BioDB);}
+
   $query="UPDATE $BioDB.Bios SET biolockedby=NULL WHERE ";
   if (isset($_SESSION['badgeid'])) {
     $query.="biolockedby='".$_SESSION['badgeid']."'";
@@ -761,6 +764,9 @@ function unlock_participant($badgeid) {
 function lock_participant($badgeid) {
   global $query, $link;
   $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($BioDB=="BIODB") {unset($BioDB);}
 
   //error_log("Zambia: lock_participant: ".$query);
   $userbadgeid=$_SESSION['badgeid'];

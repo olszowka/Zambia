@@ -3,10 +3,12 @@ require_once ('StaffCommonCode.php');
 
 global $link,$message_error,$message2;
 $BioDB=BIODB; // make it a variable so it can be substituted
-$bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
-if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
-$bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted
-if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
+
+// Tests for the substituted variables
+if ($BioDB=="BIODB") {unset($BioDB);}
+
+// Get the various length limits
+$limit_array=getLimitArray();
 
 if (isset($_POST['badgeids'])) {
   $badgeids=$_POST['badgeids'];
@@ -78,10 +80,13 @@ if (isset($_POST['update'])) {
 
 	// Check for differences, if they exist, update the database.
 	if ($teststring != $biostring) {
-	  if ((isset($bio_limit[$biotype])) and (strlen($teststring)>$bio_limit[$biotype])) {
-	    $message.="<P>".ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
-	    $message.=" too long, the limit is ".$bio_limit[$biotype]." characters.</P>\n";
-	   } else {
+	  if ((isset($limit_array['max'][$biotype]['bio'])) and (strlen($teststring)>$limit_array['max'][$biotype]['bio'])) {
+	    $message.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
+	    $message.=" too long (".strlen($teststring)." characters), the limit is ".$limit_array['max'][$biotype]['bio']." characters.";
+	   } elseif ((isset($limit_array['min'][$biotype]['bio'])) and (strlen($teststring)<$limit_array['min'][$biotype]['bio'])) {
+	    $message.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
+	    $message.=" too short (".strlen($teststring)." characters), the limit is ".$limit_array['min'][$biotype]['bio']." characters.";
+	   } else { 
 	    $message.=update_bio_element($link,$title,$teststring,$badgeid,$biotype,$biolang,$biostate);
 	   }
 	  $bioinfo[$keyname]=$teststring;
@@ -141,8 +146,15 @@ for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
 
       // Set up the LABEL.
       echo "<LABEL for=\"$keyname\">".ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
-      if (isset($bio_limit[$biotype])) {
-	echo " (Limit ".$bio_limit[$biotype]." characters)";
+      $limit_string="";
+      if (isset($limit_array['max'][$biotype]['bio'])) {
+	$limit_string.=" maximum ".$limit_array['max'][$biotype]['bio'];
+      }
+      if (isset($limit_array['min'][$biotype]['bio'])) {
+	$limit_string.=" minimum ".$limit_array['min'][$biotype]['bio'];
+      }
+      if ($limit_string !="") {
+	echo " (Limit".$limit_string." characters)";
       }
       echo ":</LABEL><BR>\n";
 

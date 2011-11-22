@@ -584,12 +584,9 @@ EOD;
 /* create_participant and edit_participant functions.  Need more doc. */
 function create_participant ($participant_arr,$permrole_arr) {
   global $link;
-  $bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
-  if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
-  $bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted
-  if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
-  $bio_limit['name']=MIN_NAME_LEN; // make it a variable so it can be substituted
-  if (!is_numeric($bio_limit['name'])) {unset($bio_limit['book']);}
+
+  // Get the various length limits
+  $limit_array=getLimitArray();
 
   // Get a set of bioinfo, not for the info, but for the arrays.
   $bioinfo=getBioData($_SESSION['badgeid']);
@@ -598,13 +595,24 @@ function create_participant ($participant_arr,$permrole_arr) {
 
   // Bios test moved into the add bios loop.
 
-  // Too short name.
+  // Too short/long name.
   $error_status=false;
-  if (isset($bio_limit['name'])) {
-    if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < $bio_limit['name']) OR
-	(strlen($participant_arr['badgename']) < $bio_limit['name']) OR
-	(strlen($participant_arr['pubsname']) < $bio_limit['name'])) {
-      $message_error="All name fields are required and minimum length is ".$bio_limit['name']." characters.  <BR>\n";
+  if (isset($limit_array['min']['web']['name'])) {
+    $namemin=$limit_array['min']['web']['name'];
+    if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < $namemin) OR
+	(strlen($participant_arr['badgename']) < $namemin) OR
+	(strlen($participant_arr['pubsname']) < $namemin)) {
+      $message_error="All name fields are required and minimum length is $namemin characters.  <BR>\n";
+      echo "<P class=\"errmsg\">".$message_error."\n";
+      return;
+    }
+  }
+  if (isset($limit_array['max']['web']['name'])) {
+    $namemax=$limit_array['max']['web']['name'];
+    if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) > $namemax) OR
+	(strlen($participant_arr['badgename']) > $namemax) OR
+	(strlen($participant_arr['pubsname']) > $namemax)) {
+      $message_error="All name fields are required and maximum length is $namemax characters.  <BR>\n";
       echo "<P class=\"errmsg\">".$message_error."\n";
       return;
     }
@@ -663,12 +671,15 @@ function create_participant ($participant_arr,$permrole_arr) {
       // $biostate=$bioinfo['biostate_array'][$k];
       $keyname=$biotype."_".$biolang."_".$biostate."_bio";
 
-      // Clear the values.
+      // Length-check the values.
       $biotext=mysql_real_escape_string($participant_arr[$keyname]);
-      if ((isset($bio_limit[$biotype])) and (strlen($biotext)>$bio_limit[$biotype])) {
-	$message_error.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
-	$message_error.=" too long, the limit is ".$bio_limit[$biotype]." characters.";
-      } else {
+      if ((isset($limit_array['max'][$biotype]['bio'])) and (strlen($biotext)>$limit_array['max'][$biotype]['bio'])) {
+	$message.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
+	$message.=" too long (".strlen($biotext)." characters), the limit is ".$limit_array['max'][$biotype]['bio']." characters.";
+       } elseif ((isset($limit_array['min'][$biotype]['bio'])) and (strlen($biotext)<$limit_array['min'][$biotype]['bio'])) {
+	$message.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
+	$message.=" too short (".strlen($biotext)." characters), the limit is ".$limit_array['min'][$biotype]['bio']." characters.";
+       } else { 
 	$message.=update_bio_element($link,$title,$biotext,$newbadgeid,$biotype,$biolang,$biostate);
       }
     }
@@ -719,24 +730,32 @@ function create_participant ($participant_arr,$permrole_arr) {
 
 function edit_participant ($participant_arr,$permrole_arr) {
   global $link;
-  $bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
-  if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
-  $bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted
-  if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
-  $bio_limit['name']=MIN_NAME_LEN; // make it a variable so it can be substituted
-  if (!is_numeric($bio_limit['name'])) {unset($bio_limit['book']);}
+
+  // Get the various length limits
+  $limit_array=getLimitArray();
 
   // Get a set of bioinfo, and compare below.
   $bioinfo=getBioData($participant_arr['partid']);
 
   // Test constraints.
 
-  // Too short name.
-  if (isset($bio_limit['name'])) {
-    if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < $bio_limit['name']) OR
-	(strlen($participant_arr['badgename']) < $bio_limit['name']) OR
-	(strlen($participant_arr['pubsname']) < $bio_limit['name'])) {
-      $message_error="All name fields are required and minimum length is ".$bio_limit['name']." characters.  <BR>\n";
+  // Too short/long name.
+  if (isset($limit_array['min']['web']['name'])) {
+    $namemin=$limit_array['min']['web']['name'];
+    if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) < $namemin) OR
+	(strlen($participant_arr['badgename']) < $namemin) OR
+	(strlen($participant_arr['pubsname']) < $namemin)) {
+      $message_error="All name fields are required and minimum length is $namemin characters.  <BR>\n";
+      echo "<P class=\"errmsg\">".$message_error."\n";
+      return;
+    }
+  }
+  if (isset($limit_array['max']['web']['name'])) {
+    $namemax=$limit_array['max']['web']['name'];
+    if ((strlen($participant_arr['firstname'])+strlen($participant_arr['lastname']) > $namemax) OR
+	(strlen($participant_arr['badgename']) > $namemax) OR
+	(strlen($participant_arr['pubsname']) > $namemax)) {
+      $message_error="All name fields are required and maximum length is $namemax characters.  <BR>\n";
       echo "<P class=\"errmsg\">".$message_error."\n";
       return;
     }
@@ -789,10 +808,13 @@ function edit_participant ($participant_arr,$permrole_arr) {
       $biostring=stripslashes(htmlspecialchars_decode($bioinfo[$keyname]));
       
       if ($teststring != $biostring) {
-	if ((isset($bio_limit[$biotype])) and (strlen($biotext)>$bio_limit[$biotype])) {
-	  $message_error.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
-	  $message_error.=" too long, the limit is ".$bio_limit[$biotype]." characters.";
-	} else {
+	if ((isset($limit_array['max'][$biotype]['bio'])) and (strlen($teststring)>$limit_array['max'][$biotype]['bio'])) {
+	  $message.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
+	  $message.=" too long (".strlen($teststring)." characters), the limit is ".$limit_array['max'][$biotype]['bio']." characters.";
+	} elseif ((isset($limit_array['min'][$biotype]['bio'])) and (strlen($teststring)<$limit_array['min'][$biotype]['bio'])) {
+	  $message.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
+	  $message.=" too short (".strlen($teststring)." characters), the limit is ".$limit_array['min'][$biotype]['bio']." characters.";
+	} else { 
 	  $message.=update_bio_element($link,$title,$teststring,$participant_arr['partid'],$biotype,$biolang,$biostate);
 	}
       }
@@ -1082,6 +1104,9 @@ function getBioData($badgeid) {
   global $message_error,$message2,$link;
   $BioDB=BIODB; // make it a variable so it can be substituted
   $LanguageList=LANGUAGE_LIST; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($BioDB=="BIODB") {unset($BioDB);}
   if ($LanguageList=="LANGUAGE_LIST") {unset($LanguageList);}
 
   $query= <<<EOD
@@ -1150,6 +1175,9 @@ EOD;
  success message */
 function update_bio_element ($link, $title, $newbio, $badgeid, $biotypename, $biolang, $biostatename) {
   $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($BioDB=="BIODB") {unset($BioDB);}
 
   // make sure it's clean
   $biotext=mysql_real_escape_string($newbio,$link);
@@ -1284,4 +1312,50 @@ EOD;
   return($session_array);
 }
 
+/* This function should populate the various limits from the LIMITDB
+ database, once that is implimented, but in the meantime it pulls all
+ the limits from the db_name.php file. */
+/* Tentatively the LIMITDB database should be something like:
+ limitid INT,
+ conid varchar,
+ minmax (0/1?),
+ biotypeid INT (reference BioTypes),
+ limitfield varchar, 
+ limitval INT
+ */
+function getLimitArray() {
+  $limit_array['min']['web']['bio']=MIN_WEB_BIO_LEN;
+  $limit_array['max']['web']['bio']=MAX_WEB_BIO_LEN;
+  $limit_array['min']['book']['bio']=MIN_BOOK_BIO_LEN;
+  $limit_array['max']['book']['bio']=MAX_BOOK_BIO_LEN;
+  $limit_array['min']['uri']['bio']=MIN_URI_BIO_LEN;
+  $limit_array['max']['uri']['bio']=MAX_URI_BIO_LEN;
+  $limit_array['min']['picture']['bio']=MIN_PICTURE_BIO_LEN;
+  $limit_array['max']['picture']['bio']=MAX_PICTURE_BIO_LEN;
+  $limit_array['min']['web']['desc']=MIN_WEB_DESC_LEN;
+  $limit_array['max']['web']['desc']=MAX_WEB_DESC_LEN;
+  $limit_array['min']['book']['desc']=MIN_BOOK_DESC_LEN;
+  $limit_array['max']['book']['desc']=MAX_BOOK_DESC_LEN;
+  $limit_array['min']['web']['name']=MIN_NAME_LEN;
+  $limit_array['max']['web']['name']=MAX_NAME_LEN;
+  $limit_array['min']['book']['name']=MIN_NAME_LEN;
+  $limit_array['max']['book']['name']=MAX_NAME_LEN;
+  $limit_array['min']['web']['title']=MIN_TITLE_LEN;
+  $limit_array['max']['web']['title']=MAX_TITLE_LEN;
+  $limit_array['min']['book']['title']=MIN_TITLE_LEN;
+  $limit_array['max']['book']['title']=MAX_TITLE_LEN;
+
+  // Tests for the substituted variables
+  $minmax_array=array_keys($limit_array);
+  foreach ($minmax_array as $minmax) {
+    $type_array=array_keys($limit_array[$minmax]);
+    foreach ($type_array as $type) {
+      $limiting_array=array_keys($limit_array[$minmax][$type]);
+      foreach ($limiting_array as $limiting) {
+	if (!is_numeric($limit_array[$minmax][$type][$limiting])) {unset($limit_array[$minmax][$type][$limiting]);}
+      }
+    }
+  }
+  return($limit_array);
+}
 ?>

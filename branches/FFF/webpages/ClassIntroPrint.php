@@ -12,6 +12,9 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 
+// Tests for the substituted variables
+if ($BioDB=="BIODB") {unset($BioDB);}
+
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="ClassIntroPrint.php";
 $title="Class Introduction Printing";

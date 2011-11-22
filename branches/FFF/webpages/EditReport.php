@@ -3,6 +3,9 @@ require_once('StaffCommonCode.php');
 global $link;
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+
 $title="Edit Reports";
 $description="<P>Use this page to edit reports.</P>\n";
 $additionalinfo="<P>A report has to be in a <A HREF=EditGroupFlows.php>Group</A> to work.</P>\n";

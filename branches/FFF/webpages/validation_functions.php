@@ -132,6 +132,10 @@ function validate_integer($input,$min,$max) {
 function validate_session() {
     // may be incomplete!!
     global $sstatus, $session, $messages, $debug;
+
+    // Get the various length limits
+    $limit_array=getLimitArray();
+
     $flag=true;
     get_sstatus();
     if (!(validate_integer($session['atten'],1,99999) or $session['atten']=="")) { //must require integer atten to be able to write to db
@@ -151,21 +155,39 @@ function validate_session() {
         return ($flag);
         }
     $i=strlen($session["title"]);
-    if ($i<MIN_TITLE_LEN||$i>MAX_TITLE_LEN) {
-        $messages.="Title is $i characters long.  Please edit it to between";
-        $messages.=" <B>".MIN_TITLE_LEN."</B> and <B>".MAX_TITLE_LEN."</B> characters long.<BR>\n";
+    if (((isset($limit_array['min']['web']['title'])) AND
+	 ($i<$limit_array['min']['web']['title'])) OR
+	((isset($limit_array['max']['web']['title'])) AND
+	 ($i>$limit_array['max']['web']['title']))) {
+        $messages.="Title is $i characters long.  Please edit it to between <B>";
+	if (isset($limit_array['min']['web']['title'])) {$messages.=$limit_array['min']['web']['title'];} else {$messages.="0";}
+        $messages.="</B> and <B>";
+	if (isset($limit_array['max']['web']['title'])) {$messages.=$limit_array['max']['web']['title'];} else {$messages.="unlimited";}
+	$messages.="</B> characters long.<BR>\n";
         $flag=false;
         }
     $i=strlen($session["pocketprogtext"]);
-    if ($i<MIN_PROG_DESC_LEN||$i>MAX_PROG_DESC_LEN) {
-        $messages.="Program book description is $i characters long.  Please edit it to between";
-        $messages.=" <B>".MIN_PROG_DESC_LEN."</B> and <B>".MAX_PROG_DESC_LEN."</B> characters long.<BR>\n";
+    if (((isset($limit_array['min']['book']['desc'])) AND
+	 ($i<$limit_array['min']['book']['desc'])) OR
+	((isset($limit_array['max']['book']['desc'])) AND
+	 ($i>$limit_array['max']['book']['desc']))) {
+        $messages.="Program book description is $i characters long.  Please edit it to between <B>";
+	if (isset($limit_array['min']['book']['desc'])) {$messages.=$limit_array['min']['book']['desc'];} else {$messages.="0";}
+        $messages.="</B> and <B>";
+	if (isset($limit_array['max']['book']['desc'])) {$messages.=$limit_array['max']['book']['desc'];} else {$messages.="unlimited";}
+	$messages.="</B> characters long.<BR>\n";
         $flag=false;
         }
     $i=strlen($session["progguiddesc"]);
-    if ($i<MIN_DESC_LEN||$i>MAX_DESC_LEN) {
-        $messages.="Web description is $i characters long.  Please edit it to between";
-        $messages.=" <B>".MIN_DESC_LEN."</B> and <B>".MAX_DESC_LEN."</B> characters long.<BR>\n";
+    if (((isset($limit_array['min']['web']['desc'])) AND
+	 ($i<$limit_array['min']['web']['desc'])) OR
+	((isset($limit_array['max']['web']['desc'])) AND
+	 ($i>$limit_array['max']['web']['desc']))) {
+        $messages.="Web description is $i characters long.  Please edit it to between <B>";
+	if (isset($limit_array['min']['web']['desc'])) {$messages.=$limit_array['min']['web']['desc'];} else {$messages.="0";}
+        $messages.="</B> and <B>";
+	if (isset($limit_array['max']['web']['desc'])) {$messages.=$limit_array['max']['web']['desc'];} else {$messages.="unlimited";}
+	$messages.="</B> characters long.<BR>\n";
         $flag=false;
         }
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {

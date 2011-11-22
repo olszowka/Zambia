@@ -3,13 +3,16 @@ global $participant,$message_error,$message2,$congoinfo;
 require_once('StaffCommonCode.php');
 $BioDB=BIODB; // make it a variable so it can be substituted
 $LanguageList=LANGUAGE_LIST; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($BioDB=="BIODB") {unset($BioDB);}
 if ($LanguageList=="LANGUAGE_LIST") {unset($LanguageList);}
 
 $title="Staff - Manage Participant Biographies";
 $description="<P>Report of status of Participant Biographies.</P>";
 $additionalinfo ="<P>This report is limited to participants who are currently listed as attending and interested in particpating.</P>\n";
 
-if (isset($_GET['badgeids'])) {
+if ((isset($_GET['badgeids'])) AND ($_GET['badgeids']!='')) {
   $additionalinfo.="<P>Click on the participant name in the table below to edit their biography or";
   $additionalinfo.=" <A HREF=StaffManageBios.php>return</A> to the editing matrix.</P>\n";
  } else {
@@ -58,7 +61,7 @@ SELECT
 EOD;
 
 // Specific set of badgeids.
-if (isset($_GET['badgeids'])) {
+if ((isset($_GET['badgeids'])) AND ($_GET['badgeids']!='')) {
   $query.=" AND B.badgeid in (".$_GET['badgeids'].")";
  }
 
@@ -97,7 +100,7 @@ topofpagereport($title,$description,$additionalinfo);
 $col_keys=array_keys($count_col);
 $badgeid_keys=array_keys($count_badgeid);
 
-if (isset($_GET['badgeids'])) {
+if ((isset($_GET['badgeids'])) AND ($_GET['badgeids']!='')) {
   if ($numrows==0) {
     echo "<P>There are no biographies to edit which match your selection.</P>\n";
     echo "<P><A HREF=\"StaffManageBios.php\">Reload the Manage Biographies page.</A></P>\n";

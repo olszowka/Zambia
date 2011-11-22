@@ -8,6 +8,14 @@ $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $GohBadgeList=GOH_BADGE_LIST; // make it a variable so it can be substituted
 $mybadgeid=$_SESSION['badgeid'];  // make it a simple variable so it can be substituted
 
+// Get the various length limits for substitution
+$limit_array=getLimitArray();
+
+// Tests for the substituted variables
+if ($BioDB=="BIODB") {unset($BioDB);}
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($GohBadgeList=="GOH_BADGE_LIST") {$GohBadgeList=('');}
+
 // LOCALIZATIONS
 $showreport=0;
 $reportid=$_GET["reportid"];

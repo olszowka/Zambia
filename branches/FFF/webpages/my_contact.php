@@ -5,11 +5,8 @@ $title="My Profile";
 // initialize db, check login, set $badgeid from session
 require_once('PartCommonCode.php'); 
 
-//variables for substitution below
-$bio_limit['web']=MAX_BIO_LEN;
-if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
-$bio_limit['book']=MAX_PROG_BIO_LEN;
-if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
+// Get the various length limits
+$limit_array=getLimitArray();
 
 // Get the congo information.
 if (getCongoData($badgeid)!=0) {
@@ -44,8 +41,15 @@ if (isset($_POST['update'])) {
       if ($_POST[$keyname]!=$bioinfo[$keyname]) {
 	if (!may_I('EditBio')) { 
 	  $message_error.="You may not update your bios for publication at this time.\n";
-	} elseif ((isset($bio_limit[$biotype])) and (strlen($_POST[$keyname])>$bio_limit[$biotype])) {
-	  $message_error.=ucfirst($biotype)." ($biolang) Biography is too long: ".(strlen($_POST[$keyname]))." characters, so it isn't updated.  Please edit.";
+	} elseif ((isset($limit_array['max'][$biotype]['bio'])) and (strlen($_POST[$keyname])>$limit_array['max'][$biotype]['bio'])) {
+	  $message_error.=ucfirst($biotype)." ($biolang) Biography is too long: ".(strlen($_POST[$keyname]));
+	  $message_error.=" characters (maximum limit ".$limit_array['max'][$biotype]['bio'];
+	  $message_error.=" characters), so it isn't updated.  Please edit.";
+	  $bioinfo[$keyname]=$_POST[$keyname];
+	} elseif ((isset($limit_array['min'][$biotype]['bio'])) and (strlen($_POST[$keyname])<$limit_array['min'][$biotype]['bio'])) {
+	  $message_error.=ucfirst($biotype)." ($biolang) Biography is too short: ".(strlen($_POST[$keyname]));
+	  $message_error.=" characters (minimum limit ".$limit_array['min'][$biotype]['bio'];
+	  $message_error.=" characters), so it isn't updated.  Please edit.";
 	  $bioinfo[$keyname]=$_POST[$keyname];
 	} else {
 	  $x=mysql_real_escape_string($_POST[$keyname],$link);
@@ -314,7 +318,16 @@ for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
     // If the user is allowed to edit their bio, present the raw version for editing.
     if (may_I('EditBio')) {
       echo "<LABEL class=\"spanlabcb\" for=\"$keynameraw\">Change your $biotype ($biolang) biographical information";
-      if (isset($bio_limit[$biotype])) {echo " (".$bio_limit[$biotype]." characters or fewer)";}
+      $limit_string="";
+      if (isset($limit_array['max'][$biotype]['bio'])) {
+	$limit_string.=" maximum ".$limit_array['max'][$biotype]['bio'];
+      }
+      if (isset($limit_array['min'][$biotype]['bio'])) {
+	$limit_string.=" minimum ".$limit_array['min'][$biotype]['bio'];
+      }
+      if ($limit_string !="") {
+	echo " (Limit".$limit_string." characters)";
+      }
       echo ":</LABEL><BR>\n";
       echo "<TEXTAREA rows=\"5\" cols=\"72\" name=\"$keynameraw\">".htmlspecialchars($bioinfo[$keynameraw],ENT_COMPAT)."</TEXTAREA>\n<BR>\n";
     }

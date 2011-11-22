@@ -6,10 +6,9 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, $message1, $message2) {
-    $bio_limit['web']=MAX_BIO_LEN; // make it a variable so it can be substituted
-    if (!is_numeric($bio_limit['web'])) {unset($bio_limit['web']);}
-    $bio_limit['book']=MAX_PROG_BIO_LEN; // make it a variable so it can be substituted
-    if (!is_numeric($bio_limit['book'])) {unset($bio_limit['book']);}
+
+    // Get the various length limits
+    $limit_array=getLimitArray();
 
     if (strlen($message1)>0) {
       echo "<P id=\"message1\"><font color=red>Message: ".$message1."</font></P>\n";
@@ -129,8 +128,15 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
 		  echo "            <DIV class=\"denseform\">\n";
 		  echo "                <SPAN><LABEL for=\"$keyname\" style=\"vertical-align: top\">";
 		  echo ucfirst($biotype)." ($biolang) Biography";
-		  if (isset($bio_limit[$biotype])) {
-		    echo "<BR>(Limit ".$bio_limit[$biotype]." characters)";
+		  $limit_string="";
+		  if (isset($limit_array['max'][$biotype]['bio'])) {
+		    $limit_string.=" maximum ".$limit_array['max'][$biotype]['bio'];
+		  }
+		  if (isset($limit_array['min'][$biotype]['bio'])) {
+		    $limit_string.=" minimum ".$limit_array['min'][$biotype]['bio'];
+		  }
+		  if ($limit_string !="") {
+		    echo "<BR>(Limit".$limit_string." characters)";
 		  }
 		  echo ": </LABEL>\n";
 		  echo "                    <TEXTAREA class=\"textlabelarea\" cols=70 name=\"$keyname\" >";

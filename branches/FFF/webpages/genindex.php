@@ -5,6 +5,9 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+
 // LOCALIZATIONS
 $gflowname=$_GET["gflowname"];
 $_SESSION['return_to_page']="genindex.php";

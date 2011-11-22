@@ -23,6 +23,9 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             exit();
             }
 
+    // Get the various length limits
+    $limit_array=getLimitArray();
+
     topofpagereport($title,$description,$additionalinfo);
     
     // still inside function RenderAddCreateSession
@@ -126,12 +129,12 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <DIV class="thinbox">
             <TABLE><COL width="100"><COL>
                 <TR>
-		    <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Web Description (<?php echo MIN_DESC_LEN."-".MAX_DESC_LEN ?>):</LABEL></TD>
+		    <TD class="txtalbl"><LABEL class="dense" for="progguiddesc">Web Description (<?php echo $limit_array['min']['web']['desc']."-".$limit_array['max']['web']['desc'] ?>):</LABEL></TD>
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=80 rows=5 name="progguiddesc" 
                             ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
                 <TR>
-                    <TD class="txtalbl"><LABEL class="dense" for="pocketprogtext">Program Book Description (<?php echo MIN_PROG_DESC_LEN."-".MAX_PROG_DESC_LEN ?>):</LABEL></TD>
+                    <TD class="txtalbl"><LABEL class="dense" for="pocketprogtext">Program Book Description (<?php echo $limit_array['min']['book']['desc']."-".$limit_array['max']['book']['desc'] ?>):</LABEL></TD>
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=80 name="pocketprogtext" 
                             ><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
