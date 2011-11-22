@@ -68,7 +68,7 @@ SELECT
         if((volunteer=1),' (outside wristband checker)',''), 
         if((introducer=1),' (announcer/inside room attendant)',''),
         ' - ',
-        DATE_FORMAT(ADDTIME('2010-02-12 00:00:00',starttime),'%a %l:%i %p'),
+        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),
         ' - ',
         CASE
           WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')

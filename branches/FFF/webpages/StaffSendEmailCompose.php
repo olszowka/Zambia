@@ -5,6 +5,7 @@
 require_once('email_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 global $title, $message, $link;
+$ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 
 if (isset($_POST['sendto'])) { // page has been visited before so restore previous values to form
   $email=get_email_from_post();
@@ -52,7 +53,7 @@ SELECT
         if((volunteer=1),' (outside wristband checker)',''), 
         if((introducer=1),' (announcer/inside room attendant)',''),
         ' - ',
-        DATE_FORMAT(ADDTIME('2010-02-12 00:00:00',starttime),'%a %l:%i %p'),
+        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),
         ' - ',
         CASE
           WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
