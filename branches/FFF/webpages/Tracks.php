@@ -35,7 +35,7 @@ SELECT
       END AS Duration,
     GROUP_CONCAT(DISTINCT roomname SEPARATOR ', ') as Roomname,
     Sessionid,
-    GROUP_CONCAT(DISTINCT concat('<A NAME=\"',trackname,'\">',trackname,'</A> <A HREF=TrackScheduleIcal.php?trackid=',trackid,'><I>(iCal)</I></A>')) as 'Track',
+    GROUP_CONCAT(DISTINCT concat('<A NAME=\"',trackname,'\">',trackname,'</A>',if((DATE_ADD('$ConStartDatim',INTERVAL $ConNumDays DAY)>NOW()),concat(' <A HREF=TrackScheduleIcal.php?trackid=',trackid,'><I>(iCal)</I></A>'),''))) as 'Track',
     concat('<A HREF=PrecisScheduleIcal.php?sessionid=',sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=Feedback.php?sessionid=',sessionid,'>(Feedback)</A>') AS Feedback,
     concat('<A HREF=\"Descriptions.php#',sessionid,'\">',title,'</A>') as Title,
