@@ -9,13 +9,18 @@ global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 
+if (isset($_GET['feedback'])) {
+  $feedbackp='?feedback=y';
+} else {
+  $feedbackp='';
+}
 // LOCALIZATIONS
-$_SESSION['return_to_page']="StaffBios.php";
+$_SESSION['return_to_page']="StaffBios.php$feedbackp";
 $title="Bios for Presenters";
 $description="<P>List of all Presenters biographical information.</P>\n";
-$additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php\">description</A>,\n";
-$additionalinfo.="the time to visit the <A HREF=\"StaffSchedule.php\">timeslot</A>, the track name to visit the particular\n";
-$additionalinfo.="<A HREF=\"StaffTracks.php\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
+$additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"StaffDescriptions.php$feedbackp\">description</A>,\n";
+$additionalinfo.="the time to visit the <A HREF=\"StaffSchedule.php$feedbackp\">timeslot</A>, the track name to visit the particular\n";
+$additionalinfo.="<A HREF=\"StaffTracks.php$feedbackp\">track</A>, or visit the <A HREF=\"grid.php?standard=y&unpublished=y\">grid</A>.</P>\n";
 if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
   $additionalinfo.="<P>To get an iCal calendar of all the classes of this Presenter, click on the (Fan iCal) after their\n";
   $additionalinfo.="Bio entry, or the (iCal) after the particular activity, to create a calendar for just that activity.</P>\n";
@@ -42,11 +47,11 @@ $pubstatus_string=implode(",",$pubstatus_array);
 $query = <<<EOD
 SELECT
     concat('<A NAME=\"',P.pubsname,'\"></A>',P.pubsname) AS 'Participants',
-    concat('<A HREF=\"StaffDescriptions.php#',S.sessionid,'\"><B>',S.title,'</B></A>') AS Title,
+    concat('<A HREF=\"StaffDescriptions.php$feedbackp#',S.sessionid,'\"><B>',S.title,'</B></A>') AS Title,
     S.secondtitle AS Subtitle,
     if((moderator=1),' (m)','') AS Moderator,
-    concat('<A HREF=\"StaffTracks.php#',T.trackname,'\">',T.trackname,'</A>') AS Track,
-    concat('<A HREF=\"StaffSchedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') AS 'Start Time',
+    concat('<A HREF=\"StaffTracks.php$feedbackp#',T.trackname,'\">',T.trackname,'</A>') AS Track,
+    concat('<A HREF=\"StaffSchedule.php$feedbackp#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') AS 'Start Time',
     CASE 
       WHEN HOUR(duration) < 1 THEN
         concat(date_format(duration,'%i'),'min')
