@@ -7,7 +7,7 @@ $TimecardDB=TIMECARDDB;  // make it a variable so it can be substituted
 if ($TimecardDB=="TIMECARDDB") {unset($TimecardDB);}
 
 $title="Volunteer Check Out";
-$description="<P align=\"center\">Check out the Volunteer's Check In instance.</P>";
+$description="<P align=\"center\">Check out the Volunteer's <A HREF=\"VolunteerCheckIn.php\">Check In</A> instance.</P>";
 
 // Should be generated from PermissionAtoms or PermissionRoles, somehow
 $permission_array=array('Programming', 'General', 'Liaison', 'Watch', 'Registration', 'Vendor', 'Events', 'Logistics', 'Sales', 'Fasttrack');
@@ -62,7 +62,7 @@ if (isset($_POST['voltimeout'])) {
   if (isset($_SESSION['return_to_page'])) {
     header("Location: ".$_SESSION['return_to_page']); // Redirect back to what send you here
   } else {
-    header("Location: VolunterCheckOut.php"); // Redirect back to here, with a blank slate
+    header("Location: VolunteerCheckOut.php"); // Redirect back to here, with a blank slate
   }
   exit();
  }

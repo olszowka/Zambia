@@ -3,6 +3,7 @@ require_once('StaffCommonCode.php');
 global $link;
 
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+$ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $GohBadgeList=GOH_BADGE_LIST; // make it a variable so it can be substituted

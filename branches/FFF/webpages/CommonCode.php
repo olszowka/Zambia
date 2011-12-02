@@ -108,7 +108,7 @@ function staff_header($title) {
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
     maketab("Printing",1,"PreconPrinting.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
-    maketab("TimeCards",1,"VolunteerManage.php");
+    maketab("TimeCards",1,"VolunteerCheckIn.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
     maketab("Participant View",1,"welcome.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";

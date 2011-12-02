@@ -8,6 +8,8 @@ if ($TimecardDB=="TIMECARDDB") {unset($TimecardDB);}
 
 $title="Volunteer Check In";
 $description="<P align=\"center\">Check in the Volunteer in question.</P>";
+$additionalinfo = "<P align=\"center\"><A HREF=\"genreport.php?reportname=volunteerexpected\">Expected to be on.</A><br>";
+$additionalinfo.= "<A HREF=\"VolunteerCheckOut.php\">Check Out</A> instead.</P>";
 
 // Should be generated from PermissionAtoms or PermissionRoles, somehow
 $permission_array=array('Programming', 'General', 'Liaison', 'Watch', 'Registration', 'Vendor', 'Events', 'Logistics', 'Sales', 'Fasttrack');
