@@ -40,6 +40,6 @@ EOD;
 	$xslt->importStylesheet($xsl);
 	$html = $xslt->transformToXML($resultXML);
 	echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
-	// some browsers does not support empty div, iframe, script and textarea tags
+	// some browsers does not support empty div, iframe, script and textarea tags 
 	staff_footer();
 ?>

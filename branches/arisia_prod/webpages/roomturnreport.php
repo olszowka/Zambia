@@ -1,6 +1,6 @@
 <?php
 	global $message_error;
-	$title = "Room Turn Report 2";
+	$title = "Room Turn Report";
     require_once('db_functions.php');
     require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 	$_SESSION['return_to_page']="roomturnreport.php";
@@ -32,7 +32,7 @@ EOD;
 	staff_header($title);
 	date_default_timezone_set('US/Eastern');
 	echo "<P align=center> Generated: ".date("D M j G:i:s T Y")."</P>\n";
-	echo "<P>List of all Sessions with track or type of \"room turn\" (Sorted by room, then time.) [On Demand]</P>\n";
+	echo "<P>List of all Sessions with track or type of \"room turn\" (Sorted by time, then room.) [On Demand]</P>\n";
 	//echo($resultXML->saveXML()); //for debugging only
 	$xsl = new DomDocument;
 	$xsl->load('reportxsl/roomturn2.xsl');
