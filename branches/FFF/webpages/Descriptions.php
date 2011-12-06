@@ -3,15 +3,36 @@ require_once('PostingCommonCode.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
-$Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
+
+$groupby="progguiddesc";
+$roomname="concat('<A HREF=\"Tracks.php$passon#',roomname,'\">',roomname,'</A>')";
+$trackname="trackname";
+if (isset($_GET['volunteer'])) {
+  $pubstatus_check="'Volunteer'";
+  $passon="?volunteer=y";
+} elseif (isset($_GET['registration'])) {
+  $pubstatus_check="'Reg Staff'";
+  $passon="?registration=y";
+} elseif (isset($_GET['sales'])) {
+  $pubstatus_check="'Sales Staff'";
+  $passon="?sales=y";
+} elseif (isset($_GET['vfull'])) {
+  $pubstatus_check="'Volunteer','Reg Staff','Sales Staff'";
+  $passon="?vfull=y";
+} else {
+  $pubstatus_check="'Public'";
+  $groupby="sessionid";
+  $roomname="roomname";
+  $trackname="concat('<A HREF=\"Tracks.php$passon#',trackname,'\">',trackname,'</A>')";
+}
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="Descriptions.php";
 $title="Session Descriptions";
 $description="<P>Descriptions for all sessions.</P>\n";
-$additionalinfo="<P>Click on the time to visit the session's <A HREF=\"Schedule.php\">timeslot</A>,\n";
-$additionalinfo.="the presenter to visit their <A HREF=\"Bios.php\">bio</A>, the track name to visit the particular\n";
-$additionalinfo.="<A HREF=\"Tracks.php\">track</A>, or visit the <A HREF=\"Postgrid.php\">grid</A>.</P>\n";
+$additionalinfo="<P>Click on the time to visit the session's <A HREF=\"Schedule.php$passon\">timeslot</A>,\n";
+$additionalinfo.="the presenter to visit their <A HREF=\"Bios.php$passon\">bio</A>, the track name to visit the particular\n";
+$additionalinfo.="<A HREF=\"Tracks.php$passon\">track</A>, or visit the <A HREF=\"Postgrid.php$passon\">grid</A>.</P>\n";
 if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
   $additionalinfo.="<P>Click on the (iCal) tag to download the iCal calendar for the particular activity you want added to your calendar.</P>\n";
  }
@@ -22,9 +43,9 @@ if (strtotime($ConStartDatim) < time()) {
 /* This query grabs everything necessary for the descriptions to be printed. */
 $query = <<<EOD
 SELECT
-    if ((pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"Bios.php#',pubsname,'\">',pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
-    GROUP_CONCAT(DISTINCT concat('<A HREF=\"Schedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') SEPARATOR ', ') as 'Start Time',
-    GROUP_CONCAT(DISTINCT concat('<A HREF=\"Tracks.php#',trackname,'\">',trackname,'</A>')) as 'Track',
+    if ((pubsname is NULL), ' ', GROUP_CONCAT(DISTINCT concat('<A HREF=\"Bios.php$passon#',pubsname,'\">',pubsname,'</A>',if((moderator=1),'(m)','')) SEPARATOR ', ')) as 'Participants',
+    GROUP_CONCAT(DISTINCT concat('<A HREF=\"Schedule.php$passon#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') SEPARATOR ', ') as 'Start Time',
+    GROUP_CONCAT(DISTINCT $trackname SEPARATOR ', ') as 'Track',
     CASE
       WHEN HOUR(duration) < 1 THEN
         concat(date_format(duration,'%i'),'min')
@@ -33,9 +54,9 @@ SELECT
       ELSE
         concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
       END AS Duration,
-    GROUP_CONCAT(DISTINCT roomname SEPARATOR ', ') as Roomname,
+    GROUP_CONCAT(DISTINCT $roomname SEPARATOR ', ') as Roomname,
     Sessionid,
-    concat('<A NAME=\"',sessionid,'\"></A>',title) as Title,
+    GROUP_CONCAT(DISTINCT concat('<A NAME=\"',sessionid,'\"></A>',title) SEPARATOR ', ') as Title,
     secondtitle AS Subtitle,
     concat('<A HREF=PrecisScheduleIcal.php?sessionid=',sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=Feedback.php?sessionid=',sessionid,'>(Feedback)</A>') AS Feedback,
@@ -49,12 +70,12 @@ SELECT
     LEFT JOIN Participants USING (badgeid)
     JOIN PubStatuses USING (pubstatusid)
   WHERE
-    pubstatusname in ('Public') AND
-    volunteer=0 AND
-    introducer=0 AND
-    aidedecamp=0
+    pubstatusname in ($pubstatus_check) AND
+    (volunteer=0 OR volunteer IS NULL) AND
+    (introducer=0 OR introducer IS NULL) AND
+    (aidedecamp=0 OR aidedecamp IS NULL)
   GROUP BY
-    sessionid
+    $groupby
   ORDER BY
     S.title
 EOD;

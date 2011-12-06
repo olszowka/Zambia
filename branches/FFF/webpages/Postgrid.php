@@ -5,16 +5,41 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
 
+if (isset($_GET['volunteer'])) {
+  $pubstatus_check="'Volunteer'";
+  $Grid_Spacer=3600;
+  $passon="?volunteer=y";
+  $passon_p="?volunteer=y&print_p=y";
+} elseif (isset($_GET['registration'])) {
+  $pubstatus_check="'Reg Staff'";
+  $Grid_Spacer=3600;
+  $passon="?registration=y";
+  $passon_p="?registration=y&print_p=y";
+} elseif (isset($_GET['sales'])) {
+  $pubstatus_check="'Sales Staff'";
+  $Grid_Spacer=3600;
+  $passon="?sales=y";
+  $passon_p="?sales=y&print_p=y";
+} elseif (isset($_GET['vfull'])) {
+  $pubstatus_check="'Volunteer','Reg Staff','Sales Staff'";
+  $Grid_Spacer=3600;
+  $passon="?vfull=y";
+  $passon_p="?vfull=y&print_p=y";
+} else {
+  $pubstatus_check="'Public'";
+  $passon_p="?print_p=y";
+}
+
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="Postgrid.php";
 $title="Sessions Grid";
 $description="<P>Grid of all sessions.</P>\n";
-$additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.php\">description</A>,\n";
-$additionalinfo.="the presenter to visit their <A HREF=\"Bios.php\">bio</A>, the time to visit that section of\n";
-$additionalinfo.="the <A HREF=\"Schedule.php\">schedule</A>, or the track name to see all the classes\n";
-$additionalinfo.="by <A HREF=\"Tracks.php\">track</A>.  (<A HREF=\"Postgrid-wide.php\">Switch indices</A>)</P>\n";
-$additionalinfo.="<P>If you wish to have a copy printed, please download the <A HREF=Postgrid.php?print_p=y>Rooms\n";
-$additionalinfo.="x Times</A> or <A HREF=Postgrid-wide.php?print_p=y>Times x Rooms</A> version.</P>\n";
+$additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.php$passon\">description</A>,\n";
+$additionalinfo.="the presenter to visit their <A HREF=\"Bios.php$passon\">bio</A>, the time to visit that section of\n";
+$additionalinfo.="the <A HREF=\"Schedule.php$passon\">schedule</A>, or the track name to see all the classes\n";
+$additionalinfo.="by <A HREF=\"Tracks.php$passon\">track</A>.  (<A HREF=\"Postgrid-wide.php$passon\">Switch indices</A>)</P>\n";
+$additionalinfo.="<P>If you wish to have a copy printed, please download the <A HREF=Postgrid.php$passon_p>Rooms\n";
+$additionalinfo.="x Times</A> or <A HREF=Postgrid-wide.php$passon_p>Times x Rooms</A> version.</P>\n";
 
 /* This query returns the room names for an array, to be used as
  headers, and keys for other arrays.*/
@@ -26,7 +51,7 @@ SELECT
             Rooms
     WHERE
         roomid in
-        (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid) JOIN PubStatuses USING (pubstatusid) WHERE pubstatusname in ('Public'))
+        (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid) JOIN PubStatuses USING (pubstatusid) WHERE pubstatusname in ($pubstatus_check))
     ORDER BY
     	  display_order;
 EOD;
@@ -39,7 +64,7 @@ list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$de
 $query = <<<EOD
 SELECT
       sessionid,
-      GROUP_CONCAT(concat("<A HREF=\"Bios.php#",pubsname,"\">",pubsname,"</A>",if((moderator=1),'(m)','')) SEPARATOR ", ") as allpubsnames
+      GROUP_CONCAT(concat("<A HREF=\"Bios.php$passon#",pubsname,"\">",pubsname,"</A>",if((moderator=1),'(m)','')) SEPARATOR ", ") as allpubsnames
     FROM
       Sessions
     JOIN ParticipantOnSession USING (sessionid)
@@ -60,8 +85,11 @@ for ($i=1; $i<=$presenters; $i++) {
   $presenters_array[$presenters_tmp_array[$i]['sessionid']]=$presenters_tmp_array[$i]['allpubsnames'];
  } 
 
+/* The below was a lovely idea, but the time differential was
+   minimal, and not all the time was the whole con being
+   represented so the below is simply commented out. */
 /* This query finds the first second that is actually scheduled
- so we don't waste grid-space and time looping through nothing. */
+ so we don't waste grid-space and time looping through nothing.
 $query="SELECT TIME_TO_SEC(starttime) as 'beginschedule' FROM Schedule ORDER BY starttime ASC LIMIT 0,1";
 if (($result=mysql_query($query,$link))===false) {
   $message="Error retrieving data from database.<BR>";
@@ -79,7 +107,7 @@ if (0==($earliest=mysql_num_rows($result))) {
 $grid_start_sec=mysql_result($result,0);
 
 /* This query finds the last second that is actually scheduled
- so we don't waste grid-space and time looping through nothing. */
+ so we don't waste grid-space and time looping through nothing. 
 $query="SELECT (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) as 'endschedule' FROM Schedule SCH JOIN Sessions S USING (sessionid) ORDER BY endschedule DESC LIMIT 0,1";
 if (($result=mysql_query($query,$link))===false) {
   $message="Error retrieving data from database.<BR>";
@@ -96,6 +124,9 @@ if (0==($latest=mysql_num_rows($result))) {
  }
 $grid_end_sec=mysql_result($result,0);
 
+*/
+$grid_start_sec=0;
+$grid_end_sec=CON_NUM_DAYS*86400;
 /* This complex query set is generated by stepping along by the time interval,
  and, in each interval, setting up the title, sessionid, duration, and background
  color of each class/grid element. */
@@ -113,7 +144,7 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
   }
   $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid)";
   $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid) JOIN PubStatuses PS USING (pubstatusid)";
-  $query.=" WHERE PS.pubstatusname in ('Public') AND TIME_TO_SEC(SCH.starttime) <= $time";
+  $query.=" WHERE PS.pubstatusname in ($pubstatus_check) AND TIME_TO_SEC(SCH.starttime) <= $time";
   $query.=" AND (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) >= ($time + $Grid_Spacer);";
   if (($result=mysql_query($query,$link))===false) {
     $message="Error retrieving data from database.<BR>";
@@ -156,7 +187,8 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
   } else {
     if ($refskiprow != 0) {
       $k=$grid_array[$time]['blocktime'];
-      $grid_array[$time]['blocktime']=sprintf("<A HREF=\"Schedule.php#%s\">%s</A>",$k,$k);
+      $fk=str_replace("&nbsp;"," ",$k);
+      $grid_array[$time]['blocktime']=sprintf("<A HREF=\"Schedule.php%s#%s\">%s</A>",$passon,$fk,$k);
     }
     array_push($header_time,$grid_array[$time]['blocktime']);
   }
@@ -193,7 +225,7 @@ for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {
       if ($bgcolor!="") {
 	$element_array[$element_row][$element_col] = sprintf("<TD BGCOLOR=\"%s\" CLASS=\"%s\">",$bgcolor,$cellclass);
 	if ($title!="") {
-	  $element_array[$element_row][$element_col].= sprintf("<A HREF=\"Descriptions.php#%s\">%s</A>",$sessionid,$title);
+	  $element_array[$element_row][$element_col].= sprintf("<A HREF=\"Descriptions.php%s#%s\">%s</A>",$passon,$sessionid,$title);
 	}
 	if ($duration!="") {
 	  $element_array[$element_row][$element_col].= sprintf(" (%s)",$duration);
@@ -239,7 +271,7 @@ if ($_GET["csv"]=="y") {
   $pdf->setLanguageArray($l);
   $pdf->setFontSubsetting(true);
   $pdf->SetFont('helvetica', '', 6, '', true);
-  for ($i=1; $i<$newtableline; $i++) {
+  for ($i=1; $i<$newtableline-1; $i++) {
     $gridstring=rendergridreport($breakon[$i],$breakon[$i+1]-1,$header_rooms,$element_array);
     $pdf->AddPage();
     $pdf->writeHTML($gridstring, true, false, true, false, '');
