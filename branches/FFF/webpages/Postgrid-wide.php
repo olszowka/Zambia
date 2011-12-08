@@ -5,29 +5,28 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
 
+// Deal with what is passed in.
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $passon="?".$_SERVER['QUERY_STRING'];
+  $passon_p=$passon."&print_p=y";
+} else {
+  $passon_p="?print_p=y";
+}
+
 if (isset($_GET['volunteer'])) {
   $pubstatus_check="'Volunteer'";
   $Grid_Spacer=3600;
-  $passon="?volunteer=y";
-  $passon_p="?volunteer=y&print_p=y";
 } elseif (isset($_GET['registration'])) {
   $pubstatus_check="'Reg Staff'";
   $Grid_Spacer=3600;
-  $passon="?registration=y";
-  $passon_p="?registration=y&print_p=y";
 } elseif (isset($_GET['sales'])) {
   $pubstatus_check="'Sales Staff'";
   $Grid_Spacer=3600;
-  $passon="?sales=y";
-  $passon_p="?sales=y&print_p=y";
 } elseif (isset($_GET['vfull'])) {
   $pubstatus_check="'Volunteer','Reg Staff','Sales Staff'";
   $Grid_Spacer=3600;
-  $passon="?vfull=y";
-  $passon_p="?vfull=y&print_p=y";
 } else {
   $pubstatus_check="'Public'";
-  $passon_p="?print_p=y";
 }
 
 ## LOCALIZATIONS

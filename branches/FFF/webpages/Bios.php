@@ -4,13 +4,34 @@ global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 
+// Deal with what is passed in.
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $passon="?".$_SERVER['QUERY_STRING'];
+}
+
+$trackname="trackname";
+$roomname="concat('<A HREF=\"Tracks.php$passon#',roomname,'\">',roomname,'</A>')";
+if (isset($_GET['volunteer'])) {
+  $pubstatus_check="'Volunteer'";
+} elseif (isset($_GET['registration'])) {
+  $pubstatus_check="'Reg Staff'";
+} elseif (isset($_GET['sales'])) {
+  $pubstatus_check="'Sales Staff'";
+} elseif (isset($_GET['vfull'])) {
+  $pubstatus_check="'Volunteer','Reg Staff','Sales Staff'";
+} else {
+  $pubstatus_check="'Public'";
+  $trackname="concat('<A HREF=\"Tracks.php$passon#',trackname,'\">',trackname,'</A>')";
+  $roomname="roomname";
+}
+
 // LOCALIZATIONS
 $_SESSION['return_to_page']="Bios.php";
 $title="Bios for Presenters";
 $description="<P>List of all Presenters biographical information.</P>\n";
-$additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.php\">description</A>,\n";
-$additionalinfo.="the time to visit the <A HREF=\"Schedule.php\">timeslot</A>, the track name to visit the particular\n";
-$additionalinfo.="<A HREF=\"Tracks.php\">track</A>, or visit the <A HREF=\"Postgrid.php\">grid</A>.</P>\n";
+$additionalinfo="<P>Click on the session title to visit the session's <A HREF=\"Descriptions.php$passon\">description</A>,\n";
+$additionalinfo.="the time to visit the <A HREF=\"Schedule.php$passon\">timeslot</A>, the track name to visit the particular\n";
+$additionalinfo.="<A HREF=\"Tracks.php$passon\">track</A>, or visit the <A HREF=\"Postgrid.php$passon\">grid</A>.</P>\n";
 if ((strtotime($ConStartDatim)+(60*60*24*$ConNumDays)) > time()) {
   $additionalinfo.="<P>To get an iCal calendar of all the classes of this Presenter, click on the (Fan iCal) after their\n";
   $additionalinfo.="Bio entry, or the (iCal) after the particular activity, to create a calendar for just that activity.</P>\n";
@@ -25,11 +46,11 @@ if (strtotime($ConStartDatim) < time()) {
 $query = <<<EOD
 SELECT
     concat('<A NAME=\"',pubsname,'\"></A>',pubsname) as 'Participants',
-    concat('<A HREF=\"Descriptions.php#',sessionid,'\"><B>',title,'</B></A>') AS Title,
+    concat('<A HREF=\"Descriptions.php$passon#',sessionid,'\"><B>',title,'</B></A>') AS Title,
     secondtitle AS Subtitle,
     if((moderator=1),' (m)','') AS Moderator,
-    concat('<A HREF=\"Tracks.php#',trackname,'\">',trackname,'</A>') AS Track,
-    concat('<A HREF=\"Schedule.php#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') AS 'Start Time',
+    $trackname AS Track,
+    concat('<A HREF=\"Schedule.php$passon#',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'\">',DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),'</A>') AS 'Start Time',
     CASE 
       WHEN HOUR(duration) < 1 THEN
         concat(date_format(duration,'%i'),'min')
@@ -38,7 +59,7 @@ SELECT
       ELSE
         concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
       END AS Duration,
-    roomname as Roomname,
+    $roomname as Roomname,
     concat('<A HREF=PrecisScheduleIcal.php?sessionid=',sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=Feedback.php?sessionid=',sessionid,'>(Feedback)</A>') AS Feedback,
     pubsname,
@@ -52,7 +73,7 @@ SELECT
     LEFT JOIN Participants P USING (badgeid)
     JOIN PubStatuses USING (pubstatusid)
   WHERE
-    pubstatusname in ('Public') AND
+    pubstatusname in ($pubstatus_check) AND
     volunteer=0 AND
     introducer=0 AND
     aidedecamp=0

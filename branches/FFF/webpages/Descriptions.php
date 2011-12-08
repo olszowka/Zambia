@@ -4,21 +4,22 @@ global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 
+// Deal with what is passed in.
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $passon="?".$_SERVER['QUERY_STRING'];
+}
+
 $groupby="progguiddesc";
 $roomname="concat('<A HREF=\"Tracks.php$passon#',roomname,'\">',roomname,'</A>')";
 $trackname="trackname";
 if (isset($_GET['volunteer'])) {
   $pubstatus_check="'Volunteer'";
-  $passon="?volunteer=y";
 } elseif (isset($_GET['registration'])) {
   $pubstatus_check="'Reg Staff'";
-  $passon="?registration=y";
 } elseif (isset($_GET['sales'])) {
   $pubstatus_check="'Sales Staff'";
-  $passon="?sales=y";
 } elseif (isset($_GET['vfull'])) {
   $pubstatus_check="'Volunteer','Reg Staff','Sales Staff'";
-  $passon="?vfull=y";
 } else {
   $pubstatus_check="'Public'";
   $groupby="sessionid";

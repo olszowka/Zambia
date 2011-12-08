@@ -10,7 +10,11 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $GohBadgeList=GOH_BADGE_LIST;
 
 // LOCALIZATIONS
-$_SESSION['return_to_page']="manualGRIDS.php";
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $_SESSION['return_to_page']="grid.php?".$_SERVER['QUERY_STRING'];
+} else {
+  $_SESSION['return_to_page']="grid.php";
+}
 
 /* unpub controls the "Do Not Print" and "Staff Only" inclusion into
  the grid it needs to be set first, because otherwise we are checking
