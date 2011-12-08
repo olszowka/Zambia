@@ -1,14 +1,10 @@
 <?php
-  $title="Staff - Manage Participants";
-  require_once('db_functions.php');
-  require_once('StaffHeader.php');
-  require_once('StaffFooter.php');
-  require_once('StaffCommonCode.php');
-  staff_header($title);
-?>
+require_once('StaffCommonCode.php');
+$title="Staff - Manage Participants";
+$description="<P>On this page you will find the online tools for managing Participants.</P>\n";
 
-<p>
-On this page you will find the online tools for managing Participants.</p>
+topofpagereport($title,$description,$additionalinfo);
+?>
 <hr>
 <DL>
    <DT id="managebios"><A HREF="StaffManageBios.php">Manage biographies.</A></DT>
@@ -33,4 +29,4 @@ On this page you will find the online tools for managing Participants.</p>
 <?php } ?>
 </DL>
 
-<?php staff_footer(); ?>
+<?php correct_footer(); ?>

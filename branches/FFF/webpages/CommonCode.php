@@ -466,17 +466,39 @@ function queryreport($query,$link,$title,$description,$reportid) {
 function select_participant ($selpartid, $returnto) {
   global $link;
 
+  // Should be generated from PermissionAtoms or PermissionRoles, somehow
+  $permission_array=array('SuperProgramming', 'Programming', 'SuperGeneral', 'General', 'SuperLiaison', 'Liaison', 'SuperWatch', 'Watch', 'SuperRegistration', 'Registration', 'SuperVendor', 'Vendor', 'SuperEvents', 'Events', 'SuperLogistics', 'Logistics', 'SuperSales', 'Sales', 'SuperFasttrack', 'Fasttrack');
+
+  foreach ($permission_array as $perm) {
+    if (may_I($perm)) {$inrole_array[]="'$perm'";}
+  }
+
+  if ((may_I("SuperLiaison")) or
+      (may_I("SuperProgramming")) or
+      (may_I("Liaison"))) {
+    $inrole_array[]="'Participant'";
+  }
+
+  if (isset($inrole_array)) {
+    $inrole_string=implode(",",$inrole_array);
+  } else {
+    $inrole_string="'P-Volunteer','G-Volunteer'";
+  }
+
   // lastname, firstname (badgename/pubsname) - partid
-  $query0="SELECT P.badgeid, concat(CD.lastname,', ',CD.firstname,' (',CD.badgename,'/',P.pubsname,') - ',P.badgeid) AS pname";
-  $query0.=" FROM Participants P, CongoDump CD WHERE P.badgeid = CD.badgeid ORDER BY CD.lastname";
+  $query0="SELECT badgeid, concat(lastname,', ',firstname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
+  $query0.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
+  $query0.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY lastname";
 
   // firstname lastname (badgename/pubsname) - partid
-  $query1="SELECT P.badgeid, concat(CD.firstname,' ',CD.lastname,' (',CD.badgename,'/',P.pubsname,') - ',P.badgeid) AS pname";
-  $query1.=" FROM Participants P, CongoDump CD WHERE P.badgeid = CD.badgeid ORDER BY CD.lastname";
+  $query1="SELECT badgeid, concat(firstname,' ',lastname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
+  $query1.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
+  $query1.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY firstname";
 
   // pubsname/badgename (lastname, firstname) - partid
-  $query2="SELECT P.badgeid, concat(P.pubsname,'/',CD.badgename,' (',CD.lastname,', ',CD.firstname,') - ',P.badgeid) AS pname";
-  $query2.=" FROM Participants P, CongoDump CD WHERE P.badgeid = CD.badgeid ORDER BY CD.lastname";
+  $query2="SELECT badgeid, concat(pubsname,'/',badgename,' (',lastname,', ',firstname,') - ',badgeid) AS pname";
+  $query2.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
+  $query2.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY pubsname";
 
   // Now give the choices
   echo "<FORM name=\"selpartform\" method=POST action=\"".$returnto."\">\n";
@@ -772,22 +794,22 @@ function edit_participant ($participant_arr,$permrole_arr) {
   $pairedvalue_array=array("bestway='".mysql_real_escape_string($participant_arr['bestway'])."'",
 			   "interested='".(($participant_arr['interested']=='')?"NULL":$participant_arr['interested'])."'",
 			   "altcontact='".mysql_real_escape_string($participant_arr['altcontact'])."'",
-			   "prognotes='".mysql_real_escape_string($participant_arr['prognotes'])."'",
-			   "pubsname='".mysql_real_escape_string($participant_arr['pubsname'])."'");
+			   "prognotes='".mysql_real_escape_string(stripslashes($participant_arr['prognotes']))."'",
+			   "pubsname='".mysql_real_escape_string(stripslashes($participant_arr['pubsname']))."'");
   $message.=update_table_element($link, $title, "Participants", $pairedvalue_array, "badgeid", $participant_arr['partid']);
 
   // Update CongoDump entry.
-  $pairedvalue_array=array("firstname='".mysql_real_escape_string($participant_arr['firstname'])."'",
-			  "lastname='".mysql_real_escape_string($participant_arr['lastname'])."'",
-			  "badgename='".mysql_real_escape_string($participant_arr['badgename'])."'",
-			  "phone='".mysql_real_escape_string($participant_arr['phone'])."'",
-			  "email='".mysql_real_escape_string($participant_arr['email'])."'",
-			  "postaddress1='".mysql_real_escape_string($participant_arr['postaddress1'])."'",
-			  "postaddress2='".mysql_real_escape_string($participant_arr['postaddress2'])."'",
-			  "postcity='".mysql_real_escape_string($participant_arr['postcity'])."'",
-			  "poststate='".mysql_real_escape_string($participant_arr['poststate'])."'",
-			  "postzip='".mysql_real_escape_string($participant_arr['postzip'])."'",
-			  "regtype='".mysql_real_escape_string($participant_arr['regtype'])."'");
+  $pairedvalue_array=array("firstname='".mysql_real_escape_string(stripslashes($participant_arr['firstname']))."'",
+			   "lastname='".mysql_real_escape_string(stripslashes($participant_arr['lastname']))."'",
+			   "badgename='".mysql_real_escape_string(stripslashes($participant_arr['badgename']))."'",
+			   "phone='".mysql_real_escape_string($participant_arr['phone'])."'",
+			   "email='".mysql_real_escape_string($participant_arr['email'])."'",
+			   "postaddress1='".mysql_real_escape_string(stripslashes($participant_arr['postaddress1']))."'",
+			   "postaddress2='".mysql_real_escape_string(stripslashes($participant_arr['postaddress2']))."'",
+			   "postcity='".mysql_real_escape_string(stripslashes($participant_arr['postcity']))."'",
+			   "poststate='".mysql_real_escape_string($participant_arr['poststate'])."'",
+			   "postzip='".mysql_real_escape_string($participant_arr['postzip'])."'",
+			   "regtype='".mysql_real_escape_string(stripslashes($participant_arr['regtype']))."'");
   $message.=update_table_element($link, $title, "CongoDump", $pairedvalue_array, "badgeid", $participant_arr['partid']);
 
   // Update/add Bios.

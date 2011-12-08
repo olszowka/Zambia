@@ -10,7 +10,7 @@ $title="Volunteer Check Out";
 $description="<P align=\"center\">Check out the Volunteer's <A HREF=\"VolunteerCheckIn.php\">Check In</A> instance.</P>";
 
 // Should be generated from PermissionAtoms or PermissionRoles, somehow
-$permission_array=array('Programming', 'General', 'Liaison', 'Watch', 'Registration', 'Vendor', 'Events', 'Logistics', 'Sales', 'Fasttrack');
+$permission_array=array('SuperProgramming', 'Programming', 'SuperGeneral', 'General', 'SuperLiaison', 'Liaison', 'SuperWatch', 'Watch', 'SuperRegistration', 'Registration', 'SuperVendor', 'Vendor', 'SuperEvents', 'Events', 'SuperLogistics', 'Logistics', 'SuperSales', 'Sales', 'SuperFasttrack', 'Fasttrack');
 
 foreach ($permission_array as $perm) {
   if (may_I($perm)) {$inrole_array[]="'$perm'";}

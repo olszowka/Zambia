@@ -47,12 +47,6 @@ SELECT
 
 EOD;
 
-if (!$activityresult=mysql_query($query,$link)) {
-  $message_error=$query."<BR>Error querying database. Unable to continue.<BR>";
-  RenderError($title,$message_error);
-  exit();
- }
-
 // Begin the page
 topofpagereport($title,$description,$additionalinfo);
 
@@ -63,19 +57,14 @@ echo "<P class=\"regmsg\">$message</P>\n";
 ?>
 
 <FORM name="tasklistselect" method=POST action="TaskListUpdate.php">
-<DIV><LABEL for="activityid">Select Task</LABEL>
-<SELECT name="activityid">
-<?php 
-  echo "     <OPTION value=0 ".(($assignedid==0)?"selected":"").">Select task</OPTION>\n";
-  while (list($taskid,$task)= mysql_fetch_array($activityresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"$taskid\"".(($activityid==$taskid)?"selected":"");
-    echo ">".htmlspecialchars($task)."</OPTION>\n";
-  }
-?>
-</SELECT></DIV>
+  <DIV><LABEL for="activityid">Select Task</LABEL>
+    <SELECT name="activityid">
+      <?php populate_select_from_query($query,$activityid,"Select task",false); ?>
+    </SELECT>
+  </DIV>
 <BUTTON class="SubmitButton" type="submit" name="submit" >Submit</BUTTON>
 </FORM>
-<HR>
+
 <?php
 // Stop page here if and individual has not yet been selected
 if ($activityid==0) {
@@ -83,66 +72,60 @@ if ($activityid==0) {
   exit();
  }
 
-if ($activityid==-1) {
-// Update note through form below
+// Should be generated from PermissionAtoms or PermissionRoles, somehow
+$permission_array=array('SuperProgramming', 'Programming', 'SuperGeneral', 'General', 'SuperLiaison', 'Liaison', 'SuperWatch', 'Watch', 'SuperRegistration', 'Registration', 'SuperVendor', 'Vendor', 'SuperEvents', 'Events', 'SuperLogistics', 'Logistics', 'SuperSales', 'Sales', 'SuperFasttrack', 'Fasttrack');
 
-  $query0=<<<EOD
+foreach ($permission_array as $perm) {
+  if (may_I($perm)) {$inrole_array[]="'$perm'";}
+}
+
+if (isset($inrole_array)) {
+  $inrole_string=implode(",",$inrole_array);
+} else {
+  $inrole_string="'P-Volunteer','G-Volunteer'";
+}
+
+$Pquery=<<<EOF
 SELECT
-    P.badgeid,
-    CD.lastname,
-    CD.firstname,
-    CD.badgename,
-    P.pubsname
+    badgeid,
+    pubsname 
   FROM
-      Participants P
-    JOIN CongoDump CD USING (badgeid)
-    JOIN UserHasPermissionRole UP USING (badgeid)
+      Participants
+    JOIN UserHasPermissionRole USING (badgeid)
+    JOIN PermissionRoles USING (permroleid)
   WHERE
-     UP.permroleid=5
+    permrolename in ($inrole_string)
   ORDER BY
-     P.pubsname
+    pubsname
+EOF;
 
-EOD;
-
-  if (!$nameresult=mysql_query($query0,$link)) {
-    $message=$query0."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    correct_footer();
-    exit();
-  }
+if ($activityid==-1) {
+  // Update note through form below
 
 ?>
-
+<hr>
 <FORM name="tasklistform" method=POST action="TaskListUpdate.php">
-<DIV class="titledtextarea">
-<INPUT type="hidden" name="activityid" value="<?php echo $activityid; ?>">
-<LABEL for="assignedid">Person assigned:</LABEL>
-<SELECT name="assignedid">
-<?php 
-  echo "     <OPTION value=0 ".(($assignedid==0)?"selected":"").">Select Participant (Pubsname)</OPTION>\n";
-  while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($nameresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$partid."\" ".(($assignedid==$partid)?"selected":"");
-    echo ">".htmlspecialchars($pubsname)."/".htmlspecialchars($badgename);
-    echo " (".htmlspecialchars($lastname).", ".htmlspecialchars($firstname).") - ".$partid."</OPTION>\n";
-  }
-?>
-</SELECT>
-<LABEL for"activity">Task:</LABEL>
-  <INPUT type="text" size="25" name="activity" id="activity">
-  <LABEL for="activitynotes">Note:</LABEL>
-  <TEXTAREA name="activitynotes" rows=6 cols=72><?php echo $activitynotes ?></TEXTAREA>
-  <LABEL for="activitystart">Targeted Start Time: (eg: 2038-10-12)</LABEL>
-  <INPUT type="text" size=10 name="activitystart" id="activitystart" value="<?php echo htmlspecialchars($activitystart) ?>">
-  <LABEL for="targettime">Targeted Completion Time: (eg: 2038-12-12)</LABEL>
-  <INPUT type="text" size=10 name="targettime" id="tartettime" value="<?php echo htmlspecialchars($targettime) ?>">
-</DIV>
-
-<BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
+  <DIV class="titledtextarea">
+    <INPUT type="hidden" name="activityid" value="<?php echo $activityid; ?>">
+    <LABEL for="assignedid">Person assigned:</LABEL>
+    <SELECT name="assignedid">
+      <?php populate_select_from_query($Pquery,$_SESSION['badgeid'],"",false); ?>
+    </SELECT>
+    <LABEL for"activity">Task:</LABEL>
+    <INPUT type="text" size="25" name="activity" id="activity">
+    <LABEL for="activitynotes">Note:</LABEL>
+    <TEXTAREA name="activitynotes" rows=6 cols=72><?php echo $activitynotes ?></TEXTAREA>
+    <LABEL for="activitystart">Targeted Start Time: (eg: 2038-10-12)</LABEL>
+    <INPUT type="text" size=10 name="activitystart" id="activitystart" value="<?php echo date("Y-m-d") ?>">
+    <LABEL for="targettime">Targeted Completion Time: (eg: 2038-12-12)</LABEL>
+    <INPUT type="text" size=10 name="targettime" id="tartettime" value="<?php echo date("Y-m-d", mktime(0,0,0,date("m")+1,date("d"),date("Y"))) ?>">
+  </DIV>
+  <BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
 </FORM>
 
 <?php } else {
 
-// Get the selected note information
+  // Get the selected note information
 
   $query= <<<EOD
 SELECT
@@ -170,69 +153,35 @@ EOD;
   $donestate=$task_array[1]['donestate'];
   $donetime=$task_array[1]['donetime'];
 
-  $query0=<<<EOD
-SELECT
-    P.badgeid,
-    CD.lastname,
-    CD.firstname,
-    CD.badgename,
-    P.pubsname
-  FROM
-      Participants P
-    JOIN CongoDump CD USING (badgeid)
-    JOIN UserHasPermissionRole UP USING (badgeid)
-  WHERE
-     UP.permroleid=5
-  ORDER BY
-     P.pubsname
-
-EOD;
-
-  if (!$nameresult=mysql_query($query0,$link)) {
-    $message=$query0."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    correct_footer();
-    exit();
-  }
-
   // Update note through form below
-  ?>
-
-<FORM name="tasklistform" method=POST action="TaskListUpdate.php">
-<INPUT type="hidden" name="activityid" value="<?php echo $activityid; ?>">
-<DIV class="titledtextarea">
-<LABEL for="assigned">Person assigned:</LABEL>
-<SELECT name="assignedid">
-<?php 
-  echo "     <OPTION value=0 ".(($assignedid==0)?"selected":"").">Select Participant (Pubsname)</OPTION>\n";
-  while (list($partid,$lastname,$firstname,$badgename,$pubsname)= mysql_fetch_array($nameresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$partid."\" ".(($assignedid==$partid)?"selected":"");
-    echo ">".htmlspecialchars($pubsname)."/".htmlspecialchars($badgename);
-    echo " (".htmlspecialchars($lastname).", ".htmlspecialchars($firstname).") - ".$partid."</OPTION>\n";
-  }
 ?>
-</SELECT>
-<LABEL for"activity">Task:</LABEL><?php echo $activity ?>
-  <LABEL for="activitynotes">Note:</LABEL>
-  <TEXTAREA name="activitynotes" rows=6 cols=72><?php echo $activitynotes ?></TEXTAREA>
-  <LABEL for="activitystart">Targeted Start Time: (eg: 2038-10-12)</LABEL>
-  <INPUT type="text" size=10 name="activitystart" id="activitystart" value="<?php echo htmlspecialchars($activitystart) ?>">
-  <LABEL for="targettime">Targeted Completion Time: (eg: 2038-12-12)</LABEL>
-  <INPUT type="text" size=10 name="targettime" id="targettime" value="<?php echo htmlspecialchars($targettime) ?>">
-  <?php if ($donestate=="Y") { ?>
-  <LABEL for="finished">Finished at:</LABEL><?php echo $donetime; ?>
-  <INPUT type="hidden" name="donetime" value="<?php echo $donetime ?>">
-  <INPUT type="hidden" name="donestate" value="<?php echo $donestate ?>">
-  <?php } else { ?>
-  <LABEL for="finished">Is it done?</LABEL>
-  <INPUT type="radio" name="donestate" id="donestate" value="Y" <?php if ($donestate=="Y") {echo "checked";} ?>> Yes, it is finished.<br>
-  <INPUT type="radio" name="donestate" id="donestate" value="P" <?php if ($donestate=="P") {echo "checked";} ?>> It is partially done.<br>
-  <INPUT type="radio" name="donestate" id="donestate" value="N" <?php if ($donestate=="N") {echo "checked";} ?>> It has not yet been begun.<br>
-  <?php } ?>
-       
-</DIV>
-
-<BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
+<hr>
+<FORM name="tasklistform" method=POST action="TaskListUpdate.php">
+  <INPUT type="hidden" name="activityid" value="<?php echo $activityid; ?>">
+  <DIV class="titledtextarea">
+    <LABEL for="assigned">Person assigned:</LABEL>
+    <SELECT name="assignedid">
+      <?php populate_select_from_query($Pquery,$assignedid,"Outside your assignment list.",true); ?>
+    </SELECT>
+    <LABEL for"activity">Task:</LABEL><?php echo $activity ?>
+    <LABEL for="activitynotes">Note:</LABEL>
+    <TEXTAREA name="activitynotes" rows=6 cols=72><?php echo $activitynotes ?></TEXTAREA>
+    <LABEL for="activitystart">Targeted Start Time: (eg: 2038-10-12)</LABEL>
+    <INPUT type="text" size=10 name="activitystart" id="activitystart" value="<?php echo htmlspecialchars($activitystart) ?>">
+    <LABEL for="targettime">Targeted Completion Time: (eg: 2038-12-12)</LABEL>
+    <INPUT type="text" size=10 name="targettime" id="targettime" value="<?php echo htmlspecialchars($targettime) ?>">
+    <?php if ($donestate=="Y") { ?>
+    <LABEL for="finished">Finished at:</LABEL><?php echo $donetime; ?>
+    <INPUT type="hidden" name="donetime" value="<?php echo $donetime ?>">
+    <INPUT type="hidden" name="donestate" value="<?php echo $donestate ?>">
+    <?php } else { ?>
+    <LABEL for="finished">Is it done?</LABEL>
+    <INPUT type="radio" name="donestate" id="donestate" value="Y" <?php if ($donestate=="Y") {echo "checked";} ?>> Yes, it is finished.<br>
+    <INPUT type="radio" name="donestate" id="donestate" value="P" <?php if ($donestate=="P") {echo "checked";} ?>> It is partially done.<br>
+    <INPUT type="radio" name="donestate" id="donestate" value="N" <?php if ($donestate=="N") {echo "checked";} ?>> It has not yet been begun.<br>
+    <?php } ?>
+  </DIV>
+  <BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
 </FORM>
 
 <?php

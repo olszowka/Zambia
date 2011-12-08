@@ -81,7 +81,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
 			for ($i=2; $i<=count($permrole_arr); $i++) {
 			  $pos = strpos($participant_arr['permroleid_list'],"$i");
 			  if (may_I($permrole_arr[$i]["permrolename"])) {
-			    if ((($permrole_arr[$i]["permrolename"]=="Participant") and (may_I("Liaison"))) or ($permrole_arr[$i]["permrolename"]!="Participant")) {
+			    if ((($permrole_arr[$i]["permrolename"]=="Participant") and ((may_I("Liaison")) or (may_I("SuperLiaison")))) or ($permrole_arr[$i]["permrolename"]!="Participant")) {
 			      if($pos === false) {
 			        echo "<INPUT type=\"hidden\" name=\"waspermroleid".$i."\" value=\"not\">\n";
                                 echo "<INPUT type=\"checkbox\" name=\"permroleid".$i."\" value=\"checked\">".$permrole_arr[$i]["permrolenotes"]."\n";
@@ -113,36 +113,41 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
                      value="<?php echo htmlspecialchars($participant_arr["postzip"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 </DIV>
 <?php
-              /* We are only updating the raw bios here, so only a 2-depth
-               search happens on biolang and biotypename. */
-              $biostate='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
-              for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
-		for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
+              if ((may_I("Programming")) or
+		  (may_I("Super Programming")) or
+		  (may_I("Liaison")) or
+		  (may_I("SuperLiaison"))) {
+		/* We are only updating the raw bios here, so only a 2-depth
+		   search happens on biolang and biotypename. */
+		$biostate='raw'; // for ($k=0; $k<count($bioinfo['biostate_array']); $k++) {
+		for ($i=0; $i<count($bioinfo['biotype_array']); $i++) {
+		  for ($j=0; $j<count($bioinfo['biolang_array']); $j++) {
 
-		  // Setup for keyname, to collapse all three variables into one passed name.
-		  $biotype=$bioinfo['biotype_array'][$i];
-		  $biolang=$bioinfo['biolang_array'][$j];
-		  // $biostate=$bioinfo['biostate_array'][$k];
-		  $keyname=$biotype."_".$biolang."_".$biostate."_bio";
+		    // Setup for keyname, to collapse all three variables into one passed name.
+		    $biotype=$bioinfo['biotype_array'][$i];
+		    $biolang=$bioinfo['biolang_array'][$j];
+		    // $biostate=$bioinfo['biostate_array'][$k];
+		    $keyname=$biotype."_".$biolang."_".$biostate."_bio";
 
-		  echo "            <DIV class=\"denseform\">\n";
-		  echo "                <SPAN><LABEL for=\"$keyname\" style=\"vertical-align: top\">";
-		  echo ucfirst($biotype)." ($biolang) Biography";
-		  $limit_string="";
-		  if (isset($limit_array['max'][$biotype]['bio'])) {
-		    $limit_string.=" maximum ".$limit_array['max'][$biotype]['bio'];
+		    echo "            <DIV class=\"denseform\">\n";
+		    echo "                <SPAN><LABEL for=\"$keyname\" style=\"vertical-align: top\">";
+		    echo ucfirst($biotype)." ($biolang) Biography";
+		    $limit_string="";
+		    if (isset($limit_array['max'][$biotype]['bio'])) {
+		      $limit_string.=" maximum ".$limit_array['max'][$biotype]['bio'];
+		    }
+		    if (isset($limit_array['min'][$biotype]['bio'])) {
+		      $limit_string.=" minimum ".$limit_array['min'][$biotype]['bio'];
+		    }
+		    if ($limit_string !="") {
+		      echo "<BR>(Limit".$limit_string." characters)";
+		    }
+		    echo ": </LABEL>\n";
+		    echo "                    <TEXTAREA class=\"textlabelarea\" cols=70 name=\"$keyname\" >";
+		    echo htmlspecialchars($participant_arr[$keyname],ENT_NOQUOTES)."</TEXTAREA>\n";
+		    echo "                    </SPAN>\n";
+		    echo "                </DIV>\n";
 		  }
-		  if (isset($limit_array['min'][$biotype]['bio'])) {
-		    $limit_string.=" minimum ".$limit_array['min'][$biotype]['bio'];
-		  }
-		  if ($limit_string !="") {
-		    echo "<BR>(Limit".$limit_string." characters)";
-		  }
-		  echo ": </LABEL>\n";
-		  echo "                    <TEXTAREA class=\"textlabelarea\" cols=70 name=\"$keyname\" >";
-		  echo htmlspecialchars($participant_arr[$keyname],ENT_NOQUOTES)."</TEXTAREA>\n";
-		  echo "                    </SPAN>\n";
-		  echo "                </DIV>\n";
 		}
 	      }?>
             <DIV class="denseform">
@@ -151,11 +156,11 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
                     </SPAN>
                 </DIV>
             <DIV class="denseform">
-            <SPAN><LABEL for="note" style="vertical-align: top">Programming Log Note:</LABEL>
+            <SPAN><LABEL for="note" style="vertical-align: top">Log Note:</LABEL>
 		<TEXTAREA class="textlabelarea" name="note" rows=2 cols=72>Participant entry <?php echo htmlspecialchars($action);?></TEXTAREA>
                 </DIV>
             <DIV class="denseform">
-                <SPAN><LABEL for="prognotes" style="vertical-align: top">Additional Programming notes: </LABEL>
+                <SPAN><LABEL for="prognotes" style="vertical-align: top">Additional Participant notes: </LABEL>
                     <TEXTAREA class="textlabelarea" cols=70 name="prognotes" ><?php echo htmlspecialchars($participant_arr["prognotes"],ENT_NOQUOTES);?></TEXTAREA>
                     </SPAN>
                 </DIV>

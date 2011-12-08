@@ -29,6 +29,25 @@ if ((is_numeric($id)) and ($id>0)) { // If the "id" is numerica and greater than
 
 // If the "id" still is not set, or reset to "", add the "Select" to the top of the form, so it can be chosen.
 if ((!isset($id)) or ($id=="")) {
+
+  // Limit it to just the appropriate set of schedule elements presented
+  if (may_I("Programming")) {$pubstatus_array[]="'Prog Staff'"; $pubstatus_array[]="'Public'";}
+  if (may_I("Liaison")) {$pubstatus_array[]="'Public'";}
+  if (may_I("General")) {$pubstatus_array[]="'Volunteer'";}
+  if (may_I("Event")) {$pubstatus_array[]="'Event Staff'";}
+  if (may_I("Registration")) {$pubstatus_array[]="'Reg Staff'";}
+  if (may_I("Watch")) {$pubstatus_array[]="'Watch Staff'";}
+  if (may_I("Vendor")) {$pubstatus_array[]="'Vendor Staff'";}
+  if (may_I("Sales")) {$pubstatus_array[]="'Sales Staff'";}
+  if (may_I("Fasttrack")) {$pubstatus_array[]="'Fast Track'";}
+  if (may_I("Logistics")) {$pubstatus_array[]="'Logistics'"; $pubstatus_array[]="'Public'";}
+
+  if (isset($pubstatus_array)) {
+    $pubstatus_string=implode(",",$pubstatus_array);
+  } else {
+    $pubstatus_string="'Public'";
+  }
+
   $query=<<<EOD
 SELECT
     sessionid,
@@ -37,8 +56,10 @@ SELECT
       Sessions
     JOIN Tracks USING (trackid)
     JOIN SessionStatuses USING (statusid)
+    JOIN PubStatuses USING (pubstatusid)
   WHERE
-    may_be_scheduled=1
+    may_be_scheduled=1 AND
+    pubstatusname in ($pubstatus_string)
   ORDER BY
     trackname,
     sessionid,

@@ -109,11 +109,9 @@ if ($action=="create") { //initialize participant array
 
    if (isset($_POST["partid"])) {
      $selpartid=$_POST["partid"];
-   }
-   elseif (isset($_GET["partid"])) {
+   } elseif (isset($_GET["partid"])) {
      $selpartid=$_GET["partid"];
-   }
-   else {
+   } else {
      $selpartid=0;
    }
    

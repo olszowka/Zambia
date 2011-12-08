@@ -1,52 +1,65 @@
 <?php
-$title="Staff - Assign Participants";
-require_once('db_functions.php');
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
 require_once('StaffAssignParticipants_FNC.php');
 
-staff_header($title);
+$title="Staff - Assign Participants";
+$description="<P>Assign a participant to a Session Element.  Click on the element name to modify the element.</P>\n";
 
-$topsectiononly=true; // no room selected -- flag indicates to display only the top section of the page
+topofpagereport($title,$description,$additionalinfo);
+
 if (isset($_POST["numrows"])) {
-    SubmitAssignParticipants();
-    }
+  SubmitAssignParticipants();
+}
 
-if (isset($_POST["selsess"])) { // room was selected by this form
-        $selsessionid=$_POST["selsess"];
-        $topsectiononly=false;
-        //unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
-        }
-    elseif (isset($_GET["selsess"])) { // room was select by external page such as a report
-        $selsessionid=$_GET["selsess"];
-        $topsectiononly=false;
-        }
-    else {
-        $selsessionid=0; // room was not yet selected.
-        unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
-        }
+if (isset($_POST["selsess"])) { // room was selected by a form
+  $selsessionid=$_POST["selsess"];
+} elseif (isset($_GET["selsess"])) { // room was select by external page such as a report
+  $selsessionid=$_GET["selsess"];
+} else {
+  $selsessionid=0; // room was not yet selected.
+  unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
+}
 
-$query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S ";
-$query.="JOIN Tracks AS T USING (trackid) ";
-$query.="JOIN SessionStatuses AS SS USING (statusid) ";
-$query.="WHERE SS.may_be_scheduled=1 ";
-$query.="ORDER BY T.trackname, S.sessionid, S.title";
-if (!$Sresult=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
-    exit();
-    }
+// Limit it to just the appropriate set of schedule elements presented
+if (may_I("Programming")) {$pubstatus_array[]="'Prog Staff'"; $pubstatus_array[]="'Public'";}
+if (may_I("Liaison")) {$pubstatus_array[]="'Public'";}
+if (may_I("General")) {$pubstatus_array[]="'Volunteer'";}
+if (may_I("Event")) {$pubstatus_array[]="'Event Staff'";}
+if (may_I("Registration")) {$pubstatus_array[]="'Reg Staff'";}
+if (may_I("Watch")) {$pubstatus_array[]="'Watch Staff'";}
+if (may_I("Vendor")) {$pubstatus_array[]="'Vendor Staff'";}
+if (may_I("Sales")) {$pubstatus_array[]="'Sales Staff'";}
+if (may_I("Fasttrack")) {$pubstatus_array[]="'Fast Track'";}
+if (may_I("Logistics")) {$pubstatus_array[]="'Logistics'"; $pubstatus_array[]="'Public'";}
+
+if (isset($pubstatus_array)) {
+  $pubstatus_string=implode(",",$pubstatus_array);
+ } else {
+  $pubstatus_string="'Public'";
+ }
+
+$query=<<<EOD
+SELECT
+    sessionid,
+    concat(trackname,' - ',sessionid,' - ',title) as sname
+  FROM
+      Sessions
+    JOIN Tracks USING (trackid)
+    JOIN SessionStatuses USING (statusid)
+    JOIN PubStatuses USING (pubstatusid)
+  WHERE
+    may_be_scheduled=1 AND
+    pubstatusname in ($pubstatus_string)
+  ORDER BY
+    trackname,
+    sessionid,
+    title
+EOD;
+
 echo "<FORM name=\"selsesform\" method=POST action=\"StaffAssignParticipants.php\">\n";
 echo "<DIV><LABEL for=\"selsess\">Select Session</LABEL>\n";
 echo "<SELECT name=\"selsess\">\n";
-echo "     <OPTION value=0 ".(($selsessionid==0)?"selected":"").">Select Session</OPTION>\n";
-while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$sessionid."\" ".(($selsessionid==$sessionid)?"selected":"");
-    echo ")>".htmlspecialchars($trackname)." - ";
-    echo htmlspecialchars($sessionid)." - ".htmlspecialchars($title)."</OPTION>\n";
-    }
+populate_select_from_query($query,$selsessionid, "Select Session", false);
 echo "</SELECT></DIV>\n";
 echo "<P>&nbsp;\n";
 echo "<DIV class=\"SubmitDiv\">";
@@ -56,30 +69,28 @@ if (isset($_SESSION['return_to_page'])) {
 echo "<BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Select Session</BUTTON></DIV>\n";
 echo "</FORM>\n";
 echo "<HR>&nbsp;<BR>\n";
-if ($topsectiononly) {
-    staff_footer();
+if ($selsessionid==0) {
+    correct_footer();
     exit();
     }
+
 $query = <<<EOD
 SELECT title, pocketprogtext, progguiddesc, persppartinfo, notesforpart, notesforprog FROM Sessions
 WHERE sessionid=$selsessionid
 EOD;
 if (!$result=mysql_query($query,$link)) {
-    $message=$query."Error querying database. Unable to continue.";
-    echo "<P class\"errmsg\">".$message."</P>\n";
-    staff_footer();
+    $message_error=$query."Error querying database. Unable to continue.";
+    RenderError($title,$message_error);
     exit();
     }
 if (mysql_num_rows($result)==0) {
-    $message="Zero rows returned, this is either a removed class, or a not-yet-created one.  Please select another session above.";
-    echo "<P class\"errmsg\">".$message."</P>\n";
-    staff_footer();
+    $message_error="Zero rows returned, this is either a removed class, or a not-yet-created one.  Please select another session above.";
+    RenderError($title,$message_error);
     exit();
     }
 if (mysql_num_rows($result)!=1) {
-    $message=$query."returned unexpected number of rows (1 expected).";
-    echo "<P class\"errmsg\">".$message."</P>\n";
-    staff_footer();
+    $message_error=$query."returned unexpected number of rows (1 expected).";
+    RenderError($title,$message_error);
     exit();
     }
 echo "<H2>$selsessionid - <A HREF=\"EditSession.php?id=".$selsessionid."\">".htmlspecialchars(mysql_result($result,0,"title"))."</A></H2>";    
@@ -144,27 +155,45 @@ SELECT
     POS.sessionid is null;
 EOD;
 if (!$result=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
-    staff_footer();
+    $message_error=$query."<BR>Error querying database. Unable to continue.<BR>";
+    RenderError($title,$message_error);
     exit();
     }
+
+// Should be generated from PermissionAtoms or PermissionRoles, somehow
+$permission_array=array('SuperProgramming', 'Programming', 'SuperGeneral', 'General', 'SuperLiaison', 'Liaison', 'SuperWatch', 'Watch', 'SuperRegistration', 'Registration', 'SuperVendor', 'Vendor', 'SuperEvents', 'Events', 'SuperLogistics', 'Logistics', 'SuperSales', 'Sales', 'SuperFasttrack', 'Fasttrack');
+
+foreach ($permission_array as $perm) {
+  if (may_I($perm)) {$inrole_array[]="'$perm'";}
+}
+
+if (isset($inrole_array)) {
+  $inrole_string=implode(",",$inrole_array);
+ } else {
+  $inrole_string="'P-Volunteer','G-Volunteer'";
+ }
+
 $query = <<<EOD
 SELECT
-            P.pubsname,
-            P.badgeid,
-            CD.lastname
-    FROM
-            Participants P
-       JOIN CongoDump CD USING(badgeid)
-    WHERE
-            P.interested=1
-        AND P.badgeid not in
-                   (Select badgeid
-                        from ParticipantSessionInterest
-                       where sessionid=$selsessionid)
-    ORDER BY
-            IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+    pubsname,
+    badgeid,
+    lastname
+  FROM
+      Participants
+    JOIN CongoDump USING(badgeid)
+    JOIN UserHasPermissionRole USING (badgeid)
+    JOIN PermissionRoles USING (permroleid)
+  WHERE
+    interested=1 AND
+    permrolename in ($inrole_string) AND
+    badgeid not in (SELECT
+                          badgeid
+                        FROM
+                            ParticipantSessionInterest
+                        WHERE
+                          sessionid=$selsessionid)
+  ORDER BY
+    IF(instr(pubsname,lastname)>0,lastname,substring_index(pubsname,' ',-1)),firstname
 EOD;
 if (!$Presult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
@@ -256,5 +285,5 @@ echo "</SELECT></DIV>\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Add</BUTTON></DIV>\n";
 
 echo "</FORM>\n";
-staff_footer();
+correct_footer();
 ?>
