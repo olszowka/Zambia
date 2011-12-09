@@ -230,15 +230,15 @@ function brainstorm_header($title) {
     }
     echo"  </tr>\n  <tr class=\"tabrows\">\n    <td class=\"tabblocks border0020\" colspan=12>\n         View sessions proposed to date:</td>\n  </tr>";
     echo "</td>\n  </tr>\n  <tr class=\"tabrows\">\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
-    maketab("All Proposals",1,"BrainstormReportAll.php");
+    maketab("All Proposals",1,"BrainstormReport.php?status=all");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
-    maketab("New (Unseen)",1,"BrainstormReportUnseen.php");
+    maketab("New (Unseen)",1,"BrainstormReport.php?status=unseen");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
-    maketab("Reviewed",1,"BrainstormReportReviewed.php");
+    maketab("Reviewed",1,"BrainstormReport.php?status=reviewed");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
-    maketab("Likely to Occur",1,"BrainstormReportLikely.php");
+    maketab("Likely to Occur",1,"BrainstormReport.php?status=likely");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=4>\n       ";
-    maketab("Scheduled",1,"BrainstormReportScheduled.php");
+    maketab("Scheduled",1,"BrainstormReport.php?status=scheduled");
     echo "</td>\n  </tr>\n</table>\n";
     echo "<table class=\"header\">\n  <tr>\n    <td style=\"height:5px\"></td>\n  </tr>\n";
     echo "  <tr>\n    <td>\n      <table width=\"100%\">\n";

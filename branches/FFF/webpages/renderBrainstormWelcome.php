@@ -30,16 +30,16 @@ Please expect the suggestions you submit to evolve over time.
 <p> Also, please note that we always have more suggestions than are 
 physically possible with the space and time we have, so not 
 everything will make it.   We do save good ideas for future conventions. 
-<ul> 
-<li> <a href="BrainstormSearchSession.php">Search </a> for similar ideas or get inspiration.
-<li> Email <?php echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> ";?> to suggest modifications on existing suggestion.
-<li> <a href="BrainstormCreateSession.php">Enter a new suggestion. </a>
-<li> See the list of <a href="BrainstormReportAll.php">All</a> suggestions (we've seen some and not see others).
-<li> See the list of <a href="BrainstormReportUnseen.php"> New </a> suggestions that have been entered recently (may not be fit for young eyes, we haven't see these yet). 
-<li> See the list of <a href="BrainstormReportReviewed.php">Reviewed </a>suggestions we are currently working through.
-<li> See the list of <a href="BrainstormReportLikely.php">Likely to Occur</a> suggestions we are or will allow participants to sign up for. 
-<li> See the list of <a href="BrainstormReportScheduled.php">Scheduled</a> suggestions.  These are very likely to happen at con.
-<li> Email <?php echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> ";?> to volunteer to help process these ideas.
+<UL> 
+  <LI> <A HREF="BrainstormSearchSession.php">Search </A> for similar ideas or get inspiration.
+  <LI> Email <?php echo "<A HREF=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</A> ";?> to suggest modifications on existing suggestion.
+  <LI> <A HREF="BrainstormCreateSession.php">Enter a new suggestion.</A>
+  <LI> See the list of <A HREF="BrainstormReport.php?status=all">All</A> suggestions (we have seen some and not see others).
+  <LI> See the list of <A HREF="BrainstormReport.php?status=unseen">New</A> suggestions that have been entered recently (may not be fit for young eyes, we have not see these yet). 
+  <LI> See the list of <A HREF="BrainstormReport.php?status=reviewed">Reviewed</A> suggestions we are currently working through.
+  <LI> See the list of <A HREF="BrainstormReport.php?status=likely">Likely to Occur</A> suggestions we are or will allow participants to sign up for. 
+  <LI> See the list of <A HREF="BrainstormReport.php?status=scheduled">Scheduled</A> suggestions.  These are very likely to happen at con.
+  <LI> Email <?php echo "<A HREF=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</A> ";?> to volunteer to help process these ideas.
 <?php 
       if(may_I('Participant')) {
            echo '<li> <a href="welcome.php">Return To Participant View</a>';
