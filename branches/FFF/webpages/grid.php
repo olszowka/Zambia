@@ -10,12 +10,6 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $GohBadgeList=GOH_BADGE_LIST;
 
 // LOCALIZATIONS
-if (!empty($_SERVER['QUERY_STRING'])) {
-  $_SESSION['return_to_page']="grid.php?".$_SERVER['QUERY_STRING'];
-} else {
-  $_SESSION['return_to_page']="grid.php";
-}
-
 /* unpub controls the "Do Not Print" and "Staff Only" inclusion into
  the grid it needs to be set first, because otherwise we are checking
  on a negative.  Default exclude "Do Not Print" and "Staff Only"
@@ -50,6 +44,25 @@ $logselect=$_GET['logistics'];
 $eventselect=$_GET['events'];
 $fasttrackselect=$_GET['fasttrack'];
 $goh=$_GET['goh'];
+$default=$_GET['default'];
+
+/* Attempt to establish a default grid based on permissions, and set
+   the proper return_to_page location. */
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $_SESSION['return_to_page']="grid.php?".$_SERVER['QUERY_STRING'];
+} else {
+  $_SESSION['return_to_page']="grid.php";
+  if (may_I('Programming')) {$progselect="y";}
+  if (may_I('Liaison')) {$progselect="y";}
+  if (may_I('General')) {$volselect="y";}
+  if (may_I('Registration')) {$regselect="y";}
+  if (may_I('Sales')) {$salesselect="y";}
+  if (may_I('Vending')) {$vendselect="y";}
+  if (may_I('Watch')) {$watchselect="y";}
+  if (may_I('Logistics')) {$logselect="y";}
+  if (may_I('Events')) {$eventselect="y";}
+  if (may_I('Fasttrack')) {$fasttrackselect="y";}
+}
 
 // If Participant, fix several of the variables, so there is only one grid displayed.
 if ($_SESSION['role']=="Participant") {
@@ -61,7 +74,7 @@ if ($_SESSION['role']=="Participant") {
   $saleselect="n";
   $vendselect="n";
   $watchselect="n";
-  $logelect="n";
+  $logselect="n";
   $eventselect="n";
   $fastrtactselect=="n";
   $filled="n";
@@ -74,7 +87,7 @@ if ($_SESSION['role']=="Participant") {
 // Defaults
 $allprint="excludes";
 $tallprint="";
-$typeprint="Complete ";
+$typeprint="";
 $beginonlyprint="regular ";
 $semifill=" (only)";
 $tsemifill="Time Semi-filled ";
@@ -93,31 +106,31 @@ if ($staffonly=="y") {
   $tallprint="Staff Only ";
  }
 if ($progselect=="y") {
-  $typeprint="Programming ";
+  $typeprint.="Programming ";
  }
 if ($volselect=="y") {
-  $typeprint="Volunteer ";
+  $typeprint.="Volunteer ";
  }
 if ($regselect=="y") {
-  $typeprint="Registration ";
+  $typeprint.="Registration ";
  }
 if ($saleselect=="y") {
-  $typeprint="Sales ";
+  $typeprint.="Sales ";
  }
 if ($vendselect=="y") {
-  $typeprint="Vending ";
+  $typeprint.="Vending ";
  }
 if ($watchselect=="y") {
-  $typeprint="Watch ";
+  $typeprint.="Watch ";
  }
 if ($logselect=="y") {
-  $typeprint="Logistics/Tech ";
+  $typeprint.="Logistics/Tech ";
  }
 if ($eventselect=="y") {
-  $typeprint="Events ";
+  $typeprint.="Events ";
  }
 if ($fasttrackselect=="y") {
-  $typeprint="Fast Track ";
+  $typeprint.="Fast Track ";
  }
 if ($filled=="y") {
   $semifill="";
@@ -136,6 +149,9 @@ if ($nocolor=="y") {
   $tcolorprint="";
   $colorprint="";
  }
+if ($typeprint=="") {
+  $typeprint="Complete ";
+}
 
 // Back to the more standard piece.
 $title=$tallprint.$gohprint.$typeprint.$tsemifill.$tcolorprint."Grid";

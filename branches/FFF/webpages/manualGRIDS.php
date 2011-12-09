@@ -3,7 +3,7 @@ require_once('StaffCommonCode.php');
 global $link;
 $_SESSION['return_to_page']="manualGRIDS.php";
 $title="All Grids";
-$description="<P>All the grids are listed below, in the grid.</P>\n";
+$description="<P>All the grids are listed below, in the grid. Or you can try your <A HREF=grid.php>default grid</A>.</P>\n";
 $additionalinfo="<P>The type of grid is listed as the headers and the area of interest it pertains to is listed down the side.\n";
 $additionalinfo.="The choice of color or not is inside each grid element.</P>\n";
 $additionalinfo.="<P>Also useful is the <A HREF=StaffBios.php>Bios for Presenters</A> (<A HREF=Bios.php>public version</A>),\n";
