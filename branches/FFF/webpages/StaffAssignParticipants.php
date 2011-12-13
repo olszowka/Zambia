@@ -167,16 +167,26 @@ foreach ($permission_array as $perm) {
   if (may_I($perm)) {$inrole_array[]="'$perm'";}
 }
 
+$additional_permission_array=array('SuperProgramming', 'SuperLiaison', 'Liaison');
+
+$volintaid_p=0;
+foreach ($additional_permission_array as $perm) {
+  if (may_I($perm)) {
+    $inrole_array[]="'Participant'";
+    $volintaid_p++;
+  }
+}
+
 if (isset($inrole_array)) {
   $inrole_string=implode(",",$inrole_array);
  } else {
-  $inrole_string="'P-Volunteer','G-Volunteer'";
+  $inrole_string="'P-Volunteer','G-Volunteer','Participant'";
  }
 
-$query = <<<EOD
+$participant_query = <<<EOD
 SELECT
-    pubsname,
-    badgeid,
+    DISTINCT(badgeid),
+    concat(pubsname, ' - ', badgeid) AS Pubsname,
     lastname
   FROM
       Participants
@@ -195,11 +205,7 @@ SELECT
   ORDER BY
     IF(instr(pubsname,lastname)>0,lastname,substring_index(pubsname,' ',-1)),firstname
 EOD;
-if (!$Presult=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    RenderError($title,$message);
-    exit();
-    }
+
 $i=0;
 $modid=0;
 $volid=0;
@@ -246,17 +252,19 @@ for ($i=0;$i<$numrows;$i++) {
     echo "        <INPUT type=\"radio\" name=\"moderator\" id=\"moderator\" value=\"".$bigarray[$i]["badgeid"]."\" ";
     echo (($bigarray[$i]["moderator"])?"checked":"").">\n";
     echo "        <LABEL for=\"moderator\">Moderator<br></LABEL>";
-    echo "        <INPUT type=\"radio\" name=\"volunteer\" id=\"volunteer\" value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["volunteer"])?"checked":"").">\n";
-    echo "        <LABEL for=\"volunteer\">Volunteer<br></LABEL>";
-    echo "        <INPUT type=\"radio\" name=\"introducer\" id=\"introducer\" value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["introducer"])?"checked":"").">\n";
-    echo "        <LABEL for=\"introducer\">Introducer<br></LABEL>";
-    echo "        <INPUT type=\"checkbox\" name=\"aidedecamp".$bigarray[$i]["badgeid"]."\" ";
-    echo "id=\"aidedecamp".$bigarray[$i]["badgeid"]."\" ".(($bigarray[$i]["aidedecamp"])?"checked":"")." value=\"1\">\n";
-    echo "        <LABEL for=\"aidedecamp\">Assisting<br></LABEL>";
-    echo "        <INPUT type=\"hidden\" name=\"wasaidedecamp".$bigarray[$i]["badgeid"]."\" value=\"";
-    echo (($bigarray[$i]["aidedecamp"])?1:0)."\">\n";
+    if ($volintaid_p > 0) {
+      echo "        <INPUT type=\"radio\" name=\"volunteer\" id=\"volunteer\" value=\"".$bigarray[$i]["badgeid"]."\" ";
+      echo (($bigarray[$i]["volunteer"])?"checked":"").">\n";
+      echo "        <LABEL for=\"volunteer\">Volunteer<br></LABEL>";
+      echo "        <INPUT type=\"radio\" name=\"introducer\" id=\"introducer\" value=\"".$bigarray[$i]["badgeid"]."\" ";
+      echo (($bigarray[$i]["introducer"])?"checked":"").">\n";
+      echo "        <LABEL for=\"introducer\">Introducer<br></LABEL>";
+      echo "        <INPUT type=\"checkbox\" name=\"aidedecamp".$bigarray[$i]["badgeid"]."\" ";
+      echo "id=\"aidedecamp".$bigarray[$i]["badgeid"]."\" ".(($bigarray[$i]["aidedecamp"])?"checked":"")." value=\"1\">\n";
+      echo "        <LABEL for=\"aidedecamp\">Assisting<br></LABEL>";
+      echo "        <INPUT type=\"hidden\" name=\"wasaidedecamp".$bigarray[$i]["badgeid"]."\" value=\"";
+      echo (($bigarray[$i]["aidedecamp"])?1:0)."\">\n";
+    }
     echo "        <INPUT type=\"checkbox\" name=\"unlist".$bigarray[$i]["badgeid"]."\" ";
     echo "id=\"unlist".$bigarray[$i]["badgeid"]."\" value=\"1\">\n";
     echo "        <LABEL for=\"unlist\">Not Interested</LABEL></TD>";
@@ -275,12 +283,7 @@ echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"S
 echo "<HR>\n";
 echo "<DIV><LABEL for=\"asgnpart\">Assign participant not indicated as interested or invited.</LABEL><BR>\n";
 echo "<SELECT name=\"asgnpart\">\n";
-echo "     <OPTION value=0 selected>Assign Participant</OPTION>\n";
-while (list($pubsname,$badgeid)= mysql_fetch_array($Presult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$badgeid."\">";
-    echo htmlspecialchars($pubsname)." - ";
-    echo htmlspecialchars($badgeid)."</OPTION>\n";
-    }
+populate_select_from_query($participant_query, 0,"Assign Participant",true);
 echo "</SELECT></DIV>\n";
 echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Add</BUTTON></DIV>\n";
 
