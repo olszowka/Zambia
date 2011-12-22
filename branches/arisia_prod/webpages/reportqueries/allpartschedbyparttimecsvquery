@@ -1,0 +1,6 @@
+TITLE='Full Participant Schedule -- CSV'
+DESCRIPTION='CSV of the schedule sorted by participant, then time [On&nbsp;Demand]'
+PROGWANTS=1
+GOHWANTS=1
+MIGRATED=1
+QUERY=""
