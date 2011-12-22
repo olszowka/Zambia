@@ -48,7 +48,7 @@ EOD;
         staff_footer();
         exit(); 
     	}
-    header('Content-disposition: attachment; filename=allroomsched.csv');
+    header('Content-disposition: attachment; filename=allpartsched.csv');
     header('Content-type: text/csv');
     echo "Participant, Moderator, Start Time, Duration, Room, Function, Track, Session ID, Title\n";
     while ($row= mysql_fetch_array($result, MYSQL_NUM)) {
