@@ -78,7 +78,8 @@ SELECT
     introducer=0 AND
     aidedecamp=0
   ORDER BY
-    P.pubsname
+  P.pubsname,
+  starttime
 EOD;
 
 // Retrieve query
@@ -91,6 +92,7 @@ for ($i=1; $i<=$elements; $i++) {
   if ($element_array[$i]['Participants'] != $printparticipant) {
     if ($printparticipant != "") {
       echo "    </TD>\n  </TR>\n</TABLE>\n";
+      echo "<P>&nbsp;</P>\n";
     }
     $printparticipant=$element_array[$i]['Participants'];
     $bioinfo=getBioData($element_array[$i]['badgeid']);
@@ -118,10 +120,10 @@ for ($i=1; $i<=$elements; $i++) {
       // Still in the language switch, but have set the $bioout array.
       if (isset($bioout['picture'])) {
 	if ($tablecount == 0) {
-	  echo "<TABLE>\n  <TR>\n    <TD width=310>";
+	  echo "<TABLE>\n  <TR>\n    <TD valign=top width=310>";
 	  $tablecount++;
 	} else {
-	  echo "    </TD>\n  </TR>\n  <TR>\n    <TD width=310>";
+	  echo "    </TD>\n  </TR>\n  <TR>\n    <TD valign=top width=310>";
 	}
 	echo sprintf("<img width=300 src=\"%s\"</TD>\n<TD>",$bioout['picture']);
       } else {
