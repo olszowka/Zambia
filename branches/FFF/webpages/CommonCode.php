@@ -676,8 +676,8 @@ function create_participant ($participant_arr,$permrole_arr) {
                      mysql_real_escape_string($participant_arr['bestway']),
                      (($participant_arr['interested']=='')?"NULL":$participant_arr['interested']),
                      mysql_real_escape_string($participant_arr['altcontact']),
-                     mysql_real_escape_string($participant_arr['prognotes']),
-                     mysql_real_escape_string($participant_arr['pubsname']));
+                     mysql_real_escape_string(stripslashes($participant_arr['prognotes'])),
+		     mysql_real_escape_string(stripslashes($participant_arr['pubsname'])));
   $message.=submit_table_element($link, $title, "Participants", $element_array, $value_array);
 
   // Add Bios.
@@ -694,7 +694,7 @@ function create_participant ($participant_arr,$permrole_arr) {
       $keyname=$biotype."_".$biolang."_".$biostate."_bio";
 
       // Length-check the values.
-      $biotext=mysql_real_escape_string($participant_arr[$keyname]);
+      $biotext=stripslashes(htmlspecialchars_decode($participant_arr[$keyname]));
       if ((isset($limit_array['max'][$biotype]['bio'])) and (strlen($biotext)>$limit_array['max'][$biotype]['bio'])) {
 	$message.=ucfirst($biostate)." ".ucfirst($biotype)." (".$biolang.") Biography";
 	$message.=" too long (".strlen($biotext)." characters), the limit is ".$limit_array['max'][$biotype]['bio']." characters.";
@@ -710,17 +710,17 @@ function create_participant ($participant_arr,$permrole_arr) {
   // Create CongoDump entry.
   $element_array = array('badgeid', 'firstname', 'lastname', 'badgename', 'phone', 'email', 'postaddress1', 'postaddress2', 'postcity', 'poststate', 'postzip', 'regtype');
   $value_array=array(mysql_real_escape_string($newbadgeid),
-		     mysql_real_escape_string($participant_arr['firstname']),
-		     mysql_real_escape_string($participant_arr['lastname']),
-		     mysql_real_escape_string($participant_arr['badgename']),
+		     mysql_real_escape_string(stripslashes($participant_arr['firstname'])),
+		     mysql_real_escape_string(stripslashes($participant_arr['lastname'])),
+		     mysql_real_escape_string(stripslashes($participant_arr['badgename'])),
 		     mysql_real_escape_string($participant_arr['phone']),
 		     mysql_real_escape_string($participant_arr['email']),
-		     mysql_real_escape_string($participant_arr['postaddress1']),
-		     mysql_real_escape_string($participant_arr['postaddress2']),
-		     mysql_real_escape_string($participant_arr['postcity']),
+		     mysql_real_escape_string(stripslashes($participant_arr['postaddress1'])),
+		     mysql_real_escape_string(stripslashes($participant_arr['postaddress2'])),
+		     mysql_real_escape_string(stripslashes($participant_arr['postcity'])),
 		     mysql_real_escape_string($participant_arr['poststate']),
 		     mysql_real_escape_string($participant_arr['postzip']),
-		     mysql_real_escape_string($participant_arr['regtype']));
+		     mysql_real_escape_string(stripslashes($participant_arr['regtype'])));
   $message.=submit_table_element($link, $title, "CongoDump", $element_array, $value_array);
 
   // Submit a note about what was done.
