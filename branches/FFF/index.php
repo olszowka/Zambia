@@ -37,6 +37,7 @@ echo "<H2>Check out the below links to give us/see your feedback and learn about
   <LI><A HREF="webpages/Schedule.php">Schedule</A></LI>
   <LI><A HREF="webpages/Tracks.php">Tracks</A></LI>
   <LI><A HREF="webpages/Bios.php">Presenter Bios</A></LI>
+  <LI><A HREF="webpages/Vendors.php">Vendor List</A></LI>
   <LI><A HREF="webpages/Postgrid.php?volunteer=y">Volunteer Grid</A></LI>
   <LI><A HREF="webpages/Descriptions.php?volunteer=y">Volunteer Job Descriptions</A></LI>
 <?php if ($nowis < $constart) { ?>
