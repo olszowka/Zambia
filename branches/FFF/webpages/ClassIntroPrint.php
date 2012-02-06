@@ -77,7 +77,8 @@ SELECT
       Schedule SCH,
       Rooms R,
       Types T,
-      UserHasPermissionRole UP
+      UserHasPermissionRole UP,
+      PermissionRoles PR
   WHERE
     POS.badgeid=P.badgeid and
     POS.sessionid=S.sessionid and
@@ -85,7 +86,8 @@ SELECT
     SCH.roomid=R.roomid and
     POS.badgeid=UP.badgeid and
     S.typeid=T.typeid and
-    UP.permroleid=5 and
+    UP.permroleid=PR.permroleid and
+    PR.permrolename in ('Programming') and
     POS.introducer=1 and
     typename in ('Panel','Class')
 

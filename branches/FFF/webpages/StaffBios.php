@@ -80,7 +80,8 @@ SELECT
     (introducer=0 OR introducer IS NULL) AND
     (aidedecamp=0 OR aidedecamp IS NULL)
   ORDER BY
-    P.pubsname
+    P.pubsname,
+    starttime
 EOD;
 
 // Retrieve query
