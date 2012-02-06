@@ -62,24 +62,24 @@ $pdf->SetFont('freesans', '', 12, '', true);
  person's information. */
 $query = <<<EOD
 SELECT 
-    P.pubsname,
-    GROUP_CONCAT(UP.permroleid) as Role
+    pubsname,
+    GROUP_CONCAT(DISTINCT permrolename) as Role
   FROM
-      Participants P
-    JOIN UserHasPermissionRole UP USING (badgeid)
+      ParticipantOnSession
+    JOIN Participants USING (badgeid)
+    JOIN UserHasPermissionRole USING (badgeid)
+    JOIN PermissionRoles USING (permroleid)
   WHERE
-    (UP.permroleid=5 OR
-     UP.permroleid=3) AND
-    P.interested=1
+    permrolename IN ('Participant', 'Programming')
 
 EOD;
 if ($individual) {$query.=" and
     P.badgeid='$individual'";}
 $query.="
   GROUP BY
-    P.pubsname
+    pubsname
   ORDER BY
-    P.pubsname";
+    pubsname";
 
 ## Retrieve query
 list($rows,$participant_header,$participant_array)=queryreport($query,$link,$title,$description,0);
@@ -91,17 +91,21 @@ foreach ($participant_array as $participant) {
   $printstring = "<P>&nbsp;</P><P>Dear ".$participant['pubsname'].",</P>";
 
   // Determine what letter.
-  if (($participant['Role'] == "5,3") OR ($participant['Role'] == "3,5")) {
+  if (($participant['Role'] == 'Participant,Programming') OR ($participant['Role'] == 'Programming,Participant')) {
     if (file_exists("../Local/Verbiage/Welcome_Letter_Presenters_and_Volunteers_0")) {
       $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Presenters_and_Volunteers_0");
+    } else {
+      if (file_exists("../Local/Verbiage/Welcome_Letter_Presenters_0")) {
+	$printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Presenters_0");
+      }
     }
-  } elseif ($participant['Role'] == "5") {
-    if (file_exists("../Local/Verbiage/Welcome_Letter_Volunteers_0")) {
-      $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Volunteers_0");
-    }
-  } elseif ($participant['Role'] == "3") {
+  } elseif ($participant['Role'] == 'Participant') {
     if (file_exists("../Local/Verbiage/Welcome_Letter_Presenters_0")) {
       $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Presenters_0");
+    }
+  } elseif ($participant['Role'] == 'Programming') {
+    if (file_exists("../Local/Verbiage/Welcome_Letter_Volunteers_0")) {
+      $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Volunteers_0");
     }
   }
 
