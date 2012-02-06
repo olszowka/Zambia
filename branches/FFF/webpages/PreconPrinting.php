@@ -7,8 +7,8 @@ staff_header($title);
 <P>On this page you will find the tools for printing what is needful before the event.</P>
 <HR>
 <DL>
-  <DT id="schedules"><A HREF="SchedulePrint.php">Schedules</A></DT>
-  <DD id="schedules">Preview and then print a schedule for everyone.</DD>
+  <DT id="schedules"><A HREF="SchedulePrint.php?group=Participant">Presenters</A> <A HREF="SchedulePrint.php?group=Programming">Programming Volunteers</A> <A HREF="SchedulePrint.php?group=General">General Volunteers</A></DT>
+  <DD id="schedules">Preview and then print a schedule for each group.</DD>
   <DT id="classintro"><A HREF="ClassIntroPrint.php">Introduction pages</A></DT>
   <DD id="classintro">Preview and then print the Introduction pages, including the roles info for everyone applicable.</DD>
   <DT id="logistics"><A HREF="LogisticsPrint.php">Room States</A></DT>
@@ -19,6 +19,8 @@ staff_header($title);
   <DD id="gridtall">Print the public grid with the Rooms across the top and the Times down the left side.</DD>
   <DT id="badges"><A HREF="BadgesPrint.php">Badges</A></DT>
   <DD id="badges">Print up simple paper badges.</DD>
+  <DT id="badgebacks"><A HREF="BadgeBackPrint.php">Badge Backs</A></DT>
+  <DD id="badges">Print up the sechedule for the back of the simple paper badges.</DD>
   <DT id="tents"><A HREF="TentsPrint.php">Tents</A></DT>
   <DD id="tents">Print the name-tents.</DD>
   <DT id="lables"><A HREF="LabelsPrint.php">Labels</A></DT>

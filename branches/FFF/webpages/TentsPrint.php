@@ -117,7 +117,6 @@ $header=<<<EOD
 
 % set font type and size
 ISOArial 32 scalefont setfont
-%%Page: labels 1
 
 EOD;
 
@@ -141,20 +140,19 @@ $positional_array[1]['revcol']=-720;
 /* This query pulls the pubsname for tents from just the panelists. */
 $query=<<<EOD
 SELECT
-    DISTINCT P.pubsname
+    DISTINCT pubsname
   FROM
-      Sessions S
-    JOIN Schedule SCH USING (sessionid)
-    JOIN Rooms R USING (roomid)
-    LEFT JOIN ParticipantOnSession POS USING (sessionid)
-    LEFT JOIN Participants P USING (badgeid)
-    LEFT JOIN UserHasPermissionRole UP USING (badgeid)
+    ParticipantOnSession
+    JOIN Sessions USING (sessionid)
+    JOIN Types USING (typeid)
+    JOIN Participants USING (badgeid)
+    JOIN UserHasPermissionRole USING (badgeid)
+    JOIN PermissionRoles USING (permroleid)
   WHERE
-    UP.permroleid=3 AND
-    S.typeid=1
+    permrolename in ('Participant') AND
+    typename IN ('Panel')
   ORDER BY
-    P.pubsname
-
+    pubsname
 EOD;
 
 // Retrive query
@@ -181,7 +179,7 @@ while ($k <= $rows) {
     echo "\ntranslate\nlabelclip\nnewpath\nISOArial 45 scalefont setfont\n3.000000 76.500000 moveto\n( ";
     echo $participant_array[$k++]['pubsname'];
     echo ") show\nstroke\ngrestore\n\n";
-  }
+   }
   echo "showpage\n\n";
  }
 

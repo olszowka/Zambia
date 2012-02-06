@@ -16,11 +16,18 @@ $_SESSION['return_to_page']="SchedulePrint.php";
 $title="Schedule Printing";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
+$group=$_GET['group'];
 
 ## If the individual isn't a staff member, only serve up their schedule information
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
 
-$description="<P>A way to <A HREF=\"SchedulePrint.php?print_p=T";
+## If an individual request, make sure it pulls all of the schedule for that person
+if ($individual != "") {$group = "Participant','Programming','General";}
+
+## If no group is set, presume that you want the Participants
+if ($group == "") {$group='Participant';}
+
+$description="<P>A way to <A HREF=\"SchedulePrint.php?print_p=T&group=$group";
 if ($individual != "") {$description.="&individual=$individual";}
 $description.="\">print</A> the appropriate schedule";
 if ($individual == "") {$description.="s";}
@@ -84,10 +91,10 @@ SELECT
     JOIN Rooms R USING (roomid)
     LEFT JOIN ParticipantOnSession POS USING (sessionid)
     LEFT JOIN Participants P USING (badgeid)
-    LEFT JOIN UserHasPermissionRole UP USING (badgeid)
+    JOIN UserHasPermissionRole UP USING (badgeid)
+    JOIN PermissionRoles PR USING (permroleid)
   WHERE
-    (UP.permroleid=5 or
-     UP.permroleid=3)
+    permrolename in ('$group')
 EOD;
 if ($individual) {$query.=" and
     POS.badgeid='$individual'";}

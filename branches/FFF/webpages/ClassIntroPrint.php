@@ -178,7 +178,7 @@ for ($i=1; $i<=$classcount; $i++) {
         $bios.=", our moderator, for the $classname.</P>";
       }
       if ($typename == "Class") {
-	$bios.="<P>".$presenter_array[$j]['pubsname']." ".htmlspecialchars($presenter_array[$j]['biotext'])."</P>";
+	$bios.="<P>".$presenter_array[$j]['pubsname']." ".$presenter_array[$j]['biotext']."</P>";
       }
     }
   }
