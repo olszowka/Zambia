@@ -3,9 +3,7 @@ require_once('StaffCommonCode.php');
 
 /* Global Variables */
 global $link;
-$ConName=CON_NAME; // make it a variable so it can be substituted
-$ConLogo="NELA-LOGO.eps";
-$BoundingBox="0 0 759 222";
+$ConStartDatim=CON_START_DATIM;
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="BadgesPrint.php";
@@ -16,7 +14,6 @@ $description="<P>Badges for Printing.</P>\n";
 $header=<<<EOD
 %!PS-Adobe-3.0
 
-/insertlogo ($ConLogo) def
 /deffont {
   findfont exch scalefont def
 } bind def
@@ -106,7 +103,6 @@ $header=<<<EOD
 /oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis
 ] def
 /ISOArial ISO-8859-1Encoding /Arial reencode_font
-/ISOArial-Bold ISO-8859-1Encoding /Arial-Bold reencode_font
 /labelclip {
 	newpath
 	1.000000 1.000000 moveto
@@ -118,56 +114,6 @@ $header=<<<EOD
 
 } def
 
-/BeginEPSF { % def
-  /b4_Inc_state save def		%Save state for cleanup
-  /dict_count countdictstack def	%Count dict objects on dict stack
-  /op_count count 1 sub def		%Count objects on operand stack
-  userdict begin			%Push userdict on dict stack
-  /showpage { } def			%Redefine showpage null
-  0 setgray 0 setlinecap 1 setlinewidth	%Graphics setup
-  0 setlinejoin 10 setmiterlimit [] 0 setdash newpath
-  /languagelevel where			%if level != 1 then set strokeadjust
-  {pop languagelevel			%and overprint to their defaults
-  1 ne
-    {false setstrokeadjust false setoverprint
-    } if
-  } if
-} bind def
-
-/EndEPSF { % def
-  count op_count sub {pop} repeat	%Clean up stacks
-  countdictstack dict_count sub {end} repeat
-  b4_Inc_state restore
-  picwidth 4 div neg -5 translate                       % Attempt at centering
-} bind def
-/rect { % llx lly w h			Lower Left X&Y Width and Height inputs
-  4 2 roll moveto			% mv llx and lly to top and go there 
-  1 index 0 rlineto			% gets and copies width, lineto w,0
-  0 exch rlineto			% switches 0 for hight, lineto 0,h
-  neg 0 rlineto				% negs width, lineto -w,0
-  closepath				% back to llx and lly
-} bind def
-/picinsert { % llx lly urx ury from BoundingBox
-  /bi_ury exch def
-  /bi_urx exch def
-  /bi_lly exch def
-  /bi_llx exch def
-  /bi_width bi_urx bi_llx sub def
-  /bi_height bi_ury bi_lly sub def
-  /picwidth 246 def
-  /picheight 20 def
-  /scale_width picwidth bi_width div def
-  /scale_height picheight bi_height div def
-  picwidth 4 div 5 translate                       % Attempt at centering
-  BeginEPSF
-  scale_height scale_height scale                        %figured from BoundingBox
-  bi_llx neg bi_lly neg translate       %-llx -lly to lower corner justify
-  bi_llx bi_lly 
-  picwidth scale_width div 
-  picheight scale_height div rect               %playspace
-  clip newpath
-} bind def
-
 % end prologue
 
 % set font type and size
@@ -176,7 +122,7 @@ ISOArial 16 scalefont setfont
 EOD;
 
 $startpage=<<<EOD
-%%Page: BadgeFront
+%%Page: BadgeBack
 
 %%BeginPageSetup
 54.000000 77.000000 translate
@@ -195,53 +141,98 @@ $positional_array[2]['col']=252;
 /* This query grabs all the schedule elements to be rated, for the selected time period. */
 $query=<<<EOD
 SELECT 
-  DISTINCT badgeid,
-  pubsname,
-  if ((permrolename='Participant'),concat("Presenter"),concat("Volunteer")) AS Role
+    DISTINCT badgeid,
+    pubsname,
+    CONCAT(title, 
+        if((moderator=1),' (moderating)',''), 
+        if ((aidedecamp=1),' (assisting)',''), 
+        if((volunteer=1),' (outside wristband checker)',''), 
+	    if((introducer=1),' (announcer/inside room attendant)','')) AS Title,
+     CONCAT(DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p'),
+	' - ',
+        CASE
+          WHEN HOUR(duration) < 1 THEN concat(date_format(duration,'%i'),'min')
+          WHEN MINUTE(duration)=0 THEN concat(date_format(duration,'%k'),'hr')
+          ELSE concat(date_format(duration,'%k'),'hr ',date_format(duration,'%i'),'min')
+          END,
+        ' - ',
+	roomname) as Info,
+     sessionid
   FROM
       Sessions
     JOIN Schedule USING (sessionid)
+    JOIN Rooms R USING (roomid)
     JOIN ParticipantOnSession USING (sessionid)
     JOIN Participants USING (badgeid)
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE
-    permrolename IN ('Participant','General','Programming')
+    permrolename in ('Participant','General','Programming')
   ORDER BY
     pubsname,
-    permroleid
+    starttime
 EOD;
 
 // Retrive query
 list($rows,$header_array,$participant_array)=queryreport($query,$link,$title,$description,0);
+
+$startpos=140;
+$name_indent=6;
+$info_indent=9;
+$fontsize=6;
+$offset=$fontsize+2;
+$name_offset=$startpos-$offset;
+$info_offset=$startpos-$offset-$offset;
+$i=0;
+$j=0;
+$new_participant_array[$j]['badgeid']="";
+while ($i <= $rows) {
+  $i++;
+  if ($new_participant_array[$j]['badgeid'] != $participant_array[$i]['badgeid']) {
+    $k=1;
+    $new_participant_array[$j]['Schedule'].="\nstroke\ngrestore\n\n";
+    $j++;
+    $new_participant_array[$j]['badgeid']=$participant_array[$i]['badgeid'];
+    $new_participant_array[$j]['pubsname']=$participant_array[$i]['pubsname'];
+    $new_participant_array[$j]['Schedule']=" ) show\n".$name_indent." ".$name_offset." moveto\n( ";
+    $new_participant_array[$j]['Schedule'].=$participant_array[$i]['Title'];
+    $new_participant_array[$j]['Schedule'].=" ) show\n".$info_indent." ".$info_offset." moveto\n( ";
+    $new_participant_array[$j]['Schedule'].=$participant_array[$i]['Info'];
+    $new_participant_array[$j]['Schedule'].=" ) show\n";
+   } else {
+    if ($participant_array[$i]['sessionid'] != $participant_array[$i-1]['sessionid']) {
+      $first=$startpos-$offsent-$offset-($k*2*$offset);
+      $second=$first-$offset;
+      $new_participant_array[$j]['Schedule'].=$name_indent." ".$first." moveto\n( ".$participant_array[$i]['Title']." ) show\n".$info_indent." ".$second." moveto\n( ".$participant_array[$i]['Info']." ) show\n";
+      $k++;
+     }
+   }
+ }
+$new_participant_array[$j]['Schedule'].="\nstroke\ngrestore\n\n";
+$new_rows=$j;
 
 /* Printing body.  */
 header('Content-type: application/postscript');
 
 echo $header;
 $k=1;
-while ($k <= $rows) {
+while ($k <= $new_rows) {
   echo $startpage;
-    for ($i=1; $i<=2; $i++) {
-      for ($j=1; $j<=4; $j++) {
-	while ((isset($participant_array[$k]['badgeid'])) AND ($participant_array[$k]['badgeid'] == $participant_array[$k-1]['badgeid'])) {$k++;}
-	echo "gsave\n";
-	echo $positional_array[$i]['col'];
-	echo " ";
-	echo $positional_array[$j]['row'];
-	echo "\ntranslate\n";
-	echo "3 3 translate\n".$BoundingBox." picinsert\ngsave\ninsertlogo run\ngrestore\n%%Trailer\nEndEPSF\n-3 -3 translate\n";    
-        echo "labelclip\nnewpath\nISOArial 16 scalefont setfont\n3.000000 60.000000 moveto\n( ";
-	echo $participant_array[$k]['Role'];
-	echo ") show\n";
-	echo "ISOArial 16 scalefont setfont\n3.000000 40.000000 moveto\n( ";
-	echo $ConName;
-	echo ") show\n";
-	echo "ISOArial-Bold 24 scalefont setfont\n3.000000 80.000000 moveto\n( ";
-	echo $participant_array[$k++]['pubsname'];
+  for ($i=2; $i>=1; $i--) {
+    for ($j=1; $j<=4; $j++) {
+      echo "gsave\n";
+      echo $positional_array[$i]['col'];
+      echo " ";
+      echo $positional_array[$j]['row'];
+      echo "\ntranslate\nlabelclip\nnewpath\nISOArial ".$fontsize." scalefont setfont\n".$name_indent." ".$startpos." moveto\n( ";
+      echo $new_participant_array[$k]['pubsname'];
+      if (isset($new_participant_array[$k]['Schedule'])) {
+	echo $new_participant_array[$k++]['Schedule'];
+       } else {
 	echo ") show\nstroke\ngrestore\n\n";
-      }
-    }
+       }
+     }
+   }
   echo "showpage\n\n";
  }
 
