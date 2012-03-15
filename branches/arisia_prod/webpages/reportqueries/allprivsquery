@@ -1,7 +1,0 @@
-TITLE='List all users and their permission roles [On Demand]'
-DESCRIPTION='Badgeid, Name, Permission roles'
-MIGRATED=1
-ADMINWANTS=1
-CSVONLY=0
-GENCSV=0
-QUERY=""

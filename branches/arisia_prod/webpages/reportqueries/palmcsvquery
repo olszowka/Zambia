@@ -1,8 +1,0 @@
-TITLE="CSV -- Report for uploading to PDA's"
-DESCRIPTION='StartTime, Duration, Room, Track, Title, Participants [On&nbsp;Demand]'
-PUBSWANTS=1
-CSVSWANTS=1
-GENCSV=0
-QUERY=" "
-MIGRATED=true
-

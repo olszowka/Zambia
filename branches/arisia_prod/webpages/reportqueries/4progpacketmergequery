@@ -1,7 +1,0 @@
-TITLE='CSV - Full Participant Schedule for the Program Packet Merge [On&nbsp;Demand]'
-DESCRIPTION='pubsname, (day, time, duration, room, mod)'
-MIGRATED=1
-PROGWANTS=1
-CSVONLY=0
-GENCSV=0
-QUERY=""

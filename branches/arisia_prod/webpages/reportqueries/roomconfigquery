@@ -1,8 +1,0 @@
-TITLE='Room Configuration'
-DESCRIPTION='List all configurable information associated with rooms.'
-HOTELWANTS=1
-ADMINWANTS=1
-MIGRATED=1
-CSVONLY=0
-GENCSV=0
-QUERY=''
