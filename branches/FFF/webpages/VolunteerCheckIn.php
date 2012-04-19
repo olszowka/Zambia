@@ -26,7 +26,7 @@ if (isset($inrole_array)) {
 
 $query=<<<EOF
 SELECT
-    badgeid,
+    DISTINCT badgeid,
     pubsname 
   FROM
       Participants
@@ -62,12 +62,12 @@ if (isset($_POST['voltimein'])) {
   $message.=submit_table_element($link, $title, "$TimecardDB.TimeCard", $element_array, $value_array);
   /* if (isset($_SESSION['return_to_page'])) {
     header("Location: ".$_SESSION['return_to_page']); // Redirect back to what send you here
-   } else {
-    header("Location: VolunterCheckIn.php"); // Redirect back to here, with a blank slate
-   } */
-  topofpagereport($title,$description,$additionalinfo);
+    } else { */
+    header("Location: VolunteerCheckIn.php"); // Redirect back to here, with a blank slate
+  /* } */
+  /* topofpagereport($title,$description,$additionalinfo);
   echo "<P>Database: $TimecardDB.Timecard</P>\n";
-  correct_footer();
+  correct_footer(); */
   exit();
  }
 

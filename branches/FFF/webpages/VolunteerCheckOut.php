@@ -1,7 +1,9 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
-$TimecardDB=TIMECARDDB;  // make it a variable so it can be substituted
+$TimecardDB=TIMECARDDB; // make it a variable so it can be substituted
+$ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+$ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 
 // Tests for the substituted variables
 if ($TimecardDB=="TIMECARDDB") {unset($TimecardDB);}
@@ -70,7 +72,10 @@ if (isset($_POST['voltimeout'])) {
 $query=<<<EOF
 SELECT
     pubsname,
-    DATE_FORMAT(voltimein,'%a %l:%i %p (%k:%i)') AS "inat"
+    if (((voltimein > '$ConStartDatim') AND
+	 (voltimein < ADDTIME('$ConStartDatim',SEC_TO_TIME('$ConNumDays'*86400)))),
+        DATE_FORMAT(voltimein,'%a %l:%i %p (%k:%i)'),
+        DATE_FORMAT(voltimein,'%c/%e %l:%i %p (%k:%i)')) AS "inat"
   FROM
       $TimecardDB.TimeCard
     JOIN Participants USING (badgeid)
