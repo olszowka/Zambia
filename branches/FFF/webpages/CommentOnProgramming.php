@@ -1,12 +1,17 @@
 <?php
-$title="Comment On Programming";
-require_once('db_functions.php');
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
-require_once('StaffCommonCode.php');
+require_once('CommonCode.php');
+if (may_I("Staff")) {
+  require_once('StaffCommonCode.php');
+ } else {
+  require_once('PartCommonCode.php');
+ }
 require_once('SubmitCommentOn.php');
+global $link;
+$title="Comment On Programming";
+$description="<P>Please add your comments about programming in the box, below</P>";
 
-staff_header($title);
+// Start page properly
+topofpagereport($title,$description,$additionalinfo);
 
 if (isset($_POST["comment"])) {
     SubmitCommentOnProgramming();
@@ -27,5 +32,5 @@ if (isset($_POST["comment"])) {
 <BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
 </FORM>
 <?php
-staff_footer();
+correct_footer();
 ?>

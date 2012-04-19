@@ -486,17 +486,17 @@ function select_participant ($selpartid, $returnto) {
   }
 
   // lastname, firstname (badgename/pubsname) - partid
-  $query0="SELECT badgeid, concat(lastname,', ',firstname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
+  $query0="SELECT DISTINCT badgeid, concat(lastname,', ',firstname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
   $query0.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
   $query0.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY lastname";
 
   // firstname lastname (badgename/pubsname) - partid
-  $query1="SELECT badgeid, concat(firstname,' ',lastname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
+  $query1="SELECT DISTINCT badgeid, concat(firstname,' ',lastname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
   $query1.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
   $query1.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY firstname";
 
   // pubsname/badgename (lastname, firstname) - partid
-  $query2="SELECT badgeid, concat(pubsname,'/',badgename,' (',lastname,', ',firstname,') - ',badgeid) AS pname";
+  $query2="SELECT DISTINCT badgeid, concat(pubsname,'/',badgename,' (',lastname,', ',firstname,') - ',badgeid) AS pname";
   $query2.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
   $query2.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY pubsname";
 

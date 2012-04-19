@@ -54,22 +54,4 @@ function SubmitCommentOnSessions () {
     $message="Database updated successfully.<BR>";
     echo "<P class=\"regmsg\">".$message."\n";
     }
-
-function SubmitPresenterSuggestion () {
-    global $link;
-    $commenter = $_POST["yourname"];
-    $comment = $_POST["yourname"]." : ".$_POST["youremail"]." : ".$_POST["theirname"]." : ".$_POST["theiremail"]." : ".$_POST["theirwebsite"]." : ".$_POST["whysuggested"]." : ".$_POST["notesforprog"];
-    $query = "INSERT INTO CommentsOnProgramming (rbadgeid,commenter,comment) VALUES ('";
-    $query.=$_SESSION['badgeid']."','";
-    $query.=mysql_real_escape_string($commenter)."','";
-    $query.=mysql_real_escape_string($comment)."')";
-    if (!mysql_query($query,$link)) {
-        $message=$query."<BR>Error updating database.  Database not updated.";
-        echo "<P class=\"errmsg\">".$message."\n";
-        return;
-        }
-    $message="Database updated successfully.<BR>";
-    echo "<P class=\"regmsg\">".$message."\n";
-    }
-
 ?>

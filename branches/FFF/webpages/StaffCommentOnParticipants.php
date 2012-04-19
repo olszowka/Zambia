@@ -27,7 +27,7 @@ if (isset($_POST["comment"])) {
 
 // Choose the individual from the database, if not previously selected
 if (!($_GET["partid"]!=0)) {
-  select_participant($partid, "CommentOnParticipants.php");
+  select_participant($partid, "StaffCommentOnParticipants.php");
   echo "<HR>";
  }
 
@@ -44,7 +44,7 @@ $pubsname=$participant_array[1]['pubsname'];
 
 ?>
 <BR>
-<FORM name="partcommentform" method=POST action="CommentOnParticipants.php">
+<FORM name="partcommentform" method=POST action="StaffCommentOnParticipants.php">
   <P>Comment on/for <?php echo htmlspecialchars($pubsname)?> for 
 <?php echo CON_NAME; ?>:
 <INPUT type="hidden" name="partid" value="<?php echo $partid; ?>">
