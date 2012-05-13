@@ -1,7 +1,9 @@
 <?php
 function load_jquery() {
 ?>
-<script src="jquery/jquery-1.6.4.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="javascript/bootstrap.js" type="text/javascript"></script>
+<script src="javascript/prefixfree.min.js" type="text/javascript"></script>
 <script src="jquery/jquery-ui-1.8.16.custom.min.js"></script>
 <script src="javascript/main.js"></script>
 <?php

@@ -6,10 +6,10 @@ if (!isset($daymap)) {
 ?>
 
 <?php if ($message_error!="") { ?>
-    <p class="errmsg"><?php echo $message_error; ?></p>
+    <p class="alert alert-error"><?php echo $message_error; ?></p>
     <?php } ?>
 <?php if ($message!="") { ?>
-    <p class="regmsg"><?php echo $message; ?></p>
+    <p class="alert alert-success"><?php echo $message; ?></p>
     <?php } ?>
 <div id=constraint>
 <//?php print_r($partAvail);?>
