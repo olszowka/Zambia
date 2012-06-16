@@ -1,0 +1,31 @@
+
+In the Upgrade_dbase directory you'll find a series of files starting 
+with a 2 digit number.  These are the database updates that need to be 
+completed when you pick up the latest cvs checkout.   Without them 
+certain functionality will not work.  
+
+These updates are already applied to EmptyDbase.dump:
+01_addpermtables.sql
+02_pubstats.sql
+03_pubstat_constraints.sql
+04_divinfo.sql
+05_PermissionAtoms_update.sql
+06_some_participant_perms.sql
+07_participant_write_perms.sql
+08_add_brainstorm.sql
+09_session_history.sql
+10_brainstorm_search_session.sql
+10_types.sql
+11_perm_bug.sql
+12_patchlog.sql
+13_part_avail_mon.sql
+14_interested_table.sql
+15_public_user.sql
+16_fix_charset.sql
+17_partavailnull.sql
+18_editbioperms.sql
+19_partavail.sql
+
+I'm really not sure what the status of  DemoDbase.dump is.  It has at least the first 4. 
+
+any further updates need to be applied
