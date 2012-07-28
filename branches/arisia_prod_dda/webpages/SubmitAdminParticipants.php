@@ -63,10 +63,10 @@ function update_participant() {
     if ($interested==2) {
         $query="DELETE FROM ParticipantOnSession where badgeid = \"$partid\"";
 	    if (!mysql_query_with_error_handling($query)) {
-	        echo "<p class=\"errmsg\">".$message_error."</p>";
+	        echo "<p class=\"alert alert-error\">".$message_error."</p>";
 	        return;
 	        }
-        $message.="<p class=\"regmsg\">Participant removed from ".mysql_affected_rows($link)." session(s).</p>";
+        $message.="<p class=\"alert alert-info\">Participant removed from ".mysql_affected_rows($link)." session(s).</p>";
         }
     echo $message;
     }

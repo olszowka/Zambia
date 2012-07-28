@@ -1,7 +1,7 @@
 <?php
     function participant_footer() {
 ?>
-<div class="container-fluid">
+<div xxclass="container-fluid">
 <hr/>
 <p/> 
 <p>If you need help or to tell us something that doesn't fit here, please email
