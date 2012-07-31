@@ -23,11 +23,18 @@ function anyChange() {
 			z.hide();
 }
 
-function cancelSearchPartsBUTN() {
+function hideSearchResults() {
 	resultsHidden = true;
   $("#searchResultsDIV").hide("fast");
-	$("#toggleSearchResultsBUTN").prop("disabled", !resultsHidden);
-	$("#toggleText").html((resultsHidden ? "Show" : "Hide"));
+	$("#toggleSearchResultsBUTN").prop("disabled", false);
+	$("#toggleText").html("Show");
+}
+
+function showSearchResults() {
+	resultsHidden = false;
+  $("#searchResultsDIV").show("fast");
+	$("#toggleSearchResultsBUTN").prop("disabled", false);
+	$("#toggleText").html("Hide");
 }
 
 function toggleSearchResultsBUTN() {
@@ -49,7 +56,7 @@ function chooseParticipant(badgeid, override) {
     $('#warnNewBadgeID').html(badgeid);
     return;
   }
-  cancelSearchPartsBUTN();
+  hideSearchResults();
 	$("#badgeid").val($("#bidSPAN_" + badgeid).html());
 	$("#lname_fname").val($("#lnameSPAN_" + badgeid).html());
 	$("#bname").val($("#bnameSPAN_" + badgeid).html());
@@ -134,7 +141,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
 	$('#resultBoxDIV').show();
 	$("#updateBUTN").prop("disabled", true);	
   $("#passwordsDontMatch").hide();
-  cancelSearchPartsBUTN();
+  hideSearchResults();
 }
 
 /*
@@ -163,18 +170,12 @@ function initializeAdminParticipants() {
 	$('#resultsDiv').hide();
 	$('#resultBoxDIV').hide();
 	$("#unsavedWarningDIV").modal({backdrop: 'static', keyboard: true, show: false});
-/*
-	$("#openSearchPartsBUTN").button();
-	$("#openSearchPartsBUTN").click(checkIfDirty);
-*/
 	$("#toggleSearchResultsBUTN").button();
 	$("#toggleSearchResultsBUTN").click(toggleSearchResultsBUTN);
 	$("#toggleSearchResultsBUTN").prop("disabled", true);
 	resultsHidden = true;
 //	$("#searchPartsBUTN").button();
 	$("#searchPartsBUTN").click(doSearchPartsBUTN);
-	$("#cancelSearchPartsBUTN").button();
-	$("#cancelSearchPartsBUTN").click(cancelSearchPartsBUTN);
 	$("#cancelOpenSearchBUTN").button();
 	$("#overrideOpenSearchBUTN").button();
 	$("#searchResultsDIV").html("").hide('fast');
@@ -262,8 +263,7 @@ function updateBUTN() {
 function writeSearchResults(data, textStatus, jqXHR) {
 	//ajax success callback function
 	$("#searchResultsDIV").html(data).show('fast');
-	resultsHidden = false;
-	$("#toggleSearchResultsBUTN").prop("disabled", resultsHidden);
   $('#searchPartsBUTN').tbutton('reset');
+  showSearchResults();
 }
 
