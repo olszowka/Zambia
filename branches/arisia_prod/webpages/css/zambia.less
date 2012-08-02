@@ -1,0 +1,170 @@
+// Colors and other variables
+@blue: #00c;
+@green: #0c0;
+@light_blue: @blue + #333;
+@dark_blue: @blue - #333;
+@light_green: @green + #333;
+@dark_green: @green - #333;
+@darker_green: @green - #222;
+@font: Verdana;
+@contrast: white;
+@color: black;
+@staffColor: @darker_green;
+@participantColor: @light_blue;
+
+////////////
+// LAYOUT //
+////////////
+
+// header
+header {
+	img, h1 {
+		float: left;
+		padding-left: 1em;
+	}
+}
+
+#welcome p {
+  text-align: right;
+}
+////////////
+// STYLES //
+////////////
+
+
+body {
+	background-image: url('../images/light_honeycomb.png');
+	xxbackground-image: url('../images/old_mathematics.png');
+	background-repeat: repeat;
+}
+
+header#top {
+	xxbackground-color: gray;
+}
+
+header {
+	label {
+		color: @color;
+		display: block;
+		text-align: right;
+		font-size: 1.1em;
+	}
+}
+
+#loginBox,
+#welcome {
+	float: right;
+	margin: 1em 1em 0 0;
+  p {
+    color: @contrast;
+  }
+}
+
+#buttonBox {
+  margin: 0.4em;
+  xposition: relative;
+  xtop: -3em;
+}
+
+.borderBox {
+  border: black thin solid;
+  padding: 5px;
+  margin: 0;
+  color: @contrast;
+}
+
+input {
+  height: 28px;
+}
+
+.navbar {
+  margin-bottom: 0.2em;
+}
+
+.staff {
+  xxbackground-color: @staffColor;
+  background-image: url('../images/staffheadbg.png');
+  background-repeat: repeat-x;
+  background-color: white;
+  color: black;
+}
+
+.participant {
+  xxbackground-color: @participantColor;
+  background-image: url('../images/partheadbg.png');
+  background-repeat: repeat-x;
+  background-color: white;
+  color: black;
+}
+
+.nowidth {
+  width: auto!important;
+  padding-right: 1em;
+  text-align: right;
+}
+
+.note {
+  font-size: 0.85em;
+}
+#login {
+	float: right;
+}
+
+.label {
+  text-align: right;
+}
+
+.congo_table {
+  margin-top: 1em;
+}
+
+h1 {
+	font-family: @font;
+	font-size: 2em;
+	padding: 1em;
+	color: @color;
+	a {
+		color: @contrast;
+		text-decoration: none;
+	}
+}
+h2 {
+	font-family: @font;
+	font-size: 1.5em;
+	padding: 0;
+	color: #666;
+	background-color: #ccc;
+	text-align: center;
+}
+ul#boxes li {
+	font-family: @font;
+	font-size: 1.33em;
+	padding: 2.5em 0;
+	color: #999;
+	background-color: #e5e5e5;
+	text-align: center;
+}
+/////////////////
+// RESPONSIVE  //
+/////////////////
+@media (max-width: 780px) {
+	.wide-only {
+		display: none;
+	}
+	.label {
+	   text-align: left;
+	}
+}
+
+@media (max-width: 480px) {
+	.wide-medium-only {
+		display: none;
+	}
+	#loginBox {
+		margin: 0 1em 0 0;
+	}
+	h2, .label {
+	 text-align: left;
+	}
+}
+

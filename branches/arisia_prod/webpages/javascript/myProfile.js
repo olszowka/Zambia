@@ -9,7 +9,7 @@ function MyProfile() {
 	var bioOK = true;
 	
 	this.anyChange = function anyChange(element) {
-		$("#resultBoxDIV").html("&nbsp;");
+		$("#resultBoxDIV").html("&nbsp;").css("visibility", "hidden");
 		pw = $("#password").val();
 		if (element != "password" && element != "cpassword") {
 				anyDirty = true;
@@ -18,30 +18,32 @@ function MyProfile() {
 			else {
 				cpw = $("#cpassword").val();
 				if (pw && pw!=cpw) {
-						$("#badPassword").addClass("revealedWarning");
-						$("#badPassword").removeClass("hiddenWarning");
+						$("#badPassword").show();
+						$("#passGroup").addClass("error");
 						$("#submitBTN").attr("disabled","disabled");
 						pwOK = false;
 						return;
 						}
 					else {
-						$("#badPassword").addClass("hiddenWarning");
-						$("#badPassword").removeClass("revealedWarning");
+						$("#badPassword").hide();
+						$("#passGroup").removeClass("error");
+						$("#submitBTN").removeAttr("disabled");
 						pwOK = true;
 						}
 				}
 		if (element == "bioTXTA") {
 			if ($("#bioTXTA").val().length > maxBioLen) {
-					$("#badBio").addClass("revealedWarning");
-					$("#badBio").removeClass("hiddenWarning");
+					$("#badBio").show();
+				  $("#bioGroup").addClass("error");
 					$("#submitBTN").attr("disabled","disabled");
 					bioOK = false;
-					}
+				}
 				else {
-					$("#badBio").addClass("hiddenWarning");
-					$("#badBio").removeClass("revealedWarning");
+					$("#badBio").hide();
+				  $("#bioGroup").removeClass("error");
+				  $("#submitBTN").removeAttr("disabled");
 					bioOK = true;
-					}
+				}
 			}
 		if (pwOK && bioOK && (anyDirty || pw)) {
 			$("#submitBTN").removeAttr("disabled");
@@ -53,13 +55,16 @@ function MyProfile() {
 		//just a filler for now
 		//debugger;
 		$("#password").val("");
+		this.anyChange("password");
+		this.anyChange("bioTXTA");
 		dirtyInputArr = [];
-		$("#submitBTN").attr("disabled","disabled");
+		$("#submitBTN").tbutton().attr("disabled","disabled");
 		//window.status="Reached initializeMyProfile.";
 	}
 
 	this.updateBUTN = function updateBUTN() {
 		//debugger;
+		$("#submitBTN").tbutton('loading');
 		var postdata = {
 			ajax_request_action : "update_participant"
 			};
@@ -97,12 +102,14 @@ function MyProfile() {
 
 	this.showUpdateResults = function showUpdateResults(data, textStatus, jqXHR) {
 		//ajax success callback function
-		$("#resultBoxDIV").html(data);
+		$("#resultBoxDIV").html(data).css("visibility", "visible");
 		$("#password").val("");
 		$("#cpassword").val("");
 		dirtyInputArr = [];
 		anyDirty = false;
-		$("#submitBTN").attr("disabled","disabled");
+		$("#submitBTN").tbutton('reset');
+		setTimeout(function() {$("#submitBTN").tbutton().attr("disabled","disabled");}, 0);
+		//$("#submitBTN").html("Update").removeClass("disabled");
 		document.getElementById("resultBoxDIV").scrollIntoView(false);
 	}
 

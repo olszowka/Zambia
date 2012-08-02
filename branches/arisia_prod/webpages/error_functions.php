@@ -5,7 +5,7 @@
     require_once('StaffFooter.php');
     staff_header($title);
     if (isset($debug)) echo $debug."<BR>\n";
-    echo "<P class=\"errmsg\">".$message."</P>\n";
+    echo "<P class=\"alert alert-error\">".$message."</P>\n";
     staff_footer();
     }
 
@@ -13,7 +13,7 @@ function PartRenderError ($title, $message) {
     require_once('ParticipantHeader.php');
     require_once('ParticipantFooter.php');
     participant_header($title);
-    echo "<P class=\"errmsg\">".$message."</P>\n";
+    echo "<P class=\"alert alert-error\">".$message."</P>\n";
     participant_footer();
     }
 
@@ -21,7 +21,7 @@ function BrainstormRenderError ($title, $message) {
     require_once('BrainstormHeader.php');
     require_once('BrainstormFooter.php');
     brainstorm_header($title);
-    echo "<P class=\"errmsg\">".$message."</P>\n";
+    echo "<P class=\"alert alert-error\">".$message."</P>\n";
     brainstorm_footer();
     }
 
@@ -54,6 +54,6 @@ function RenderError($title,$message) {
     }
 
 function RenderErrorAjax($message_error) {
-	echo "<span class=\"errmsg\">$message_error</span>\n";
+	echo "<span class=\"alert\">$message_error</span>\n";
 	}
 ?>

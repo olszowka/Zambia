@@ -13,10 +13,10 @@ function SetSessionSearchParameterDefaults () {
 function RenderSearchPreviousSessions() {
     global $SessionSearchParameters, $message_error,$message;
     if ($message_error) {
-            echo "<P class=\"errmsg\">$message_error</P>\n";
+            echo "<P class=\"alert alert-error\">$message_error</P>\n";
             }
         elseif ($message!="") {
-            echo "<P class=\"regmsg\">$message</P>\n";
+            echo "<P class=\"alert alert-success\">$message</P>\n";
             }
 ?>
 

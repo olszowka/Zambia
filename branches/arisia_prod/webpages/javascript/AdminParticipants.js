@@ -3,6 +3,7 @@ var pnameDirty = false;
 var snotesDirty = false;
 var originalInterested = 0;
 var fbadgeid;
+var resultsHidden = true;
 
 function anyChange() {
 	var x = $("#password").val();
@@ -17,18 +18,45 @@ function anyChange() {
 			}
 	var z = $("#passwordsDontMatch");
 	if (x && y && x!=y)
-			z.css("display","inline-block");
+			z.show();
 		else
 			z.hide();
 }
 
-function cancelSearchPartsBUTN() {
-	$("#searchPartsDIV").dialog("close");
+function hideSearchResults() {
+	resultsHidden = true;
+  $("#searchResultsDIV").hide("fast");
+	$("#toggleSearchResultsBUTN").prop("disabled", false);
+	$("#toggleText").html("Show");
 }
 
-function chooseParticipant(badgeid) {
+function showSearchResults() {
+	resultsHidden = false;
+  $("#searchResultsDIV").show("fast");
+	$("#toggleSearchResultsBUTN").prop("disabled", false);
+	$("#toggleText").html("Hide");
+}
+
+function toggleSearchResultsBUTN() {
+	$("#searchResultsDIV").slideToggle("fast");
+	resultsHidden = !resultsHidden;
+	$("#toggleText").html((resultsHidden ? "Show" : "Hide"));
+}
+
+function loadNewParticipant() {
+  var id = $('#warnNewBadgeID').html();
+  chooseParticipant(id, 'override');
+  return true;
+}
+
+function chooseParticipant(badgeid, override) {
 	//debugger;
-	$("#searchPartsDIV").dialog("close");
+  if (!checkIfDirty(override)) {
+    $('#warnName').html($("#pname").val());
+    $('#warnNewBadgeID').html(badgeid);
+    return;
+  }
+  hideSearchResults();
 	$("#badgeid").val($("#bidSPAN_" + badgeid).html());
 	$("#lname_fname").val($("#lnameSPAN_" + badgeid).html());
 	$("#bname").val($("#bnameSPAN_" + badgeid).html());
@@ -50,15 +78,20 @@ function chooseParticipant(badgeid) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
+	$('#resultsDiv').show();
 	$("#updateBUTN").prop("disabled", true);
-	$("#resultBoxDIV").html("");
+	$("#resultBoxDIV").html("").hide();
+  $("#passwordsDontMatch").hide();
 }
 
 function doSearchPartsBUTN() {
+  if (!checkIfDirty())
+    return;
 	//called when user clicks "Search" within dialog
 	var x = document.getElementById("searchPartsINPUT").value;
 	if (!x)
 		return;
+  $('#searchPartsBUTN').tbutton('loading');
 	$.ajax({
 		url: "SubmitAdminParticipants.php",
 		dataType: "html",
@@ -104,9 +137,14 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
+	$('#resultsDiv').show();
+	$('#resultBoxDIV').show();
 	$("#updateBUTN").prop("disabled", true);	
+  $("#passwordsDontMatch").hide();
+  hideSearchResults();
 }
 
+/*
 function highlight(dohighlight, id) {
 	if (dohighlight) {
 			$("#actionDIV_" + id).removeClass().addClass("action_hover");
@@ -123,60 +161,47 @@ function highlight(dohighlight, id) {
 			$("#bidSPAN_" + id).removeClass().addClass("action");
 			}
 }
+*/
 
 function initializeAdminParticipants() {
 	//called when JQuery says AdminParticipants page has loaded
 	//debugger;
-	$("#searchPartsDIV").dialog({
-		title: "Search for participants",
-		height: "450",
-		width: "550",
-		modal: true,
-		autoOpen: false,
-		resizable: false,
-		draggable: true
-		});
-	$("#unsavedWarningDIV").dialog({
-		title: "Data not saved",
-		height: "175",
-		width: "350",
-		modal: true,
-		autoOpen: false,
-		resizable: false,
-		draggable: true
-		});
-	$("#openSearchPartsBUTN").button();
-	$("#openSearchPartsBUTN").click(openSearchPartsBUTN);
-	$("#doSearchPartsBUTN").button();
-	$("#doSearchPartsBUTN").click(doSearchPartsBUTN);
-	$("#cancelSearchPartsBUTN").button();
-	$("#cancelSearchPartsBUTN").click(cancelSearchPartsBUTN);
+  $("#passwordsDontMatch").hide();
+	$('#resultsDiv').hide();
+	$('#resultBoxDIV').hide();
+	$("#unsavedWarningDIV").modal({backdrop: 'static', keyboard: true, show: false});
+	$("#toggleSearchResultsBUTN").button();
+	$("#toggleSearchResultsBUTN").click(toggleSearchResultsBUTN);
+	$("#toggleSearchResultsBUTN").prop("disabled", true);
+	resultsHidden = true;
+//	$("#searchPartsBUTN").button();
+	$("#searchPartsBUTN").click(doSearchPartsBUTN);
 	$("#cancelOpenSearchBUTN").button();
 	$("#overrideOpenSearchBUTN").button();
-	//window.status="Reached initializeAdminParticipants."
-	if (fbadgeid)	// signal from page initializer that page was requested to
-					// to be preloaded with a participant
+	$("#searchResultsDIV").html("").hide('fast');
+
+	if (fbadgeid)  // signal from page initializer that page was requested to
+					       // to be preloaded with a participant
 		fetchParticipant(fbadgeid);
 }
 
-function openSearchPartsBUTN(mode) {
+function checkIfDirty(mode) {
 	//called when user clicks "Search for participants" on the page
 	//debugger;
 	if (!mode && (bioDirty || pnameDirty || snotesDirty || 
 		$("#interested").val() != originalInterested ||
 		($("#password").val()) && 
 			$("#cpassword").val())) {
-			$("#unsavedWarningDIV").dialog("open");
+			$("#unsavedWarningDIV").modal('show');
 			$("#cancelOpenSearchBUTN").blur();
-			return;	
+			return false;	
 			}
+
 	if (mode)
-		$("#unsavedWarningDIV").dialog("close");
+		$("#unsavedWarningDIV").modal('hide');
 	if (mode=="cancel")
-		return;
-	$("#searchPartsINPUT").val("");
-	$("#searchResultsDIV").html("");
-	$("#searchPartsDIV").dialog("open");
+		return false;
+  return true;
 }
 
 function showUpdateResults(data, textStatus, jqXHR) {
@@ -184,9 +209,11 @@ function showUpdateResults(data, textStatus, jqXHR) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
-	$("#updateBUTN").prop("disabled", true);
+  $('#updateBUTN').tbutton('reset');
+  setTimeout(function() {$("#updateBUTN").tbutton().attr("disabled","disabled");}, 0);
 	originalInterested = $("#interested").val();
 	$("#resultBoxDIV").html(data);
+	$('#resultBoxDIV').show();
 }
 
 function textChange(which) {
@@ -209,6 +236,7 @@ function textChange(which) {
 
 function updateBUTN() {
 	//debugger;
+  $('#updateBUTN').tbutton('loading');
 	var postdata = {
 		ajax_request_action : "update_participant",
 		badgeid : $("#badgeid").val()
@@ -234,6 +262,8 @@ function updateBUTN() {
 
 function writeSearchResults(data, textStatus, jqXHR) {
 	//ajax success callback function
-	$("#searchResultsDIV").html(data);
+	$("#searchResultsDIV").html(data).show('fast');
+  $('#searchPartsBUTN').tbutton('reset');
+  showSearchResults();
 }
 

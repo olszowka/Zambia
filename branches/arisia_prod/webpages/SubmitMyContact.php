@@ -108,7 +108,7 @@
 			exit();
 			}
 		}
-	echo ("<span class=\"regmsg\">");
+	echo ("<span class=\"alert alert-success\">");
 	if ($password) {
 		echo "Password updated. ";
 		$_SESSION['password']=$password;

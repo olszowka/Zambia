@@ -15,10 +15,10 @@ if (isset($pubsname)) {
 participant_header($title);
 
 if ($message_error!="") { 
-	echo "<P class=\"errmsg\">".$message_error."</P>";
+	echo "<P class=\"alert alert-error\">".$message_error."</P>";
 	}
 if ($message!="") {
-	echo "<P class=\"regmsg\">".$message."</P>";
+	echo "<P class=\"alert alert-success\">".$message."</P>";
 	}
 ?>
 <form name="partform" method=POST action="SubmitMyContact.php">

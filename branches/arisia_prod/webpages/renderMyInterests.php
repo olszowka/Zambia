@@ -4,10 +4,10 @@ function renderMyInterests ($title, $error, $message) {
     global $otherroles, $newrow, $rolerows, $rolearray;
     participant_header($title);
     if ($error) {
-            echo "<P class=\"errmsg\">Database not updated.<BR>".$message."</P>";
+            echo "<P class=\"alert alert-error\">Database not updated.<BR>".$message."</P>";
             }
         elseif ($message!="") {
-            echo "<P class=\"regmsg\">".$message."</P>";
+            echo "<P class=\"alert alert-success\">".$message."</P>";
             }
     if (!may_I('my_gen_int_write')) {
         echo "<P>We're sorry, but we are unable to accept your suggestions at this time.\n";

@@ -3,10 +3,10 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
     global $session_interests, $title;
     participant_header($title);
     if ($message_error) {
-        echo "<P class=\"errmsg\">Database not updated.<BR>".$message_error."</P>";
+        echo "<P class=\"alert alert-error\">Database not updated.<BR>".$message_error."</P>";
         }
     if ($message) {
-        echo "<P class=\"regmsg\">".$message."</P>";
+        echo "<P class=\"alert alert-success\">".$message."</P>";
         }
     // "Add" Section
     echo "<FORM name=\"addform\" method=POST action=\"PartPanelInterests_POST.php\">\n";

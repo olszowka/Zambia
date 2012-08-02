@@ -17,13 +17,13 @@ if (isset($_POST["selpart"])) {
             $query.="sessionid=".$sessionid;
             $result=mysql_query($query,$link);
             if ($result) {
-                    echo "<P class=\"regmsg\">Database successfully updated.</P>\n";
+                    echo "<P class=\"alert alert-success\">Database successfully updated.</P>\n";
                     }
                 elseif (mysql_errno($link)==1062) {
-                    echo "<P class=\"errmsg\">Database not updated.  That participant was already invited to that session.</P>";
+                    echo "<P class=\"alert\">Database not updated. That participant was already invited to that session.</P>";
                     }
                 else {
-                    echo $query."<P class=\"errmsg\">Database not updated.</P>";
+                    echo $query."<P class=\"alert alert-error\">Database not updated.</P>";
                     }
                 
             }        
