@@ -1,7 +1,7 @@
 // Colors and other variables
 @blue: #00c;
 @green: #0c0;
-@light_blue: @blue + #333;
+@light_blue: @blue + #666;
 @dark_blue: @blue - #333;
 @light_green: @green + #333;
 @dark_green: @green - #333;
@@ -89,12 +89,28 @@ input {
   color: black;
 }
 
+#staffView {
+  color: @staffColor;
+}
+
+#staffView:hover {
+  color: (@staffColor + #444);
+}
+
 .participant {
   xxbackground-color: @participantColor;
   background-image: url('../images/partheadbg.png');
   background-repeat: repeat-x;
   background-color: white;
   color: black;
+}
+
+#ParticipantView {
+  color: @participantColor;
+}
+
+#ParticipantView:hover {
+  color: (@participantColor + #444);
 }
 
 .nowidth {

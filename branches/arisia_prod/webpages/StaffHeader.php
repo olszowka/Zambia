@@ -14,7 +14,7 @@
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/zambia.less" type="text/less" media="screen" />
+	  <link rel="stylesheet" href="css/zambia.less" type="text/less" media="screen" />
 <!--   <link rel="stylesheet" href="ParticipantSection.css" type="text/css" /> -->
 
     <!-- Scripts -->
