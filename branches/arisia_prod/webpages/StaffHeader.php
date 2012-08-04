@@ -127,8 +127,18 @@ EOD;
             <li><a href="StaffPage.php">Overview</a></li>
          	  <?php makeMenuItem("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormWelcome.php",may_I('BrainstormSubmit')); ?></td>
       		  <li class="divider-vertical"></li>
-            </ul>
-				    <ul class="nav pull-right">
+             <li>
+              <form method=POST action="ShowSessions.php" class="navbar-search pull-left">
+                <input type="text" name="searchtitle" class="search-query" placeholder="Search by session title">
+                <input type="hidden" value="ANY" name="track">
+                <input type="hidden" value="ANY" name="status">
+                <input type="hidden" value="ANY" name="type">
+                <input type="hidden" value="" name="sessionid">
+                <input type="hidden" value="ANY" name="divisionid">
+              </form>
+            </li>
+           </ul>
+  				    <ul class="nav pull-right">
         		  <li class="divider-vertical"></li>
 				      <li><a id="ParticipantView" href="welcome.php">Participant View</a></li>
 				    </ul>
