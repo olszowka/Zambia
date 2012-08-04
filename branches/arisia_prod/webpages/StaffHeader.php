@@ -129,7 +129,7 @@ EOD;
       		  <li class="divider-vertical"></li>
              <li>
               <form method=POST action="ShowSessions.php" class="navbar-search pull-left">
-                <input type="text" name="searchtitle" class="search-query" placeholder="Search by session title">
+                <input type="text" name="searchtitle" class="search-query" placeholder="Search for sessions by title">
                 <input type="hidden" value="ANY" name="track">
                 <input type="hidden" value="ANY" name="status">
                 <input type="hidden" value="ANY" name="type">
