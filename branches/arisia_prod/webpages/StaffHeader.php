@@ -71,6 +71,7 @@ load_javascript();
             <ul class="nav">
               <li class="dropdown"><a href="#sessions" class="dropdown-toggle" data-toggle="dropdown">Sessions<b class="caret"></b></a>
               	<ul class="dropdown-menu">
+              		<li><a href="StaffSearchSessions.php">Search Sessions</a></li>
               		<li><a href="CreateSession.php">Create New Session</a></li>
               		<li><a href="ViewSessionCountReport.php">View Session Counts</a></li>
               		<li><a href="ViewAllSessions.php">View All Sessions</a></li>
