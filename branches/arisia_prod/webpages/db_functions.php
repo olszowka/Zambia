@@ -56,7 +56,7 @@ function populateCustomTextArray() {
 
 // Function prepare_db()
 // Opens database channel
-include ('db_name.php');
+include ('../db_name.php');
 
 function prepare_db() {
     global $link;

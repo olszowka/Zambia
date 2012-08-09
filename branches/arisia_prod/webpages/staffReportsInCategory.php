@@ -11,15 +11,28 @@
 		RenderError($title,$message_error);
         exit();
 		}
-	$query = "SELECT description from ReportCategories where reportcategoryid = $reportcategoryid;";
-	$result = mysql_query_with_error_handling($query);
-	if ($result===false || mysql_num_rows($result) != 1) {
-		$message_error = "reportcategoryid $reportcategoryid not found in db.";
-		RenderError($title,$message_error);
-        exit();
-		}
-	$title = mysql_result($result,0);
-	$queryArray["reportTypes"]=<<<EOD
+	if ($reportcategoryid == 0) {
+			$title = "All Reports";
+			$queryArray["reportTypes"]= <<<EOD
+SELECT
+		RT.reporttypeid, RT.title, RT.description, RT.oldmechanism, RT.ondemand, RT.filename
+	FROM
+		ReportTypes RT
+	ORDER BY
+		RT.display_order;
+EOD;
+			}
+		else {
+			// actual $reportcategoryid
+			$query = "SELECT description from ReportCategories where reportcategoryid = $reportcategoryid;";
+			$result = mysql_query_with_error_handling($query);
+			if ($result===false || mysql_num_rows($result) != 1) {
+				$message_error = "reportcategoryid $reportcategoryid not found in db.";
+				RenderError($title,$message_error);
+				exit();
+				}
+			$title = mysql_result($result,0);
+			$queryArray["reportTypes"]= <<<EOD
 SELECT
 		RT.reporttypeid, RT.title, RT.description, RT.oldmechanism, RT.ondemand, RT.filename
 	FROM
@@ -30,6 +43,7 @@ SELECT
 	ORDER BY
 		RT.display_order;
 EOD;
+			}
 	if (($resultXML=mysql_query_XML($queryArray))===false) {
 	    RenderError($title,$message_error);
         exit();
