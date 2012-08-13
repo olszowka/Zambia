@@ -30,7 +30,9 @@ define("SECOND_DESCRIPTION_CAPTION","Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION","Biographie en fran&ccedil;ais");
 define("DURATION_IN_MINUTES","FALSE"); // TRUE: in mmm; False: in hh:mm
         // affects session edit/create page only, not reports
+define("DEFAULT_DURATION","1:15"); // must correspond to DURATION_IN_MINUTES
 define("BASESESSIONDIR","/var/lib/php5");
+define("SHOW_BRAINSTORM_LOGIN_HINT",FALSE);
 global $daymap;
 $daymap = array ('long' => array(1 => "Thursday", 2 => "Friday", 3 => "Saturday", 4 => "Sunday", 5 => "Monday"),
     'short' => array(1 => 'Thu', 2 => 'Fri', 3 => 'Sat', 4 => 'Sun', 5 => 'Mon'));
