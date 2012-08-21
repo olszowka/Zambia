@@ -29,6 +29,7 @@ function fdropitems(source, dest) {
     }
 
 function mysubmit() {
+	$("#sessionid").prop("disabled",false);
     var i;
     for ( i = 0 ; i < document.sessform.featdest.length ; i++ ) {
         document.sessform.featdest.options[i].selected=true;

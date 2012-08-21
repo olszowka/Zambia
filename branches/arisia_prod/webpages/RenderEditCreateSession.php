@@ -48,7 +48,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
           <div class="row-fluid">
             <div class="control-group">
               <label class="control-label" for="sessionid">Session #: </label>
-                <INPUT type="text" class="span1" size=4 name="sessionid" disabled readonly value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>">
+                <INPUT id="sessionid" type="text" class="span1" size=4 name="sessionid" disabled readonly value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>">
               <label class="control-label" for="divisionid">Division: </label>
                 <SELECT name="divisionid" class="span2">
                    <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
