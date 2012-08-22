@@ -3,6 +3,7 @@ require_once('PartCommonCode.php');
 require_once('db_functions.php');
 
 $title="Login";
+$badgeid=$_GET['login'];
 
 participant_header($title);
 
@@ -17,7 +18,8 @@ participant_header($title);
   <table class="login" align=center>
     <tr>
       <td>Badge ID:</td>
-      <td><input type="text" name="badgeid" maxlength="40"> </td>
+      <td><input type="text" name="badgeid" maxlength="40"
+          <?php if ($badgeid!="") echo "value=\"$badgeid\"" ?> ></td>
     </tr>
     <tr>
       <td>Password:</td>
