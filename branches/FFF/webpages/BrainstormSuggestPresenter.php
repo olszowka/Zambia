@@ -43,7 +43,7 @@ if ((isset ($_POST['update'])) and ($_POST['update']=="Yes")) {
   $_POST['note']=$tmp_note;
   $_POST['firstname']=$_POST['pubsname'];
   $_POST['badgename']=$_POST['pubsname'];
-  create_participant ($_POST,$permrole_arr);
+  list($message,$message_error)=create_participant ($_POST,$permrole_arr);
  }
 
 // Set the values.

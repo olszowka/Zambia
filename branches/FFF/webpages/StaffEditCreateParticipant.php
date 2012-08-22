@@ -52,7 +52,7 @@ if ($action=="create") { //initialize participant array
   // If the information has already been added, and we are
   // on the return loop, add the Participant to the database.
   if ((isset ($_POST['update'])) and ($_POST['update']=="Yes")) {
-    create_participant ($_POST,$permrole_arr);
+    list($message,$message_error)=create_participant ($_POST,$permrole_arr);
   }
 
   // Get a set of bioinfo, not for the info, but for the arrays.
@@ -94,7 +94,7 @@ if ($action=="create") { //initialize participant array
   $participant_arr['postcity']="";
   $participant_arr['poststate']="";
   $participant_arr['postzip']="";
-  RenderEditCreateParticipant($action,$participant_arr,$permrole_arr,$message_warn,$message_error);
+  RenderEditCreateParticipant($action,$participant_arr,$permrole_arr,$message,$message_error);
   correct_footer();
  }
 
@@ -193,7 +193,7 @@ EOD;
        $participant_arr[$keyname]=$bioinfo[$keyname];
      }
    }
-   RenderEditCreateParticipant($action,$participant_arr,$permrole_arr,$message_warn,$message_error);
+   RenderEditCreateParticipant($action,$participant_arr,$permrole_arr,$message,$message_error);
    // Show previous notes added, for references, and end page
    show_participant_notes ($selpartid);
  }
