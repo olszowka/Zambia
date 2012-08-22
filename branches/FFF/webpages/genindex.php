@@ -37,8 +37,10 @@ EOD;
   $report_array[2]['Tools']="<A HREF=genreport.php?reportname=personalflow>My Flow</A>";
   $report_array[3]['Tools']="<A HREF=grid.php>Default Grid</A>";
   $report_array[4]['Tools']="<A HREF=manualGRIDS.php>All Grids</A>";
-  $report_array[5]['Tools']="<A HREF=searchreport.php>Search</A>";
-  $report_array[6]['Tools']="<A HREF=EditGroupFlows.php>Edit</A>";
+  $report_array[5]['Tools']="<A HREF=ScheduledAndCheckInTimesGraph.php>Sched/Check In</A>";
+  $report_array[6]['Tools']="<A HREF=ScheduledAndAvailabilityTimesGraph.php>Sched/Avail</A>";
+  $report_array[7]['Tools']="<A HREF=searchreport.php>Search</A>";
+  $report_array[8]['Tools']="<A HREF=EditGroupFlows.php>Edit</A>";
 
   // Page Rendering
   topofpagereport($title,$description,$additionalinfo);
