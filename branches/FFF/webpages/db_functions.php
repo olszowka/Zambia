@@ -261,7 +261,30 @@ function update_session() {
             if (!mysql_query($query,$link)) { return false; }
             }
         }
-
+    $query="DELETE from SessionHasVendorFeature where sessionid=".$session["sessionid"];
+    $message2=$query;
+    if (!mysql_query($query,$link)) { return false; }
+    $id=$session["sessionid"];
+    if ($session["vendfeatdest"]!="") {
+        for ($i=0 ; $session["vendfeatdest"][$i]!="" ; $i++ ) {
+            $query="INSERT into SessionHasVendorFeature set sessionid=".$id.", vendorfeatureid=";
+            $query.=$session["vendfeatdest"][$i];
+            $message2=$query;
+            if (!mysql_query($query,$link)) { return false; }
+            }
+        }
+    $query="DELETE from SessionHasVendorSpace where sessionid=".$session["sessionid"];
+    $message2=$query;
+    if (!mysql_query($query,$link)) { return false; }
+    $id=$session["sessionid"];
+    if ($session["vendorspace"]!="") {
+        for ($i=0 ; $session["vendorspace"][$i]!="" ; $i++ ) {
+            $query="INSERT into SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
+            $query.=$session["vendorspace"][$i];
+            $message2=$query;
+            if (!mysql_query($query,$link)) { return false; }
+            }
+        }
     return true;
     }
 
@@ -343,7 +366,20 @@ function insert_session() {
             $result = mysql_query($query,$link);
             }
         }
-
+    if ($session["vendfeatdest"]!="") {
+        for ($i=0 ; $session["vendfeatdest"][$i]!="" ; $i++ ) {
+            $query="INSERT into SessionHasVendorFeature set sessionid=".$id.", vendorfeatureid=";
+            $query.=$session["vendorfeatdest"][$i];
+            $result = mysql_query($query,$link);
+            }
+        }
+    if ($session["vendorspace"]!="") {
+        for ($i=0 ; $session["vendorspace"][$i]!="" ; $i++ ) {
+            $query="INSERT into SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
+            $query.=$session["vendorspace"][$i];
+            $result = mysql_query($query,$link);
+            }
+        }
     return $id;
     }
 

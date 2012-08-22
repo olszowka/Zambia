@@ -253,6 +253,62 @@ function brainstorm_header($title) {
   echo "</table>\n\n<H2 class=\"head\">$title</H2>\n";
 }
 
+function vendor_header($title) {
+  require_once ("javascript_functions.php");
+  $ConName=CON_NAME; // make it a variable so it can be substituted
+  $ConUrl=CON_URL; // make it a variable so it can be substituted
+
+  echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/strict.dtd\">\n";
+  echo "<html xmlns=\"http://www.w3.org/TR/xhtml1/transitional\">\n";
+  echo "<head>\n";
+  echo "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=latin-1\">\n";
+  echo "  <title>Zambia -- $ConName -- $title</title>\n";
+  echo "  <link rel=\"stylesheet\" href=\"BrainstormSection.css\" type=\"text/css\">\n";
+  echo "  <meta name=\"keywords\" content=\"Questionnaire\">\n";
+  javascript_for_edit_session();
+  javascript_pretty_buttons();
+  mousescripts();
+  echo "</head>\n";
+  echo "<body leftmargin=\"0\" topmargin=\"0\" marginheight=\"0\" marginwidth=\"0\">\n";
+  echo "<H1 class=\"head\">Zambia&ndash;The $ConName Scheduling Tool</H1>\n";
+  echo "<H1 class=\"head\">Return to the <A HREF=\"http://$ConUrl\">$ConName</A> website</H1>\n";
+  echo "<hr>\n\n";
+  if (isset($_SESSION['badgeid'])) {
+    echo "<table class=\"tabhead\">\n";
+    echo "  <col width=8%><col width=8%><col width=8%><col width=8%><col width=8%>\n";
+    echo "  <col width=8%><col width=10%><col width=10%><col width=8%><col width=8%>\n";
+    echo "  <col width=8%><col width=8%>\n";
+    echo "  <tr class=\"tabrow\">\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
+    maketab("Welcome",1,"VendorWelcome.php");
+    echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
+    maketab("List",1,"VendorSearch.php");
+    echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
+    if (may_I('Vendor')) { 
+      maketab("Update",may_I('Vendor'),"VendorSubmitVendor.php"); 
+    } else {
+      maketab("New Vendor",may_I('BrainstormSubmit'),"VendorSubmitVendor.php");
+    }
+    echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
+    maketab("Apply",may_I('Vendor'),"VendorApply.php");
+    echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
+    echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
+    if (may_I('Staff')) { 
+      maketab("Staff View",may_I('Staff'),"StaffPage.php");
+    }
+    echo "</td>\n  </tr>\n</table>\n";
+    echo "<table class=\"header\">\n  <tr>\n    <td style=\"height:5px\"></td>\n  </tr>\n";
+    echo "  <tr>\n    <td>\n      <table width=\"100%\">\n";
+    echo "        <tr>\n          <td width=\"425\">&nbsp;</td>\n";
+    echo "          <td class=\"Welcome\">Welcome ";
+    echo $_SESSION['badgename'];
+    echo "            </td>\n";
+    echo "          <td><A class=\"logout\" HREF=\"logout.php\">&nbsp;Logout&nbsp;</A></td>\n";
+    echo "          <td width=\"25\">&nbsp;</td>\n        </tr>\n      </table>\n";
+    echo "    </td>\n  </tr>\n";
+  }
+  echo "</table>\n\n<H2 class=\"head\">$title</H2>\n";
+}
+
 function posting_footer() {
   $ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
   $FooterTemplateFile="../Local/FooterTemplate.html";
@@ -298,6 +354,15 @@ function brainstorm_footer() {
   echo "\n\n</body>\n</html>\n";
 }
 
+function vendor_footer() {
+  $VendorEmail=VENDOR_EMAIL; // make it a variable so it can be substituted
+
+  echo "<hr>\n<P>If you would like assistance using this tool, please contact ";
+  echo "<A HREF=\"mailto:$VendorEmail\">$VendorEmail</A>.  ";
+  include('google_analytics.php');
+  echo "\n\n</body>\n</html>\n";
+}
+
 /* Top of page reporting, simplified by the foo_header functions
  for HTML pages.  It takes the title, description and any
  additional information, and puts it all in the right place
@@ -305,6 +370,9 @@ function brainstorm_footer() {
 function topofpagereport($title,$description,$info) {
   if ($_SESSION['role'] == "Brainstorm") {
     brainstorm_header($title);
+  }
+  elseif ($_SESSION['role'] == "Vendor") {
+    vendor_header($title);
   }
   elseif ($_SESSION['role'] == "Participant") {
     participant_header($title);
@@ -338,6 +406,9 @@ function topofpagecsv($filename) {
 function correct_footer() {
   if ($_SESSION['role'] == "Brainstorm") {
     brainstorm_footer();
+  }
+  elseif ($_SESSION['role'] == "Vendor") {
+    vendor_footer();
   }
   elseif ($_SESSION['role'] == "Participant") {
     participant_footer();
@@ -625,8 +696,7 @@ function create_participant ($participant_arr,$permrole_arr) {
 	(strlen($participant_arr['badgename']) < $namemin) OR
 	(strlen($participant_arr['pubsname']) < $namemin)) {
       $message_error="All name fields are required and minimum length is $namemin characters.  <BR>\n";
-      echo "<P class=\"errmsg\">".$message_error."\n";
-      return;
+      return array ($message,$message_error);
     }
   }
   if (isset($limit_array['max']['web']['name'])) {
@@ -635,17 +705,14 @@ function create_participant ($participant_arr,$permrole_arr) {
 	(strlen($participant_arr['badgename']) > $namemax) OR
 	(strlen($participant_arr['pubsname']) > $namemax)) {
       $message_error="All name fields are required and maximum length is $namemax characters.  <BR>\n";
-      echo "<P class=\"errmsg\">".$message_error."\n";
-      return;
+      return array ($message,$message_error);
     }
   }
 
   // Invalid email address.
   if (!is_email($participant_arr['email'])) {
     $message_error="Email address: ".$participant_arr['email']." is not valid.  <BR>\n";
-    echo "<P class=\"errmsg\">".$message_error."\n";
-    return;
-
+    return array ($message,$message_error);
   }
 
   // Get next possible badgeid.
@@ -747,7 +814,7 @@ function create_participant ($participant_arr,$permrole_arr) {
 
   // Make $message additive (.=) to get all the information
   $message="Database updated successfully with ".$participant_arr["badgename"].".<BR>";
-  echo "<P class=\"regmsg\">".$message."\n";
+  return array ($message,$message_error);
 }
 
 function edit_participant ($participant_arr,$permrole_arr) {

@@ -6,24 +6,24 @@ function RenderError($title,$message) {
   if ($_SESSION['role'] == "Brainstorm") {
     brainstorm_header($title);
     echo "<P id=\"errmsg\">".$message."</P>\n";
-    brainstorm_footer();
+  }
+  elseif ($_SESSION['role'] == "Vendor") {
+    vendor_header($title);
+    echo "<P id=\"errmsg\">".$message."</P>\n";
   }
   elseif ($_SESSION['role'] == "Participant") {
     participant_header($title);
     echo "<P id=\"errmsg\">".$message."</P>\n";
-    participant_footer();
   }
   elseif ($_SESSION['role'] == "Staff") {
     global $debug;
     staff_header($title);
     if (isset($debug)) echo $debug."<BR>\n";
     echo "<P id=\"errmsg\">".$message."</P>\n";
-    staff_footer();
   }
   elseif ($_SESSION['role'] == "Posting") {
     posting_header($title);
     echo "<P id=\"errmsg\">".$message."</P>\n";
-    posting_footer();
   }
   else {
     // do something generic here (though this might be way too generic)
@@ -41,6 +41,7 @@ function RenderError($title,$message) {
     echo "</body>";
     echo "</html>";
   }
+  correct_footer();
 }
 
 ?>
