@@ -39,9 +39,6 @@ function get_nameemail_from_post(&$name, &$email) {
 // Reads the data posted by the browser form and populates
 // the $partavail global variable with it.
 //
-// Notes on variables:
-// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are just 1-24 whole hours, 0 for unset; 1 is midnight start of day 
-//
 function get_participant_availability_from_post() {
     global $partAvail;
     // for numeric fields in ParticipantAvailability--convert to 0 if blank

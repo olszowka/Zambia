@@ -54,9 +54,10 @@ for guidance when assigning and scheduling panels. </p>
 <!-- SCHEDULE availability times -->
 <H2>Times I Am Available</H2>
 
-<p> For each day you will be attending <?php echo CON_NAME; ?>, please 
-indicate the times when you will be available.  Entering a single time
-for the whole con is fine.  Splitting a day into multiple time slots
+<p> For <?php if (CON_NUM_DAYS>1) {echo "each ";} else {echo "the ";} ?>
+day you will be attending <?php echo CON_NAME; ?>, please indicate
+the times when you will be available.  Entering a single time for
+the whole con is fine.  Splitting a day into multiple time slots
 also is fine.  Keep in mind we will be using this as guidance when
 scheduling you.</p>
 
@@ -70,7 +71,7 @@ scheduling you.</p>
   </tr> <!-- header row  -->
 <?php
 //  Notes on variables:
-//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are measured in 1-48 half hour increments
+//  $partAvail["availstarttime_$i"], $partAvail["availendtime_$i"] are measured in GRID_SPACER increments
 //     0 is unset, 1 is midnight beginning of day
     for ($i=1; $i<=AVAILABILITY_ROWS; $i++) {
         echo "  <TR> <!-- Row $i -->\n";
@@ -85,9 +86,28 @@ scheduling you.</p>
                 }
             echo "        </SELECT></TD>\n";
             }
+	//If starttimeindex is set for this $i to the availstarttime for it, otherwise set it to -1
+        $starttimeindex=(isset($partAvail["availstarttime_$i"]))?$partAvail["availstarttime_$i"]:-1;
+	//If starttimeindex got set, make sure the leading 0 is in place, based on length.
+	if (($starttimeindex!=-1) AND (strlen($starttimeindex) < 8)) {$starttimeindex="0".$starttimeindex;}
+	//A value of '' is passed, instead of the prevous '0', because of the way strings are read,
+        // for midnight anything was coming out as '0'.
         echo "    <TD><SELECT name=\"availstarttime_$i\">\n";
-        $timeindex=(isset($partAvail["availstarttime_$i"]))?$partAvail["availstarttime_$i"]:0;
-        populate_select_from_table("Times", $timeindex, "", true);
+	echo "          <OPTION value=''></OPTION>\n";
+	//Iterate across one day in GRID_SPACER increments
+	for ($starttime=0; $starttime < 86400; $starttime = $starttime + GRID_SPACER) {
+	  //produces HH:MM:SS
+	  $indextime=gmdate('H:i:s',$starttime);
+	  //produces ?H:MM[ap]m
+	  $displaytime=gmdate('g:ia',$starttime);
+	  //Noon and midnight fix by request
+          if ($displaytime == "12:00am") {$displaytime="Midnight";}
+          if ($displaytime == "12:00pm") {$displaytime="Noon";}
+	  //Build the rest of the select, with the starttimeindex selected, if it exists
+	  echo "          <OPTION value=$indextime";
+	  if ($indextime==$starttimeindex) {echo " selected";}
+	  echo ">$displaytime</OPTION>\n";
+	}
         echo "        </SELECT></TD>\n";
         echo "    <TD> Until </TD>\n";
         if (CON_NUM_DAYS>1) {
@@ -101,9 +121,28 @@ scheduling you.</p>
                 }
             echo "        </SELECT></TD>\n";
             }
+	//If endtimeindex is set for this $i to the availendtime for it, otherwise set it to -1
+        $endtimeindex=(isset($partAvail["availendtime_$i"]))?$partAvail["availendtime_$i"]:-1;
+	//If endtimeindex got set, make sure the leading 0 is in place, based on length.
+	if (($endtimeindex!=-1) AND (strlen($endtimeindex) < 8)) {$endtimeindex="0".$endtimeindex;}
+	//A value of '' is passed, instead of the prevous '0', because of the way strings are read,
+        // for midnight anything was coming out as '0'.
         echo "    <TD><SELECT name=\"availendtime_$i\">\n";
-        $timeindex=(isset($partAvail["availendtime_$i"]))?$partAvail["availendtime_$i"]:0;
-        populate_select_from_table("Times", $timeindex, "", true);
+	echo "          <OPTION value=''></OPTION>\n";
+	//Iterate across one day in GRID_SPACER increments
+	for ($endtime=0; $endtime < 86400; $endtime = $endtime + GRID_SPACER) {
+	  //produces HH:MM:SS
+	  $indextime=gmdate('H:i:s',$endtime);
+	  //produces ?H:MM[ap]m
+	  $displaytime=gmdate('g:ia',$endtime);
+	  //Noon and midnight fix by request
+          if ($displaytime == "12:00am") {$displaytime="Midnight";}
+          if ($displaytime == "12:00pm") {$displaytime="Noon";}
+	  //Build the rest of the select, with the endtimeindex selected, if it exists
+	  echo "          <OPTION value=$indextime";
+	  if ($indextime==$endtimeindex) {echo " selected";}
+	  echo ">$displaytime</OPTION>\n";
+	}
         echo "        </SELECT></TD>\n";
         echo "    </TR>\n";
         }

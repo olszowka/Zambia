@@ -257,8 +257,9 @@ function validate_participant_availability() {
                 $x3=$partAvail["availendday_$i"];
                 $x4=$partAvail["availendtime_$i"];
                 //error_log("zambia: $i, $x1, $x2, $x3, $x4"); //for debugging only
-                if (($x1>0 || $x2>0 || $x3>0 || $x4>0) && ($x1==0 || $x2==0 || $x3==0 || $x4==0 )) {
-                    $messages.="To define an available slot, set all 4 items.  To delete a slot, clear all 4 items.<BR>\n";
+		// if any of them are in the "unset" state, and if any of them are not, throw an error
+                if (($x1==0 || $x2=='' || $x3==0 || $x4=='') && ($x1!=0 || $x2!='' || $x3!=0 || $x4!='')) {
+                    $messages.="To define an available slot, set all 4 items.  To delete a slot, clear all 4 items. Line $i $x1, $x2, $x3, $x4<BR>\n";
                     $flag=false;
                     break;
                     }
@@ -267,8 +268,9 @@ function validate_participant_availability() {
                 // Day fields will not be populated.
                 $x2=$partAvail["availstarttime_$i"];
                 $x4=$partAvail["availendtime_$i"];
-                if (($x2>0 || $x4>0) && ($x2==0 || $x4==0)) {
-                    $messages.="To define an available slot, set both items.  To delete a slot, clear both items.<BR>\n";
+		// if any of them are in the "unset" state, and if any of them are not, throw an error
+                if (($x2=='' || $x4=='') && ($x2!='' || $x4!='')) {
+                    $messages.="To define an available slot, set both items.  To delete a slot, clear both items. Line: $i $x2 $x4<BR>\n";
                     $flag=false;
                     break;
                     }
