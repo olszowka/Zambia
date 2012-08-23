@@ -4,7 +4,7 @@
     $title="Session Query Results";
       staff_header($title);
 ?>
-    <TABLE class="table table-condensed table-striped">
+    <TABLE class="table table-condensed">
         <COL><COL><COL><COL><COL><COL><COL><COL>
         <TR>
             <TH class="border1121">Sess.<BR>ID</TH>
