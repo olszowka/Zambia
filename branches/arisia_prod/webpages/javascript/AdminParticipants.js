@@ -144,25 +144,6 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
   hideSearchResults();
 }
 
-/*
-function highlight(dohighlight, id) {
-	if (dohighlight) {
-			$("#actionDIV_" + id).removeClass().addClass("action_hover");
-			$("#lnameSPAN_" + id).removeClass().addClass("action_hover");
-			$("#pnameSPAN_" + id).removeClass().addClass("actionB_hover");
-			$("#bnameSPAN_" + id).removeClass().addClass("action_hover");
-			$("#bidSPAN_" + id).removeClass().addClass("action_hover");
-			}
-		else {
-			$("#actionDIV_" + id).removeClass().addClass("action");
-			$("#lnameSPAN_" + id).removeClass().addClass("action");
-			$("#pnameSPAN_" + id).removeClass().addClass("actionB");
-			$("#bnameSPAN_" + id).removeClass().addClass("action");
-			$("#bidSPAN_" + id).removeClass().addClass("action");
-			}
-}
-*/
-
 function initializeAdminParticipants() {
 	//called when JQuery says AdminParticipants page has loaded
 	//debugger;
@@ -170,11 +151,9 @@ function initializeAdminParticipants() {
 	$('#resultsDiv').hide();
 	$('#resultBoxDIV').hide();
 	$("#unsavedWarningDIV").modal({backdrop: 'static', keyboard: true, show: false});
-//	$("#toggleSearchResultsBUTN").button();
 	$("#toggleSearchResultsBUTN").click(toggleSearchResultsBUTN);
 	$("#toggleSearchResultsBUTN").prop("disabled", true);
 	resultsHidden = true;
-//	$("#searchPartsBUTN").button();
 	$("#searchPartsBUTN").click(doSearchPartsBUTN);
 	$("#cancelOpenSearchBUTN").button();
 	$("#overrideOpenSearchBUTN").button();
