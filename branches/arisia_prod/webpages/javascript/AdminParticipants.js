@@ -170,7 +170,7 @@ function initializeAdminParticipants() {
 	$('#resultsDiv').hide();
 	$('#resultBoxDIV').hide();
 	$("#unsavedWarningDIV").modal({backdrop: 'static', keyboard: true, show: false});
-	$("#toggleSearchResultsBUTN").button();
+//	$("#toggleSearchResultsBUTN").button();
 	$("#toggleSearchResultsBUTN").click(toggleSearchResultsBUTN);
 	$("#toggleSearchResultsBUTN").prop("disabled", true);
 	resultsHidden = true;
