@@ -71,6 +71,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
                     <OPTION value="Twitter DM" <?php if ($participant_arr["bestway"]=="Twitter DM") echo "selected";?> >Twitter DM</OPTION>
                     <OPTION value="Fet Life" <?php if ($participant_arr["bestway"]=="Fet Life") echo "selected";?> >Fet Life</OPTION>
                     <OPTION value="Facebook" <?php if ($participant_arr["bestway"]=="Facebook") echo "selected";?> >Facebook</OPTION>
+                    <OPTION value="G+" <?php if ($participant_arr["bestway"]=="G+") echo "selected";?> >G+</OPTION>
                     <OPTION value="Instant Messenger" <?php if ($participant_arr["bestway"]=="Instant Messenger") echo "selected";?> >Instant Messenger</OPTION>
                     </SELECT>
                     </SPAN>
