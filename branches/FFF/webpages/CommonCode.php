@@ -7,6 +7,13 @@ require_once('validation_functions.php');
 require_once('php_functions.php');
 require_once('error_functions.php');
 
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 //set_session_timeout();
 session_start();
 if (prepare_db()===false) {
@@ -535,6 +542,13 @@ function queryreport($query,$link,$title,$description,$reportid) {
  Each list is ordered by the sorting key, for html-based and visual-based
  searching. */
 function select_participant ($selpartid, $returnto) {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
   global $link;
 
   // Should be generated from PermissionAtoms or PermissionRoles, somehow
@@ -558,17 +572,17 @@ function select_participant ($selpartid, $returnto) {
 
   // lastname, firstname (badgename/pubsname) - partid
   $query0="SELECT DISTINCT badgeid, concat(lastname,', ',firstname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
-  $query0.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
+  $query0.=" FROM $ReportDB.Participants JOIN $ReportDB.CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
   $query0.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY lastname";
 
   // firstname lastname (badgename/pubsname) - partid
   $query1="SELECT DISTINCT badgeid, concat(firstname,' ',lastname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
-  $query1.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
+  $query1.=" FROM $ReportDB.Participants JOIN $ReportDB.CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
   $query1.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY firstname";
 
   // pubsname/badgename (lastname, firstname) - partid
   $query2="SELECT DISTINCT badgeid, concat(pubsname,'/',badgename,' (',lastname,', ',firstname,') - ',badgeid) AS pname";
-  $query2.=" FROM Participants JOIN CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
+  $query2.=" FROM $ReportDB.Participants JOIN $ReportDB.CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
   $query2.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY pubsname";
 
   // Now give the choices
@@ -652,7 +666,7 @@ function submit_participant_note ($note, $partid) {
 
 /* Pull the notes for a participant, in reverse order. */
 // I'm no longer sure why the below is here ...
-//"SELECT PR.pubsname, PB.pubsname, N.timestamp, N.note FROM NotesOnParticipants N, Participants PR, Participants PB WHERE N.rbadgeid=PR.badgeid AND N.badgeid=PB.badgeid;
+//"SELECT PR.pubsname, PB.pubsname, N.timestamp, N.note FROM NotesOnParticipants N, $ReportDB.Participants PR, $ReportDB.Participants PB WHERE N.rbadgeid=PR.badgeid AND N.badgeid=PB.badgeid;
 function show_participant_notes ($partid) {
   global $link;
   $query = <<<EOD
@@ -662,7 +676,7 @@ SELECT
     N.note as 'What Was Done'
   FROM
       NotesOnParticipants N,
-      Participants P
+      $ReportDB.Participants P
   WHERE
     N.rbadgeid=P.badgeid AND
     N.badgeid=$partid
@@ -676,6 +690,13 @@ EOD;
 
 /* create_participant and edit_participant functions.  Need more doc. */
 function create_participant ($participant_arr,$permrole_arr) {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
   global $link;
 
   // Get the various length limits
@@ -716,8 +737,8 @@ function create_participant ($participant_arr,$permrole_arr) {
   }
 
   // Get next possible badgeid.
-  // WAS: "SELECT MAX(badgeid) FROM Participants WHERE badgeid>='1'";
-  $query = "SELECT badgeid FROM Participants ORDER BY ABS(badgeid) DESC LIMIT 1";
+  // WAS: "SELECT MAX(badgeid) FROM $ReportDB.Participants WHERE badgeid>='1'";
+  $query = "SELECT badgeid FROM $ReportDB.Participants ORDER BY ABS(badgeid) DESC LIMIT 1";
   $result=mysql_query($query,$link);
   if (!$result) {
     $message_error="Unrecoverable error updating database.  Database not updated.<BR>\n";
@@ -745,7 +766,7 @@ function create_participant ($participant_arr,$permrole_arr) {
                      mysql_real_escape_string($participant_arr['altcontact']),
                      mysql_real_escape_string(stripslashes($participant_arr['prognotes'])),
 		     mysql_real_escape_string(stripslashes($participant_arr['pubsname'])));
-  $message.=submit_table_element($link, $title, "Participants", $element_array, $value_array);
+  $message.=submit_table_element($link, $title, "$ReportDB.Participants", $element_array, $value_array);
 
   // Add Bios.
   /* We are only updating the raw bios here, so only a 2-depth
@@ -788,7 +809,7 @@ function create_participant ($participant_arr,$permrole_arr) {
 		     mysql_real_escape_string($participant_arr['poststate']),
 		     mysql_real_escape_string($participant_arr['postzip']),
 		     mysql_real_escape_string(stripslashes($participant_arr['regtype'])));
-  $message.=submit_table_element($link, $title, "CongoDump", $element_array, $value_array);
+  $message.=submit_table_element($link, $title, "$ReportDB.CongoDump", $element_array, $value_array);
 
   // Submit a note about what was done.
   $element_array = array('badgeid', 'rbadgeid', 'note');
@@ -818,6 +839,13 @@ function create_participant ($participant_arr,$permrole_arr) {
 }
 
 function edit_participant ($participant_arr,$permrole_arr) {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
   global $link;
 
   // Get the various length limits
@@ -863,7 +891,7 @@ function edit_participant ($participant_arr,$permrole_arr) {
 			   "altcontact='".mysql_real_escape_string($participant_arr['altcontact'])."'",
 			   "prognotes='".mysql_real_escape_string(stripslashes($participant_arr['prognotes']))."'",
 			   "pubsname='".mysql_real_escape_string(stripslashes($participant_arr['pubsname']))."'");
-  $message.=update_table_element($link, $title, "Participants", $pairedvalue_array, "badgeid", $participant_arr['partid']);
+  $message.=update_table_element($link, $title, "$ReportDB.Participants", $pairedvalue_array, "badgeid", $participant_arr['partid']);
 
   // Update CongoDump entry.
   $pairedvalue_array=array("firstname='".mysql_real_escape_string(stripslashes($participant_arr['firstname']))."'",
@@ -877,7 +905,7 @@ function edit_participant ($participant_arr,$permrole_arr) {
 			   "poststate='".mysql_real_escape_string($participant_arr['poststate'])."'",
 			   "postzip='".mysql_real_escape_string($participant_arr['postzip'])."'",
 			   "regtype='".mysql_real_escape_string(stripslashes($participant_arr['regtype']))."'");
-  $message.=update_table_element($link, $title, "CongoDump", $pairedvalue_array, "badgeid", $participant_arr['partid']);
+  $message.=update_table_element($link, $title, "$ReportDB.CongoDump", $pairedvalue_array, "badgeid", $participant_arr['partid']);
 
   // Update/add Bios.
   /* We are only updating the raw bios here, so only a 2-depth

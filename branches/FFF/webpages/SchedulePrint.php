@@ -10,6 +10,12 @@ require_once('../../tcpdf/tcpdf.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="SchedulePrint.php";
@@ -90,7 +96,7 @@ SELECT
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
     LEFT JOIN ParticipantOnSession POS USING (sessionid)
-    LEFT JOIN Participants P USING (badgeid)
+    LEFT JOIN $ReportDB.Participants P USING (badgeid)
     JOIN UserHasPermissionRole UP USING (badgeid)
     JOIN PermissionRoles PR USING (permroleid)
   WHERE

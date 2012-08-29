@@ -1,6 +1,13 @@
 <?php
 require_once('VendorCommonCode.php');
 
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 // Localisms
 $_SESSION['return_to_page']='VendorWelcome.php';
 $title="Submit Vendor Application";
@@ -26,8 +33,8 @@ SELECT
     if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",firstname,"</A>"),"") AS "Contact First Name",
     if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",lastname,"</A>"),"") AS "Contact Last Name"
   FROM
-      CongoDump
-    JOIN Participants USING (badgeid)
+      $ReportDB.CongoDump
+    JOIN $ReportDB.Participants USING (badgeid)
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE

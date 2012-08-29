@@ -4,6 +4,12 @@ global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 // Deal with what is passed in.
 if (!empty($_SERVER['QUERY_STRING'])) {
@@ -67,7 +73,7 @@ SELECT
     FROM
       Sessions
     JOIN ParticipantOnSession USING (sessionid)
-    JOIN Participants USING (badgeid)
+    JOIN $ReportDB.Participants USING (badgeid)
     WHERE 
       volunteer=0 AND
       introducer=0 AND

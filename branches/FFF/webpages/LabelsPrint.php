@@ -3,6 +3,12 @@ require_once('StaffCommonCode.php');
 
 /* Global Variables */
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="LabelsPrint.php";
@@ -158,7 +164,7 @@ SELECT
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
     LEFT JOIN ParticipantOnSession POS USING (sessionid)
-    LEFT JOIN Participants P USING (badgeid)
+    LEFT JOIN $ReportDB.Participants P USING (badgeid)
     LEFT JOIN UserHasPermissionRole UP USING (badgeid)
   WHERE
     (UP.permroleid=5 or

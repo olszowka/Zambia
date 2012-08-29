@@ -4,8 +4,12 @@ global $link;
 $TimecardDB=TIMECARDDB; // make it a variable so it can be substituted
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
 
 // Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 if ($TimecardDB=="TIMECARDDB") {unset($TimecardDB);}
 
 $title="Volunteer Check Out";
@@ -29,7 +33,7 @@ SELECT
     voltimeid,
     concat(pubsname, " in at: ",DATE_FORMAT(voltimein,'%a %l:%i %p (%k:%i)')) as 'Who'
   FROM
-      Participants
+      $ReportDB.Participants
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
     JOIN $TimecardDB.TimeCard USING (badgeid)
@@ -78,7 +82,7 @@ SELECT
         DATE_FORMAT(voltimein,'%c/%e %l:%i %p (%k:%i)')) AS "inat"
   FROM
       $TimecardDB.TimeCard
-    JOIN Participants USING (badgeid)
+    JOIN $ReportDB.Participants USING (badgeid)
   WHERE
     voltimeid='$voltimeid'
 EOF;

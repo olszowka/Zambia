@@ -2,10 +2,12 @@
 require_once ('StaffCommonCode.php');
 
 global $link,$message_error,$message2;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 
 // Tests for the substituted variables
-if ($BioDB=="BIODB") {unset($BioDB);}
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 // Get the various length limits
 $limit_array=getLimitArray();
@@ -46,10 +48,10 @@ SELECT
     LB.pubsname as lockedby,
     if(P.pubsname!="",P.pubsname,concat(firstname," ",lastname)) name 
   FROM 
-      Participants P
+      $ReportDB.Participants P
     JOIN $BioDB.Bios B USING (badgeid)
-    JOIN CongoDump USING (badgeid)
-    LEFT JOIN Participants LB on B.biolockedby = LB.badgeid
+    JOIN $ReportDB.CongoDump USING (badgeid)
+    LEFT JOIN $ReportDB.Participants LB on B.biolockedby = LB.badgeid
   WHERE
     P.badgeid='$badgeid'
 EOD;

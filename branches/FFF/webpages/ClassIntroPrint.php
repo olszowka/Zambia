@@ -10,10 +10,12 @@ require_once('../../tcpdf/tcpdf.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 
 // Tests for the substituted variables
-if ($BioDB=="BIODB") {unset($BioDB);}
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="ClassIntroPrint.php";
@@ -73,7 +75,7 @@ SELECT
   FROM
       ParticipantOnSession POS, 
       Sessions S, 
-      Participants P,
+      $ReportDB.Participants P,
       Schedule SCH,
       Rooms R,
       Types T,
@@ -113,7 +115,7 @@ SELECT
   FROM
       Sessions S
     LEFT JOIN ParticipantOnSession POS ON S.sessionid=POS.sessionid
-    LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+    LEFT JOIN $ReportDB.Participants P ON POS.badgeid=P.badgeid
     LEFT JOIN (SELECT 
                    badgeid,
                    biotext

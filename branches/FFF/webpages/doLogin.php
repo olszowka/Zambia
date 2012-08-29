@@ -2,9 +2,18 @@
 $logging_in=true;
 require_once ('CommonCode.php');
 require_once ('error_functions.php');
+
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $title="Submit Password";
 $badgeid = $_POST['badgeid'];
 $password = stripslashes($_POST['passwd']);
+$conid = CON_KEY; // Temporary measure until passed in from login/index.php
 $target = $_POST['target'];
 
 
@@ -17,7 +26,7 @@ if (prepare_db()===false) {
 // echo "Connected to database.\n";
 
 //Badgid test
-$result=mysql_query("Select password from Participants where badgeid='".$badgeid."'",$link);
+$result=mysql_query("Select password from $ReportDB.Participants where badgeid='".$badgeid."'",$link);
 if (!$result) {
   $message="Incorrect BadgeID or Password - please be aware that BadgeID and Password are case sensitive and try again.";
   require ('login.php');
@@ -36,7 +45,7 @@ if (md5($password)!=$dbpassword) {
 }
 
 // Get and set information on individual
-$result=mysql_query("Select badgename from CongoDump where badgeid='".$badgeid."'",$link);
+$result=mysql_query("Select badgename from $ReportDB.CongoDump where badgeid='".$badgeid."'",$link);
 if ($result) {
   $dbobject=mysql_fetch_object($result);
   $badgename=$dbobject->badgename;
@@ -44,7 +53,7 @@ if ($result) {
 } else {
   $_SESSION['badgename']="";
 }
-$result=mysql_query("Select pubsname from Participants where badgeid='".$badgeid."'",$link);
+$result=mysql_query("Select pubsname from $ReportDB.Participants where badgeid='".$badgeid."'",$link);
 $pubsname="";
 if ($result) {
   $dbobject=mysql_fetch_object($result);
@@ -55,6 +64,7 @@ if (!($pubsname=="")) {
 }
 $_SESSION['badgeid']=$badgeid;
 $_SESSION['password']=$dbpassword;
+$_SESSION['conid']=$conid;
 set_permission_set($badgeid);
 //error_log("Zambia: Completed set_permission_set.\n");
 

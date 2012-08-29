@@ -8,6 +8,12 @@ if (may_I("Staff")) {
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $GohBadgeList=GOH_BADGE_LIST;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 // LOCALIZATIONS
 /* unpub controls the "Do Not Print" and "Staff Only" inclusion into
@@ -249,7 +255,7 @@ SELECT
     FROM
       Sessions
     JOIN ParticipantOnSession USING (sessionid)
-    JOIN Participants USING (badgeid)
+    JOIN $ReportDB.Participants USING (badgeid)
     GROUP BY
       sessionid
     ORDER BY

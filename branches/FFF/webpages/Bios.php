@@ -3,6 +3,12 @@ require_once('PostingCommonCode.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 // Deal with what is passed in.
 if (!empty($_SERVER['QUERY_STRING'])) {
@@ -70,7 +76,7 @@ SELECT
     JOIN Rooms USING (roomid)
     JOIN Tracks USING (trackid)
     LEFT JOIN ParticipantOnSession USING (sessionid)
-    LEFT JOIN Participants P USING (badgeid)
+    LEFT JOIN $ReportDB.Participants P USING (badgeid)
     JOIN PubStatuses USING (pubstatusid)
   WHERE
     pubstatusname in ($pubstatus_check) AND

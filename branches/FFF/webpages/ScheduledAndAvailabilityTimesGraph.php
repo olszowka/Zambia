@@ -10,6 +10,12 @@ global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $GridSpacer=GRID_SPACER; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 // LOCALIZATIONS
 $title="Availability and Scheduled times for Programming";
@@ -66,7 +72,7 @@ SELECT
     TIME_TO_SEC(endtime) DIV $GridSpacer AS Endtime
   FROM
       ParticipantAvailabilityTimes
-    JOIN Participants USING (badgeid)
+    JOIN $ReportDB.Participants USING (badgeid)
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE
@@ -105,7 +111,7 @@ SELECT
     (TIME_TO_SEC(starttime) DIV $GridSpacer )+(TIME_TO_SEC(duration) DIV $GridSpacer) AS Endtime
   FROM
       ParticipantOnSession
-    JOIN Participants USING (badgeid)
+    JOIN $ReportDB.Participants USING (badgeid)
     JOIN Sessions USING (sessionid)
     JOIN Schedule USING (sessionid)
   WHERE

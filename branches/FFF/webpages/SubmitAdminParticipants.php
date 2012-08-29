@@ -1,6 +1,13 @@
 <?php
 function SubmitAdminParticipants () {
     global $link;
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     $interested = $_POST["interested"];
     $wasinterested = $_POST["wasinterested"];
     $password = $_POST["password"];
@@ -18,7 +25,7 @@ function SubmitAdminParticipants () {
             echo "<P class=\"errmsg\">".$message."\n";
             return;
             }
-    $query = "UPDATE Participants SET ";
+    $query = "UPDATE $ReportDB.Participants SET ";
     if ($update_password==true) {
         $query=$query."password=\"".md5($password)."\", ";
         }

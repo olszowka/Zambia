@@ -3,6 +3,13 @@ $title="Administer Participants";
 require_once('StaffCommonCode.php');
 require_once('SubmitAdminParticipants.php');
 
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 staff_header($title);
 
 // Collaps the three choices into one
@@ -35,7 +42,7 @@ if ((!isset($_POST["partid"])) or ($_POST["partid"]==0)) {
     exit();
     }
 
-$query ="SELECT interested, pubsname FROM Participants WHERE badgeid=$selpartid";
+$query ="SELECT interested, pubsname FROM $ReportDB.Participants WHERE badgeid=$selpartid";
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";

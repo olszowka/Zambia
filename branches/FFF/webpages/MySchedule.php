@@ -2,6 +2,12 @@
 require_once('PartCommonCode.php'); // initialize db; check login;
 $ConStartDatim=CON_START_DATIM; //make it a variable so it will be substituted
 $ProgramEmail=PROGRAM_EMAIL; //Use it a variable locally
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 $title="My Schedule";
 // require_once('renderMySessions2.php');
@@ -37,7 +43,7 @@ $query = <<<EOD
 SELECT
     message
   FROM
-      CongoDump C
+      $ReportDB.CongoDump C
     LEFT JOIN RegTypes R on C.regtype=R.regtype
   WHERE
     C.badgeid="$badgeid"
@@ -204,8 +210,8 @@ SELECT
     PSI.comments AS PresenterComments
   FROM
       ParticipantOnSession POS
-    JOIN CongoDump CD USING(badgeid)
-    JOIN Participants P USING(badgeid)
+    JOIN $ReportDB.CongoDump CD USING(badgeid)
+    JOIN $ReportDB.Participants P USING(badgeid)
     LEFT JOIN ParticipantSessionInterest PSI USING(sessionid,badgeid)
   WHERE
     POS.sessionid in (SELECT

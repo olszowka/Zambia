@@ -9,6 +9,12 @@ $ConName=CON_NAME;
 $ProgramEmail=PROGRAM_EMAIL;
 $DBHostname=DBHOSTNAME;
 $url=CON_URL;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 $dtstamp=date('Ymd').'T'.date('His');
 $title="Precis iCal generation page";
 $description="<P>Please select from the below list.</P>";
@@ -96,8 +102,8 @@ SELECT
     POS.aidedecamp
   FROM
       ParticipantOnSession POS
-    JOIN CongoDump CD USING(badgeid)
-    JOIN Participants P USING(badgeid)
+    JOIN $ReportDB.CongoDump CD USING(badgeid)
+    JOIN $ReportDB.Participants P USING(badgeid)
   WHERE
     POS.sessionid='$sessionid'
   ORDER BY

@@ -10,6 +10,13 @@
   $ProgramEmail=PROGRAM_EMAIL;
   $DBHostname=DBHOSTNAME;
   $url=CON_URL;
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
   $dtstamp=date('Ymd').'T'.date('His');
   if (isset($_GET['badgeid'])) {
     $badgeid=$_GET['badgeid'];
@@ -66,8 +73,8 @@ SELECT
     POS.aidedecamp
   FROM
       ParticipantOnSession POS
-    JOIN CongoDump CD USING(badgeid)
-    JOIN Participants P USING(badgeid)
+    JOIN $ReportDB.CongoDump CD USING(badgeid)
+    JOIN $ReportDB.Participants P USING(badgeid)
   WHERE
     POS.sessionid in (SELECT
                           sessionid 
@@ -94,7 +101,7 @@ EOD;
 SELECT
     pubsname
   FROM
-      Participants
+      $ReportDB.Participants
   WHERE
     badgeid='$badgeid'
 EOD;

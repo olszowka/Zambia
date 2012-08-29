@@ -1,8 +1,13 @@
 <?php
 require_once('VendorCommonCode.php');
 $_SESSION['return_to_page']='VendorApply.php';
+$ConId=CON_KEY; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
 $title="Vendor Application";
 $badgeid=$_SESSION['badgeid'];
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 
 /* Submit goes here */
 get_session_from_post();
@@ -83,8 +88,8 @@ SELECT
 	      vendorspaceprice
 	    FROM
 	        Sessions
-	      JOIN SessionHasVendorSpace USING (sessionid)
-	      JOIN VendorSpace USING (vendorspaceid)) X USING (sessionid)
+	      JOIN $ReportDB.SessionHasVendorSpace USING (sessionid)
+	      JOIN $ReportDB.VendorSpaces USING (vendorspaceid)) X USING (sessionid)
     LEFT JOIN (SELECT
 	           sessionid,
 	           SUM(vendorfeatureprice) AS 'vendorfeaturetotal',
@@ -92,8 +97,8 @@ SELECT
 	           GROUP_CONCAT(DISTINCT vendorfeatureid SEPARATOR ', ') as 'vendfeatureid'
 	         FROM
 	             Sessions
-	           JOIN SessionHasVendorFeature USING (sessionid)
-	           JOIN VendorFeature USING (vendorfeatureid)
+	           JOIN $ReportDB.SessionHasVendorFeature USING (sessionid)
+	           JOIN $ReportDB.VendorFeatures USING (vendorfeatureid)
                  GROUP BY
 	           sessionid) Y USING (sessionid)
   WHERE
@@ -202,7 +207,7 @@ if ($session['statusname']=="Vendor Approved") {
           <TR>
             <TD>
                <SPAN><LABEL for="vendorspace">Space Requested: </LABEL><SELECT name="vendorspace[]">
-                     <?php populate_select_from_table("VendorSpace", $session["vendorspaceid"], "SELECT", FALSE); ?>
+                     <?php populate_select_from_table("$ReportDB.VendorSpaces", $session["vendorspaceid"], "SELECT", FALSE); ?>
                      </SELECT>&nbsp;&nbsp;</SPAN></TD></TR>
 <?php /*
         <TR>
@@ -218,7 +223,7 @@ if ($session['statusname']=="Vendor Approved") {
                     <DIV class="tab-row">
                         <SPAN class="tab-cell">
                              <SELECT class="selectfwidth" id="featsrc" name="featsrc" size=6 multiple>
-                                <?php populate_multisource_from_table("VendorFeature", $session["vendfeatdest"]); ?></SELECT>
+                                <?php populate_multisource_from_table("$ReportDB.VendorFeatures", $session["vendfeatdest"]); ?></SELECT>
                              </SPAN>
                         <SPAN class="thickobject">
                             <BUTTON onclick="fadditems(document.sessform.featsrc,document.sessform.featdest)"
@@ -229,7 +234,7 @@ if ($session['statusname']=="Vendor Approved") {
                     <DIV class="tab-row">
                         <SPAN class="tab-cell">
                             <SELECT class="selectfwidth" id="featdest" name="vendfeatdest[]" size=6 multiple >
-                                <?php populate_multidest_from_table("VendorFeature", $session["vendfeatdest"]); ?></SELECT>
+                                <?php populate_multidest_from_table("$ReportDB.VendorFeatures", $session["vendfeatdest"]); ?></SELECT>
                             </SPAN>
                         </DIV>
                 </DIV> <!-- VendorFeatures --> 
@@ -237,7 +242,7 @@ if ($session['statusname']=="Vendor Approved") {
           <TR>
             <TD>
 		     <SPAN><LABEL for="vendfeatdest">Extras (Use the Control-Click to select multiple extras.):</LABEL><BR><SELECT name="vendfeatdest[]" size=8 multiple >
-                     <?php populate_multiselect_from_table("VendorFeature", $session["vendfeatdest"]); ?>
+                     <?php populate_multiselect_from_table("$ReportDB.VendorFeatures", $session["vendfeatdest"]); ?>
                      </SELECT>&nbsp;&nbsp;</SPAN></TD></TR>
 	<TR>
            <TD>

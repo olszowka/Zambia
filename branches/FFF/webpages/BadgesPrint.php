@@ -4,6 +4,13 @@ require_once('StaffCommonCode.php');
 /* Global Variables */
 global $link;
 $ConName=CON_NAME; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $ConLogo="NELA-LOGO.eps";
 $BoundingBox="0 0 759 222";
 
@@ -202,7 +209,7 @@ SELECT
       Sessions
     JOIN Schedule USING (sessionid)
     JOIN ParticipantOnSession USING (sessionid)
-    JOIN Participants USING (badgeid)
+    JOIN $ReportDB.Participants USING (badgeid)
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE

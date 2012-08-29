@@ -1,11 +1,13 @@
 <?php
 global $participant,$message_error,$message2,$congoinfo;
 require_once('StaffCommonCode.php');
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 $LanguageList=LANGUAGE_LIST; // make it a variable so it can be substituted
 
 // Tests for the substituted variables
-if ($BioDB=="BIODB") {unset($BioDB);}
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 if ($LanguageList=="LANGUAGE_LIST") {unset($LanguageList);}
 
 $title="Staff - Manage Participant Biographies";
@@ -47,13 +49,13 @@ SELECT
     P.pubsname,
     biotext
   FROM
-      Participants P
+      $ReportDB.Participants P
     JOIN $BioDB.Bios B USING (badgeid)
     JOIN $BioDB.BioTypes USING (biotypeid)
     JOIN $BioDB.BioStates USING (biostateid)
     LEFT JOIN UserHasPermissionRole USING (badgeid)
     LEFT JOIN PermissionRoles USING (permroleid)
-    LEFT JOIN Participants LB on B.biolockedby = LB.badgeid
+    LEFT JOIN $ReportDB.Participants LB on B.biolockedby = LB.badgeid
   WHERE
     P.interested=1 and
     (permrolename in ('Participant') or
@@ -139,6 +141,7 @@ if ((isset($_GET['badgeids'])) AND ($_GET['badgeids']!='')) {
 
   for ($i=0; $i<count($count_badgeid); $i++ ) {
     $k=$badgeid_keys[$i];
+    $all_bios.=",$k";
     for ($j=0; $j<count($count_col); $j++) {
       $l=$col_keys[$j];
       if (!isset($check_element[$k][$l]['raw'])) {
@@ -186,6 +189,7 @@ if ((isset($_GET['badgeids'])) AND ($_GET['badgeids']!='')) {
   }
   echo "  </TR>\n";
 
+  $fixed_all=trim($all_bios,",");
   // Table body, with links to the editing groups, reflecting back here
   for ($i=0; $i<count($possible_states); $i++) {
     echo "  <TR>\n    <TH>".$possible_statename[$possible_states[$i]]."</TH>\n";
@@ -203,7 +207,7 @@ if ((isset($_GET['badgeids'])) AND ($_GET['badgeids']!='')) {
     }
     echo "  </TR>\n";
   }
-  echo "</TABLE>";
+  echo "</TABLE><P><A HREF=StaffManageBios.php?badgeids=$fixed_all>All</A></P>";
  }
 
 correct_footer();     

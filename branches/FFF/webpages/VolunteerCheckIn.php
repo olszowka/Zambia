@@ -1,9 +1,13 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
 $TimecardDB=TIMECARDDB;  // make it a variable so it can be substituted
 
 // Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 if ($TimecardDB=="TIMECARDDB") {unset($TimecardDB);}
 
 $title="Volunteer Check In";
@@ -29,7 +33,7 @@ SELECT
     DISTINCT badgeid,
     pubsname 
   FROM
-      Participants
+      $ReportDB.Participants
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE
@@ -75,7 +79,7 @@ $query=<<<EOF
 SELECT
     pubsname 
   FROM
-      Participants
+      $ReportDB.Participants
   WHERE
     badgeid='$badgeid'
 EOF;

@@ -1,6 +1,12 @@
 <?php
 require_once ('StaffCommonCode.php');
 require ('StaffEditCreateParticipant_FNC.php');
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 if (isset($_GET['action'])) {
   $action=$_GET['action'];
@@ -154,8 +160,8 @@ SELECT
     P.prognotes,
     group_concat(U.permroleid) as 'permroleid_list'
   FROM 
-      CongoDump CD
-    JOIN Participants P USING (badgeid)
+      $ReportDB.CongoDump CD
+    JOIN $ReportDB.Participants P USING (badgeid)
     JOIN UserHasPermissionRole U USING (badgeid)
   WHERE
     CD.badgeid='$selpartid'

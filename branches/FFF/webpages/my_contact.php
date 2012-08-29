@@ -1,5 +1,12 @@
 <?php
 global $participant,$message,$message_error,$message2,$congoinfo;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $title="My Profile";
 
 // initialize db, check login, set $badgeid from session
@@ -81,7 +88,7 @@ if (isset($_POST['update'])) {
   }
 
   // Begin the query:
-  $query_start="UPDATE Participants SET ";
+  $query_start="UPDATE $ReportDB.Participants SET ";
   $query="";
 
   // ... add password ...

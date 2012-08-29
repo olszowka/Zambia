@@ -3,6 +3,12 @@ require_once('StaffCommonCode.php');
 
 /* Global Variables */
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="TentsPrint.php";
@@ -145,7 +151,7 @@ SELECT
     ParticipantOnSession
     JOIN Sessions USING (sessionid)
     JOIN Types USING (typeid)
-    JOIN Participants USING (badgeid)
+    JOIN $ReportDB.Participants USING (badgeid)
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE

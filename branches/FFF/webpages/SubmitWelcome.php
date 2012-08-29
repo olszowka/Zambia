@@ -4,6 +4,13 @@
     // Welcome page.  A previous version prompted the user to change his password if it was
     // still the initial password.
     require ('PartCommonCode.php');
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     $title="Welcome";
     $interested = $_POST['interested'];
     $password = $_POST['password'];
@@ -26,7 +33,7 @@
                     exit();
                     }
             }
-	$query = "UPDATE Participants SET ";
+	$query = "UPDATE $ReportDB.Participants SET ";
 	if ($update_password==true) {
 		$query=$query."password=\"".md5($password)."\", ";
 		}
@@ -50,7 +57,7 @@
             RenderError($title,$message);
             exit();
             }
-    $result=mysql_query("Select password from Participants where badgeid='".$badgeid."'",$link);
+    $result=mysql_query("Select password from $ReportDB.Participants where badgeid='".$badgeid."'",$link);
     if (!$result) {
     	$message="Incorrect badgeid or password.";
         require ('login.php');
@@ -66,7 +73,7 @@
 	exit(0);
 	}
 /*
-    $result=mysql_query("Select badgename from Participants where badgeid='".$badgeid."'",$link);
+    $result=mysql_query("Select badgename from $ReportDB.Participants where badgeid='".$badgeid."'",$link);
     if ($result) {
     		$dbobject=mysql_fetch_object($result);
     		$badgename=$dbobject->badgename;

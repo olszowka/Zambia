@@ -10,6 +10,12 @@ require_once('../../tcpdf/tcpdf.php');
 global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 ## LOCALIZATIONS
 $_SESSION['return_to_page']="WelcomeLettersPrint.php";
@@ -66,7 +72,7 @@ SELECT
     GROUP_CONCAT(DISTINCT permrolename) as Role
   FROM
       ParticipantOnSession
-    JOIN Participants USING (badgeid)
+    JOIN $ReportDB.Participants USING (badgeid)
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE

@@ -2,6 +2,12 @@
 // Function prepare_db()
 // Opens database channel
 include ('../Local/db_name.php');
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 function prepare_db() {
     global $link;
@@ -34,6 +40,13 @@ function record_session_history($sessionid, $badgeid, $name, $email, $editcode, 
 // Gets name and email from db if they are available and not already set
 // returns FALSE if error condition encountered.  Error message in global $message_error
 function get_name_and_email(&$name, &$email) {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
     global $link, $message_error, $badgeid;
     if (isset($name) && $name!='') {
         //$name="foo"; //for debugging only
@@ -46,7 +59,7 @@ function get_name_and_email(&$name, &$email) {
         return(TRUE);
         }
     if (may_I('Staff') || may_I('Participant')) { //name and email should be found in db if either set
-        $query="SELECT pubsname from Participants where badgeid='$badgeid'";
+        $query="SELECT pubsname from $ReportDB.Participants where badgeid='$badgeid'";
         //error_log($query); //for debugging only
         $result=mysql_query($query,$link);
         if (!$result) {
@@ -60,7 +73,7 @@ function get_name_and_email(&$name, &$email) {
         if ($name=='') {
             $name=' '; //if name is null or '' in db, set to ' ' so it won't appear unpopulated in query above
             }
-        $query="SELECT badgename,email from CongoDump where badgeid='$badgeid'";
+        $query="SELECT badgename,email from $ReportDB.CongoDump where badgeid='$badgeid'";
         $result=mysql_query($query,$link);
         if (!$result) {
             $message_error=$query."<BR> ";
@@ -192,11 +205,20 @@ function populate_multidest_from_table($table_name, $skipset) {
     }
 // Function update_session()
 // Takes data from global $session array and updates
-// the tables Sessions, SessionHasFeature, and SessionHasService.
+// the tables Sessions, SessionHasFeature, SessionHasPubChar, 
+// SessionHasService, SessionHasVendorFeature, SessionHasVendorSpace
 //
 function update_session() {
     global $link, $session, $message2;
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     $query="UPDATE Sessions set ";
+    //$query.="conid=".$_SESSION['conid'].", ";
     $query.="trackid=".$session["track"].", ";
     $query.="typeid=".$session["type"].", ";
     $query.="divisionid=".$session["divisionid"].", ";
@@ -227,6 +249,7 @@ function update_session() {
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     $query="DELETE from SessionHasFeature where sessionid=".$session["sessionid"];
+    //$query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     $id=$session["sessionid"];
@@ -234,22 +257,26 @@ function update_session() {
         for ($i=0 ; $session["featdest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasFeature set sessionid=".$id.", featureid=";
             $query.=$session["featdest"][$i];
+	    //$query.=", conid=".$_SESSION['conid'];
             $message2=$query;
             if (!mysql_query($query,$link)) { return false; }
             }
         }
     $query="DELETE from SessionHasService where sessionid=".$session["sessionid"];
+    //$query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     if ($session["servdest"]!="") {
         for ($i=0 ; $session["servdest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasService set sessionid=".$id.", serviceid=";
             $query.=$session["servdest"][$i];
+	    //$query.=", conid=".$_SESSION['conid'];
             $message2=$query;
             if (!mysql_query($query,$link)) { return false; }
             }
         }
     $query="DELETE from SessionHasPubChar where sessionid=".$session["sessionid"];
+    //$query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     if ($session["pubchardest"]!="") {
@@ -257,30 +284,35 @@ function update_session() {
         for ($i=0 ; $session["pubchardest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasPubChar set sessionid=".$id.", pubcharid=";
             $query.=$session["pubchardest"][$i];
+	    //$query.=", conid=".$_SESSION['conid'];
             $message2=$query;
             if (!mysql_query($query,$link)) { return false; }
             }
         }
-    $query="DELETE from SessionHasVendorFeature where sessionid=".$session["sessionid"];
+    $query="DELETE from $ReportDB.SessionHasVendorFeature where sessionid=".$session["sessionid"];
+    $query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     $id=$session["sessionid"];
     if ($session["vendfeatdest"]!="") {
         for ($i=0 ; $session["vendfeatdest"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasVendorFeature set sessionid=".$id.", vendorfeatureid=";
+            $query="INSERT into $ReportDB.SessionHasVendorFeature set sessionid=".$id.", vendorfeatureid=";
             $query.=$session["vendfeatdest"][$i];
+	    $query.=", conid=".$_SESSION['conid'];
             $message2=$query;
             if (!mysql_query($query,$link)) { return false; }
             }
         }
-    $query="DELETE from SessionHasVendorSpace where sessionid=".$session["sessionid"];
+    $query="DELETE from $ReportDB.SessionHasVendorSpace where sessionid=".$session["sessionid"];
+    $query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
     if (!mysql_query($query,$link)) { return false; }
     $id=$session["sessionid"];
     if ($session["vendorspace"]!="") {
         for ($i=0 ; $session["vendorspace"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
+            $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
             $query.=$session["vendorspace"][$i];
+	    $query.=", conid=".$_SESSION['conid'];
             $message2=$query;
             if (!mysql_query($query,$link)) { return false; }
             }
@@ -307,7 +339,15 @@ function get_next_session_id() {
 //
 function insert_session() {
     global $session, $link, $query, $message_error;
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     $query="INSERT into Sessions set ";
+    //$query.="conid=".$_SESSION['conid'].", ";
     $query.="trackid=".$session["track"].',';
     $temp=$session["type"];
     $query.="typeid=".(($temp==0)?"null":$temp).", ";
@@ -349,6 +389,7 @@ function insert_session() {
         for ($i=0 ; $session["featdest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasFeature set sessionid=".$id.", featureid=";
             $query.=$session["featdest"][$i];
+	    //$query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
             }
         }
@@ -356,6 +397,7 @@ function insert_session() {
         for ($i=0 ; $session["servdest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasService sessionid=".$id.", serviceid=";
             $query.=$session["servdest"][$i];
+	    //$query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
             }
         }
@@ -363,20 +405,23 @@ function insert_session() {
         for ($i=0 ; $session["pubchardest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasPubChar sessionid=".$id.", pubcharid=";
             $query.=$session["pubchardest"][$i];
+	    //$query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
             }
         }
     if ($session["vendfeatdest"]!="") {
         for ($i=0 ; $session["vendfeatdest"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasVendorFeature set sessionid=".$id.", vendorfeatureid=";
+            $query="INSERT into $ReportDB.SessionHasVendorFeature set sessionid=".$id.", vendorfeatureid=";
             $query.=$session["vendorfeatdest"][$i];
+	    $query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
             }
         }
     if ($session["vendorspace"]!="") {
         for ($i=0 ; $session["vendorspace"][$i]!="" ; $i++ ) {
-            $query="INSERT into SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
+            $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
             $query.=$session["vendorspace"][$i];
+	    $query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
             }
         }
@@ -484,6 +529,12 @@ EOD;
 
 function isLoggedIn() {
     global $link,$message2;
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
 
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['password'])) {
         return false;
@@ -496,7 +547,7 @@ function isLoggedIn() {
         }
 // addslashes to session username before using in a query.
 
-    $result=mysql_query("SELECT password FROM Participants where badgeid='".$_SESSION['badgeid']."'",$link);
+    $result=mysql_query("SELECT password FROM $ReportDB.Participants where badgeid='".$_SESSION['badgeid']."'",$link);
     if (!$result) {
         $message2=mysql_error($link);
         unset($_SESSION['badgeid']);
@@ -553,7 +604,14 @@ function isLoggedIn() {
 function retrieve_participant_from_db($badgeid) {
     global $participant;
     global $link,$message2;
-    $result=mysql_query("SELECT pubsname, password, interested  FROM Participants where badgeid='$badgeid'",$link);
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
+    $result=mysql_query("SELECT pubsname, password, interested  FROM $ReportDB.Participants where badgeid='$badgeid'",$link);
     if (!$result) {
         $message2=mysql_error($link);
         return (-3);
@@ -567,10 +625,17 @@ function retrieve_participant_from_db($badgeid) {
     return (0);
     }
 // Function getCongoData()
-// Reads CongoDump table
+// Reads $ReportDB.CongoDump table
 // from db to populate global array $congoinfo.
 //
 function getCongoData($badgeid) {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
     global $message_error,$message2,$congoinfo,$link;
     $query= <<<EOD
 SELECT
@@ -587,7 +652,7 @@ SELECT
 	postzip,
 	postcountry
     FROM
-        CongoDump
+        $ReportDB.CongoDump
     WHERE
         badgeid="$badgeid"
 EOD;
@@ -770,11 +835,6 @@ function get_idlist_from_db($table_name,$id_col_name,$desc_col_name,$desc_col_ma
 
 function unlock_participant($badgeid) {
   global $query,$link;
-  $BioDB=BIODB; // make it a variable so it can be substituted
-
-  // Tests for the substituted variables
-  if ($BioDB=="BIODB") {unset($BioDB);}
-
   $query="UPDATE $BioDB.Bios SET biolockedby=NULL WHERE ";
   if (isset($_SESSION['badgeid'])) {
     $query.="biolockedby='".$_SESSION['badgeid']."'";
@@ -799,11 +859,6 @@ function unlock_participant($badgeid) {
 
 function lock_participant($badgeid) {
   global $query, $link;
-  $BioDB=BIODB; // make it a variable so it can be substituted
-
-  // Tests for the substituted variables
-  if ($BioDB=="BIODB") {unset($BioDB);}
-
   //error_log("Zambia: lock_participant: ".$query);
   $userbadgeid=$_SESSION['badgeid'];
   $query="UPDATE $BioDB.Bios SET biolockedby='$userbadgeid' WHERE biolockedby IS NULL and badgeid='$badgeid'";

@@ -1,5 +1,12 @@
 <?php
 require_once('StaffCommonCode.php');
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $title="Task List Update";
 $description="Return to the <A HREF=\"genreport.php?reportname=tasklistdisplay\">Task List Report</A></P>";
 
@@ -90,7 +97,7 @@ SELECT
     badgeid,
     pubsname 
   FROM
-      Participants
+      $ReportDB.Participants
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE

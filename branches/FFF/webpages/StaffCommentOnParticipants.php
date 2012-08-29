@@ -7,6 +7,13 @@ if (may_I("Staff")) {
   }
 require_once('SubmitCommentOn.php');
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $title="Comment On Participant";
 $description="<P>Please add a comment about a presenter, below.</P>";
 
@@ -38,7 +45,7 @@ if ((!isset($partid)) or ($partid==0)) {
     }
 
 // Query to get the pubsname of the individuals in question.
-$query="SELECT pubsname FROM Participants WHERE badgeid='$partid'";
+$query="SELECT pubsname FROM $ReportDB.Participants WHERE badgeid='$partid'";
 list($participant,$header_array,$participant_array)=queryreport($query,$link,$title,$description,0);
 $pubsname=$participant_array[1]['pubsname'];
 

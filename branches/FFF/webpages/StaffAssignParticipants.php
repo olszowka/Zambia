@@ -2,6 +2,13 @@
 require_once('StaffCommonCode.php');
 require_once('StaffAssignParticipants_FNC.php');
 
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $title="Staff - Assign Participants";
 $description="<P>Assign a participant to a Session Element.  Click on the element name to modify the element.</P>\n";
 
@@ -128,7 +135,7 @@ SELECT
     PSI.willmoderate,
     PSI.comments
   FROM
-      Participants AS P
+      $ReportDB.Participants AS P
       JOIN (SELECT
                 distinct badgeid,
                 sessionid
@@ -189,8 +196,8 @@ SELECT
     concat(pubsname, ' - ', badgeid) AS Pubsname,
     lastname
   FROM
-      Participants
-    JOIN CongoDump USING(badgeid)
+      $ReportDB.Participants
+    JOIN $ReportDB.CongoDump USING(badgeid)
     JOIN UserHasPermissionRole USING (badgeid)
     JOIN PermissionRoles USING (permroleid)
   WHERE
