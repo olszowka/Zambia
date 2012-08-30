@@ -10,7 +10,7 @@
 ?>
 
 <div class="row-fluid">
-<FORM method=POST action="ShowSessions.php" class="well form-horizontal">
+<form method=POST action="ShowSessions.php" class="well form-horizontal">
 	<fieldset>
     <p class="">Session Search (shows same data as Precis View for each session):</p>
     <DIV class="control-group">
@@ -30,9 +30,9 @@
         </div>
     </DIV>
     <DIV class="control-group">
-        <LABEL for="type" class="control-label">Status: </LABEL>
+        <LABEL for="status" class="control-label">Status: </LABEL>
         <div class="controls">
-          <SELECT name="type" class="span2">
+          <SELECT name="status" class="span2">
               <?php populate_select_from_table("SessionStatuses",0,"ANY",true); ?>
           </SELECT>
         </div>
