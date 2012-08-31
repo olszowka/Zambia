@@ -64,11 +64,11 @@ EOD;
 				</xsl:otherwise>
 			</xsl:choose>
 			<div style="margin-top:0.75em; font-style: italic">
-				<span>Most reports are now generated when the link is clicked.  Those marked with</span>
-				<div style="display: inline-block; border:none" class="ui-state-active">
-				    <span class="ui-icon ui-icon-clock"></span>
+				<span>Most reports are now generated when the link is clicked. Those marked with<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
+				<div style="display: inline-block; border:none">
+				    <span class="icon-time"></span>
 				</div>
-				<span>are generated periodically--about every 15 minutes.</span>
+				<span><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>are generated periodically <xsl:text disable-output-escaping="yes">&amp;mdash;</xsl:text> about every 15 minutes.</span>
 			</div>
 		</xsl:template>
 		<xsl:template match="/doc/query[@queryName='reportTypes']/row">
@@ -77,8 +77,8 @@ EOD;
 					<xsl:when test="@oldmechanism='1'">
 						<a href="{@filename}"><xsl:value-of select="@title" /></a>
 						<xsl:if test="@ondemand = '0'">
-							<div style="display: inline-block; border:none" class="ui-state-active">
-							    <span class="ui-icon ui-icon-clock"></span>
+							<div style="display: inline-block; border:none"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+							    <span class="icon-time"></span>
 							</div>
 						</xsl:if>
 					</xsl:when>
