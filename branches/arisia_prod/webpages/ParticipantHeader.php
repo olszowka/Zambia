@@ -51,7 +51,7 @@ load_javascript();
 				<a id="logoutButton" href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
 			</div>
 		</header>
-    <nav id="participantNav" class="navbar">
+    <nav id="participantNav" class="navbar navbar-inverse">
       <div class="navbar-inner">
         <div class="container" style="width: auto;">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
