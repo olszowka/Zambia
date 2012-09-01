@@ -14,11 +14,10 @@
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/zambia.less" type="text/less" media="screen" />
+	<link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
 <!--   <link rel="stylesheet" href="ParticipantSection.css" type="text/css" /> -->
 
     <!-- Scripts -->
-	<script src="javascript/less-1.1.3.min.js" type="text/javascript"></script>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>

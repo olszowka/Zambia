@@ -1,0 +1,173 @@
+header img,
+header h1 {
+  float: left;
+  padding-left: 1em;
+}
+#welcome p {
+  text-align: right;
+}
+body {
+  background-image: url('../images/light_honeycomb.png');
+  xxbackground-image: url('../images/old_mathematics.png');
+  background-repeat: repeat;
+}
+header#top {
+  xxbackground-color: gray;
+}
+header label {
+  color: #000000;
+  display: block;
+  text-align: right;
+  font-size: 1.1em;
+}
+#loginBox,
+#welcome {
+  float: right;
+  margin: 1em 1em 0 0;
+}
+#loginBox p,
+#welcome p {
+  color: #ffffff;
+}
+#buttonBox {
+  margin: 0.4em;
+  xposition: relative;
+  xtop: -3em;
+}
+.borderBox {
+  border: black thin solid;
+  padding: 5px;
+  margin: 0;
+  color: #000000;
+}
+input {
+  height: 28px;
+}
+.navbar {
+  margin-bottom: 0.2em;
+}
+.staff {
+  xxbackground-color: #00aa00;
+  background-image: url('../images/staffheadbg.png');
+  background-repeat: repeat-x;
+  background-color: white;
+  color: black;
+}
+#staffView {
+  color: #00aa00;
+}
+#staffView:hover {
+  color: #22ee22;
+}
+.participant {
+  xxbackground-color: #6666ff;
+  background-image: url('../images/partheadbg.png');
+  background-repeat: repeat-x;
+  background-color: white;
+  color: black;
+}
+#ParticipantView {
+  color: #6666ff;
+}
+#ParticipantView:hover {
+  color: #aaaaff;
+}
+.checkbox.inline {
+  padding-top: 0px;
+  margin-bottom: 5px;
+}
+.checkbox.adjust {
+  padding-top: 0px;
+  margin-bottom: 8px;
+}
+#resultsDiv {
+  padding-top: 1.0em;
+}
+#searchPartsINPUT {
+  margin-bottom: 0px;
+}
+.nowidth {
+  width: auto!important;
+  padding-right: 1em;
+  text-align: right;
+}
+.note {
+  font-size: 0.85em;
+}
+#login {
+  float: right;
+}
+.label {
+  text-align: right;
+}
+.congo_table {
+  margin-top: 1em;
+}
+h1 {
+  font-family: Verdana;
+  font-size: 2em;
+  padding: 1em;
+  color: #000000;
+}
+h1 a {
+  color: #ffffff;
+  text-decoration: none;
+}
+h2 {
+  font-family: Verdana;
+  font-size: 1.5em;
+  padding: 0;
+  color: #666;
+  background-color: #ccc;
+  text-align: center;
+}
+ul#boxes li {
+  font-family: Verdana;
+  font-size: 1.33em;
+  padding: 2.5em 0;
+  color: #999;
+  background-color: #e5e5e5;
+  text-align: center;
+}
+table.report {
+  border-collapse: collapse;
+  margin: 10px;
+  border: 1px solid black;
+  font-family: Arial;
+  font-size: 12px;
+}
+th.report {
+  border: 1px solid black;
+  background-color: #c0e4ff;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+}
+td.report {
+  border: 1px solid black;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+.report A {
+  color: #1c30b0;
+}
+@media (max-width: 780px) {
+  .wide-only {
+    display: none;
+  }
+  .label {
+    text-align: left;
+  }
+}
+@media (max-width: 480px) {
+  .wide-medium-only {
+    display: none;
+  }
+  #loginBox {
+    margin: 0 1em 0 0;
+  }
+  h2,
+  .label {
+    text-align: left;
+  }
+}

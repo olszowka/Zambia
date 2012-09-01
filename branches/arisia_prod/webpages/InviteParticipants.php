@@ -10,7 +10,7 @@ if (isset($_POST["selpart"])) {
     $partbadgeid=$_POST["selpart"];
     $sessionid=$_POST["selsess"];
     if (($partbadgeid==0) || ($sessionid==0)) {
-            echo "<P class=\"errmsg\">Database not updated.  Select a participant and a session.</P>";
+            echo "<P class=\"alert alert-error\">Database not updated. Select a participant and a session.</P>";
             }
         else {    
             $query="INSERT INTO ParticipantSessionInterest SET badgeid=\"".$partbadgeid."\", ";
@@ -59,8 +59,8 @@ if (!$Sresult=mysql_query($query,$link)) {
     exit();
     }
 echo "<p>Use this tool to put sessions marked \"invited guests only\" on a participant's interest list.\n";
-echo "<FORM name=\"invform\" method=POST action=\"InviteParticipants.php\">";
-echo "<DIV><LABEL for=\"selpart\">Select Participant</LABEL>\n";
+echo "<FORM class=\"form-inline\" name=\"invform\" method=POST action=\"InviteParticipants.php\">";
+echo "<DIV class=\"row-fluid\"><LABEL class=\"control-label\" for=\"selpart\">Select Participant:&nbsp;</LABEL>\n";
 echo "<SELECT name=\"selpart\">\n";
 echo "     <OPTION value=0 selected>Select Participant</OPTION>\n";
 while (list($lastname,$firstname,$badgename,$badgeid,$pubsname)= mysql_fetch_array($Presult, MYSQL_NUM)) {
@@ -75,9 +75,8 @@ while (list($lastname,$firstname,$badgename,$badgeid,$pubsname)= mysql_fetch_arr
     echo " (".htmlspecialchars($badgename).") - ";
     echo htmlspecialchars($badgeid)."</OPTION>\n";
     }
-echo "</SELECT></DIV>\n";
-echo "<P>&nbsp;";
-echo "<DIV><LABEL for=\"selsess\">Select Session</LABEL>\n";
+echo "</SELECT>\n";
+echo "<LABEL class=\"control-label\" for=\"selsess\">Select Session:&nbsp;</LABEL>\n";
 echo "<SELECT name=\"selsess\">\n";
 echo "     <OPTION value=0 selected>Select Session</OPTION>\n";
 while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
@@ -86,6 +85,6 @@ while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM
     }
 echo "</SELECT></DIV>\n";
 echo "<P>&nbsp;";
-echo "<DIV class=\"SubmitButton\"><BUTTON type=\"submit\" name=\"Invite\" >Invite</BUTTON></DIV>";
+echo "<DIV class=\"SubmitButton\"><BUTTON class=\"btn btn-primary\" type=\"submit\" name=\"Invite\" >Invite</BUTTON></DIV>";
 echo "</FORM>";
 staff_footer(); ?>

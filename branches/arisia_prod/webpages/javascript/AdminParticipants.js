@@ -91,7 +91,7 @@ function doSearchPartsBUTN() {
 	var x = document.getElementById("searchPartsINPUT").value;
 	if (!x)
 		return;
-  $('#searchPartsBUTN').tbutton('loading');
+  $('#searchPartsBUTN').button('loading');
 	$.ajax({
 		url: "SubmitAdminParticipants.php",
 		dataType: "html",
@@ -188,8 +188,8 @@ function showUpdateResults(data, textStatus, jqXHR) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
-  $('#updateBUTN').tbutton('reset');
-  setTimeout(function() {$("#updateBUTN").tbutton().attr("disabled","disabled");}, 0);
+  $('#updateBUTN').button('reset');
+  setTimeout(function() {$("#updateBUTN").button().attr("disabled","disabled");}, 0);
 	originalInterested = $("#interested").val();
 	$("#resultBoxDIV").html(data);
 	$('#resultBoxDIV').show();
@@ -215,7 +215,7 @@ function textChange(which) {
 
 function updateBUTN() {
 	//debugger;
-  $('#updateBUTN').tbutton('loading');
+  $('#updateBUTN').button('loading');
 	var postdata = {
 		ajax_request_action : "update_participant",
 		badgeid : $("#badgeid").val()
@@ -242,7 +242,7 @@ function updateBUTN() {
 function writeSearchResults(data, textStatus, jqXHR) {
 	//ajax success callback function
 	$("#searchResultsDIV").html(data).show('fast');
-  $('#searchPartsBUTN').tbutton('reset');
+  $('#searchPartsBUTN').button('reset');
   showSearchResults();
 }
 

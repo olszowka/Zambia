@@ -70,7 +70,7 @@ header {
   border: black thin solid;
   padding: 5px;
   margin: 0;
-  color: @contrast;
+  color: @color;
 }
 
 input {
@@ -113,18 +113,24 @@ input {
   color: (@participantColor + #444);
 }
 
+@adjustment: 5px;
 .checkbox.inline {
   padding-top: 0px;
-  margin-bottom: 3px;
+  margin-bottom: @adjustment;
 }
 
-/*
-#invguest, #signup {
+.checkbox.adjust {
   padding-top: 0px;
-  margin-bottom: 3px;
+  margin-bottom: @adjustment + 3;
 }
-*/
 
+#resultsDiv {
+  padding-top: 1.0em;
+}
+
+#searchPartsINPUT {
+  margin-bottom: 0px;
+}
 .nowidth {
   width: auto!important;
   padding-right: 1em;
