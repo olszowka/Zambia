@@ -14,11 +14,11 @@ $additionalinfo="<P>A report has to be in a <A HREF=EditGroupFlows.php>Group</A>
 if ((isset($_POST["reportupdate"])) and ($_POST["reportupdate"]!="")) {
   if ($_POST["selreport"] == "-1") {
     $element_array=array('reportname','reporttitle','reportdescription','reportadditionalinfo','reportquery');
-    $value_array=array(mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportname"]))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reporttitle"]))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportdescription"]))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportadditionalinfo"]))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode(refrom($_POST["reportquery"])))));
+    $value_array=array(htmlspecialchars_decode($_POST["reportname"]),
+		       htmlspecialchars_decode($_POST["reporttitle"]),
+		       htmlspecialchars_decode($_POST["reportdescription"]),
+		       htmlspecialchars_decode($_POST["reportadditionalinfo"]),
+		       htmlspecialchars_decode(refrom($_POST["reportquery"])));
     $message.=submit_table_element($link, $title, "$ReportDB.Reports", $element_array, $value_array);
   } else {
     $pairedvalue_array=array("reportdescription='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST["reportdescription"])))."'",

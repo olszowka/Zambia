@@ -9,11 +9,11 @@ $description="<P>Return to the <A HREF=\"genreport.php?reportname=meetingagendad
 if ((isset($_POST["agendaupdate"])) and ($_POST["agendaupdate"]!="")) {
   if ($_POST["agendaid"] == "-1") {
     $element_array=array('agendaname','permroleid','agenda','agendanotes','meetingtime');
-    $value_array=array(mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendaname']))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['permroleid']))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agenda']))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendanotes']))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['meetingtime']))));
+    $value_array=array(htmlspecialchars_decode($_POST['agendaname']),
+		       htmlspecialchars_decode($_POST['permroleid']),
+		       htmlspecialchars_decode($_POST['agenda']),
+		       htmlspecialchars_decode($_POST['agendanotes']),
+		       htmlspecialchars_decode($_POST['meetingtime']));
     $message.=submit_table_element($link, $title, "AgendaList", $element_array, $value_array);
    } else {
     $pairedvalue_array=array("agendanotes='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['agendanotes'])))."'",

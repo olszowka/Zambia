@@ -13,9 +13,9 @@ topofpagereport($title,$description,$additionalinfo);
 if ((isset($_POST["emailtoupdate"])) and ($_POST["emailtoupdate"]!="")) {
   if ($_POST["emailtoid"] == "-1") {
     $element_array=array('emailtodescription','display_order','emailtoquery');
-    $value_array=array(mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['emailtodescription']))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['display_order']))),
-		       mysql_real_escape_string(stripslashes(htmlspecialchars_decode(refrom($_POST['emailtoquery'])))));
+    $value_array=array(htmlspecialchars_decode($_POST['emailtodescription']),
+		       htmlspecialchars_decode($_POST['display_order']),
+		       htmlspecialchars_decode(refrom($_POST['emailtoquery'])));
     submit_table_element($link, $title, "EmailTo", $element_array, $value_array);
    } else {
     $pairedvalue_array=array("emailtodescription='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['emailtodescription'])))."'",
