@@ -759,13 +759,13 @@ function create_participant ($participant_arr,$permrole_arr) {
 
   // Create Participants entry.
   $element_array = array('badgeid', 'password', 'bestway', 'interested', 'altcontact', 'prognotes', 'pubsname');
-  $value_array=array(mysql_real_escape_string($newbadgeid),
-                     mysql_real_escape_string($participant_arr['password']),
-                     mysql_real_escape_string($participant_arr['bestway']),
+  $value_array=array($newbadgeid,
+                     $participant_arr['password'],
+                     $participant_arr['bestway'],
                      (($participant_arr['interested']=='')?"NULL":$participant_arr['interested']),
-                     mysql_real_escape_string($participant_arr['altcontact']),
-                     mysql_real_escape_string(stripslashes($participant_arr['prognotes'])),
-		     mysql_real_escape_string(stripslashes($participant_arr['pubsname'])));
+                     htmlspecialchars_decode($participant_arr['altcontact']),
+                     htmlspecialchars_decode($participant_arr['prognotes']),
+		     htmlspecialchars_decode($participant_arr['pubsname']));
   $message.=submit_table_element($link, $title, "$ReportDB.Participants", $element_array, $value_array);
 
   // Add Bios.
@@ -797,25 +797,25 @@ function create_participant ($participant_arr,$permrole_arr) {
 
   // Create CongoDump entry.
   $element_array = array('badgeid', 'firstname', 'lastname', 'badgename', 'phone', 'email', 'postaddress1', 'postaddress2', 'postcity', 'poststate', 'postzip', 'regtype');
-  $value_array=array(mysql_real_escape_string($newbadgeid),
-		     mysql_real_escape_string(stripslashes($participant_arr['firstname'])),
-		     mysql_real_escape_string(stripslashes($participant_arr['lastname'])),
-		     mysql_real_escape_string(stripslashes($participant_arr['badgename'])),
-		     mysql_real_escape_string($participant_arr['phone']),
-		     mysql_real_escape_string($participant_arr['email']),
-		     mysql_real_escape_string(stripslashes($participant_arr['postaddress1'])),
-		     mysql_real_escape_string(stripslashes($participant_arr['postaddress2'])),
-		     mysql_real_escape_string(stripslashes($participant_arr['postcity'])),
-		     mysql_real_escape_string($participant_arr['poststate']),
-		     mysql_real_escape_string($participant_arr['postzip']),
-		     mysql_real_escape_string(stripslashes($participant_arr['regtype'])));
+  $value_array=array($newbadgeid,
+		     htmlspecialchars_decode($participant_arr['firstname']),
+		     htmlspecialchars_decode($participant_arr['lastname']),
+		     htmlspecialchars_decode($participant_arr['badgename']),
+		     htmlspecialchars_decode($participant_arr['phone']),
+		     htmlspecialchars_decode($participant_arr['email']),
+		     htmlspecialchars_decode($participant_arr['postaddress1']),
+		     htmlspecialchars_decode($participant_arr['postaddress2']),
+		     htmlspecialchars_decode($participant_arr['postcity']),
+		     htmlspecialchars_decode($participant_arr['poststate']),
+		     htmlspecialchars_decode($participant_arr['postzip']),
+		     htmlspecialchars_decode($participant_arr['regtype']));
   $message.=submit_table_element($link, $title, "$ReportDB.CongoDump", $element_array, $value_array);
 
   // Submit a note about what was done.
   $element_array = array('badgeid', 'rbadgeid', 'note');
-  $value_array=array(mysql_real_escape_string($newbadgeid),
-                     mysql_real_escape_string($_SESSION['badgeid']),
-                     mysql_real_escape_string($participant_arr['note']));
+  $value_array=array($newbadgeid,
+                     $_SESSION['badgeid'],
+                     htmlspecialchars_decode($participant_arr['note']));
   $message.=submit_table_element($link, $title, "NotesOnParticipants", $element_array, $value_array);
 
   // Assign permissions.
@@ -1011,8 +1011,8 @@ function send_fixed_email_info($emailto,$subject,$body,$link,$title,$description
   // Insert into queue, the ADMIN_EMAIL is the from address, no cc address, status 1 to send
   $element_array=array('emailto','emailfrom','emailcc','emailsubject','body','status');
   $value_array=array($emailto, ADMIN_EMAIL, '',
-		     mysql_real_escape_string(stripslashes(htmlspecialchars_decode($subject))),
-		     mysql_real_escape_string(stripslashes(htmlspecialchars_decode($body))),
+		     htmlspecialchars_decode($subject),
+		     htmlspecialchars_decode($body),
 		     1);
   $message.=submit_table_element($link, $title, "EmailQueue", $element_array, $value_array);
 }
@@ -1028,7 +1028,7 @@ function remove_flow_report ($flowid,$table,$title,$description) {
   ## Establish the table element or fail
   if (strpos($table,"Group")) {
     $tableelement="gflowid";
-  } elseif ($table=="Personal") {
+  } elseif (strpos($table,"Personal")) {
     $tableelement="pflowid";
   } else {
     $message="<P>Error finding table $tablename.  Database not updated.</P>\n<P>";
@@ -1050,24 +1050,32 @@ function remove_flow_report ($flowid,$table,$title,$description) {
 
 function add_flow_report ($addreport,$addphase,$table,$group,$title,$description) {
   global $link;
-  $mybadgeid=$_SESSION['badgeid'];
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
 
-  ## Get phaseid list
-  $query="SELECT phaseid FROM Phases ORDER BY phaseid";
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
+  $mybadgeid=$_SESSION['badgeid'];
+  $conid=$_SESSION['conid'];
+
+  ## Get phasetypeid list
+  $query="SELECT phasetypeid FROM $ReportDB.PhaseTypes ORDER BY phasetypeid";
 
   ## Retrieve query
   list($phasecount,$unneeded_array_a,$phase_array)=queryreport($query,$link,$title,$description,0);
 
   ## Build the limits
-  $firstphase=$phase_array[1]['phaseid'];
-  $lastphase=$phase_array[$phasecount]['phaseid'];
+  $firstphase=$phase_array[1]['phasetypeid'];
+  $lastphase=$phase_array[$phasecount]['phasetypeid'];
 
-  ## Set the phase, if it is within the phaseid list
+  ## Set the phase, if it is within the phasetypeid list
   $phasecheck="";
   if (($addphase<=$lastphase) AND ($addphase>=$firstphase)) {
-    $phasecheck="phaseid='$addphase'";
+    $phasecheck="phasetypeid='$addphase'";
   } else {
-    $phasecheck="phaseid is NULL";
+    $phasecheck="phasetypeid is NULL";
   }
 
   ## Establish the table name
@@ -1079,7 +1087,7 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
     $tname="gflowname";
     $cname=$group;
     $tid="gflowid";
-  } elseif ($table=="Personal") {
+  } elseif (strpos($table,"Personal")) {
     $torder="pfloworder";
     $tname="badgeid";
     $cname=$mybadgeid;
@@ -1106,10 +1114,10 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
   $nextfloworder=$floworder_array[1]['floworder']+1;
 
   ## Insert query
-  if ($phasecheck!="phaseid is NULL") {
-    $query="INSERT INTO $tablename (reportid,$tname,$torder,phaseid) VALUES ($addreport,'$cname',$nextfloworder,$addphase)";
+  if ($phasecheck!="phasetypeid is NULL") {
+    $query="INSERT INTO $tablename (reportid,$tname,$torder,phasetypeid,conid) VALUES ($addreport,'$cname',$nextfloworder,$addphase,$conid)";
   } else {
-    $query="INSERT INTO $tablename (reportid,$tname,$torder) VALUES ($addreport,'$cname',$nextfloworder)";
+    $query="INSERT INTO $tablename (reportid,$tname,$torder,conid) VALUES ($addreport,'$cname',$nextfloworder,$conid)";
   }
 
   ## Execute query
@@ -1131,7 +1139,7 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
     $torder="gfloworder";
     $tname="gflowname";
     $tid="gflowid";
-  } elseif ($table=="Personal") {
+  } elseif (strpos($table,"Personal")) {
     $torder="pfloworder";
     $tname="badgeid";
     $tid="pflowid";
@@ -1142,7 +1150,7 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
   }
 
   ## Get element from table;
-  $query="SELECT $torder,$tname,phaseid FROM $tablename WHERE $tid=$flowid";
+  $query="SELECT $torder,$tname,phasetypeid FROM $tablename WHERE $tid=$flowid";
   list($phaserows,$phaseheader_array,$phasereport_array)=queryreport($query,$link,$title,$description,0);
 
   ## Set the current flow order number;
@@ -1165,12 +1173,12 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
     exit ();
   }
 
-  ## Determine if there is a phaseid attached to this particular flow element;
-  if (isset($phasereport_array[1]['phaseid'])) {
-    $phase=$phasereport_array[1]['phaseid'];
-    $phasecheck="phaseid='$phase'";
+  ## Determine if there is a phasetypeid attached to this particular flow element;
+  if (isset($phasereport_array[1]['phasetypeid'])) {
+    $phase=$phasereport_array[1]['phasetypeid'];
+    $phasecheck="phasetypeid='$phase'";
   } else {
-    $phasecheck="phaseid is NULL";
+    $phasecheck="phasetypeid is NULL";
   }
 
   ## Get element to be swapped with from table, based on current element floworder and $norder

@@ -750,15 +750,23 @@ EOD;
 //
 function set_permission_set($badgeid) {
     global $link;
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     
 // First do simple permissions
     $_SESSION['permission_set']="";
+    $conid=$_SESSION['conid'];
     $query= <<<EOD
-    Select distinct permatomtag from PermissionAtoms as PA, Phases as PH,
-    PermissionRoles as PR, UserHasPermissionRole as UHPR, Permissions P where
-    ((UHPR.badgeid='$badgeid' and UHPR.permroleid = P.permroleid)
+    Select distinct permatomtag from $ReportDB.PermissionAtoms as PA, $ReportDB.Phase as PH,
+    $ReportDB.PermissionRoles as PR, $ReportDB.UserHasPermissionRole as UHPR, Permissions P where
+    ((UHPR.badgeid='$badgeid' and UHPR.permroleid = P.permroleid and UHPR.conid=$conid)
         or P.badgeid='$badgeid' ) and
-    (P.phaseid is null or (P.phaseid = PH.phaseid and PH.current = TRUE)) and
+    (P.phaseid is null or (P.phaseid = PH.phasetypeid and PH.phasestate = TRUE and PH.conid=$conid)) and
     P.permatomid = PA.permatomid
 EOD;
     $result=mysql_query($query,$link);
@@ -779,11 +787,11 @@ EOD;
 // Second, do <<specific>> permissions
     $_SESSION['permission_set_specific']="";
     $query= <<<EOD
-    Select distinct permatomtag, elementid from PermissionAtoms as PA, Phases as PH,
-    PermissionRoles as PR, UserHasPermissionRole as UHPR, Permissions P where
-    ((UHPR.badgeid='$badgeid' and UHPR.permroleid = P.permroleid)
+    Select distinct permatomtag, elementid from $ReportDB.PermissionAtoms as PA, $ReportDB.Phase as PH,
+    $ReportDB.PermissionRoles as PR, $ReportDB.UserHasPermissionRole as UHPR, Permissions P where
+    ((UHPR.badgeid='$badgeid' and UHPR.permroleid = P.permroleid and UHPR.conid=$conid)
         or P.badgeid='$badgeid' ) and
-    (P.phaseid is null or (P.phaseid = PH.phaseid and PH.current = TRUE)) and
+    (P.phaseid is null or (P.phaseid = PH.phasetypeid and PH.phasestate = TRUE and PH.conid=$conid)) and
     P.permatomid = PA.permatomid and
     PA.elementid is not null
 EOD;

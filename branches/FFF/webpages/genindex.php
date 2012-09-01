@@ -4,6 +4,7 @@ global $link;
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ProgramEmail=PROGRAM_EMAIL; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
+$conid=$_SESSION['conid']; // make it a variable so it can be substituted
 
 // Tests for the substituted variables
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
@@ -57,11 +58,11 @@ SELECT
   FROM
     $ReportDB.GroupFlow GF,
     $ReportDB.Reports R,
-    Phases P
+    $ReportDB.Phase P
   WHERE
     GF.reportid=R.reportid and
     GF.gflowname='$gflowname' and
-    (GF.phaseid is null or (GF.phaseid = P.phaseid and P.current = TRUE))
+    (GF.phasetypeid is null or (GF.phasetypeid = P.phasetypeid and P.phasestate = TRUE and conid=$conid))
   ORDER BY
     GF.gfloworder
 EOD;

@@ -14,20 +14,25 @@ $additionalinfo="<P><A HREF=genreport.php?reportname=personalflow>Return</A> to 
 $mybadgeid=$_SESSION['badgeid'];
 
 if (isset($_POST['addto'])) {
-  add_flow_report($_POST['addto'],$_POST['addphase'],"Personal","",$title,$description);
+  add_flow_report($_POST['addto'],$_POST['addphase'],"$ReportDB.Personal","",$title,$description);
  }
 
 if (isset($_POST['unrank'])) {
-  remove_flow_report($_POST['unrank'],"Personal",$title,$description);
+  remove_flow_report($_POST['unrank'],"$ReportDB.Personal",$title,$description);
  }
 
 if (isset($_POST['upfrom'])) {
-  deltarank_flow_report($_POST['upfrom'],"Personal","Up",$title,$description);
+  deltarank_flow_report($_POST['upfrom'],"$ReportDB.Personal","Up",$title,$description);
  }
 
 if (isset($_POST['downfrom'])) {
-  deltarank_flow_report($_POST['downfrom'],"Personal","Down",$title,$description);
+  deltarank_flow_report($_POST['downfrom'],"$ReportDB.Personal","Down",$title,$description);
  }
+
+if (isset($_POST['newnote'])) {
+  $note_array=array("pflownote='".mysql_real_escape_string(stripslashes(htmlspecialchars_decode($_POST['newnote'])))."'");
+  update_table_element ($link, $title, "$ReportDB.PersonalFlow", $note_array, "pflowid", $_POST['noteid']);
+}
 
 // Forms inserted into the query
 $uprank_query ="concat('<FORM name=\"uprank\" method=POST action=\"EditPersonalFlows.php\">";
@@ -48,16 +53,25 @@ $remove_query ="concat('<FORM name=\"unrank\" method=POST action=\"EditPersonalF
 $remove_query.="<INPUT type=\"hidden\" name=\"unrank\" value=\"',PF.pflowid,'\">";
 $remove_query.="<INPUT type=submit value=\"Remove\">";
 $remove_query.="</FORM>') as Remove,";
+$note_query ="concat('<FORM name=\"notemod\" method=POST action=\"EditPersonalFlows.php\">";
+$note_query.="<INPUT type=\"hidden\" name=\"noteid\" value=\"',PF.pflowid,'\">";
+$note_query.="<INPUT type=\"text\" name=\"newnote\" value=\"',if ((PF.pflownote is NULL),'',PF.pflownote),'\">";
+$note_query.="<INPUT type=submit value=\"Update Note\">";
+$note_query.="</FORM>') as 'My Notes'";
 
-// First table, list of phases and their phaseids
+// First table, list of phases and their phasetypeids
+$conid=$_SESSION['conid'];
 $query = <<<EOD
 SELECT
-    phaseid,
-    concat(phasename,if ((current=TRUE),' (c)',' ')) AS Phases
+    phasetypeid,
+    concat(phasetypename,if ((phasestate=TRUE),' (c)',' ')) AS Phases
   FROM
-    Phases  
+    $ReportDB.PhaseTypes
+  JOIN $ReportDB.Phase USING (phasetypeid)
+  WHERE
+    conid=$conid
   ORDER BY
-    phaseid
+    phasetypeid
 EOD;
 
 // Retrieve query
@@ -69,23 +83,25 @@ $phasereport_array[$phaserows]['Phases']="ALL";
 
 $query = <<<EOD
 SELECT
-    DISTINCT concat("<A HREF=genreport.php?reportid=",R.reportid,">",R.reporttitle,"</A> (<A HREF=genreport.php?reportid=",R.reportid,"&csv=y>csv</A>)") AS Title,
+    concat("<A HREF=genreport.php?reportid=",R.reportid,">",R.reporttitle," (",conname,")</A> (<A HREF=genreport.php?reportid=",R.reportid,"&csv=y>csv</A>)") AS Title,
     $uprank_query
     $downrank_query
     $addto_query
     $remove_query
-    PF.pfloworder,
-    if((PF.phaseid IS NULL),'ALL',P.phasename) as Phase
+    PF.pfloworder AS "Order #",
+  if((PF.phasetypeid IS NULL),'ALL',concat("(",PF.phasetypeid,") ",PT.phasetypename)) AS Phase,
+    $note_query
   FROM
-    PersonalFlow PF,
-    $ReportDB.Reports R,
-    Phases P
+      $ReportDB.PersonalFlow PF
+    JOIN $ReportDB.Reports R USING (reportid)
+    JOIN $ReportDB.ConInfo USING (conid)
+    LEFT JOIN $ReportDB.PhaseTypes PT USING (phasetypeid)
+    LEFT JOIN $ReportDB.Phase P USING (phasetypeid)
   WHERE
-    PF.badgeid=$mybadgeid AND
-    PF.reportid=R.reportid AND
-    (PF.phaseid is NULL OR (PF.phaseid = P.phaseid AND P.current = TRUE))
+    badgeid=$mybadgeid AND
+    (P.conid is NULL or P.conid=$conid)
   ORDER BY
-    P.phasename,PF.pfloworder
+    PT.phasetypename,PF.pfloworder
 EOD;
 
 // Retrieve query

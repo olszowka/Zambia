@@ -50,15 +50,19 @@ $remove_query.="<INPUT type=\"hidden\" name=\"unrank\" value=\"',GF.gflowid,'\">
 $remove_query.="<INPUT type=submit value=\"Remove\">";
 $remove_query.="</FORM>') as Remove,";
 
-// First table, list of phases and their phaseids
+// First table, list of phases and their phasetypeids
+$conid=$_SESSION['conid'];
 $query = <<<EOD
 SELECT
-    phaseid,
-    concat(phasename,if ((current=TRUE),' (c)',' ')) AS Phases
+    phasetypeid,
+    concat(phasetypename,if ((phasestate=TRUE),' (c)',' ')) AS Phases
   FROM
-    Phases  
+      $ReportDB.PhaseTypes 
+    JOIN $ReportDB.Phase USING (phasetypeid)
+  WHERE
+    conid=$conid
   ORDER BY
-    phaseid
+    phasetypeid
 EOD;
 
 // Retrieve query
@@ -78,16 +82,18 @@ SELECT
     $remove_query
     GF.gflowname,
     GF.gfloworder,
-    if((GF.phaseid IS NULL),'ALL',P.phasename) as Phase
+    if((GF.phasetypeid IS NULL),'ALL',PT.phasetypename) as Phase
   FROM
       $ReportDB.GroupFlow GF,
       $ReportDB.Reports R,
-      Phases P
+      $ReportDB.Phase P,
+      $ReportDB.PhaseTypes PT
   WHERE
+    P.phasetypeid=PT.phasetypeid AND
     GF.reportid=R.reportid AND
-    (GF.phaseid is NULL OR (GF.phaseid = P.phaseid AND P.current = TRUE))
+    (GF.phasetypeid is NULL OR (GF.phasetypeid = P.phasetypeid AND P.phasestate = TRUE AND P.conid = $conid))
   ORDER BY
-    P.phasename,GF.gflowname,GF.gfloworder
+    PT.phasetypename,GF.gflowname,GF.gfloworder
 EOD;
 
 // Retrieve query

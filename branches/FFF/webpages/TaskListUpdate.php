@@ -13,10 +13,10 @@ $description="Return to the <A HREF=\"genreport.php?reportname=tasklistdisplay\"
 // Submit the task, if there was one, when this was called
 if (isset($_POST["activitynotes"])) {
   if ($_POST["activityid"] == "-1") {
-    $element_array=array('activity','activitynotes','badgeid','activitystart','targettime','donestate');
-    $value_array=array($_POST['activity'],$_POST['activitynotes'],$_POST['assignedid'],$_POST['activitystart'],$_POST['targettime'],"N");
+    $element_array=array('conid','activity','activitynotes','badgeid','activitystart','targettime','donestate');
+    $value_array=array($_SESSION['conid'],$_POST['activity'],$_POST['activitynotes'],$_POST['assignedid'],$_POST['activitystart'],$_POST['targettime'],"N");
     //    $value_array=array($_POST['activity'],$_POST['activitynotes'],"123",$_POST['activitystart'],$_POST['targettime'],"N");
-    $message.=submit_table_element($link, $title, "TaskList", $element_array, $value_array);
+    $message.=submit_table_element($link, $title, "$ReportDB.TaskList", $element_array, $value_array);
   } else {
     if ($_POST['donestate']=="Y") {
       if (isset($_POST['donetime'])) {
@@ -25,10 +25,10 @@ if (isset($_POST["activitynotes"])) {
 	$donetime=",donetime=CURRENT_DATE";
       }
     } else { $donetime=""; }
-    $pairedvalue_array=array("activitynotes='".$_POST['activitynotes']."'","badgeid='".$_POST['assignedid']."'","activitystart='".$_POST['activitystart']."'","targettime='".$_POST['targettime']."'","donestate='".$_POST['donestate']."'".$donetime);
+    $pairedvalue_array=array("conid='".$_SESSION['conid']."'","activitynotes='".$_POST['activitynotes']."'","badgeid='".$_POST['assignedid']."'","activitystart='".$_POST['activitystart']."'","targettime='".$_POST['targettime']."'","donestate='".$_POST['donestate']."'".$donetime);
     $match_field="activityid";
     $match_value=$_POST['activityid'];
-    $message.=update_table_element($link, $title, "TaskList", $pairedvalue_array, $match_field, $match_value);
+    $message.=update_table_element($link, $title, "$ReportDB.TaskList", $pairedvalue_array, $match_field, $match_value);
   }
  }
 
@@ -46,9 +46,10 @@ if (isset($_POST["activityid"])) {
 $query=<<<EOD
 SELECT
     activityid,
-    activity
+    concat(activity," (",conname,")") AS Activity
   FROM
-      TaskList
+      $ReportDB.TaskList
+    JOIN $ReportDB.ConInfo USING (conid)
   ORDER BY
      activityid
 
@@ -136,7 +137,7 @@ if ($activityid==-1) {
 
   $query= <<<EOD
 SELECT
-    activity,
+    concat(activity," (",conname,")") AS Activity,
     activitynotes,
     badgeid,
     activitystart,
@@ -144,7 +145,8 @@ SELECT
     donestate,
     donetime
   FROM
-      TaskList
+      $ReportDB.TaskList
+    JOIN $ReportDB.ConInfo USING (conid)
   WHERE
     activityid='$activityid'
 
@@ -152,7 +154,7 @@ EOD;
 
   list($rows,$header_array,$task_array)=queryreport($query,$link,$title,$description,0);
 
-  $activity=$task_array[1]['activity'];
+  $activity=$task_array[1]['Activity'];
   $activitynotes=$task_array[1]['activitynotes'];
   $assignedid=$task_array[1]['badgeid'];
   $activitystart=$task_array[1]['activitystart'];

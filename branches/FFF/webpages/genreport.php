@@ -7,7 +7,8 @@ $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $GohBadgeList=GOH_BADGE_LIST; // make it a variable so it can be substituted
-$mybadgeid=$_SESSION['badgeid'];  // make it a simple variable so it can be substituted
+$mybadgeid=$_SESSION['badgeid']; // make it a simple variable so it can be substituted
+$conid=$_SESSION['conid']; // make it a simple variable so it can be substituted
 
 // Get the various length limits for substitution
 $limit_array=getLimitArray();
@@ -92,14 +93,15 @@ EOD;
   // Get the personal flow previous and next
   $query = <<<EOD
 SELECT
-    DISTINCT reportid
+    reportid
   FROM
-      PersonalFlow
-      LEFT JOIN Phases USING (phaseid)
+      $ReportDB.PersonalFlow
+      LEFT JOIN $ReportDB.Phase P USING (phasetypeid)
   WHERE
     badgeid='$mybadgeid' AND
-    (phaseid is null OR
-     current = TRUE)
+    (phasetypeid is null OR
+     (phasestate = TRUE AND
+      P.conid=$conid))
   ORDER BY
     pfloworder
 EOD;
@@ -153,11 +155,10 @@ SELECT
     DISTINCT reportid
   FROM
       $ReportDB.GroupFlow
-      LEFT JOIN Phases USING (phaseid)
+      LEFT JOIN $ReportDB.Phase USING (phasetypeid)
   WHERE
     gflowname='$cgroup' AND
-    phaseid is null OR
-    current = TRUE
+      (phasetypeid is null OR (phasestate = TRUE and conid=$conid))
   ORDER BY
     gfloworder
 EOD;

@@ -1,6 +1,13 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
+$conid=$_SESSION['conid'];
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 // LOCALIZATIONS
 $_SESSION['return_to_page']="gantt_absolute.php";
@@ -35,9 +42,11 @@ SELECT
     CONCAT("<A HREF=TaskListUpdate.php?activityid=",activityid,">",activity,"</A>") as task,
     UNIX_TIMESTAMP(activitystart) as date_start,
     UNIX_TIMESTAMP(targettime) as date_end,
-    donestate as donestate
+    donestate
   FROM
-    TaskList
+    $ReportDB.TaskList
+  WHERE
+    conid=$conid
   ORDER BY
     activitystart
 
