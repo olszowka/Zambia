@@ -1,5 +1,12 @@
 <?php
 require_once('BrainstormCommonCode.php');
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 
 $title="Search Panels";
 $description="<P>Clicking Search without making any selections will display all panels.</P>";
@@ -75,7 +82,7 @@ SELECT
       Sessions
     JOIN Tracks USING (trackid)
     JOIN SessionStatuses USING (statusid)
-    JOIN Types USING (typeid)
+    JOIN $ReportDB.Types USING (typeid)
   WHERE
     statusname in ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled') and
     typename in ('Panel','Class','Presentation','Author Reading','Lounge','SIG/BOF/MnG','Social','EVENT','Performance')

@@ -1385,8 +1385,8 @@ INSERT INTO
     $BioDB.Bios (badgeid, biotypeid, biostateid, biolang, biotext) 
   VALUES 
     ('$badgeid',
-     (SELECT biotypeid FROM nelaonli_FFFGen.BioTypes WHERE biotypename IN ('$biotypename')),
-     (SELECT biostateid FROM nelaonli_FFFGen.BioStates WHERE biostatename IN ('$biostatename')),
+     (SELECT biotypeid FROM $BioDB.BioTypes WHERE biotypename IN ('$biotypename')),
+     (SELECT biostateid FROM $BioDB.BioStates WHERE biostatename IN ('$biostatename')),
      '$biolang',
      '$biotext');
 EOD;
