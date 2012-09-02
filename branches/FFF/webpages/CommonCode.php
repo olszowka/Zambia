@@ -585,7 +585,7 @@ foreach ($additional_permission_array as $perm) {
 $permrolecheck_string=implode(",",$permrolecheck_array);
 
   // lastname, firstname (badgename/pubsname) - partid
-  $query0=<<<EOF
+  $query0=<<<EOD
 SELECT
     DISTINCT badgeid,
     concat(lastname,', ',firstname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname
@@ -599,10 +599,10 @@ SELECT
     UHPR.conid=$conid
   ORDER BY
     lastname
-EOF;
+EOD;
 
   // firstname lastname (badgename/pubsname) - partid
-  $query1=<<<EOF
+  $query1=<<<EOD
 SELECT
     DISTINCT badgeid,
     concat(firstname,' ',lastname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname
@@ -616,10 +616,10 @@ SELECT
     UHPR.conid=$conid
   ORDER BY
     firstname
-EOF;
+EOD;
 
   // pubsname/badgename (lastname, firstname) - partid
-  $query2=<<<EOF
+  $query2=<<<EOD
 SELECT
     DISTINCT badgeid,
     concat(pubsname,'/',badgename,' (',lastname,', ',firstname,') - ',badgeid) AS pname
@@ -633,7 +633,7 @@ SELECT
     UHPR.conid=$conid
   ORDER BY
     pubsname
-EOF;
+EOD;
 
   // Now give the choices
   echo "<FORM name=\"selpartform\" method=POST action=\"".$returnto."\">\n";

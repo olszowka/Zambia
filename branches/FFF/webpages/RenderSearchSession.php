@@ -25,7 +25,7 @@ function RenderSearchSession () {
         <td>Track: </td>
         <td>
           <SELECT name="track">
-            <?php $query = "SELECT trackid, trackname FROM Tracks ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
+            <?php $query = "SELECT trackid, trackname FROM $ReportDB.Tracks ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
           </SELECT>
         </td>
         <td>Type:</td>
@@ -37,7 +37,7 @@ function RenderSearchSession () {
         <td>Status:</td>
         <td>
           <SELECT name="status">
-            <?php $query = "SELECT statusid, statusname FROM SessionStatuses ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
+            <?php $query = "SELECT statusid, statusname FROM $ReportDB.SessionStatuses ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
           </SELECT>
         </td>
         <td>

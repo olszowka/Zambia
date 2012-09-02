@@ -41,7 +41,7 @@ SELECT
       Sessions S,
       Rooms R,
       Schedule SCH,
-      Tracks T,
+      $ReportDB.Tracks T,
       $ReportDB.Participants P
   WHERE
     P.pubsname='$pubsname' and

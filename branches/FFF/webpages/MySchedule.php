@@ -139,7 +139,7 @@ SELECT
     JOIN Sessions S USING (sessionid)
     JOIN ParticipantOnSession POS USING (sessionid)
     JOIN Rooms R USING (roomid)
-    JOIN Tracks T USING (trackid)
+    JOIN $ReportDB.Tracks T USING (trackid)
     LEFT JOIN (SELECT
            S.sessionid, 
            title,

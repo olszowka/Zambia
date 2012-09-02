@@ -70,7 +70,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                      <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
                      </SELECT>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="track">Track: </LABEL><SELECT name="track">
-                    <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
+                    <?php populate_select_from_table("$ReportDB.Tracks", $session["track"], "SELECT", FALSE); ?>
                     </SELECT>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="type">Type: </LABEL><SELECT name="type">
                     <?php populate_select_from_table("$ReportDB.Types", $session["type"], "SELECT", FALSE); ?>
@@ -129,7 +129,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <SELECT name="roomset"><?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
                     </SELECT>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="status">Status:</LABEL>
-                    <SELECT name="status"><?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?></SELECT>
+                    <SELECT name="status"><?php populate_select_from_table("$ReportDB.SessionStatuses", $session["status"], "", FALSE); ?></SELECT>
                     </SPAN>
                 </DIV>
         <HR class="withspace">

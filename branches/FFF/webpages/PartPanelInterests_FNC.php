@@ -32,6 +32,13 @@ EOD;
 // ['trackname'] ['title'] ['duration'] ['progguiddesc'] ['persppartinfo']
 //
 function get_si_session_info_from_db($session_interest_count) {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
     global $session_interests, $session_interest_index, $title, $link;
 	//print_r($session_interest_index);
     if ($session_interest_count==0) return;
@@ -50,8 +57,8 @@ SELECT
         S.persppartinfo
     FROM
         Sessions S JOIN
-        Tracks T using (trackid) JOIN
-        SessionStatuses SS using (statusid)
+        $ReportDB.Tracks T using (trackid) JOIN
+        $ReportDB.SessionStatuses SS using (statusid)
     WHERE
         S.sessionid in ($sessionidlist) and
         SS.may_be_scheduled=1

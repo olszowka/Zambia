@@ -52,8 +52,8 @@ SELECT
     concat(trackname,' - ',sessionid,' - ',title) as sname
   FROM
       Sessions
-    JOIN Tracks USING (trackid)
-    JOIN SessionStatuses USING (statusid)
+    JOIN $ReportDB.Tracks USING (trackid)
+    JOIN $ReportDB.SessionStatuses USING (statusid)
     JOIN PubStatuses USING (pubstatusid)
   WHERE
     may_be_scheduled=1 AND

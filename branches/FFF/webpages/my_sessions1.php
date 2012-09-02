@@ -25,7 +25,7 @@
         <td>Track: </td>
         <td>
           <SELECT class="tcell" name="track">
-            <?php $query = "SELECT trackid, trackname FROM Tracks WHERE selfselect=1 ORDER BY display_order"; populate_select_from_query($query, '0', "ANY",false); ?>
+            <?php $query = "SELECT trackid, trackname FROM $ReportDB.Tracks WHERE selfselect=1 ORDER BY display_order"; populate_select_from_query($query, '0', "ANY",false); ?>
           </SELECT>
         </td>
 

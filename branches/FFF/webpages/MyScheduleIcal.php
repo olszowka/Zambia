@@ -41,7 +41,7 @@ SELECT
       Sessions S,
       Rooms R,
       Schedule SCH,
-      Tracks T
+      $ReportDB.Tracks T
   WHERE
     badgeid="$badgeid" and
     POS.sessionid = S.sessionid and

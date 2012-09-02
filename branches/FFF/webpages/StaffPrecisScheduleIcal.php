@@ -15,6 +15,7 @@ $BioDB=BIODB; // make it a variable so it can be substituted
 // Tests for the substituted variables
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $dtstamp=date('Ymd').'T'.date('His');
 $title="Precis iCal generation page";
 $description="<P>Please select from the below list.</P>";
@@ -61,7 +62,7 @@ SELECT
       Sessions S,
       Rooms R,
       Schedule SCH,
-      Tracks T
+      $ReportDB.Tracks T
   WHERE
     S.sessionid="$sessionid" and
     R.roomid = SCH.roomid and

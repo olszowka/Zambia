@@ -42,7 +42,7 @@ if (file_exists("../Local/Verbiage/BrainstormSearchSession_0")) {
   <TR>
     <TD>Track:</TD>
     <TD><SELECT class="tcell" name="track">
-          <?php $query = "SELECT trackid, trackname FROM Tracks WHERE selfselect=1 ORDER BY display_order"; populate_select_from_query($query, $trackid, "ANY", false); ?>
+          <?php $query = "SELECT trackid, trackname FROM $ReportDB.Tracks WHERE selfselect=1 ORDER BY display_order"; populate_select_from_query($query, $trackid, "ANY", false); ?>
         </SELECT></TD>
     <TD>Title Search:</TD>
     <TD> <INPUT type="text" name="title" value="<?php echo $titlesearch; ?>"></TD>
@@ -80,8 +80,8 @@ SELECT
     persppartinfo
   FROM
       Sessions
-    JOIN Tracks USING (trackid)
-    JOIN SessionStatuses USING (statusid)
+    JOIN $ReportDB.Tracks USING (trackid)
+    JOIN $ReportDB.SessionStatuses USING (statusid)
     JOIN $ReportDB.Types USING (typeid)
   WHERE
     statusname in ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled') and

@@ -62,7 +62,7 @@ SELECT
       Sessions S,
       Rooms R,
       Schedule SCH,
-      Tracks T
+      $ReportDB.Tracks T
   WHERE
     S.sessionid="$sessionid" and
     R.roomid = SCH.roomid and

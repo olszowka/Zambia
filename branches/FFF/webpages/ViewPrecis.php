@@ -5,6 +5,13 @@
     require_once('StaffFooter.php');
     require_once ('render_functions.php');
     require_once ('retrieve.php');
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     $title=CON_NAME . " - Precis";
     $showlinks=$_GET["showlinks"];
     $_SESSION['return_to_page']="ViewPrecis.php?showlinks=$showlinks";
@@ -14,7 +21,7 @@
     elseif ($showlinks="0") {
             $showlinks=false;
             }
-   $statusidlist=get_idlist_from_db("SessionStatuses","statusid","statusname","'Brainstorm','Edit Me','Vetted'");
+   $statusidlist=get_idlist_from_db("$ReportDB.SessionStatuses","statusid","statusname","'Brainstorm','Edit Me','Vetted'");
    $typeidlist="";
    $trackidlist="";
    $sessionid="";

@@ -32,8 +32,8 @@ SELECT
         PSI.badgeid
     FROM
         Sessions S JOIN
-        Tracks T USING (trackid) JOIN
-        SessionStatuses SST USING (statusid) LEFT JOIN
+        $ReportDB.Tracks T USING (trackid) JOIN
+        $ReportDB.SessionStatuses SST USING (statusid) LEFT JOIN
                 (SELECT
                          badgeid, sessionid
                      FROM
@@ -44,7 +44,7 @@ SELECT
         S.Sessionid in
             (SELECT S2.Sessionid FROM
                      Sessions S2 JOIN
-                     Tracks T USING (trackid) JOIN
+                     $ReportDB.Tracks T USING (trackid) JOIN
                      $ReportDB.Types Y USING (typeid)
                  WHERE
                      S2.invitedguest=0 AND

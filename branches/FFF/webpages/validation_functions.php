@@ -37,6 +37,13 @@ function validate_session_interests($max_si_row) {
 
 function validate_add_session_interest($sessionid,$badgeid,$mode) {
     global $link, $message, $title;
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     if (!($mode==ParticipantAddSession or $mode==StaffInviteSession)) {
         $message="Function validate_add_session_interest called with invalid mode.<BR>\n";
         return (false);
@@ -47,8 +54,8 @@ function validate_add_session_interest($sessionid,$badgeid,$mode) {
         }
     $query= "SELECT S.sessionid FROM";
     $query.="            Sessions S";
-    $query.="       JOIN Tracks T USING (trackid)";
-    $query.="       JOIN SessionStatuses SS USING (statusid)";
+    $query.="       JOIN $ReportDB.Tracks T USING (trackid)";
+    $query.="       JOIN $ReportDB.SessionStatuses SS USING (statusid)";
     $query.="    WHERE";
     $query.="        T.selfselect=1 and";
     $query.="        SS.may_be_scheduled=1 and";

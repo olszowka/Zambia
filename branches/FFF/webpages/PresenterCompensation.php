@@ -33,7 +33,7 @@ $additionalinfo.="<A HREF=\"PresenterCompensation.php?Notes=Y&csv=y\">csv with n
 $additionalinfo.="<A HREF=\"PresenterCompensation.php?csv=y\">csv without notes</A></P>\n";
 
 // Get the comptypeid and comptypename for the header fields
-$query = <<<EOF
+$query = <<<EOD
 SELECT 
     comptypeid,
     comptypename,
@@ -42,7 +42,7 @@ SELECT
       $ReportDB.CompensationTypes
   ORDER BY
     comptypeid;
-EOF;
+EOD;
 
 // Retrieve query
 list($comptypecount,$unneeded_array_a,$comptype_array)=queryreport($query,$link,$title,$description,0);
@@ -63,7 +63,7 @@ for ($i=1; $i<=$comptypecount; $i++) {
 // Second walk through: Fetch the compensation per presenter
 $conid=$_SESSION['conid']; // So it can be substituted
 for ($i=1; $i<=$comptypecount; $i++) {
-  $query = <<<EOF
+  $query = <<<EOD
 SELECT 
     pubsname,
     compamount,
@@ -74,7 +74,7 @@ SELECT
   WHERE
     conid=$conid AND
     comptypeid=$i
-EOF;
+EOD;
   
   // Retrieve query
   list($tmpcompcount,$unneded_array_b,$tmp_comp_array)=queryreport($query,$link,$title,$description,0);

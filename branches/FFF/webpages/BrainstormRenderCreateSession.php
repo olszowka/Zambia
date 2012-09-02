@@ -140,7 +140,7 @@ var enable = true;
                    <TR>
                        <TD class="form1">&nbsp;<BR>
                            <LABEL for="track" ID="track">Track:</LABEL><BR><SELECT name="track" onChange="return checkSubmitButton();">
-                           <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
+                           <?php populate_select_from_table("$ReportDB.Tracks", $session["track"], "SELECT", FALSE); ?>
                            </SELECT></TD>
                        <TD class="form1">&nbsp;<BR>
                            <LABEL for="type" ID="type">Type:</LABEL><BR><SELECT name="type" onChange="return checkSubmitButton();">

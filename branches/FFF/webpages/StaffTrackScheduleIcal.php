@@ -27,7 +27,7 @@ $query= <<<EOD
 SELECT
     DISTINCT concat("<A HREF=StaffTrackScheduleIcal.php?trackid=",T.trackid,">",T.trackname,"</A>") AS "Tracks"
   FROM
-      Tracks T,
+      $ReportDB.Tracks T,
       Schedule SCH,
       Sessions S
   WHERE
@@ -63,7 +63,7 @@ SELECT
       Sessions S,
       Rooms R,
       Schedule SCH,
-      Tracks T
+      $ReportDB.Tracks T
   WHERE
     T.trackid="$trackid" and
     R.roomid = SCH.roomid and

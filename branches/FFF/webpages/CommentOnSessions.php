@@ -1,6 +1,13 @@
 <?php
 require_once('StaffCommonCode.php');
 require_once('SubmitCommentOn.php');
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $title="Comment On Session";
 
 staff_header($title);
@@ -24,8 +31,8 @@ if (isset($_POST["selsess"])) {
         }
 
 $query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S ";
-$query.="JOIN Tracks AS T USING (trackid) ";
-$query.="JOIN SessionStatuses AS SS USING (statusid) ";
+$query.="JOIN $ReportDB.Tracks AS T USING (trackid) ";
+$query.="JOIN $ReportDB.SessionStatuses AS SS USING (statusid) ";
 $query.="WHERE SS.may_be_scheduled=1 ";
 $query.="ORDER BY T.trackname, S.sessionid, S.title";
 if (!$Sresult=mysql_query($query,$link)) {

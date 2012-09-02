@@ -77,8 +77,8 @@ SELECT
     persppartinfo
   FROM
       Sessions
-    JOIN Tracks USING (trackid)
-    JOIN SessionStatuses USING (statusid)
+    JOIN $ReportDB.Tracks USING (trackid)
+    JOIN $ReportDB.SessionStatuses USING (statusid)
     JOIN $ReportDB.Types USING (typeid)
   WHERE
     statusname in ($selstatus) and

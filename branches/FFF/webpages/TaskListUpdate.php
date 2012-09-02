@@ -105,7 +105,7 @@ for ($i=1; $i<=$permrole_rows; $i++) {
  }
 $permrolecheck_string=implode(",",$permrolecheck_array);
 
-$query=<<<EOF
+$query=<<<EOD
 SELECT
     badgeid,
     pubsname 
@@ -118,7 +118,7 @@ SELECT
     permrolename in ($permrolecheck_string)
   ORDER BY
     pubsname
-EOF;
+EOD;
 
 if ($activityid==-1) {
   // Update note through form below

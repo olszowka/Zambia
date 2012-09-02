@@ -51,7 +51,7 @@ if (strlen($message_error)>0) {
   exit(); // If there is a message2, then there is a fatal error.
 }
 
-$query= <<<EOF
+$query= <<<EOD
 SELECT
     sessionid,
     title,
@@ -80,7 +80,7 @@ SELECT
     statusid AS status
   FROM
       Sessions S
-    JOIN SessionStatuses USING (statusid)
+    JOIN $ReportDB.SessionStatuses USING (statusid)
     JOIN (SELECT
 	      sessionid,
 	      vendorspaceid,
@@ -103,7 +103,7 @@ SELECT
 	           sessionid) Y USING (sessionid)
   WHERE
     title='$badgeid'
-EOF;
+EOD;
 
 if (!$result=mysql_query($query,$link)) {
   $message_error.=$query."<BR>Error querying database.<BR>";
@@ -133,7 +133,7 @@ if ($rows==0) {
   $session['kids']=1;
 
   // These are queried
-  $query= <<<EOF
+  $query= <<<EOD
 SELECT
     divisionid,
     trackid AS track,
@@ -143,11 +143,11 @@ SELECT
     statusid AS status
   FROM
       Divisions,
-      Tracks,
+      $ReportDB.Tracks,
       $ReportDB.Types,
       RoomSets,
       PubStatuses,
-      SessionStatuses
+      $ReportDB.SessionStatuses
   WHERE
     divisionname='Vendor' and
     trackname='Vendor' and
@@ -155,7 +155,7 @@ SELECT
     roomsetname='Vendor' and
     pubstatusname='Vendor' and
     statusname='Vendor Pending'
-EOF;
+EOD;
 
   list($rows,$header_array,$defaultinfo_array)=queryreport($query,$link,$title,$description,0);
   foreach ($header_array as $element) {

@@ -886,14 +886,21 @@ function lock_participant($badgeid) {
 // Populates the global sstatus array from the database
 
 function get_sstatus() {
-    global $link, $sstatus;
-    $query = "SELECT statusid, may_be_scheduled, validate from SessionStatuses";
-    $result=mysql_query($query,$link);
-    while ($arow = mysql_fetch_array($result, MYSQL_ASSOC)) {
-        $statusid=$arow['statusid'];
-        $may_be_scheduled=($arow['may_be_scheduled']==1?1:0);
-        $validate=($arow['validate']==1?1:0);
-        $sstatus[$statusid]=array('may_be_scheduled'=>$may_be_scheduled, 'validate'=>$validate);
-        }
-    }
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
+  global $link, $sstatus;
+  $query = "SELECT statusid, may_be_scheduled, validate from $ReportDB.SessionStatuses";
+  $result=mysql_query($query,$link);
+  while ($arow = mysql_fetch_array($result, MYSQL_ASSOC)) {
+    $statusid=$arow['statusid'];
+    $may_be_scheduled=($arow['may_be_scheduled']==1?1:0);
+    $validate=($arow['validate']==1?1:0);
+    $sstatus[$statusid]=array('may_be_scheduled'=>$may_be_scheduled, 'validate'=>$validate);
+  }
+}
 ?>

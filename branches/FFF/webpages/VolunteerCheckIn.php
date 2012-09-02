@@ -44,7 +44,7 @@ $permrolecheck_string=implode(",",$permrolecheck_array);
 they aren't already logged in, without limititing it to those who have
 already stood shifts. */
 
-$query=<<<EOF
+$query=<<<EOD
 SELECT
     DISTINCT badgeid,
     pubsname 
@@ -57,7 +57,7 @@ SELECT
     permrolename in ($permrolecheck_string)
   ORDER BY
     pubsname
-EOF;
+EOD;
 
 if (isset($_POST['badgeid'])) {
   $badgeid=$_POST['badgeid'];
@@ -92,14 +92,14 @@ if (isset($_POST['voltimein'])) {
   exit();
  }
 
-$query=<<<EOF
+$query=<<<EOD
 SELECT
     pubsname 
   FROM
       $ReportDB.Participants
   WHERE
     badgeid='$badgeid'
-EOF;
+EOD;
 
 // Retrieve query
 list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description,0);

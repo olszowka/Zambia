@@ -40,7 +40,7 @@ for ($i=1; $i<=$permrole_rows; $i++) {
  }
 $permrolecheck_string=implode(",",$permrolecheck_array);
 
-$query=<<<EOF
+$query=<<<EOD
 SELECT
     voltimeid,
     concat(pubsname, " in at: ",DATE_FORMAT(voltimein,'%a %l:%i %p (%k:%i)')) as 'Who'
@@ -55,7 +55,7 @@ SELECT
     voltimeout IS NULL
   ORDER BY
     pubsname
-EOF;
+EOD;
 
 if (isset($_POST['voltimeid'])) {
   $voltimeid=$_POST['voltimeid'];
@@ -86,7 +86,7 @@ if (isset($_POST['voltimeout'])) {
   exit();
  }
 
-$query=<<<EOF
+$query=<<<EOD
 SELECT
     pubsname,
     if (((voltimein > '$ConStartDatim') AND
@@ -98,7 +98,7 @@ SELECT
     JOIN $ReportDB.Participants USING (badgeid)
   WHERE
     voltimeid='$voltimeid'
-EOF;
+EOD;
 
 // Retrieve query
 list($elements,$header_array,$element_array)=queryreport($query,$link,$title,$description,0);

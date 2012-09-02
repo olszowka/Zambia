@@ -1,6 +1,12 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
 $title="Invite Participants";
 $description="<P>Use this tool to put sessions marked \"invited guests only\" on a participant's interest list.</P>\n";
@@ -74,8 +80,8 @@ SELECT
     concat(trackname,' - ',sessionid,' - ',title) as sname
   FROM
       Sessions
-    JOIN Tracks USING (trackid)
-    JOIN SessionStatuses USING (statusid)
+    JOIN $ReportDB.Tracks USING (trackid)
+    JOIN $ReportDB.SessionStatuses USING (statusid)
     JOIN PubStatuses USING (pubstatusid)
   WHERE
     may_be_scheduled=1 AND

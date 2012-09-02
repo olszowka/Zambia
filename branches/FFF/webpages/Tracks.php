@@ -72,7 +72,7 @@ SELECT
       Sessions
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
-    JOIN Tracks T USING (trackid)
+    JOIN $ReportDB.Tracks T USING (trackid)
     LEFT JOIN ParticipantOnSession USING (sessionid)
     LEFT JOIN $ReportDB.Participants USING (badgeid)
     JOIN PubStatuses USING (pubstatusid)

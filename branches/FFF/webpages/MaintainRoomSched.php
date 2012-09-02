@@ -7,6 +7,13 @@ require_once('StaffHeader.php');
 require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 global $daymap;
 
 staff_header($title);
@@ -152,11 +159,28 @@ for ($i=1;$i<=$numrows;$i++) {
     }
 echo "      </TABLE>\n";
 $query = <<<EOD
-SELECT SC.scheduleid, SC.starttime, S.duration, SC.sessionid, T.trackname, S.title, ST.roomsetname 
-FROM Schedule SC, Sessions S, Tracks T, RoomSets ST WHERE
-SC.sessionid = S.sessionid AND S.trackid = T.trackid AND S.roomsetid=ST.roomsetid
-AND SC.roomid=$selroomid ORDER BY SC.starttime
+SELECT 
+    SC.scheduleid,
+    SC.starttime,
+    S.duration,
+    SC.sessionid,
+    T.trackname,
+    S.title,
+    ST.roomsetname 
+  FROM
+      Schedule SC,
+      Sessions S,
+      $ReportDB.Tracks T,
+      RoomSets ST
+  WHERE
+    SC.sessionid = S.sessionid AND
+    S.trackid = T.trackid AND
+    S.roomsetid=ST.roomsetid AND
+    SC.roomid=$selroomid
+  ORDER BY
+    SC.starttime
 EOD;
+
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
     echo "<P class\"errmsg\">".$message."\n";
@@ -203,8 +227,8 @@ SELECT
         S.sessionid, T.trackname, S.title, SCH.roomid
     FROM
         Sessions S JOIN
-        Tracks T USING (trackid) JOIN
-        SessionStatuses SS USING (statusid) LEFT JOIN
+        $ReportDB.Tracks T USING (trackid) JOIN
+        $ReportDB.SessionStatuses SS USING (statusid) LEFT JOIN
         Schedule SCH USING (sessionid)
     WHERE
         SS.may_be_scheduled=1
@@ -217,8 +241,8 @@ SELECT
         S.sessionid, T.trackname, S.title, SCH.roomid
     FROM
         Sessions S JOIN
-        Tracks T USING (trackid) JOIN
-        SessionStatuses SS USING (statusid) LEFT JOIN
+        $ReportDB.Tracks T USING (trackid) JOIN
+        $ReportDB.SessionStatuses SS USING (statusid) LEFT JOIN
         Schedule SCH USING (sessionid)
     WHERE
         SS.may_be_scheduled=1
