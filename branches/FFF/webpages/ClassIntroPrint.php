@@ -8,6 +8,7 @@ if (may_I("Staff")) {
 require_once('../../tcpdf/config/lang/eng.php');
 require_once('../../tcpdf/tcpdf.php');
 global $link;
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
@@ -66,33 +67,26 @@ $pdf->SetFont('helvetica', '', 10, '', true);
  us to print one person's information, as well. */
 $query = <<<EOD
 SELECT
-    P.pubsname, 
-    S.title,
-    DATE_FORMAT(ADDTIME("$ConStartDatim",SCH.starttime), '%a %l:%i %p') as StartTime,
-    R.roomname,
-    S.sessionid,
-    T.typename
+    pubsname, 
+    title,
+    DATE_FORMAT(ADDTIME("$ConStartDatim",starttime), '%a %l:%i %p') as StartTime,
+    roomname,
+    sessionid,
+    typename
   FROM
-      ParticipantOnSession POS, 
-      Sessions S, 
-      $ReportDB.Participants P,
-      Schedule SCH,
-      Rooms R,
-      Types T,
-      UserHasPermissionRole UP,
-      PermissionRoles PR
+      Sessions S
+    JOIN Schedule SCH USING (sessionid)
+    JOIN Rooms R USING (roomid)
+    JOIN ParticipantOnSession POS USING (sessionid)
+    JOIN $ReportDB.Participants P USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles PR USING (permroleid)
+    JOIN $ReportDB.Types T USING (typeid)
   WHERE
-    POS.badgeid=P.badgeid and
-    POS.sessionid=S.sessionid and
-    POS.sessionid=SCH.sessionid and
-    SCH.roomid=R.roomid and
-    POS.badgeid=UP.badgeid and
-    S.typeid=T.typeid and
-    UP.permroleid=PR.permroleid and
-    PR.permrolename in ('Programming') and
-    POS.introducer=1 and
+    permrolename in ('Programming') and
+    introducer=1 and
+    UHPR.conid=$conid and
     typename in ('Panel','Class')
-
 EOD;
 
 if ($individual) {$query.=" and

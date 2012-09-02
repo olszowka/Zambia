@@ -8,6 +8,7 @@ if (may_I("Staff")) {
 require_once('../../tcpdf/config/lang/eng.php');
 require_once('../../tcpdf/tcpdf.php');
 global $link;
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
@@ -67,12 +68,12 @@ $pdf->setLanguageArray($l);
 $pdf->setFontSubsetting(true);
 $pdf->SetFont('times', '', 12, '', true);
 
-/* This query returns the badgeid, email, pubsname, and permroleid for
- the participants who are either Presenters or Volunteers The
- UserHasPermissionRole is 3=Presenter 5=Volunteer, if this changes in
- the database, it should change here and other places, as well.  The
- individual switch lets us work from the premise of printing just one
- person's information. */
+/* This query returns the title with any role appended followed by the
+ time of the class the duration and the room, as well as the pubsname
+ for the participants who are either Presenters or Presenters,
+ Programming Volunteers and General Volunteers.  The individual switch
+ lets us work from the premise of printing just one person's
+ information. */
 $query = <<<EOD
 SELECT 
     DISTINCT CONCAT(S.title, 
@@ -95,12 +96,13 @@ SELECT
       Sessions S
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
-    LEFT JOIN ParticipantOnSession POS USING (sessionid)
-    LEFT JOIN $ReportDB.Participants P USING (badgeid)
-    JOIN UserHasPermissionRole UP USING (badgeid)
-    JOIN PermissionRoles PR USING (permroleid)
+    JOIN ParticipantOnSession POS USING (sessionid)
+    JOIN $ReportDB.Participants P USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles PR USING (permroleid)
   WHERE
-    permrolename in ('$group')
+    permrolename in ('$group') AND
+    UHPR.conid=$conid
 EOD;
 if ($individual) {$query.=" and
     POS.badgeid='$individual'";}

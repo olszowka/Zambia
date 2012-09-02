@@ -3,6 +3,7 @@ require_once('StaffCommonCode.php');
 
 /* Global Variables */
 global $link;
+$conid=$_SESSION['conid'];
 $ConName=CON_NAME; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
@@ -210,10 +211,11 @@ SELECT
     JOIN Schedule USING (sessionid)
     JOIN ParticipantOnSession USING (sessionid)
     JOIN $ReportDB.Participants USING (badgeid)
-    JOIN UserHasPermissionRole USING (badgeid)
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
-    permrolename IN ('Participant','General','Programming')
+    permrolename IN ('Participant','General','Programming') AND
+    UHPR.conid=$conid
   ORDER BY
     pubsname,
     permroleid

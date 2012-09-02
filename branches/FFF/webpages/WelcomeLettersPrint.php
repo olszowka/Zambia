@@ -8,6 +8,7 @@ if (may_I("Staff")) {
 require_once('../../tcpdf/config/lang/eng.php');
 require_once('../../tcpdf/tcpdf.php');
 global $link;
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
@@ -60,12 +61,10 @@ $pdf->setLanguageArray($l);
 $pdf->setFontSubsetting(true);
 $pdf->SetFont('freesans', '', 12, '', true);
 
-/* This query returns the  pubsname, and permroleid for the participants
- who are either Presenters or Volunteers who are attending.  The
- UserHasPermissionRole is 3=Presenter 5=Volunteer, if this changes in
- the database, it should change here and other places, as well.  The
- individual switch lets us work from the premise of printing just one
- person's information. */
+/* This query returns the pubsname, and permrolename for the
+ participants who are either Presenters or Volunteers who are
+ attending.  The individual switch lets us work from the premise of
+ printing just one person's information. */
 $query = <<<EOD
 SELECT 
     pubsname,
@@ -73,9 +72,10 @@ SELECT
   FROM
       ParticipantOnSession
     JOIN $ReportDB.Participants USING (badgeid)
-    JOIN UserHasPermissionRole USING (badgeid)
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
+    UHPR.conid=$conid AND
     permrolename IN ('Participant', 'Programming')
 
 EOD;

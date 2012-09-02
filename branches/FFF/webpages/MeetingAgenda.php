@@ -45,7 +45,7 @@ SELECT
     concat(permrolename,": ",agendaname) as aname
   FROM
       AgendaList
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   ORDER BY
     permrolename,
     agendaname
@@ -134,7 +134,7 @@ EOD;
 <INPUT type="text" size=10 name="meetingtime" id="meetingtime" value="<?php echo htmlspecialchars($meetingtime); ?>">
 <LABEL for="permroleid">Select Meeting Group:</LABEL>
 <SELECT name="permroleid">
-<?php $query="SELECT permroleid, permrolename FROM PermissionRoles" ; populate_select_from_query($query, $permroleid, "Select Meeting Group", false); ?>
+<?php $query="SELECT permroleid, permrolename FROM $ReportDB.PermissionRoles" ; populate_select_from_query($query, $permroleid, "Select Meeting Group", false); ?>
 </SELECT>
 </DIV>
 

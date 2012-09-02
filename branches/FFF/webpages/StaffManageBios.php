@@ -1,6 +1,7 @@
 <?php
 global $participant,$message_error,$message2,$congoinfo;
 require_once('StaffCommonCode.php');
+$conid=$_SESSION['conid'];
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 $LanguageList=LANGUAGE_LIST; // make it a variable so it can be substituted
@@ -53,12 +54,13 @@ SELECT
     JOIN $BioDB.Bios B USING (badgeid)
     JOIN $BioDB.BioTypes USING (biotypeid)
     JOIN $BioDB.BioStates USING (biostateid)
-    LEFT JOIN UserHasPermissionRole USING (badgeid)
-    LEFT JOIN PermissionRoles USING (permroleid)
+    LEFT JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    LEFT JOIN $ReportDB.PermissionRoles USING (permroleid)
     LEFT JOIN $ReportDB.Participants LB on B.biolockedby = LB.badgeid
   WHERE
-    P.interested=1 and
-    (permrolename in ('Participant') or
+    P.interested=1 AND
+    UHPR.conid=$conid AND
+    (permrolename in ('Participant') OR
      permrolename like '%Super%')
 EOD;
 

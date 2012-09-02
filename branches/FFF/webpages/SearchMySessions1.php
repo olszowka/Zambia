@@ -1,14 +1,21 @@
 <?php
-    global $participant,$message_error,$message2,$congoinfo;
-    $title="Show Search Session Results";
+global $participant,$message_error,$message2,$congoinfo;
+$title="Show Search Session Results";
 // initialize db; check login; retrieve $badgeid
-    require_once ('PartCommonCode.php');
-    $trackid=$_POST["track"];
-    $titlesearch=stripslashes($_POST["title"]);
+require_once ('PartCommonCode.php');
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
+$trackid=$_POST["track"];
+$titlesearch=stripslashes($_POST["title"]);
 // List of sessions that match search criteria 
 // Does not includes sessions in which participant is interested if they do match match search
 // Use "My Panel Interests" page to just see everything in which you are interested
-    $query = <<<EOD
+$query = <<<EOD
 SELECT
         S.sessionid,
         T.trackname,
@@ -38,29 +45,29 @@ SELECT
             (SELECT S2.Sessionid FROM
                      Sessions S2 JOIN
                      Tracks T USING (trackid) JOIN
-                     Types Y USING (typeid)
+                     $ReportDB.Types Y USING (typeid)
                  WHERE
                      S2.invitedguest=0 AND
                      T.selfselect=1 AND
                      Y.selfselect=1
 EOD;
-    if ($trackid!=0) {
-        $query.="                     AND S.trackid=$trackid\n";
-        }
-    if ($titlesearch!="") {
-        $x=mysql_real_escape_string($titlesearch,$link);
-        $query.="                     AND S.title LIKE \"%$x%\"\n";
-        }
-    $query.=")\n";
-    if (!$result=mysql_query($query,$link)) {
-        $message=$query."<BR>Error querying database.<BR>";
-        RenderError($title,$message);
-        exit();
-        }
-    participant_header($title);
-    //echo $query."<BR>\n";
-    require ('RenderMySessions1.php');    
-    RenderMySessions1($result);
-    participant_footer();
-    exit();
+if ($trackid!=0) {
+  $query.="                     AND S.trackid=$trackid\n";
+}
+if ($titlesearch!="") {
+  $x=mysql_real_escape_string($titlesearch,$link);
+  $query.="                     AND S.title LIKE \"%$x%\"\n";
+}
+$query.=")\n";
+if (!$result=mysql_query($query,$link)) {
+  $message=$query."<BR>Error querying database.<BR>";
+  RenderError($title,$message);
+  exit();
+}
+participant_header($title);
+//echo $query."<BR>\n";
+require ('RenderMySessions1.php');    
+RenderMySessions1($result);
+participant_footer();
+exit();
 ?>

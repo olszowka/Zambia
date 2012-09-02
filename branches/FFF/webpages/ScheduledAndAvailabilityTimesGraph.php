@@ -7,6 +7,7 @@ if (may_I("Staff")) {
  }
 global $link;
 
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $GridSpacer=GRID_SPACER; // make it a variable so it can be substituted
@@ -73,10 +74,11 @@ SELECT
   FROM
       ParticipantAvailabilityTimes
     JOIN $ReportDB.Participants USING (badgeid)
-    JOIN UserHasPermissionRole USING (badgeid)
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
-    permrolename in ('Programming')
+    permrolename in ('Programming') AND
+    UHPR.conid=$conid
 EOD;
 
 list($avail_rows,$avail_header_array,$avail_array)=queryreport($query,$link,$title,$description,0);
@@ -310,7 +312,7 @@ for ($i=1; $i<=$avail_rows; $i++) {
   echo '" x="',($xstart+($avail_array[$i]['Starttime']*$xoffset));
   echo '" width="',($xoffset*($avail_array[$i]['Endtime']-$avail_array[$i]['Starttime']));
   echo '" id="barelement',$i;
-  echo '" onmousemove="ShowTooltipUpper(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',$avail_array[$i]['pubsname'];
+  echo '" onmousemove="ShowTooltipUpper(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',htmlspecialchars($avail_array[$i]['pubsname']);
   echo '" style="stroke:#000;stroke-width:1px;fill:url(#gradient1);"/>
 ';
 }
@@ -322,7 +324,7 @@ for ($i=1; $i<=$sched_rows; $i++) {
   echo '" x="',($xstart+($sched_array[$i]['Starttime']*$xoffset));
   echo '" width="',($xoffset*($sched_array[$i]['Endtime']-$sched_array[$i]['Starttime']));
   echo '" id="barelement',$i;
-  echo '" onmousemove="ShowTooltipLower(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',$sched_array[$i]['pubsname'];
+  echo '" onmousemove="ShowTooltipLower(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',htmlspecialchars($sched_array[$i]['pubsname']);
   echo '" style="stroke:#000;stroke-width:1px;fill:url(#gradient0);"/></a>
 ';
 }
@@ -363,7 +365,7 @@ echo '    </g>
 echo '    <g text-anchor="end">
 ';
 for ($i=0; $i<$badgeid_rows; $i++) {
-  echo '      <text x="'.($xstart-2).'" y="'.($ypad+($yoffset/2)+($yoffset*$i)).'">'.$pubsname_array[$i].'</text>
+  echo '      <text x="'.($xstart-2).'" y="'.($ypad+($yoffset/2)+($yoffset*$i)).'">'.htmlspecialchars($pubsname_array[$i]).'</text>
 ';
 }
 

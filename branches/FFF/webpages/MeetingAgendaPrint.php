@@ -24,7 +24,7 @@ SELECT
     concat(permrolename, ": ", agendaname, " at ", meetingtime)
   FROM
       AgendaList
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   ORDER BY
     permrolename,
     agendaname
@@ -86,7 +86,7 @@ SELECT
     meetingtime
   FROM
       AgendaList
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
     agendaid='$agendaid'
 

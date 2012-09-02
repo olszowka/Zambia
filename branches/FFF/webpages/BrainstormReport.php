@@ -2,6 +2,13 @@
 require_once('BrainstormCommonCode.php');
 global $link;
 
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 if ($_GET['status']=="scheduled") {
   $selstatus="'Assigned','Scheduled'";
   $title="Scheduled Suggestions";
@@ -72,7 +79,7 @@ SELECT
       Sessions
     JOIN Tracks USING (trackid)
     JOIN SessionStatuses USING (statusid)
-    JOIN Types USING (typeid)
+    JOIN $ReportDB.Types USING (typeid)
   WHERE
     statusname in ($selstatus) and
     typename in ('Panel','Class','Presentation','Author Reading','Lounge','SIG/BOF/MnG','Social','EVENT','Performance')

@@ -3,6 +3,14 @@ require_once('BrainstormCommonCode.php');
 
 // Localisms
 $_SESSION['return_to_page']='BrainstormSuggestPresenter.php';
+$conid=$_SESSION['conid'];
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
 $title="Brainstorm Suggested Presenter";
 
 // Begin the display
@@ -14,7 +22,7 @@ SELECT
     permroleid,
     permrolename
   FROM
-      PermissionRoles
+      $ReportDB.PermissionRoles
 EOD;
 if (($result=mysql_query($query,$link))===false) {
   $message_error="Error retrieving data from database<BR>\n";

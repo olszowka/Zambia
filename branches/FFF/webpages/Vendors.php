@@ -1,6 +1,7 @@
 <?php
 require_once('PostingCommonCode.php');
 global $link;
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
@@ -26,8 +27,8 @@ SELECT
     badgeid
   FROM
       $ReportDB.Participants
-    JOIN UserHasPermissionRole USING (badgeid)
-  JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
     interested=1 AND
     permrolename in ('Vendor')

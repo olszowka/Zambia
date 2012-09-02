@@ -145,7 +145,7 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
     $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,T.htmlcellcolor,\"\") SEPARATOR '') as \"%s htmlcellcolor\"",$x,$y);
   }
   $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid)";
-  $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid) JOIN PubStatuses PS USING (pubstatusid)";
+  $query.=" JOIN Rooms R USING (roomid) JOIN $ReportDB.Types T USING (typeid) JOIN PubStatuses PS USING (pubstatusid)";
   $query.=" WHERE PS.pubstatusname in ($pubstatus_check) AND TIME_TO_SEC(SCH.starttime) <= $time";
   $query.=" AND (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) >= ($time + $Grid_Spacer);";
   if (($result=mysql_query($query,$link))===false) {

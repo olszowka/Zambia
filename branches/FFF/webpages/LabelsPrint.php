@@ -3,6 +3,7 @@ require_once('StaffCommonCode.php');
 
 /* Global Variables */
 global $link;
+$conid=$_SESSION['conid'];
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 
@@ -150,25 +151,27 @@ $positional_array[1]['col']=0;
 $positional_array[2]['col']=200;
 $positional_array[3]['col']=400;
 
-/* This query returns the badgeid, email, pubsname, and permroleid for
- the participants who are either Presenters or Volunteers The
- UserHasPermissionRole is 3=Presenter 5=Volunteer, if this changes in
- the database, it should change here and other places, as well.  The
- individual switch lets us work from the premise of printing just one
- person's information. */
+/* This query returns the pubsname (and probably should return the
+ permrolename) for the participants who are either Presenters, General
+ Volunteers, or Programming Volunteers.  The individual switch lets us
+ work from the premise of printing just one person's information. */
 $query = <<<EOD
 SELECT 
-    DISTINCT P.pubsname
+    P.pubsname,
+    GROUP_CONCAT(DISTINCT permrolename SEPARATOR ", ") AS permroles
   FROM
       Sessions S
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
-    LEFT JOIN ParticipantOnSession POS USING (sessionid)
-    LEFT JOIN $ReportDB.Participants P USING (badgeid)
-    LEFT JOIN UserHasPermissionRole UP USING (badgeid)
+    JOIN ParticipantOnSession POS USING (sessionid)
+    JOIN $ReportDB.Participants P USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
-    (UP.permroleid=5 or
-     UP.permroleid=3)
+    permrolename in ('Participant', 'Programming') AND
+    UHPR.conid=$conid
+  GROUP BY
+    P.badgeid
   ORDER BY
     P.pubsname
 
@@ -177,8 +180,7 @@ EOD;
 // Retrieve query
 list($rows,$header_array,$participant_array)=queryreport($query,$link,$title,$description,0);
 
-/* Printing body.  Uses the page-init from above adds informational line
- then creates the Descriptions. */
+/* Printing body. */
 header('Content-type: application/postscript');
 
 echo $header;
@@ -191,7 +193,9 @@ while ($k <= $rows) {
 	echo $positional_array[$i]['col'];
 	echo " ";
 	echo $positional_array[$j]['row'];
-	echo "\ntranslate\nlabelclip\nnewpath\nISOTimes-Roman 17 scalefont setfont\n3.000000 36.000000 moveto\n( ";
+	echo "\ntranslate\nlabelclip\nnewpath\nISOTimes-Roman 12 scalefont setfont\n3.000000 36.000000 moveto\n( ";
+	echo $participant_array[$k]['permroles'];
+	echo ") show\nISOTimes-Roman 17 scalefont setfont\n3.000000 50.000000 moveto\n ( ";
 	echo $participant_array[$k++]['pubsname'];
 	echo ") show\nstroke\ngrestore\n\n";
       }

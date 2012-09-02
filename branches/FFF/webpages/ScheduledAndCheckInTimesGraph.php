@@ -6,7 +6,7 @@ if (may_I("Staff")) {
   require_once('PartCommonCode.php');
  }
 global $link;
-
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $GridSpacer=GRID_SPACER; // make it a variable so it can be substituted
@@ -31,7 +31,7 @@ SELECT
     permrolename,
     notes
   FROM
-      PermissionRoles
+      $ReportDB.PermissionRoles
   WHERE
     permroleid > 1
 EOD;
@@ -121,10 +121,11 @@ SELECT
   FROM
       TimeCard
     JOIN $ReportDB.Participants USING (badgeid)
-    JOIN UserHasPermissionRole USING (badgeid)
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
-    $wherestring
+    $wherestring AND
+    UHPR.conid=$conid
 EOD;
 
 list($timecard_rows,$timecard_header_array,$timecard_array)=queryreport($query,$link,$title,$description,0);
@@ -168,10 +169,11 @@ SELECT
     JOIN $ReportDB.Participants USING (badgeid)
     JOIN Sessions USING (sessionid)
     JOIN Schedule USING (sessionid)
-    JOIN UserHasPermissionRole USING (badgeid)
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
-   $wherestring
+   $wherestring AND
+   UHPR.conid=$conid
 EOD;
 
 list($sched_rows,$sched_header_array,$sched_array)=queryreport($query,$link,$title,$description,0);
@@ -365,7 +367,7 @@ for ($i=1; $i<=$timecard_rows; $i++) {
   echo '" x="',($xstart+($timecard_array[$i]['Starttime']*$xoffset));
   echo '" width="',($xoffset*($timecard_array[$i]['Endtime']-$timecard_array[$i]['Starttime']));
   echo '" id="barelement',$i;
-  echo '" onmousemove="ShowTooltipUpper(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',$timecard_array[$i]['pubsname'];
+  echo '" onmousemove="ShowTooltipUpper(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',htmlspecialchars($timecard_array[$i]['pubsname']);
   echo '" style="stroke:#000;stroke-width:1px;fill:url(#gradient0);"/>
 ';
 }
@@ -377,7 +379,7 @@ for ($i=1; $i<=$sched_rows; $i++) {
   echo '" x="',($xstart+($sched_array[$i]['Starttime']*$xoffset));
   echo '" width="',($xoffset*($sched_array[$i]['Endtime']-$sched_array[$i]['Starttime']));
   echo '" id="barelement',$i;
-  echo '" onmousemove="ShowTooltipLower(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',$sched_array[$i]['pubsname'];
+  echo '" onmousemove="ShowTooltipLower(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',htmlspecialchars($sched_array[$i]['pubsname']);
   echo '" style="stroke:#000;stroke-width:1px;fill:url(#gradient1);"/></a>
 ';
 }
@@ -418,7 +420,7 @@ echo '    </g>
 echo '    <g text-anchor="end">
 ';
 for ($i=0; $i<$badgeid_rows; $i++) {
-  echo '      <text x="'.($xstart-2).'" y="'.($ypad+($yoffset/2)+($yoffset*$i)).'">'.$pubsname_array[$i].'</text>
+  echo '      <text x="'.($xstart-2).'" y="'.($ypad+($yoffset/2)+($yoffset*$i)).'">'.htmlspecialchars($pubsname_array[$i]).'</text>
 ';
 }
 

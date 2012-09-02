@@ -5,6 +5,13 @@
   //     message1: a string to display before the form
   //     message2: an urgent string to display before the form and after m1
 function RenderSearchSession () {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
   $TRU=TRUE;
   // still inside function RenderSearchSession
   if (file_exists("../Local/Verbiage/RenderSearchSession_0")) {
@@ -24,7 +31,7 @@ function RenderSearchSession () {
         <td>Type:</td>
         <td>
           <SELECT name="type">
-            <?php $query = "SELECT typeid, typename FROM Types ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
+            <?php $query = "SELECT typeid, typename FROM $ReportDB.Types ORDER BY display_order"; populate_select_from_query($query, '0', "ANY", $TRU); ?>
           </SELECT>
         </td>
         <td>Status:</td>

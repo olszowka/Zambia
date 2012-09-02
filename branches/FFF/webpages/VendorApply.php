@@ -144,7 +144,7 @@ SELECT
   FROM
       Divisions,
       Tracks,
-      Types,
+      $ReportDB.Types,
       RoomSets,
       PubStatuses,
       SessionStatuses

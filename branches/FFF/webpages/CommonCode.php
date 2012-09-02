@@ -542,6 +542,7 @@ function queryreport($query,$link,$title,$description,$reportid) {
  Each list is ordered by the sorting key, for html-based and visual-based
  searching. */
 function select_participant ($selpartid, $returnto) {
+  $conid=$_SESSION['conid'];
   $ReportDB=REPORTDB; // make it a variable so it can be substituted
   $BioDB=BIODB; // make it a variable so it can be substituted
 
@@ -551,39 +552,88 @@ function select_participant ($selpartid, $returnto) {
 
   global $link;
 
-  // Should be generated from PermissionAtoms or PermissionRoles, somehow
-  $permission_array=array('SuperProgramming', 'Programming', 'SuperGeneral', 'General', 'SuperLiaison', 'Liaison', 'SuperWatch', 'Watch', 'SuperRegistration', 'Registration', 'SuperVendor', 'Vendor', 'SuperEvents', 'Events', 'SuperLogistics', 'Logistics', 'SuperSales', 'Sales', 'SuperFasttrack', 'Fasttrack');
+/* Get all the Permission Roles */
+$query = <<<EOD
+SELECT
+    permrolename,
+    notes
+  FROM
+      $ReportDB.PermissionRoles
+  WHERE
+    permroleid > 1
+EOD;
 
-  foreach ($permission_array as $perm) {
-    if (may_I($perm)) {$inrole_array[]="'$perm'";}
-  }
+list($permrole_rows,$permrole_header_array,$permrole_array)=queryreport($query,$link,"Broken Query",$query,0);
 
-  if ((may_I("SuperLiaison")) or
-      (may_I("SuperProgramming")) or
-      (may_I("Liaison"))) {
-    $inrole_array[]="'Participant'";
-  }
+// Empty Title Switch to begin with.
+$TitleSwitch="";
 
-  if (isset($inrole_array)) {
-    $inrole_string=implode(",",$inrole_array);
-  } else {
-    $inrole_string="'P-Volunteer','G-Volunteer'";
+/* Attempt to establish default graph based on permissions */
+for ($i=1; $i<=$permrole_rows; $i++) {
+  if (may_I($permrole_array[$i]['permrolename'])) {
+    $permrolecheck_array[]="'".$permrole_array[$i]['permrolename']."'";
+   }
+ }
+
+$additional_permission_array=array('SuperProgramming', 'SuperLiaison', 'Liaison');
+
+foreach ($additional_permission_array as $perm) {
+  if (may_I($perm)) {
+    $permrolecheck_array[]="'Participant'";
   }
+}
+$permrolecheck_string=implode(",",$permrolecheck_array);
 
   // lastname, firstname (badgename/pubsname) - partid
-  $query0="SELECT DISTINCT badgeid, concat(lastname,', ',firstname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
-  $query0.=" FROM $ReportDB.Participants JOIN $ReportDB.CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
-  $query0.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY lastname";
+  $query0=<<<EOF
+SELECT
+    DISTINCT badgeid,
+    concat(lastname,', ',firstname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname
+  FROM 
+      $ReportDB.Participants 
+    JOIN $ReportDB.CongoDump USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
+  WHERE
+    permrolename in ($permrolecheck_string) AND
+    UHPR.conid=$conid
+  ORDER BY
+    lastname
+EOF;
 
   // firstname lastname (badgename/pubsname) - partid
-  $query1="SELECT DISTINCT badgeid, concat(firstname,' ',lastname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname";
-  $query1.=" FROM $ReportDB.Participants JOIN $ReportDB.CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
-  $query1.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY firstname";
+  $query1=<<<EOF
+SELECT
+    DISTINCT badgeid,
+    concat(firstname,' ',lastname,' (',badgename,'/',pubsname,') - ',badgeid) AS pname
+  FROM
+      $ReportDB.Participants
+    JOIN $ReportDB.CongoDump USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
+  WHERE
+    permrolename in ($permrolecheck_string) AND
+    UHPR.conid=$conid
+  ORDER BY
+    firstname
+EOF;
 
   // pubsname/badgename (lastname, firstname) - partid
-  $query2="SELECT DISTINCT badgeid, concat(pubsname,'/',badgename,' (',lastname,', ',firstname,') - ',badgeid) AS pname";
-  $query2.=" FROM $ReportDB.Participants JOIN $ReportDB.CongoDump USING (badgeid) JOIN UserHasPermissionRole USING (badgeid)";
-  $query2.=" JOIN PermissionRoles USING (permroleid) WHERE permrolename in ($inrole_string) ORDER BY pubsname";
+  $query2=<<<EOF
+SELECT
+    DISTINCT badgeid,
+    concat(pubsname,'/',badgename,' (',lastname,', ',firstname,') - ',badgeid) AS pname
+  FROM
+      $ReportDB.Participants
+    JOIN $ReportDB.CongoDump USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
+  WHERE
+    permrolename in ($permrolecheck_string) AND
+    UHPR.conid=$conid
+  ORDER BY
+    pubsname
+EOF;
 
   // Now give the choices
   echo "<FORM name=\"selpartform\" method=POST action=\"".$returnto."\">\n";
@@ -819,16 +869,17 @@ function create_participant ($participant_arr,$permrole_arr) {
   $message.=submit_table_element($link, $title, "NotesOnParticipants", $element_array, $value_array);
 
   // Assign permissions.
-  $query = "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ";
+  $query = "INSERT INTO $ReportDB.UserHasPermissionRole (badgeid, permroleid, conid) VALUES ";
   for ($i=2; $i<=count($permrole_arr); $i++) {
     $perm="permroleid".$i;
     if ($participant_arr[$perm]=="checked") {
-      $query.="('".$newbadgeid."','".$i."'),";
+      $query.="('".$newbadgeid."','".$i."','".$conid."'),";
     }
+
   }
   $query=rtrim($query,',');
   if (!mysql_query($query,$link)) {
-    $message_error=$query."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
+    $message_error=$query."<BR>Error updating $ReportDB.UserHasPermissionRole database.  Database not updated.";
     RenderError($title,$message_error);
     exit();
   }
@@ -839,6 +890,7 @@ function create_participant ($participant_arr,$permrole_arr) {
 }
 
 function edit_participant ($participant_arr,$permrole_arr) {
+  $conid=$_SESSION['conid'];
   $ReportDB=REPORTDB; // make it a variable so it can be substituted
   $BioDB=BIODB; // make it a variable so it can be substituted
 
@@ -951,19 +1003,19 @@ function edit_participant ($participant_arr,$permrole_arr) {
     $wperm="waspermroleid".$i;
     if (isset ($participant_arr[$perm])) {
       if ($participant_arr[$wperm] == "not") {
-	$queryl ="INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ";
-        $queryl.="('".$participant_arr['partid']."','".$i."');";
+	$queryl ="INSERT INTO $ReportDB.UserHasPermissionRole (badgeid, permroleid, conid) VALUES ";
+        $queryl.="('".$participant_arr['partid']."','".$i."','".$conid."');";
         if (!mysql_query($queryl,$link)) {
-	  $message.=$queryl."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
+	  $message.=$queryl."<BR>Error updating $ReportDB.UserHasPermissionRole database.  Database not updated.";
 	  echo "<P class=\"errmsg\">".$message."\n";
 	  return;
 	}
       }
     } elseif ($participant_arr[$wperm] == "indeed") {
-      $queryl ="DELETE FROM UserHasPermissionRole where ";
-      $queryl.="badgeid=".$participant_arr['partid']." AND permroleid=".$i.";";
+      $queryl ="DELETE FROM $ReportDB.UserHasPermissionRole where ";
+      $queryl.="badgeid=".$participant_arr['partid']." AND permroleid=".$i." AND conid=".$conid.";";
       if (!mysql_query($queryl,$link)) {
-	$message.=$queryl."<BR>Error updating UserHasPermissionRole database.  Database not updated.";
+	$message.=$queryl."<BR>Error updating $ReportDB.UserHasPermissionRole database.  Database not updated.";
 	echo "<P class=\"errmsg\">".$message."\n";
 	return;
       }

@@ -8,6 +8,13 @@
 function BrainstormRenderCreateSession ($action, $session, $message1, $message2) {
     global $name, $email;
     require_once("BrainstormCommonCode.php");
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     $_SESSION['return_to_page']='BrainstormRenderCreateSession.php';
     $title="Brainstorm New Session";
     brainstorm_header($title);
@@ -137,7 +144,7 @@ var enable = true;
                            </SELECT></TD>
                        <TD class="form1">&nbsp;<BR>
                            <LABEL for="type" ID="type">Type:</LABEL><BR><SELECT name="type" onChange="return checkSubmitButton();">
-                           <?php populate_select_from_table("Types", $session["type"], "Panel", FALSE); ?>
+                           <?php populate_select_from_table("$ReportDB.Types", $session["type"], "Panel", FALSE); ?>
                            </SELECT></TD>
                        <TD class="form1">&nbsp;<BR>
                            <LABEL for="roomset" ID="roomset">Room Set:</LABEL><BR><SELECT name="roomset" onChange="return checkSubmitButton();">

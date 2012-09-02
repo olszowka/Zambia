@@ -5,6 +5,7 @@
 require_once('email_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 global $title, $message, $link;
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
@@ -73,12 +74,13 @@ SELECT
       Sessions S
     JOIN Schedule SCH USING (sessionid)
     JOIN Rooms R USING (roomid)
-    LEFT JOIN ParticipantOnSession POS USING (sessionid)
-    LEFT JOIN $ReportDB.Participants P USING (badgeid)
-    LEFT JOIN UserHasPermissionRole UP USING (badgeid)
+    JOIN ParticipantOnSession POS USING (sessionid)
+    JOIN $ReportDB.Participants P USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
-    (UP.permroleid=5 or
-     UP.permroleid=3) and
+    permrolename in ('Participant','General','Programming') AND
+    UHPR.conid=$conid AND
     POS.badgeid='$individual'
   ORDER BY
     starttime

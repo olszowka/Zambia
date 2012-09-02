@@ -317,7 +317,7 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
     $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,T.htmlcellcolor,\"\") SEPARATOR '') as \"%s htmlcellcolor\"",$header_roomid,$header_roomname);
   }
   $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid)";
-  $query.=" JOIN Rooms R USING (roomid) JOIN Types T USING (typeid)";
+  $query.=" JOIN Rooms R USING (roomid) JOIN $ReportDB.Types T USING (typeid)";
   $query.=" JOIN PubStatuses USING (pubstatusid)";
   $query.=" WHERE";
   if ($goh=="y") {$query.=" S.sessionid in (SELECT DISTINCT sessionid from ParticipantOnSession WHERE badgeid IN $GohBadgeList) AND";}

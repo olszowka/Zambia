@@ -1,6 +1,7 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
+$conid=$_SESSION['conid'];
 $TimecardDB=TIMECARDDB; // make it a variable so it can be substituted
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
@@ -15,18 +16,29 @@ if ($TimecardDB=="TIMECARDDB") {unset($TimecardDB);}
 $title="Volunteer Check Out";
 $description="<P align=\"center\">Check out the Volunteer's <A HREF=\"VolunteerCheckIn.php\">Check In</A> instance.</P>";
 
-// Should be generated from PermissionAtoms or PermissionRoles, somehow
-$permission_array=array('SuperProgramming', 'Programming', 'SuperGeneral', 'General', 'SuperLiaison', 'Liaison', 'SuperWatch', 'Watch', 'SuperRegistration', 'Registration', 'SuperVendor', 'Vendor', 'SuperEvents', 'Events', 'SuperLogistics', 'Logistics', 'SuperSales', 'Sales', 'SuperFasttrack', 'Fasttrack');
+/* Get all the Permission Roles */
+$query = <<<EOD
+SELECT
+    permrolename,
+    notes
+  FROM
+      $ReportDB.PermissionRoles
+  WHERE
+    permroleid > 1
+EOD;
 
-foreach ($permission_array as $perm) {
-  if (may_I($perm)) {$inrole_array[]="'$perm'";}
-}
+list($permrole_rows,$permrole_header_array,$permrole_array)=queryreport($query,$link,"Broken Query",$query,0);
 
-if (isset($inrole_array)) {
-  $inrole_string=implode(",",$inrole_array);
- } else {
-  $inrole_string="'P-Volunteer','G-Volunteer'";
+// Empty Title Switch to begin with.
+$TitleSwitch="";
+
+/* Attempt to establish default graph based on permissions */
+for ($i=1; $i<=$permrole_rows; $i++) {
+  if (may_I($permrole_array[$i]['permrolename'])) {
+    $permrolecheck_array[]="'".$permrole_array[$i]['permrolename']."'";
+   }
  }
+$permrolecheck_string=implode(",",$permrolecheck_array);
 
 $query=<<<EOF
 SELECT
@@ -34,11 +46,12 @@ SELECT
     concat(pubsname, " in at: ",DATE_FORMAT(voltimein,'%a %l:%i %p (%k:%i)')) as 'Who'
   FROM
       $ReportDB.Participants
-    JOIN UserHasPermissionRole USING (badgeid)
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
     JOIN $TimecardDB.TimeCard USING (badgeid)
   WHERE
-    permrolename in ($inrole_string) AND
+    UHPR.conid=$conid AND
+    permrolename in ($permrolecheck_string) AND
     voltimeout IS NULL
   ORDER BY
     pubsname

@@ -1,6 +1,6 @@
 <?php
 require_once('VendorCommonCode.php');
-
+$conid=$_SESSION['conid'];
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 
@@ -29,14 +29,14 @@ if (may_I("Vendor")) {
 $query= <<<EOD
 SELECT
     $badgeid_string
-    if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",pubsname,"</A>"),pubsname) AS "Business Name",
+    DISTINCT if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",pubsname,"</A>"),pubsname) AS "Business Name",
     if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",firstname,"</A>"),"") AS "Contact First Name",
     if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",lastname,"</A>"),"") AS "Contact Last Name"
   FROM
       $ReportDB.CongoDump
     JOIN $ReportDB.Participants USING (badgeid)
-    JOIN UserHasPermissionRole USING (badgeid)
-    JOIN PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
   WHERE
     permrolename='Vendor'
   ORDER BY

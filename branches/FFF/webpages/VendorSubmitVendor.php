@@ -2,7 +2,7 @@
 require_once('VendorCommonCode.php');
 // Localisms
 global $message,$message_error,$message2;
-
+$conid=$_SESSION['conid'];
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 
@@ -19,7 +19,7 @@ SELECT
     permroleid,
     permrolename
   FROM
-      PermissionRoles
+      $ReportDB.PermissionRoles
 EOD;
 if (($result=mysql_query($query,$link))===false) {
   $message_error="Error retrieving data from database<BR>\n";
@@ -108,11 +108,11 @@ SELECT
     P.altcontact,
     P.prognotes,
     P.password,
-    group_concat(U.permroleid) as 'permroleid_list'
+    group_concat(UHPR.permroleid) as 'permroleid_list'
   FROM 
       $ReportDB.CongoDump CD
     JOIN $ReportDB.Participants P USING (badgeid)
-    JOIN UserHasPermissionRole U USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
   WHERE
     CD.badgeid='$selpartid'
 EOD;

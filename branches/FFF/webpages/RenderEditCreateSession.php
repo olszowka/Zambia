@@ -8,6 +8,13 @@
 function RenderEditCreateSession ($action, $session, $message1, $message2) {
     global $name, $email, $debug;
     require_once("CommonCode.php");
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     if ($action=="create") {
             $title="Add New Session";
 	    $description="<P>Saving an added session presumes you are going to add another new session next.</P>";
@@ -66,7 +73,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
                     </SELECT>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="type">Type: </LABEL><SELECT name="type">
-                    <?php populate_select_from_table("Types", $session["type"], "SELECT", FALSE); ?>
+                    <?php populate_select_from_table("$ReportDB.Types", $session["type"], "SELECT", FALSE); ?>
                     </SELECT>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="pubstatusid">Pub. Status: </LABEL><SELECT name="pubstatusid">
                     <?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT", FALSE); ?>
