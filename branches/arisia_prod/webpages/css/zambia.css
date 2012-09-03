@@ -121,6 +121,9 @@ h2 {
   background-color: #ccc;
   text-align: center;
 }
+h4 {
+  text-align: center;
+}
 ul#boxes li {
   font-family: Verdana;
   font-size: 1.33em;

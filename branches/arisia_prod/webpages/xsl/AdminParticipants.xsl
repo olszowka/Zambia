@@ -6,7 +6,7 @@
             <div class="alert-info">No matching results found</div>
             </xsl:when>
             <xsl:otherwise>
-              <table class="table table-condensed">
+              <table class="table table-condensed table-hover">
                 <thead>
                   <tr>
                     <th>Last Name</th>

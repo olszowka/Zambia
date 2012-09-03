@@ -5,7 +5,7 @@
     require_once('StaffFooter.php');
     require_once ('render_functions.php');
     require_once ('retrieve.php');
-    $title=CON_NAME . " - Precis";
+    $title="Precis";
     $showlinks=$_GET["showlinks"];
     $_SESSION['return_to_page']="ViewPrecis.php?showlinks=$showlinks";
     if ($showlinks=="1") {
