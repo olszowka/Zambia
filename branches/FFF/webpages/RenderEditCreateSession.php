@@ -222,7 +222,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <DIV class="tab-row">
                         <SPAN class="tab-cell">
                              <SELECT class="selectfwidth" id="servsrc" name="servsrc" size=6 multiple>
-                                <?php populate_multisource_from_table("Services", $session["servdest"]); ?></SELECT>
+                                <?php populate_multisource_from_table("$ReportDB.Services", $session["servdest"]); ?></SELECT>
                              </SPAN>
                         <SPAN class="thickobject">
                             <BUTTON onclick="fadditems(document.sessform.servsrc,document.sessform.servdest)"
@@ -233,7 +233,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <DIV class="tab-row">
                         <SPAN class="tab-cell">
                             <SELECT class="selectfwidth" id="servdest" name="servdest[]" size=6 multiple >
-                                <?php populate_multidest_from_table("Services", $session["servdest"]); ?></SELECT>
+                                <?php populate_multidest_from_table("$ReportDB.Services", $session["servdest"]); ?></SELECT>
                             </SPAN>
                         </DIV>
                 </DIV> <!-- Services -->

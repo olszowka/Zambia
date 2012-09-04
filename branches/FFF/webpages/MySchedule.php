@@ -1,5 +1,6 @@
 <?php
 require_once('PartCommonCode.php'); // initialize db; check login;
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; //make it a variable so it will be substituted
 $ProgramEmail=PROGRAM_EMAIL; //Use it a variable locally
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
@@ -147,10 +148,11 @@ SELECT
          FROM
              Sessions S, 
              SessionHasService SS, 
-             Services SE
+             $ReportDB.Services SE
          WHERE
            S.sessionid=SS.sessionid and
-           SE.serviceid=SS.serviceid
+           SE.serviceid=SS.serviceid and
+	   SE.conid=$conid
          GROUP BY
            S.sessionid) X USING (sessionid)
     LEFT JOIN (SELECT

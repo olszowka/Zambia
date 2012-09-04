@@ -1,6 +1,14 @@
 <?php
 require_once('StaffCommonCode.php');
 global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
+
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
+
+$conid=$_SESSION['conid'];
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
@@ -38,10 +46,11 @@ SELECT
         FROM
             Sessions S, 
             SessionHasService SS, 
-            Services SE
+            $ReportDB.Services SE
         WHERE
           S.sessionid=SS.sessionid and
-          SE.serviceid=SS.serviceid
+          SE.serviceid=SS.serviceid and
+	  SE.conid=$conid
         GROUP BY
            S.sessionid) X USING (sessionid)
     LEFT JOIN (SELECT

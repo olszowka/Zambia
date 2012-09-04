@@ -154,10 +154,11 @@ function populate_select_from_query($query, $default_value, $option_0_text, $def
 function populate_multiselect_from_table($table_name, $skipset) {
     // assumes id's in the table start at 1 '
     // skipset is array of integers of values of id from table to preselect
+    // assumes mulit-year element in all useage
     global $link;
     // error_log("Zambia->populate_multiselect_from_table->\$skipset: ".print_r($skipset,TRUE)."\n"); // only for debugging
     if ($skipset=="") $skipset=array(-1);
-    $result=mysql_query("Select * from ".$table_name." order by display_order",$link);
+    $result=mysql_query("SELECT * from ".$table_name." WHERE conid=".$_SESSION['conid']." ORDER BY display_order",$link);
     while (list($option_value,$option_name)= mysql_fetch_array($result, MYSQL_NUM)) {
         echo "<OPTION value=\"".$option_value."\"";
         if (array_search($option_value,$skipset)!==FALSE) {
@@ -175,9 +176,10 @@ function populate_multiselect_from_table($table_name, $skipset) {
 function populate_multisource_from_table($table_name, $skipset) {
     // assumes id's in the table start at 1 '
     // skipset is array of integers of values of id from table not to include
+    // assumes mulit-year element in all useage
     global $link;
     if ($skipset=="") $skipset=array(-1);
-    $result=mysql_query("Select * from ".$table_name." order by display_order",$link);
+    $result=mysql_query("SELECT * from ".$table_name." WHERE conid=".$_SESSION['conid']." ORDER BY display_order",$link);
     while (list($option_value,$option_name)= mysql_fetch_array($result, MYSQL_NUM)) {
         if (array_search($option_value,$skipset)===false) {
         echo "<OPTION value=".$option_value.">".$option_name."</OPTION>\n";
@@ -194,9 +196,10 @@ function populate_multidest_from_table($table_name, $skipset) {
     // assumes id's in the table start at 1                        '
     // skipset is array of integers of values of id from table to include
     // in "dest" because they were skipped from "source"
+    // assumes mulit-year element in all useage
     global $link;
     if ($skipset=="") $skipset=array(-1);
-    $result=mysql_query("Select * from ".$table_name." order by display_order",$link);
+    $result=mysql_query("SELECT * from ".$table_name." WHERE conid=".$_SESSION['conid']." ORDER BY display_order",$link);
     while (list($option_value,$option_name)= mysql_fetch_array($result, MYSQL_NUM)) {
         if (array_search($option_value,$skipset)!==false) {
             echo "<OPTION value=".$option_value.">".$option_name."</OPTION>\n";
