@@ -71,7 +71,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
               <label class="control-label" for="title">Title:</LABEL>
               <INPUT type=text class="span4" size="50" name="title" value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT)."\">"; ?>
               <INPUT class="checkbox adjust" type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?> name="invguest">
-              <label class="checkbox inline" for="invguest"> Invited Guests Only</LABEL>
+              <label class="checkbox inline" for="invguest"> Invited Guests Only</LABEL>&nbsp;&nbsp;&nbsp;
               <INPUT class="checkbox adjust" type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?> name="signup">
               <label class="checkbox inline" for="signup"> Signup Required</LABEL>
               <label class="control-label" for="kids">&nbsp;&nbsp;Kids:</LABEL>
