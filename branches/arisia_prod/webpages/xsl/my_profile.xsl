@@ -26,7 +26,7 @@
             <div class="control-group">
               <label for="interested" class="control-label nowidth">I am interested and able to participate in programming for <xsl:value-of select="$conName"/>:</label>
               <div class="controls">
-                <select id="interested" name="interested" class="yesno span1" onchange="myProfile.anyChange('interested');"
+                <select id="interested" name="interested" class="yesno span2" onchange="myProfile.anyChange('interested');"
                   onkeyup="myProfile.anyChange('interested')">
                   <option value="0">
                       <xsl:if test="$interested=0 or not ($interested)">
@@ -53,7 +53,7 @@
                 <div class="control-group">
                   <label for="share_email" class="control-label nowidth">I give permission for <xsl:value-of select="$conName"/> to share my email address with other participants:</label>
                   <div class="controls">
-                    <select id="share_email" name="share_email" class="span1" onchange="myProfile.anyChange('share_email')"
+                    <select id="share_email" name="share_email" class="span2" onchange="myProfile.anyChange('share_email')"
                         onkeyup="myProfile.anyChange('share_email')">
                     <option value="null">
                         <xsl:if test="not($share_email) and $share_email!='0'"><!-- is there an explicit test for null? -->
@@ -124,11 +124,11 @@
           </xsl:choose>
           <fieldset>
             <div class="control-group" id="passGroup">
-              <label for="password" class="control-label nowidth">New Password:</label>
+              <label for="password" class="control-label xnowidth">New Password:</label>
               <div class="controls">
                 <input type="password" size="10" name="password" id="password" onchange="myProfile.anyChange('password')" onkeyup="myProfile.anyChange('password')"/>
               </div>
-              <label for="cpassword" class="control-label nowidth">Confirm New Password:</label>
+              <label for="cpassword" class="control-label xnowidth">Confirm Password:</label>
               <div class="controls">
                 <input type="password" size="10" name="cpassword" id="cpassword"  onchange="myProfile.anyChange('cpassword')" onkeyup="myProfile.anyChange('cpassword')"/>
                 <span id="badPassword" class="help-inline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Passwords don't match!</span>
@@ -154,14 +154,14 @@
           <div class="control-group" id="bioGroup">
             <label for="bio">Your biography (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer including spaces):</label>
             <div>
-              <textarea rows="5" cols="72" name="bio" id="bioTXTA" onchange="myProfile.anyChange('bioTXTA')"
+              <textarea class="span12" rows="5" cols="72" name="bio" id="bioTXTA" onchange="myProfile.anyChange('bioTXTA')"
                   onkeyup="myProfile.anyChange('bioTXTA')"><xsl:choose>
                   <xsl:when test="$enableBioEdit!='1'">
                       <xsl:attribute name="readonly">readonly</xsl:attribute>
-                      <xsl:attribute name="class">span11 userFormTXT readonly</xsl:attribute>
+                      <xsl:attribute name="class">span12 userFormTXT readonly</xsl:attribute>
                   </xsl:when>
                   <xsl:otherwise>
-                      <xsl:attribute name="class">span11 userFormTXT</xsl:attribute>
+                      <xsl:attribute name="class">span12 userFormTXT</xsl:attribute>
                   </xsl:otherwise>
                   </xsl:choose><xsl:value-of
                   select="/doc/query[@queryName='participant_info']/row/@bio"/>
@@ -181,7 +181,7 @@
                       <xsl:sort select="@display_order" data-type="number"/>
                       <label class="checkbox">
                           <xsl:value-of select="@credentialname"/>
-                        <input id="credentialCHK{@credentialid}" type="checkbox"
+                        <input class="checkbox" id="credentialCHK{@credentialid}" type="checkbox"
                             onchange="myProfile.anyChange('credentialCHK{@credentialid}')"
                             onkeyup="myProfile.anyChange('credentialCHK{@credentialid}')">
                             <xsl:if test="@badgeid">

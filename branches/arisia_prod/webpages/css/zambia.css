@@ -40,7 +40,7 @@ header label {
   margin: 0;
   color: #000000;
 }
-input {
+input[type=input] {
   height: 28px;
 }
 .navbar {

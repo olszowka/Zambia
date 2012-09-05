@@ -58,13 +58,13 @@ function MyProfile() {
 		this.anyChange("password");
 		this.anyChange("bioTXTA");
 		dirtyInputArr = [];
-		$("#submitBTN").tbutton().attr("disabled","disabled");
+		$("#submitBTN").button().attr("disabled","disabled");
 		//window.status="Reached initializeMyProfile.";
 	}
 
 	this.updateBUTN = function updateBUTN() {
 		//debugger;
-		$("#submitBTN").tbutton('loading');
+		$("#submitBTN").button('loading');
 		var postdata = {
 			ajax_request_action : "update_participant"
 			};
@@ -107,8 +107,8 @@ function MyProfile() {
 		$("#cpassword").val("");
 		dirtyInputArr = [];
 		anyDirty = false;
-		$("#submitBTN").tbutton('reset');
-		setTimeout(function() {$("#submitBTN").tbutton().attr("disabled","disabled");}, 0);
+		$("#submitBTN").button('reset');
+		setTimeout(function() {$("#submitBTN").button().attr("disabled","disabled");}, 0);
 		//$("#submitBTN").html("Update").removeClass("disabled");
 		document.getElementById("resultBoxDIV").scrollIntoView(false);
 	}
