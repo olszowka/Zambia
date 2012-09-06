@@ -109,6 +109,20 @@ input[type="password"] {
 .congo_table {
   margin-top: 1em;
 }
+.topBorder {
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+}
+.edgeBorder {
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+}
+.bottomBorder {
+  border-bottom: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+}
 h1 {
   font-family: Verdana;
   font-size: 2em;
