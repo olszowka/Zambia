@@ -77,6 +77,11 @@ input[type="password"] {
   padding-top: 0px;
   margin-bottom: 5px;
 }
+.checkbox.inline.long {
+  padding-top: 0px;
+  margin-bottom: 5px;
+  width: 14em;
+}
 .checkbox.adjust {
   padding-top: 0px;
   margin-bottom: 8px;

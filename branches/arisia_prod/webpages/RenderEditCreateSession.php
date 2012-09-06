@@ -69,13 +69,14 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
           </div>
             <div class="control-group">
               <label class="control-label" for="title">Title:</LABEL>
-              <INPUT type=text class="span4" size="50" name="title" value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT)."\">"; ?>
+              <INPUT type=text class="span4" size="50" name="title" value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT)."\">"; ?>&nbsp;&nbsp;
               <INPUT class="checkbox adjust" type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?> name="invguest">
               <label class="checkbox inline" for="invguest"> Invited Guests Only</LABEL>&nbsp;&nbsp;&nbsp;
               <INPUT class="checkbox adjust" type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?> name="signup">
               <label class="checkbox inline" for="signup"> Signup Required</LABEL>
-              <label class="control-label" for="kids">&nbsp;&nbsp;Kids:</LABEL>
-              <SELECT name="kids" class="span2"><?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT", FALSE); ?></SELECT>
+              <label class="control-label span4 pull-right" for="kids">&nbsp;&nbsp;Kids:
+                <SELECT name="kids" class="span6"><?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT", FALSE); ?></SELECT>
+              </LABEL>
           </DIV>
 <?php
       if (strtoupper(BILINGUAL)=="TRUE") {
