@@ -9,24 +9,24 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
         echo "<P class=\"alert alert-success\">".$message."</P>";
         }
     // "Add" Section
-    echo "<FORM name=\"addform\" method=POST action=\"PartPanelInterests_POST.php\">\n";
-    echo "    <table>\n";
-    echo "        <tr>\n";
-    echo "            <td>Add Session ID to my List</td>\n";
-    echo "            <td><Input type=\"text\" name=\"addsessionid\" size=10></td>\n";
-    echo "            <td><BUTTON type=\"submit\" name=\"add\" id=\"add\">Add</BUTTON></td>\n";
-    echo "            </tr>\n";
-    echo "        </table>\n";
+    echo "<FORM class=\"form-inline\" name=\"addform\" method=POST action=\"PartPanelInterests_POST.php\">\n";
+    echo "      <div class=\"row-fluid\">";
+    echo "        <div class=\"control-group\">";
+    echo "            <label class=\"control-label\">Add Session ID to my List: ";
+    echo "            <Input type=\"text\" class=\"span4\" name=\"addsessionid\" size=\"10\"></label>\n";
+    echo "            <BUTTON class=\"btn btn-primary\" type=\"submit\" name=\"add\" id=\"add\">Add</BUTTON>\n";
+    echo "        </div>\n";
+    echo "      </div>\n";
     echo "    </FORM>\n";
     echo "<HR>\n";
     // "Update Ranks" Section
-    echo "<FORM name=\"sessionform\" method=POST action=\"PartPanelInterests_POST2.php\">\n";
-    echo "<DIV class=\"submit\" id=\"submit\"><BUTTON class=\"SubmitButton\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
+    echo "<FORM class=\"form-horizontal\" name=\"sessionform\" method=POST action=\"PartPanelInterests_POST2.php\">\n";
+    echo "<DIV class=\"submit\" id=\"submit\"><BUTTON class=\"btn btn-primary\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
     echo "<P>Please use the following scale when ranking your interest in the panels you have chosen:  </P>\n";
-    echo "<P>1 - Oooh! Oh! Pick Me!, 2-3 - I'd like to if I can, 4-5 - I am qualified but this is not one of my primary interests.</P>\n";
+    echo "<strong>1 - Oooh! Oh! Pick Me!, 2-3 - I'd like to if I can, 4-5 - I am qualified but this is not one of my primary interests.</strong>\n";
     echo "<P>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</P>\n";
     echo "<H3>List of Sessions in Which I'm Interested in Participating</H3>\n";
-    echo "<TABLE>\n";
+    echo "<TABLE class=\"table table-condensed\">\n";
 	$j=1; //use $j so that skipped sessions don't skip numbering
     for ($i=1; $i<=$session_interest_count; $i++) {
         if (!$session_interests[$i]['title']) continue;
@@ -62,7 +62,7 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
 		$j++;
         }
     echo "    </TABLE>\n";
-    echo "<DIV class=\"submit\" id=\"submit2\"><BUTTON class=\"SubmitButton\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
+    echo "<DIV class=\"submit\" id=\"submit2\"><BUTTON class=\"btn btn-primary\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
     echo "</FORM>\n";
     participant_footer();
     }
