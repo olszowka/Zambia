@@ -14,6 +14,7 @@
 <body>
 	<script type="text/javascript">
 		var thisPage="<?php echo $title; ?>";
+		var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
 	</script>
 <?php
 	load_javascript();

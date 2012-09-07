@@ -1,5 +1,6 @@
 <?php
 	function staffHeaderOnePage($title) {
+		//header("Access-Control-Allow-Origin: *");
 		require_once ("javascript_functions.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -12,6 +13,7 @@
 	<link rel="stylesheet" href="jquery/jquery-ui-1.8.16.custom.css" type="text/css" />
 	<script type="text/javascript">
 		var thisPage="<?php echo $title; ?>";
+		var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
 	</script>
 <?php
 	load_javascript();
@@ -20,6 +22,7 @@
 </head>
 <body class="onepage">
 <div id="fullPageContainer">
+	<div id="myhelper"></div>
 	<div class="topBand" id="fullPageHeader">
 		<h1 class="appTitle">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</h1>
 <?php if (isset($_SESSION['badgeid'])) { ?>

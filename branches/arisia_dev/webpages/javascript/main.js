@@ -22,9 +22,12 @@ $(document).ready(function() {
 var lib = new lib;
 
 function lib() {
-	this.toggleCheckbox = function toggleCheckbox(me) {
-		var thecheckbox = $(me).find(":checkbox");
-		thecheckbox.prop("checked",!thecheckbox.prop("checked"));
+	this.toggleCheckbox = function toggleCheckbox() {
+		// for some fucking reason I can't fathom, under some, but not all, circumstances (and this code qualifies)
+		// if you call .click() on a checkbox, the browser will call the handler before updating the value.
+		var checkbox = $(this).find(":checkbox");
+		checkbox.prop("checked",!checkbox.prop("checked"));
+		checkbox.triggerHandler("click");
 		}
 
 	this.onePageResize = function onePageResize() {

@@ -1,4 +1,31 @@
 <?php
+
+function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
+	$startTimeUnits = $startTimeHour * 2;
+	if ($startTimeMin >= 30)
+		$startTimeUnits++;
+	return $startTimeUnits;
+}
+
+function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
+	$endTimeUnits = $endTimeHour * 2;
+	if ($endTimeMin > 30)
+			$endTimeUnits += 2;
+		elseif ($endTimeMin > 0)
+			$endTimeUnits++;
+	return $endTimeUnits;
+}
+
+function convertUnitsToTimeStr($timeUnits) {
+	return floor($timeUnits/2).":00:00";
+}
+
+function convertUnitsToHourMin($timeUnits) {
+	$hour = floor($timeUnits/2);
+	$min = ($timeUnits%2) * 30;
+	return array($hour, $min);
+}
+
 function showCustomText($pre,$tag,$post) {
 	global $customTextArray;
 	if (strlen($x = $customTextArray[$tag])>0) {
@@ -28,6 +55,24 @@ function conv_min2hrsmin($mininput) {
     return (sprintf("%02d:%02d:00",$hrs,$minr));
     }
 //
+// Function getInt("name")
+// gets a parameter from $_GET[] or $_POST[] of name
+// and confirms it is an integer.
+function getInt($name) {
+	if (isset($_GET[$name])) {
+			$int = $_GET[$name];
+			}
+		else {
+			if (isset($_POST[$name])) {
+					$int = $_POST[$name];
+					}
+				else {
+					return false;
+					}
+			}
+	return(filter_var($int,FILTER_SANITIZE_NUMBER_INT));
+}
+
 // Function stripfancy()
 // returns a string with many non-7-bit ASCII characters
 // removed from input string and replaced with similar
@@ -194,14 +239,25 @@ function parse_mysql_time_hours($time) {
 function time_description($time) {
     global $daymap;
     $atime=parse_mysql_time($time);
-    $result="";
-    $result.=$daymap['short'][$atime["day"]+1]." ";
-    $hour=fmod($atime["hour"],12);
-    $result.=(($hour==0)?12:$hour).":".$atime["minute"]." ";
-    $result.=($atime["hour"]>=12)?"PM":"AM";
+    $result = $daymap['short'][$atime["day"]+1]." ";
+    $hour = fmod($atime["hour"],12);
+    $result .= (($hour==0) ? "12" : $hour).":".$atime["minute"]." ";
+    $result .= ($atime["hour"]>=12) ? "PM" : "AM";
     return($result);
     }
-
+//
+// Function timeDescFromUnits($timeUnits)
+// Takes the int $timeUnits which is the number of time units (1/2 hours)
+// from the start of the con and converts to string like "Fri 1:00 PM"
+function timeDescFromUnits($timeUnits) {
+	global $daymap;
+	$result = $daymap['short'][intval($timeUnits / 48 + 1)]." ";
+	$result .= (fmod(intval(fmod($timeUnits,48)/2) + 11, 12) + 1) . ":";
+	$result .= (fmod($timeUnits,2) == 1) ? "30" : "00";
+	$result .= (fmod($timeUnits,48) >= 24) ? " PM" : " AM";
+	return $result;
+	}
+//
 // Function fix_slashes($arg)
 // Takes the string $arg and removes multiple slashes, 
 // slash-quote and slash-double quote.

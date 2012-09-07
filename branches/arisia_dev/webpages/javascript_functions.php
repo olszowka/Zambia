@@ -1,7 +1,7 @@
 <?php
 function load_jquery() {
 ?>
-<script src="jquery/jquery-1.6.4.js"></script>
+<script src="jquery/jquery-1.7.2.min.js"></script>
 <script src="jquery/jquery-ui-1.8.16.custom.min.js"></script>
 <script src="javascript/main.js"></script>
 <?php

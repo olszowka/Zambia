@@ -5,11 +5,15 @@
     require_once('render_functions.php');
     require_once('validation_functions.php');
     require_once('php_functions.php');
+	date_default_timezone_set("America/New_York");
     //set_session_timeout();
     session_start();
     if (prepare_db()===false) {
         $message_error="Unable to connect to database.<BR>No further execution possible.";
-        RenderError($title,$message_error);
+		if (isset($_GET["ajax_request_action"]) || isset($_POST["ajax_request_action"]))
+				RenderErrorAjax("Session expired. Please <a HREF=\"index.php\">log in</a> again.");
+			else
+        		RenderError($title,$message_error);
         exit();
         };
     if (isLoggedIn()==false and !isset($logging_in)) {
@@ -23,7 +27,10 @@
     	};
     if (!populateCustomTextArray()) {
 		$message_error="Failed to retrieve custom text. ".$message_error;
-        RenderError($title,$message_error);
+		if (isset($_GET["ajax_request_action"]) || isset($_POST["ajax_request_action"]))
+				RenderErrorAjax("Session expired. Please <a HREF=\"index.php\">log in</a> again.");
+			else
+        		RenderError($title,$message_error);
         exit();
 		}
 
@@ -42,15 +49,15 @@
 	if ($usable) {
 		echo '<SPAN class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
 		echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
-		echo '<A HREF="' . $url . '">' ;// XXX link needs to be quoted
-		echo $text;                     // XXX needs to be quoted
+		echo '<A HREF="' . $url . '">' ;// link needs to be quoted
+		echo $text;                     // needs to be quoted
 		echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
 		echo '</SPAN>';
 	    }
 	else {
 		echo '<SPAN class="unusabletab">';
 		echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
-		echo $text;                     // XXX needs to be quoted
+		echo $text;                     // needs to be quoted
 		echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
 		echo '</SPAN>';
 	    }
