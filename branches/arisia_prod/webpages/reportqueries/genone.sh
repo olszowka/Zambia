@@ -16,7 +16,7 @@ umask 022
 
 #mysql -u $DBUSERNAME -H $DATABASE -p $DBPASSWORD -e '\. fixnames'
 
-for x in ${SRCDIR}/pocketprogramcsvquery; do
+for x in ${SRCDIR}/conflictpartatimequery; do
   name=`echo $x | sed "s%${SRCDIR}/%%" | sed "s/query$//"`
   eval `cat $x`
   echo $x
@@ -27,7 +27,7 @@ for x in ${SRCDIR}/pocketprogramcsvquery; do
                             sed "s%REPORT_DESCRIPTION%$DESCRIPTION%" | \
                             sed "s%CON_NAME%$CON_NAME%" > $DESTDIR/${name}report.php
 
-  echo $QUERY | ~/usr/bin/mysql --host=$DBHOSTNAME -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
+  echo $QUERY | /usr/local/mysql/bin/mysql --host=$DBHOSTNAME -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD >> $DESTDIR/${name}report.php
 
   cat genreportfooter.php >> $DESTDIR/${name}report.php
   
