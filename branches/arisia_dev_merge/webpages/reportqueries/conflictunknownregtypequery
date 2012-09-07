@@ -2,6 +2,7 @@ TITLE='Conflict Report - Unknown RegTypes'
 DESCRIPTION='Congo RegTypes that Zambia does not recognize'
 CONFLICTWANTS=1
 REGWANTS=1
+ADMINWANTS=1
 QUERY="
    select distinct(C.regtype)
      from CongoDump C 

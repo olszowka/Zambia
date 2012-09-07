@@ -4,9 +4,11 @@ require_once('db_functions.php');
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
-//require_once('SubmitAdminParticipants.php');
-
+$fbadgeid = getInt("badgeid");
+//error_log("Reached AdminParticpants.");
 staff_header($title);
+if ($fbadgeid)
+	echo"<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
 ?>
 <div style="display:none" id="searchPartsDIV">
 	<div class="dialog">Enter all or part of first name, last name, badge name, <span style="font-weight:bold">or</span> published name.  If you enter numbers, it will be interpreted as a complete badgeid.

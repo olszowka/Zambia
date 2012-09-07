@@ -17,7 +17,7 @@ if (isset($_POST["numrows"])) {
 	if(!SubmitMaintainRoom($ignore_conflicts)) $conflict=true;
     }
 
-if (isset($_POST["selroom"])) { // room was selected by this form
+if (isset($_POST["selroom"]) && $_POST["selroom"]!="0") { // room was selected by this form
         $selroomid=$_POST["selroom"];
         $topsectiononly=false;
         //unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
@@ -32,32 +32,37 @@ if (isset($_POST["selroom"])) { // room was selected by this form
         }
 
 if ($conflict!=true) {
-		$query="SELECT roomid, roomname, function FROM Rooms ORDER BY display_order";
-		if (!$Rresult=mysql_query($query,$link)) {
-		    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-		    echo "<P class\"errmsg\">".$message."\n";
-		    staff_footer();
-		    exit();
-		    }
-		echo "<FORM name=\"selroomform\" method=POST action=\"MaintainRoomSched.php\">\n";
-		echo "<DIV><LABEL for=\"selroom\">Select Room</LABEL>\n";
-		echo "<SELECT name=\"selroom\">\n";
-		echo "     <OPTION value=0 ".(($selroomid==0)?"selected":"").">Select Room</OPTION>\n";
-		while (list($roomid,$roomname, $rmfunct)= mysql_fetch_array($Rresult, MYSQL_NUM)) {
-		    echo "     <OPTION value=\"".$roomid."\" ".(($selroomid==$roomid)?"selected":"");
-		    echo ">".htmlspecialchars($roomname);
-		    if (strlen($rmfunct)>0) echo " (".htmlspecialchars($rmfunct).")";
-		    echo "</OPTION>\n";
-		    }
-		echo "</SELECT></DIV>\n";
-		echo "<br><P>For any session where you are rescheduling, please read the Notes for Programming Committee. \n";
-		echo "<DIV class=\"SubmitDiv\">";
+		$queryArray["rooms"]="SELECT roomid, roomname, function, is_scheduled FROM Rooms ORDER BY display_order";
+		if (($resultXML=mysql_query_XML($queryArray))===false) {
+		    RenderErrorAjax($message_error); //header has already been sent, so can just send error message and stop.
+	        exit();
+	        }
+		//echo($resultXML->saveXML()); //for debugging only
+		$xsl = new DomDocument;
+		$xsl->load('xsl/MaintainRoomSched_roomSelect.xsl');
+		$xslt = new XsltProcessor();
+		$xslt->importStylesheet($xsl);
+		$html = $xslt->transformToXML($resultXML);
+?>
+<form name="selroomform" method="POST" action="MaintainRoomSched.php">
+	<div><label for="selroom">Select Room</label>
+<?php echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i")); ?>
+	</div>
+	<div style="margin-top:0.5em">
+		<input type="checkbox" id="showUnschedRmsCHK" name="showUnschedRmsCHK" value="1" <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
+		<label for="showUnschedRmsCHK">Include unscheduled rooms</lable>
+	</div>
+	<div style="margin-top:0.5em">For any session where you are rescheduling, please read the Notes for Programming Committee.</div>
+	<div class="SubmitDiv">
+<?php
 		if (isset($_SESSION['return_to_page'])) {
 		    echo "<A HREF=\"".$_SESSION['return_to_page']."\">Return to report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A>";
 		    }
-		echo "<BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Submit</BUTTON></DIV>\n";
-		echo "</FORM>\n";
-		echo "<HR>\n";
+?>
+	<button type="submit" name="submit" class="SubmitButton">Submit</button></div>
+	</form>
+	<hr>
+<?php
 		// unset all stuff from posts so input fields get reset to blank
 		for ($i=1;$i<=newroomslots;$i++) {
 			unset($_POST["day$i"]);
@@ -74,10 +79,13 @@ if ($topsectiononly) {
     staff_footer();
     exit();
     }
-echo "<FORM name=\"rmschdform\" method=POST action=\"MaintainRoomSched.php\">\n";
+?>
+<form name="rmschdform" method="POST" action="MaintainRoomSched.php">
+<input type="hidden" name="showUnschedRmsCHK" value="1" <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
+<?php
 if ($conflict==true) {
-	echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"override\" class=\"SubmitButton\">Save Anyway!</BUTTON></DIV>\n";
-	echo "<BR><HR>\n";
+	echo "<div class=\"SubmitDiv\"><button type=\"submit\" name=\"override\" class=\"SubmitButton\">Save Anyway!</button></div>\n";
+	echo "<br><hr>\n";
 	}
 $query = <<<EOD
 SELECT roomid, roomname, opentime1, closetime1, opentime2, closetime2, opentime3, closetime3,
@@ -89,10 +97,10 @@ if (!$result=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
-echo "<H2>$selroomid - ".htmlspecialchars(mysql_result($result,0,"roomname"))."</H2>";
+echo "<h2>$selroomid - ".htmlspecialchars(mysql_result($result,0,"roomname"))."</h2>";
 //echo "|".mysql_result($result,0,"opentime1")."|<BR>\n";
-echo "<H4>Open Times</H4>\n";
-echo "<DIV class=\"border1111 lrpad lrmargin\"><P class=\"lrmargin\">";
+echo "<h4>Open Times</h4>\n";
+echo "<div class=\"border1111 lrpad lrmargin\"><P class=\"lrmargin\">";
 if (mysql_result($result,0,"opentime1")!="") {
     echo time_description(mysql_result($result,0,"opentime1"))." through ".time_description(mysql_result($result,0,"closetime1"))."<BR>\n";
     }
@@ -102,7 +110,7 @@ if (mysql_result($result,0,"opentime2")!="") {
 if (mysql_result($result,0,"opentime3")!="") {
     echo time_description(mysql_result($result,0,"opentime3"))." through ".time_description(mysql_result($result,0,"closetime3"))."<BR>\n";
     }
-echo "</DIV>\n";
+echo "</div>\n";
 echo "<H4>Characteristics</H4>\n";
 echo "   <TABLE class=\"border1111=\">\n";
 echo "      <TR>\n";

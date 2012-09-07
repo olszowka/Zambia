@@ -27,9 +27,8 @@ SELECT
     FROM
             Rooms R
     WHERE
-        R.function like '%rogram%' AND
         R.roomid in
-        (SELECT DISTINCT roomid FROM Schedule)
+        (SELECT DISTINCT roomid FROM Schedule SCH JOIN Sessions S using (sessionid) WHERE S.divisionid = 2)
     ORDER BY
         R.display_order;
 EOD;
@@ -47,7 +46,7 @@ EOD;
     for ($i=1; $i<=$rooms; $i++) {
         $header_array[$i]=mysql_fetch_assoc($result);
         }
-    $header_cells="<TR><TH>Time</TH>";
+    $header_cells="<tr><th class=\"report\">Time</th>";
 //
 //SELECT
 //        DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',SCH.starttime),'%a %l:%i %p') as 'Start Time',
@@ -71,9 +70,9 @@ EOD;
 //
     $query="SELECT DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') as 'starttime'";
     for ($i=1; $i<=$rooms; $i++) {
-        $header_cells.="<TH>";
-        $header_cells.=sprintf("<A HREF=\"MaintainRoomSched.php?selroom=%s\">%s</A>",$header_array[$i]["roomid"],$header_array[$i]["roomname"]);
-        $header_cells.="</TH>";
+        $header_cells.="<th class=\"report\">";
+        $header_cells.=sprintf("<a href=\"MaintainRoomSched.php?selroom=%s\">%s</a>",$header_array[$i]["roomid"],$header_array[$i]["roomname"]);
+        $header_cells.="</th>";
         $x=$header_array[$i]["roomid"];
         $y=$header_array[$i]["roomname"]." Title";
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.title,\"\") SEPARATOR '') as \"%s\"",$x,$y);
@@ -81,9 +80,9 @@ EOD;
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.sessionid,\"\") SEPARATOR '') as \"%s\"",$x,$y);
         $query.=sprintf(",GROUP_CONCAT(IF(roomid=%s,S.duration,\"\") SEPARATOR '') as \"%s\"",$x,$y);
         }
-    $header_cells.="</TR>";
-    $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN Rooms R USING (roomid) WHERE S.pubstatusid = 2 AND";
-    $query.=" R.function like '%rogram%' GROUP BY SCH.starttime ORDER BY SCH.starttime;";
+    $header_cells.="</tr>";
+    $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN Rooms R USING (roomid) WHERE S.pubstatusid = 2 AND S.divisionid = 2";
+    $query.=" GROUP BY SCH.starttime ORDER BY SCH.starttime;";
     if (($result=mysql_query($query,$link))===false) {
         $message="Error retrieving data from database.<BR>";
         $message.=$query;
@@ -102,14 +101,14 @@ EOD;
         } 
     topofpage();
     echo "<P>Click on the room name to edit the room's schedule; the session id to edit the session's participants; or the title to edit the session.</P>\n";
-    echo "<TABLE BORDER=1>";
+    echo "<table border=\"1\" class=\"report\">";
     echo $header_cells;
     for ($i=1; $i<=$rows; $i++) {
-        echo "<TR><TD>";
+        echo "<tr><td class=\"report\">";
         echo $grid_array[$i]['starttime'];
-        echo "</TD>";
+        echo "</td>";
         for ($j=1; $j<=$rooms; $j++) {
-            echo "<TD>";
+            echo "<td class=\"report\">";
             $x=$grid_array[$i][$j*3-1]; //sessionid
             if ($x!="") {
                     echo sprintf("(<A HREF=\"StaffAssignParticipants.php?selsess=%s\">%s</A>) ",$x,$x);
@@ -121,9 +120,9 @@ EOD;
                     }
                 else
                     { echo "&nbsp;"; } 
-            echo "</TD>";
+            echo "</td>";
             }
-        echo "</TR>\n";
+        echo "</tr>\n";
         }
-    echo "</TABLE>";
+    echo "</table>";
     staff_footer();

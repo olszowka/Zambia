@@ -81,6 +81,24 @@ function getInt($name) {
 // set constants stripfancy_from and stripfancy_to in
 // file db_name.php to configure
 //
+// Function getInt("name")
+// gets a parameter from $_GET[] or $_POST[] of name
+// and confirms it is an integer.
+function getInt($name) {
+	if (isset($_GET[$name])) {
+			$int = $_GET[$name];
+			}
+		else {
+			if (isset($_POST[$name])) {
+					$int = $_POST[$name];
+					}
+				else {
+					return false;
+					}
+			}
+	return(filter_var($int,FILTER_SANITIZE_NUMBER_INT));
+}
+
 function stripfancy($input) {
     if (stripfancy_from) {
             return(strtr($input,stripfancy_from,stripfancy_to));

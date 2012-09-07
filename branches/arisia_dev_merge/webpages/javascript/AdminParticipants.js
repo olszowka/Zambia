@@ -2,23 +2,24 @@ var bioDirty = false;
 var pnameDirty = false;
 var snotesDirty = false;
 var originalInterested = 0;
+var fbadgeid;
 
 function anyChange() {
-	var x = document.getElementById("password").value;
-	var y = document.getElementById("cpassword").value;
-	if (!x && !y && (document.getElementById("interested").value != originalInterested || 
+	var x = $("#password").val();
+	var y = $("#cpassword").val();
+	if (!x && !y && ($("#interested").val() != originalInterested || 
 			bioDirty || pnameDirty || snotesDirty) ||
 		(x && x == y) ) {
-			document.getElementById("updateBUTN").disabled = false;
+			$("#updateBUTN").prop("disabled", false);
 			}
 		else {
-			document.getElementById("updateBUTN").disabled = true;			
+			$("#updateBUTN").prop("disabled", true);
 			}
-	var z = document.getElementById("passwordsDontMatch");
+	var z = $("#passwordsDontMatch");
 	if (x && y && x!=y)
-			z.style.display = "inline-block";
+			z.css("display","inline-block");
 		else
-			z.style.display = "none";
+			z.hide();
 }
 
 function cancelSearchPartsBUTN() {
@@ -28,28 +29,28 @@ function cancelSearchPartsBUTN() {
 function chooseParticipant(badgeid) {
 	//debugger;
 	$("#searchPartsDIV").dialog("close");
-	document.getElementById("badgeid").value = document.getElementById("bidSPAN_" + badgeid).innerHTML;
-	document.getElementById("lname_fname").value = document.getElementById("lnameSPAN_" + badgeid).innerHTML;
-	document.getElementById("bname").value = document.getElementById("bnameSPAN_" + badgeid).innerHTML;
-	document.getElementById("pname").value = document.getElementById("pnameSPAN_" + badgeid).innerHTML;
-	document.getElementById("pname").readOnly = false;
-	originalInterested = document.getElementById("interestedHID_" + badgeid).value;
+	$("#badgeid").val($("#bidSPAN_" + badgeid).html());
+	$("#lname_fname").val($("#lnameSPAN_" + badgeid).html());
+	$("#bname").val($("#bnameSPAN_" + badgeid).html());
+	$("#pname").val($("#pnameSPAN_" + badgeid).html());
+	$("#pname").prop("readOnly", false);
+	originalInterested = $("#interestedHID_" + badgeid).val();
 	if (originalInterested=="")
 		originalInterested = 0;
-	document.getElementById("interested").value = originalInterested;
-	document.getElementById("interested").disabled = false;
-	document.getElementById("bio").value = document.getElementById("bioHID_" + badgeid).value;
-	document.getElementById("bio").readOnly = false;
-	document.getElementById("staffnotes").value = document.getElementById("staffnotesHID_" + badgeid).value;
-	document.getElementById("staffnotes").readOnly = false;
-	document.getElementById("password").readOnly = false;
-	document.getElementById("password").value = "";
-	document.getElementById("cpassword").readOnly = false;
-	document.getElementById("cpassword").value = "";
+	$("#interested").val(originalInterested);
+	$("#interested").prop("disabled", false);
+	$("#bio").val($("#bioHID_" + badgeid).val());
+	$("#bio").prop("readOnly", false);
+	$("#staffnotes").val($("#staffnotesHID_" + badgeid).val());
+	$("#staffnotes").prop("readOnly", false);
+	$("#password").prop("readOnly", false);
+	$("#password").val("");
+	$("#cpassword").prop("readOnly", false);
+	$("#cpassword").val("");
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
-	document.getElementById("updateBUTN").disabled = true;
+	$("#updateBUTN").prop("disabled", true);
 	$("#resultBoxDIV").html("");
 }
 
@@ -68,26 +69,63 @@ function doSearchPartsBUTN() {
 		});
 }
 
+function fetchParticipant(badgeid) {
+	$.ajax({
+		url: "SubmitAdminParticipants.php",
+		dataType: "xml",
+		data: ({ badgeid : badgeid,
+				ajax_request_action : "fetch_participant" }),
+		success: fetchParticipantCallback,
+		type: "GET"
+		});
+}
+
+function fetchParticipantCallback(data, textStatus, jqXHR) {
+	//debugger;
+	var node=data.firstChild.firstChild.firstChild;
+	$("#badgeid").val(node.getAttribute("badgeid"));
+	$("#lname_fname").val(node.getAttribute("lastname")+", "+node.getAttribute("firstname"));
+	$("#bname").val(node.getAttribute("badgename"));
+	$("#pname").val(node.getAttribute("pubsname"));
+	$("#pname").prop("readOnly", false);
+	originalInterested = node.getAttribute("interested");
+	if (originalInterested=="")
+		originalInterested = 0;
+	$("#interested").val(originalInterested);
+	$("#interested").prop("disabled", false);
+	$("#bio").val(node.getAttribute("bio"));
+	$("#bio").prop("readOnly", false);
+	$("#staffnotes").val(node.getAttribute("staff_notes"));
+	$("#staffnotes").prop("readOnly", false);
+	$("#password").prop("readOnly", false);
+	$("#password").val("");
+	$("#cpassword").prop("readOnly", false);
+	$("#cpassword").val("");
+	bioDirty = false;
+	pnameDirty = false;
+	snotesDirty = false;
+	$("#updateBUTN").prop("disabled", true);	
+}
+
 function highlight(dohighlight, id) {
 	if (dohighlight) {
-			document.getElementById("actionDIV_" + id).className="action_hover";
-			document.getElementById("lnameSPAN_" + id).className="action_hover";
-			document.getElementById("pnameSPAN_" + id).className="actionB_hover";
-			document.getElementById("bnameSPAN_" + id).className="action_hover";
-			document.getElementById("bidSPAN_" + id).className="action_hover";
+			$("#actionDIV_" + id).removeClass().addClass("action_hover");
+			$("#lnameSPAN_" + id).removeClass().addClass("action_hover");
+			$("#pnameSPAN_" + id).removeClass().addClass("actionB_hover");
+			$("#bnameSPAN_" + id).removeClass().addClass("action_hover");
+			$("#bidSPAN_" + id).removeClass().addClass("action_hover");
 			}
 		else {
-			document.getElementById("actionDIV_" + id).className="action";
-			document.getElementById("lnameSPAN_" + id).className="action";
-			document.getElementById("pnameSPAN_" + id).className="actionB";
-			document.getElementById("bnameSPAN_" + id).className="action";
-			document.getElementById("bidSPAN_" + id).className="action";
+			$("#actionDIV_" + id).removeClass().addClass("action");
+			$("#lnameSPAN_" + id).removeClass().addClass("action");
+			$("#pnameSPAN_" + id).removeClass().addClass("actionB");
+			$("#bnameSPAN_" + id).removeClass().addClass("action");
+			$("#bidSPAN_" + id).removeClass().addClass("action");
 			}
 }
 
 function initializeAdminParticipants() {
 	//called when JQuery says AdminParticipants page has loaded
-	//just a filler for now
 	//debugger;
 	$("#searchPartsDIV").dialog({
 		title: "Search for participants",
@@ -116,16 +154,18 @@ function initializeAdminParticipants() {
 	$("#cancelOpenSearchBUTN").button();
 	$("#overrideOpenSearchBUTN").button();
 	//window.status="Reached initializeAdminParticipants."
+	if (fbadgeid)	// signal from page initializer that page was requested to
+					// to be preloaded with a participant
+		fetchParticipant(fbadgeid);
 }
 
 function openSearchPartsBUTN(mode) {
 	//called when user clicks "Search for participants" on the page
-	//just a filler for now
 	//debugger;
 	if (!mode && (bioDirty || pnameDirty || snotesDirty || 
-		document.getElementById("interested").value != originalInterested ||
-		(document.getElementById("password").value) && 
-			document.getElementById("cpassword").value)) {
+		$("#interested").val() != originalInterested ||
+		($("#password").val()) && 
+			$("#cpassword").val())) {
 			$("#unsavedWarningDIV").dialog("open");
 			$("#cancelOpenSearchBUTN").blur();
 			return;	
@@ -134,8 +174,8 @@ function openSearchPartsBUTN(mode) {
 		$("#unsavedWarningDIV").dialog("close");
 	if (mode=="cancel")
 		return;
-	document.getElementById("searchPartsINPUT").value="";
-	document.getElementById("searchResultsDIV").innerHTML="";
+	$("#searchPartsINPUT").val("");
+	$("#searchResultsDIV").html("");
 	$("#searchPartsDIV").dialog("open");
 }
 
@@ -144,7 +184,7 @@ function showUpdateResults(data, textStatus, jqXHR) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
-	document.getElementById("updateBUTN").disabled = true;
+	$("#updateBUTN").prop("disabled", true);
 	originalInterested = $("#interested").val();
 	$("#resultBoxDIV").html(data);
 }
@@ -194,6 +234,6 @@ function updateBUTN() {
 
 function writeSearchResults(data, textStatus, jqXHR) {
 	//ajax success callback function
-	document.getElementById("searchResultsDIV").innerHTML = data;
+	$("#searchResultsDIV").html(data);
 }
 

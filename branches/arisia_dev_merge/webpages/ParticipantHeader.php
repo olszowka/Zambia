@@ -1,17 +1,35 @@
 <?php
     function participant_header($title) {
     require_once ("javascript_functions.php");
-    global $badgeid;
+    global $badgeid, $message;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Zambia -- <?php echo $title ?></title>
-  <link rel="stylesheet" href="ParticipantSection.css" type="text/css" />
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Zambia &ndash; <?php echo $title ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Zambia, the Arisia scheduling tool">
+    <meta name="author" content="PeterO, DDA, others">
 
-</head>
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
+<!--   <link rel="stylesheet" href="ParticipantSection.css" type="text/css" /> -->
+
+    <!-- Scripts -->
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  </head>
 <body>
 <script type="text/javascript">
 	var thisPage="<?php echo $title; ?>";

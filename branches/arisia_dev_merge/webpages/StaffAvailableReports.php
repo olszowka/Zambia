@@ -24,7 +24,7 @@
 		</xsl:template>
 		<xsl:template match="/doc/query[@queryName='categories']/row">
 			<div>
-				<a href="staffReportsInCategory?reportcategoryid={@reportcategoryid}"><xsl:value-of select="@description" /></a>
+				<a href="staffReportsInCategory.php?reportcategoryid={@reportcategoryid}"><xsl:value-of select="@description" /></a>
 			</div>
 		</xsl:template>
 	</xsl:stylesheet>
