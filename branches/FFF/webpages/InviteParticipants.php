@@ -49,9 +49,9 @@ if (($selpartid!=0) && ($selsessionid!=0)) {
 }
 
 if ($selsessionid==0) {
-  select_participant($selpartid, "InviteParticipants.php");
+  select_participant($selpartid, "'Yes'", "InviteParticipants.php");
 } else {
-  select_participant($selpartid, "InviteParticipants.php?selsess=$selsessionid");
+  select_participant($selpartid, "'Yes'", "InviteParticipants.php?selsess=$selsessionid");
 }
 
 echo "<hr>\n";

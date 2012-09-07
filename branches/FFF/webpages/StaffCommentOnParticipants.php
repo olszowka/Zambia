@@ -34,7 +34,7 @@ if (isset($_POST["comment"])) {
 
 // Choose the individual from the database, if not previously selected
 if (!($_GET["partid"]!=0)) {
-  select_participant($partid, "StaffCommentOnParticipants.php");
+  select_participant($partid, "'Yes'", "StaffCommentOnParticipants.php");
   echo "<HR>";
  }
 

@@ -26,7 +26,7 @@ if (isset($_POST["partid"])) {
  }
 
 // Choose the individual from the database
-select_participant($selpartid, "NoteOnParticipant.php");
+select_participant($selpartid, '', "NoteOnParticipant.php");
 
 // Stop page here if and individual has not yet been selected
 if ($selpartid==0) {
