@@ -2,7 +2,7 @@
 require_once('StaffCommonCode.php');
 $title="Compensation Information";
 $description="<P>Here is all the compensation entered for all the people.</P>\n";
-$additionalinfo="<P>To change it is coming.</P>\n";
+$additionalinfo="<P>To <A HREF=\"StaffEditCompensation.php\">change</A> someone's compensation, click on their name.</P>\n";
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
 
@@ -66,6 +66,7 @@ for ($i=1; $i<=$comptypecount; $i++) {
   $query = <<<EOD
 SELECT 
     pubsname,
+    badgeid,
     compamount,
     compdescription
   FROM
@@ -83,15 +84,43 @@ EOD;
   for ($j=1; $j<=$tmpcompcount; $j++) {
     $comp_array[$tmp_comp_array[$j]['pubsname']][$i]["Value"]=$tmp_comp_array[$j]['compamount'];
     $comp_array[$tmp_comp_array[$j]['pubsname']][$i]["Note"]=$tmp_comp_array[$j]['compdescription'];
+    $badge_array[$tmp_comp_array[$j]['pubsname']]=$tmp_comp_array[$j]['badgeid'];
     $total_array[$i]=$total_array[$i]+$tmp_comp_array[$j]['compamount'];
   }
+}
+
+$query = <<<EOD
+SELECT 
+    interestedtypename,
+    pubsname
+  FROM
+      $ReportDB.Interested
+    JOIN $ReportDB.InterestedTypes USING (interestedtypeid)
+    JOIN $ReportDB.Participants USING (badgeid)
+  WHERE
+    conid=$conid
+EOD;
+  
+// Retrieve query
+list($interestedcount,$unneded_array_b,$interested_array)=queryreport($query,$link,$title,$description,0);
+
+// Integrate the interested array
+for ($i=1; $i<=$interestedcount; $i++) {
+  $int_array[$interested_array[$i]['pubsname']]=$interested_array[$i]['interestedtypename'];
+  $int_array[$interested_array[$i]['pubsname']]=$interested_array[$i]['interestedtypename'];
 }
 
 $rows=1;
 // Walk the presenters, and make the array of values.
 foreach ($comp_array as $presenter => $comp) {
-  $report_array[$rows]['Presenter']=$presenter;
-  $report_array[$rows]['Attending']="??";
+  $report_array[$rows]['Presenter']="<A HREF=\"StaffEditCompensation.php?partid=".$badge_array[$presenter]."\">$presenter</A>";
+  $report_array[$rows]['Attending']="<A HREF=\"AdminParticipants.php?partid=".$badge_array[$presenter]."\">";
+  if (isset($int_array[$presenter]) AND ($int_array[$presenter]!='')) {
+    $report_array[$rows]['Attending'].=$int_array[$presenter];
+  } else {
+    $report_array[$rows]['Attending'].="??";
+  }
+  $report_array[$rows]['Attending'].="</A>";
   for ($i=1; $i<=$comptypecount; $i++) {
     $report_array[$rows][sprintf("<A HREF=\"#key%s\">%s</A>",$comptype_array[$i]['comptypeid'],$comptype_array[$i]['comptypename'])]=$comp[$i]["Value"];
     if ($withnotes) {
