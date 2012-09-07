@@ -5,15 +5,17 @@ $(document).ready(function() {
 		case "Administer Participants":
 			initializeAdminParticipants();
 			break;
+		case "Maintain Room Schedule":
+			maintainRoomSched.initialize();
+			break;
 		case "My Profile":
 			myProfile.initialize();
 			break;
-		case "Edit Schedule":
-			staffMaintainSchedule.initialize();
-			break;
+		//case "Edit Schedule":
+		//	staffMaintainSchedule.initialize();
 		case "Show Search Session Results":
 			searchMySessions1.initialize();
-			break;
+			
 		default:
 			window.status="Ready."
 		}
