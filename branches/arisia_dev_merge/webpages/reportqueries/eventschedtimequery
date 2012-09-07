@@ -1,0 +1,5 @@
+TITLE='Event Schedule by time then room'
+DESCRIPTION='Lists all Events (as determined by division on session) Scheduled in all Rooms (includes "Public", "Do Not Print" and "Staff Only").'
+MIGRATED=1
+EVENTSWANTS=1
+QUERY=""

@@ -1,0 +1,7 @@
+TITLE='CSV--Full Room Schedule by room then time [On&nbsp;Demand]'
+DESCRIPTION='Lists all Sessions Scheduled in all Rooms.'
+MIGRATED=1
+PROGWANTS=1
+CSVONLY=0
+GENCSV=0
+QUERY=""

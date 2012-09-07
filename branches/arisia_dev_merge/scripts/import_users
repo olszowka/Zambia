@@ -1,0 +1,5 @@
+#!/bin/sh
+
+/usr/bin/mysql --password='4arisia' --user='arisia07_prod' arisia07_prod -e '\. /home/users/trg/Arisia07/latest_congo' --force > /home/users/trg/Arisia07/last_run.log 2>&1 
+
+mv /home/users/trg/Arisia07/latest_congo /home/users/trg/Arisia07/latest_congo.prev

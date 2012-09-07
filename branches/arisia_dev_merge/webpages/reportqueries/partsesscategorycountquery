@@ -1,0 +1,7 @@
+TITLE='Categorized Session Count Report [On&nbsp;Demand]'
+DESCRIPTION='Show count of how many sessions each participant is scheduled for broken down by division'
+MIGRATED=1
+PUBSWANTS=1
+CSVONLY=0
+GENCSV=0
+QUERY=""

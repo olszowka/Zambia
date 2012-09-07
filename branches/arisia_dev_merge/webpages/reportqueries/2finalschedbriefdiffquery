@@ -1,0 +1,41 @@
+TITLE='Schedule - brief diff'
+DESCRIPTION='Recent changes to the PUBLIC Panel, Events, Film, Anime, Video and Arisia TV schedule.'
+PUBSWANTS=1
+PROGWANTS=1
+QUERY="
+SELECT
+            S.sessionid,
+            DATE_FORMAT(ADDTIME('2011-01-14 00:00:00',SCH.starttime),'%a %l:%i %p') AS 'Start Time', 
+            CASE
+                WHEN HOUR(S.duration) < 1 THEN CONCAT(DATE_FORMAT(S.duration,'%i'),'min')
+                WHEN MINUTE(S.duration)=0 THEN CONCAT(DATE_FORMAT(S.duration,'%k'),'hr')
+                ELSE CONCAT(DATE_FORMAT(S.duration,'%k'),'hr ',DATE_FORMAT(S.duration,'%i'),'min')
+                END AS 'duration',
+            R.roomname, 
+            T.trackname, 
+            S.title,
+            SEH.timestamp AS 'When Changed',
+            SEC.description
+    FROM
+            Sessions S 
+       JOIN
+            (SELECT
+                     sessionid,
+                     MAX(timestamp) AS timestamp
+                 FROM
+                     SessionEditHistory
+                 GROUP BY
+                     sessionid) AS SEH2 ON S.sessionid = SEH2.sessionid
+       JOIN SessionEditHistory SEH ON S.sessionid = SEH.sessionid AND SEH2.timestamp = SEH.timestamp
+       JOIN Schedule SCH ON S.sessionid = SCH.sessionid
+       JOIN Tracks T USING (trackid) 
+       JOIN Rooms R USING (roomid)
+       JOIN SessionEditCodes SEC USING (sessioneditcode)
+    WHERE
+            S.pubstatusid = 2 AND
+            SEH.timestamp >'2011-01-04 04:50:00' 
+    ORDER BY
+            SEH.timestamp, 
+            SCH.starttime,
+            T.trackname;"
+
