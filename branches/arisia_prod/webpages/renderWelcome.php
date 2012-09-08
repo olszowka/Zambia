@@ -40,7 +40,7 @@ to your participation again next year.</P>
             <label for="interested" class="control-label">Are you interested?</label>
             <div class="controls">
               <?php $int=$participant['interested']; ?>
-              <SELECT id="interested" name="interested" class="span1">
+              <SELECT id="interested" name="interested" class="span2">
                 <OPTION value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp;</OPTION>
                 <OPTION value=1 <?php if ($int==1) {echo "selected";} ?> >Yes</OPTION>
                 <OPTION value=2 <?php if ($int==2) {echo "selected";} ?> >No</OPTION>

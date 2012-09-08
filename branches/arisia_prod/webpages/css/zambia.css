@@ -86,6 +86,9 @@ input[type="password"] {
   padding-top: 0px;
   margin-bottom: 8px;
 }
+.padded {
+  margin-top: 0.5em;
+}
 #resultsDiv {
   padding-top: 1.0em;
 }
@@ -103,8 +106,12 @@ input[type="password"] {
 #login {
   float: right;
 }
-.label {
-  text-align: right;
+label {
+  xxtext-align: right;
+  xxmargin-bottom: 0;
+}
+.compact {
+  margin-bottom: 0px;
 }
 .congo_table {
   margin-top: 1em;
@@ -141,7 +148,7 @@ h2 {
   background-color: #ccc;
   text-align: center;
 }
-h4 {
+.center {
   text-align: center;
 }
 ul#boxes li {
@@ -178,8 +185,8 @@ td.report {
   .wide-only {
     display: none;
   }
-  .label {
-    text-align: left;
+  label {
+    xxtext-align: left;
   }
 }
 @media (max-width: 480px) {

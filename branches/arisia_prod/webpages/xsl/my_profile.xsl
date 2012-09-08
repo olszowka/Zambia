@@ -124,11 +124,11 @@
           </xsl:choose>
           <fieldset>
             <div class="control-group" id="passGroup">
-              <label for="password" class="control-label xnowidth">New Password:</label>
+              <label for="password" class="control-label compact">New Password:</label>
               <div class="controls">
                 <input type="password" size="10" name="password" id="password" onchange="myProfile.anyChange('password')" onkeyup="myProfile.anyChange('password')"/>
               </div>
-              <label for="cpassword" class="control-label xnowidth">Confirm Password:</label>
+              <label for="cpassword" class="control-label compact">Confirm Password:</label>
               <div class="controls">
                 <input type="password" size="10" name="cpassword" id="cpassword"  onchange="myProfile.anyChange('cpassword')" onkeyup="myProfile.anyChange('cpassword')"/>
                 <span id="badPassword" class="help-inline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Passwords don't match!</span>
