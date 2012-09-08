@@ -4,7 +4,7 @@
     require ('PartPanelInterests_FNC.php');
     require ('PartPanelInterests_Render.php');
     global $session_interests,$session_interest_index, $title, $message;
-    $title="My Panel Interests";
+    $title="Panel Interests";
     $error=false;
     if (!may_I('my_panel_interests')) {
         $message="You do not currently have permission to view this page.<BR>\n";
