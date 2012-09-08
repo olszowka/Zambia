@@ -89,6 +89,9 @@ input[type="password"] {
 .padded {
   margin-top: 0.5em;
 }
+.navbar .brand {
+  padding-top: 8px;
+}
 #resultsDiv {
   padding-top: 1.0em;
 }

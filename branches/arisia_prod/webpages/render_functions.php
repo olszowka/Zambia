@@ -18,14 +18,14 @@ function RenderPrecis($result,$showlinks) {
         echo "&nbsp;&nbsp;</td>\n";
 	echo "  <td class=\"border0000\" style=\"font-weight:bold\">".$trackname."</td>\n";
 	echo "  <td class=\"border0000\" style=\"font-weight:bold\">".$typename."</td>\n";
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">";
-           if ($showlinks){
-                   echo "<a href=\"EditSession.php?id=".$sessionid."\">".htmlspecialchars($title,ENT_NOQUOTES)."</a>";
-	       } else {
-                   echo htmlspecialchars($title,ENT_NOQUOTES);
-               }
-        echo "&nbsp;&nbsp;</td>\n";
-	echo "  <td class=\"border0000\" style=\"font-weight:bold\">".$duration."</td>\n";
+  echo "  <td class=\"border0000\" style=\"font-weight:bold\">";
+     if ($showlinks){
+             echo "<a href=\"EditSession.php?id=".$sessionid."\">".htmlspecialchars($title,ENT_NOQUOTES)."</a>";
+   } else {
+             echo htmlspecialchars($title,ENT_NOQUOTES);
+         }
+  echo "&nbsp;&nbsp;</td>\n";
+	echo "  <td colspan=\"2\" class=\"border0000\" style=\"font-weight:bold\">".$duration."</td>\n";
 	echo "  <td class=\"border0000\" style=\"font-weight:bold\">";
 	if ($roomname)
 			echo $roomname;
@@ -40,9 +40,10 @@ function RenderPrecis($result,$showlinks) {
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr><td colspan=\"7\" class=\"border0010\">".htmlspecialchars($progguiddesc,ENT_NOQUOTES)."</td></tr>\n";
-	echo "<tr><td colspan=\"7\" class=\"border0000\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</td></tr>\n";
+	if ($persppartinfo) {
+	 echo "<tr><td colspan=\"7\" class=\"border0000\"><span class=\"alert\" style=\"padding: 0\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</span></td></tr>\n";
+  }
 	echo "<tr><td colspan=\"7\" class=\"border0020\">&nbsp;</td></tr>\n";
-	echo "<tr><td colspan=\"7\" class=\"border0000\">&nbsp;</td></tr>\n";
     }
     echo "</table>\n";
 }

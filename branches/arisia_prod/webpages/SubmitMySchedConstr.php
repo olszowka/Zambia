@@ -1,5 +1,5 @@
 <?php
-    $title="Update My Schedule Constraint Info";
+    $title="My Availability";
     global $participant,$message_error,$messages,$congoinfo;
     global $partAvail,$availability;
     require ('PartCommonCode.php'); // initialize db; check login;
