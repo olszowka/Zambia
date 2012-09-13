@@ -3,6 +3,7 @@
     require_once ("javascript_functions.php");
     global $badgeid, $message;
 ?>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
