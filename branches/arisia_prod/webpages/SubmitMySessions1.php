@@ -1,6 +1,6 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo,$session_interests,$session_interest_index, $title;
-    $title="Select Interested Sessions";
+    $title="Select Sessions";
     require ('PartCommonCode.php'); //define database functions
     require ('PartPanelInterests_FNC.php');
     require ('PartPanelInterests_Render.php');
@@ -43,7 +43,7 @@
         $message="No changes to database requested.";
         }
     if ($delcount>0) {
-        $message=$delcount." session(s) removed from interest list.<BR>";
+        $message=$delcount." session(s) removed from interest list.";
         }
     if ($inscount>0) {
         $message.=$inscount." session(s) added to interest list.";

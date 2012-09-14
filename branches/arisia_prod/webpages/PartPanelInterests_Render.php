@@ -23,7 +23,7 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
     echo "<HR />\n";
     // "Update Ranks" Section
     echo "<FORM class=\"form-inline\" name=\"sessionform\" method=POST action=\"PartPanelInterests_POST2.php\">\n";
-    echo "<DIV class=\"submit\" id=\"submit\"><BUTTON class=\"btn btn-primary\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
+    echo "<DIV class=\"submit\" id=\"submit\"><BUTTON class=\"btn btn-primary pull-right\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
     echo "<P>Please use the following scale when ranking your interest in the panels you have chosen:  </P>\n";
     echo "<strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I'd like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong>\n";
     echo "<P>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</P>\n";
@@ -59,7 +59,7 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
         if ($session_interests[$i]['persppartinfo']) {
         echo "    <div class=\"controls controls-row\">\n";
         echo "        <span class=\"span1\"></span>\n";
-        echo "        <span class=\"span11 alert\">".htmlspecialchars($session_interests[$i]['persppartinfo'],ENT_NOQUOTES)."</span>\n";
+        echo "        <span class=\"span11 alert\" style=\"padding: 0\">".htmlspecialchars($session_interests[$i]['persppartinfo'],ENT_NOQUOTES)."</span>\n";
         echo "    </div>\n";
         }
         echo "        <hr />\n";
@@ -67,7 +67,7 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
 		$j++;
         }
     echo "</div>\n";
-    echo "<DIV class=\"submit\" id=\"submit2\"><BUTTON class=\"btn btn-primary\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
+    echo "<DIV class=\"submit\" id=\"submit2\"><BUTTON class=\"btn btn-primary pull-right\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV><br>\n";
     echo "</FORM>\n";
     participant_footer();
     }
