@@ -53,7 +53,7 @@
                         </xsl:if>
                     </input>
                   </label>
-                  <input type="hidden" value="{@sessionid}" name="dirty{@sessionid}" id="dirty{@sessionid}" disabled="disabled" />
+                  <input type="hidden" value="{@sessionid}" name="dirty{@sessionid}" id="dirty{@sessionid}" />
                 </td>
             </tr>
         </xsl:if>
