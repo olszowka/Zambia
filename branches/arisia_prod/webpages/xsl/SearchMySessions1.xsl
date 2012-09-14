@@ -47,13 +47,13 @@
         <xsl:if test="$mayISubmitPanelInterests">
             <tr>
                 <td colspan="3" sessionid="{@sessionid}">
-                  <label class="checkbox"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Add this panel to my list<input type="checkbox" value="{@sessionid}" name="int{@sessionid}" id="int{@sessionid}">
-                        <xsl:if test="@badgeid">
-                            <xsl:attribute name="checked">checked</xsl:attribute>
-                        </xsl:if>
-                    </input>
-                  </label>
-                  <input type="hidden" value="{@sessionid}" name="dirty{@sessionid}" id="dirty{@sessionid}" />
+                    <label class="checkbox"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Add this panel to my list<input type="checkbox" value="{@sessionid}" name="int{@sessionid}" id="int{@sessionid}">
+                            <xsl:if test="@badgeid">
+                                <xsl:attribute name="checked">checked</xsl:attribute>
+                            </xsl:if>
+                        </input>
+                        <input type="hidden" value="{@sessionid}" name="dirty{@sessionid}" id="dirty{@sessionid}" disabled="disabled" />
+                    </label>
                 </td>
             </tr>
         </xsl:if>

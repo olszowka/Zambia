@@ -13,7 +13,7 @@ $(document).ready(function() {
 			break;
 		//case "Edit Schedule":
 		//	staffMaintainSchedule.initialize();
-		case "Show Search Session Results":
+		case "Search Results":
 			searchMySessions1.initialize();
 			
 		default:
