@@ -33,7 +33,7 @@ to your participation again next year.</P>
       
       <p>Welcome to the <?php echo CON_NAME; ?> Programming website.</p>
       
-      <h4>First, please take a moment to indicate your ability and interest in partipating in <?php echo CON_NAME; ?> programming.</h4>
+      <h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming.</h4>
       <FORM class="form-horizontal" name="pwform" method=POST action="SubmitWelcome.php">
         <fieldset>
           <div id="update_section" class="control-group">
@@ -71,70 +71,69 @@ to your participation again next year.</P>
   </div>
   <div class="row-fluid">
     <div class="span12">
-      <p> Use the "My Profile" tab to:</p>
+      <p> Use the "Profile" menu to:</p>
         <ul>
           <li> Check your contact information. </li>
-          <li> Indicate whether you will be participating in <?php echo 
-    CON_NAME; ?>. </li>
+          <li> Indicate whether you will be participating in <?php echo CON_NAME; ?>. </li>
           <li> Opt out of sharing your email address with other program participants.</li>
           <li> Edit your name as you want to appear in our publications.</li>
           <li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
         </ul>
     
-    <?php if (may_I('search_panels')) { ?>
-      <p> Use the "Search Panels" tab to:
-        <ul>
-          <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
-          <li> Indicate panels you would like to participate on. </li>
-        </ul>
-    <?php } else { ?>
-      <p> The "Search Panels" tab is currently unavailable.  Check back later.
-    <?php } ?>
-    
     <?php if (may_I('my_panel_interests')) { ?>
-      <p> Use the "My Panel Interests" tab to:
+      <p> Use the "Panel Interests" menu to:
         <ul>
           <li> See what selections you have made for panels. </li>
-          <li> Alter or give more information about your selections . </li>
-          <li> Rank the preference of your selections . </li>
+          <li> Alter or give more information about your selections. </li>
+          <li> Rank the preference of your selections. </li>
         </ul>
     <?php } else { ?>
-      <p> The "My Panel Interests" tab is currently unavailable.  Check back later.
+      <p> The "Panel Interests" menu is currently unavailable. Check back later.
+    <?php } ?>
+    
+    <?php if (may_I('my_gen_int_write')) { ?>
+      <p> Use the "General Interests" menu to:  
+        <ul>
+          <li> Describe the kinds of panels you are interested in.  </li>
+          <li> Suggest the people you would like to work with.  </li>
+        </ul>
+    <?php } else { ?>
+      <p> Use the "General Interests" menu to:
+        <ul>
+          <li> See what you previously entered as your interests. 
+          <li> This is currently read-only as con is approaching.  If you need to make a change here, please email us:  <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
+        </ul>
     <?php } ?>
     
     <?php if (may_I('my_schedule')) { ?>
-      <p> Use the "My Schedule" tab to:
+      <p> Use the "My Schedule" menu to:
         <ul>
           <li> See what you have been scheduled to do at con. 
           <li> If there are issues, conflict or questions please email us at 
     <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
         </ul>
     <?php } else { ?>
-      <p> The "My Schedule" tab is currently unavailable.  Check back later.
+      <p> The "My Schedule" menu is currently unavailable.  Check back later.
     <?php } ?>
     
-    <?php if (may_I('my_gen_int_write')) { ?>
-      <p> Use the "My General Interests" tab to:  
+    <?php if (may_I('search_panels')) { ?>
+      <p> Use the "Search Panels" menu to:
         <ul>
-          <li> Describe the kinds of panels you are interested in.  </li>
-          <li> Suggest the people you would like to work with.  </li>
+          <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
+          <li> Indicate panels you would like to participate on. </li>
         </ul>
     <?php } else { ?>
-      <p> Use the "My General Interests" tab to:  
-        <ul>
-          <li> See what you previously entered as your interests. 
-          <li> This is currently read only as con is approaching.  If you need to make a change here, please email us:  <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
-        </ul>
+      <p> The "Search Panels" menu is currently unavailable.  Check back later.
     <?php } ?>
     
     <?php if (may_I('BrainstormSubmit')) { ?>
-      <p> Use the "Suggest a Session" tab to:  
+      <p> Use the "Suggest a Session" menu to:  
         <ul>
           <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
           <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner. 
         </ul>
     <?php } else { ?>
-      <p> The "Suggest a Session" tab is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
+      <p> The "Suggest a Session" menu is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a>
     <?php } ?>
     
     </ol>

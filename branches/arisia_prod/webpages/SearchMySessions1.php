@@ -1,6 +1,6 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
-    $title="Show Search Session Results";
+    $title="Search Results";
     require ('PartCommonCode.php'); // initialize db; check login; retrieve $badgeid
     require_once('ParticipantHeader.php');
     require_once('ParticipantFooter.php');
