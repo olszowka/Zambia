@@ -108,7 +108,7 @@ function get_participant_availability_from_post() {
 //
 function get_session_from_post() {
     global $session;
-    $session["sessionid"]=$_POST["sessionid"];
+    $session["sessionid"]=isset($_POST["sessionid"])?$_POST["sessionid"]:"";
     $session["track"]=$_POST["track"];
     $session["type"]=$_POST["type"];
     $session["divisionid"]=$_POST["divisionid"];
@@ -121,24 +121,24 @@ function get_session_from_post() {
         else {
             $session["title"]="";
             }
-    $session["secondtitle"]=stripslashes($_POST["secondtitle"]);
-    $session["pocketprogtext"]=stripslashes($_POST["pocketprogtext"]);
-    $session["progguiddesc"]=stripslashes($_POST["progguiddesc"]);
-    $session["persppartinfo"]=stripslashes($_POST["persppartinfo"]);
+    $session["secondtitle"]=isset($_POST["secondtitle"])?stripslashes($_POST["secondtitle"]):"";
     //error_log("Zambia->get_session_from_post->\$_POST[\"pubchardest\"]: ".print_r($_POST["pubchardest"],TRUE)); // for debugging only
-    $session["pubchardest"]=$_POST["pubchardest"];
+    $session["pubchardest"]=isset($_POST["pubchardest"])?$_POST["pubchardest"]:"";
     //error_log("Zambia->get_session_from_post->\$session[\"pubchardest\"]: ".print_r($session["pubchardest"],TRUE)); // for debugging only
-    $session["featdest"]=$_POST["featdest"];
+    $session["featdest"]=isset($_POST["featdest"])?$_POST["featdest"]:"";
     //error_log("Zambia->get_session_from_post->\$session[\"featdest\"]: ".print_r($session["featdest"],TRUE)); // for debugging only
-    $session["servdest"]=$_POST["servdest"];
+    $session["pocketprogtext"]=isset($_POST["pocketprogtext"])?stripslashes($_POST["pocketprogtext"]):$session["pubchardest"];
+    $session["progguiddesc"]=isset($_POST["progguiddesc"])?stripslashes($_POST["progguiddesc"]):$session["pubchardest"];
+    $session["persppartinfo"]=isset($_POST["persppartinfo"])?stripslashes($_POST["persppartinfo"]):"";
+    $session["servdest"]=isset($_POST["servdest"])?$_POST["servdest"]:"";
     $session["duration"]=stripslashes($_POST["duration"]);
     $session["atten"]=$_POST["atten"];
     $session["kids"]=$_POST["kids"];
     $session["invguest"]=isset($_POST["invguest"]);
     $session["signup"]=isset($_POST["signup"]);
     $session["roomset"]=$_POST["roomset"];
-    $session["notesforpart"]=stripslashes($_POST["notesforpart"]);
-    $session["servnotes"]=stripslashes($_POST["servnotes"]);
+    $session["notesforpart"]=isset($_POST["notesforpart"])?stripslashes($_POST["notesforpart"]):"";
+    $session["servnotes"]=isset($_POST["servnotes"])?stripslashes($_POST["servnotes"]):"";
     $session["status"]=$_POST["status"];
     $session["notesforprog"]=stripslashes($_POST["notesforprog"]);
     }
@@ -178,7 +178,7 @@ function set_session_defaults() {
     $session["roomset"]=0; // prompt with "SELECT"
     $session["notesforpart"]="";
     $session["servnotes"]="";
-    $session["status"]=2; // default to "Edit Me"
+    $session["status"]=2; // default to "Vetted"
     $session["notesforprog"]="";
     $session["invguest"]=false; // leave checkbox blank initially
     }

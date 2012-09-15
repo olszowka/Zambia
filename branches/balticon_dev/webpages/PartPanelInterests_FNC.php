@@ -36,6 +36,7 @@ function get_si_session_info_from_db($session_interest_count) {
 	//print_r($session_interest_index);
     if ($session_interest_count==0) return;
     for ($i=1; $i<=$session_interest_count; $i++ ) {
+        if(!isset($sessionidlist)) { $sessionidlist=""; }
         $sessionidlist.=$session_interests[$i]['sessionid'].", ";
         }
     $sessionidlist=substr($sessionidlist,0,-2); // drop extra trailing ", "

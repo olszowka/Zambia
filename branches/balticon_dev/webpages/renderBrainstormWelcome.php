@@ -14,7 +14,7 @@
 <?php
     $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
     $chint=($participant["interested"]==0);
-    if (may_I('BrainstormSubmit')) { ?>
+    if (may_I('BrainstormSubmit') or may_I('my_suggestions_write')) { ?>
 <p> Here you can submit new suggestions or look at existing ideas for 
 panels, events, movies, films, presentations, speeches, concerts, etc.  
 <p> As suggestions come in and we read through them, we will rework 

@@ -13,7 +13,7 @@ function validate_session_interests($max_si_row) {
     global $session_interests, $message;
     $flag=true;
     $message="";
-    $count=array(0,0,0,0);
+    $count=array(0,0,0,0,0,0);
     for ($i=1; $i<=$max_si_row; $i++) {
         if ($session_interests[$i]['rank']=="" or $session_interests[$i]['delete']) continue;
         if (filter_var($session_interests[$i]['rank'],FILTER_VALIDATE_INT,array('options' => array('min_range' => 1, 'max_range' => 5)))==false) {
@@ -22,6 +22,10 @@ function validate_session_interests($max_si_row) {
             break;
             }
         $count[$session_interests[$i]['rank']]++;    
+        }
+    if ($count[0]!=0) {
+        $message.="You may not use preference 0.<BR\>\n";
+        $flag=false;
         }
     if ($count[1]>4 or $count[2]>4 or $count[3]>4 or $count[4]>4) {
         $message.="You may not use preferences 1-4 more than 4 times each.<BR>\n";

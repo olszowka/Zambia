@@ -5,10 +5,12 @@
     //                                  set $badgeid from session
     $queryArray["participant_info"]=<<<EOD
 SELECT
-		CD.badgeid, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email,
-			CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-			CD.postcountry, P.pubsname, P.password, P.bestway, P.interested, P.bio, 
-			P.share_email 
+		CD.badgeid, CD.firstname, CD.lastname, CD.middleInit, CD.suffix,
+        CD.badgename, CD.phone, CD.email,
+        CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+			CD.postcountry, 
+        CD.regtype,
+        P.pubsname, P.password, P.bestway, P.interested, P.bio, P.share_email 
 	FROM
 			CongoDump CD
 	   JOIN Participants P USING (badgeid) 
@@ -30,13 +32,14 @@ EOD;
 	$optionsNode = $resultXML->createElement("options");
 	$docNode = $resultXML->getElementsByTagName("doc")->item(0);
 	$optionsNode = $docNode->appendChild($optionsNode);
-	$optionsNode->setAttribute("conName",CON_NAME);
+	$optionsNode->setAttribute("conName",CON_NAME . " " . CON_ID);
 	if (ENABLE_SHARE_EMAIL_QUESTION)
 		$optionsNode->setAttribute("enable_share_email_question",1);
 	if (ENABLE_BESTWAY_QUESTION)
 		$optionsNode->setAttribute("enable_bestway_question",1);
 	$optionsNode->setAttribute("maxBioLen",MAX_BIO_LEN);
 	$optionsNode->setAttribute("enableBioEdit",may_I('EditBio'));
+	$optionsNode->setAttribute("enableRegEdit",may_I('EditReg'));
 	participant_header($title);
 	$resultXML = appendCustomTextArrayToXML($resultXML);
 	//echo($resultXML->saveXML()); //for debugging only

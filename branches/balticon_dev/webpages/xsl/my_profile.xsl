@@ -9,10 +9,13 @@
 <xsl:template match="/">
     <xsl:variable name="conName"><xsl:value-of select="/doc/options/@conName"/></xsl:variable>
     <xsl:variable name="enableBioEdit"><xsl:value-of select="/doc/options/@enableBioEdit"/></xsl:variable>
+    <xsl:variable name="enableRegEdit"><xsl:value-of select="/doc/options/@enableRegEdit"/></xsl:variable>
     <xsl:variable name="interested"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@interested"/></xsl:variable>
     <xsl:variable name="share_email"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@share_email"/></xsl:variable>
     <xsl:variable name="bestway"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bestway"/></xsl:variable>
     <xsl:variable name="bioNote"><xsl:value-of select="/doc/customText/@biography_note"/></xsl:variable>
+   	<xsl:variable name="currentRegType"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@regtype"/></xsl:variable>
+
     <script type="text/javascript">var maxBioLen = <xsl:value-of select="/doc/options/@maxBioLen"/>;</script>
     <div class="resultBox" id="resultBoxDIV"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
     <form name="partform" method="POST" action="SubmitMyContact.php">
@@ -201,59 +204,204 @@
                 </div>
             </div>
         </div>
+     </form>
+ 	 <form name="regform" method="POST" action="SubmitMyRegistration.php">
         <div id="congo_section" class="border2222">
             <div class="congo_table">
-                <div class="congo_data">
-                    <span class="label">Badge ID</span>
+	            <div class="congo_data">
+                    <span class="label">Program Participant ID</span>
                     <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgeid"/></span>
+                </div>
+				<div class="congo_data">
+                    <span class="label">Program Registration</span>
+                    <span class="value">
+						<select name="regtype" id="regtype" class="userFormINPTXT" onchange="myRegistration.anyChange('regtype')">
+						<xsl:choose>
+							<xsl:when test="$enableRegEdit!='1'"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:when>
+							<xsl:when test="$currentRegType='Comp'">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+								<option selected="selected">Comp</option>
+							</xsl:when>
+							<xsl:when test="$currentRegType='ConfirmedParticipant'">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+								<option selected="selected">Participant Membership Granted</option>
+							</xsl:when>
+							<xsl:when test="$currentRegType='Guest of Honor'">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+								<option selected="selected">Guest of Honor</option>
+							</xsl:when>
+							<xsl:when test="$currentRegType='Staff'">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+								<option selected="selected">Staff</option>
+							</xsl:when>
+                        </xsl:choose>							
+						<option value="None">
+							<xsl:if test="'None'=$currentRegType">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							Please select a membership type
+						</option>
+						<option value="BSFS">
+							<xsl:if test="'BSFS'=$currentRegType">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							I am a BSFS member
+						</option>
+						<option value="Paid">
+							<xsl:if test="'Paid'=$currentRegType">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>							
+							I purchased a registration this year
+						</option>
+						<option value="Dealer">
+							<xsl:if test="'Dealer'=$currentRegType">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>	
+							I have registered through another department
+						</option>
+						<option value="Volunteer">
+							<xsl:if test="'Volunteer'=$currentRegType">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>	
+							I earned a membership by Volunteering last year
+						</option>
+						<option value="Participant">
+							<xsl:if test="'Participant'=$currentRegType">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>	
+							I would like to request Membership as a Participant this year
+						</option>
+						</select>
+					</span>
                 </div>
                 <div class="congo_data">
                     <span class="label">First Name</span>
-                    <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@firstname"/></span>
+					<input type="text" size="20" name="firstname" value="{/doc/query[@queryName='participant_info']/row/@firstname}"
+                        id="firstname" onchange="myRegistration.anyChange('firstname')" onkeyup="myRegistration.anyChange('firstname')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
+                </div>
+				<div class="congo_data">
+                    <span class="label">Middle Initial</span>
+					<input type="text" size="1" name="middleInit" value="{/doc/query[@queryName='participant_info']/row/@middleInit}"
+                        id="middleInit" onchange="myRegistration.anyChange('middleInit')" onkeyup="myRegistration.anyChange('middleInit')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
                 </div>
                 <div class="congo_data">
                     <span class="label">Last Name</span>
-                    <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@lastname"/></span>
+					<input type="text" size="20" name="lastname" value="{/doc/query[@queryName='participant_info']/row/@lastname}"
+                        id="lastname" onchange="myRegistration.anyChange('lastname')" onkeyup="myRegistration.anyChange('lastname')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
                 </div>
                 <div class="congo_data">
                     <span class="label">Badge Name</span>
-                    <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgename"/></span>
+                    <input type="text" size="20" name="badgename" value="{/doc/query[@queryName='participant_info']/row/@badgename}"
+                        id="badgename" onchange="myRegistration.anyChange('badgename')" onkeyup="myRegistration.anyChange('badgename')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
                 </div>
                 <div class="congo_data">
                     <span class="label">Phone Info</span>
-                    <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@phone"/></span>
+                    <input type="text" size="20" name="phone" value="{/doc/query[@queryName='participant_info']/row/@phone}"
+                        id="phone" onchange="myRegistration.anyChange('phone')" onkeyup="myRegistration.anyChange('phone')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
                 </div>
                 <div class="congo_data">
-                    <span class="label">Email Address</span>
-                    <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@email"/></span>
+                    <span class="label">Email Address</span><input type="text" size="20" name="email" value="{/doc/query[@queryName='participant_info']/row/@email}"
+                        id="email" onchange="myRegistration.anyChange('email')" onkeyup="myRegistration.anyChange('email')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
+                </div>
+				<hr/>
+                <div class="congo_data">
+                    <span class="label">Postal Address</span><input type="text" size="41" name="postaddress1" value="{/doc/query[@queryName='participant_info']/row/@postaddress1}"
+                        id="postaddress1" onchange="myRegistration.anyChange('postaddress1')" onkeyup="myRegistration.anyChange('postaddress1')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
                 </div>
                 <div class="congo_data">
-                    <span class="label">Postal Address</span>
-                    <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postaddress1"/></span>
+                    <span class="label"><xsl:text disable-output-escaping="yes">company/address2</xsl:text></span>
+                    <input type="text" size="41" name="postaddress2" value="{/doc/query[@queryName='participant_info']/row/@postaddress2}"
+						id="postaddress2" onchange="myRegistration.anyChange('postaddress2')" onkeyup="myRegistration.anyChange('postaddress2')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
                 </div>
-                <xsl:if test="/doc/query[@queryName='participant_info']/row/@postaddress2">
-                    <div class="congo_data">
-                        <span class="label"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
-                        <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postaddress2"/></span>
-                    </div>
-                </xsl:if>
                 <div class="congo_data">
-                    <span class="label"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
-                    <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcity"/>, <xsl:value-of
-                        select="/doc/query[@queryName='participant_info']/row/@poststate"/> <xsl:value-of
-                        select="/doc/query[@queryName='participant_info']/row/@postzip"/></span>
+                    <span class="label"><xsl:text disable-output-escaping="yes">city, state zip</xsl:text></span>
+                    <input type="text" size="20" name="postcity" value="{/doc/query[@queryName='participant_info']/row/@postcity}"
+                        id="postcity" onchange="myRegistration.anyChange('postcity')" onkeyup="myRegistration.anyChange('postcity')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>,
+					<input type="text" size="2" name="poststate" value="{/doc/query[@queryName='participant_info']/row/@poststate}"
+                        id="poststate" onchange="myRegistration.anyChange('poststate')" onkeyup="myRegistration.anyChange('poststate')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+					<input type="text" size="10" name="postzip" value="{/doc/query[@queryName='participant_info']/row/@postcode}"
+                        id="postzip" onchange="myRegistration.anyChange('postzip')" onkeyup="myRegistration.anyChange('postcode')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
                 </div>
-                <xsl:if test="/doc/query[@queryName='participant_info']/row/@postcountry">
-                    <div class="congo_data">
-                        <span class="label"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
-                        <span class="value"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcountry"/></span>
-                    </div>
-                </xsl:if>
+				<div class="congo_data">
+                    <span class="label"><xsl:text disable-output-escaping="yes">country</xsl:text></span>
+					<input type="text" size="20" name="postcode" value="{/doc/query[@queryName='participant_info']/row/@postcountry}"
+                        id="postcountry" onchange="myRegistration.anyChange('postcountry')" onkeyup="myRegistration.anyChange('postcountry')"
+                        class="userFormINPTXT">
+						<xsl:if test="$enableRegEdit!='1'">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                        </xsl:if>
+					</input>
+                </div>
             </div>
-            <p class="congo-note">Please confirm your contact information.  If it is not correct, please log into Arisia's
-                <a HREF="http://arisia.stonekeep.com" target="_blank">on-line registration system</a> and correct it there.
-                Please note that the password there is <span style="font-weight: bold">not the same</span> as the one you use
-                in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>
+			<div class="SubmitDivNew">
+                <div class="SubmitDiv2New">
+                    <button class="SubmitButtonNew" type="button" name="regSubmitBTN" id="regSubmitBTN" onclick="myRegistration.updateBUTN();">Update</button>
+                </div>
+            </div>
+			<hr/>
+            <ul class="congo-note">
+				<li class="congo-note"><strong>Please confirm your contact information and registration type.</strong></li>
+				<br/>
+				<li>First and Last name should reflect your legal name; they are used for identification purposes only and will be required when you pick up your badge and participant packet.</li>
+				<br/>
+				<li>Postal Address information is required for Participant and Staff memberships;</li>
+				<li>Participant and Staff memberships may only be granted by convention staff.</li>
+			</ul>
         </div>
     </form>
 </xsl:template>

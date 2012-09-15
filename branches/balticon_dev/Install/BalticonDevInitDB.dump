@@ -1,0 +1,1881 @@
+-- MySQL dump 10.13  Distrib 5.1.49, for debian-linux-gnu (x86_64)
+--
+-- Host: mysql.zambia.dreamhosters.com    Database: arisia13_prod
+-- ------------------------------------------------------
+-- Server version	5.1.53-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `CategoryHasReport`
+--
+
+DROP TABLE IF EXISTS `CategoryHasReport`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `CategoryHasReport` (
+  `reportcategoryid` int(11) NOT NULL,
+  `reporttypeid` int(11) NOT NULL,
+  PRIMARY KEY (`reportcategoryid`,`reporttypeid`),
+  KEY `FK_CategoryHasReport2` (`reporttypeid`),
+  CONSTRAINT `FK_CategoryHasReport` FOREIGN KEY (`reportcategoryid`) REFERENCES `ReportCategories` (`reportcategoryid`),
+  CONSTRAINT `FK_CategoryHasReport2` FOREIGN KEY (`reporttypeid`) REFERENCES `ReportTypes` (`reporttypeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `CategoryHasReport`
+--
+
+LOCK TABLES `CategoryHasReport` WRITE;
+/*!40000 ALTER TABLE `CategoryHasReport` DISABLE KEYS */;
+/*!40000 ALTER TABLE `CategoryHasReport` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CongoDump`
+--
+
+DROP TABLE IF EXISTS `CongoDump`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `CongoDump` (
+  `badgeid` int(15) NOT NULL auto_increment,
+  `firstname` varchar(30) default NULL,
+  `lastname` varchar(40) default NULL,
+  `middleInit` varchar(1) default NULL,
+  `suffix` varchar(5) default NULL,
+  `badgename` varchar(51) DEFAULT NULL,
+  `phone` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `postaddress1` varchar(100) DEFAULT NULL,
+  `postaddress2` varchar(100) DEFAULT NULL,
+  `postcity` varchar(50) DEFAULT NULL,
+  `poststate` varchar(25) DEFAULT NULL,
+  `postzip` varchar(10) DEFAULT NULL,
+  `postcountry` varchar(25) DEFAULT NULL,
+  `regtype` varchar(40) DEFAULT NULL,
+  `regdepartment` varchar(40) default NULL,
+  PRIMARY KEY  (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `CongoDump`
+--
+
+LOCK TABLES `CongoDump` WRITE;
+/*!40000 ALTER TABLE `CongoDump` DISABLE KEYS */;
+/*!40000 ALTER TABLE `CongoDump` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Credentials`
+--
+
+DROP TABLE IF EXISTS `Credentials`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Credentials` (
+  `credentialid` int(11) NOT NULL AUTO_INCREMENT,
+  `credentialname` varchar(100) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`credentialid`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Credentials`
+--
+
+LOCK TABLES `Credentials` WRITE;
+/*!40000 ALTER TABLE `Credentials` DISABLE KEYS */;
+INSERT INTO `Credentials` VALUES (1,'Professional Artist',1),(2,'Professional Editor',2),(3,'Professional Musician',3),(4,'Published Author',4),(5,'Web Comics Creator',5);
+/*!40000 ALTER TABLE `Credentials` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CustomText`
+--
+
+DROP TABLE IF EXISTS `CustomText`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `CustomText` (
+  `customtextid` int(11) NOT NULL AUTO_INCREMENT,
+  `page` varchar(100) DEFAULT NULL,
+  `tag` varchar(25) DEFAULT NULL,
+  `textcontents` text,
+  PRIMARY KEY (`customtextid`),
+  UNIQUE KEY `page` (`page`,`tag`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `CustomText`
+--
+
+LOCK TABLES `CustomText` WRITE;
+/*!40000 ALTER TABLE `CustomText` DISABLE KEYS */;
+INSERT INTO `CustomText` VALUES (1,'My Profile','biography_note','Note: Your biography will appear immediately following your name in the program. If you have previously been a participant, the stored bio for you will be displayed below. Please verify the text for publication.<BR>\n'),(2,'My Availability','note_after_times','Please note: the Masquerade is generally scheduled for Sat 8-10pm.');
+/*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Divisions`
+--
+
+DROP TABLE IF EXISTS `Divisions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Divisions` (
+  `divisionid` int(11) NOT NULL AUTO_INCREMENT,
+  `divisionname` varchar(30) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`divisionid`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Divisions`
+--
+
+LOCK TABLES `Divisions` WRITE;
+/*!40000 ALTER TABLE `Divisions` DISABLE KEYS */;
+INSERT INTO `Divisions` VALUES (1, 'Programing', 1),
+	(2,'Hotel',2),
+	(3,'Other',3);
+/*!40000 ALTER TABLE `Divisions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EmailCC`
+--
+
+DROP TABLE IF EXISTS `EmailCC`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EmailCC` (
+  `emailccid` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(50) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  `emailaddress` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`emailccid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EmailCC`
+--
+
+LOCK TABLES `EmailCC` WRITE;
+/*!40000 ALTER TABLE `EmailCC` DISABLE KEYS */;
+INSERT INTO `EmailCC` VALUES (1,'None',1,NULL);
+/*!40000 ALTER TABLE `EmailCC` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EmailFrom`
+--
+
+DROP TABLE IF EXISTS `EmailFrom`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EmailFrom` (
+  `emailfromid` int(11) NOT NULL AUTO_INCREMENT,
+  `emailfromdescription` varchar(30) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  `emailfromaddress` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`emailfromid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EmailFrom`
+--
+
+LOCK TABLES `EmailFrom` WRITE;
+/*!40000 ALTER TABLE `EmailFrom` DISABLE KEYS */;
+INSERT INTO `EmailFrom` VALUES (1,'Balticon Programming',2,'programming@balticon.org'),(3,'Balticon Con Chair',4,'chair@balticon.org');
+/*!40000 ALTER TABLE `EmailFrom` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EmailHistory`
+--
+
+DROP TABLE IF EXISTS `EmailHistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EmailHistory` (
+  `emailid` int(11) NOT NULL,
+  `badgeid` varchar(15) NOT NULL,
+  PRIMARY KEY (`emailid`,`badgeid`),
+  KEY `FK_EmailHistory2` (`badgeid`),
+  CONSTRAINT `FK_EmailHistory` FOREIGN KEY (`emailid`) REFERENCES `EmailTracking` (`emailid`),
+  CONSTRAINT `FK_EmailHistory2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EmailHistory`
+--
+
+LOCK TABLES `EmailHistory` WRITE;
+/*!40000 ALTER TABLE `EmailHistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `EmailHistory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EmailQueue`
+--
+
+DROP TABLE IF EXISTS `EmailQueue`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EmailQueue` (
+  `emailqueueid` int(11) NOT NULL AUTO_INCREMENT,
+  `emailto` varchar(255) DEFAULT NULL,
+  `emailfrom` varchar(255) DEFAULT NULL,
+  `emailcc` varchar(255) DEFAULT NULL,
+  `emailsubject` varchar(255) DEFAULT NULL,
+  `body` text,
+  `status` int(11) NOT NULL,
+  `emailtimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`emailqueueid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EmailQueue`
+--
+
+LOCK TABLES `EmailQueue` WRITE;
+/*!40000 ALTER TABLE `EmailQueue` DISABLE KEYS */;
+/*!40000 ALTER TABLE `EmailQueue` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EmailTo`
+--
+
+DROP TABLE IF EXISTS `EmailTo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EmailTo` (
+  `emailtoid` int(11) NOT NULL AUTO_INCREMENT,
+  `emailtodescription` varchar(75) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  `emailtoquery` text,
+  PRIMARY KEY (`emailtoid`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EmailTo`
+--
+
+LOCK TABLES `EmailTo` WRITE;
+/*!40000 ALTER TABLE `EmailTo` DISABLE KEYS */;
+-- save this for formating but it won't work and it doesn't help
+-- INSERT INTO `EmailTo` VALUES (1,'Mike, Peter, Emily & Ben for testing',10,'SELECT CD.badgeid, CD.firstname, CD.lastname, CD.email, P.pubsname, CD.badgename\r\nfrom CongoDump CD join Participants P using (badgeid)\r\nwhere P.badgeid in (\'53159\',\'4440\',\'93133\',\'4720\') order by badgeid;'),(2,'All Program Participants',1,'SELECT\r\n            CD.badgeid, CD.firstname, CD.lastname, CD.email, P.pubsname, CD.badgename\r\n    from\r\n            CongoDump CD join\r\n            Participants P using (badgeid) join\r\n            UserHasPermissionRole UHPR using (badgeid)\r\n    where\r\n            UHPR.permroleid=3'),(3,'Program Participants who are attending',2,'SELECT CD.badgeid, CD.firstname, CD.lastname, CD.email, P.pubsname, CD.badgename\r\nfrom CongoDump CD, Participants P , UserHasPermissionRole UHPR\r\nwhere CD.badgeid=P.badgeid and CD.badgeid=UHPR.badgeid and UHPR.permroleid=3\r\nand P.interested=1'),(4,'Attending participants willing to read own work',3,'SELECT\r\n        CD.badgeid,\r\n        CD.firstname,\r\n        CD.lastname,\r\n        CD.email,\r\n        P.pubsname,\r\n        CD.badgename\r\n    from\r\n        CongoDump CD\r\n            join\r\n        Participants P\r\n            using (badgeid)\r\n            join\r\n        UserHasPermissionRole UHPR\r\n            using (badgeid)\r\n            join\r\n        ParticipantHasRole\r\n            using (badgeid)\r\n    where\r\n        UHPR.permroleid=3 and\r\n        P.interested=1 and\r\n        roleid = 2\r\n    order by lastname;'),(5,'Participants who participated in programming',9,'SELECT CD.badgeid, CD.firstname, CD.lastname, CD.email, P.pubsname, CD.badgename,\r\n    P.interested\r\n  from CongoDump CD inner join Participants P on CD.badgeid=P.badgeid\r\n    and CD.email is not null and P.badgeid in\r\n (select distinct badgeid from ParticipantOnSession POS inner join Sessions S\r\n    on POS.sessionid = S.sessionid and S.statusid=3 and S.divisionid=2);'),(6,'Attending participants willing to do workshop',4,'SELECT DISTINCT\r\n        CD.badgeid,\r\n        CD.firstname,\r\n        CD.lastname,\r\n        CD.email,\r\n        P.pubsname,\r\n        CD.badgename\r\n    from\r\n        CongoDump CD\r\n            join\r\n        (select badgeid from ParticipantHasRole where roleid = 6\r\n             union\r\n             select badgeid from ParticipantInterests where yespanels!=\"\") WP\r\n            using (badgeid)\r\n            join\r\n        Participants P\r\n            using (badgeid)\r\n            join\r\n        UserHasPermissionRole UHPR\r\n            using (badgeid)\r\n    where\r\n        P.interested=1 and\r\n        UHPR.permroleid=3\r\n    order by lastname;'),(7,'Have not logged in or responded to \"interested\" query',7,'SELECT CD.badgeid, CD.firstname, CD.lastname, CD.email, P.pubsname, CD.badgename FROM CongoDump CD JOIN Participants P USING (badgeid) JOIN UserHasPermissionRole UHPR USING (badgeid) WHERE UHPR.permroleid=3 AND P.interested IS NULL ORDER BY IFNULL(CD.lastname,\'ZZZZZ\');'),(8,'Staff with insecure passwords',8,'SELECT CD.badgeid, CD.firstname, CD.lastname, CD.email, P.pubsname, CD.badgename\r\nFROM CongoDump CD JOIN Participants P USING (badgeid) JOIN UserHasPermissionRole UHPR USING (badgeid)\r\nwhere UHPR.permroleid = 2 AND P.password =\'4cb9c8a8048fd02294477fcb1a41191a\';'),(9,'Scheduled Program Participants who are moderators',5,'SELECT DISTINCT\r\n        CD.badgeid,\r\n        CD.firstname,\r\n        CD.lastname,\r\n        CD.email,\r\n        P.pubsname,\r\n        CD.badgename\r\n    FROM\r\n            CongoDump CD\r\n       JOIN Participants P USING (badgeid)\r\n       JOIN UserHasPermissionRole UHPR USING (badgeid)\r\n       JOIN ParticipantOnSession POS ON (CD.badgeid = POS.badgeid AND POS.moderator = 1)\r\n       JOIN `Schedule` SCH USING (sessionid)\r\n       JOIN Sessions S ON (SCH.sessionid = S.sessionid AND S.divisionid = 2)\r\n     WHERE\r\n        UHPR.permroleid = 3\r\n    ORDER BY CD.lastname;');
+/*!40000 ALTER TABLE `EmailTo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EmailTracking`
+--
+
+DROP TABLE IF EXISTS `EmailTracking`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EmailTracking` (
+  `emailid` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  `senddttm` datetime DEFAULT NULL,
+  PRIMARY KEY (`emailid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EmailTracking`
+--
+
+LOCK TABLES `EmailTracking` WRITE;
+/*!40000 ALTER TABLE `EmailTracking` DISABLE KEYS */;
+INSERT INTO `EmailTracking` VALUES (1,'Balticon 47 Program Invitation--development','2012-06-16 12:06:00');
+/*!40000 ALTER TABLE `EmailTracking` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Features`
+--
+
+DROP TABLE IF EXISTS `Features`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Features` (
+  `featureid` int(11) NOT NULL AUTO_INCREMENT,
+  `featurename` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`featureid`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Features`
+--
+
+LOCK TABLES `Features` WRITE;
+/*!40000 ALTER TABLE `Features` DISABLE KEYS */;
+INSERT INTO `Features` VALUES (1,'Power (110)',1),(2,'Cable TV',2),(3,'Running Water',3),(4,'Toilet',4);
+/*!40000 ALTER TABLE `Features` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `KidsCategories`
+--
+
+DROP TABLE IF EXISTS `KidsCategories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `KidsCategories` (
+  `kidscatid` int(11) NOT NULL AUTO_INCREMENT,
+  `kidscatname` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`kidscatid`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `KidsCategories`
+--
+
+LOCK TABLES `KidsCategories` WRITE;
+/*!40000 ALTER TABLE `KidsCategories` DISABLE KEYS */;
+INSERT INTO `KidsCategories` VALUES (1,'Targeted',1),(2,'Welcome',2),(3,'Only w/ Parent',3),(4,'Not Allowed',4);
+/*!40000 ALTER TABLE `KidsCategories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `LanguageStatuses`
+--
+
+DROP TABLE IF EXISTS `LanguageStatuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `LanguageStatuses` (
+  `languagestatusid` int(11) NOT NULL AUTO_INCREMENT,
+  `languagestatusname` varchar(30) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`languagestatusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `LanguageStatuses`
+--
+
+LOCK TABLES `LanguageStatuses` WRITE;
+/*!40000 ALTER TABLE `LanguageStatuses` DISABLE KEYS */;
+INSERT INTO `LanguageStatuses` VALUES (1,'English',1),(2,'French',2),(3,'Bilingual',3);
+/*!40000 ALTER TABLE `LanguageStatuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantAvailability`
+--
+
+DROP TABLE IF EXISTS `ParticipantAvailability`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantAvailability` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `maxprog` int(11) DEFAULT NULL,
+  `preventconflict` varchar(255) DEFAULT NULL,
+  `otherconstraints` varchar(255) DEFAULT NULL,
+  `numkidsfasttrack` int(11) DEFAULT NULL,
+  PRIMARY KEY (`badgeid`),
+  CONSTRAINT `ParticipantAvailability_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantAvailability`
+--
+
+LOCK TABLES `ParticipantAvailability` WRITE;
+/*!40000 ALTER TABLE `ParticipantAvailability` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantAvailability` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantAvailabilityDays`
+--
+
+DROP TABLE IF EXISTS `ParticipantAvailabilityDays`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantAvailabilityDays` (
+  `badgeid` varchar(15) NOT NULL,
+  `day` smallint(6) NOT NULL,
+  `maxprog` int(11) DEFAULT NULL,
+  PRIMARY KEY (`badgeid`,`day`),
+  CONSTRAINT `ParticipantAvailabilityDays_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantAvailabilityDays`
+--
+
+LOCK TABLES `ParticipantAvailabilityDays` WRITE;
+/*!40000 ALTER TABLE `ParticipantAvailabilityDays` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantAvailabilityDays` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantAvailabilityTimes`
+--
+
+DROP TABLE IF EXISTS `ParticipantAvailabilityTimes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantAvailabilityTimes` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `availabilitynum` int(11) NOT NULL DEFAULT '0',
+  `starttime` time DEFAULT NULL,
+  `endtime` time DEFAULT NULL,
+  PRIMARY KEY (`badgeid`,`availabilitynum`),
+  CONSTRAINT `ParticipantAvailabilityTimes_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantAvailabilityTimes`
+--
+
+LOCK TABLES `ParticipantAvailabilityTimes` WRITE;
+/*!40000 ALTER TABLE `ParticipantAvailabilityTimes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantAvailabilityTimes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantHasCredential`
+--
+
+DROP TABLE IF EXISTS `ParticipantHasCredential`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantHasCredential` (
+  `badgeid` varchar(15) NOT NULL,
+  `credentialid` int(11) NOT NULL,
+  PRIMARY KEY (`badgeid`,`credentialid`),
+  KEY `phcfk2` (`credentialid`),
+  CONSTRAINT `phcfk1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `phcfk2` FOREIGN KEY (`credentialid`) REFERENCES `Credentials` (`credentialid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantHasCredential`
+--
+
+LOCK TABLES `ParticipantHasCredential` WRITE;
+/*!40000 ALTER TABLE `ParticipantHasCredential` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantHasCredential` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantHasRole`
+--
+
+DROP TABLE IF EXISTS `ParticipantHasRole`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantHasRole` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `roleid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`badgeid`,`roleid`),
+  KEY `roleid` (`roleid`),
+  CONSTRAINT `ParticipantHasRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantHasRole_ibfk_2` FOREIGN KEY (`roleid`) REFERENCES `Roles` (`roleid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantHasRole`
+--
+
+LOCK TABLES `ParticipantHasRole` WRITE;
+/*!40000 ALTER TABLE `ParticipantHasRole` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantHasRole` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantInterests`
+--
+
+DROP TABLE IF EXISTS `ParticipantInterests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantInterests` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `yespanels` text,
+  `nopanels` text,
+  `yespeople` text,
+  `nopeople` text,
+  `otherroles` text,
+  PRIMARY KEY (`badgeid`),
+  CONSTRAINT `ParticipantInterests_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantInterests`
+--
+
+LOCK TABLES `ParticipantInterests` WRITE;
+/*!40000 ALTER TABLE `ParticipantInterests` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantInterests` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantOnSession`
+--
+
+DROP TABLE IF EXISTS `ParticipantOnSession`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantOnSession` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `moderator` tinyint(4) DEFAULT '0',
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`badgeid`,`sessionid`),
+  KEY `sessionid` (`sessionid`),
+  CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantOnSession`
+--
+
+LOCK TABLES `ParticipantOnSession` WRITE;
+/*!40000 ALTER TABLE `ParticipantOnSession` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantOnSession` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantSessionInterest`
+--
+
+DROP TABLE IF EXISTS `ParticipantSessionInterest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantSessionInterest` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `rank` int(11) DEFAULT NULL,
+  `willmoderate` tinyint(1) DEFAULT NULL,
+  `comments` text,
+  PRIMARY KEY (`badgeid`,`sessionid`),
+  KEY `sessionid` (`sessionid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_3` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantSessionInterest_ibfk_4` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantSessionInterest`
+--
+
+LOCK TABLES `ParticipantSessionInterest` WRITE;
+/*!40000 ALTER TABLE `ParticipantSessionInterest` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantSessionInterest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ParticipantSuggestions`
+--
+
+DROP TABLE IF EXISTS `ParticipantSuggestions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantSuggestions` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `paneltopics` text,
+  `otherideas` text,
+  `suggestedguests` text,
+  PRIMARY KEY (`badgeid`),
+  CONSTRAINT `ParticipantSuggestions_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ParticipantSuggestions`
+--
+
+LOCK TABLES `ParticipantSuggestions` WRITE;
+/*!40000 ALTER TABLE `ParticipantSuggestions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ParticipantSuggestions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Participants`
+--
+
+DROP TABLE IF EXISTS `Participants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Participants` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `password` varchar(32) DEFAULT NULL,
+  `bestway` varchar(12) DEFAULT NULL,
+  `interested` tinyint(1) DEFAULT NULL,
+  `bio` text,
+  `pubsname` varchar(50) DEFAULT NULL,
+  `share_email` tinyint(11) DEFAULT '1',
+  `staff_notes` text,
+  PRIMARY KEY (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Participants`
+--
+
+LOCK TABLES `Participants` WRITE;
+/*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PatchLog`
+--
+
+DROP TABLE IF EXISTS `PatchLog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PatchLog` (
+  `patchname` varchar(40) DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PatchLog`
+--
+
+LOCK TABLES `PatchLog` WRITE;
+/*!40000 ALTER TABLE `PatchLog` DISABLE KEYS */;
+INSERT INTO `PatchLog` VALUES ('2012-06-16 start balticon developmen','2012-06-16 12:10:00');
+/*!40000 ALTER TABLE `PatchLog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PermissionAtoms`
+--
+
+DROP TABLE IF EXISTS `PermissionAtoms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PermissionAtoms` (
+  `permatomid` int(11) NOT NULL AUTO_INCREMENT,
+  `permatomtag` varchar(20) NOT NULL DEFAULT '',
+  `elementid` int(11) DEFAULT NULL,
+  `page` varchar(30) DEFAULT NULL,
+  `notes` text,
+  PRIMARY KEY (`permatomid`),
+  UNIQUE KEY `taginx` (`permatomtag`,`elementid`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PermissionAtoms`
+--
+
+LOCK TABLES `PermissionAtoms` WRITE;
+/*!40000 ALTER TABLE `PermissionAtoms` DISABLE KEYS */;
+INSERT INTO `PermissionAtoms` VALUES 
+    (1,'Staff',NULL,'renderWelcome','Enables staff menu link'),
+    (2,'Administrator',NULL,'many','Use to be determined'),
+    (3,'Participant',NULL,'many','Use to be determined'),
+    (4,'EditBio',NULL,'renderMyContact','Allow write to biography on my contact page'),
+    (5,'my_availability',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),
+    (6,'search_panels',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),
+    (7,'my_panel_interests',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),
+    (8,'my_schedule',NULL,'ParticipantHeader','Enables menu option throughout participant section and enables page.'),
+    (9,'my_suggestions_write',NULL,'MySuggestions','Enables write access to the form elements on the page MySuggestions.'),
+    (10,'my_gen_int_write',NULL,'MyGeneralInterests','Enables write access to the form elements on the page My General Interests'),
+    (11,'BrainstormSubmit',NULL,'EditCreateSession','Brainstorm user can create session'),
+    (12,'BS_sear_sess',NULL,'SearchSessions','Brainstorm user can view sessions'),
+    (13,'public_login',NULL,'Login','Brainstorm user can log in'),
+    (14,'SendEmail',NULL,'StaffManageParticipants','Access to Send email set of pages'),
+    (15,'postcon',NULL,'renderWelcome','Forces participant welcome page to display only post con message.'),
+    (16,'EditReg',NULL,'renderMyContact','Allow write to registration information on my contact page');
+/*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PermissionRoles`
+--
+
+DROP TABLE IF EXISTS `PermissionRoles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PermissionRoles` (
+  `permroleid` int(11) NOT NULL AUTO_INCREMENT,
+  `permrolename` varchar(100) DEFAULT NULL,
+  `notes` text,
+  PRIMARY KEY (`permroleid`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PermissionRoles`
+--
+
+LOCK TABLES `PermissionRoles` WRITE;
+/*!40000 ALTER TABLE `PermissionRoles` DISABLE KEYS */;
+INSERT INTO `PermissionRoles` VALUES 
+    (1,'Administrator','Use to be determined'),
+    (2,'Staff','Can access staff pages'),
+    (3,'Program Participant','Use to be determined'),
+    (4,'Brainstorm','Use for Brainstorm pages'),
+    (5,'Event Participant','Can\'t even log in.  Just for bulk email.'),
+    (6,'Event Organizer','Can\'t even log in.  Just for bulk email.'),
+    (7,'Liaison','Can only login to get reports.');
+/*!40000 ALTER TABLE `PermissionRoles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Permissions`
+--
+
+DROP TABLE IF EXISTS `Permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Permissions` (
+  `permissionid` int(11) NOT NULL AUTO_INCREMENT,
+  `permatomid` int(11) NOT NULL DEFAULT '0',
+  `phaseid` int(11) DEFAULT '0' COMMENT 'null indicates all phases',
+  `permroleid` int(11) DEFAULT '0' COMMENT 'null indicates not applicable',
+  `badgeid` int(11) DEFAULT '0' COMMENT 'null indicates not applicable',
+  PRIMARY KEY (`permissionid`),
+  UNIQUE KEY `unique1` (`permatomid`,`phaseid`,`permroleid`,`badgeid`),
+  KEY `FK_Permissions` (`phaseid`),
+  KEY `FK_PRoles` (`permroleid`),
+  CONSTRAINT `Permissions_ibfk_1` FOREIGN KEY (`permatomid`) REFERENCES `PermissionAtoms` (`permatomid`),
+  CONSTRAINT `Permissions_ibfk_2` FOREIGN KEY (`phaseid`) REFERENCES `Phases` (`phaseid`),
+  CONSTRAINT `Permissions_ibfk_3` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 4096 kB';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Permissions`
+--
+
+LOCK TABLES `Permissions` WRITE;
+/*!40000 ALTER TABLE `Permissions` DISABLE KEYS */;
+INSERT INTO `Permissions` VALUES 
+    (1,1,NULL,1,NULL),
+    (2,2,NULL,1,NULL),
+    (3,3,NULL,1,NULL),
+    (4,1,NULL,2,NULL),
+    (5,3,NULL,2,NULL),
+    (6,3,NULL,3,NULL),
+    (13,2,NULL,7,NULL),
+
+    (9,4,1,2,NULL),
+    (10,4,2,2,NULL),
+    (11,4,1,3,NULL),
+    (12,4,2,3,NULL),
+    
+    (14,5,1,3,NULL),
+    (15,5,2,3,NULL),
+    (16,5,3,3,NULL),
+    
+    (17,6,1,3,NULL),
+    (18,6,2,3,NULL),
+    (19,6,3,3,NULL),
+
+    (20,7,1,3,NULL),
+    (21,7,2,3,NULL),
+    (22,7,3,3,NULL),
+
+    (23,8,2,3,NULL),
+    (24,8,3,3,NULL),
+    (25,8,4,3,NULL),
+    (26,8,5,3,NULL),
+
+    (27,9,NULL,2,NULL),
+    (28,9,NULL,3,NULL),
+
+    (29,10,1,3,NULL),
+    (30,10,2,3,NULL),
+
+    (31,11,NULL,2,NULL),
+    (32,11,NULL,3,NULL),
+    (33,11,NULL,4,NULL),
+    
+    (34,13,NULL,4,NULL),
+
+    (35,14,NULL,2,NULL),
+    
+    (36,16,1,2,NULL),
+    (37,16,2,2,NULL),
+    (38,16,1,3,NULL),
+    (39,16,2,3,NULL),
+    
+    (40,15,5,3,NULL);
+/*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Phases`
+--
+
+DROP TABLE IF EXISTS `Phases`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Phases` (
+  `phaseid` int(11) NOT NULL AUTO_INCREMENT,
+  `phasename` varchar(100) DEFAULT NULL,
+  `current` tinyint(1) DEFAULT '0',
+  `notes` text,
+  PRIMARY KEY (`phaseid`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Phases`
+--
+
+LOCK TABLES `Phases` WRITE;
+/*!40000 ALTER TABLE `Phases` DISABLE KEYS */;
+INSERT INTO `Phases` VALUES 
+    (1, 'Participant Registration',1,'Create Participants and panels, allow participants to sign up for panels'),
+    (2, 'Schedule Building',0,'Begin open scheduling of all panels and events'),
+    (3, 'Final Scheduling',0,'Registration fixed, start public reporting, brainstorming closed'),
+    (4, 'Convention Operations',0,'Schedule viewable, not changable'),
+    (5, 'Post Convention',0,'wrap up functions');
+/*!40000 ALTER TABLE `Phases` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PreviousConTracks`
+--
+
+DROP TABLE IF EXISTS `PreviousConTracks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PreviousConTracks` (
+  `previousconid` int(11) NOT NULL,
+  `previoustrackid` int(11) NOT NULL,
+  `trackname` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`previousconid`,`previoustrackid`),
+  KEY `previousconid` (`previousconid`),
+  CONSTRAINT `PreviousCons_ibfk_1` FOREIGN KEY (`previousconid`) REFERENCES `PreviousCons` (`previousconid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PreviousConTracks`
+--
+
+LOCK TABLES `PreviousConTracks` WRITE;
+/*!40000 ALTER TABLE `PreviousConTracks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PreviousConTracks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PreviousCons`
+--
+
+DROP TABLE IF EXISTS `PreviousCons`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PreviousCons` (
+  `previousconid` int(11) NOT NULL AUTO_INCREMENT,
+  `previousconname` varchar(128) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`previousconid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PreviousCons`
+--
+
+LOCK TABLES `PreviousCons` WRITE;
+/*!40000 ALTER TABLE `PreviousCons` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PreviousCons` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PreviousParticipants`
+--
+
+DROP TABLE IF EXISTS `PreviousParticipants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PreviousParticipants` (
+  `badgeid` varchar(15) NOT NULL,
+  `bio` text,
+  PRIMARY KEY (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PreviousParticipants`
+--
+
+LOCK TABLES `PreviousParticipants` WRITE;
+/*!40000 ALTER TABLE `PreviousParticipants` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PreviousParticipants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PreviousSessions`
+--
+
+DROP TABLE IF EXISTS `PreviousSessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PreviousSessions` (
+  `previousconid` int(11) NOT NULL,
+  `previoussessionid` int(11) NOT NULL,
+  `previoustrackid` int(11) NOT NULL,
+  `previousstatusid` int(11) NOT NULL,
+  `typeid` int(11) NOT NULL,
+  `divisionid` int(11) NOT NULL,
+  `languagestatusid` int(11) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `secondtitle` varchar(100) DEFAULT NULL,
+  `pocketprogtext` text,
+  `progguiddesc` text,
+  `persppartinfo` text,
+  `duration` time DEFAULT NULL,
+  `estatten` int(11) DEFAULT NULL,
+  `kidscatid` int(11) NOT NULL,
+  `signupreq` tinyint(1) DEFAULT NULL,
+  `notesforpart` text,
+  `notesforprog` text,
+  `invitedguest` tinyint(1) DEFAULT NULL,
+  `importedsessionid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`previousconid`,`previoussessionid`),
+  KEY `previousconid` (`previousconid`),
+  KEY `previoustrackid` (`previousconid`,`previoustrackid`),
+  KEY `previousstatusid` (`previousstatusid`),
+  KEY `typeid` (`typeid`),
+  KEY `divisionid` (`divisionid`),
+  KEY `languagestatusid` (`languagestatusid`),
+  KEY `kidscatid` (`kidscatid`),
+  CONSTRAINT `PreviousSessions_ibfk_1` FOREIGN KEY (`previousconid`) REFERENCES `PreviousCons` (`previousconid`),
+  CONSTRAINT `PreviousSessions_ibfk_2` FOREIGN KEY (`previousconid`, `previoustrackid`) REFERENCES `PreviousConTracks` (`previousconid`, `previoustrackid`),
+  CONSTRAINT `PreviousSessions_ibfk_3` FOREIGN KEY (`previousstatusid`) REFERENCES `SessionStatuses` (`statusid`),
+  CONSTRAINT `PreviousSessions_ibfk_4` FOREIGN KEY (`typeid`) REFERENCES `Types` (`typeid`),
+  CONSTRAINT `PreviousSessions_ibfk_5` FOREIGN KEY (`divisionid`) REFERENCES `Divisions` (`divisionid`),
+  CONSTRAINT `PreviousSessions_ibfk_6` FOREIGN KEY (`languagestatusid`) REFERENCES `LanguageStatuses` (`languagestatusid`),
+  CONSTRAINT `PreviousSessions_ibfk_7` FOREIGN KEY (`kidscatid`) REFERENCES `KidsCategories` (`kidscatid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PreviousSessions`
+--
+
+LOCK TABLES `PreviousSessions` WRITE;
+/*!40000 ALTER TABLE `PreviousSessions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PreviousSessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PubCharacteristics`
+--
+
+DROP TABLE IF EXISTS `PubCharacteristics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PubCharacteristics` (
+  `pubcharid` int(11) NOT NULL AUTO_INCREMENT,
+  `pubcharname` varchar(30) DEFAULT NULL,
+  `pubchartag` varchar(10) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pubcharid`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PubCharacteristics`
+--
+
+LOCK TABLES `PubCharacteristics` WRITE;
+/*!40000 ALTER TABLE `PubCharacteristics` DISABLE KEYS */;
+-- hold this for format example, not sure what we'd use here
+-- INSERT INTO `PubCharacteristics` VALUES (1,'35mm','35mm',1),(2,'16mm','16mm',2),(3,'dubbed','dubbed',3),(4,'anime','anime',4);
+/*!40000 ALTER TABLE `PubCharacteristics` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PubStatuses`
+--
+
+DROP TABLE IF EXISTS `PubStatuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PubStatuses` (
+  `pubstatusid` int(11) NOT NULL AUTO_INCREMENT,
+  `pubstatusname` varchar(12) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pubstatusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PubStatuses`
+--
+
+LOCK TABLES `PubStatuses` WRITE;
+/*!40000 ALTER TABLE `PubStatuses` DISABLE KEYS */;
+INSERT INTO `PubStatuses` VALUES (2,'Public',2),(3,'Do not print',3);
+/*!40000 ALTER TABLE `PubStatuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `RegTypes`
+--
+
+DROP TABLE IF EXISTS `RegTypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `RegTypes` (
+  `regtype` varchar(40) NOT NULL DEFAULT '',
+  `message` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`regtype`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `RegTypes`
+--
+
+LOCK TABLES `RegTypes` WRITE;
+/*!40000 ALTER TABLE `RegTypes` DISABLE KEYS */;
+INSERT INTO `RegTypes` VALUES
+	('None', 'NOT registered'),
+	('BSFS', 'Registered'),
+	('Paid', 'Registered'),
+	('Dealer', 'Registered'),
+	('Guest of Honor', 'Registered and Comp\'ed'),
+	('Comp', 'Registered and Comp\'ed'),
+	('Participant', 'Comp Requested'),
+	('ConfirmedParticipant', 'Registered and Comp\'ed'),
+	('Volunteer', 'Registered'),
+	('Staff', 'Registered and Comp\'ed');
+/*!40000 ALTER TABLE `RegTypes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ReportCategories`
+--
+
+DROP TABLE IF EXISTS `ReportCategories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ReportCategories` (
+  `reportcategoryid` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(50) DEFAULT NULL,
+  `display_order` int(11) NOT NULL,
+  PRIMARY KEY (`reportcategoryid`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ReportCategories`
+--
+
+LOCK TABLES `ReportCategories` WRITE;
+/*!40000 ALTER TABLE `ReportCategories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ReportCategories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ReportQueries`
+--
+
+DROP TABLE IF EXISTS `ReportQueries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ReportQueries` (
+  `reportqueryid` int(11) NOT NULL AUTO_INCREMENT,
+  `reporttypeid` int(11) NOT NULL,
+  `queryname` varchar(25) NOT NULL,
+  `query` text,
+  PRIMARY KEY (`reportqueryid`),
+  KEY `FK_ReportQueries` (`reporttypeid`),
+  CONSTRAINT `FK_ReportQueries` FOREIGN KEY (`reporttypeid`) REFERENCES `ReportTypes` (`reporttypeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ReportQueries`
+--
+
+LOCK TABLES `ReportQueries` WRITE;
+/*!40000 ALTER TABLE `ReportQueries` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ReportQueries` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ReportTypes`
+--
+
+DROP TABLE IF EXISTS `ReportTypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ReportTypes` (
+  `reporttypeid` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) NOT NULL,
+  `description` text,
+  `technology` varchar(200) DEFAULT NULL COMMENT 'notes for tracking migration only',
+  `oldmechanism` tinyint(4) NOT NULL DEFAULT '0',
+  `ondemand` tinyint(4) DEFAULT NULL COMMENT '=1 for all new tech and some old',
+  `filename` varchar(35) DEFAULT NULL COMMENT 'populate only if oldmechanism = 1',
+  `xsl` text COMMENT 'populate only if oldmechanism = 0',
+  `download` tinyint(4) DEFAULT NULL COMMENT 'disregard if oldmechanism = 1',
+  `downloadfilename` varchar(25) DEFAULT NULL COMMENT 'populate only if download = 1',
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`reporttypeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ReportTypes`
+--
+
+LOCK TABLES `ReportTypes` WRITE;
+/*!40000 ALTER TABLE `ReportTypes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ReportTypes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Roles`
+--
+
+DROP TABLE IF EXISTS `Roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Roles` (
+  `roleid` int(11) NOT NULL AUTO_INCREMENT,
+  `rolename` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`roleid`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Roles`
+--
+
+LOCK TABLES `Roles` WRITE;
+/*!40000 ALTER TABLE `Roles` DISABLE KEYS */;
+INSERT INTO `Roles` VALUES 
+    (1,'Other',-1),
+    (2,'Reading my own works',3),
+    (3,'Autographing',4),
+    (5,'Performing',6),
+    (6,'Running workshops',7),
+    (7,'Leading discussions',8),
+    (8,'Running games',9),
+    (9,'Working with children',10),
+    (10,'Panel Moderator',2),
+    (11,'Panel Participant',1),
+    (13,'Join Balticon Volunteer Staff',13);
+/*!40000 ALTER TABLE `Roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `RoomHasSet`
+--
+
+DROP TABLE IF EXISTS `RoomHasSet`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `RoomHasSet` (
+  `roomid` int(11) NOT NULL DEFAULT '0',
+  `roomsetid` int(11) NOT NULL DEFAULT '0',
+  `capacity` int(11) DEFAULT NULL,
+  PRIMARY KEY (`roomid`,`roomsetid`),
+  KEY `roomsetid` (`roomsetid`),
+  CONSTRAINT `RoomHasSet_ibfk_1` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`),
+  CONSTRAINT `RoomHasSet_ibfk_2` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `RoomHasSet`
+--
+
+LOCK TABLES `RoomHasSet` WRITE;
+/*!40000 ALTER TABLE `RoomHasSet` DISABLE KEYS */;
+INSERT INTO `RoomHasSet` VALUES 
+    (1,1,NULL),(1,4,NULL),(1,5,NULL),
+    (2,2,NULL),(2,4,NULL),(2,5,NULL),
+    (3,2,NULL),
+    (4,2,NULL),(3,3,NULL),
+    (5,2,NULL),
+    (6,2,NULL),
+    (7,2,NULL),
+    (8,2,NULL),
+    (9,2,NULL),(9,4,NULL),
+    (10,2,NULL),(10,7,NULL),
+    (11,2,NULL),(11,7,NULL),
+    (12,2,NULL),(12,5,NULL),
+    (13,2,NULL),(13,5,NULL),
+    (14,5,NULL),
+    (15,5,NULL),
+    (16,5,NULL),
+    (17,5,NULL),
+    (18,1,NULL),
+    (19,1,NULL),
+    (20,5,NULL),
+    (21,5,NULL);
+/*!40000 ALTER TABLE `RoomHasSet` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `RoomSets`
+--
+
+DROP TABLE IF EXISTS `RoomSets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `RoomSets` (
+  `roomsetid` int(11) NOT NULL AUTO_INCREMENT,
+  `roomsetname` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`roomsetid`)
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `RoomSets`
+--
+
+LOCK TABLES `RoomSets` WRITE;
+/*!40000 ALTER TABLE `RoomSets` DISABLE KEYS */;
+INSERT INTO `RoomSets` VALUES 
+    (1, 'Theater', 2),
+    (2, 'Panel', 1),
+    (3, 'Workshop', 3),
+    (4, 'No Chairs', 4),
+    (5, 'Other (describe)', 98),
+    (6, 'I do not know', 99),
+    (7, 'Merged', 5);
+/*!40000 ALTER TABLE `RoomSets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Rooms`
+--
+
+DROP TABLE IF EXISTS `Rooms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Rooms` (
+  `roomid` int(11) NOT NULL AUTO_INCREMENT,
+  `roomname` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `height` varchar(100) DEFAULT NULL,
+  `dimensions` varchar(100) DEFAULT NULL,
+  `area` varchar(100) DEFAULT NULL,
+  `function` varchar(100) DEFAULT NULL,
+  `floor` varchar(50) DEFAULT NULL,
+  `notes` text,
+  `opentime1` time DEFAULT NULL,
+  `closetime1` time DEFAULT NULL,
+  `opentime2` time DEFAULT NULL,
+  `closetime2` time DEFAULT NULL,
+  `opentime3` time DEFAULT NULL,
+  `closetime3` time DEFAULT NULL,
+  `is_scheduled` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`roomid`)
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Rooms`
+--
+
+LOCK TABLES `Rooms` WRITE;
+/*!40000 ALTER TABLE `Rooms` DISABLE KEYS */;
+INSERT INTO `Rooms` VALUES 
+    (1, 'Valley Ballroom',1,NULL,NULL,NULL,'Main Tent','Lower Level',NULL,'19:00:00','03:00:00','07:00:00','02:00:00','07:00:00','02:00:00',1),
+	(2, 'Garden Room',2,NULL,NULL,NULL,'Small Tent', 'Lobby', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(3, 'Belmont',3,NULL,NULL,NULL,'Program','Lobby','has TV', NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(4, 'Chase',4,NULL,NULL,NULL,'Childrens (daytime)','Lobby',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(5, 'Derby',5,NULL,NULL,NULL,'New Media','Lobby',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(6, 'Chesapeake',6,NULL,NULL,NULL,'New Media','Lobby',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(7, 'Pimlico',7,NULL,NULL,NULL,'Reading','Lower Level',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(8, 'Salon A',8,NULL,NULL,NULL,'Science','Lower Level',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(9, 'Salon B',9,NULL,NULL,NULL,'Program','Lower Level',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(10, 'Salon C',10,NULL,NULL,NULL,'Program','Lower Level',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(11, 'Salon D',11,NULL,NULL,NULL,'Program','Lower Level',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(12, 'Parlor 1041', 12,NULL,NULL,NULL,'Program','Lobby','Among Guest Rooms', NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(13, 'Parlor 3041', 13,NULL,NULL,NULL,'Program','3rd Floor','Among Guest Rooms', NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(14, 'Maryland Foyer', 14,NULL,NULL,NULL,'Autograph Sessions','Lobby',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(15, 'Con-Suite', 15,NULL,NULL,NULL,'Con Suite Concerts and Parties','Lower Level',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(16, 'Valley Foyer', 16,NULL,NULL,NULL,'Prefunction','Lower Level',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(17, 'McCormick Suite', 17,NULL,NULL,NULL,'Participant Green Room','2nd Floor','Among Guest Rooms', NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(18, 'Salon E',18,NULL,NULL,NULL,'Anime','Lower Level',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(19, 'Salon F',19,NULL,NULL,NULL,'Video','Lower Level','Masquerade Overflow Saturday Night', NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(20, 'Tack', 20,NULL,NULL,NULL,'Gaming','Lobby',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+	(21, 'Hotel Bar', 21,NULL,NULL,NULL,'informal','Lobby',NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+-- (56,'Galleria - Artist/Author Alley',73,NULL,'6.x2.5','18','Alley','Galleria','','10:00:00',NULL,'10:00:00',NULL,'10:00:00',NULL,1);
+/*!40000 ALTER TABLE `Rooms` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Schedule`
+--
+
+DROP TABLE IF EXISTS `Schedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Schedule` (
+  `scheduleid` int(11) NOT NULL AUTO_INCREMENT,
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `roomid` int(11) NOT NULL DEFAULT '0',
+  `starttime` time NOT NULL DEFAULT '00:00:00',
+  PRIMARY KEY (`scheduleid`),
+  KEY `sessionid` (`sessionid`),
+  KEY `roomid` (`roomid`),
+  CONSTRAINT `Schedule_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `Schedule_ibfk_2` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Schedule`
+--
+
+LOCK TABLES `Schedule` WRITE;
+/*!40000 ALTER TABLE `Schedule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Schedule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Services`
+--
+
+DROP TABLE IF EXISTS `Services`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Services` (
+  `serviceid` int(11) NOT NULL AUTO_INCREMENT,
+  `servicename` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`serviceid`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Services`
+--
+
+LOCK TABLES `Services` WRITE;
+/*!40000 ALTER TABLE `Services` DISABLE KEYS */;
+INSERT INTO `Services` VALUES 
+(1,'Projector & Screen',10),
+(2,'DVD Player',20),
+(3,'Elmo',30),
+(4,'Sound',40);
+-- (1,'CD Player',10),(2,'DVD Player & Projector',20),(3,'Flip Chart',30),(4,'Food',40),(5,'Gopher',50),(6,'Power',60),(7,'Projector (for laptop)',70),(8,'Sound',80),(9,'Water Station',90),(10,'Podium',55);
+/*!40000 ALTER TABLE `Services` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionEditCodes`
+--
+
+DROP TABLE IF EXISTS `SessionEditCodes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SessionEditCodes` (
+  `sessioneditcode` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(40) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`sessioneditcode`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SessionEditCodes`
+--
+
+LOCK TABLES `SessionEditCodes` WRITE;
+/*!40000 ALTER TABLE `SessionEditCodes` DISABLE KEYS */;
+INSERT INTO `SessionEditCodes` VALUES 
+    (1,'Created in brainstorm',1),
+    (2,'Created in staff create session',2),
+    (3,'Unknown edit',4),
+    (4,'Add to schedule',5),
+    (5,'Remove from schedule',6),
+    (6,'Created by import',3);
+/*!40000 ALTER TABLE `SessionEditCodes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionEditHistory`
+--
+
+DROP TABLE IF EXISTS `SessionEditHistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SessionEditHistory` (
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `badgeid` varchar(15) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `email_address` varchar(75) DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `sessioneditcode` int(11) NOT NULL DEFAULT '0',
+  `statusid` int(11) NOT NULL DEFAULT '0',
+  `editdescription` text,
+  PRIMARY KEY (`sessionid`,`timestamp`),
+  KEY `FK_SessionEditHistory` (`badgeid`),
+  KEY `FK_SessionEditCodes` (`sessioneditcode`),
+  KEY `FK_SessionEditHistory4` (`statusid`),
+  CONSTRAINT `SessionEditHistory_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionEditHistory_ibfk_2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `SessionEditHistory_ibfk_3` FOREIGN KEY (`sessioneditcode`) REFERENCES `SessionEditCodes` (`sessioneditcode`),
+  CONSTRAINT `SessionEditHistory_ibfk_4` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 8192 kB';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SessionEditHistory`
+--
+
+LOCK TABLES `SessionEditHistory` WRITE;
+/*!40000 ALTER TABLE `SessionEditHistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionEditHistory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionHasFeature`
+--
+
+DROP TABLE IF EXISTS `SessionHasFeature`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SessionHasFeature` (
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `featureid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`sessionid`,`featureid`),
+  KEY `featureid` (`featureid`),
+  CONSTRAINT `SessionHasFeature_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionHasFeature_ibfk_2` FOREIGN KEY (`featureid`) REFERENCES `Features` (`featureid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SessionHasFeature`
+--
+
+LOCK TABLES `SessionHasFeature` WRITE;
+/*!40000 ALTER TABLE `SessionHasFeature` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionHasFeature` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionHasPubChar`
+--
+
+DROP TABLE IF EXISTS `SessionHasPubChar`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SessionHasPubChar` (
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `pubcharid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`sessionid`,`pubcharid`),
+  KEY `Fkey2` (`pubcharid`),
+  CONSTRAINT `Fkey1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `Fkey2` FOREIGN KEY (`pubcharid`) REFERENCES `PubCharacteristics` (`pubcharid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SessionHasPubChar`
+--
+
+LOCK TABLES `SessionHasPubChar` WRITE;
+/*!40000 ALTER TABLE `SessionHasPubChar` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionHasPubChar` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionHasService`
+--
+
+DROP TABLE IF EXISTS `SessionHasService`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SessionHasService` (
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `serviceid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`sessionid`,`serviceid`),
+  KEY `serviceid` (`serviceid`),
+  CONSTRAINT `SessionHasService_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `SessionHasService_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `Services` (`serviceid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SessionHasService`
+--
+
+LOCK TABLES `SessionHasService` WRITE;
+/*!40000 ALTER TABLE `SessionHasService` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionHasService` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SessionStatuses`
+--
+
+DROP TABLE IF EXISTS `SessionStatuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SessionStatuses` (
+  `statusid` int(11) NOT NULL AUTO_INCREMENT,
+  `statusname` varchar(50) DEFAULT NULL,
+  `validate` tinyint(4) NOT NULL DEFAULT '0',
+  `may_be_scheduled` tinyint(4) NOT NULL DEFAULT '0',
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`statusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SessionStatuses`
+--
+
+LOCK TABLES `SessionStatuses` WRITE;
+/*!40000 ALTER TABLE `SessionStatuses` DISABLE KEYS */;
+INSERT INTO `SessionStatuses` VALUES 
+    (1,'Brainstorm',0,0,4),
+    (2,'Vetted',1,1,6),
+    (3,'Scheduled',1,1,10),
+    (4,'Dropped',0,0,18),
+    (5,'Cancelled',0,0,20),
+    (6,'Edit Me',0,0,1),
+    (7,'Assigned',1,1,13),
+    (10,'duplicate',0,0,90);
+/*!40000 ALTER TABLE `SessionStatuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Sessions`
+--
+
+DROP TABLE IF EXISTS `Sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Sessions` (
+  `sessionid` int(11) NOT NULL AUTO_INCREMENT,
+  `trackid` int(11) NOT NULL DEFAULT '0',
+  `typeid` int(11) NOT NULL DEFAULT '0',
+  `divisionid` int(11) NOT NULL DEFAULT '0',
+  `pubstatusid` int(11) DEFAULT '0',
+  `languagestatusid` int(11) DEFAULT '1',
+  `pubsno` varchar(50) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `secondtitle` varchar(100) DEFAULT NULL,
+  `pocketprogtext` text,
+  `progguiddesc` text,
+  `persppartinfo` text,
+  `duration` time DEFAULT NULL,
+  `estatten` int(11) DEFAULT NULL,
+  `kidscatid` int(11) NOT NULL DEFAULT '0',
+  `signupreq` tinyint(1) DEFAULT NULL,
+  `roomsetid` int(11) NOT NULL DEFAULT '0',
+  `notesforpart` text,
+  `servicenotes` text,
+  `statusid` int(11) NOT NULL DEFAULT '0',
+  `notesforprog` text,
+  `warnings` tinyint(1) DEFAULT NULL,
+  `invitedguest` tinyint(1) DEFAULT '0',
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sessionid`),
+  KEY `trackid` (`trackid`),
+  KEY `typeid` (`typeid`),
+  KEY `kidscatid` (`kidscatid`),
+  KEY `roomsetid` (`roomsetid`),
+  KEY `statusid` (`statusid`),
+  KEY `Sessions_ibfk_7` (`divisionid`),
+  KEY `Sessions_ibfk_6` (`pubstatusid`),
+  KEY `languagestatusid` (`languagestatusid`),
+  CONSTRAINT `Sessions_ibfk_1` FOREIGN KEY (`trackid`) REFERENCES `Tracks` (`trackid`),
+  CONSTRAINT `Sessions_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `Types` (`typeid`),
+  CONSTRAINT `Sessions_ibfk_3` FOREIGN KEY (`kidscatid`) REFERENCES `KidsCategories` (`kidscatid`),
+  CONSTRAINT `Sessions_ibfk_4` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`),
+  CONSTRAINT `Sessions_ibfk_5` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`),
+  CONSTRAINT `Sessions_ibfk_6` FOREIGN KEY (`pubstatusid`) REFERENCES `PubStatuses` (`pubstatusid`),
+  CONSTRAINT `Sessions_ibfk_7` FOREIGN KEY (`divisionid`) REFERENCES `Divisions` (`divisionid`),
+  CONSTRAINT `Sessions_ibfk_8` FOREIGN KEY (`languagestatusid`) REFERENCES `LanguageStatuses` (`languagestatusid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Sessions`
+--
+
+LOCK TABLES `Sessions` WRITE;
+/*!40000 ALTER TABLE `Sessions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Times`
+--
+
+DROP TABLE IF EXISTS `Times`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Times` (
+  `timeid` int(11) NOT NULL,
+  `timedisplay` char(14) DEFAULT NULL,
+  `timevalue` time DEFAULT NULL,
+  `next_day` tinyint(4) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `avail_start` tinyint(4) DEFAULT NULL,
+  `avail_end` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`timeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Times`
+--
+
+LOCK TABLES `Times` WRITE;
+/*!40000 ALTER TABLE `Times` DISABLE KEYS */;
+INSERT INTO `Times` VALUES 
+    (1,'8:30a','08:30:00',0,1,1,0),
+    (2,'10:00a','10:00:00',0,2,1,1),
+    (3,'11:30a','11:30:00',0,3,1,1),
+    (4,'1:00p','13:00:00',0,4,1,1),
+    (5,'2:30p','14:30:00',0,5,1,1),
+    (6,'4:00p','16:00:00',0,6,1,1),
+    (7,'5:30p','17:30:00',0,7,1,1),
+    (8,'7:00p','19:00:00',0,8,1,1),
+    (9,'8:30p','20:30:00',0,9,1,1),
+    (10,'10:00p','22:00:00',0,10,1,1),
+    (11,'11:30p','23:30:00',0,11,1,1),
+    (12,'1:00a (+1d)','01:00:00',1,12,0,1);
+/*!40000 ALTER TABLE `Times` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `TrackCompatibility`
+--
+
+DROP TABLE IF EXISTS `TrackCompatibility`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TrackCompatibility` (
+  `previousconid` int(11) NOT NULL,
+  `previoustrackid` int(11) NOT NULL,
+  `currenttrackid` int(11) NOT NULL,
+  PRIMARY KEY (`previousconid`,`previoustrackid`),
+  KEY `currenttrackid` (`currenttrackid`),
+  CONSTRAINT `TrackCompatibility_ibfk_1` FOREIGN KEY (`previousconid`, `previoustrackid`) REFERENCES `PreviousConTracks` (`previousconid`, `previoustrackid`),
+  CONSTRAINT `TrackCompatibility_ibfk_2` FOREIGN KEY (`currenttrackid`) REFERENCES `Tracks` (`trackid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `TrackCompatibility`
+--
+
+LOCK TABLES `TrackCompatibility` WRITE;
+/*!40000 ALTER TABLE `TrackCompatibility` DISABLE KEYS */;
+/*!40000 ALTER TABLE `TrackCompatibility` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Tracks`
+--
+
+DROP TABLE IF EXISTS `Tracks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Tracks` (
+  `trackid` int(11) NOT NULL AUTO_INCREMENT,
+  `trackname` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `selfselect` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`trackid`)
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Tracks`
+--
+
+LOCK TABLES `Tracks` WRITE;
+/*!40000 ALTER TABLE `Tracks` DISABLE KEYS */;
+INSERT INTO `Tracks` VALUES 
+    (1,'Anime',10,1),
+    (2,'Art',20,1),
+	(3,'Autographings',30,1),
+    (4,'Childrens',40,1),
+	(5,'Costuming',50,1),
+    (6,'Dances & Parties',60,1),
+    (7,'Fan',70,1),
+    (8,'Film, TV, & Film Making',80,1),
+    (9,'Gaming',90,0),
+    (10,'Kaffeeklatsches',100,1),
+    (11,'LARP',110,1),
+    (12,'Masquerade',120,1),
+    (13,'Music',130,1),
+    (14,'New Media',140,1),
+    (15,'Teen',150,1),
+    (16,'Publishers',160,0),
+	(17,'Readers',170,0),
+	(18,'Writers',180,0),
+	(19,'Science',190,0),
+	(20,'Skeptical Thinking',200,0),
+	(21,'Teen',210,0),
+	(22,'Video',220,0),
+    (23,'Craft',55,1),
+    (24,'Workshops',185,1),
+    (99,'I do not know',99,0);
+-- (1,'Anime',5,1),(2,'Art',10,1),(3,'Costuming',15,1),(4,'Fan Interest',19,1),(5,'Fast Track',25,1),(7,'Gaming',35,1),(8,'GOH',40,1),(9,'Literature',45,1),(10,'Media',50,1),(11,'Music',55,1),(12,'Science',60,1),(13,'Writing',80,1),(14,'Roomturn, etc.',90,0),(15,'Crafting',17,1),(19,'Comics',12,1),(23,'Communities',14,1),(24,'Trackless events',87,0),(27,'Theater & con tech',85,0),(28,'Refresh',89,0),(99,'Unknown',99,0);
+/*!40000 ALTER TABLE `Tracks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Types`
+--
+
+DROP TABLE IF EXISTS `Types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Types` (
+  `typeid` int(11) NOT NULL AUTO_INCREMENT,
+  `typename` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `selfselect` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`typeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Types`
+--
+
+LOCK TABLES `Types` WRITE;
+/*!40000 ALTER TABLE `Types` DISABLE KEYS */;
+INSERT INTO `Types` VALUES 
+    (1,'Panel',1,1),
+    (2,'Workshop',2,0),
+    (3,'Room Turn',500,0),
+    (4,'Lecture',6,0),
+    (5,'Meeting',20,0),
+    (6,'Interview',9,0),
+    (7,'Signing',13,0),
+    (8,'Reading',7,0),
+    (9,'Rehearsal',100,0),
+    (10,'TV - Live Event',10,0),
+    (11,'TV - Previous Event',11,0),
+    (12,'Projected Media',8,0),
+    (14,'Open Gaming',18,0),
+    (15,'Scheduled Game',19,0),
+    (16,'TV - Movie/Show',12,0),
+    (17,'I do not know',700,0),
+    (18,'Concert',4,0),
+    (19,'Participatory Event',3,0),
+    (20,'Drama',5,0),
+    (21,'Setup',200,0),
+    (22,'Refresh',499,0);
+/*!40000 ALTER TABLE `Types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `UserHasPermissionRole`
+--
+
+DROP TABLE IF EXISTS `UserHasPermissionRole`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserHasPermissionRole` (
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `permroleid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`badgeid`,`permroleid`),
+  KEY `FK_UserHasPermissionRole` (`permroleid`),
+  CONSTRAINT `UserHasPermissionRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `UserHasPermissionRole_ibfk_2` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserHasPermissionRole`
+--
+
+LOCK TABLES `UserHasPermissionRole` WRITE;
+/*!40000 ALTER TABLE `UserHasPermissionRole` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserHasPermissionRole` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2012-05-18 10:39:06
+
+--
+-- Initial User
+--
+
+-- INSERT INTO `CongoDump` VALUES ('1','Admin','User','A', NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Admin User','Committee','program');
+-- INSERT INTO `CongoDump` VALUES ('2','Staff','User','A', NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Staff User','Staff','program');
+-- INSERT INTO `CongoDump` VALUES ('3','Participant','User','A',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Participant User','Participant','program');
+-- INSERT INTO `CongoDump` VALUES ('4','Brainstorm','User','A',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Brainstorm User','None',NULL);
+
+
+-- all passwords = `changeme`
+-- INSERT INTO `Participants` VALUES ('1', '4cb9c8a8048fd02294477fcb1a41191a', NULL, NULL, NULL, NULL, NULL, NULL);
+-- INSERT INTO `Participants` VALUES ('2', '4cb9c8a8048fd02294477fcb1a41191a', NULL, NULL, NULL, NULL, NULL, NULL);
+-- INSERT INTO `Participants` VALUES ('3', '4cb9c8a8048fd02294477fcb1a41191a', NULL, NULL, NULL, NULL, NULL, NULL);
+-- INSERT INTO `Participants` VALUES ('4', '4cb9c8a8048fd02294477fcb1a41191a', NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- INSERT INTO `UserHasPermissionRole` VALUES ('1','1'),('1','2'),('1','3');
+-- INSERT INTO `UserHasPermissionRole` VALUES ('2','2'),('2','3');
+-- INSERT INTO `UserHasPermissionRole` VALUES ('3','3');
+-- INSERT INTO `UserHasPermissionRole` VALUES ('4','4');
+
+
+-- INSERT INTO `ParticipantHasRole` VALUES ('1',1),('1',5),('1',13);
+-- INSERT INTO `ParticipantHasRole` VALUES ('2',1),('2',5);

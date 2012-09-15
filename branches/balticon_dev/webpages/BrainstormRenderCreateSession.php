@@ -103,7 +103,6 @@ var enable = true;
         <FORM name="sessform" class="bb"  method=POST action="SubmitEditCreateSession.php">
         <INPUT type="hidden" name="type" value="<?php echo $session["type"]; ?>">
         <INPUT type="hidden" name="divisionid" value="<?php echo $session["divisionid"]; ?>">
-        <INPUT type="hidden" name="roomset" value="<?php echo $session["roomset"]; ?>">
         <INPUT type="hidden" name="languagestatusid" value="<?php echo $session["languagestatusid"]; ?>">
         <INPUT type="hidden" name="pubstatusid" value="<?php echo $session["pubstatusid"]; ?>">
         <INPUT type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT);?>">
@@ -143,6 +142,20 @@ var enable = true;
             echo htmlspecialchars($session["title"],ENT_COMPAT)."\" onKeyPress=\"return checkSubmitButton();\">"; ?>
                 </TD>
              </TR>
+            <TR>
+            <TR>
+                <TD class="form1">&nbsp;<BR>
+          <LABEL for="secondtitle" ID="secondtitle">Sub-Title: </LABEL><BR>
+            <?php echo "<INPUT type=text size=\"50\" name=\"secondtitle\" value=\"";
+            echo htmlspecialchars($session["secondtitle"],ENT_COMPAT)."\" onKeyPress=\"return checkSubmitButton();\">"; ?>
+                </TD>
+             </TR>
+             <TR>
+                <TD class="form1">&nbsp;<BR>
+             <LABEL for="roomset">Room Set: </LABEL>
+                    <SELECT name="roomset"><?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
+                    </SELECT>&nbsp;&nbsp;</TD>
+            </TR>
             <TR>
                 <TD class="form1">&nbsp;<BR>
           <LABEL for="progguiddesc" id="progguiddesc">Description:</LABEL><BR>

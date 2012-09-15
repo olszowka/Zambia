@@ -16,5 +16,5 @@
     get_si_session_info_from_db($session_interest_count); // Will render its own errors
     $message="";
     $message_error="";
-    render_session_interests($badgid,$session_interest_count,$message,$message_error); // includes footer
+    render_session_interests($badgeid,$session_interest_count,$message,$message_error); // includes footer
 ?>

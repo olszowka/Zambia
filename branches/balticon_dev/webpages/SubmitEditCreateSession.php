@@ -76,7 +76,7 @@
             $message_error="";
             }
     $message_warn="Session record created.  Database updated successfully.";
-    record_session_history($id, $badgeid, $name, $email, ($action=='brainstorm'?1:2), // 1 is brainstorm; 2 is normal create
+    record_session_history($id, $badgeid, $name, $email, ($action=='brainstorm'?1:2), // 1 is brainstorm; 2 is vetted sessions
         $session['status']);
     set_session_defaults();
     $id=get_next_session_id();

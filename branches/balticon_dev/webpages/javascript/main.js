@@ -10,12 +10,13 @@ $(document).ready(function() {
 			break;
 		case "My Profile":
 			myProfile.initialize();
+			myRegistration.initialize();
 			break;
 		//case "Edit Schedule":
 		//	staffMaintainSchedule.initialize();
 		case "Show Search Session Results":
 			searchMySessions1.initialize();
-			
+			break;
 		default:
 			window.status="Ready."
 		}
