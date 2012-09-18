@@ -40,6 +40,10 @@ header label {
   margin: 0;
   color: #000000;
 }
+input.search-query {
+	height:21px !important;
+}
+
 input[type="text"],
 input[type="password"] {
   height: 28px;
@@ -90,7 +94,7 @@ input[type="password"] {
   margin-top: 0.5em;
 }
 .navbar .brand {
-  padding-top: 8px;
+  padding-top: 4px;
 }
 #resultsDiv {
   padding-top: 1.0em;
@@ -183,6 +187,25 @@ td.report {
 }
 .report A {
   color: #1c30b0;
+}
+.arisiaLens {
+	padding: 3px;
+	display: table-cell;
+	float: none;
+}
+.pageHeader {
+	padding:0;
+	width:100%;
+	display: table;
+	margin-top:0;
+	margin-bottom:0;
+}
+.pageHeader div.pageHeaderText {
+	width:88%;
+	margin-left:0;
+	display: table-cell;
+	vertical-align: middle;
+	float:none;
 }
 @media (max-width: 780px) {
   .wide-only {

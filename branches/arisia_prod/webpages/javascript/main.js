@@ -11,11 +11,12 @@ $(document).ready(function() {
 		case "My Profile":
 			myProfile.initialize();
 			break;
-		//case "Edit Schedule":
-		//	staffMaintainSchedule.initialize();
+		case "Grid Scheduler":
+			staffMaintainSchedule.initialize();
+			break;
 		case "Search Results":
 			searchMySessions1.initialize();
-			
+			break;
 		default:
 			window.status="Ready."
 		}
@@ -24,8 +25,13 @@ $(document).ready(function() {
 var lib = new lib;
 
 function lib() {
-	this.toggleCheckbox = function toggleCheckbox(me) {
-		var thecheckbox = $(me).find(":checkbox");
+	this.toggleCheckbox = function toggleCheckbox() {
+		var thecheckbox = $(this).find(":checkbox");
 		thecheckbox.prop("checked",!thecheckbox.prop("checked"));
+		thecheckbox.triggerHandler("click");
+		}
+	
+	this.onePageResize = function onePageResize() {
+		$("#mainContentContainer").css("top", $("#top").outerHeight(true) + $("#staffNav").outerHeight(true) + 1);
 		}	
 }

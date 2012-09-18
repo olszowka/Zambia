@@ -1,4 +1,30 @@
 <?php
+function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
+	$startTimeUnits = $startTimeHour * 2;
+	if ($startTimeMin >= 30)
+		$startTimeUnits++;
+	return $startTimeUnits;
+}
+
+function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
+	$endTimeUnits = $endTimeHour * 2;
+	if ($endTimeMin > 30)
+			$endTimeUnits += 2;
+		elseif ($endTimeMin > 0)
+			$endTimeUnits++;
+	return $endTimeUnits;
+}
+
+function convertUnitsToTimeStr($timeUnits) {
+	return floor($timeUnits/2).":00:00";
+}
+
+function convertUnitsToHourMin($timeUnits) {
+	$hour = floor($timeUnits/2);
+	$min = ($timeUnits%2) * 30;
+	return array($hour, $min);
+}
+
 function showCustomText($pre,$tag,$post) {
 	global $customTextArray;
 	if (strlen($x = $customTextArray[$tag])>0) {
@@ -219,7 +245,19 @@ function time_description($time) {
     $result.=($atime["hour"]>=12)?"PM":"AM";
     return($result);
     }
-
+//
+// Function timeDescFromUnits($timeUnits)
+// Takes the int $timeUnits which is the number of time units (1/2 hours)
+// from the start of the con and converts to string like "Fri 1:00 PM"
+function timeDescFromUnits($timeUnits) {
+	global $daymap;
+	$result = $daymap['short'][intval($timeUnits / 48 + 1)]." ";
+	$result .= (fmod(intval(fmod($timeUnits,48)/2) + 11, 12) + 1) . ":";
+	$result .= (fmod($timeUnits,2) == 1) ? "30" : "00";
+	$result .= (fmod($timeUnits,48) >= 24) ? " PM" : " AM";
+	return $result;
+	}
+//
 // Function fix_slashes($arg)
 // Takes the string $arg and removes multiple slashes, 
 // slash-quote and slash-double quote.

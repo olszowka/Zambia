@@ -632,7 +632,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 10px 0;
+  margin: 5px 0 3px 0;
   font-family: inherit;
   font-weight: bold;
   line-height: 1;
@@ -652,33 +652,33 @@ h6 small {
 }
 
 h1 {
-  font-size: 36px;
-  line-height: 40px;
+  font-size: 24px;
+  line-height: 32px;
 }
 
 h2 {
-  font-size: 30px;
-  line-height: 40px;
+  font-size: 21px;
+  line-height: 26px;
 }
 
 h3 {
-  font-size: 24px;
-  line-height: 40px;
+  font-size: 18px;
+  line-height: 21px;
 }
 
 h4 {
-  font-size: 18px;
-  line-height: 20px;
+  font-size: 16px;
+  line-height: 18px;
 }
 
 h5 {
   font-size: 14px;
-  line-height: 20px;
+  line-height: 15px;
 }
 
 h6 {
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 13px;
 }
 
 h1 small {
@@ -4151,7 +4151,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar-inner {
-  min-height: 40px;
+  min-height: 28xpx;
   padding-right: 20px;
   padding-left: 20px;
   background-color: #fafafa;
@@ -4194,7 +4194,7 @@ input[type="submit"].btn.btn-mini {
 .navbar .brand {
   display: block;
   float: left;
-  padding: 10px 20px 10px;
+  padding: 4px 12px;
   margin-left: -20px;
   font-size: 20px;
   font-weight: 200;
@@ -4220,7 +4220,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar .divider-vertical {
-  height: 40px;
+  height: 30px;
   margin: 0 9px;
   border-right: 1px solid #ffffff;
   border-left: 1px solid #f2f2f2;
@@ -4287,12 +4287,12 @@ input[type="submit"].btn.btn-mini {
 .navbar-search {
   position: relative;
   float: left;
-  margin-top: 5px;
+  margin-top: 3px;
   margin-bottom: 0;
 }
 
 .navbar-search .search-query {
-  padding: 4px 14px;
+  padding: 1px 14px;
   margin-bottom: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
@@ -4388,7 +4388,7 @@ input[type="submit"].btn.btn-mini {
 
 .navbar .nav > li > a {
   float: none;
-  padding: 10px 15px 10px;
+  padding: 4px 12px;
   color: #777777;
   text-decoration: none;
   text-shadow: 0 1px 0 #ffffff;

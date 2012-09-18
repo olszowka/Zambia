@@ -55,15 +55,17 @@
 		echo '</SPAN>';
 	    }
     }
-    Function makeMenuItem($text,$usable,$url,$sep=false) {
-    	if ($usable) {
-        if ($sep) {
-          echo '<li class="divider-vertical"></li>';
-        }
-        echo '<li><a href="' . $url . '">' . $text . '</a></li>';
-      }
-    	else {
-  //  		echo '<li><span class="unusabletab" href="#">' . $text . '</span></li>';
-      }
-    }
+
+	Function makeMenuItem($text,$usable,$url,$sep=false) {
+		//plain menu item looks like
+		//<li><a href="StaffAssignParticipants.php">Assign to a Session</a></li>
+		if ($usable)
+			{
+			if ($sep)
+				{
+				echo "<li class=\"divider-vertical\"></li>";
+				}
+			echo "<li><a href=\"$url\">$text</a></li>";
+			}
+	}
 ?>

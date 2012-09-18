@@ -42,7 +42,7 @@ load_javascript();
 	<!-- Header -->
 		<header class="row-fluid participant" id="top">
 		  <div class="span9">
-  			<img src="/images/logo.gif" title="Arisia logo" class="pull-left" />
+  			<img src="images/logo.gif" title="Arisia logo" class="pull-left" />
   			<h1 class="pull-left wide-medium-only">Zambia<br/><span class="wide-only">The <?php echo CON_NAME; ?> Scheduling Tool</span></h1>
   		</div>
 <?php if (isset($_SESSION['badgeid'])) { ?>

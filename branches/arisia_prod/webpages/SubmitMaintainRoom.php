@@ -8,7 +8,7 @@ function check_room_sched_conflicts($deleteScheduleIds,$addToScheduleArray)
 	// Perform following checks on the participants in the new schedule entries (taking into account deleted entries):
 	//    1. Are any participants double booked?
 	//    2. Are any participants scheduled outside available times?
-	//    3. Are any participants scheduled for more sessions than limits (daily and total)?
+	//    3. Are any participants scheduled for more sessions than limits (daily and total)? (not implemented yet!!!)
 	//
 	// Process
 	//
@@ -44,7 +44,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-			$message=$query."<BR>\nError querying database.<BR>\n";
+			$message=$query."<br>\nError querying database.<br>\n";
 			RenderError($title,$message);
 			exit();
 		}
@@ -65,7 +65,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-		$message=$query."<BR>\nError querying database.<BR>\n";
+		$message=$query."<br>\nError querying database.<br>\n";
 		RenderError($title,$message);
 		exit();
 		}
@@ -91,7 +91,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-		$message=$query."<BR>\nError querying database.<BR>\n";
+		$message=$query."<br>\nError querying database.<br>\n";
 		RenderError($title,$message);
 		exit();
 		}
@@ -113,7 +113,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-		$message=$query."<BR>\nError querying database.<BR>\n";
+		$message=$query."<br>\nError querying database.<br>\n";
 		RenderError($title,$message);
 		exit();
 		}
@@ -160,7 +160,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-		$message=$query."<BR>\nError querying database.<BR>\n";
+		$message=$query."<br>\nError querying database.<br>\n";
 		RenderError($title,$message);
 		exit();
 		}
@@ -192,12 +192,13 @@ EOD;
 						continue;
 					if (!$conflictThisAddition)
 						{ // Need header for this session
-						$message.="<P>Session $sessionid: {$addSession['title']}</P>\n<UL>"; 
+						$message.="<div class=\"conflictEditConfirmation\">Session $sessionid: {$addSession['title']}</div>\n";
+                        $message.="<div class=\"conflictList\"><ul>"; 
 						}
 					$conflictThisAddition=true;
-					$message.="<LI>".htmlspecialchars($addToScheduleParticipants[$badgeid],ENT_NOQUOTES)." ($badgeid) ";
+					$message.="<li>".htmlspecialchars($addToScheduleParticipants[$badgeid],ENT_NOQUOTES)." ($badgeid) ";
 					$message.="has conflict with ".htmlspecialchars($refSession['title'],ENT_NOQUOTES)." ({$refSession['sessionid']}) in ";
-					$message.="{$refSession['roomname']}.</LI>\n";
+					$message.="{$refSession['roomname']}.</li>\n";
 					// conflict!
 					}
 				}
@@ -239,17 +240,18 @@ EOD;
 					if (!$conflictThisAddition) 
 						{
 						// Need header for this session
-						$message.="<P>Session $sessionid: {$addSession['title']}</P>\n<UL>"; 
+						$message.="<div class=\"conflictEditConfirmation\">Session $sessionid: {$addSession['title']}</div>\n";
+                        $message.="<div class=\"conflictList\"><ul>"; 
 						}
 					$conflictThisAddition=true;
-					$message.="<LI>".htmlspecialchars($addToScheduleParticipants[$addBadgeid],ENT_NOQUOTES)." ($addBadgeid) ";
-					$message.="is not available.</LI>\n";
+					$message.="<li>".htmlspecialchars($addToScheduleParticipants[$addBadgeid],ENT_NOQUOTES)." ($addBadgeid) ";
+					$message.="is not available.</li>\n";
 					}
 				}
 			}
 		if ($conflictThisAddition)
 			{ 
-			$message.="</UL>";
+			$message.="</ul></div>";
 			}
 		}
 	return (($message)?false:true); // empty message == no conflicts.
