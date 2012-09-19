@@ -115,13 +115,6 @@ if (isset($_POST['update'])) {
     $participant['bestway']=$_POST['bestway'];
   }
 
-  // ... add interested.
-  if ($_POST['interested']!=$participant['interested']) {
-    if ($query!="") {$query.=", ";}
-    $query.="interested=\"".$_POST['interested']."\"";
-    $participant['interested']=$_POST['interested'];
-  }
-
   // Check to see if we are actually doing anything, and if so, do it.
   if ($query!="") {
     $query_start.=$query;
@@ -133,6 +126,26 @@ if (isset($_POST['update'])) {
       exit();
     }
     $message.="Database updated successfully with participant information.";
+  }
+  // Update interested if changed
+  if ($_POST['interested']!=$participant['interested']) {
+    $query ="UPDATE $ReportDB.Interested SET ";
+    $query.="interestedtypeid=".$_POST['interested']." ";
+    $query.="WHERE badgeid=\"".$badgeid."\" AND conid=".$_SESSION['conid'];
+    if (!mysql_query($query,$link)) {
+      $message.=$query."<BR>Error updating Interested table.  Database not update.";
+      echo "<P class=\"errmsg\">".$message."</P>\n";
+      return;
+    }
+    ereg("Rows matched: ([0-9]*)", mysql_info($link), $r_matched);
+    if ($r_matched[1]==0) {
+      $element_array=array('conid','badgeid','interestedtypeid');
+      $value_array=array($_SESSION['conid'], $badgeid, mysql_real_escape_string(stripslashes($_POST['interested'])));
+      $message.=submit_table_element($link,"Admin Participants","$ReportDB.Interested", $element_array, $value_array);
+    } elseif ($r_matched[1]>1) {
+      $message.="There might be something wrong with the table, there are multiple interested elements for this year.";
+    }
+    $participant['interested']=$_POST['interested'];
   }
 }
 
@@ -157,6 +170,7 @@ if ($message!="") {
 
 <FORM name="partform" method=POST action="my_contact.php">
   <div id="update_section">
+<?php /*  This should not (necessarily) be modifiable by the user.  See Welocme page for more info
     <div class="divlistbox">
       <span class="spanlabcb">I am interested and able to participate in 
         programming for <?php echo CON_NAME; ?>&nbsp;</span>
@@ -167,6 +181,7 @@ if ($message!="") {
             <OPTION value=2 <?php if ($int==2) {echo "selected";} ?> >No</OPTION></SELECT>
           </span>
       </div>
+      */ ?>
     <div id="bestway">
       <span class="spanlabcb">Preferred mode of contact&nbsp;</span>
       <div id="bwbuttons">

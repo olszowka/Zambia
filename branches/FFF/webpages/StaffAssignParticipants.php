@@ -213,9 +213,12 @@ SELECT
     JOIN $ReportDB.CongoDump USING(badgeid)
     JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
     JOIN $ReportDB.PermissionRoles USING (permroleid)
+    JOIN $ReportDB.Interested I USING (badgeid)
+    JOIN $ReportDB.InterestedTypes USING (interestedtypeid)
   WHERE
-    interested=1 AND
-    UHPR.conid=$conid
+    interestedtypename in ('Yes') AND
+    UHPR.conid=$conid AND
+    I.conid=$conid AND
     permrolename in ($permrolecheck_string) AND
     badgeid not in (SELECT
                           badgeid

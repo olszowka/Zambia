@@ -6,6 +6,12 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, $message1, $message2) {
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
 
     // Get the various length limits
     $limit_array=getLimitArray();
@@ -33,7 +39,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
                 <TD style="margin: 0em; padding: 0em">
-                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
+<?php /*                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>  trimmed for sanity purposes */ ?>
                     <BUTTON class="ib" type=submit value="save">Save</BUTTON>
                     </TD></TR></TABLE>
                 </DIV>
@@ -51,12 +57,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
                 <SPAN><LABEL for="badgename">Badge Name: </LABEL><INPUT type="text" size=20 name="badgename" id="badgename"
                      value="<?php echo htmlspecialchars($participant_arr["badgename"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="interested">Will participate and attend: </LABEL><SELECT name="interested">
-                    <OPTION value="" <?php if ($participant_arr["interested"]=="") echo "selected";?> >Not yet logged in</OPTION>
-                    <OPTION value="0" <?php if ($participant_arr["interested"]=="0") echo "selected";?> >Did not answer</OPTION>
-                    <OPTION value="1" <?php if ($participant_arr["interested"]=="1") echo "selected";?> >Yes</OPTION>
-                    <OPTION value="2" <?php if ($participant_arr["interested"]=="2") echo "selected";?> >No</OPTION>
-                    <OPTION value="3" <?php if ($participant_arr["interested"]=="3") echo "selected";?> >Invited</OPTION>
-                    <OPTION value="4" <?php if ($participant_arr["interested"]=="4") echo "selected";?> >Suggested</OPTION>
+                    <?php populate_select_from_table("$ReportDB.InterestedTypes", $participant_arr['interested'], " ", FALSE); ?>
                     </SELECT>
                 </DIV>
             <DIV class="denseform">
@@ -175,7 +176,7 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
                 <TD style="margin: 0em; padding: 0em">
-                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
+								<?php /*                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON> Trimmed for sanity purposes */ ?>
                     <BUTTON class="ib" type=submit value="save">Save</BUTTON>
                     </TD></TR></TABLE>
                 </DIV>

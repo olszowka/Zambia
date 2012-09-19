@@ -12,11 +12,8 @@
 	<P class="regmsg"><?php echo $message; ?></P>
 	<?php } ?>
 <?php
-  //    $chpw1=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
-  //    $chpw=($participant["password"]=="c79bdf421714f5087fc34b7c538b6807");
-  //    $chint=($participant["interested"]==0);
   //  $mayi=(in_array('BrainstormSubmit',$_SESSION['permission_set']));
-  //echo "<P>chpw ". $chpw ." chpw1 ".$chpw1." chint ".$chint." mayi ".$mayi.":<PRE>".Print_r($_SESSION['permission_set'])."</PRE></P>\n";
+  //echo "<P>mayi ".$mayi.":<PRE>".Print_r($_SESSION['permission_set'])."</PRE></P>\n";
     if (may_I('BrainstormSubmit')) {
       if (file_exists("../Local/Verbiage/BrainstormWelcome_0")) {
 	echo file_get_contents("../Local/Verbiage/BrainstormWelcome_0");

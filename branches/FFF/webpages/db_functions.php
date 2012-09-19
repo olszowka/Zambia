@@ -250,11 +250,19 @@ function update_session() {
     $query.="notesforprog=\"".mysql_real_escape_string($session["notesforprog"],$link)."\" ";
     $query.=" WHERE sessionid=".$session["sessionid"];
     $message2=$query;
-    if (!mysql_query($query,$link)) { return false; }
+    if (!mysql_query($query,$link)) {
+        $message_error.=mysql_error($link);
+        $message_error.=" query=$query";
+        return $message_error;
+        }
     $query="DELETE from SessionHasFeature where sessionid=".$session["sessionid"];
     //$query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
-    if (!mysql_query($query,$link)) { return false; }
+    if (!mysql_query($query,$link)) {
+        $message_error.=mysql_error($link);
+	$message_error.=" query=$query";
+	return $message_error;
+        }
     $id=$session["sessionid"];
     if ($session["featdest"]!="") {
         for ($i=0 ; $session["featdest"][$i]!="" ; $i++ ) {
@@ -262,26 +270,42 @@ function update_session() {
             $query.=$session["featdest"][$i];
 	    //$query.=", conid=".$_SESSION['conid'];
             $message2=$query;
-            if (!mysql_query($query,$link)) { return false; }
+            if (!mysql_query($query,$link)) {
+	        $message_error.=mysql_error($link);
+	        $message_error.=" query=$query";
+	        return $message_error;
+                }
             }
         }
     $query="DELETE from SessionHasService where sessionid=".$session["sessionid"];
     //$query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
-    if (!mysql_query($query,$link)) { return false; }
+    if (!mysql_query($query,$link)) {
+        $message_error.=mysql_error($link);
+	$message_error.=" query=$query";
+	return $message_error;
+        }
     if ($session["servdest"]!="") {
         for ($i=0 ; $session["servdest"][$i]!="" ; $i++ ) {
             $query="INSERT into SessionHasService set sessionid=".$id.", serviceid=";
             $query.=$session["servdest"][$i];
 	    //$query.=", conid=".$_SESSION['conid'];
             $message2=$query;
-            if (!mysql_query($query,$link)) { return false; }
+            if (!mysql_query($query,$link)) {
+	        $message_error.=mysql_error($link);
+	        $message_error.=" query=$query";
+	        return $message_error;
+                }
             }
         }
     $query="DELETE from SessionHasPubChar where sessionid=".$session["sessionid"];
     //$query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
-    if (!mysql_query($query,$link)) { return false; }
+    if (!mysql_query($query,$link)) {
+        $message_error.=mysql_error($link);
+	$message_error.=" query=$query";
+	return $message_error;
+        }
     if ($session["pubchardest"]!="") {
         //error_log("Zamiba->update_session->\$session[\"pubchardest\"]: ".print_r($session["pubchardest"],TRUE)); // for debugging only
         for ($i=0 ; $session["pubchardest"][$i]!="" ; $i++ ) {
@@ -289,13 +313,21 @@ function update_session() {
             $query.=$session["pubchardest"][$i];
 	    //$query.=", conid=".$_SESSION['conid'];
             $message2=$query;
-            if (!mysql_query($query,$link)) { return false; }
+            if (!mysql_query($query,$link)) {
+	        $message_error.=mysql_error($link);
+	        $message_error.=" query=$query";
+	        return $message_error;
+                }
             }
         }
     $query="DELETE from $ReportDB.SessionHasVendorFeature where sessionid=".$session["sessionid"];
     $query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
-    if (!mysql_query($query,$link)) { return false; }
+    if (!mysql_query($query,$link)) {
+        $message_error.=mysql_error($link);
+	$message_error.=" query=$query";
+	return $message_error;
+        }
     $id=$session["sessionid"];
     if ($session["vendfeatdest"]!="") {
         for ($i=0 ; $session["vendfeatdest"][$i]!="" ; $i++ ) {
@@ -303,22 +335,53 @@ function update_session() {
             $query.=$session["vendfeatdest"][$i];
 	    $query.=", conid=".$_SESSION['conid'];
             $message2=$query;
-            if (!mysql_query($query,$link)) { return false; }
+            if (!mysql_query($query,$link)) {
+	        $message_error.=mysql_error($link);
+	        $message_error.=" query=$query";
+	        return $message_error;
+                }
             }
         }
     $query="DELETE from $ReportDB.SessionHasVendorSpace where sessionid=".$session["sessionid"];
     $query.=" AND conid=".$_SESSION['conid'];
     $message2=$query;
-    if (!mysql_query($query,$link)) { return false; }
+    if (!mysql_query($query,$link)) {
+        $message_error.=mysql_error($link);
+	$message_error.=" query=$query";
+	return $message_error;
+        }
     $id=$session["sessionid"];
-    if ($session["vendorspace"]!="") {
-        for ($i=0 ; $session["vendorspace"][$i]!="" ; $i++ ) {
-            $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
-            $query.=$session["vendorspace"][$i];
-	    $query.=", conid=".$_SESSION['conid'];
-            $message2=$query;
-            if (!mysql_query($query,$link)) { return false; }
+    if ($session["vendorspace"]!=0) {
+        $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
+	$query.=$session["vendorspace"];
+	$query.=", conid=".$_SESSION['conid'];
+        $message2=$query;
+        if (!mysql_query($query,$link)) {
+	    $message_error.=mysql_error($link);
+	    $message_error.=" query=$query";
+	    return $message_error;
             }
+        }
+    $query="DELETE from $ReportDB.SessionHasVendorAdjust where sessionid=".$session["sessionid"];
+    $query.=" AND conid=".$_SESSION['conid'];
+    $message2=$query;
+    if (($session["vendoradjustvalue"]!="") or ($session["vendoradjustnote"]!="")) {
+        $query="INSERT into $ReportDB.SessionHasVendorAdjust set sessionid=".$id." ";
+        if ($session["vendoradjustvalue"]!="") {
+	    $query.=", vendoradjustvalue=";
+	    $query.=$session["vendoradjustvalue"]." ";
+  	    }
+        if ($session["vendoradjustnote"]!="") {
+	    $query.=", vendoradjustnote='";
+	    $query.=$session["vendoradjustnote"]."' ";
+	    }
+        $query.=", conid=".$_SESSION['conid'];
+        $result = mysql_query($query,$link);
+	if (!$result) {
+	    $message_error.=mysql_error($link);
+	    $message_error.=" query=$query";
+	    return $message_error;
+	    }
         }
     return true;
     }
@@ -338,7 +401,8 @@ function get_next_session_id() {
 
 // Function insert_session()
 // Takes data from global $session array and creates new rows in
-// the tables Sessions, SessionHasFeature, and SessionHasService.
+// the tables Sessions, SessionHasFeature, SessionHasService,
+// SessionHasPubChar, SessionHasVendorFeature, and SessionHasVendorSpace
 //
 function insert_session() {
     global $session, $link, $query, $message_error;
@@ -384,8 +448,9 @@ function insert_session() {
     if ($session["invguest"]) {$query.="1";} else {$query.="0";}
     $result = mysql_query($query,$link);
     if (!$result) {
-        $message_error=mysql_error($link);
-        return $result;
+        $message_error.=mysql_error($link);
+        $message_error.=" query=$query";
+        return $message_error;
         }
     $id = mysql_insert_id($link);
     if ($session["featdest"]!="") {
@@ -394,6 +459,11 @@ function insert_session() {
             $query.=$session["featdest"][$i];
 	    //$query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
+	    if (!$result) {
+	        $message_error.=mysql_error($link);
+		$message_error.=" query=$query";
+	        return $message_error;
+	        }
             }
         }
     if ($session["servdest"]!="") {
@@ -402,6 +472,11 @@ function insert_session() {
             $query.=$session["servdest"][$i];
 	    //$query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
+	    if (!$result) {
+	        $message_error.=mysql_error($link);
+		$message_error.=" query=$query";
+	        return $message_error;
+	        }
             }
         }
     if ($session["pubchardest"]!="") {
@@ -410,23 +485,54 @@ function insert_session() {
             $query.=$session["pubchardest"][$i];
 	    //$query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
+	    if (!$result) {
+	        $message_error.=mysql_error($link);
+		$message_error.=" query=$query";
+	        return $message_error;
+	        }
             }
         }
     if ($session["vendfeatdest"]!="") {
         for ($i=0 ; $session["vendfeatdest"][$i]!="" ; $i++ ) {
             $query="INSERT into $ReportDB.SessionHasVendorFeature set sessionid=".$id.", vendorfeatureid=";
-            $query.=$session["vendorfeatdest"][$i];
+            $query.=$session["vendfeatdest"][$i];
 	    $query.=", conid=".$_SESSION['conid'];
             $result = mysql_query($query,$link);
+	    if (!$result) {
+	        $message_error.=mysql_error($link);
+		$message_error.=" query=$query";
+	        return $message_error;
+	        }
             }
         }
-    if ($session["vendorspace"]!="") {
-        for ($i=0 ; $session["vendorspace"][$i]!="" ; $i++ ) {
-            $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
-            $query.=$session["vendorspace"][$i];
-	    $query.=", conid=".$_SESSION['conid'];
-            $result = mysql_query($query,$link);
-            }
+    if ($session["vendorspace"]!=0) {
+        $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
+        $query.=$session["vendorspace"];
+        $query.=", conid=".$_SESSION['conid'];
+        $result = mysql_query($query,$link);
+	if (!$result) {
+	    $message_error.=mysql_error($link);
+	    $message_error.=" query=$query";
+	    return $message_error;
+	    }
+        }
+    if (($session["vendoradjustvalue"]!="") or ($session["vendoradjustnote"]!="")) {
+        $query="INSERT into $ReportDB.SessionHasVendorAdjust set sessionid=".$id." ";
+        if ($session["vendoradjustvalue"]!="") {
+	    $query.=", vendoradjustvalue=";
+	    $query.=$session["vendoradjustvalue"]." ";
+  	    }
+        if ($session["vendoradjustnote"]!="") {
+	    $query.=", vendoradjustnote='";
+	    $query.=$session["vendoradjustnote"]."' ";
+	    }
+        $query.=", conid=".$_SESSION['conid'];
+        $result = mysql_query($query,$link);
+	if (!$result) {
+	    $message_error.=mysql_error($link);
+	    $message_error.=" query=$query";
+	    return $message_error;
+	    }
         }
     return $id;
     }
@@ -614,7 +720,7 @@ function retrieve_participant_from_db($badgeid) {
     if ($ReportDB=="REPORTDB") {unset($ReportDB);}
     if ($BiotDB=="BIODB") {unset($BIODB);}
 
-    $result=mysql_query("SELECT pubsname, password, interested  FROM $ReportDB.Participants where badgeid='$badgeid'",$link);
+    $result=mysql_query("SELECT pubsname, password FROM $ReportDB.Participants where badgeid='$badgeid'",$link);
     if (!$result) {
         $message2=mysql_error($link);
         return (-3);
@@ -670,7 +776,7 @@ EOD;
         return(-1);
         };
     if (retrieve_participant_from_db($badgeid)!=0) {
-        $message_error=$message2."<BR>No further execution possible.";
+        $message_error=$message2."<BR>In Congo but not in Participants, no further execution possible.";
         return(-1);
         };
     $participant["password"]="";
@@ -765,12 +871,16 @@ function set_permission_set($badgeid) {
     $_SESSION['permission_set']="";
     $conid=$_SESSION['conid'];
     $query= <<<EOD
-    Select distinct permatomtag from $ReportDB.PermissionAtoms as PA, $ReportDB.Phase as PH,
-    $ReportDB.PermissionRoles as PR, $ReportDB.UserHasPermissionRole as UHPR, Permissions P where
-    ((UHPR.badgeid='$badgeid' and UHPR.permroleid = P.permroleid and UHPR.conid=$conid)
-        or P.badgeid='$badgeid' ) and
-    (P.phaseid is null or (P.phaseid = PH.phasetypeid and PH.phasestate = TRUE and PH.conid=$conid)) and
-    P.permatomid = PA.permatomid
+SELECT
+    DISTINCT permatomtag
+  FROM 
+      $ReportDB.Phase as PH,
+      Permissions P
+    JOIN $ReportDB.PermissionAtoms USING (permatomid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (permroleid)
+  WHERE
+    ((UHPR.badgeid='$badgeid' AND UHPR.conid=$conid) OR P.badgeid='$badgeid' ) AND
+    (P.phaseid is null OR (P.phaseid = PH.phasetypeid AND PH.phasestate = TRUE and PH.conid=$conid))
 EOD;
     $result=mysql_query($query,$link);
 //    error_log("set_permission_set query:  ".$query);

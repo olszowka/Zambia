@@ -123,7 +123,7 @@ if ($action=="create") { //initialize participant array
    }
    
    //Choose the individual from the database
-   select_participant($selpartid, "StaffEditCreateParticipant.php?action=edit");
+   select_participant($selpartid, "'Yes'", "StaffEditCreateParticipant.php?action=edit");
    
    //Stop page here if and individual has not yet been selected
    if ($selpartid==0) {
@@ -155,7 +155,6 @@ SELECT
     CD.postzip,
     CD.regtype,
     P.bestway,
-    P.interested,
     P.pubsname,
     P.altcontact,
     P.prognotes,
@@ -182,6 +181,16 @@ EOD;
    }
    $participant_arr=mysql_fetch_array($result,MYSQL_ASSOC);
 
+   // Get interested as in participating in current con
+   $query="SELECT interestedtypeid FROM $ReportDB.Interested WHERE badgeid=$selpartid AND conid=$conid";
+   if (($result=mysql_query($query,$link))===false) {
+     $message_error="Error retrieving data from database<BR>\n";
+     $message_error.=$query;
+     RenderError($title,$message_error);
+     exit();
+   }
+   list($participant_arr['interested'])=mysql_fetch_array($result,MYSQL_NUM); 
+
    // Get a set of bioinfo, and map it to the appropriate $participant_arr.
    $bioinfo=getBioData($selpartid);
 
@@ -202,6 +211,18 @@ EOD;
      }
    }
    RenderEditCreateParticipant($action,$participant_arr,$permrole_arr,$message,$message_error);
+   echo "<DIV class=\"sectionheader\">\n";
+   $printname=htmlspecialchars($participant_arr['pubsname']);
+   echo "<A HREF=AdminParticipants.php?partid=$selpartid>Edit password for $printname</A> ::\n";
+   if (may_I(SuperLiaison)) {
+     echo "<A HREF=StaffEditCompensation.php?partid=$selpartid>Set Compensation for $printname</A> ::\n";
+   }
+   if (may_I(Participant)) {
+     echo "<A HREF=ClassIntroPrint.php?individual=$selpartid>Print Intros for $printname</A> ::\n";
+     echo "<A HREF=WelcomeLettersPrint.php?individual=$selpartid>Print Welcome Letter for $printname</A> ::\n";
+   }
+   echo "<A HREF=SchedulePrint.php?individual=$selpartid>Print Schedule for $printname</A>\n";
+   echo "</DIV>\n";
    // Show previous notes added, for references, and end page
    show_participant_notes ($selpartid);
  }

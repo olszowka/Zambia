@@ -44,6 +44,24 @@ for ($i=1; $i<=$rows; $i++) {
   }
 }
 
+// Get the interested value that means "Suggested" from the InterestedTypes table.
+$query= <<<EOD
+SELECT
+    interestedtypeid
+  FROM
+      $ReportDB.InterestedTypes
+  WHERE
+    interestedtypename in ('Suggested')
+EOD;
+if (!$result=mysql_query($query,$link)) {
+    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
+    echo "<P class\"errmsg\">".$message."\n";
+    staff_footer();
+    exit();
+    }
+
+list($interested)= mysql_fetch_array($result, MYSQL_NUM);
+
 // If the information has already been added, and we are
 // on the return loop, add the Participant to the database.
 if ((isset ($_POST['update'])) and ($_POST['update']=="Yes")) {
@@ -57,7 +75,7 @@ if ((isset ($_POST['update'])) and ($_POST['update']=="Yes")) {
 // Set the values.
 $participant_arr['password']=md5("unassigned");
 $participant_arr['bestway']="Email";
-$participant_arr['interested']="4"; // 4 means suggested
+$participant_arr['interested']=$interested;
 $participant_arr['prognotes']="Suggested via Brainstorm"; 
 $participant_arr['regtype']="Suggested Presenter";
 

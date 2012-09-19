@@ -58,7 +58,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
                 <TD style="margin: 0em; padding: 0em">
-                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
+<?php /*                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON> Dyked out for safety purposes */ ?>
                     <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
                     </TD></TR></TABLE>
                 </DIV>
@@ -254,7 +254,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
                 <TD style="margin: 0em; padding: 0em">
-                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON>
+<?php /*                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON> Dyked out for safety purposes */ ?>
                     <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
                     </TD></TR></TABLE>
                 </DIV>

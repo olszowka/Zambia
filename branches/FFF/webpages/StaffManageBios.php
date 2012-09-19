@@ -40,7 +40,7 @@ if (isset($_GET['unlock'])) {
   en-us web, en-us book, en-us uri, en-us picture, en-uk web, en-uk book
 */
 
-// Participants.interested: 1=yes; 2=no; 3=invited; 4=suggested; 0=left blank; null=never hit 'save'
+// Participants
 $query= <<<EOD
 SELECT 
     B.badgeid,
@@ -54,12 +54,16 @@ SELECT
     JOIN $BioDB.Bios B USING (badgeid)
     JOIN $BioDB.BioTypes USING (biotypeid)
     JOIN $BioDB.BioStates USING (biostateid)
-    LEFT JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
-    LEFT JOIN $ReportDB.PermissionRoles USING (permroleid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
+    JOIN $ReportDB.PermissionRoles USING (permroleid)
+    JOIN $ReportDB.Interested I USING (badgeid)
+    JOIN $ReportDB.InterestedTypes USING (interestedtypeid)
     LEFT JOIN $ReportDB.Participants LB on B.biolockedby = LB.badgeid
+   
   WHERE
-    P.interested=1 AND
+    interestedtypename in ('Yes') AND
     UHPR.conid=$conid AND
+    I.conid=$conid AND
     (permrolename in ('Participant') OR
      permrolename like '%Super%')
 EOD;

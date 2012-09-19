@@ -4,17 +4,40 @@
     // Welcome page.  A previous version prompted the user to change his password if it was
     // still the initial password.
     require ('PartCommonCode.php');
-    $ReportDB=REPORTDB; // make it a variable so it can be substituted
-    $BioDB=BIODB; // make it a variable so it can be substituted
+    global $link;
+$ReportDB=REPORTDB; // make it a variable so it can be substituted
+$BioDB=BIODB; // make it a variable so it can be substituted
 
-    // Tests for the substituted variables
-    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
-    if ($BiotDB=="BIODB") {unset($BIODB);}
+// Tests for the substituted variables
+if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+if ($BiotDB=="BIODB") {unset($BIODB);}
 
     $title="Welcome";
-    $interested = $_POST['interested'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];
+
+// If interested is changed.
+if ($_POST['interested']!=$participant['interested']) {
+  $query ="UPDATE $ReportDB.Interested SET ";
+  $query.="interestedtypeid=".$_POST['interested']." ";
+  $query.="WHERE badgeid=\"".$badgeid."\" AND conid=".$_SESSION['conid'];
+  if (!mysql_query($query,$link)) {
+    $message.=$query."<BR>Error updating Interested table.  Database not updated.";
+    echo "<P class=\"errmsg\">".$message."</P>\n";
+    return;
+  }
+  ereg("Rows matched: ([0-9]*)", mysql_info($link), $r_matched);
+  if ($r_matched[1]==0) {
+    $element_array=array('conid','badgeid','interestedtypeid');
+    $value_array=array($_SESSION['conid'], $badgeid, mysql_real_escape_string(stripslashes($_POST['interested'])));
+    $message.=submit_table_element($link,$title,"$ReportDB.Interested", $element_array, $value_array);
+  } elseif ($r_matched[1]>1) {
+    $message.="There might be something wrong with the table, there are multiple interested elements for this year.";
+  }
+  $participant['interested']=$_POST['interested'];
+}
+
+// If password is changed.
     if ($password=="" and $cpassword=="") {
             $update_password=false;
 	    }
@@ -37,7 +60,6 @@
 	if ($update_password==true) {
 		$query=$query."password=\"".md5($password)."\", ";
 		}
-	$query.="interested=".$interested;
 	$query.=" WHERE badgeid=\"".$badgeid."\"";                               //"
     if (!mysql_query($query,$link)) {
 		$message=$query."<BR>Error updating database.  Database not updated.";

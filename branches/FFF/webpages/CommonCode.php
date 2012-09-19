@@ -118,8 +118,14 @@ function staff_header($title) {
     maketab("TimeCards",1,"VolunteerCheckIn.php");
     echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
     maketab("Participant View",1,"welcome.php");
-    echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
-    maketab("Brainstorm View",may_I('public_login'),"BrainstormWelcome.php");
+    if (may_I('Vendor')) {
+      echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
+      maketab("Vendor View",1,"VendorWelcome.php");
+      }
+    if (may_I('public_login')) {
+      echo "</td>\n      <td class=\"tabblocks border0020\">\n          ";
+      maketab("Brainstorm View",1,"BrainstormWelcome.php");
+    }
     echo "</td>\n    </tr>\n  </table>\n";
     echo "<table class=\"header\">\n  <tr>\n    <td style=\"height:5px\">\n      </td>\n    </tr>\n";
     echo "  <tr>\n    <td>\n      <table width=\"100%\">\n";
@@ -296,7 +302,7 @@ function vendor_header($title) {
       maketab("New Vendor",may_I('BrainstormSubmit'),"VendorSubmitVendor.php");
     }
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
-    maketab("Apply",may_I('Vendor'),"VendorApply.php");
+    maketab("Apply",may_I('vendor_apply'),"VendorApply.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     if (may_I('Staff')) { 
@@ -541,7 +547,7 @@ function queryreport($query,$link,$title,$description,$reportid) {
 /* Show a list of participants to select from, generated from all participants.
  Each list is ordered by the sorting key, for html-based and visual-based
  searching. */
-function select_participant ($selpartid, $returnto) {
+function select_participant ($selpartid, $limit, $returnto) {
   $conid=$_SESSION['conid'];
   $ReportDB=REPORTDB; // make it a variable so it can be substituted
   $BioDB=BIODB; // make it a variable so it can be substituted
@@ -553,7 +559,7 @@ function select_participant ($selpartid, $returnto) {
   global $link;
 
 /* Get all the Permission Roles */
-$query = <<<EOD
+  $query = <<<EOD
 SELECT
     permrolename,
     notes
@@ -563,26 +569,52 @@ SELECT
     permroleid > 1
 EOD;
 
-list($permrole_rows,$permrole_header_array,$permrole_array)=queryreport($query,$link,"Broken Query",$query,0);
+  list($permrole_rows,$permrole_header_array,$permrole_array)=queryreport($query,$link,"Broken Query - select_participant - PermissionRoles",$query,0);
 
-// Empty Title Switch to begin with.
-$TitleSwitch="";
+  // Empty Title Switch to begin with.
+  $TitleSwitch="";
 
-/* Attempt to establish default graph based on permissions */
-for ($i=1; $i<=$permrole_rows; $i++) {
-  if (may_I($permrole_array[$i]['permrolename'])) {
-    $permrolecheck_array[]="'".$permrole_array[$i]['permrolename']."'";
-   }
- }
-
-$additional_permission_array=array('SuperProgramming', 'SuperLiaison', 'Liaison');
-
-foreach ($additional_permission_array as $perm) {
-  if (may_I($perm)) {
-    $permrolecheck_array[]="'Participant'";
+  /* Attempt to establish default graph based on permissions */
+  for ($i=1; $i<=$permrole_rows; $i++) {
+    if (may_I($permrole_array[$i]['permrolename'])) {
+      $permrolecheck_array[]="'".$permrole_array[$i]['permrolename']."'";
+    }
   }
-}
-$permrolecheck_string=implode(",",$permrolecheck_array);
+
+  $additional_permission_array=array('SuperProgramming', 'SuperLiaison', 'Liaison');
+
+  foreach ($additional_permission_array as $perm) {
+    if (may_I($perm)) {
+      $permrolecheck_array[]="'Participant'";
+    }
+  }
+  $permrolecheck_string=implode(",",$permrolecheck_array);
+
+  if ($limit!='') {
+    $query=<<<EOD
+SELECT
+    interestedtypeid
+  FROM
+      $ReportDB.InterestedTypes
+  WHERE
+    interestedtypename=$limit
+EOD;
+
+    list($interested_rows,$interested_header_array,$interested_array)=queryreport($query,$link,"Broken Query - select_participant - InterestedTypes",$query,0);
+  
+    // should only return one thing
+    $interestedtypeid=$interested_array[1]['interestedtypeid'];
+    if ($interestedtypeid=='') {
+      $message.=$query." Returned an empty array";
+      RenderError("Broken Query - select_participant - InterestedTypes", $message);
+      exit;
+    }
+    $limittables="    JOIN $ReportDB.Interested I USING (badgeid)\n";
+    $limitwhere="    interestedtypeid=$interestedtypeid AND\n    I.conid=$conid AND\n";
+  } else {
+    $limittables='';
+    $limitwhere='';
+  }
 
   // lastname, firstname (badgename/pubsname) - partid
   $query0=<<<EOD
@@ -594,7 +626,9 @@ SELECT
     JOIN $ReportDB.CongoDump USING (badgeid)
     JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
     JOIN $ReportDB.PermissionRoles USING (permroleid)
+    $limittables
   WHERE
+    $limitwhere
     permrolename in ($permrolecheck_string) AND
     UHPR.conid=$conid
   ORDER BY
@@ -611,7 +645,9 @@ SELECT
     JOIN $ReportDB.CongoDump USING (badgeid)
     JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
     JOIN $ReportDB.PermissionRoles USING (permroleid)
+    $limittables
   WHERE
+    $limitwhere
     permrolename in ($permrolecheck_string) AND
     UHPR.conid=$conid
   ORDER BY
@@ -628,7 +664,9 @@ SELECT
     JOIN $ReportDB.CongoDump USING (badgeid)
     JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
     JOIN $ReportDB.PermissionRoles USING (permroleid)
+    $limittables
   WHERE
+    $limitwhere
     permrolename in ($permrolecheck_string) AND
     UHPR.conid=$conid
   ORDER BY
@@ -808,15 +846,34 @@ function create_participant ($participant_arr,$permrole_arr) {
   $newbadgeid=sprintf("%d",$x+1); // convert to num; add 1; convert back to string
 
   // Create Participants entry.
-  $element_array = array('badgeid', 'password', 'bestway', 'interested', 'altcontact', 'prognotes', 'pubsname');
+  $element_array = array('badgeid', 'password', 'bestway', 'altcontact', 'prognotes', 'pubsname');
   $value_array=array($newbadgeid,
                      $participant_arr['password'],
                      $participant_arr['bestway'],
-                     (($participant_arr['interested']=='')?"NULL":$participant_arr['interested']),
                      htmlspecialchars_decode($participant_arr['altcontact']),
                      htmlspecialchars_decode($participant_arr['prognotes']),
 		     htmlspecialchars_decode($participant_arr['pubsname']));
   $message.=submit_table_element($link, $title, "$ReportDB.Participants", $element_array, $value_array);
+
+  // Add "Interested" if exists
+  if (isset($participant_arr['interested']) AND ($participant_arr['interested']!='')) {
+    $query ="UPDATE $ReportDB.Interested SET ";
+    $query.="interestedtypeid=".$participant_arr['interested']." ";
+    $query.="WHERE badgeid=\"".$newbadgeid."\" AND conid=".$_SESSION['conid'];
+    if (!mysql_query($query,$link)) {
+      $message.=$query."<BR>Error updating Interested table.  Database not update.";
+      echo "<P class=\"errmsg\">".$message."</P>\n";
+      return;
+    }
+    ereg("Rows matched: ([0-9]*)", mysql_info($link), $r_matched);
+    if ($r_matched[1]==0) {
+      $element_array=array('conid','badgeid','interestedtypeid');
+      $value_array=array($_SESSION['conid'], $newbadgeid, mysql_real_escape_string(stripslashes($participant_arr['interested'])));
+      $message.=submit_table_element($link,$title,"$ReportDB.Interested", $element_array, $value_array);
+    } elseif ($r_matched[1]>1) {
+      $message.="There might be something wrong with the table, there are multiple interested elements for this year.";
+    }
+  }
 
   // Add Bios.
   /* We are only updating the raw bios here, so only a 2-depth
@@ -861,28 +918,28 @@ function create_participant ($participant_arr,$permrole_arr) {
 		     htmlspecialchars_decode($participant_arr['regtype']));
   $message.=submit_table_element($link, $title, "$ReportDB.CongoDump", $element_array, $value_array);
 
-  // Submit a note about what was done.
-  $element_array = array('badgeid', 'rbadgeid', 'note');
-  $value_array=array($newbadgeid,
-                     $_SESSION['badgeid'],
-                     htmlspecialchars_decode($participant_arr['note']));
-  $message.=submit_table_element($link, $title, "NotesOnParticipants", $element_array, $value_array);
-
   // Assign permissions.
   $query = "INSERT INTO $ReportDB.UserHasPermissionRole (badgeid, permroleid, conid) VALUES ";
   for ($i=2; $i<=count($permrole_arr); $i++) {
     $perm="permroleid".$i;
     if ($participant_arr[$perm]=="checked") {
-      $query.="('".$newbadgeid."','".$i."','".$conid."'),";
+      $query.="('".$newbadgeid."','".$i."','".$_SESSION['conid']."'),";
     }
-
   }
+
   $query=rtrim($query,',');
   if (!mysql_query($query,$link)) {
     $message_error=$query."<BR>Error updating $ReportDB.UserHasPermissionRole database.  Database not updated.";
     RenderError($title,$message_error);
     exit();
   }
+
+  // Submit a note about what was done.
+  $element_array = array('badgeid', 'rbadgeid', 'note');
+  $value_array=array($newbadgeid,
+                     $_SESSION['badgeid'],
+                     htmlspecialchars_decode($participant_arr['note']));
+  $message.=submit_table_element($link, $title, "NotesOnParticipants", $element_array, $value_array);
 
   // Make $message additive (.=) to get all the information
   $message="Database updated successfully with ".$participant_arr["badgename"].".<BR>";
@@ -939,7 +996,6 @@ function edit_participant ($participant_arr,$permrole_arr) {
 
   // Update Participants entry.
   $pairedvalue_array=array("bestway='".mysql_real_escape_string($participant_arr['bestway'])."'",
-			   "interested='".(($participant_arr['interested']=='')?"NULL":$participant_arr['interested'])."'",
 			   "altcontact='".mysql_real_escape_string($participant_arr['altcontact'])."'",
 			   "prognotes='".mysql_real_escape_string(stripslashes($participant_arr['prognotes']))."'",
 			   "pubsname='".mysql_real_escape_string(stripslashes($participant_arr['pubsname']))."'");
@@ -958,6 +1014,24 @@ function edit_participant ($participant_arr,$permrole_arr) {
 			   "postzip='".mysql_real_escape_string($participant_arr['postzip'])."'",
 			   "regtype='".mysql_real_escape_string(stripslashes($participant_arr['regtype']))."'");
   $message.=update_table_element($link, $title, "$ReportDB.CongoDump", $pairedvalue_array, "badgeid", $participant_arr['partid']);
+
+  // Update Interested entry.
+  if (isset($participant_arr['interested']) AND ($participant_arr['interested']!='') AND ($participant_arr['interested']!=0)) {
+    $query ="UPDATE $ReportDB.Interested SET ";
+    $query.="interestedtypeid=".$participant_arr['interested']." ";
+    $query.="WHERE badgeid=\"".$participant_arr['partid']."\" AND conid=".$_SESSION['conid'];
+    if (!mysql_query($query,$link)) {
+      $message.=$query."<BR>Error updating Interested table.  Database not update.";
+    }
+    ereg("Rows matched: ([0-9]*)", mysql_info($link), $r_matched);
+    if ($r_matched[1]==0) {
+      $element_array=array('conid','badgeid','interestedtypeid');
+      $value_array=array($_SESSION['conid'], $participant_arr['partid'], mysql_real_escape_string(stripslashes($participant_arr['interested'])));
+      $message.=submit_table_element($link,"Admin Participants","$ReportDB.Interested", $element_array, $value_array);
+    } elseif ($r_matched[1]>1) {
+      $message.="There might be something wrong with the table, there are multiple interested elements for this year.";
+    }
+  }
 
   // Update/add Bios.
   /* We are only updating the raw bios here, so only a 2-depth

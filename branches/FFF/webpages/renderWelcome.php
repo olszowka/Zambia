@@ -3,6 +3,7 @@
    //error_log("Zambia: Reached renderWelcome.php"); 
    $title="Participant View";
    require_once('PartCommonCode.php');
+   $conid=$_SESSION['conid'];
    participant_header($title);
    getCongoData($badgeid);
 
@@ -13,7 +14,40 @@
         echo "<P class=\"regmsg\">$message</P>\n";
         }
     $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");
-    $chint=($participant["interested"]==0);
+
+/* Get interested state from table.  Below the full table isn't
+   generated, because we _only_ want to give them a limited set of
+   responses.  Tentatively (although not coded yet) 
+   "Pending" or "Not Accepted", not modifyable, "Invited", "Suggested"
+   or "Yes" => "No", "No", "Not Applied", or not on the table at all
+   => "Suggested", perhaps this should be coded into the table itself,
+   since different cons might do things differently. */
+$query = <<<EOD
+SELECT
+    interestedtypename
+  FROM
+      $ReportDB.Participants
+    JOIN $ReportDB.Interested I USING (badgeid)
+    JOIN $ReportDB.InterestedTypes USING (interestedtypeid)
+  WHERE
+    badgeid=$badgeid AND
+    I.conid=$conid
+EOD;
+
+if (!$result=mysql_query($query,$link)) {
+    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
+    echo "<P class\"errmsg\">".$message."\n";
+    staff_footer();
+    exit();
+    }
+
+list($interested)= mysql_fetch_array($result, MYSQL_NUM);
+
+// to make the words below make sense
+if ($interested=="") {
+  $interested="not having been in touch";
+}
+
     if (may_I('postcon')) { 
       if (file_exists("../Local/Verbiage/Welcome_0")) {
 	echo file_get_contents("../Local/Verbiage/Welcome_0");
@@ -40,43 +74,57 @@ to your participation again next year.</P>
 <P> Dear
 <?php echo $congoinfo["firstname"]; echo " "; echo $congoinfo["lastname"]; ?>,
 
-<p> Welcome to the <?php echo CON_NAME; ?> Programming website.
+<P> Welcome to the <?php echo CON_NAME; ?> website.</P>
 
-<p> First, please take a moment to indicate your ability and interest in partipating in <?php echo CON_NAME; ?> programming.
+<?php /*
+<p> First, please take a moment to indicate your ability and interest in partipating in <?php echo CON_NAME; ?>.
+      <table><tr><td>&nbsp;&nbsp;&nbsp;</td>
+      <td><label for="interested" class="padbot0p5">I am interested and able to participate in <?php echo CON_NAME; ?>. &nbsp;</label>
+      <SELECT name=interested class="yesno">
+				   <OPTION value=0 <?php if (($interested==0) OR ($interested>2)) {echo "selected";} ?> >&nbsp;</OPTION>
+            <OPTION value=1 <?php if ($interested==1) {echo "selected";} ?> >Yes</OPTION>
+            <OPTION value=2 <?php if ($interested==2) {echo
+            "selected";} ?> >No</OPTION></SELECT>
+      </td></tr></table>
+      */ ?>
+
+<P> You are currently listed on our roles as <?php echo $interested; ?>.</P>
+
+<P> If this does not match with your expectations please, get in touch with
+your liaison person, as soon as possible.</P>
+
+<?php if ($chpw) { ?>
 <FORM class="nomargin" name="pwform" method=POST action="SubmitWelcome.php">
   <div id="update_section">
-      <table><tr><td>&nbsp;&nbsp;&nbsp;</td>
-      <td><label for="interested" class="padbot0p5">I am interested and able to participate in programming for <?php echo CON_NAME; ?> &nbsp;</label>
-      <?php $int=$participant['interested']; ?>
-      <SELECT name=interested class="yesno">
-            <OPTION value=0 <?php if ($int==0) {echo "selected";} ?> >&nbsp;</OPTION>
-            <OPTION value=1 <?php if ($int==1) {echo "selected";} ?> >Yes</OPTION>
-            <OPTION value=2 <?php if ($int==2) {echo "selected";} ?> >No</OPTION></SELECT>
-      </td></tr></table>
-<?php if ($chpw) { ?>
     <p>Now take a moment and personalize your password.
-      <table><tr><td>&nbsp;&nbsp;&nbsp;</td>
-      <td>Change Password</td>
-      <td><INPUT type="password" size="10" name="password"></td></tr>
-      <tr><td>&nbsp;&nbsp;&nbsp;</td><td>Confirm New Password&nbsp;</td>
-      <td><INPUT type="password" size="10" name="cpassword"></td></tr></table>
-<?php } else { ?>
-    <p> Thank you for changing your password. For future changes, use the "My Profile" tab.
-<?php } ?>
+    <table>
+      <tr>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td>Change Password</td>
+        <td><INPUT type="password" size="10" name="password"></td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;&nbsp;</td><td>Confirm New Password&nbsp;</td>
+        <td><INPUT type="password" size="10" name="cpassword"></td>
+      </tr>
+    </table>
     <DIV class="submit">
-        <DIV id="submit" ><BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON></DIV>
+      <DIV id="submit" >
+        <BUTTON class="SubmitButton" type="submit" name="submit" >Update</BUTTON>
       </DIV>
     </DIV>
-  </FORM>
+  </DIV>
+</FORM>
+<?php } ?>
 <?php
 if (file_exists("../Local/Verbiage/Welcome_2")) {
   echo file_get_contents("../Local/Verbiage/Welcome_2");
 } else {
 ?>
-  <p> Use the "My Profile" tab to:
+  <p> Use the <A HREF="my_contact.php">"My Profile"</A> tab above, at any point to:
     <ul>
       <li> Check your contact information. </li>
-      <li> Indicate whether you will be participating in <?php echo CON_NAME; ?>. </li>
+      <li> Change your passowrd. </li>
 <?php  if (may_I('EditBio')) { ?>
       <li> Edit your name as you want to appear in our publications.</li>
       <li> Enter a short and long bio for <?php echo CON_NAME; ?> web and program book publications.</li>
@@ -91,7 +139,7 @@ if (may_I('my_availability')) {
     echo file_get_contents("../Local/Verbiage/Welcome_7");
   } else {
 ?>
-  <p> Use the "My Availability" tab to:
+  <p> Use the <A HREF="my_sched_constr.php">"My Availability"</A> tab above, at any point to:
     <ul>
       <li> Set the total number of times you would be willing to commit to, for all of <?php echo CON_NAME; ?>.</li>
       <li> Set the per day number of times you would be willing to commit to. </li>
@@ -106,7 +154,7 @@ if (may_I('search_panels')) {
     echo file_get_contents("../Local/Verbiage/Welcome_3");
   } else {
 ?>
-  <p> Use the "Search Panels" tab to:
+  <p> Use the <A HREF="my_sessions1.php">"Search Panels"</A> tab above, at any point to:
     <ul>
       <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
       <li> Indicate panels you would like to participate on. </li>
@@ -119,7 +167,7 @@ if (may_I('my_panel_interests')) {
     echo file_get_contents("../Local/Verbiage/Welcome_4");
   } else {
 ?>
-  <p> Use the "My Panel Interests" tab to:
+  <p> Use the <A HREF="PartPanelInterests.php">"My Panel Interests"</A> tab above, at any point to:
     <ul>
       <li> See what selections you have made for panels. </li>
       <li> Alter or give more information about your selections . </li>
@@ -133,7 +181,7 @@ if (may_I('my_schedule')) {
       echo file_get_contents("../Local/Verbiage/Welcome_5");
     } else {
 ?>
-  <p> Use the "My Schedule" tab to:
+  <p> Use the <A HREF="MySchedule.php">"My Schedule"</A> tab above, at any point to:
     <ul>
       <li> See what you have been scheduled to do at con. 
       <li> If there are issues, conflict or questions please email us at 
@@ -147,7 +195,7 @@ if (may_I('my_gen_int_write')) {
     echo file_get_contents("../Local/Verbiage/Welcome_6");
   } else {
 ?>
-  <p> Use the "My General Interests" tab to:  
+  <p> Use the <A HREF="my_interests.php">"My General Interests"</A> tab above, at any point to:
     <ul>
       <li> Describe the kinds of panels you are interested in.  </li>
       <li> Suggest the people you would like to work with.  </li>
@@ -160,7 +208,7 @@ if (may_I('BrainstormSubmit')) {
     echo file_get_contents("../Local/Verbiage/Welcome_8");
   } else {
 ?>
-  <p> Use the "Suggest a Session" tab to:  
+  <p> Use the <A HREF="BrainstormWelcome.php">"Suggest a Session"</A> tab above, at any point to:
     <ul>
       <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
       <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner. 
