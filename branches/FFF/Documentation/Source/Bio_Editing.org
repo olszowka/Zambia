@@ -1,0 +1,266 @@
+#+TITLE: Bios Editing in Zambia
+#+EMAIL: NELA.Percy@gmail.com
+#+AUTHOR: Percy
+#+DATE: November 2011
+#+DESCRIPTION: Zambia is a piece of Con Management Software.  This document is a "How To" guide assisting in the way of editing the Bios for the Zambia FFF-branch instance for your convention.  This is still a work in progress.
+#+KEYWORDS: Zambia, Documentation, FFF branch
+#+LANGUAGE: en
+
+#+OPTIONS: \n:t ^:nil timestamp:nil creator:nil H:3 num:t @:t ::nil |:t -:t todo:nil tasks:nil tags:t <:t *:t author:t email:t skip:nil d:t f:t pri:t
+#+LATEX_CLASS: koma-article
+#+LaTeX_CLASS_OPTIONS: [tablesignature] 
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage[scaled]{beraserif}
+#+LATEX_HEADER: \usepackage[scaled]{berasans}
+#+LATEX_HEADER: \usepackage[scaled]{beramono}
+#+LATEX_HEADER: \usepackage[usenames,dvipsnames]{color}
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \usepackage{subfig}
+#+LaTeX_HEADER: \usepackage{listings}
+#+LaTeX_HEADER: \lstnewenvironment{common-lispcode}
+#+LaTeX_HEADER: {\lstset{language={HTML},basicstyle={\ttfamily\footnotesize},frame=single,breaklines=true}}
+#+LaTeX_HEADER: {}
+#+LATEX_HEADER: \usepackage{paralist}
+#+LATEX_HEADER: \let\itemize\compactitem
+#+LATEX_HEADER: \let\description\compactdesc
+#+LATEX_HEADER: \let\enumerate\compactenum
+#+LATEX_HEADER: \usepackage[letterpaper,includeheadfoot,top=12.5mm,bottom=25mm,left=19mm,right=19mm]{geometry}
+#+LATEX_HEADER: \pagestyle{fancy}
+#+LaTeX: \pagenumbering{roman}
+#+LaTeX: \thispagestyle{fancy}
+#+LaTeX: \renewcommand{\headrulewidth}{0pt}
+#+LaTeX: \renewcommand{\footrulewidth}{1pt}
+#+LaTeX: \lhead{}
+#+LaTeX: \rhead{}
+#+LaTeX: \chead{}
+#+LaTeX: \lfoot{{{{{AUTHOR}}}} <{{{{EMAIL}}}}>}
+#+LaTeX: \cfoot{}
+#+LaTeX: \rfoot{\thepage}
+#+LaTeX: \begin{abstract}
+#+LaTeX: \vspace{5cm}
+#+LaTeX: {\LARGE{\textbf{Abstract:\\}}}
+{{{DESCRIPTION}}}
+#+LaTeX: \end{abstract}
+#+HTML:<h2>Abstract:<br></h2><p>{{{DESCRIPTION}}}</p>
+#+LaTeX: \newpage
+#+LaTeX: \renewcommand{\headrulewidth}{1pt}
+#+LaTeX: \chead{{{{{TITLE}}}}}
+#+LaTeX: \tableofcontents
+#+LaTeX: \listoftables
+#+LaTeX: \listoffigures
+#+LaTeX: \newpage
+#+LaTeX: \pagenumbering{arabic}
+* Introduction
+
+  The biographical information for your presenters is an important
+  part of the convention experience that Zambia manages.  This is part
+  of how people decide they want to attend your convention and part of
+  what they might want to do when there.  From a presenter's point of
+  view, the biographical information is a way to connect with their
+  fan-base, and allow contact, give information, or arrange for
+  continued interactions.  From a con manager's point of view,
+  managing biographical information is fairly work-intensive, and one
+  of the things that doesn't exactly scale.
+
+  There are several pieces that make up the biographical information
+  matrix within Zambia.  Few, any, or all of the elements can be
+  chosen to be deployed and customized to the desire of your
+  particular convention or set of conventions.  Currently the
+  biographical information information is designed to be held in a
+  shared database, outside of a specific convention, so that, while
+  the information is available and editable within that convention,
+  when the information is updated, it is updated across all the
+  conventions served from the same server, and information is
+  available across multiple convention instances.  Not all of the
+  conventions will necessarily use all of the information.
+* Biographical Information Matrix
+
+  The biographical information Matrix is made up of three different
+  values.  The types of biographical information, the status of a
+  biographical element, and the language that that element is written
+  in.
+** Types
+
+   The (extendable) types that are currently in use in Zambia are:
+   + Web: The verbose biographical information, limited by variables
+     in the db_name.php file, that is shared on your Zambia site, for
+     all to browse to, often less limited than the published
+     information.  Most HTML markup works with this type.
+   + Book: The biographical information that is published in your
+     convention book, handout, or other printed materials that is
+     often more limited by space concerns, and publishing costs.
+     These limits are set in the db_name.php file.  This will be
+     published so markup and hypertext is discouraged.
+   + URI: The set of Uniform Resource Identifiers (URLs, URNs, etc)
+     that are available on your Zambia site, for people to follow.
+     Most HTML markup works with this type.
+   + Picture: This is a URI reference to either an outside (http)
+     picture or, preferably, a copy of said picture residing on the
+     serving machine (/path/to/picture), so if the original gets
+     hacked, Zambia isn't compromised.
+** States
+   + raw: This is the information provided by the presenter when they
+     are permitted to, within Zambia.  This might be as far as the
+     involvement with the biographical information that the Zambia
+     staff will have.  This allows for unknown people to put unknown
+     references and information on your web-site.  Beware.
+   + edited: This is intended to be the mid-step, the negotiation
+     point between the people responsible for what is being published
+     in the literature and on the web, and the individual presenters,
+     it is presented to them, so dialogue can happen, and they can see
+     how it is to be presented, should it be approved.  This might be
+     as far as the involvement with the biographical information that
+     the Zambia staff will have.  Once in the edited mode it might be
+     considered published.
+   + good: This is intended to be what is published.  Once the edited
+     matches the raw, it should be promoted to the good level, then if
+     changes to the raw show up, they can go back through the vetting
+     process and, once again, be promoted to good, and then available
+     for the various publishing media.
+** Languages
+
+   The language field is designed to contain any of the various
+   language elements.  Currently en-us and fr-ca are the two expected
+   ones, as a hold-over from the original "secondary language" concept
+   of Zambia when it was used for a Canadian event.  Starting any
+   language will allow it to be flexible enough to have it show up in
+   the appropriate tables.  Just adding to the LANGUAGE_LIST searches
+   for each/all of the languages listed.  While this is a first step
+   in the internationalization of this software, expanding the rest,
+   along these lines is expected and planned for.  Each of the other
+   elements, the various verbiage on the pages, and in the reports
+   will pull from similar tables, able to be customized off of, or
+   feed concurrently, depending on the design the multiple languages
+   available.  All of the biographical information is designed to be
+   subsequently displayed, rather than switched on the
+   $_SESSION['language'] variable.
+* Pages
+** StaffManageBios.php
+#+LaTeX: \label{StaffManageBios.php}
+#+HTML: <A NAME="StaffManageBios.php" ID="StaffManageBios.php"></A>
+#+HTML: <A HREF="../webpages/StaffManageBios.php">StaffManageBios.php</A>
+
+   The starting point for managing the biographical information data.
+   This is set to work with only those folks who will be published.
+   This is all the presenters, and the any of the super-volunteers.
+   They might not be chosen to be published, or they might be,
+   depending on the choice of the convention, and the relative space
+   in the various publications.
+
+   The rows are organized around the states so that if there is
+   missing raw, edited (if used), and good (if used) elements, they
+   are reported first, then if the raw elements and the edited
+   elements don't match (if used) or the edited elements and the good
+   elements don't match (if used) they are reported next.  Then,
+   lastly, if everything matches, that is reported last.  Hopefully,
+   come publication time, and con-time, all the elements will be in
+   the last row.
+
+   The columns are a combination of the various languages available
+   (somewhat useless if only one language is used, but there, as a
+   place-holder) and the type of the element.
+
+   To bring up the list of individuals in any particular category of
+   missing, incorrect, or even correct information, simply click on
+   the number of elements in the state you wish to work with.  In the
+   example below, there are seven individuals who do not have an
+   edited en-us web entry in the biographical information matrix.  By
+   clicking on the "7" in that section of the table, you bring up the
+   list of participants who's elements need editing.
+
+   The table might resemble the following:
+#+CAPTION: Staff - Manage Participant Biographies
+#+LABEL: tbl:staffmanageparticipantbiographies
+#+ATTR_LaTeX: longtable width=\textwidth align=|c|c|c|c|c|c|c|c|c|
+#+ATTR_HTML: border="1" rules="all" frame="all"
+|-----------------------------------+-----------+-----------+------------+------------+-----------+-----------+---------------+---------------|
+| Count of the States of the bios   | en-us web | fr-ca web | en-us book | fr-ca book | en-us uri | fr-ca uri | en-us picture | fr-ca picture |
+|-----------------------------------+-----------+-----------+------------+------------+-----------+-----------+---------------+---------------|
+| Missing raw bio                   |           |           |          3 |          6 |        59 |        61 |            14 |            61 |
+| Missing edited bio                |         7 |        16 |         21 |          5 |        48 |        61 |            14 |            61 |
+| Missing good bio                  |        59 |        59 |         59 |         59 |        59 |        61 |            14 |            61 |
+| Raw bio doesn't match edited bio  |        17 |        11 |         18 |         19 |         9 |           |               |               |
+| Edited bio doesn't match good bio |        12 |         9 |         28 |         46 |         9 |           |               |               |
+| All bios match                    |         5 |         3 |          4 |            |           |        61 |            47 |            61 |
+|-----------------------------------+-----------+-----------+------------+------------+-----------+-----------+---------------+---------------|
+
+   Once the particular subsection of the editing has been picked, you
+   will be provided with a matrix of names in this category, so you
+   might choose the one(s) to be edited.
+
+   The three columns in this table are:
+   + Participant: If the link that is this name is chosen from this
+     column, you will be brought to the [[StaffEditBios.php]] page
+     relevant to the participant chosen, for editing purposes.
+   + Edit Full: If the link that is this name is chosen from this
+     column, you will be brought to the [[StaffEditCreateParticipant.php]]
+     page, in the mode of editing the participant chosen, in case that
+     is necessary to find out more about who they are, or if there are
+     any notes, or the like to assist you with the biographical
+     information editing.
+   + Currently being edited by: This shows you the individual who
+     presumes that they are the one editing the particular
+     information.  Please, do not choose to edit biographical
+     information for someone who is locked by someone other than you.
+
+   The table might resemble the following:
+#+CAPTION: Staff - Manage Participant Biographies Subedit
+#+LABEL: tbl:staffmanageparticipantbiographiessubedit
+#+ATTR_LaTeX: longtable width=\textwidth align=|l|l|l|l|
+#+ATTR_HTML: border="1" rules="all" frame="all"
+|-------------+-------------+---------------------------|
+| Participant | Edit Full   | Currently being edited by |
+|-------------+-------------+---------------------------|
+| Mr E.       | Mr E.       |                           |
+| Joker       | Joker       | Str8mn                    |
+| Batman      | Batman      | The Riddler               |
+| The Riddler | The Riddler | Batman                    |
+| Catwoman    | Catwoman    |                           |
+| Cartman     | Cartman     |                           |
+| Robin       | Robin       |                           |
+|-------------+-------------+---------------------------|
+
+   There is also the "return" link, just above the table, that brings
+   you back to the [[tbl:staffmanageparticipantbiographies][Staff - Manage Participant Biographies]], in case you
+   are done with this particular subset of individuals, and wish to
+   deal with another.
+** StaffEditBios.php
+#+LaTeX: \label{StaffEditBios.php}
+#+HTML: <A NAME="StaffEditBios.php" ID="StaffEditBios.php"></A>
+#+HTML: <A HREF="../webpages/StaffEditBios.php">StaffEditBios.php</A>
+
+   If the edited and/or good states are to be used, this page is where
+   an individual's information is edited.  If just the raw information
+   is used, there is no need to use this page.  Once this page is
+   opened for a participant, the editing individual's name will be
+   placed in the "Currently being edited by" column, so two people
+   don't try to edit the same bio information at the same time.  
+
+   There are two links at the top of the page.  The first, being the
+   individuals name, will lead you to the
+   [[StaffEditCreateParticipant.php]] page, in the mode of editing the
+   participant chosen, and the return link, which will bring you right
+   back to the table [[tbl:staffmanageparticipantbiographiessubedit][Staff - Manage Participant Biographies Subedit]] on
+   the [[StaffManageBios.php]] page.
+
+   Of course, any of the "Save Whole Page" buttons will save the
+   current state of the entire page, and clear the "Currently being
+   edited by" flag.
+
+   This design of this page has a series of elements, broken down
+   first by state element (raw, edited, good) state, then by language
+   (en-us, fr-ca), and then by the type (web, book, uri, picture)
+   allowing for the editing of the edited (if used) and good (if used)
+   information.  The raw information is there for reference and
+   copying purposes only and is not in a malleable state.
+** StaffEditCreateParticipant.php
+#+LaTeX: \label{StaffEditCreateParticipant.php}
+#+HTML: <A NAME="StaffEditCreateParticipant.php" ID="StaffEditCreateParticipant.php"></A>
+#+HTML: <A HREF="../webpages/StaffEditCreateParticipant.php?action=edit">StaffEditCreateParticipant.php</A>
+
+   While this page is of more general use (which is documented
+   elsewhere) if absolutely necessary, it can be used to modify the
+   raw biographical information. This is most useful should that be
+   the only state of the information chosen for this instance of
+   Zambia.  The raw state of all of the types (web, book, URI,
+   picture) and languages are available to be edited on this page.

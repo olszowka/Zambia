@@ -1,0 +1,1039 @@
+#+TITLE: Schema for database 'zambiademo'
+#+EMAIL: NELA.Percy@gmail.com
+#+AUTHOR: Percy
+#+DATE: March 2012
+#+DESCRIPTION: Zambia is a piece of Conference Management Software.  This document is a "How To" guide assisting in the way of entering and keeping track of Presenters for the Zambia FFF-branch instance for your conference.  This is still a work in progress.
+#+KEYWORDS: Zambia, Documentation, FFF branch
+#+LANGUAGE: en
+
+#+OPTIONS: \n:t ^:nil timestamp:nil creator:nil H:3 num:t @:t ::nil |:t -:t todo:nil tasks:nil tags:t <:t *:t author:t email:t skip:nil d:t f:t pri:t
+#+LATEX_CLASS: koma-article
+#+LaTeX_CLASS_OPTIONS: [tablesignature] 
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage[scaled]{beraserif}
+#+LATEX_HEADER: \usepackage[scaled]{berasans}
+#+LATEX_HEADER: \usepackage[scaled]{beramono}
+#+LATEX_HEADER: \usepackage[usenames,dvipsnames]{color}
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \usepackage{subfig}
+#+LaTeX_HEADER: \usepackage{listings}
+#+LaTeX_HEADER: \lstnewenvironment{common-lispcode}
+#+LaTeX_HEADER: {\lstset{language={HTML},basicstyle={\ttfamily\footnotesize},frame=single,breaklines=true}}
+#+LaTeX_HEADER: {}
+#+LATEX_HEADER: \usepackage{paralist}
+#+LATEX_HEADER: \let\itemize\compactitem
+#+LATEX_HEADER: \let\description\compactdesc
+#+LATEX_HEADER: \let\enumerate\compactenum
+#+LATEX_HEADER: \usepackage[letterpaper,includeheadfoot,top=12.5mm,bottom=25mm,left=19mm,right=19mm]{geometry}
+#+LATEX_HEADER: \pagestyle{fancy}
+#+LaTeX: \pagenumbering{roman}
+#+LaTeX: \thispagestyle{fancy}
+#+LaTeX: \renewcommand{\headrulewidth}{0pt}
+#+LaTeX: \renewcommand{\footrulewidth}{1pt}
+#+LaTeX: \lhead{}
+#+LaTeX: \rhead{}
+#+LaTeX: \chead{}
+#+LaTeX: \lfoot{{{{{AUTHOR}}}} <{{{{EMAIL}}}}>}
+#+LaTeX: \cfoot{}
+#+LaTeX: \rfoot{\thepage}
+#+LaTeX: \begin{abstract}
+#+LaTeX: \vspace{5cm}
+#+LaTeX: {\LARGE{\textbf{Abstract:\\}}}
+{{{DESCRIPTION}}}
+#+LaTeX: \end{abstract}
+#+HTML:<h2>Abstract:<br></h2><p>{{{DESCRIPTION}}}</p>
+#+LaTeX: \newpage
+#+LaTeX: \renewcommand{\headrulewidth}{1pt}
+#+LaTeX: \chead{{{{{TITLE}}}}}
+#+LaTeX: \tableofcontents
+#+LaTeX: %\listoftables
+#+LaTeX: %\listoffigures
+#+LaTeX: \newpage
+#+LaTeX: \pagenumbering{arabic}
+* CongoDump
+
+#+CAPTION: CongoDump Fields
+#+LABEL: tbl:congodumpfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-------------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field       | Type         | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|-------------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| badgeid     | varchar(15)  | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| firstname   | varchar(30)  | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| lastname    | varchar(40)  | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| badgename   | varchar(51)  | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| phone       | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| email       | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| postaddress | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| regtype     | varchar(40)  | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|-------------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: CongoDump Indexes
+#+LABEL: tbl:congodumpindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table     | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| CongoDump |          0 | PRIMARY  |            1 | badgeid     | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* Divisions
+
+#+CAPTION: Divisions Fields
+#+LABEL: tbl:divisionsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| divisionid    | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| divisionname  | varchar(30) | latin1_general_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | &nbsp; | &nbsp; | 0       | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: Divisions Indexes
+#+LABEL: tbl:Divisionsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+-------------|
+| Table     | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment     |
+|-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+-------------|
+| Divisions |          0 | PRIMARY  |            1 | divisionid  | A         |           5 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;      |
+|-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+-------------|
+
+* Features
+
+#+CAPTION: Features Fields
+#+LABEL: tbl:featuresfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| featureid     | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| featurename   | varchar(50) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: Features Indexes
+#+LABEL: tbl:featuresindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table    | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Features |          0 | PRIMARY  |            1 | featureid   | A         |          12 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp   |
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* KidsCategories
+
+#+CAPTION: KidsCategories Fields
+#+LABEL: tbl:kidscategoriesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| kidscatid     | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| kidscatname   | varchar(50) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: KidsCategories Indexes
+#+LABEL: tbl:kidscategoriesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table          | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| KidsCategories |          0 | PRIMARY  |            1 | kidscatid   | A         |           4 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* ParticipantAvailability
+
+#+CAPTION: ParticipantAvailability Fields
+#+LABEL: tbl:participantavailabilityfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|------------------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field            | Type         | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|------------------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| badgeid          | varchar(15)  | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| fridaymaxprog    | int(11)      | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| saturdaymaxprog  | int(11)      | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| sundaymaxprog    | int(11)      | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| maxprog          | int(11)      | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| preventconflict  | varchar(255) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| otherconstraints | varchar(255) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| numkidsfasttrack | int(11)      | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|------------------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: ParticipantAvailability Indexes
+#+LABEL: tbl:participantavailabilityindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table                   | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| ParticipantAvailability |          0 | PRIMARY  |            1 | badgeid     | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: ParticipantAvailabilty Foreign Key Relationships
+#+LABEL: tbl:participantavailabilityfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|--------------------------------+-----------------+---------------+---------------+------------|
+| FK Id                          | Reference Table | Source Column | Target Column | Extra Info |
+|--------------------------------+-----------------+---------------+---------------+------------|
+| ParticipantAvailability_ibfk_1 | Participants    | `badgeid`     | `badgeid`     |            |
+|--------------------------------+-----------------+---------------+---------------+------------|
+
+* ParticipantAvailabilityTimes
+
+#+CAPTION: ParticipantAvailabilityTimes Fields
+#+LABEL: tbl:participantavailabilitytimesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-----------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field           | Type        | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|-----------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| badgeid         | varchar(15) | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| availabilitynum | int(11)     | NULL              | &nbsp; | PRI    | 0       | &nbsp; | select,insert,update,references | &nbsp;  |
+| starttime       | time        | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| endtime         | time        | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|-----------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: ParticipantAvailabilityTimes Indexes
+#+LABEL: tbl:participantavailabilitytimesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|------------------------------+------------+----------+--------------+-----------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table                        | Non unique | Key name | Seq in index | Column name     | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|------------------------------+------------+----------+--------------+-----------------+-----------+-------------+----------+--------+--------+------------+---------|
+| ParticipantAvailabilityTimes |          0 | PRIMARY  |            1 | badgeid         | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| ParticipantAvailabilityTimes |          0 | PRIMARY  |            2 | availabilitynum | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|------------------------------+------------+----------+--------------+-----------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: ParticipantAvailabilityTimes Foreign Key Relationships
+#+LABEL: tbl:participantavailabilitytimesfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-------------------------------------+-----------------+---------------+---------------+------------|
+| FK Id                               | Reference Table | Source Column | Target Column | Extra Info |
+|-------------------------------------+-----------------+---------------+---------------+------------|
+| ParticipantAvailabilityTimes_ibfk_1 | Participants    | `badgeid`     | `badgeid`     |            |
+|-------------------------------------+-----------------+---------------+---------------+------------|
+
+* ParticipantHasRole
+
+#+CAPTION: ParticipantHasRole Fields
+#+LABEL: tbl:participanthasrolefields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------+-------------+-------------------+--------+-----+---------+--------+---------------------------------+---------|
+| Field   | Type        | Collation         | Null   | Key | Default | Extra  | Privileges                      | Comment |
+|---------+-------------+-------------------+--------+-----+---------+--------+---------------------------------+---------|
+| badgeid | varchar(15) | latin1_swedish_ci | &nbsp; | PRI | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| roleid  | int(11)     | NULL              | &nbsp; | PRI | 0       | &nbsp; | select,insert,update,references | &nbsp;  |
+|---------+-------------+-------------------+--------+-----+---------+--------+---------------------------------+---------|
+
+#+CAPTION: ParticipantHasRole Indexes
+#+LABEL: tbl:participanthasroleindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|--------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table              | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|--------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| ParticipantHasRole |          0 | PRIMARY  |            1 | badgeid     | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| ParticipantHasRole |          0 | PRIMARY  |            2 | roleid      | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| ParticipantHasRole |          1 | roleid   |            1 | roleid      | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|--------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: ParticipantHasRole Foreign Key Relationships
+#+LABEL: tbl:participanthasrolefkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|---------------------------+-----------------+---------------+---------------+------------|
+| FK Id                     | Reference Table | Source Column | Target Column | Extra Info |
+|---------------------------+-----------------+---------------+---------------+------------|
+| ParticipantHasRole_ibfk_1 | Participants    | `badgeid`     | `badgeid`     |            |
+| ParticipantHasRole_ibfk_2 | Roles           | `roleid`      | `roleid`      |            |
+|---------------------------+-----------------+---------------+---------------+------------|
+
+* ParticipantInterests
+
+#+CAPTION: ParticipantInterests Fields
+#+LABEL: tbl:participantinterestsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field      | Type        | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| badgeid    | varchar(15) | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| yespanels  | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| nopanels   | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| yespeople  | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| nopeople   | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| otherroles | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: ParticipantInterests Indexes
+#+LABEL: tbl:participantinterestesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table                | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| ParticipantInterests |          0 | PRIMARY  |            1 | badgeid     | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: ParticipantInterests Foreign Key Relationships
+#+LABEL: tbl:participantinterestsfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-----------------------------+-----------------+---------------+---------------+------------|
+| FK Id                       | Reference Table | Source Column | Target Column | Extra Info |
+|-----------------------------+-----------------+---------------+---------------+------------|
+| ParticipantInterests_ibfk_1 | Participants    | `badgeid`     | `badgeid`     |            |
+|-----------------------------+-----------------+---------------+---------------+------------|
+
+* ParticipantOnSession
+
+#+CAPTION: ParticipantOnSession Fields
+#+LABEL: tbl:participantonsessionfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-----------+-------------+-------------------+--------+--------+-------------------+--------+---------------------------------+---------|
+| Field     | Type        | Collation         | Null   | Key    | Default           | Extra  | Privileges                      | Comment |
+|-----------+-------------+-------------------+--------+--------+-------------------+--------+---------------------------------+---------|
+| badgeid   | varchar(15) | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;            | &nbsp; | select,insert,update,references | &nbsp;  |
+| sessionid | int(11)     | NULL              | &nbsp; | PRI    | 0                 | &nbsp; | select,insert,update,references | &nbsp;  |
+| moderator | tinyint(4)  | NULL              | YES    | &nbsp; | 0                 | &nbsp; | select,insert,update,references | &nbsp;  |
+| ts        | timestamp   | NULL              | YES    | &nbsp; | CURRENT_TIMESTAMP | &nbsp; | select,insert,update,references | &nbsp;  |
+|-----------+-------------+-------------------+--------+--------+-------------------+--------+---------------------------------+---------|
+
+#+CAPTION: ParticipantOnSession Indexes
+#+LABEL: tbl:participantonsessionindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table                | Non unique | Key name  | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| ParticipantOnSession |          0 | PRIMARY   |            1 | badgeid     | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| ParticipantOnSession |          0 | PRIMARY   |            2 | sessionid   | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| ParticipantOnSession |          1 | sessionid |            1 | sessionid   | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: ParticipantOnSession Foreign Key Relationships
+#+LABEL: tbl:participantonsessionfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-----------------------------+-----------------+---------------+---------------+------------|
+| FK Id                       | Reference Table | Source Column | Target Column | Extra Info |
+|-----------------------------+-----------------+---------------+---------------+------------|
+| ParticipantOnSession_ibfk_1 | Participants    | `badgeid`     | `badgeid`     |            |
+| ParticipantOnSession_ibfk_2 | Sessions        | `sessionid`   | `sessionid`   |            |
+|-----------------------------+-----------------+---------------+---------------+------------|
+
+* Participants
+
+#+CAPTION: Participants Fields
+#+LABEL: tbl:participantsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field      | Type        | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| badgeid    | varchar(15) | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| password   | varchar(32) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| bestway    | varchar(12) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| interested | tinyint(1)  | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| bio        | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| pubsname   | varchar(50) | latin1_general_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: Participants Indexes
+#+LABEL: tbl:participantsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|--------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table        | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|--------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Participants |          0 | PRIMARY  |            1 | badgeid     | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|--------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* ParticipantSessionInterest
+
+#+CAPTION: ParticipantSessionInterest Fields
+#+LABEL: tbl:participantsessioninterestfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|--------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field        | Type        | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|--------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| badgeid      | varchar(15) | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| sessionid    | int(11)     | NULL              | &nbsp; | PRI    | 0       | &nbsp; | select,insert,update,references | &nbsp;  |
+| rank         | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| willmoderate | tinyint(1)  | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| comments     | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|--------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: ParticipantSessionInterest Indexes
+#+LABEL: tbl:participantsessioninterestindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table                      | Non unique | Key name  | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| ParticipantSessionInterest |          0 | PRIMARY   |            1 | badgeid     | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| ParticipantSessionInterest |          0 | PRIMARY   |            2 | sessionid   | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| ParticipantSessionInterest |          1 | sessionid |            1 | sessionid   | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: ParticipantSessionInterests Foreign Key Relationships
+#+LABEL: tbl:participantsessioninterestsfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-----------------------------------+-----------------+---------------+---------------+------------|
+| FK Id                             | Reference Table | Source Column | Target Column | Extra Info |
+|-----------------------------------+-----------------+---------------+---------------+------------|
+| ParticipantSessionInterest_ibfk_1 | Participants    | `badgeid`     | `badgeid`     |            |
+| ParticipantSessionInterest_ibfk_2 | Sessions        | `sessionid`   | `sessionid`   |            |
+| ParticipantSessionInterest_ibfk_3 | Participants    | `badgeid`     | `badgeid`     |            |
+| ParticipantSessionInterest_ibfk_4 | Sessions        | `sessionid`   | `sessionid`   |            |
+|-----------------------------------+-----------------+---------------+---------------+------------|
+
+* ParticipantSuggestions
+
+#+CAPTION: ParticipantSuggestions Fields
+#+LABEL: tbl:participantsuggestionsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-----------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field           | Type        | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|-----------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| badgeid         | varchar(15) | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| paneltopics     | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| otherideas      | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| suggestedguests | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|-----------------+-------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: ParticipantSuggestions Indexes
+#+LABEL: tbl:participantsuggestionsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|------------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table                  | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|------------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| ParticipantSuggestions |          0 | PRIMARY  |            1 | badgeid     | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|------------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: ParticipantSuggestions Foreign Key Relationships
+#+LABEL: tbl:participantsuggestionsfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-------------------------------+-----------------+---------------+---------------+------------|
+| FK Id                         | Reference Table | Source Column | Target Column | Extra Info |
+|-------------------------------+-----------------+---------------+---------------+------------|
+| ParticipantSuggestions_ibfk_1 | Participants    | `badgeid`     | `badgeid`     |            |
+|-------------------------------+-----------------+---------------+---------------+------------|
+
+* PermissionAtoms
+
+#+CAPTION: PermissionAtoms Fields
+#+LABEL: tbl:permissionatomsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field       | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|-------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| permatomid  | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| permatomtag | varchar(20) | latin1_swedish_ci | &nbsp; | UNI    | &nbsp;  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| page        | varchar(20) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| notes       | text        | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|-------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: PermissionAtoms Indexes
+#+LABEL: tbl:permissionatomsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table           | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| PermissionAtoms |          0 | PRIMARY  |            1 | permatomid  | A         |           4 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| PermissionAtoms |          0 | taginx   |            1 | permatomtag | A         |           4 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* PermissionRoles
+
+#+CAPTION: PermissionRoles Fields
+#+LABEL: tbl:permissionrolesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|--------------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field        | Type         | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|--------------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| permroleid   | int(11)      | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| permrolename | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| notes        | text         | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|--------------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: PermissionRoles Indexes
+#+LABEL: tbl:permissionrolesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table           | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| PermissionRoles |          0 | PRIMARY  |            1 | permroleid  | A         |           3 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* Permissions
+
+#+CAPTION: Permissions Fields
+#+LABEL: tbl:permissionsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|--------------+---------+-----------+--------+--------+---------+----------------+---------------------------------+-------------------------------|
+| Field        | Type    | Collation | Null   | Key    | Default | Extra          | Privileges                      | Comment                       |
+|--------------+---------+-----------+--------+--------+---------+----------------+---------------------------------+-------------------------------|
+| permissionid | int(11) | NULL      | &nbsp; | PRI    |  (NULL) | auto_increment | select,insert,update,references | &nbsp;                        |
+| permatomid   | int(11) | NULL      | &nbsp; | MUL    |       0 | &nbsp;         | select,insert,update,references | &nbsp;                        |
+| phaseid      | int(11) | NULL      | YES    | MUL    |       0 | &nbsp;         | select,insert,update,references | null indicates all phases     |
+| permroleid   | int(11) | NULL      | YES    | MUL    |       0 | &nbsp;         | select,insert,update,references | null indicates not applicable |
+| badgeid      | int(11) | NULL      | YES    | &nbsp; |       0 | &nbsp;         | select,insert,update,references | null indicates not applicable |
+|--------------+---------+-----------+--------+--------+---------+----------------+---------------------------------+-------------------------------|
+
+#+CAPTION: Permissions Indexes
+#+LABEL: tbl:permissionsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------------+------------+----------------+--------------+--------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table       | Non unique | Key name       | Seq in index | Column name  | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------------+------------+----------------+--------------+--------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Permissions |          0 | PRIMARY        |            1 | permissionid | A         |           4 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Permissions |          0 | unique1        |            1 | permatomid   | A         |           4 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Permissions |          0 | unique1        |            2 | phaseid      | A         |           4 | (NULL)   | (NULL) | YES    | BTREE      | &nbsp;  |
+| Permissions |          0 | unique1        |            3 | permroleid   | A         |           4 | (NULL)   | (NULL) | YES    | BTREE      | &nbsp;  |
+| Permissions |          0 | unique1        |            4 | badgeid      | A         |           4 | (NULL)   | (NULL) | YES    | BTREE      | &nbsp;  |
+| Permissions |          1 | FK_Permissions |            1 | phaseid      | A         |           4 | (NULL)   | (NULL) | YES    | BTREE      | &nbsp;  |
+| Permissions |          1 | FK_PRoles      |            1 | permroleid   | A         |           4 | (NULL)   | (NULL) | YES    | BTREE      | &nbsp;  |
+|-------------+------------+----------------+--------------+--------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: Permissions Foreign Key Relationships
+#+LABEL: tbl:permissionsfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|--------------------+-----------------+---------------+---------------+------------|
+| FK Id              | Reference Table | Source Column | Target Column | Extra Info |
+|--------------------+-----------------+---------------+---------------+------------|
+| Permissions_ibfk_1 | PermissionAtoms | `permatomid`  | `permatomid`  |            |
+| Permissions_ibfk_2 | Phases          | `phaseid`     | `phaseid`     |            |
+| Permissions_ibfk_3 | PermissionRoles | `permroleid`  | `permroleid`  |            |
+|--------------------+-----------------+---------------+---------------+------------|
+
+* Phases
+
+#+CAPTION: Phases Fields
+#+LABEL: tbl:phasesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-----------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field     | Type         | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|-----------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| phaseid   | int(11)      | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| phasename | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| current   | tinyint(1)   | NULL              | YES    | &nbsp; | 0       | &nbsp;         | select,insert,update,references | &nbsp;  |
+| notes     | text         | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|-----------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: Phases Indexes
+#+LABEL: tbl:phasesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|--------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table  | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|--------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Phases |          0 | PRIMARY  |            1 | phaseid     | A         |           4 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|--------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* PubCharacteristics
+
+#+CAPTION: PubCharacteristics Fields
+#+LABEL: tbl:pubcharacteristicsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| pubcharid     | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| pubcharname   | varchar(30) | latin1_general_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| pubchartag    | varchar(10) | latin1_general_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | &nbsp; | &nbsp; | 0       | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: PubCharacteristics Indexes
+#+LABEL: tbl:pubcharacteristicsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|--------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table              | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|--------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| PubCharacteristics |          0 | PRIMARY  |            1 | pubcharid   | A         |           4 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|--------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* PubStatuses
+
+#+CAPTION: PubStatuses Fields
+#+LABEL: tbl:pubsttausesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| pubstatusid   | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| pubstatusname | varchar(12) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | &nbsp; | &nbsp; | 0       | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: PubStatuses Indexes
+#+LABEL: tbl:pubstatusesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table       | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| PubStatuses |          0 | PRIMARY  |            1 | pubstatusid | A         |           3 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* RegTypes
+
+#+CAPTION: RegTypes Fields
+#+LABEL: tbl:regtypesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field   | Type         | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|---------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| regtype | varchar(40)  | latin1_swedish_ci | &nbsp; | PRI    | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| message | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|---------+--------------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: RegTypes Indexes
+#+LABEL: tbl:regtypesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table    | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| RegTypes |          0 | PRIMARY  |            1 | regtype     | A         |           9 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* Roles
+
+#+CAPTION: Roles Fields
+#+LABEL: tbl:rolesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| roleid        | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| rolename      | varchar(50) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: Roles Indexes
+#+LABEL: tbl:rolesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Roles |          0 | PRIMARY  |            1 | roleid      | A         |          12 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* RoomHasSet
+
+#+CAPTION: RoomHasSet Fields
+#+LABEL: tbl:roomhassetfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-----------+---------+-----------+--------+--------+---------+--------+---------------------------------+---------|
+| Field     | Type    | Collation | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|-----------+---------+-----------+--------+--------+---------+--------+---------------------------------+---------|
+| roomid    | int(11) | NULL      | &nbsp; | PRI    |       0 | &nbsp; | select,insert,update,references | &nbsp;  |
+| roomsetid | int(11) | NULL      | &nbsp; | PRI    |       0 | &nbsp; | select,insert,update,references | &nbsp;  |
+| capacity  | int(11) | NULL      | YES    | &nbsp; |  (NULL) | &nbsp; | select,insert,update,references | &nbsp;  |
+|-----------+---------+-----------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: RoomHasSet Indexes
+#+LABEL: tbl:roomhassetindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table      | Non unique | Key name  | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| RoomHasSet |          0 | PRIMARY   |            1 | roomid      | A         |          84 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| RoomHasSet |          0 | PRIMARY   |            2 | roomsetid   | A         |          84 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| RoomHasSet |          1 | roomsetid |            1 | roomsetid   | A         |           8 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: RoomHasSet Foreign Key Relationships
+#+LABEL: tbl:roomhassetfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-------------------+-----------------+---------------+---------------+------------|
+| FK Id             | Reference Table | Source Column | Target Column | Extra Info |
+|-------------------+-----------------+---------------+---------------+------------|
+| RoomHasSet_ibfk_1 | Rooms           | `roomid`      | `roomid`      |            |
+| RoomHasSet_ibfk_2 | RoomSets        | `roomsetid`   | `roomsetid`   |            |
+|-------------------+-----------------+---------------+---------------+------------|
+
+* Rooms
+
+#+CAPTION: Rooms Fields
+#+LABEL: tbl:roomsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type         | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| roomid        | int(11)      | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| roomname      | varchar(50)  | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)      | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| height        | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| dimensions    | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| area          | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| function      | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| floor         | varchar(50)  | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| notes         | text         | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| opentime1     | time         | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| closetime1    | time         | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| opentime2     | time         | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| closetime2    | time         | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| opentime3     | time         | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| closetime3    | time         | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+--------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: Rooms Indexes
+#+LABEL: tbl:roomsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Rooms |          0 | PRIMARY  |            1 | roomid      | A         |          38 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* RoomSets
+
+#+CAPTION: RoomSets Fields
+#+LABEL: tbl:roomsetsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| roomsetid     | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| roomsetname   | varchar(50) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: RoomSets Indexes
+#+LABEL: tbl:roomsetsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table    | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| RoomSets |          0 | PRIMARY  |            1 | roomsetid   | A         |          12 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* Schedule
+
+#+CAPTION: Schedule Fields
+#+LABEL: tbl:schedulefields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|------------+---------+-----------+--------+--------+----------+----------------+---------------------------------+---------|
+| Field      | Type    | Collation | Null   | Key    |  Default | Extra          | Privileges                      | Comment |
+|------------+---------+-----------+--------+--------+----------+----------------+---------------------------------+---------|
+| scheduleid | int(11) | NULL      | &nbsp; | PRI    |   (NULL) | auto_increment | select,insert,update,references | &nbsp;  |
+| sessionid  | int(11) | NULL      | &nbsp; | MUL    |        0 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| roomid     | int(11) | NULL      | &nbsp; | MUL    |        0 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| starttime  | time    | NULL      | &nbsp; | &nbsp; | 00:00:00 | &nbsp;         | select,insert,update,references | &nbsp;  |
+|------------+---------+-----------+--------+--------+----------+----------------+---------------------------------+---------|
+
+#+CAPTION: Schedule Indexes
+#+LABEL: tbl:scheduleindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table    | Non unique | Key name  | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Schedule |          0 | PRIMARY   |            1 | scheduleid  | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Schedule |          1 | sessionid |            1 | sessionid   | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Schedule |          1 | roomid    |            1 | roomid      | A         |           1 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: Schedule Foreign Key Relationships
+#+LABEL: tbl:schedulefkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-----------------+-----------------+---------------+---------------+------------|
+| FK Id           | Reference Table | Source Column | Target Column | Extra Info |
+|-----------------+-----------------+---------------+---------------+------------|
+| Schedule_ibfk_1 | Sessions        | `sessionid`   | `sessionid`   |            |
+| Schedule_ibfk_2 | Rooms           | `roomid`      | `roomid`      |            |
+|-----------------+-----------------+---------------+---------------+------------|
+
+* Services
+
+#+CAPTION: Services Fields
+#+LABEL: tbl:servicesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| serviceid     | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| servicename   | varchar(50) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: Service Indexes
+#+LABEL: tbl:serviceindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table    | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Services |          0 | PRIMARY  |            1 | serviceid   | A         |          14 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* SessionHasFeature
+
+#+CAPTION: SessionHasFeature Fields
+#+LABEL: tbl:sessionhasfeaturefields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+| Field     | Type    | Collation | Null   | Key | Default | Extra  | Privileges                      | Comment |
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+| sessionid | int(11) | NULL      | &nbsp; | PRI |       0 | &nbsp; | select,insert,update,references | &nbsp;  |
+| featureid | int(11) | NULL      | &nbsp; | PRI |       0 | &nbsp; | select,insert,update,references | &nbsp;  |
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+
+#+CAPTION: SessionHasFeature Indexes
+#+LABEL: tbl:sessionhasfeatureindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table             | Non unique | Key name  | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| SessionHasFeature |          0 | PRIMARY   |            1 | sessionid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| SessionHasFeature |          0 | PRIMARY   |            2 | featureid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| SessionHasFeature |          1 | featureid |            1 | featureid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: SessionHasFeature Foreign Key Relationships
+#+LABEL: tbl:sessionhasfeaturefkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|--------------------------+-----------------+---------------+---------------+------------|
+| FK Id                    | Reference Table | Source Column | Target Column | Extra Info |
+|--------------------------+-----------------+---------------+---------------+------------|
+| SessionHasFeature_ibfk_1 | Sessions        | `sessionid`   | `sessionid`   |            |
+| SessionHasFeature_ibfk_2 | Features        | `featureid`   | `featureid`   |            |
+|--------------------------+-----------------+---------------+---------------+------------|
+
+* SessionHasPubChar
+
+#+CAPTION: SessionHasPubChar Fields
+#+LABEL: tbl:sessionhaspubcharfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+| Field     | Type    | Collation | Null   | Key | Default | Extra  | Privileges                      | Comment |
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+| sessionid | int(11) | NULL      | &nbsp; | PRI |       0 | &nbsp; | select,insert,update,references | &nbsp;  |
+| pubcharid | int(11) | NULL      | &nbsp; | PRI |       0 | &nbsp; | select,insert,update,references | &nbsp;  |
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+
+#+CAPTION: SessionHasPubChar Indexes
+#+LABEL: tbl:sessionhaspubcharindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table             | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| SessionHasPubChar |          0 | PRIMARY  |            1 | sessionid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| SessionHasPubChar |          0 | PRIMARY  |            2 | pubcharid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| SessionHasPubChar |          1 | Fkey2    |            1 | pubcharid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: SessionHasPubChar Foreign Key Relationships
+#+LABEL: tbl:sessionhaspubcharfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-------+--------------------+---------------+---------------+------------|
+| FK Id | Reference Table    | Source Column | Target Column | Extra Info |
+|-------+--------------------+---------------+---------------+------------|
+| Fkey1 | Sessions           | `sessionid`   | `sessionid`   |            |
+| Fkey2 | PubCharacteristics | `pubcharid`   | `pubcharid`   |            |
+|-------+--------------------+---------------+---------------+------------|
+
+* SessionHasService
+
+#+CAPTION: SessionHasService Fields
+#+LABEL: tbl:sessionhasservicefields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+| Field     | Type    | Collation | Null   | Key | Default | Extra  | Privileges                      | Comment |
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+| sessionid | int(11) | NULL      | &nbsp; | PRI |       0 | &nbsp; | select,insert,update,references | &nbsp;  |
+| serviceid | int(11) | NULL      | &nbsp; | PRI |       0 | &nbsp; | select,insert,update,references | &nbsp;  |
+|-----------+---------+-----------+--------+-----+---------+--------+---------------------------------+---------|
+
+#+CAPTION: SessionHasService Indexes
+#+LABEL: tbl:sessionhasserviceindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table             | Non unique | Key name  | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| SessionHasService |          0 | PRIMARY   |            1 | sessionid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| SessionHasService |          0 | PRIMARY   |            2 | serviceid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| SessionHasService |          1 | serviceid |            1 | serviceid   | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------------------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: SessionHasService Foreign Key Relationships
+#+LABEL: tbl:sessonhasservicefkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|--------------------------+-----------------+---------------+---------------+------------|
+| FK Id                    | Reference Table | Source Column | Target Column | Extra Info |
+|--------------------------+-----------------+---------------+---------------+------------|
+| SessionHasService_ibfk_1 | Sessions        | `sessionid`   | `sessionid`   |            |
+| SessionHasService_ibfk_2 | Services        | `serviceid`   | `serviceid`   |            |
+|--------------------------+-----------------+---------------+---------------+------------|
+
+* Sessions
+
+#+CAPTION: Sessions Fields
+#+LABEL: tbl:sessionsfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|----------------+--------------+-------------------+--------+--------+-------------------+----------------+---------------------------------+---------|
+| Field          | Type         | Collation         | Null   | Key    | Default           | Extra          | Privileges                      | Comment |
+|----------------+--------------+-------------------+--------+--------+-------------------+----------------+---------------------------------+---------|
+| sessionid      | int(11)      | NULL              | &nbsp; | PRI    | (NULL)            | auto_increment | select,insert,update,references | &nbsp;  |
+| trackid        | int(11)      | NULL              | &nbsp; | MUL    | 0                 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| typeid         | int(11)      | NULL              | &nbsp; | MUL    | 0                 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| divisionid     | int(11)      | NULL              | &nbsp; | MUL    | 0                 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| pubstatusid    | int(11)      | NULL              | YES    | MUL    | 0                 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| pubsno         | varchar(50)  | latin1_swedish_ci | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| title          | varchar(100) | latin1_swedish_ci | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| pocketprogtext | text         | latin1_swedish_ci | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| progguiddesc   | text         | latin1_general_ci | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| persppartinfo  | text         | latin1_swedish_ci | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| duration       | time         | NULL              | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| estatten       | int(11)      | NULL              | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| kidscatid      | int(11)      | NULL              | &nbsp; | MUL    | 0                 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| signupreq      | tinyint(1)   | NULL              | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| roomsetid      | int(11)      | NULL              | &nbsp; | MUL    | 0                 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| notesforpart   | text         | latin1_swedish_ci | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| servicenotes   | text         | latin1_swedish_ci | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| statusid       | int(11)      | NULL              | &nbsp; | MUL    | 0                 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| notesforprog   | text         | latin1_swedish_ci | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| warnings       | tinyint(1)   | NULL              | YES    | &nbsp; | (NULL)            | &nbsp;         | select,insert,update,references | &nbsp;  |
+| invitedguest   | tinyint(1)   | NULL              | YES    | &nbsp; | 0                 | &nbsp;         | select,insert,update,references | &nbsp;  |
+| ts             | timestamp    | NULL              | YES    | &nbsp; | CURRENT_TIMESTAMP | &nbsp;         | select,insert,update,references | &nbsp;  |
+|----------------+--------------+-------------------+--------+--------+-------------------+----------------+---------------------------------+---------|
+
+#+CAPTION: Sessions Indexes
+#+LABEL: tbl:sessionsindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|----------+------------+-----------------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table    | Non unique | Key name        | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|----------+------------+-----------------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Sessions |          0 | PRIMARY         |            1 | sessionid   | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Sessions |          1 | trackid         |            1 | trackid     | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Sessions |          1 | typeid          |            1 | typeid      | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Sessions |          1 | kidscatid       |            1 | kidscatid   | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Sessions |          1 | roomsetid       |            1 | roomsetid   | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Sessions |          1 | statusid        |            1 | statusid    | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| Sessions |          1 | Sessions_ibfk_6 |            1 | pubstatusid | A         |           2 | (NULL)   | (NULL) | YES    | BTREE      | &nbsp;  |
+| Sessions |          1 | Sessions_ibfk_7 |            1 | divisionid  | A         |           2 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|----------+------------+-----------------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: Sessions Foreign Key Relationships
+#+LABEL: tbl:sessionsfkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|-----------------+-----------------+---------------+---------------+------------|
+| FK Id           | Reference Table | Source Column | Target Column | Extra Info |
+|-----------------+-----------------+---------------+---------------+------------|
+| Sessions_ibfk_7 | Divisions       | `divisionid`  | `divisionid`  |            |
+| Sessions_ibfk_1 | Tracks          | `trackid`     | `trackid`     |            |
+| Sessions_ibfk_2 | Types           | `typeid`      | `typeid`      |            |
+| Sessions_ibfk_3 | KidsCategories  | `kidscatid`   | `kidscatid`   |            |
+| Sessions_ibfk_4 | RoomSets        | `roomsetid`   | `roomsetid`   |            |
+| Sessions_ibfk_5 | SessionStatuses | `statusid`    | `statusid`    |            |
+| Sessions_ibfk_6 | PubStatuses     | `pubstatusid` | `pubstatusid` |            |
+|-----------------+-----------------+---------------+---------------+------------|
+
+* SessionStatuses
+
+#+CAPTION: SessionStatuses Fields
+#+LABEL: tbl:sessionstatusesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| statusid      | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| statusname    | varchar(50) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: SessionStatuses Indexes
+#+LABEL: tbl:sessionstatusesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table           | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| SessionStatuses |          0 | PRIMARY  |            1 | statusid    | A         |           7 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-----------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* Times
+
+#+CAPTION: Times Fields
+#+LABEL: tbl:timessfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+----------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| Field         | Type     | Collation         | Null   | Key    | Default | Extra  | Privileges                      | Comment |
+|---------------+----------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+| timeindex     | int(11)  | NULL              | &nbsp; | PRI    | 0       | &nbsp; | select,insert,update,references | &nbsp;  |
+| timetext      | char(10) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+| display_order | int(11)  | NULL              | YES    | &nbsp; | (NULL)  | &nbsp; | select,insert,update,references | &nbsp;  |
+|---------------+----------+-------------------+--------+--------+---------+--------+---------------------------------+---------|
+
+#+CAPTION: Times Indexes
+#+LABEL: tbl:timesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Times |          0 | PRIMARY  |            1 | timeindex   | A         |          24 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* Tracks
+
+#+CAPTION: Tracks Fields
+#+LABEL: tbl:tracksfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| trackid       | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| trackname     | varchar(50) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| selfselect    | tinyint(1)  | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: Tracks Indexes
+#+LABEL: tbl:trackssindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|--------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table  | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|--------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Tracks |          0 | PRIMARY  |            1 | trackid     | A         |          22 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|--------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* Types
+
+#+CAPTION: Types Fields
+#+LABEL: tbl:typesfields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| Field         | Type        | Collation         | Null   | Key    | Default | Extra          | Privileges                      | Comment |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+| typeid        | int(11)     | NULL              | &nbsp; | PRI    | (NULL)  | auto_increment | select,insert,update,references | &nbsp;  |
+| typename      | varchar(50) | latin1_swedish_ci | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+| display_order | int(11)     | NULL              | YES    | &nbsp; | (NULL)  | &nbsp;         | select,insert,update,references | &nbsp;  |
+|---------------+-------------+-------------------+--------+--------+---------+----------------+---------------------------------+---------|
+
+#+CAPTION: Types Indexes
+#+LABEL: tbl:typesindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table | Non unique | Key name | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Types |          0 | PRIMARY  |            1 | typeid      | A         |          16 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+* UserHasPermissionRole
+
+#+CAPTION: UserHasPermissionRole Fields
+#+LABEL: tbl:userhaspermissionrolefields
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|
+|------------+-------------+-------------------+--------+-----+---------+--------+---------------------------------+---------|
+| Field      | Type        | Collation         | Null   | Key | Default | Extra  | Privileges                      | Comment |
+|------------+-------------+-------------------+--------+-----+---------+--------+---------------------------------+---------|
+| badgeid    | varchar(15) | latin1_swedish_ci | &nbsp; | PRI | &nbsp;  | &nbsp; | select,insert,update,references | &nbsp;  |
+| permroleid | int(11)     | NULL              | &nbsp; | PRI | 0       | &nbsp; | select,insert,update,references | &nbsp;  |
+|------------+-------------+-------------------+--------+-----+---------+--------+---------------------------------+---------|
+
+#+CAPTION: UserHasPermissionRole Indexes
+#+LABEL: tbl:userhaspermissionroleindexes
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|l|l|l|l|l|l|l|
+|-----------------------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| Table                 | Non unique | Key name                 | Seq in index | Column name | Collation | Cardinality | Sub part | Packed | Null   | Index type | Comment |
+|-----------------------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+| UserHasPermissionRole |          0 | PRIMARY                  |            1 | badgeid     | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| UserHasPermissionRole |          0 | PRIMARY                  |            2 | permroleid  | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+| UserHasPermissionRole |          1 | FK_UserHasPermissionRole |            1 | permroleid  | A         |           0 | (NULL)   | (NULL) | &nbsp; | BTREE      | &nbsp;  |
+|-----------------------+------------+--------------------------+--------------+-------------+-----------+-------------+----------+--------+--------+------------+---------|
+
+#+CAPTION: UserHasPermissionRole Foreign Key Relationships
+#+LABEL: tbl:UserHasPermissionrolefkr
+#+ATTR_LaTeX: longtable align=|l|l|l|l|l|
+|------------------------------+-----------------+---------------+---------------+------------|
+| FK Id                        | Reference Table | Source Column | Target Column | Extra Info |
+|------------------------------+-----------------+---------------+---------------+------------|
+| UserHasPermissionRole_ibfk_2 | PermissionRoles | `permroleid`  | `permroleid`  |            |
+| UserHasPermissionRole_ibfk_1 | Participants    | `badgeid`     | `badgeid`     |            |
+|------------------------------+-----------------+---------------+---------------+------------|

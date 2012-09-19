@@ -1,5 +1,5 @@
 #+TITLE: Time Card Usage in Zambia
-#+EMAIL: nela.program@gmail.com
+#+EMAIL: NELA.Percy@gmail.com
 #+AUTHOR: Percy
 #+DATE: March 2012
 #+DESCRIPTION: Zambia is a piece of Conference Management Software.  This document is a "How To" guide assisting in the way of keeping track of Volunteer Hours for the Zambia FFF-branch instance for your conference.  This is still a work in progress.

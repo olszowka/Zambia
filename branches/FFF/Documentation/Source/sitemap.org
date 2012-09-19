@@ -1,0 +1,8 @@
+#+TITLE: Site Map
+
+   + [[file:Bio_Editing.org][Bios Editing in Zambia]]
+   + [[file:NotesForCoders.org][Notes for Coders]]
+   + [[file:Presenter_Flow.org][Presenter Flow in Zambia]]
+   + [[file:schema.org][Schema for database 'zambiademo']]
+   + [[file:Setting_Up.org][Setting Up Zambia from Scratch]]
+   + [[file:Time_Card.org][Time Card Usage in Zambia]]
