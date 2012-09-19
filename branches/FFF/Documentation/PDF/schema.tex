@@ -73,21 +73,21 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{CongoDump Fields} \label{tbl:congodumpfields}\\
 \hline
- Field        &  Type          &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field        &  Type          &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid      &  varchar(15)   &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- firstname    &  varchar(30)   &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- lastname     &  varchar(40)   &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- badgename    &  varchar(51)   &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- phone        &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- email        &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- postaddress  &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- regtype      &  varchar(40)   &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid      &  varchar(15)   &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ firstname    &  varchar(30)   &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ lastname     &  varchar(40)   &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ badgename    &  varchar(51)   &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ phone        &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ email        &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ postaddress  &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ regtype      &  varchar(40)   &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -95,14 +95,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{CongoDump Indexes} \label{tbl:congodumpindexes}\\
 \hline
- Table      &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table      &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- CongoDump  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ CongoDump  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{Divisions}
@@ -112,16 +112,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Divisions Fields} \label{tbl:divisionsfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- divisionid        &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- divisionname      &  varchar(30)  &  latin1\_{}general\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  \&nbsp;  &  \&nbsp;  &  0        &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ divisionid        &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ divisionname      &  varchar(30)  &  latin1\_{}general\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &        &       &  0        &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -129,14 +129,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Divisions Indexes} \label{tbl:Divisionsindexes}\\
 \hline
- Table      &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table      &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Divisions  &           0  &  PRIMARY   &             1  &  divisionid   &  A          &            5  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Divisions  &           0  &  PRIMARY   &             1  &  divisionid   &  A          &            5  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{Features}
@@ -146,16 +146,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Features Fields} \label{tbl:featuresfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- featureid         &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- featurename       &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ featureid         &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ featurename       &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -163,14 +163,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Features Indexes} \label{tbl:featuresindexes}\\
 \hline
- Table     &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table     &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Features  &           0  &  PRIMARY   &             1  &  featureid    &  A          &           12  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp   \\
+ Features  &           0  &  PRIMARY   &             1  &  featureid    &  A          &           12  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{KidsCategories}
@@ -180,16 +180,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{KidsCategories Fields} \label{tbl:kidscategoriesfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- kidscatid         &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- kidscatname       &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ kidscatid         &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ kidscatname       &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -197,14 +197,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{KidsCategories Indexes} \label{tbl:kidscategoriesindexes}\\
 \hline
- Table           &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table           &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- KidsCategories  &           0  &  PRIMARY   &             1  &  kidscatid    &  A          &            4  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ KidsCategories  &           0  &  PRIMARY   &             1  &  kidscatid    &  A          &            4  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{ParticipantAvailability}
@@ -214,21 +214,21 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantAvailability Fields} \label{tbl:participantavailabilityfields}\\
 \hline
- Field             &  Type          &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field             &  Type          &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid           &  varchar(15)   &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- fridaymaxprog     &  int(11)       &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- saturdaymaxprog   &  int(11)       &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- sundaymaxprog     &  int(11)       &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- maxprog           &  int(11)       &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- preventconflict   &  varchar(255)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- otherconstraints  &  varchar(255)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- numkidsfasttrack  &  int(11)       &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid           &  varchar(15)   &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ fridaymaxprog     &  int(11)       &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ saturdaymaxprog   &  int(11)       &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ sundaymaxprog     &  int(11)       &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ maxprog           &  int(11)       &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ preventconflict   &  varchar(255)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ otherconstraints  &  varchar(255)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ numkidsfasttrack  &  int(11)       &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -236,14 +236,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantAvailability Indexes} \label{tbl:participantavailabilityindexes}\\
 \hline
- Table                    &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table                    &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- ParticipantAvailability  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ ParticipantAvailability  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -268,17 +268,17 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantAvailabilityTimes Fields} \label{tbl:participantavailabilitytimesfields}\\
 \hline
- Field            &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field            &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid          &  varchar(15)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- availabilitynum  &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  0        &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- starttime        &  time         &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- endtime          &  time         &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid          &  varchar(15)  &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ availabilitynum  &  int(11)      &  NULL                     &        &  PRI  &  0        &         &  select,insert,update,references  &           \\
+ starttime        &  time         &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ endtime          &  time         &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -286,15 +286,15 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantAvailabilityTimes Indexes} \label{tbl:participantavailabilitytimesindexes}\\
 \hline
- Table                         &  Non unique  &  Key name  &  Seq in index  &  Column name      &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table                         &  Non unique  &  Key name  &  Seq in index  &  Column name      &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- ParticipantAvailabilityTimes  &           0  &  PRIMARY   &             1  &  badgeid          &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- ParticipantAvailabilityTimes  &           0  &  PRIMARY   &             2  &  availabilitynum  &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ ParticipantAvailabilityTimes  &           0  &  PRIMARY   &             1  &  badgeid          &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ ParticipantAvailabilityTimes  &           0  &  PRIMARY   &             2  &  availabilitynum  &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -319,15 +319,15 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantHasRole Fields} \label{tbl:participanthasrolefields}\\
 \hline
- Field    &  Type         &  Collation                &  Null     &  Key  &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field    &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid  &  varchar(15)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI  &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- roleid   &  int(11)      &  NULL                     &  \&nbsp;  &  PRI  &  0        &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid  &  varchar(15)  &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ roleid   &  int(11)      &  NULL                     &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -335,16 +335,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantHasRole Indexes} \label{tbl:participanthasroleindexes}\\
 \hline
- Table               &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table               &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- ParticipantHasRole  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- ParticipantHasRole  &           0  &  PRIMARY   &             2  &  roleid       &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- ParticipantHasRole  &           1  &  roleid    &             1  &  roleid       &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ ParticipantHasRole  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ ParticipantHasRole  &           0  &  PRIMARY   &             2  &  roleid       &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ ParticipantHasRole  &           1  &  roleid    &             1  &  roleid       &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -370,19 +370,19 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantInterests Fields} \label{tbl:participantinterestsfields}\\
 \hline
- Field       &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field       &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid     &  varchar(15)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- yespanels   &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- nopanels    &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- yespeople   &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- nopeople    &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- otherroles  &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid     &  varchar(15)  &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ yespanels   &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ nopanels    &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ yespeople   &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ nopeople    &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ otherroles  &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -390,14 +390,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantInterests Indexes} \label{tbl:participantinterestesindexes}\\
 \hline
- Table                 &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table                 &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- ParticipantInterests  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ ParticipantInterests  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -422,17 +422,17 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantOnSession Fields} \label{tbl:participantonsessionfields}\\
 \hline
- Field      &  Type         &  Collation                &  Null     &  Key      &  Default               &  Extra    &  Privileges                       &  Comment \\
+ Field      &  Type         &  Collation                &  Null  &  Key  &               Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid    &  varchar(15)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;               &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- sessionid  &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  0                     &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- moderator  &  tinyint(4)   &  NULL                     &  YES      &  \&nbsp;  &  0                     &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- ts         &  timestamp    &  NULL                     &  YES      &  \&nbsp;  &  CURRENT\_{}TIMESTAMP  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid    &  varchar(15)  &  latin1\_{}swedish\_{}ci  &        &  PRI  &                        &         &  select,insert,update,references  &           \\
+ sessionid  &  int(11)      &  NULL                     &        &  PRI  &                     0  &         &  select,insert,update,references  &           \\
+ moderator  &  tinyint(4)   &  NULL                     &  YES   &       &                     0  &         &  select,insert,update,references  &           \\
+ ts         &  timestamp    &  NULL                     &  YES   &       &  CURRENT\_{}TIMESTAMP  &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -440,16 +440,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantOnSession Indexes} \label{tbl:participantonsessionindexes}\\
 \hline
- Table                 &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table                 &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- ParticipantOnSession  &           0  &  PRIMARY    &             1  &  badgeid      &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- ParticipantOnSession  &           0  &  PRIMARY    &             2  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- ParticipantOnSession  &           1  &  sessionid  &             1  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ ParticipantOnSession  &           0  &  PRIMARY    &             1  &  badgeid      &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ ParticipantOnSession  &           0  &  PRIMARY    &             2  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ ParticipantOnSession  &           1  &  sessionid  &             1  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -475,19 +475,19 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Participants Fields} \label{tbl:participantsfields}\\
 \hline
- Field       &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field       &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid     &  varchar(15)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- password    &  varchar(32)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- bestway     &  varchar(12)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- interested  &  tinyint(1)   &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- bio         &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- pubsname    &  varchar(50)  &  latin1\_{}general\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid     &  varchar(15)  &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ password    &  varchar(32)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ bestway     &  varchar(12)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ interested  &  tinyint(1)   &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ bio         &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ pubsname    &  varchar(50)  &  latin1\_{}general\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -495,14 +495,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Participants Indexes} \label{tbl:participantsindexes}\\
 \hline
- Table         &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table         &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Participants  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Participants  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{ParticipantSessionInterest}
@@ -512,18 +512,18 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantSessionInterest Fields} \label{tbl:participantsessioninterestfields}\\
 \hline
- Field         &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field         &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid       &  varchar(15)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- sessionid     &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  0        &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- rank          &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- willmoderate  &  tinyint(1)   &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- comments      &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid       &  varchar(15)  &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ sessionid     &  int(11)      &  NULL                     &        &  PRI  &  0        &         &  select,insert,update,references  &           \\
+ rank          &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ willmoderate  &  tinyint(1)   &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ comments      &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -531,16 +531,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantSessionInterest Indexes} \label{tbl:participantsessioninterestindexes}\\
 \hline
- Table                       &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table                       &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- ParticipantSessionInterest  &           0  &  PRIMARY    &             1  &  badgeid      &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- ParticipantSessionInterest  &           0  &  PRIMARY    &             2  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- ParticipantSessionInterest  &           1  &  sessionid  &             1  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ ParticipantSessionInterest  &           0  &  PRIMARY    &             1  &  badgeid      &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ ParticipantSessionInterest  &           0  &  PRIMARY    &             2  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ ParticipantSessionInterest  &           1  &  sessionid  &             1  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -568,17 +568,17 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantSuggestions Fields} \label{tbl:participantsuggestionsfields}\\
 \hline
- Field            &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field            &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid          &  varchar(15)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- paneltopics      &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- otherideas       &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- suggestedguests  &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid          &  varchar(15)  &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ paneltopics      &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ otherideas       &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ suggestedguests  &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -586,14 +586,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{ParticipantSuggestions Indexes} \label{tbl:participantsuggestionsindexes}\\
 \hline
- Table                   &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table                   &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- ParticipantSuggestions  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ ParticipantSuggestions  &           0  &  PRIMARY   &             1  &  badgeid      &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -618,17 +618,17 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{PermissionAtoms Fields} \label{tbl:permissionatomsfields}\\
 \hline
- Field        &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field        &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- permatomid   &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- permatomtag  &  varchar(20)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  UNI      &  \&nbsp;  &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- page         &  varchar(20)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- notes        &  text         &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ permatomid   &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ permatomtag  &  varchar(20)  &  latin1\_{}swedish\_{}ci  &        &  UNI  &           &                     &  select,insert,update,references  &           \\
+ page         &  varchar(20)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ notes        &  text         &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -636,15 +636,15 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{PermissionAtoms Indexes} \label{tbl:permissionatomsindexes}\\
 \hline
- Table            &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table            &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- PermissionAtoms  &           0  &  PRIMARY   &             1  &  permatomid   &  A          &            4  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- PermissionAtoms  &           0  &  taginx    &             1  &  permatomtag  &  A          &            4  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ PermissionAtoms  &           0  &  PRIMARY   &             1  &  permatomid   &  A          &            4  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ PermissionAtoms  &           0  &  taginx    &             1  &  permatomtag  &  A          &            4  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{PermissionRoles}
@@ -654,16 +654,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{PermissionRoles Fields} \label{tbl:permissionrolesfields}\\
 \hline
- Field         &  Type          &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field         &  Type          &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- permroleid    &  int(11)       &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- permrolename  &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- notes         &  text          &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ permroleid    &  int(11)       &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ permrolename  &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ notes         &  text          &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -671,14 +671,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{PermissionRoles Indexes} \label{tbl:permissionrolesindexes}\\
 \hline
- Table            &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table            &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- PermissionRoles  &           0  &  PRIMARY   &             1  &  permroleid   &  A          &            3  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ PermissionRoles  &           0  &  PRIMARY   &             1  &  permroleid   &  A          &            3  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{Permissions}
@@ -688,18 +688,18 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Permissions Fields} \label{tbl:permissionsfields}\\
 \hline
- Field         &  Type     &  Collation  &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment                       \\
+ Field         &  Type     &  Collation  &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment                       \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- permissionid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI      &   (NULL)  &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;                        \\
- permatomid    &  int(11)  &  NULL       &  \&nbsp;  &  MUL      &        0  &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;                        \\
- phaseid       &  int(11)  &  NULL       &  YES      &  MUL      &        0  &  \&nbsp;            &  select,insert,update,references  &  null indicates all phases      \\
- permroleid    &  int(11)  &  NULL       &  YES      &  MUL      &        0  &  \&nbsp;            &  select,insert,update,references  &  null indicates not applicable  \\
- badgeid       &  int(11)  &  NULL       &  YES      &  \&nbsp;  &        0  &  \&nbsp;            &  select,insert,update,references  &  null indicates not applicable  \\
+ permissionid  &  int(11)  &  NULL       &        &  PRI  &   (NULL)  &  auto\_{}increment  &  select,insert,update,references  &                                 \\
+ permatomid    &  int(11)  &  NULL       &        &  MUL  &        0  &                     &  select,insert,update,references  &                                 \\
+ phaseid       &  int(11)  &  NULL       &  YES   &  MUL  &        0  &                     &  select,insert,update,references  &  null indicates all phases      \\
+ permroleid    &  int(11)  &  NULL       &  YES   &  MUL  &        0  &                     &  select,insert,update,references  &  null indicates not applicable  \\
+ badgeid       &  int(11)  &  NULL       &  YES   &       &        0  &                     &  select,insert,update,references  &  null indicates not applicable  \\
 \hline
 \end{longtable}
 
@@ -707,20 +707,20 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Permissions Indexes} \label{tbl:permissionsindexes}\\
 \hline
- Table        &  Non unique  &  Key name           &  Seq in index  &  Column name   &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table        &  Non unique  &  Key name           &  Seq in index  &  Column name   &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Permissions  &           0  &  PRIMARY            &             1  &  permissionid  &  A          &            4  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Permissions  &           0  &  unique1            &             1  &  permatomid    &  A          &            4  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Permissions  &           0  &  unique1            &             2  &  phaseid       &  A          &            4  &  (NULL)    &  (NULL)  &  YES      &  BTREE       &  \&nbsp;  \\
- Permissions  &           0  &  unique1            &             3  &  permroleid    &  A          &            4  &  (NULL)    &  (NULL)  &  YES      &  BTREE       &  \&nbsp;  \\
- Permissions  &           0  &  unique1            &             4  &  badgeid       &  A          &            4  &  (NULL)    &  (NULL)  &  YES      &  BTREE       &  \&nbsp;  \\
- Permissions  &           1  &  FK\_{}Permissions  &             1  &  phaseid       &  A          &            4  &  (NULL)    &  (NULL)  &  YES      &  BTREE       &  \&nbsp;  \\
- Permissions  &           1  &  FK\_{}PRoles       &             1  &  permroleid    &  A          &            4  &  (NULL)    &  (NULL)  &  YES      &  BTREE       &  \&nbsp;  \\
+ Permissions  &           0  &  PRIMARY            &             1  &  permissionid  &  A          &            4  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Permissions  &           0  &  unique1            &             1  &  permatomid    &  A          &            4  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Permissions  &           0  &  unique1            &             2  &  phaseid       &  A          &            4  &  (NULL)    &  (NULL)  &  YES   &  BTREE       &           \\
+ Permissions  &           0  &  unique1            &             3  &  permroleid    &  A          &            4  &  (NULL)    &  (NULL)  &  YES   &  BTREE       &           \\
+ Permissions  &           0  &  unique1            &             4  &  badgeid       &  A          &            4  &  (NULL)    &  (NULL)  &  YES   &  BTREE       &           \\
+ Permissions  &           1  &  FK\_{}Permissions  &             1  &  phaseid       &  A          &            4  &  (NULL)    &  (NULL)  &  YES   &  BTREE       &           \\
+ Permissions  &           1  &  FK\_{}PRoles       &             1  &  permroleid    &  A          &            4  &  (NULL)    &  (NULL)  &  YES   &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -747,17 +747,17 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Phases Fields} \label{tbl:phasesfields}\\
 \hline
- Field      &  Type          &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field      &  Type          &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- phaseid    &  int(11)       &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- phasename  &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- current    &  tinyint(1)    &  NULL                     &  YES      &  \&nbsp;  &  0        &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- notes      &  text          &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ phaseid    &  int(11)       &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ phasename  &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ current    &  tinyint(1)    &  NULL                     &  YES   &       &  0        &                     &  select,insert,update,references  &           \\
+ notes      &  text          &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -765,14 +765,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Phases Indexes} \label{tbl:phasesindexes}\\
 \hline
- Table   &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table   &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Phases  &           0  &  PRIMARY   &             1  &  phaseid      &  A          &            4  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Phases  &           0  &  PRIMARY   &             1  &  phaseid      &  A          &            4  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{PubCharacteristics}
@@ -782,17 +782,17 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{PubCharacteristics Fields} \label{tbl:pubcharacteristicsfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- pubcharid         &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- pubcharname       &  varchar(30)  &  latin1\_{}general\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- pubchartag        &  varchar(10)  &  latin1\_{}general\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  \&nbsp;  &  \&nbsp;  &  0        &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ pubcharid         &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ pubcharname       &  varchar(30)  &  latin1\_{}general\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ pubchartag        &  varchar(10)  &  latin1\_{}general\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &        &       &  0        &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -800,14 +800,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{PubCharacteristics Indexes} \label{tbl:pubcharacteristicsindexes}\\
 \hline
- Table               &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table               &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- PubCharacteristics  &           0  &  PRIMARY   &             1  &  pubcharid    &  A          &            4  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ PubCharacteristics  &           0  &  PRIMARY   &             1  &  pubcharid    &  A          &            4  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{PubStatuses}
@@ -817,16 +817,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{PubStatuses Fields} \label{tbl:pubsttausesfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- pubstatusid       &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- pubstatusname     &  varchar(12)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  \&nbsp;  &  \&nbsp;  &  0        &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ pubstatusid       &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ pubstatusname     &  varchar(12)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &        &       &  0        &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -834,14 +834,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{PubStatuses Indexes} \label{tbl:pubstatusesindexes}\\
 \hline
- Table        &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table        &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- PubStatuses  &           0  &  PRIMARY   &             1  &  pubstatusid  &  A          &            3  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ PubStatuses  &           0  &  PRIMARY   &             1  &  pubstatusid  &  A          &            3  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{RegTypes}
@@ -851,15 +851,15 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{RegTypes Fields} \label{tbl:regtypesfields}\\
 \hline
- Field    &  Type          &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field    &  Type          &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- regtype  &  varchar(40)   &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI      &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- message  &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ regtype  &  varchar(40)   &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ message  &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -867,14 +867,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{RegTypes Indexes} \label{tbl:regtypesindexes}\\
 \hline
- Table     &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table     &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- RegTypes  &           0  &  PRIMARY   &             1  &  regtype      &  A          &            9  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ RegTypes  &           0  &  PRIMARY   &             1  &  regtype      &  A          &            9  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{Roles}
@@ -884,16 +884,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Roles Fields} \label{tbl:rolesfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- roleid            &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- rolename          &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ roleid            &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ rolename          &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -901,14 +901,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Roles Indexes} \label{tbl:rolesindexes}\\
 \hline
- Table  &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table  &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Roles  &           0  &  PRIMARY   &             1  &  roleid       &  A          &           12  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Roles  &           0  &  PRIMARY   &             1  &  roleid       &  A          &           12  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{RoomHasSet}
@@ -918,16 +918,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{RoomHasSet Fields} \label{tbl:roomhassetfields}\\
 \hline
- Field      &  Type     &  Collation  &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field      &  Type     &  Collation  &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- roomid     &  int(11)  &  NULL       &  \&nbsp;  &  PRI      &        0  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- roomsetid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI      &        0  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- capacity   &  int(11)  &  NULL       &  YES      &  \&nbsp;  &   (NULL)  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ roomid     &  int(11)  &  NULL       &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
+ roomsetid  &  int(11)  &  NULL       &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
+ capacity   &  int(11)  &  NULL       &  YES   &       &   (NULL)  &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -935,16 +935,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{RoomHasSet Indexes} \label{tbl:roomhassetindexes}\\
 \hline
- Table       &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table       &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- RoomHasSet  &           0  &  PRIMARY    &             1  &  roomid       &  A          &           84  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- RoomHasSet  &           0  &  PRIMARY    &             2  &  roomsetid    &  A          &           84  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- RoomHasSet  &           1  &  roomsetid  &             1  &  roomsetid    &  A          &            8  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ RoomHasSet  &           0  &  PRIMARY    &             1  &  roomid       &  A          &           84  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ RoomHasSet  &           0  &  PRIMARY    &             2  &  roomsetid    &  A          &           84  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ RoomHasSet  &           1  &  roomsetid  &             1  &  roomsetid    &  A          &            8  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -970,28 +970,28 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Rooms Fields} \label{tbl:roomsfields}\\
 \hline
- Field             &  Type          &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type          &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- roomid            &  int(11)       &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- roomname          &  varchar(50)   &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)       &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- height            &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- dimensions        &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- area              &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- function          &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- floor             &  varchar(50)   &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- notes             &  text          &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- opentime1         &  time          &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- closetime1        &  time          &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- opentime2         &  time          &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- closetime2        &  time          &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- opentime3         &  time          &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- closetime3        &  time          &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ roomid            &  int(11)       &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ roomname          &  varchar(50)   &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)       &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ height            &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ dimensions        &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ area              &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ function          &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ floor             &  varchar(50)   &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ notes             &  text          &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ opentime1         &  time          &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ closetime1        &  time          &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ opentime2         &  time          &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ closetime2        &  time          &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ opentime3         &  time          &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ closetime3        &  time          &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -999,14 +999,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Rooms Indexes} \label{tbl:roomsindexes}\\
 \hline
- Table  &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table  &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Rooms  &           0  &  PRIMARY   &             1  &  roomid       &  A          &           38  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Rooms  &           0  &  PRIMARY   &             1  &  roomid       &  A          &           38  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{RoomSets}
@@ -1016,16 +1016,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{RoomSets Fields} \label{tbl:roomsetsfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- roomsetid         &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- roomsetname       &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ roomsetid         &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ roomsetname       &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1033,14 +1033,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{RoomSets Indexes} \label{tbl:roomsetsindexes}\\
 \hline
- Table     &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table     &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- RoomSets  &           0  &  PRIMARY   &             1  &  roomsetid    &  A          &           12  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ RoomSets  &           0  &  PRIMARY   &             1  &  roomsetid    &  A          &           12  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{Schedule}
@@ -1050,17 +1050,17 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Schedule Fields} \label{tbl:schedulefields}\\
 \hline
- Field       &  Type     &  Collation  &  Null     &  Key      &   Default  &  Extra              &  Privileges                       &  Comment \\
+ Field       &  Type     &  Collation  &  Null  &  Key  &   Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- scheduleid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI      &    (NULL)  &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- sessionid   &  int(11)  &  NULL       &  \&nbsp;  &  MUL      &         0  &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- roomid      &  int(11)  &  NULL       &  \&nbsp;  &  MUL      &         0  &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- starttime   &  time     &  NULL       &  \&nbsp;  &  \&nbsp;  &  00:00:00  &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ scheduleid  &  int(11)  &  NULL       &        &  PRI  &    (NULL)  &  auto\_{}increment  &  select,insert,update,references  &           \\
+ sessionid   &  int(11)  &  NULL       &        &  MUL  &         0  &                     &  select,insert,update,references  &           \\
+ roomid      &  int(11)  &  NULL       &        &  MUL  &         0  &                     &  select,insert,update,references  &           \\
+ starttime   &  time     &  NULL       &        &       &  00:00:00  &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1068,16 +1068,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Schedule Indexes} \label{tbl:scheduleindexes}\\
 \hline
- Table     &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table     &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Schedule  &           0  &  PRIMARY    &             1  &  scheduleid   &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Schedule  &           1  &  sessionid  &             1  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Schedule  &           1  &  roomid     &             1  &  roomid       &  A          &            1  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Schedule  &           0  &  PRIMARY    &             1  &  scheduleid   &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Schedule  &           1  &  sessionid  &             1  &  sessionid    &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Schedule  &           1  &  roomid     &             1  &  roomid       &  A          &            1  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -1103,16 +1103,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Services Fields} \label{tbl:servicesfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- serviceid         &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- servicename       &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ serviceid         &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ servicename       &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1120,14 +1120,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Service Indexes} \label{tbl:serviceindexes}\\
 \hline
- Table     &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table     &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Services  &           0  &  PRIMARY   &             1  &  serviceid    &  A          &           14  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Services  &           0  &  PRIMARY   &             1  &  serviceid    &  A          &           14  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{SessionHasFeature}
@@ -1137,15 +1137,15 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{SessionHasFeature Fields} \label{tbl:sessionhasfeaturefields}\\
 \hline
- Field      &  Type     &  Collation  &  Null     &  Key  &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field      &  Type     &  Collation  &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- sessionid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI  &        0  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- featureid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI  &        0  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ sessionid  &  int(11)  &  NULL       &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
+ featureid  &  int(11)  &  NULL       &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1153,16 +1153,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{SessionHasFeature Indexes} \label{tbl:sessionhasfeatureindexes}\\
 \hline
- Table              &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table              &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- SessionHasFeature  &           0  &  PRIMARY    &             1  &  sessionid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- SessionHasFeature  &           0  &  PRIMARY    &             2  &  featureid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- SessionHasFeature  &           1  &  featureid  &             1  &  featureid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ SessionHasFeature  &           0  &  PRIMARY    &             1  &  sessionid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ SessionHasFeature  &           0  &  PRIMARY    &             2  &  featureid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ SessionHasFeature  &           1  &  featureid  &             1  &  featureid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -1188,15 +1188,15 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{SessionHasPubChar Fields} \label{tbl:sessionhaspubcharfields}\\
 \hline
- Field      &  Type     &  Collation  &  Null     &  Key  &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field      &  Type     &  Collation  &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- sessionid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI  &        0  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- pubcharid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI  &        0  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ sessionid  &  int(11)  &  NULL       &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
+ pubcharid  &  int(11)  &  NULL       &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1204,16 +1204,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{SessionHasPubChar Indexes} \label{tbl:sessionhaspubcharindexes}\\
 \hline
- Table              &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table              &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- SessionHasPubChar  &           0  &  PRIMARY   &             1  &  sessionid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- SessionHasPubChar  &           0  &  PRIMARY   &             2  &  pubcharid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- SessionHasPubChar  &           1  &  Fkey2     &             1  &  pubcharid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ SessionHasPubChar  &           0  &  PRIMARY   &             1  &  sessionid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ SessionHasPubChar  &           0  &  PRIMARY   &             2  &  pubcharid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ SessionHasPubChar  &           1  &  Fkey2     &             1  &  pubcharid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -1239,15 +1239,15 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{SessionHasService Fields} \label{tbl:sessionhasservicefields}\\
 \hline
- Field      &  Type     &  Collation  &  Null     &  Key  &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field      &  Type     &  Collation  &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- sessionid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI  &        0  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- serviceid  &  int(11)  &  NULL       &  \&nbsp;  &  PRI  &        0  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ sessionid  &  int(11)  &  NULL       &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
+ serviceid  &  int(11)  &  NULL       &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1255,16 +1255,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{SessionHasService Indexes} \label{tbl:sessionhasserviceindexes}\\
 \hline
- Table              &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table              &  Non unique  &  Key name   &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- SessionHasService  &           0  &  PRIMARY    &             1  &  sessionid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- SessionHasService  &           0  &  PRIMARY    &             2  &  serviceid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- SessionHasService  &           1  &  serviceid  &             1  &  serviceid    &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ SessionHasService  &           0  &  PRIMARY    &             1  &  sessionid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ SessionHasService  &           0  &  PRIMARY    &             2  &  serviceid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ SessionHasService  &           1  &  serviceid  &             1  &  serviceid    &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -1290,35 +1290,35 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Sessions Fields} \label{tbl:sessionsfields}\\
 \hline
- Field           &  Type          &  Collation                &  Null     &  Key      &  Default               &  Extra              &  Privileges                       &  Comment \\
+ Field           &  Type          &  Collation                &  Null  &  Key  &  Default               &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- sessionid       &  int(11)       &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)                &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- trackid         &  int(11)       &  NULL                     &  \&nbsp;  &  MUL      &  0                     &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- typeid          &  int(11)       &  NULL                     &  \&nbsp;  &  MUL      &  0                     &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- divisionid      &  int(11)       &  NULL                     &  \&nbsp;  &  MUL      &  0                     &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- pubstatusid     &  int(11)       &  NULL                     &  YES      &  MUL      &  0                     &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- pubsno          &  varchar(50)   &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- title           &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- pocketprogtext  &  text          &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- progguiddesc    &  text          &  latin1\_{}general\_{}ci  &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- persppartinfo   &  text          &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- duration        &  time          &  NULL                     &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- estatten        &  int(11)       &  NULL                     &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- kidscatid       &  int(11)       &  NULL                     &  \&nbsp;  &  MUL      &  0                     &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- signupreq       &  tinyint(1)    &  NULL                     &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- roomsetid       &  int(11)       &  NULL                     &  \&nbsp;  &  MUL      &  0                     &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- notesforpart    &  text          &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- servicenotes    &  text          &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- statusid        &  int(11)       &  NULL                     &  \&nbsp;  &  MUL      &  0                     &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- notesforprog    &  text          &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- warnings        &  tinyint(1)    &  NULL                     &  YES      &  \&nbsp;  &  (NULL)                &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- invitedguest    &  tinyint(1)    &  NULL                     &  YES      &  \&nbsp;  &  0                     &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- ts              &  timestamp     &  NULL                     &  YES      &  \&nbsp;  &  CURRENT\_{}TIMESTAMP  &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ sessionid       &  int(11)       &  NULL                     &        &  PRI  &  (NULL)                &  auto\_{}increment  &  select,insert,update,references  &           \\
+ trackid         &  int(11)       &  NULL                     &        &  MUL  &  0                     &                     &  select,insert,update,references  &           \\
+ typeid          &  int(11)       &  NULL                     &        &  MUL  &  0                     &                     &  select,insert,update,references  &           \\
+ divisionid      &  int(11)       &  NULL                     &        &  MUL  &  0                     &                     &  select,insert,update,references  &           \\
+ pubstatusid     &  int(11)       &  NULL                     &  YES   &  MUL  &  0                     &                     &  select,insert,update,references  &           \\
+ pubsno          &  varchar(50)   &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ title           &  varchar(100)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ pocketprogtext  &  text          &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ progguiddesc    &  text          &  latin1\_{}general\_{}ci  &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ persppartinfo   &  text          &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ duration        &  time          &  NULL                     &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ estatten        &  int(11)       &  NULL                     &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ kidscatid       &  int(11)       &  NULL                     &        &  MUL  &  0                     &                     &  select,insert,update,references  &           \\
+ signupreq       &  tinyint(1)    &  NULL                     &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ roomsetid       &  int(11)       &  NULL                     &        &  MUL  &  0                     &                     &  select,insert,update,references  &           \\
+ notesforpart    &  text          &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ servicenotes    &  text          &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ statusid        &  int(11)       &  NULL                     &        &  MUL  &  0                     &                     &  select,insert,update,references  &           \\
+ notesforprog    &  text          &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ warnings        &  tinyint(1)    &  NULL                     &  YES   &       &  (NULL)                &                     &  select,insert,update,references  &           \\
+ invitedguest    &  tinyint(1)    &  NULL                     &  YES   &       &  0                     &                     &  select,insert,update,references  &           \\
+ ts              &  timestamp     &  NULL                     &  YES   &       &  CURRENT\_{}TIMESTAMP  &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1326,21 +1326,21 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Sessions Indexes} \label{tbl:sessionsindexes}\\
 \hline
- Table     &  Non unique  &  Key name               &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table     &  Non unique  &  Key name               &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Sessions  &           0  &  PRIMARY                &             1  &  sessionid    &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Sessions  &           1  &  trackid                &             1  &  trackid      &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Sessions  &           1  &  typeid                 &             1  &  typeid       &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Sessions  &           1  &  kidscatid              &             1  &  kidscatid    &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Sessions  &           1  &  roomsetid              &             1  &  roomsetid    &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Sessions  &           1  &  statusid               &             1  &  statusid     &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- Sessions  &           1  &  Sessions\_{}ibfk\_{}6  &             1  &  pubstatusid  &  A          &            2  &  (NULL)    &  (NULL)  &  YES      &  BTREE       &  \&nbsp;  \\
- Sessions  &           1  &  Sessions\_{}ibfk\_{}7  &             1  &  divisionid   &  A          &            2  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Sessions  &           0  &  PRIMARY                &             1  &  sessionid    &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Sessions  &           1  &  trackid                &             1  &  trackid      &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Sessions  &           1  &  typeid                 &             1  &  typeid       &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Sessions  &           1  &  kidscatid              &             1  &  kidscatid    &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Sessions  &           1  &  roomsetid              &             1  &  roomsetid    &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Sessions  &           1  &  statusid               &             1  &  statusid     &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ Sessions  &           1  &  Sessions\_{}ibfk\_{}6  &             1  &  pubstatusid  &  A          &            2  &  (NULL)    &  (NULL)  &  YES   &  BTREE       &           \\
+ Sessions  &           1  &  Sessions\_{}ibfk\_{}7  &             1  &  divisionid   &  A          &            2  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
@@ -1371,16 +1371,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{SessionStatuses Fields} \label{tbl:sessionstatusesfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- statusid          &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- statusname        &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ statusid          &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ statusname        &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1388,14 +1388,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{SessionStatuses Indexes} \label{tbl:sessionstatusesindexes}\\
 \hline
- Table            &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table            &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- SessionStatuses  &           0  &  PRIMARY   &             1  &  statusid     &  A          &            7  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ SessionStatuses  &           0  &  PRIMARY   &             1  &  statusid     &  A          &            7  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{Times}
@@ -1405,16 +1405,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Times Fields} \label{tbl:timessfields}\\
 \hline
- Field             &  Type      &  Collation                &  Null     &  Key      &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field             &  Type      &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- timeindex         &  int(11)   &  NULL                     &  \&nbsp;  &  PRI      &  0        &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- timetext          &  char(10)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)   &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ timeindex         &  int(11)   &  NULL                     &        &  PRI  &  0        &         &  select,insert,update,references  &           \\
+ timetext          &  char(10)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)   &  NULL                     &  YES   &       &  (NULL)   &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1422,14 +1422,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Times Indexes} \label{tbl:timesindexes}\\
 \hline
- Table  &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table  &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Times  &           0  &  PRIMARY   &             1  &  timeindex    &  A          &           24  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Times  &           0  &  PRIMARY   &             1  &  timeindex    &  A          &           24  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{Tracks}
@@ -1439,17 +1439,17 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Tracks Fields} \label{tbl:tracksfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- trackid           &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- trackname         &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- selfselect        &  tinyint(1)   &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ trackid           &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ trackname         &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ selfselect        &  tinyint(1)   &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1457,14 +1457,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Tracks Indexes} \label{tbl:trackssindexes}\\
 \hline
- Table   &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table   &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Tracks  &           0  &  PRIMARY   &             1  &  trackid      &  A          &           22  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Tracks  &           0  &  PRIMARY   &             1  &  trackid      &  A          &           22  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{Types}
@@ -1474,16 +1474,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{Types Fields} \label{tbl:typesfields}\\
 \hline
- Field             &  Type         &  Collation                &  Null     &  Key      &  Default  &  Extra              &  Privileges                       &  Comment \\
+ Field             &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra              &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- typeid            &  int(11)      &  NULL                     &  \&nbsp;  &  PRI      &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &  \&nbsp;  \\
- typename          &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
- display\_{}order  &  int(11)      &  NULL                     &  YES      &  \&nbsp;  &  (NULL)   &  \&nbsp;            &  select,insert,update,references  &  \&nbsp;  \\
+ typeid            &  int(11)      &  NULL                     &        &  PRI  &  (NULL)   &  auto\_{}increment  &  select,insert,update,references  &           \\
+ typename          &  varchar(50)  &  latin1\_{}swedish\_{}ci  &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
+ display\_{}order  &  int(11)      &  NULL                     &  YES   &       &  (NULL)   &                     &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1491,14 +1491,14 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{Types Indexes} \label{tbl:typesindexes}\\
 \hline
- Table  &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table  &  Non unique  &  Key name  &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- Types  &           0  &  PRIMARY   &             1  &  typeid       &  A          &           16  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ Types  &           0  &  PRIMARY   &             1  &  typeid       &  A          &           16  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 \section{UserHasPermissionRole}
@@ -1508,15 +1508,15 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|}
 \caption{UserHasPermissionRole Fields} \label{tbl:userhaspermissionrolefields}\\
 \hline
- Field       &  Type         &  Collation                &  Null     &  Key  &  Default  &  Extra    &  Privileges                       &  Comment \\
+ Field       &  Type         &  Collation                &  Null  &  Key  &  Default  &  Extra  &  Privileges                       &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{9}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- badgeid     &  varchar(15)  &  latin1\_{}swedish\_{}ci  &  \&nbsp;  &  PRI  &  \&nbsp;  &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
- permroleid  &  int(11)      &  NULL                     &  \&nbsp;  &  PRI  &  0        &  \&nbsp;  &  select,insert,update,references  &  \&nbsp;  \\
+ badgeid     &  varchar(15)  &  latin1\_{}swedish\_{}ci  &        &  PRI  &           &         &  select,insert,update,references  &           \\
+ permroleid  &  int(11)      &  NULL                     &        &  PRI  &        0  &         &  select,insert,update,references  &           \\
 \hline
 \end{longtable}
 
@@ -1524,16 +1524,16 @@ Zambia is a piece of Conference Management Software.  This document is a ``How T
 \begin{longtable}{|l|l|l|l|l|l|l|l|l|l|l|l|}
 \caption{UserHasPermissionRole Indexes} \label{tbl:userhaspermissionroleindexes}\\
 \hline
- Table                  &  Non unique  &  Key name                     &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null     &  Index type  &  Comment \\
+ Table                  &  Non unique  &  Key name                     &  Seq in index  &  Column name  &  Collation  &  Cardinality  &  Sub part  &  Packed  &  Null  &  Index type  &  Comment \\
 \hline
 \endhead
 \hline\multicolumn{12}{r}{Continued on next page}\
 \endfoot
 \endlastfoot
 \hline
- UserHasPermissionRole  &           0  &  PRIMARY                      &             1  &  badgeid      &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- UserHasPermissionRole  &           0  &  PRIMARY                      &             2  &  permroleid   &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
- UserHasPermissionRole  &           1  &  FK\_{}UserHasPermissionRole  &             1  &  permroleid   &  A          &            0  &  (NULL)    &  (NULL)  &  \&nbsp;  &  BTREE       &  \&nbsp;  \\
+ UserHasPermissionRole  &           0  &  PRIMARY                      &             1  &  badgeid      &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ UserHasPermissionRole  &           0  &  PRIMARY                      &             2  &  permroleid   &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
+ UserHasPermissionRole  &           1  &  FK\_{}UserHasPermissionRole  &             1  &  permroleid   &  A          &            0  &  (NULL)    &  (NULL)  &        &  BTREE       &           \\
 \hline
 \end{longtable}
 
