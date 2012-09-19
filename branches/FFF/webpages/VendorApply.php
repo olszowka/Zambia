@@ -1,7 +1,6 @@
 <?php
 require_once('VendorCommonCode.php');
 $_SESSION['return_to_page']='VendorApply.php';
-$ConId=CON_KEY; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $title="Vendor Application";
 $badgeid=$_SESSION['badgeid'];
@@ -9,34 +8,48 @@ $badgeid=$_SESSION['badgeid'];
 // Tests for the substituted variables
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 
+if (may_I('SuperVendor')) {
+  // Collaps the three choices into one
+  if ($_POST["partidl"]!=0) {$_POST["partid"]=$_POST["partidl"];}
+  if ($_POST["partidf"]!=0) {$_POST["partid"]=$_POST["partidf"];}
+  if ($_POST["partidp"]!=0) {$_POST["partid"]=$_POST["partidp"];}
+
+  if (isset($_POST["partid"])) {
+    $badgeid=$_POST["partid"];
+  } elseif (isset($_GET["partid"])) {
+    $badgeid=$_GET["partid"];
+  }
+}
+  
+/* Get the pubsname from the badgeid */
+$namequery="SELECT pubsname FROM $ReportDB.Participants WHERE badgeid=$badgeid";
+if (($result=mysql_query($namequery,$link)) === false) {
+  $message_error.="<BR>".$namequery."Cannot find the name to go with the badgeid.";
+}
+list($tmp_pubsname)=mysql_fetch_array($result, MYSQL_NUM);
+$pubsname=htmlspecialchars($tmp_pubsname);
+
 /* Submit goes here */
 get_session_from_post();
 if ($_POST['update']=="New") {
   $id=insert_session();
   if (!$id OR $id=="") {
-    $message_error=""; // warning message
     $message_error.="<BR>".$query."\nUnknown error creating record.  Database not updated successfully.";
   }
-  if ($id!=$session["sessionid"]) {
-    $message_error="Due to problem with database or concurrent editing, the session ";
-    $message_error.="created was actually id: ".$id.".";
-  } else {
-    $message_error="";
-  }
-  $message="Session record created.  Database updated successfully.";
+  $message.="Session record created with Session ID of $id.  Database updated successfully.";
   // 1 is brainstorm; 2 is normal create
   record_session_history($id, $_SESSION['badgeid'], $session['title'], '', 3, $session['status']);
 } elseif ($_POST['update']=="Update") {
   $status=update_session();
   if (!$status) {
-    $message_error=$message2; // warning message
+    $message_error.=$message2; // warning message
     $message_error.="<BR>Unknown error updating record.  Database not updated successfully.";
   } else {
     // 3 is code for unknown edit
     if (!record_session_history($session['sessionid'], $_SESSION['badgeid'], $session['title'], '', 3, $session['status'])) {
       error_log("Error recording session history. ".$message_error);
     } else {
-      $message="Database updated successfully.";
+      $message.="Database updated successfully.";
     }
   }
 }
@@ -49,6 +62,13 @@ if (strlen($message)>0) {
 if (strlen($message_error)>0) {
   echo "<P id=\"message2\"><font color=red>".$message_error."</font></P>\n";
   exit(); // If there is a message2, then there is a fatal error.
+}
+
+if (may_I('SuperVendor')) {
+  //Choose the individual from the database
+  select_participant($badgeid, '', "VendorApply.php");
+  echo "\n<hr>\n";
+  echo "<P>Update for: ($badgeid) $pubsname</P>\n";
 }
 
 $query= <<<EOD
@@ -64,7 +84,7 @@ SELECT
     vendorspacename,
     vendfeaturename,
     vendfeatureid,
-    progguiddesc,
+    servicenotes AS servnotes,
     pubsno AS pubno,
     languagestatusid,
     pocketprogtext,
@@ -102,7 +122,7 @@ SELECT
                  GROUP BY
 	           sessionid) Y USING (sessionid)
   WHERE
-    title='$badgeid'
+    title='$pubsname'
 EOD;
 
 if (!$result=mysql_query($query,$link)) {
@@ -114,13 +134,14 @@ $rows=mysql_num_rows($result);
 if ($rows==0) {
   // Set all the defaults.
   //$session['sessionid'] should be set on creation
-  $session['title']=$badgeid; // Title set to the badgeid of the vendor, so the Session element can be tracked.
+  $session['title']=$pubsname; // Title set to the badgeid of the vendor, so the Session element can be tracked.
   $session['secondtitle']=''; // Secondtitle is set to the location of the booth/room, which, on creation is unset.
   $session['total']=0; // Nothing selected yet.
-  $session['vendorspaceid']=0; // Unselected as to yet.
-  $session['vendorspacename']=""; // Unselected as to yet.
-  $session['vendfeatdest'][]=""; //Unselected as to yet.
-  $session['progguiddesc']=""; // Unspecified as to yet.
+  $session['vendorspace']=0; // Unselected as to yet.
+  $session['vendfeatdest']=""; //Unselected as to yet.
+  $session['servnotes']=""; // Unspecified as to yet.
+  $session['vendoradjustvalue']=""; // Unspecified as to yet.
+  $session['vendoradjustnote']=""; // Unspecified as to yet.
   $session['update']="New"; // New entry.
 
   // These can probably just be ignored.
@@ -202,12 +223,14 @@ if ($session['statusname']=="Vendor Approved") {
     <DIV class="formbox">
 
         <FORM name="sessform" class="bb"  method=POST action="VendorApply.php">
+        <INPUT type="hidden" name="partid" value="<?php echo $badgeid; ?>">
         <?php foreach ($session as $key => $value) { echo "<INPUT type=\"hidden\" name=\"$key\" value=\"$value\">\n"; } ?>
         <TABLE><COL><COL>
           <TR>
             <TD>
-               <SPAN><LABEL for="vendorspace">Space Requested: </LABEL><SELECT name="vendorspace[]">
-                     <?php populate_select_from_table("$ReportDB.VendorSpaces", $session["vendorspaceid"], "SELECT", FALSE); ?>
+               <SPAN><LABEL for="vendorspace">Space Requested: </LABEL><SELECT name="vendorspace">
+  <?php $query="SELECT vendorspaceid, vendorspacename from $ReportDB.VendorSpaces WHERE conid=".$_SESSION['conid']." ORDER BY display_order";
+        populate_select_from_query($query, $session["vendorspaceid"], "SELECT", FALSE); ?>
                      </SELECT>&nbsp;&nbsp;</SPAN></TD></TR>
 <?php /*
         <TR>
@@ -246,8 +269,8 @@ if ($session['statusname']=="Vendor Approved") {
                      </SELECT>&nbsp;&nbsp;</SPAN></TD></TR>
 	<TR>
            <TD>
-				<SPAN><LABEL for="progguiddesc" id="progguiddesc">Please tell us what you sell, why should you be accepted to vend at this event, and any other important information (like if there is a requested load in time [note that you are not guarenteed a requested load in time] or if you will self carry) that we should know:</LABEL><BR>
-		     <TEXTAREA cols="70" rows="5" name="progguiddesc"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES); ?></TEXTAREA></SPAN></TD></TR>
+				<SPAN><LABEL for="servnotes" id="servnotes">Please tell us what you sell, why should you be accepted to vend at this event, and any other important information (like if there is a requested load in time [note that you are not guarenteed a requested load in time] or if you will self carry) that we should know:</LABEL><BR>
+		     <TEXTAREA cols="70" rows="5" name="servnotes"><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES); ?></TEXTAREA></SPAN></TD></TR>
         <TR>
            <TD>
               <INPUT type=submit ID="sButtonBottom" value="Save"></TD></TR>

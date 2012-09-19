@@ -12,6 +12,10 @@ if ($message!="") {
   echo "<P class=\"regmsg\">$message</P>";
 }					
 
+/* echo "<hr>\n";
+print_r($_SESSION);
+echo "<hr>\n"; */
+
 if (may_I('BrainstormSubmit') or may_I('Vendor')) {
   if (file_exists("../Local/Verbiage/VendorWelcome_0")) {
     echo file_get_contents("../Local/Verbiage/VendorWelcome_0");
@@ -28,7 +32,9 @@ if (may_I("Vendor")) {
   echo "<UL>\n";
   echo "  <LI> <A HREF=\"VendorSearch.php\">List </A>the known vendors.\n";
   echo "  <LI> <A HREF=\"VendorSubmitVendor.php\">Update</A> your contact (vendor) information.\n";
-  echo "  <LI> <A HREF=\"VendorApply.php\">Check, update, or apply</A> to be a vendor for ".CON_NAME.".\n";
+  if (may_I("vendor_apply")) {
+    echo "  <LI> <A HREF=\"VendorApply.php\">Check, update, or apply</A> to be a vendor for ".CON_NAME.".\n";
+  }
   echo "</UL>\n";
 } else { 
   echo "<OL>\n";

@@ -16,7 +16,12 @@ $title="Submit Vendor Application";
 if (may_I("Vendor")) {
   $mybadgeid=$_SESSION['badgeid'];
   $badgeid_string='';
-  $description="<P>Please click anywhere on your names to update your information, and click on the \"Apply\" tab above, to see your current application state.</P>\n";
+  $description="<P>Please click anywhere on your names to <A HREF=\"VendorSubmitVendor.php\">update your information</A>";
+  if (may_I("vendor_apply")) {
+    $description.="and click on the <A HREF=\"VendorApply.php\">Apply</A> tab above (at any time), to see your current application state.</P>\n";
+  } else {
+    $description.=".</P>\n";
+  }
 } else {
   $mybadgeid=100;
   $badgeid_string='concat("<A HREF=\"login.php?login=",badgeid,"\">",badgeid,"</A>") AS "Login Number",';
@@ -24,8 +29,6 @@ if (may_I("Vendor")) {
   $additionalinfo="<P>If you have forgotten your password, please get in touch with the Vendor Liaison at <A HREF=mailto:".VENDOR_EMAIL.">".VENDOR_EMAIL."</A> so you might be helped.</P>\n";
 }
 // Get the list of all the vendors in our system
-// NEED to get the APPLY/Pending,et al back in the list.
-//    if ((interested is NULL OR interested="0" OR interestedname="Not Applied"),if (badgeid="$mybadgeid","<A HREF=\"VendorApply.php\">Apply</A>","Not Applied"),interestedname))) AS "Status"
 $query= <<<EOD
 SELECT
     $badgeid_string
