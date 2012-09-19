@@ -115,35 +115,73 @@ Zambia is a piece of Con Management Software.  This document is a ``How To'' gui
 
     Is this system going to be a standalone system, or are you going
     to interface it with Congo, or another piece of registration software?
-\subsubsection{Webserver}
+\subsubsection{Single/Multiple installation}
 \label{sec-1_2_2}
 
-    web install location (whatever directory you will be putting your
-    files into).  Often something like /var/www/Zambia-Con or
-    /home/username/public\_{}html/Zambia-Con or the like.
-\subsubsection{db\_{}name.php file}
+    Is this going to be a single instantce of Zambia, or are you going
+    to have multiple instances of Zambia running on the same machine
+    with some shared resources?
+\subsubsection{Webserver}
 \label{sec-1_2_3}
+
+    Where is your web installation location (whatever directory you
+    will be putting your files into)?  Often something like
+    /var/www/Zambia-Con or /home/username/public\_{}html/Zambia-Con or
+    the like.
+\subsubsection{db\_{}name.php file}
+\label{sec-1_2_4}
 
     This information will go in the db\_{}name.php file when you install it.
 \begin{itemize}
 
 \item Required information for the program to run:
-\label{sec-1_2_3_1}%
+\label{sec-1_2_4_1}%
 \begin{itemize}
-\item database hostname (\textbf{DBHOSTNAME}) (If you are setting things up on
+\item Database hostname (\textbf{DBHOSTNAME}). If you are setting things up on
      the same machine that MySQL is running on, \emph{localhost} should be
-     what you are using for \textbf{DBHOSTNAME}).
-\item database username (\textbf{DBUSERNAME})
-\item database password (\textbf{DBPASSOWRD})
-\item database name (\textbf{DBNAME})
+     what you are using for \textbf{DBHOSTNAME}.
+\item Database username (\textbf{DBUSERNAME}).  The user created for the
+     Zambia program to access the database(s).
+\item Database password (\textbf{DBPASSOWRD}).  The password created for the
+     Zambia program to access the database(s).
+\item Main database name (\textbf{DBDB}).  The database for all the single
+     convention specific information to live in.
+\item Biographical information database name (\textbf{BIODB}).  The database
+     for all the (possibly shared between Zambia instances)
+     biographical data.  If you are having the same people either for
+     multiple years, or for multiple activities, it makes sense to
+     centralize the information, otherwise it could be a one-shot for
+     the particular convention.
+\item The Reports databasse name (\textbf{REPORTDB}) points to where the
+     reports are kept.  It is on of the main ways of interation with
+     the data about the convention.  If you have multiple Zambia
+     instances it makes sense for this to be a single, shared
+     resource.
+\item The CongoDump database name (\textbf{CONGODB}). Congo is another piece of
+     software designed to interact with Zambia. The information in
+     that set of databases can be accessed in a variety of ways.
+\item The Limits (\textbf{LIMITDB}) and Localizations (\textbf{LOCALDB}) databases
+     are used to key things that are specific to a convention, but
+     might all want to live in a central database, for ease of
+     deploying new conventions.
+\item The TimeCard database (\textbf{TIMECARDDB}) might want to be specific to
+     a convention, or generalized across many different activities of
+     your organization, it often is local to the convention instance,
+     but there are some reasons to have it in a single, externally
+     served database.
+\item The convention database keying tag (\textbf{CON\_{}KEY}) is useful when the
+     Limits and Localizations are stored in a single table, to
+     distinguish between which instance needs to be pulled.
 \item your host name (\textbf{MYHOST}) (If you are setting things up on the same
      machine that MySQL is running on, \emph{localhost} should be what you
      are using for \textbf{MYHOST}) (this doesn't actually go in the file)
 \end{itemize}
 
 
-\item Extremely useful information:
-\label{sec-1_2_3_2}%
+\item Extremely useful information:\\
+\label{sec-1_2_4_2}%
+Most of this information, currently in the db\_{}name.php file,
+     would all be candidtates to be inthe Localization database.
 \begin{itemize}
 \item Con name.
 \item Zambia administrator email.
@@ -151,52 +189,104 @@ Zambia is a piece of Con Management Software.  This document is a ``How To'' gui
 \item Programming email.
 \item Registration email.
 \item Number of days the con will run (code works for 1-8 currently.)
-\item Date and time the con will start (In the format of yyyy-mm-dd HH:MM:DD for parsing purposes.  Suggested 00:00:00 for the start time.)
+\item Date and time the con will start (In the format of yyyy-mm-dd
+       HH:MM:DD for parsing purposes.  Suggested 00:00:00 for the
+       start time.)
 \item URL of the con (without the leading \href{http://}{http://} in the URL.)
 \item Logo for the con (gif, png, etc.)
+\item Availabilty Records (starting number of ``availability'' fields
+       to render in the ``when I am available'' form, 8 is a good
+       default.)
+\item Are kids avaiable (This should probably be set to ``FALSE'', it
+       is a hold-over from backwards compatibility.)
+\item Default Duration of the classes. (How long, in H:MM format that
+       the classes are expected to be.)
+\item Duration in Minutes (Should probably be ``FALSE'': TRUE: in mmm;
+       False: in hh:mm - affects session edit/create page only, not
+       reports.)
+\item Grid Spacer (The time divisions in the fixed grid produced, in
+       seconds.  For example 1800 is 60 sec/min and 30 min, and a good
+       default.)
 \end{itemize}
 
 
 \item Very useful information
-\label{sec-1_2_3_3}%
+\label{sec-1_2_4_3}%
 \begin{itemize}
-\item Guests of Honor badgelist (if you have specific featured Guests of Honor, the badgeids get listed here, comma seperated.)
-\item Prefered total number of sessions upper limit (so your presenters don't oversubscribe themselves 5 is good default for a 3-4 day con.)
-\item Prefered daily number of sessions upper limit (3 is a good default.)
-\item Availabilty Records (starting number of ``availability'' fields to render in the ``when I am available'' form, 8 is a goto default)
+\item Guests of Honor badgelist (if you have specific featured Guests
+       of Honor, the badgeids get listed here, comma seperated.)
+       (This is being migrated as a flag for a presenter.)
+\item Prefered total number of sessions upper limit (so your
+       presenters don't oversubscribe themselves 5 is good default for
+       a 3-4 day con.) (This should move to the Limits database.)
+\item Prefered daily number of sessions upper limit (3 is a good
+       default.) (This should move to the Limits database.)
 \end{itemize}
 
 
-\item Description minimums and maximums
-\label{sec-1_2_3_4}%
+\item Description minimums and maximums\\
+\label{sec-1_2_4_4}%
+All of this information should be migrated to the Limits
+     database.  Only set a value if you need it, unset values are
+     simply presume there is no limit to the information in that
+     direction.  At some point, the precis descriptions will be folded
+     into the same, or a similar structure to the Biographical
+     Information is, currently.
 \begin{itemize}
-\item Maximum web biography character length (Some cons have a different limits for what is on the web, and what is in the book, 3000 characters is a good starting default.)
-\item Maximum book biography character length (if there isn't a difference in the limit, set to the same as above.)
-\item Minimum web precis character length (You need a precis description of at least this long to be acceptable, 10 as a good default.)
+\item Minimum web biography character length (Some cons have minimum
+       biographical information requirements.)
+\item Maximum web biography character length (Some cons have a
+       different limits for what is on the web, and what is in the
+       book, 3000 characters is a good starting default for the WWW.)
+\item Minimum book biography character length (Some cons have minimum
+       biographical information requirements.)
+\item Maximum book biography character length (if there isn't a
+       difference in the limit, but still, there is a limit, set to
+       the same as the web maximum.)
+\item Minimum uri biography character length (the URI block is often
+       unlimited in either direction.)
+\item Maximum uri biography character length (the URI block is often
+       unlimited in either direction.)
+\item Minimum picture biography character length (the picture line is
+       often unlimited in either direction.)
+\item Maximum picture biography character length (the picture line is
+       often unlimited in either direction.)
+\item Minimum web precis character length (You need a precis
+       description of at least this long to be acceptable, 10 as a
+       good default.)
 \item Maximum web precis character length (3000 as a good default.)
-\item Minimum book precis character length (if there isn't a difference in the limit, set it to the same as above for these, as well.)
+\item Minimum book precis character length (if there isn't a
+       difference in the limit, set it to the same as above for these,
+       as well.)
 \item Maximum book precis character length
-\item Minimum precis title character length (You need a precis title of at least this long to be acceptable, 5 as a good default.)
+\item Minimum precis title character length (You need a precis title
+       of at least this long to be acceptable, 5 as a good default.)
 \item Maximum precis title character length (50 as a good default.)
+\item Minimum name character length (if there is a need to make sure
+       all names are of at least a specifc length.)
+\item Maximum name character length (if there is a need to make sure
+       all names are no more than a specifc length.)
 \end{itemize}
 
 
-\item Other interesting settings
-\label{sec-1_2_3_5}%
+\item Other interesting settings\\
+\label{sec-1_2_4_5}%
+The linguistic settings (below) will go away once the precis
+     descriptions are migrated to a similar format as the Biographical
+     information currently resides.
 \begin{itemize}
-\item Are kids avaiable (This should probably be set to ``FALSE'', it is a hold-over from backwards compatibility.)
-\item Is this a bilingual event (This should probably be set to ``FALSE'' due to it's lack of complete support across the system, and the next few elements in this list, ignored.)
+\item Is this a bilingual event (This should probably be set to
+       ``FALSE'' due to it's lack of complete support across the system,
+       and the next few elements in this list, ignored.)
 \item What the second language is.
 \item Title caption in second language.
 \item Description caption in second language.
 \item Biography caption in second language.
-\item Duration in Minutes (Should probably be ``FALSE'': TRUE: in mmm; False: in hh:mm - affects session edit/create page only, not reports.)
-\item Grid Spacer (The time divisions in the fixed grid produced, in seconds.  For example 1800 is 60 sec/min and 30 min, and a good default.)
 \end{itemize}
 
 
 \item The rest of the file should not have to change.\\
-\label{sec-1_2_3_6}%
+\label{sec-1_2_4_6}%
 \end{itemize} % ends low level
 \section{Downloading}
 \label{sec-2}
@@ -512,12 +602,15 @@ is an advantage to all.
   for the db\_{}name.php file:
 
 \begin{itemize}
-\item database hostname (\textbf{DBHOSTNAME}) (If you are setting things up on
+\item database hostname: (\textbf{DBHOSTNAME}) (If you are setting things up on
     the same machine that MySQL is running on, \emph{localhost} should be
     what you are using for \textbf{DBHOSTNAME}).
-\item database username (\textbf{DBUSERNAME})
-\item database password (\textbf{DBPASSOWRD})
-\item database name (\textbf{DBNAME})
+\item database username: (\textbf{DBUSERNAME})
+\item database password: (\textbf{DBPASSOWRD})
+\item database name: (\textbf{DBNAME})
+\item Each of the alternate database locators that will be used:
+    (\textbf{BIODB}), (\textbf{REPORTDB}), (\textbf{CONGODB}), (\textbf{LIMITDB}), (\textbf{LOCALDB}),
+    (\textbf{TIMECARDDB})
 \item your host name (\textbf{MYHOST}) (If you are setting things up on the
     same machine that MySQL is running on, \emph{localhost} should be what
     you are using for \textbf{MYHOST})
@@ -531,10 +624,10 @@ is an advantage to all.
 
   The chances are your setup will have you:
 \begin{itemize}
-\item create a database
-\item create a MySQL user
-\item add MySQL user to the database
-\item grant them all privs.
+\item create a database or databases
+\item possibly create a MySQL user
+\item add MySQL user to the database or databases
+\item grant the MySQL user all privs.
 \end{itemize}
 \subsection{Your own MySQL Setup}
 \label{sec-4_2}
@@ -542,7 +635,7 @@ is an advantage to all.
    If you are setting up your own MySQL server, and need to set up the
    database by hand the following steps should work for you.  Don't
    forget to replace the instances of \textbf{DBHOSTNAME}, \textbf{DBUSERNAME},
-   \textbf{DBPASSWORD}, \textbf{DBNAME}, and \textbf{MYHOST} with the proper bits of information.
+   etc. with the proper bits of information.
 
 \begin{itemize}
 \item Log into the database: (it should ask you for your MySQL root password)
@@ -741,6 +834,36 @@ YourWebPath/webpages/genreport.php?reportname=tasklistdisplay
   The script is invoked as:
 \begin{verbatim}
 backup_mysql /your/path/to/Zambia-FFF/instance
+\end{verbatim}
+\section{Quick and dirty}
+\label{sec-10}
+
+  To build a quick and dirty copy on the same machine as another running version: 
+\begin{itemize}
+\item for i in ../Zambia-FFF/* ; do ln -s \$i . ; done
+\item rm Local
+\item rm webpages
+\item mkdir Local webpages
+\item cd webpages
+\item for i in ../../Zambia-FFF/webpages/* ; do ln -s \$i . ; done
+\item cd ../Local
+\item mkdir Verbiage
+\item for i in ../../Zambia-FFF/Local/*.html ; do ln -s \$i . ; done
+\item ln -s ../../Zambia-FFF/Local/Participant\_{}Images .
+\end{itemize}
+
+  Finally, copy over, and modify the db\_{}name.php as appropraite
+  To update them all do:
+\begin{verbatim}
+for i in FFF-[34]*
+  do 
+    pushd $i/webpages
+    for j in ../../Zambia-FFF/webpages/*
+      do 
+        ln -s $j .
+      done
+    popd
+  done
 \end{verbatim}
 
 \end{document}

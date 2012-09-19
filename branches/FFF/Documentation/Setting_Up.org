@@ -84,56 +84,143 @@
 *** Standalone/Combination
     Is this system going to be a standalone system, or are you going
     to interface it with Congo, or another piece of registration software?
+*** Single/Multiple installation
+    Is this going to be a single instantce of Zambia, or are you going
+    to have multiple instances of Zambia running on the same machine
+    with some shared resources?
 *** Webserver
-    web install location (whatever directory you will be putting your
-    files into).  Often something like /var/www/Zambia-Con or
-    /home/username/public_html/Zambia-Con or the like.
+    Where is your web installation location (whatever directory you
+    will be putting your files into)?  Often something like
+    /var/www/Zambia-Con or /home/username/public_html/Zambia-Con or
+    the like.
 *** db_name.php file
     This information will go in the db_name.php file when you install it.
 **** Required information for the program to run:
-   + database hostname (*DBHOSTNAME*) (If you are setting things up on
+   + Database hostname (*DBHOSTNAME*). If you are setting things up on
      the same machine that MySQL is running on, /localhost/ should be
-     what you are using for *DBHOSTNAME*).
-   + database username (*DBUSERNAME*)
-   + database password (*DBPASSOWRD*)
-   + database name (*DBNAME*)
+     what you are using for *DBHOSTNAME*.
+   + Database username (*DBUSERNAME*).  The user created for the
+     Zambia program to access the database(s).
+   + Database password (*DBPASSOWRD*).  The password created for the
+     Zambia program to access the database(s).
+   + Main database name (*DBDB*).  The database for all the single
+     convention specific information to live in.
+   + Biographical information database name (*BIODB*).  The database
+     for all the (possibly shared between Zambia instances)
+     biographical data.  If you are having the same people either for
+     multiple years, or for multiple activities, it makes sense to
+     centralize the information, otherwise it could be a one-shot for
+     the particular convention.
+   + The Reports databasse name (*REPORTDB*) points to where the
+     reports are kept.  It is on of the main ways of interation with
+     the data about the convention.  If you have multiple Zambia
+     instances it makes sense for this to be a single, shared
+     resource.
+   + The CongoDump database name (*CONGODB*). Congo is another piece of
+     software designed to interact with Zambia. The information in
+     that set of databases can be accessed in a variety of ways.
+   + The Limits (*LIMITDB*) and Localizations (*LOCALDB*) databases
+     are used to key things that are specific to a convention, but
+     might all want to live in a central database, for ease of
+     deploying new conventions.
+   + The TimeCard database (*TIMECARDDB*) might want to be specific to
+     a convention, or generalized across many different activities of
+     your organization, it often is local to the convention instance,
+     but there are some reasons to have it in a single, externally
+     served database.
+   + The convention database keying tag (*CON_KEY*) is useful when the
+     Limits and Localizations are stored in a single table, to
+     distinguish between which instance needs to be pulled.
    + your host name (*MYHOST*) (If you are setting things up on the same
      machine that MySQL is running on, /localhost/ should be what you
      are using for *MYHOST*) (this doesn't actually go in the file)
 **** Extremely useful information:
+     Most of this information, currently in the db_name.php file,
+     would all be candidtates to be inthe Localization database.
      + Con name.
      + Zambia administrator email.
      + Brainstorm email.
      + Programming email.
      + Registration email.
-     + Number of days the con will run (code works for 1-8 currently.)
-     + Date and time the con will start (In the format of yyyy-mm-dd HH:MM:DD for parsing purposes.  Suggested 00:00:00 for the start time.)
+     + Number of days the con will run (code works for 1-8 currently.) 
+     + Date and time the con will start (In the format of yyyy-mm-dd
+       HH:MM:DD for parsing purposes.  Suggested 00:00:00 for the
+       start time.) 
      + URL of the con (without the leading http:// in the URL.)
      + Logo for the con (gif, png, etc.)
+     + Availabilty Records (starting number of "availability" fields
+       to render in the "when I am available" form, 8 is a good
+       default.)
+     + Are kids avaiable (This should probably be set to "FALSE", it
+       is a hold-over from backwards compatibility.)
+     + Default Duration of the classes. (How long, in H:MM format that
+       the classes are expected to be.)
+     + Duration in Minutes (Should probably be "FALSE": TRUE: in mmm;
+       False: in hh:mm - affects session edit/create page only, not
+       reports.)
+     + Grid Spacer (The time divisions in the fixed grid produced, in
+       seconds.  For example 1800 is 60 sec/min and 30 min, and a good
+       default.)
 **** Very useful information
-     + Guests of Honor badgelist (if you have specific featured Guests of Honor, the badgeids get listed here, comma seperated.)
-     + Prefered total number of sessions upper limit (so your presenters don't oversubscribe themselves 5 is good default for a 3-4 day con.)
-     + Prefered daily number of sessions upper limit (3 is a good default.)
-     + Availabilty Records (starting number of "availability" fields to render in the "when I am available" form, 8 is a goto default)
+     + Guests of Honor badgelist (if you have specific featured Guests
+       of Honor, the badgeids get listed here, comma seperated.)
+       (This is being migrated as a flag for a presenter.)
+     + Prefered total number of sessions upper limit (so your
+       presenters don't oversubscribe themselves 5 is good default for
+       a 3-4 day con.) (This should move to the Limits database.)
+     + Prefered daily number of sessions upper limit (3 is a good
+       default.) (This should move to the Limits database.)
 **** Description minimums and maximums
-     + Maximum web biography character length (Some cons have a different limits for what is on the web, and what is in the book, 3000 characters is a good starting default.)
-     + Maximum book biography character length (if there isn't a difference in the limit, set to the same as above.)
-     + Minimum web precis character length (You need a precis description of at least this long to be acceptable, 10 as a good default.)
+     All of this information should be migrated to the Limits
+     database.  Only set a value if you need it, unset values are
+     simply presume there is no limit to the information in that
+     direction.  At some point, the precis descriptions will be folded
+     into the same, or a similar structure to the Biographical
+     Information is, currently.
+     + Minimum web biography character length (Some cons have minimum
+       biographical information requirements.)
+     + Maximum web biography character length (Some cons have a
+       different limits for what is on the web, and what is in the
+       book, 3000 characters is a good starting default for the WWW.) 
+     + Minimum book biography character length (Some cons have minimum
+       biographical information requirements.)
+     + Maximum book biography character length (if there isn't a
+       difference in the limit, but still, there is a limit, set to
+       the same as the web maximum.)
+     + Minimum uri biography character length (the URI block is often
+       unlimited in either direction.)
+     + Maximum uri biography character length (the URI block is often
+       unlimited in either direction.)
+     + Minimum picture biography character length (the picture line is
+       often unlimited in either direction.)
+     + Maximum picture biography character length (the picture line is
+       often unlimited in either direction.)
+     + Minimum web precis character length (You need a precis
+       description of at least this long to be acceptable, 10 as a
+       good default.)
      + Maximum web precis character length (3000 as a good default.)
-     + Minimum book precis character length (if there isn't a difference in the limit, set it to the same as above for these, as well.)
-     + Maximum book precis character length 
-     + Minimum precis title character length (You need a precis title of at least this long to be acceptable, 5 as a good default.)
+     + Minimum book precis character length (if there isn't a
+       difference in the limit, set it to the same as above for these,
+       as well.)
+     + Maximum book precis character length
+     + Minimum precis title character length (You need a precis title
+       of at least this long to be acceptable, 5 as a good default.) 
      + Maximum precis title character length (50 as a good default.)
+     + Minimum name character length (if there is a need to make sure
+       all names are of at least a specifc length.)
+     + Maximum name character length (if there is a need to make sure
+       all names are no more than a specifc length.)
 **** Other interesting settings
-     + Are kids avaiable (This should probably be set to "FALSE", it is a hold-over from backwards compatibility.)
-     + Is this a bilingual event (This should probably be set to "FALSE" due to it's lack of complete support across the system, and the next few elements in this list, ignored.)
+     The linguistic settings (below) will go away once the precis
+     descriptions are migrated to a similar format as the Biographical
+     information currently resides.
+     + Is this a bilingual event (This should probably be set to
+       "FALSE" due to it's lack of complete support across the system,
+       and the next few elements in this list, ignored.) 
      + What the second language is.
      + Title caption in second language.
      + Description caption in second language.
      + Biography caption in second language.
-     + Default Duration of the classes.
-     + Duration in Minutes (Should probably be "FALSE": TRUE: in mmm; False: in hh:mm - affects session edit/create page only, not reports.)
-     + Grid Spacer (The time divisions in the fixed grid produced, in seconds.  For example 1800 is 60 sec/min and 30 min, and a good default.)
 **** The rest of the file should not have to change.
 * Downloading
   If you are checking the code out directly on the hosting machine,
@@ -417,12 +504,15 @@ is an advantage to all.
   The pieces of information you will need are from the above decisions
   for the db_name.php file:
 
-  + database hostname (*DBHOSTNAME*) (If you are setting things up on
+  + database hostname: (*DBHOSTNAME*) (If you are setting things up on
     the same machine that MySQL is running on, /localhost/ should be
     what you are using for *DBHOSTNAME*).
-  + database username (*DBUSERNAME*)
-  + database password (*DBPASSOWRD*)
-  + database name (*DBNAME*)
+  + database username: (*DBUSERNAME*)
+  + database password: (*DBPASSOWRD*)
+  + database name: (*DBNAME*)
+  + Each of the alternate database locators that will be used:
+    (*BIODB*), (*REPORTDB*), (*CONGODB*), (*LIMITDB*), (*LOCALDB*),
+    (*TIMECARDDB*) 
   + your host name (*MYHOST*) (If you are setting things up on the
     same machine that MySQL is running on, /localhost/ should be what
     you are using for *MYHOST*)
@@ -432,15 +522,15 @@ is an advantage to all.
   setting up your database should be documented there.
 
   The chances are your setup will have you:
-  + create a database
-  + create a MySQL user
-  + add MySQL user to the database
-  + grant them all privs.
+  + create a database or databases
+  + possibly create a MySQL user
+  + add MySQL user to the database or databases
+  + grant the MySQL user all privs.
 ** Your own MySQL Setup
    If you are setting up your own MySQL server, and need to set up the
    database by hand the following steps should work for you.  Don't
    forget to replace the instances of *DBHOSTNAME*, *DBUSERNAME*,
-   *DBPASSWORD*, *DBNAME*, and *MYHOST* with the proper bits of information.
+   etc. with the proper bits of information.
 
    + Log into the database: (it should ask you for your MySQL root password) 
 #+begin_src html :exports both :results silent
@@ -596,4 +686,29 @@ is an advantage to all.
   The script is invoked as:
 #+begin_src html :exports both :results silent
   backup_mysql /your/path/to/Zambia-FFF/instance
+#+end_src
+* Quick and dirty
+  To build a quick and dirty copy on the same machine as another running version: 
+  + for i in ../Zambia-FFF/* ; do ln -s $i . ; done
+  + rm Local
+  + rm webpages
+  + mkdir Local webpages
+  + cd webpages
+  + for i in ../../Zambia-FFF/webpages/* ; do ln -s $i . ; done
+  + cd ../Local
+  + mkdir Verbiage
+  + for i in ../../Zambia-FFF/Local/*.html ; do ln -s $i . ; done
+  + ln -s ../../Zambia-FFF/Local/Participant_Images .
+  Finally, copy over, and modify the db_name.php as appropraite
+  To update them all do:
+#+begin_src html :exports both :results silent
+for i in FFF-[34]*
+  do 
+    pushd $i/webpages
+    for j in ../../Zambia-FFF/webpages/*
+      do 
+        ln -s $j .
+      done
+    popd
+  done
 #+end_src

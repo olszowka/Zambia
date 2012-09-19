@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>Time Card Usage in Zambia</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="March 2012"/>
+<meta name="author" content="Percy"/>
+<meta name="description" content="Zambia is a piece of Conference Management Software.  This document is a "How To" guide assisting in the way of keeping track of Volunteer Hours for the Zambia FFF-branch instance for your conference.  This is still a work in progress."/>
+<meta name="keywords" content="Zambia, Documentation, FFF branch"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="content">
+
+<h1 class="title">Time Card Usage in Zambia</h1>
+
+
+<h2>Abstract:<br></h2><p>Zambia is a piece of Conference Management Software.  This document is a "How To" guide assisting in the way of keeping track of Volunteer Hours for the Zambia FFF-branch instance for your conference.  This is still a work in progress.</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Introduction </a></li>
+<li><a href="#sec-2">2 Self Check-In/Check-Out </a>
+<ul>
+<li><a href="#sec-2_1">2.1 To Check In </a></li>
+<li><a href="#sec-2_2">2.2 To Check Out </a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Other Volunteer Check-In/Check-Out </a>
+<ul>
+<li><a href="#sec-3_1">3.1 Not scheduled people during, or anyone before or after the conference </a></li>
+<li><a href="#sec-3_2">3.2 Expected people on their shifts during the conference </a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Useful Reports/Pages </a>
+<ul>
+<li><a href="#sec-4_1">4.1 VolunteerCheckIn.php </a></li>
+<li><a href="#sec-4_2">4.2 VolunteerCheckOut.php </a></li>
+<li><a href="#sec-4_3">4.3 genreport.php?reportname=myusefultimecardtabledump </a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction </h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+Checking in and checking out people (including yourself) is an<br/>
+importnat part of how the conference runs.  It is important before,<br/>
+during, and after the conference, for tracking hours, to see who is<br/>
+overburdened and needs more help, who is underutilized, and, if the<br/>
+volunteers are rewarded, who gets what and how to keep track of each<br/>
+of them.  It also allows you to figure out your coverage issues,<br/>
+when you need more people, and when you need less.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Self Check-In/Check-Out </h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p><br/>
+The Check-In/Check-Out system is fairly striaght-forward.  <br/>
+</p>
+</div>
+
+<div id="outline-container-2_1" class="outline-3">
+<h3 id="sec-2_1"><span class="section-number-3">2.1</span> To Check In </h3>
+<div class="outline-text-3" id="text-2_1">
+
+
+<A HREF="../webpages/VolunteerCheckIn.php">VolunteerCheckIn.php</A>
+
+<p>
+In the staff view (green tabs) you just have to select the<br/>
+"TimeCards" tab.  The default view you get at this point should<br/>
+have you listed as the "Volunteer:" to check in.  Simply click on<br/>
+the "Choose" button.  This will take you to the Check In page.<br/>
+</p>
+<p><br/>
+If you are about to start working, as in, checking in now, simply<br/>
+click the button reading "Check in &lt;YOUR NAME&gt; now."  You are now<br/>
+checked in.  After you are done with your FFF work, follow the<br/>
+check-out procedure.<br/>
+</p>
+<p><br/>
+If, instead, you started working a bit ago, and forgot to check<br/>
+yourself in, or you worked some time, not near a computer, and need<br/>
+to retroactively create your check-in/check-out records, simply<br/>
+enter the start time of the period you worked in the box labeled<br/>
+"Actual Start time for &lt;YOUR NAME&gt;:" The format for that is<br/>
+YYYY-MM-DD hh:mm:ss (A four digit year, a dash, followed by a two<br/>
+digit month, a dash, followed by a two digit day, a space, followed<br/>
+by a two digit hour, a colon, followed by a two-digit minute, a<br/>
+colon, followed by a two digit second (Yes, you need the leading<br/>
+zeros, if any of the values are less than 10.) to be correct.)<br/>
+NOTE: This is a 24 hour clock.  Noon is 12, Midnight is 00, 1pm is<br/>
+13, and so forth.  There is a defualut time (now) in there, so if<br/>
+it was ten minutes ago, it's really easy to adjust for.  Keeping<br/>
+time to the second is not necessary.  Depending on your conference,<br/>
+you might be rounding to the nearest larger chunk of time (15<br/>
+minute, half an hour, whatever is decided) anyway, so follow the<br/>
+conventions of your conference.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-2_2" class="outline-3">
+<h3 id="sec-2_2"><span class="section-number-3">2.2</span> To Check Out </h3>
+<div class="outline-text-3" id="text-2_2">
+
+
+<A HREF="../webpages/VolunteerCheckOut.php">VolunteerCheckOut.php</A>
+
+<p>
+In the staff view (green tabs) you just have to select the<br/>
+"TimeCards" tab.  From here, select the "Check Out" link just above<br/>
+the box containing your name.  This will take you to the Check Out<br/>
+page.  The default view you get at this point should have you and<br/>
+the time you checked in listed as the "Volunteer:" to check out.<br/>
+Simply click on the "Choose" button.  If, somehow, you have more<br/>
+than one check-in instance, please work through each of them, to<br/>
+make sure your hours are accounted for.<br/>
+</p>
+<p><br/>
+If you have just finished working, as in, checking out now, simply<br/>
+click the button reading "Check out &lt;YOUR NAME&gt; now."  You are now<br/>
+checked out.<br/>
+</p>
+<p><br/>
+If, instead, you finished working a bit ago, and forgot to check<br/>
+yourself out, or you worked some time, not near a computer, and<br/>
+need to retroactively create your check-in/check-out records,<br/>
+simply enter the end time of the period you worked in the box<br/>
+labeled "Actual end time for shift starting at &lt;YOUR START TIME&gt;<br/>
+for &lt;YOUR NAME&gt;:" The format for that is YYYY-MM-DD hh:mm:ss (A<br/>
+four digit year, a dash, followed by a two digit month, a dash,<br/>
+followed by a two digit day, a space, followed by a two digit hour,<br/>
+a colon, followed by a two-digit minute, a colon, followed by a two<br/>
+digit second (Yes, you need the leading zeros, if any of the values<br/>
+are less than 10.) to be correct.)  NOTE: This is a 24 hour clock.<br/>
+Noon is 12, Midnight is 00, 1pm is 13, and so forth.  There is a<br/>
+defualut time (now) in there, so if it was ten minutes ago, it's<br/>
+really easy to adjust for.  Keeping time to the second is not<br/>
+necessary.  Depending on your conference, you might be rounding to<br/>
+the nearest larger chunk of time (15 minute, half an hour, whatever<br/>
+is decided) anyway, so follow the conventions of your conference.<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Other Volunteer Check-In/Check-Out </h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3_1" class="outline-3">
+<h3 id="sec-3_1"><span class="section-number-3">3.1</span> Not scheduled people during, or anyone before or after the conference </h3>
+<div class="outline-text-3" id="text-3_1">
+
+</div>
+
+</div>
+
+<div id="outline-container-3_2" class="outline-3">
+<h3 id="sec-3_2"><span class="section-number-3">3.2</span> Expected people on their shifts during the conference </h3>
+<div class="outline-text-3" id="text-3_2">
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Useful Reports/Pages </h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4_1" class="outline-3">
+<h3 id="sec-4_1"><span class="section-number-3">4.1</span> VolunteerCheckIn.php </h3>
+<div class="outline-text-3" id="text-4_1">
+
+
+<A NAME="VolunteerCheckIn.php" ID="VolunteerCheckIn.php"></A>
+<A HREF="../webpages/VolunteerCheckIn.php">VolunteerCheckIn.php</A>
+
+<p>
+This page is the check in page, it is accessable under the TimeCard<br/>
+tab on any of the staff (green tab) pages.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-4_2" class="outline-3">
+<h3 id="sec-4_2"><span class="section-number-3">4.2</span> VolunteerCheckOut.php </h3>
+<div class="outline-text-3" id="text-4_2">
+
+
+<A NAME="VolunteerCheckOut.php" ID="VolunteerCheckOut.php"></A>
+<A HREF="../webpages/VolunteerCheckOut.php">VolunteerCheckOut.php</A>
+
+<p>
+This page is the check out page, it is accessable from most of the<br/>
+staff check in pages.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-4_3" class="outline-3">
+<h3 id="sec-4_3"><span class="section-number-3">4.3</span> genreport.php?reportname=myusefultimecardtabledump </h3>
+<div class="outline-text-3" id="text-4_3">
+
+
+<A NAME="genreport.php?reportname=myusefultimecardtabledump" ID="genreport.php?reportname=myusefultimecardtabledump"></A>
+<A HREF="../webpages/genreport.php?reportname=myusefultimecardtabledump">genreport.php?reportname=myusefultimecardtabledump</A>
+
+<p>
+This report is to check on your own hours.  It is to make sure you<br/>
+didn't forget to record any, or to see if you left yourself checked<br/>
+in at any time previous.<br/>
+</p></div>
+</div>
+</div>
+<div id="postamble">
+<p class="author"> Author: Percy
+<a href="mailto:nela.program@gmail.com">&lt;nela.program@gmail.com&gt;</a>
+</p>
+</div>
+</div>
+</body>
+</html>
