@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DATABASE=`cat ../db_name.php | awk -F'"' '/DBDB/ {print $4}'`
-DBUSERNAME=`cat ../db_name.php | awk -F'"' '/DBUSERID/ {print $4}'`
-DBPASSWORD=`cat ../db_name.php | awk -F'"' '/DBPASSWORD/ {print $4}'`
+DATABASE=`cat ../../db_name.php | awk -F'"' '/DBDB/ {print $4}'`
+DBUSERNAME=`cat ../../db_name.php | awk -F'"' '/DBUSERID/ {print $4}'`
+DBPASSWORD=`cat ../../db_name.php | awk -F'"' '/DBPASSWORD/ {print $4}'`
 SRCDIR="."
 #DESTDIR="../reports"
 DESTDIR=".."
@@ -14,7 +14,7 @@ for x in ${SRCDIR}/4*query ; do
   eval `cat $x`
   echo $x
 
-  echo $QUERY | mysql -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD | \
+  echo $QUERY | ~/usr/bin/mysql -u $DBUSERNAME -H $DATABASE -p$DBPASSWORD | \
      sed 's%"%""%g' |\
      sed 's%MAKEMEACOMMA ,%</TD><TD>%g' |\
      sed 's%MAKEMEACOMMA </TD>%</TD>%g' |\

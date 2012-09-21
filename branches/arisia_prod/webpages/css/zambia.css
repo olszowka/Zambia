@@ -166,28 +166,37 @@ ul#boxes li {
   background-color: #e5e5e5;
   text-align: center;
 }
-table.report {
-  border-collapse: collapse;
-  margin: 10px;
-  border: 1px solid black;
-  font-family: Arial;
-  font-size: 12px;
-}
-th.report {
-  border: 1px solid black;
-  background-color: #c0e4ff;
-  padding-right: 0.2em;
-  padding-left: 0.2em;
-}
-td.report {
-  border: 1px solid black;
-  vertical-align: top;
-  padding-left: 0.2em;
-  padding-right: 0.2em;
-}
-.report A {
-  color: #1c30b0;
-}
+
+.reportPageContent {
+	line-height:normal;
+	}
+
+div.reportPageContent table, table.report {
+	border-collapse: collapse;
+	margin: 10px;
+	border: 1px solid black;
+	font-family: Arial;
+	font-size: 12px;
+	}
+		
+div.reportPageContent table th, th.report {
+	border: 1px solid black;
+	background-color: #c0e4ff;
+	padding-right: 0.2em;
+	padding-left: 0.2em;
+	}
+
+div.reportPageContent table td, td.report {
+	border: 1px solid black;
+	vertical-align: top;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	}
+
+div.reportPageContent table td a, .report A {
+	color: #1c30b0;
+	}
+
 .arisiaLens {
 	padding: 3px;
 	display: table-cell;

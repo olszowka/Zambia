@@ -7,5 +7,6 @@
   staff_header($title);
   $_SESSION['return_to_page']="REPORT_LINK";
 ?>
-<p align=center> Generated: REPORT_DATE
-<P>REPORT_DESCRIPTION
+<div class="reportPageContent">
+<div style="text-align:center">Generated: REPORT_DATE</div>
+<div>REPORT_DESCRIPTION</div>
