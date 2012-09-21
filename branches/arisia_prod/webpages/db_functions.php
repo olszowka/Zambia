@@ -585,36 +585,37 @@ function getCongoData($badgeid) {
     $query= <<<EOD
 SELECT
         badgeid,
-	firstname,
-	lastname,
-	badgename,
-	phone,
-	email,
-	postaddress1,
-	postaddress2,
-	postcity,
-	poststate,
-	postzip,
-	postcountry
+		firstname,
+		lastname,
+		badgename,
+		phone,
+		email,
+		postaddress1,
+		postaddress2,
+		postcity,
+		poststate,
+		postzip,
+		postcountry
     FROM
         CongoDump
     WHERE
-        badgeid="$badgeid"
+        badgeid = "$badgeid";
 EOD;
     $result=mysql_query($query,$link);
     if (!$result) {
-        $message_error=mysql_error($link)."\n<BR>Database Error.<BR>No further execution possible.";
+        $message_error=mysql_error($link)."\n<br>Database Error.<br>No further execution possible.";
         return(-1);
         };
     $rows=mysql_num_rows($result);
     if ($rows!=1) {
-        $message_error=$rows." rows returned for badgeid when 1 expected.<BR>Database Error.<BR>No further execution possible.";
+        $message_error=$rows." rows returned for badgeid when 1 expected.<br>Database Error.<br>No further execution possible.";
         return(-1);
         };
     if (retrieve_participant_from_db($badgeid)!=0) {
-        $message_error=$message2."<BR>No further execution possible.";
+        $message_error=$message2."<br>No further execution possible.";
         return(-1);
         };
+	$participant["chpw"] = ($participant["password"] == "4cb9c8a8048fd02294477fcb1a41191a");
     $participant["password"]="";
     $congoinfo=mysql_fetch_array($result, MYSQL_ASSOC);
     return(0);
