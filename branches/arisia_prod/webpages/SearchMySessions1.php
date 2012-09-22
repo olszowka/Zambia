@@ -47,7 +47,7 @@ EOD;
         $x=mysql_real_escape_string($titlesearch,$link);
         $queryArray["sessions"].="                     AND S.title LIKE \"%$x%\"\n";
         }
-    $queryArray["sessions"].=");";
+    $queryArray["sessions"].=") ORDER BY T.trackname, S.sessionid;";
 	$queryArray["may_I"] = "select ".(may_I('my_panel_interests') ? "1" : "0"). " AS my_panel_interests;";
 	if (($resultXML=mysql_query_XML($queryArray))===false) {
 	    RenderError($title,$message_error);
