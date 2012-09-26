@@ -16,15 +16,15 @@ if (!isset($daymap)) {
 <form class="form-inline" name="constrform" method=POST action="SubmitMySchedConstr.php">
 
 <h4 class="alert-info center">Number of Program Items I'm Willing to Participate In</h4>
-<p> Please indicate the maximum number of panels you are willing to be on.  
+<p> Please indicate the maximum number of sessions you are willing to be on.  
 You may indicate a total for each day as well as an overall maximum for 
 the whole con.  Please note that Zambia limits you to <?php echo PREF_TTL_SESNS_LMT;?> or fewer 
 total sessions and <?php echo PREF_DLY_SESNS_LMT;?> each day.  There is no need for the numbers to add up.  We'll use this 
-for guidance when assigning and scheduling panels. </p>
+for guidance when assigning and scheduling sessions. </p>
 <div class="row-fluid">
   <div class="control-group">
     <div class="controls">
-      <label class="control-label" for="maxprog">preferred total number of panels:</label>
+      <label class="control-label" for="maxprog">preferred total number of sessions:</label>
       <input class="span1" type="text" size=3 name="maxprog" value="<?php echo $partAvail["maxprog"];?>">
     </div>
 <?php
@@ -62,7 +62,7 @@ for guidance when assigning and scheduling panels. </p>
 indicate the times when you will be available as a program panelist.  
 Entering a single time for the whole con is fine.  Splitting a day into 
 multiple time slots also is fine.  Keep in mind we will be using this as 
-guidance when scheduling your panels.</p>
+guidance when scheduling your sessions.</p>
 
 <table class="table table-condensed">
   <tr> <!-- row one -->
@@ -130,7 +130,7 @@ $xslt->importStylesheet($xsl);
 
 <div class="row-fluid">
   <div class="span6">
-    <label>Please don't schedule me for a panel that conflicts with:</label>
+    <label>Please don't schedule me for a session that conflicts with:</label>
     <textarea class="span12" name="preventconflict" rows=3 cols=72><?php
         echo htmlspecialchars($partAvail["preventconflict"],ENT_NOQUOTES);?></textarea>
   </div>

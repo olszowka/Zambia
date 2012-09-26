@@ -8,7 +8,7 @@
     $titlesearch=stripslashes($_POST["title"]);
 // List of sessions that match search criteria 
 // Includes sessions in which participant is already interested if they do match match search
-// Use "My Panel Interests" page to just see everything in which you are interested
+// Use "Session Interests" page to just see everything in which you are interested
     $queryArray["sessions"] = <<<EOD
 SELECT
         S.sessionid, T.trackname, S.title,

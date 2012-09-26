@@ -1,5 +1,5 @@
 TITLE='Conflict Report - Picky people '
-DESCRIPTION='Show who the picky people do not want to be on a panel with and who they are on panels with.'
+DESCRIPTION='Show who the picky people do not want to be on a session with and who they are on sessions with.'
 CONFLICTWANTS=1
 QUERY="
 Select 
@@ -10,7 +10,7 @@ Select
   concat('<a href=StaffAssignParticipants.php?selsess=',X.s,'>', X.s,'</a>') 
     as Sessionid, 
   X.sn 'sessionname', 
-  group_concat(DISTINCT P2.pubsname,concat(' (',P2.badgeid,')') SEPARATOR ', ') 'others on this panel' 
+  group_concat(DISTINCT P2.pubsname,concat(' (',P2.badgeid,')') SEPARATOR ', ') 'others on this session' 
 from (select PI.badgeid as b, P.pubsname as pn,  
              S.sessionid as s, nopeople as no, title as sn, trackname as tn 
         from ParticipantInterests PI, ParticipantOnSession PS , 

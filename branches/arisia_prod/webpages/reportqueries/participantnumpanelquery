@@ -1,5 +1,5 @@
-TITLE='Participant # Panel and Constraints'
-DESCRIPTION='How many panels does each person want to be on and the other constraints they indicated'
+TITLE='Participant # Session and Constraints'
+DESCRIPTION='How many sessions does each person want to be on and the other constraints they indicated'
 PROGWANTS=1
 QUERY='
 SELECT P.badgeid, P.pubsname, interested,

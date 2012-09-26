@@ -1,5 +1,5 @@
 TITLE='Conflict Report - Interested Participants that wont comp '
-DESCRIPTION='Comps are limited to participants on 3 or more panels.  These folks are on less than 3 scheduled panels.'
+DESCRIPTION='Comps are limited to participants on 3 or more sessions.  These folks are on less than 3 scheduled sessions.'
 CONFLICTWANTS=1
 REGWANTS=1
 QUERY="

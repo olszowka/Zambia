@@ -74,19 +74,19 @@ if (may_I('postcon')) { ?>
 				<li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
 			</ul>
 		<?php if (may_I('my_panel_interests')) { ?>
-			<p> Use the "Panel Interests" menu to:</p>
+			<p> Use the "Session Interests" menu to:</p>
 				<ul>
-					<li> See what selections you have made for panels.</li>
+					<li> See what selections you have made for sessions.</li>
 					<li> Alter or give more information about your selections.</li>
 					<li> Rank the preference of your selections.</li>
 				</ul>
             <?php } else { ?>
-            <p> The "Panel Interests" menu is currently unavailable. Check back later.</p>
+            <p> The "Session Interests" menu is currently unavailable. Check back later.</p>
             <?php } ?>
             <?php if (may_I('my_gen_int_write')) { ?>
             <p> Use the "General Interests" menu to:</p>
                 <ul>
-                    <li> Describe the kinds of panels you are interested in.</li>
+                    <li> Describe the kinds of sessions you are interested in.</li>
                     <li> Suggest the people you would like to work with.</li>
                 </ul>
         <?php } else { ?>
@@ -109,13 +109,13 @@ if (may_I('postcon')) { ?>
         <?php } ?>
         
         <?php if (may_I('search_panels')) { ?>
-          <p> Use the "Search Panels" menu to:</p>
+          <p> Use the "Search Sessions" menu to:</p>
             <ul>
               <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
-              <li> Indicate panels you would like to participate on. </li>
+              <li> Indicate sessions you would like to participate on. </li>
             </ul>
         <?php } else { ?>
-          <p> The "Search Panels" menu is currently unavailable.  Check back later.</p>
+          <p> The "Search Sessions" menu is currently unavailable.  Check back later.</p>
         <?php } ?>
         
         <?php if (may_I('BrainstormSubmit')) { ?>

@@ -1,7 +1,7 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
     global $partAvail,$availability;
-    $title="Search Panels";
+    $title="Search Sessions";
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     if (!may_I('search_panels')) {
@@ -27,8 +27,8 @@
 
         <BUTTON class="btn btn-primary" type=submit value="search">Search</BUTTON>
 
-<P>On the following page, you can select panels for participation. You must <strong>SAVE</strong> your changes before leaving the page or your selections will not be recorded.
-<P>Clicking Search without making any selections will display all panels.
+<P>On the following page, you can select sessions for participation. You must <strong>SAVE</strong> your changes before leaving the page or your selections will not be recorded.
+<P>Clicking Search without making any selections will display all sessions.
 </FORM>
 </div>
 <?php

@@ -1,5 +1,5 @@
 TITLE='Session Interest Counts by Participant'
-DESCRIPTION='Just how many panels did each participant sign up for anyway?'
+DESCRIPTION='Just how many sessions did each participant sign up for anyway?'
 PROGWANTS=1
 QUERY="
     select P.Badgeid, 

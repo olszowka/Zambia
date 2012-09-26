@@ -13,7 +13,7 @@
         <form class="form-inline" name="resform" method="POST" action="SubmitMySessions1.php">
             <xsl:if test="$mayISubmitPanelInterests">
                 <button class="btn btn-primary pull-right" type="submit" name="save">Save</button>
-                <p>If you have selected any panels, please remember to <strong>SAVE</strong> before leaving the page. (Use either "Save" buttons at the top or bottom.)</p>
+                <p>If you have selected any sessions, please remember to <strong>SAVE</strong> before leaving the page. (Use either "Save" buttons at the top or bottom.)</p>
                 <div class="alert-info">You will find the results of your search below. We have included the session id, track, title, duration, a check box for you to
                     indicate interest, followed by the description as it will appear in the program guide and some additional information for you as a
                     prospective panelist.
@@ -47,7 +47,7 @@
         <xsl:if test="$mayISubmitPanelInterests">
             <tr>
                 <td colspan="3" sessionid="{@sessionid}">
-                    <label class="checkbox"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Add this panel to my list<input type="checkbox" value="{@sessionid}" name="int{@sessionid}" id="int{@sessionid}">
+                    <label class="checkbox"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Add this session to my list<input type="checkbox" value="{@sessionid}" name="int{@sessionid}" id="int{@sessionid}">
                             <xsl:if test="@badgeid">
                                 <xsl:attribute name="checked">checked</xsl:attribute>
                             </xsl:if>

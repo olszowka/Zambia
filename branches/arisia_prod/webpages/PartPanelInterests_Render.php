@@ -24,7 +24,7 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
     // "Update Ranks" Section
     echo "<FORM class=\"form-inline\" name=\"sessionform\" method=POST action=\"PartPanelInterests_POST2.php\">\n";
     echo "<DIV class=\"submit\" id=\"submit\"><BUTTON class=\"btn btn-primary pull-right\" type=\"submit\" name=\"submitranks\">Save</BUTTON></DIV>\n";
-    echo "<P>Please use the following scale when ranking your interest in the panels you have chosen:  </P>\n";
+    echo "<P>Please use the following scale when ranking your interest in the sessions you have chosen:  </P>\n";
     echo "<strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I'd like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong>\n";
     echo "<P>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</P>\n";
     echo "<H4>List of Sessions in Which I'm Interested in Participating:</H4>\n";
@@ -43,13 +43,13 @@ function render_session_interests($badgid,$session_interest_count,$message,$mess
         echo "    <div class=\"controls controls-row\">\n";
         echo "        <span class=\"span1\"></span>\n";
         echo "        <label class=\"span2 control-label\">Rank: <INPUT class=\"span5\" type=\"text\" size=3 name=\"rank$j\" value=\"{$session_interests[$i]['rank']}\"></label>\n";
-        echo "        <label class=\"span5 checkbox inline\">I'd like to moderate this panel&nbsp;<INPUT class=\"checkbox\" type=\"checkbox\" value=1 name=\"mod$j\" ";
+        echo "        <label class=\"span5 checkbox inline\">I'd like to moderate this session&nbsp;<INPUT class=\"checkbox\" type=\"checkbox\" value=1 name=\"mod$j\" ";
         echo "            ".(($session_interests[$i]['willmoderate'])?"checked":"")."></label>\n";
-        echo "        <label class=\"span4 checkbox \">Remove this panel from my list<INPUT class=\"checkbox\" type=\"checkbox\" value=1 name=\"delete$j\"></label>\n";
+        echo "        <label class=\"span4 checkbox \">Remove this session from my list<INPUT class=\"checkbox\" type=\"checkbox\" value=1 name=\"delete$j\"></label>\n";
         echo "    </div>\n";
         echo "    <div class=\"controls controls-row\">\n";
         echo "        <span class=\"span1\"></span>\n";
-        echo "        <label class=\"span11 control-label\">Use this space to convince us why you would be fabulous on this panel:";
+        echo "        <label class=\"span11 control-label\">Use this space to convince us why you would be fabulous on this session:";
         echo "            <TEXTAREA class=\"span12\" height=5em cols=80 name=\"comments$j\" id=\"intCmnt\">". htmlspecialchars( $session_interests[$i]['comments'],ENT_COMPAT)."</TEXTAREA></label>\n";
         echo "    </div>\n";
         echo "    <div class=\"controls controls-row padded\">\n";

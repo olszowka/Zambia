@@ -1,5 +1,5 @@
 TITLE='Participants With People to Avoid'
-DESCRIPTION='Show the badgeid, pubsname and list of people to avoid for each participant who indicated he is attending and listed people with whom he does not want to share a panel.'
+DESCRIPTION='Show the badgeid, pubsname and list of people to avoid for each participant who indicated he is attending and listed people with whom he does not want to share a session.'
 PROGWANTS=1
 QUERY="
 select PI.badgeid, P.pubsname, PI.nopeople
