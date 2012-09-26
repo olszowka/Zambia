@@ -1,4 +1,4 @@
-TITLE='Conflict Report - people on panels they are not interested in'
+TITLE='Conflict Report - people on sessions they are not interested in'
 DESCRIPTION='This can happen two ways: Either someone used the feature at the bottom of the assign page to do this deliberately or the participant removed his or her interest after being assigned.'
 CONFLICTWANTS=1
 QUERY="
