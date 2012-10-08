@@ -46,24 +46,34 @@ load_javascript();
 	<?php if ($fullPage) echo "<div id=\"headerContainer\">"; ?>
 	<!-- Header -->
 		<header class="row-fluid staff" id="top">
-			<div class="span9">
-				<h1 class="pageHeader pull-left">
-					<img id="arisiaLens" src="images/logo.gif" title="Arisia logo" class="arisiaLens wide-only" />
-					<div class="pageHeaderText span9"> Zambia<span class="wide-medium-only">: The <?php echo CON_NAME; ?> Scheduling Tool</span></div>
-				</h1>
-			</div>
-<?php if (isset($_SESSION['badgeid'])) {
-	require_once('db_functions.php');
-  	$queryArray["categories"] = "SELECT reportcategoryid, description FROM ReportCategories ORDER BY display_order;";
-  	if (($resultXML=mysql_query_XML($queryArray))===false) {
-  	    RenderError($title,$message_error);
-          exit();
-    }
-?>
-			<div class="span3" id="welcome">
-				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
-				<a id="logoutButton" class="btn btn-primary pull-right" href="logout.php" title="Click to log out">Log out</a>
-			</div>
+		  <div id="regHeader" class="span12">
+  			<div class="span9">
+  				<h1 class="pageHeader pull-left">
+  					<img id="arisiaLens" src="images/logo.gif" title="Arisia logo" class="arisiaLens wide-only" />
+  					<div class="pageHeaderText span9"> Zambia<span class="wide-medium-only">: The <?php echo CON_NAME; ?> Scheduling Tool</span></div>
+  				</h1>
+  			</div>
+  <?php if (isset($_SESSION['badgeid'])) {
+  	require_once('db_functions.php');
+    	$queryArray["categories"] = "SELECT reportcategoryid, description FROM ReportCategories ORDER BY display_order;";
+    	if (($resultXML=mysql_query_XML($queryArray))===false) {
+    	    RenderError($title,$message_error);
+            exit();
+      }
+  ?>
+  			<div class="span3" id="welcome">
+  				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
+          <img id="hideHeader" class="imgButton pull-right" src="images/green-up.png"/>
+  				<a id="logoutButton" class="btn btn-primary pull-right" href="logout.php" title="Click to log out">Log out</a>
+  			</div>
+      </div>
+  		<div id="altHeader" class="row-fluid">
+  		  <div id="welcomeSmall">
+  				<img src="images/green-down.png" id="showHeader" class="pull-right"/>
+  				<a id="logoutButton" class="btn btn-primary btn-mini pull-right" href="logout.php" title="Click to log out">Log out</a>
+  				<p class="pull-right">Welcome, <?php echo $_SESSION['badgename']; ?></p>
+        </div>
+  		</div>
 		</header>
 		<nav id="staffNav" class="navbar navbar-inverse">
 			<div class="navbar-inner">

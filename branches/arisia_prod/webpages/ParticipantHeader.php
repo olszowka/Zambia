@@ -41,15 +41,25 @@ load_javascript();
   <div class="container-fluid">
 	<!-- Header -->
 		<header class="row-fluid participant" id="top">
-		  <div class="span9">
-  			<img src="images/logo.gif" title="Arisia logo" class="pull-left" />
-  			<h1 class="pull-left wide-medium-only">Zambia<br/><span class="wide-only">The <?php echo CON_NAME; ?> Scheduling Tool</span></h1>
+		  <div id="regHeader" class="span12">
+  		  <div class="span9">
+    			<img src="images/logo.gif" title="Arisia logo" class="pull-left" />
+    			<h1 class="pull-left wide-medium-only">Zambia<br/><span class="wide-only">The <?php echo CON_NAME; ?> Scheduling Tool</span></h1>
+    		</div>
+  <?php if (isset($_SESSION['badgeid'])) { ?>
+  			<div class="span3" id="welcome">
+  				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
+          <img id="hideHeader" class="imgButton pull-right" src="images/blue-up.png"/>
+  				<a id="logoutButton" href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
+  			</div>
+      </div>
+  		<div id="altHeader" class="row-fluid">
+  		  <div id="welcomeSmall">
+  				<img src="images/blue-down.png" id="showHeader" class="pull-right"/>
+  				<a id="logoutButton" class="btn btn-primary btn-mini pull-right" href="logout.php" title="Click to log out">Log out</a>
+  				<p class="pull-right">Welcome, <?php echo $_SESSION['badgename']; ?></p>
+        </div>
   		</div>
-<?php if (isset($_SESSION['badgeid'])) { ?>
-			<div class="span3" id="welcome">
-				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
-				<a id="logoutButton" href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
-			</div>
 		</header>
     <nav id="participantNav" class="navbar navbar-inverse">
       <div class="navbar-inner">

@@ -24,9 +24,6 @@ header {
 	}
 }
 
-#welcome p {
-  text-align: right;
-}
 ////////////
 // STYLES //
 ////////////
@@ -49,6 +46,9 @@ header {
 		text-align: right;
 		font-size: 1.1em;
 	}
+	.imgButton {
+	 cursor: pointer;
+	}
 }
 
 #loginBox,
@@ -57,7 +57,19 @@ header {
 	margin: 1em 1em 0 0;
   p {
     color: @contrast;
+    text-align: right;
   }
+}
+
+#altHeader p {
+    color: @contrast;
+    text-align: right;
+    padding-right: 0.5em;
+}
+
+#showHeader {
+  height: 20px;
+  padding-left: 0.5em;
 }
 
 #buttonBox {
@@ -134,10 +146,6 @@ input[type="password"] {
   margin-top: 0.5em;
 }
 
-.navbar .brand {
-  padding-top: 8px;
-}
-
 #resultsDiv {
   padding-top: 1.0em;
 }
@@ -211,6 +219,59 @@ h2 {
 	text-align: center;
 }
 
+input.search-query {
+	height:21px !important;
+}
+
+.reportPageContent {
+	line-height:normal;
+	}
+
+div.reportPageContent table, table.report {
+	border-collapse: collapse;
+	margin: 10px;
+	border: 1px solid black;
+	font-family: Arial;
+	font-size: 12px;
+	}
+		
+div.reportPageContent table th, th.report {
+	border: 1px solid black;
+	background-color: #c0e4ff;
+	padding-right: 0.2em;
+	padding-left: 0.2em;
+	}
+
+div.reportPageContent table td, td.report {
+	border: 1px solid black;
+	vertical-align: top;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	}
+
+div.reportPageContent table td a, .report A {
+	color: #1c30b0;
+	}
+
+.arisiaLens {
+	padding: 3px;
+	display: table-cell;
+	float: none;
+}
+.pageHeader {
+	padding:0;
+	width:100%;
+	display: table;
+	margin-top:0;
+	margin-bottom:0;
+}
+.pageHeader div.pageHeaderText {
+	width:88%;
+	margin-left:0;
+	display: table-cell;
+	vertical-align: middle;
+	float:none;
+}
 ul#boxes li {
 	font-family: @font;
 	font-size: 1.33em;
@@ -219,27 +280,57 @@ ul#boxes li {
 	background-color: #e5e5e5;
 	text-align: center;
 }
-table.report {
-    border-collapse: collapse;
-    margin: 10px;
-    border: 1px solid black;
-    font-family: Arial;
-    font-size: 12px;
+
+.reportPageContent {
+	line-height:normal;
 }
-th.report {
-    border: 1px solid black;
-    background-color: #c0e4ff;
-    padding-right:0.2em;
-    padding-left:0.2em
+
+div.reportPageContent table, table.report {
+	border-collapse: collapse;
+	margin: 10px;
+	border: 1px solid black;
+	font-family: Arial;
+	font-size: 12px;
 }
-td.report {
-    border: 1px solid black;
-    vertical-align:top;
-    padding-left:0.2em;
-    padding-right:0.2em;
+		
+div.reportPageContent table th, th.report {
+	border: 1px solid black;
+	background-color: #c0e4ff;
+	padding-right: 0.2em;
+	padding-left: 0.2em;
 }
-.report A {
-    color: #1c30b0;
+
+div.reportPageContent table td, td.report {
+	border: 1px solid black;
+	vertical-align: top;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+}
+
+div.reportPageContent table td a, .report A {
+	color: #1c30b0;
+}
+
+.arisiaLens {
+	padding: 3px;
+	display: table-cell;
+	float: none;
+}
+
+.pageHeader {
+	padding:0;
+	width:100%;
+	display: table;
+	margin-top:0;
+	margin-bottom:0;
+}
+
+.pageHeader div.pageHeaderText {
+	width:88%;
+	margin-left:0;
+	display: table-cell;
+	vertical-align: middle;
+	float:none;
 }
 /////////////////
 // RESPONSIVE  //

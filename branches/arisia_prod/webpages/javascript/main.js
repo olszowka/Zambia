@@ -20,7 +20,47 @@ $(document).ready(function() {
 		default:
 			window.status="Ready."
 		}
+
+  if (getValue('zambiaHeader') == 'small') {
+    $('#altHeader').show();
+    $('#regHeader').hide();
+  }
+  else {
+    $('#altHeader').hide();
+    $('#regHeader').show();
+  };
+  
+  $('#hideHeader').click(function() {$('#regHeader').slideUp(); $('#altHeader').show(); setValue('zambiaHeader', 'small');});
+  $('#showHeader').click(function() {$('#altHeader').hide(); $('#regHeader').slideDown(); setValue('zambiaHeader', 'large');});
 });
+
+function supports_html5_storage() {
+  try {
+    return 'localStorage' in window && window['localStorage'] !== null;
+  } catch (e) {
+    return false;
+  }
+}
+
+function setValue(key, val) {
+  if (supports_html5_storage()) {
+    localStorage[key] = val;
+  }
+}
+
+function getValue(key) {
+  if (supports_html5_storage()) {
+    return localStorage[key];
+  }
+  else
+    return null;
+}
+
+function clearValue(key) {
+  if (supports_html5_storage()) {
+    localStorage[key] = null;
+  }
+}
 
 var lib = new lib;
 

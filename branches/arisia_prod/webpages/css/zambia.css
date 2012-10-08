@@ -3,9 +3,6 @@ header h1 {
   float: left;
   padding-left: 1em;
 }
-#welcome p {
-  text-align: right;
-}
 body {
   background-image: url('../images/light_honeycomb.png');
   xxbackground-image: url('../images/old_mathematics.png');
@@ -20,6 +17,9 @@ header label {
   text-align: right;
   font-size: 1.1em;
 }
+header .imgButton {
+  cursor: pointer;
+}
 #loginBox,
 #welcome {
   float: right;
@@ -28,6 +28,16 @@ header label {
 #loginBox p,
 #welcome p {
   color: #ffffff;
+  text-align: right;
+}
+#altHeader p {
+  color: #ffffff;
+  text-align: right;
+  padding-right: 0.5em;
+}
+#showHeader {
+  height: 20px;
+  padding-left: 0.5em;
 }
 #buttonBox {
   margin: 0.4em;
@@ -40,10 +50,6 @@ header label {
   margin: 0;
   color: #000000;
 }
-input.search-query {
-	height:21px !important;
-}
-
 input[type="text"],
 input[type="password"] {
   height: 28px;
@@ -92,9 +98,6 @@ input[type="password"] {
 }
 .padded {
   margin-top: 0.5em;
-}
-.navbar .brand {
-  padding-top: 4px;
 }
 #resultsDiv {
   padding-top: 1.0em;
@@ -158,6 +161,57 @@ h2 {
 .center {
   text-align: center;
 }
+input.search-query {
+  height: 21px !important;
+}
+.reportPageContent {
+  line-height: normal;
+}
+div.reportPageContent table,
+table.report {
+  border-collapse: collapse;
+  margin: 10px;
+  border: 1px solid black;
+  font-family: Arial;
+  font-size: 12px;
+}
+div.reportPageContent table th,
+th.report {
+  border: 1px solid black;
+  background-color: #c0e4ff;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+}
+div.reportPageContent table td,
+td.report {
+  border: 1px solid black;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+div.reportPageContent table td a,
+.report A {
+  color: #1c30b0;
+}
+.arisiaLens {
+  padding: 3px;
+  display: table-cell;
+  float: none;
+}
+.pageHeader {
+  padding: 0;
+  width: 100%;
+  display: table;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.pageHeader div.pageHeaderText {
+  width: 88%;
+  margin-left: 0;
+  display: table-cell;
+  vertical-align: middle;
+  float: none;
+}
 ul#boxes li {
   font-family: Verdana;
   font-size: 1.33em;
@@ -166,55 +220,53 @@ ul#boxes li {
   background-color: #e5e5e5;
   text-align: center;
 }
-
 .reportPageContent {
-	line-height:normal;
-	}
-
-div.reportPageContent table, table.report {
-	border-collapse: collapse;
-	margin: 10px;
-	border: 1px solid black;
-	font-family: Arial;
-	font-size: 12px;
-	}
-		
-div.reportPageContent table th, th.report {
-	border: 1px solid black;
-	background-color: #c0e4ff;
-	padding-right: 0.2em;
-	padding-left: 0.2em;
-	}
-
-div.reportPageContent table td, td.report {
-	border: 1px solid black;
-	vertical-align: top;
-	padding-left: 0.2em;
-	padding-right: 0.2em;
-	}
-
-div.reportPageContent table td a, .report A {
-	color: #1c30b0;
-	}
-
+  line-height: normal;
+}
+div.reportPageContent table,
+table.report {
+  border-collapse: collapse;
+  margin: 10px;
+  border: 1px solid black;
+  font-family: Arial;
+  font-size: 12px;
+}
+div.reportPageContent table th,
+th.report {
+  border: 1px solid black;
+  background-color: #c0e4ff;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+}
+div.reportPageContent table td,
+td.report {
+  border: 1px solid black;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+div.reportPageContent table td a,
+.report A {
+  color: #1c30b0;
+}
 .arisiaLens {
-	padding: 3px;
-	display: table-cell;
-	float: none;
+  padding: 3px;
+  display: table-cell;
+  float: none;
 }
 .pageHeader {
-	padding:0;
-	width:100%;
-	display: table;
-	margin-top:0;
-	margin-bottom:0;
+  padding: 0;
+  width: 100%;
+  display: table;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .pageHeader div.pageHeaderText {
-	width:88%;
-	margin-left:0;
-	display: table-cell;
-	vertical-align: middle;
-	float:none;
+  width: 88%;
+  margin-left: 0;
+  display: table-cell;
+  vertical-align: middle;
+  float: none;
 }
 @media (max-width: 780px) {
   .wide-only {
