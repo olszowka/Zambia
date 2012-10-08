@@ -49,13 +49,13 @@ load_javascript();
   <?php if (isset($_SESSION['badgeid'])) { ?>
   			<div class="span3" id="welcome">
   				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
-          <img id="hideHeader" class="imgButton pull-right" src="images/blue-up.png"/>
+          <img id="hideHeader" class="imgButton pull-right" src="images/blue-up.png" alt="Shrink header to a thin strip" title="Shrink header to a thin strip"/>
   				<a id="logoutButton" href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
   			</div>
       </div>
   		<div id="altHeader" class="row-fluid">
   		  <div id="welcomeSmall">
-  				<img src="images/blue-down.png" id="showHeader" class="pull-right"/>
+  				<img src="images/blue-down.png" id="showHeader" class="pull-right" alt="Expand header to normal size" title="Expand header to normal size"/>
   				<a id="logoutButton" class="btn btn-primary btn-mini pull-right" href="logout.php" title="Click to log out">Log out</a>
   				<p class="pull-right">Welcome, <?php echo $_SESSION['badgename']; ?></p>
         </div>
