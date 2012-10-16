@@ -30,8 +30,21 @@ $(document).ready(function() {
     $('#regHeader').show();
   };
   
-  $('#hideHeader').click(function() {$('#regHeader').slideUp(); $('#altHeader').show(); setValue('zambiaHeader', 'small');});
-  $('#showHeader').click(function() {$('#altHeader').hide(); $('#regHeader').slideDown(); setValue('zambiaHeader', 'large');});
+	$('#hideHeader').click(function() {
+		$('#regHeader').slideUp();
+		$('#altHeader').show();
+		setValue('zambiaHeader', 'small');
+		window.setTimeout(staffMaintainSchedule.resizeMe,300);
+		window.setTimeout(staffMaintainSchedule.resizeMe,600);
+		});
+	$('#showHeader').click(function() {
+		$('#altHeader').hide();
+		$('#regHeader').slideDown();
+		setValue('zambiaHeader', 'large');
+		window.setTimeout(staffMaintainSchedule.resizeMe,300);
+		window.setTimeout(staffMaintainSchedule.resizeMe,600);
+		});
+
 });
 
 function supports_html5_storage() {

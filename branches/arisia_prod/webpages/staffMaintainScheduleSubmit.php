@@ -634,7 +634,7 @@ EOD;
 
 function editSchedule() {
 	global $link,$message,$message_error;
-	usleep(500000);
+	//usleep(500000);
 	$returnTable = isset($_POST["returnTable"]) ? $_POST["returnTable"] : false;
 	$editsArray = isset($_POST["editsArray"]) ? $_POST["editsArray"] : false;
 	$roomsToDisplayArray = isset($_POST["roomsToDisplayArray"]) ? $_POST["roomsToDisplayArray"] : false;
