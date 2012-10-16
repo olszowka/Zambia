@@ -188,9 +188,11 @@ function showUpdateResults(data, textStatus, jqXHR) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
+  $("#password").val("");
+  $("#cpassword").val("");
   $('#updateBUTN').button('reset');
-  setTimeout(function() {$("#updateBUTN").button().attr("disabled","disabled");}, 0);
 	originalInterested = $("#interested").val();
+  setTimeout(function() {$("#updateBUTN").button().attr("disabled","disabled");}, 0);
 	$("#resultBoxDIV").html(data);
 	$('#resultBoxDIV').show();
 }
