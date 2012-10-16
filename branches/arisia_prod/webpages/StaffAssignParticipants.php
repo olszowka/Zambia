@@ -199,7 +199,7 @@ echo "</TABLE>";
 echo "<INPUT type=\"hidden\" name=\"selsess\" value=\"$selsessionid\">\n";
 echo "<INPUT type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasmodid\" value=\"$modid\">\n";
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"btn btn-primary pull-right\">Update</BUTTON></DIV>\n";
+echo "<DIV class=\"clearfix\"><BUTTON type=\"submit\" name=\"update\" class=\"btn btn-primary pull-right\">Update</BUTTON></DIV>\n";
 echo "<HR>\n";
 echo "<DIV><LABEL for=\"asgnpart\">Assign participant not indicated as interested or invited.</LABEL><BR>\n";
 echo "<SELECT name=\"asgnpart\">\n";
