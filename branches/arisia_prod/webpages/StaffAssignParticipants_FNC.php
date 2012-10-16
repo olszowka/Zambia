@@ -31,7 +31,7 @@ function SubmitAssignParticipants() {
                 }
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"errmsg\">".$message."\n";
+            echo "<P class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }
@@ -42,7 +42,7 @@ function SubmitAssignParticipants() {
         $result=mysql_query($query,$link);
         if (!$result) {
             $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"errmsg\">".$message."\n";
+            echo "<P class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }
@@ -52,7 +52,7 @@ function SubmitAssignParticipants() {
 //        error_log("Zambia query: $query\n");
         if (!$result) {
             $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"errmsg\">".$message."\n";
+            echo "<P class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }

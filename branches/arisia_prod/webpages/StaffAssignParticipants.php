@@ -1,5 +1,5 @@
 <?php
-$title="Staff - Assign Participants";
+$title="Assign Participants";
 require_once('db_functions.php');
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');
@@ -38,8 +38,8 @@ if (!$Sresult=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
-echo "<FORM name=\"selsesform\" method=POST action=\"StaffAssignParticipants.php\">\n";
-echo "<DIV><LABEL for=\"selsess\">Select Session</LABEL>\n";
+echo "<FORM name=\"selsesform\" class=\"form-inline\"method=POST action=\"StaffAssignParticipants.php\">\n";
+echo "<DIV><LABEL for=\"selsess\">Select Session:</LABEL>\n";
 echo "<SELECT name=\"selsess\">\n";
 echo "     <OPTION value=0 ".(($selsessionid==0)?"selected":"").">Select Session</OPTION>\n";
 while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
@@ -47,14 +47,12 @@ while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM
     echo ")>".htmlspecialchars($trackname)." - ";
     echo htmlspecialchars($sessionid)." - ".htmlspecialchars($title)."</OPTION>\n";
     }
-echo "</SELECT></DIV>\n";
-echo "<P>&nbsp;\n";
-echo "<DIV class=\"SubmitDiv\">";
+echo "</SELECT>\n";
+echo "<BUTTON type=\"submit\" name=\"submit\" class=\"btn btn-primary\">Select Session</BUTTON>\n";
 if (isset($_SESSION['return_to_page'])) {
-    echo "<A HREF=\"".$_SESSION['return_to_page']."\">Return to report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A>";
+    echo "<A HREF=\"".$_SESSION['return_to_page']."\">Return to report</A>";
     }
-echo "<BUTTON type=\"submit\" name=\"submit\" class=\"SubmitButton\">Select Session</BUTTON></DIV>\n";
-echo "</FORM>\n";
+echo "</DIV></FORM>\n";
 echo "<HR>&nbsp;<BR>\n";
 if ($topsectiononly) {
     staff_footer();
@@ -66,25 +64,31 @@ WHERE sessionid=$selsessionid
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
+    echo "<P class\"alert alert-error\">".$message."\n";
     staff_footer();
     exit();
     }
 echo "<H2>$selsessionid - ".htmlspecialchars(mysql_result($result,0,"title"))."</H2>";    
-echo "<P>Program Guide Text\n";
-echo "<P class=\"border1111 lrmargin lrpad\">";
+echo "<P class=\"label\">Program Guide Text:</p>";
+echo "<span class=\"\">";
 echo htmlspecialchars(mysql_result($result,0,"progguiddesc"));
-echo "\n";
-echo "<P>Prospective Participant Info\n";
-echo "<P class=\"border1111 lrmargin lrpad\">";
+echo "\n</span>";
+if (mysql_result($result,0,"persppartinfo") != "") {
+  echo "<P class=\"label\">Prospective Participant Info:";
+  echo "<P class=\"\">";
+}
 echo htmlspecialchars(mysql_result($result,0,"persppartinfo"));
 echo "\n";
-echo "<P>Notes for Participant\n";
-echo "<P class=\"border1111 lrmargin lrpad\">";
+if (mysql_result($result,0,"notesforpart") != "") {
+  echo "<P class=\"label\">Notes for Participant:";
+  echo "<P class=\"text-info\">";
+}
 echo htmlspecialchars(mysql_result($result,0,"notesforpart"));
 echo "\n";
-echo "<P>Notes for Program Staff\n";
-echo "<P class=\"border1111 lrmargin lrpad\">";
+if (mysql_result($result,0,"notesforprog") != "") {
+  echo "<P class=\"label\">Notes for Program Staff:";
+  echo "<P class=\"text-alert\">";
+}
 echo htmlspecialchars(mysql_result($result,0,"notesforprog"));
 echo "\n";
 echo "<HR>\n";
@@ -115,7 +119,7 @@ select badgeid, sessionid from ParticipantSessionInterest where sessionid=$selse
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
+    echo "<P class\"alert alert-error\">".$message."\n";
     staff_footer();
     exit();
     }
@@ -149,35 +153,44 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
         }
     $i++;
     }
-$numrows=$i; 
-echo "<FORM name=\"selsesform\" method=POST action=\"StaffAssignParticipants.php\">\n";
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
+$numrows=$i;
+echo "<div class=\"row-fluid\">";
+echo "<FORM name=\"selsesform\" class=\"form-inline\" method=POST action=\"StaffAssignParticipants.php\">\n";
+echo "<BUTTON type=\"submit\" name=\"update\" class=\"btn btn-primary pull-right\">Update</BUTTON>\n";
+echo "<LABEL for=\"moderator\" class=\"radio\">";
 echo "<INPUT type=\"radio\" name=\"moderator\" id=\"moderator\" value=\"0\"".(($modid==0)?"checked":"").">";
-echo "<LABEL for=\"moderator\">No Moderator Selected</LABEL>";
-echo "<TABLE>\n";
+echo "No Moderator Selected</LABEL>";
+echo "<TABLE class=\"table table-condensed\">\n";
 for ($i=0;$i<$numrows;$i++) {
-    echo "   <TR>\n";
-    echo "      <TD class=\"vatop\"><INPUT type=\"checkbox\" name=\"asgn".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["posbadgeid"])?"checked":"")." value=\"1\"></TD>";
-    echo "      <TD class=\"vatop lrpad\">Assigned</TD>";
+    echo "   <TR ";
+    echo (($bigarray[$i]["moderator"])?"class=\"success\"":"");
+    echo ">\n";
+    echo "      <TD style=\"width: 7em;\"><LABEL class=\"checkbox\"><INPUT type=\"checkbox\" name=\"asgn".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["posbadgeid"])?"checked":"")." value=\"1\">Assigned</LABEL>";
     echo "<INPUT type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["badgeid"]."\">";
     echo "<INPUT type=\"hidden\" name=\"wasasgn".$bigarray[$i]["badgeid"]."\" value=\"";
     echo ((isset($bigarray[$i]["posbadgeid"]))?1:0)."\">";
     echo "         </TD>\n";
-    echo "      <TD class=\"vatop\">".$bigarray[$i]["badgeid"]."</TD>\n";
-    echo "      <TD class=\"vatop\">".$bigarray[$i]["pubsname"]."</TD>\n";
-    echo "      <TD class=\"vatop\">Rank: ".$bigarray[$i]["rank"]."</TD>\n";
-    echo "      <TD class=\"vatop\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
+    echo "      <TD class=\"\">".$bigarray[$i]["badgeid"]."</TD>\n";
+    echo "      <TD class=\"\">".$bigarray[$i]["pubsname"]."</TD>\n";
+    echo "      <TD class=\"\">Rank: ".$bigarray[$i]["rank"]."</TD>\n";
+    echo "      <TD class=\"\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
     echo "      </TR>\n";
-    echo "   <TR>\n";
-    echo "      <TD class=\"vatop\"><INPUT type=\"radio\" name=\"moderator\" id=\"moderator\"value=\"".$bigarray[$i]["badgeid"]."\" ";
-    echo (($bigarray[$i]["moderator"])?"checked":"")."></TD>";
-    echo "      <TD class=\"vatop lrpad\">Moderator</TD>";
-    echo "      <TD colspan=4 class=\"border1111 lrpad\">".htmlspecialchars($bigarray[$i]["comments"]);
+    echo "   <TR ";
+    echo (($bigarray[$i]["moderator"])?"class=\"success\"":"");
+    echo ">\n";
+    echo "      <TD class=\"\"><LABEL class=\"radio\"><INPUT type=\"radio\" name=\"moderator\" id=\"moderator\"value=\"".$bigarray[$i]["badgeid"]."\" ";
+    echo (($bigarray[$i]["moderator"])?"checked":"").">Moderator</TD>";
+    echo "      <TD colspan=4 class=\"alert alert-info\">".htmlspecialchars($bigarray[$i]["comments"]);
     echo "</TD>\n";
-    echo "      </TR>\n";
+    echo "   <TR ";
+    echo (($bigarray[$i]["moderator"])?"class=\"success\"":"");
+    echo ">\n";
 	if ($bigarray[$i]["staff_notes"]) {
-		echo "      <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan=\"4\">".htmlspecialchars($bigarray[$i]["staff_notes"]);
+    echo "   <TR ";
+    echo (($bigarray[$i]["moderator"])?"class=\"success\"":"");
+    echo ">\n";
+		echo "      <td>&nbsp;</td><td colspan=\"4\" class=\"alert alert-success\">".htmlspecialchars($bigarray[$i]["staff_notes"]);
 		echo "</td></tr>\n";
 		}
     echo "   <TR><TD colspan=6>&nbsp;</TD></TR>\n";
@@ -186,7 +199,7 @@ echo "</TABLE>";
 echo "<INPUT type=\"hidden\" name=\"selsess\" value=\"$selsessionid\">\n";
 echo "<INPUT type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
 echo "<INPUT type=\"hidden\" name=\"wasmodid\" value=\"$modid\">\n";
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Update</BUTTON></DIV>\n";
+echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"btn btn-primary pull-right\">Update</BUTTON></DIV>\n";
 echo "<HR>\n";
 echo "<DIV><LABEL for=\"asgnpart\">Assign participant not indicated as interested or invited.</LABEL><BR>\n";
 echo "<SELECT name=\"asgnpart\">\n";
@@ -196,9 +209,9 @@ while (list($pubsname,$badgeid)= mysql_fetch_array($Presult, MYSQL_NUM)) {
     echo htmlspecialchars($pubsname)." - ";
     echo htmlspecialchars($badgeid)."</OPTION>\n";
     }
-echo "</SELECT></DIV>\n";
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"SubmitButton\">Add</BUTTON></DIV>\n";
+echo "</SELECT>\n";
+echo "<BUTTON type=\"submit\" name=\"update\" class=\"btn btn-primary\">Add</BUTTON></DIV>\n";
 
-echo "</FORM>\n";
+echo "</FORM></div>\n";
 staff_footer();
 ?>
