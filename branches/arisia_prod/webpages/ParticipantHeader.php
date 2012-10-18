@@ -33,6 +33,7 @@
 <body>
 <script type="text/javascript">
 	var thisPage="<?php echo $title; ?>";
+	var alwaysShowLargeHeader = false;
 </script>
 <?php
 load_jquery();
@@ -93,7 +94,10 @@ load_javascript();
     </nav>
 <?php }
 	  else {
-	   require_once("loginForm.php");
+		require_once("loginForm.php");
+		echo "<script type=\"text/javascript\">";
+		echo "   var alwaysShowLargeHeader = true;";
+		echo "</script>";
 ?>
 		</header>
 <?php } ?>

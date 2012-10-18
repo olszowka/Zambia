@@ -21,7 +21,7 @@ $(document).ready(function() {
 			window.status="Ready."
 		}
 
-  if (getValue('zambiaHeader') == 'small') {
+  if (getValue('zambiaHeader') == 'small' && !alwaysShowLargeHeader) {
     $('#altHeader').show();
     $('#regHeader').hide();
   }
