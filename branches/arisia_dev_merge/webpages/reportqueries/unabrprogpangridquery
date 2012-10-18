@@ -1,7 +1,0 @@
-TITLE='Unabridged Programming Panel Grid'
-DESCRIPTION='Display complete programming panel schedule with rooms on horizontal axis and time on vertical. This includes any item marked "Do Not Print". [On&nbsp;Demand]'
-PROGWANTS=1
-GRIDSWANTS=1
-QUERY=' '
-MIGRATED=true
-

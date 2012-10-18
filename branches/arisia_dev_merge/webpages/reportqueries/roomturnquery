@@ -1,7 +1,0 @@
-TITLE='Room Turns'
-DESCRIPTION='List of all Sessions with track or type of "room turn"'
-HOTELWANTS=1
-MIGRATED=1
-CSVONLY=0
-GENCSV=0
-QUERY=''

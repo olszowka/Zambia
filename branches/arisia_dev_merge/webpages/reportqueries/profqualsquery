@@ -1,7 +1,0 @@
-TITLE='Participant Professional Qualifications [On Demand]'
-DESCRIPTION='List all program participants who are attending and their professional qualifications: (Lastname, firstname), Pubsname, Badgename, Badgeid, Qualifications'
-MIGRATED=1
-PROGWANTS=1
-CSVONLY=0
-GENCSV=0
-QUERY=""

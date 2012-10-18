@@ -1,8 +1,0 @@
-TITLE='Program AV Grid'
-DESCRIPTION='Show Service Requests on a grid. [On&nbsp;Demand]'
-PROGWANTS=1
-TECHWANTS=1
-GRIDSWANTS=1
-QUERY=' '
-MIGRATED=true
-
