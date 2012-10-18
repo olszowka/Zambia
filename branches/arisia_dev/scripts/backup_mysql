@@ -1,0 +1,10 @@
+#!/bin/sh
+
+DEST=/home/trg/Backup
+D=`/bin/date +%Y_%m_%d_%H` export D
+DBNAME=zambiademo
+
+/usr/bin/mysqldump $DBNAME > $DEST/$DBNAME.$D
+
+bzip2 $DEST/$DBNAME.$D
+

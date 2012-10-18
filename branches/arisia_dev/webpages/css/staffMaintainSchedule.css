@@ -1,0 +1,382 @@
+html.fullPage, body.fullPage {
+	width:100%;
+	height:100%;
+	}
+
+.animHelper {
+	position: absolute;
+	z-index: 2;
+	background: none;
+	font-size:11px;
+	line-height:normal;
+	}
+
+#myhelper {
+	position: absolute;
+	display: none;
+	border: 3px solid green;
+	z-index: 2;
+	background: none;
+	font-size:11px;
+	line-height:normal;
+	}
+
+.compoundTR {
+	height:16.5px	
+	}
+
+.compoundTD {
+	vertical-align: top
+	}
+
+#tabs-warnings .conflictList {
+	font-family: verdana, arial;
+	font-size: 11px;
+	}
+
+#tabs-warnings .conflictList ul {
+	padding-left:1.5em;
+	margin-left:1.5em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	}
+
+.warnConfMsg {
+	font-family: verdana, arial;
+	font-size: 11px;
+	margin-bottom: 0.75em;
+	}
+
+.warnConfMsgTitle {
+	font-style: italic;
+	}
+
+.scheduleGridEmptyDIV {
+	border: 4px solid white;
+	}
+
+table.scheduleGridCompTAB, table.scheduleGridCompTAB td {
+	padding: 0;
+	margin: 0;
+	border-collapse: collapse;
+	}
+
+.scheduleGridCompoundEmptyDIV {
+	border: 1px solid #909090;
+	width: 125px;
+	}
+
+.scheduleGridCompoundDIV {
+	width: 254px;
+	overflow: hidden
+	}
+
+.scheduleGridCompoundSessContainer {
+	overflow: hidden;
+	width: 125px;
+	border: 1px solid #909090;
+	}
+
+.scheduleGridComplexDIV {
+	background-color: #ffd0d0;
+	font-family: verdana, arial;
+	font-size: 11px;
+	}
+
+.infolabel {
+	font-family: verdana, arial;
+	font-size: 11px;
+	color: #00b0d0;
+	font-style: italic;
+	}
+
+span.infolabel {
+	display:inline-block;
+	}
+
+.infofield, .inforow {
+	font-family: verdana, arial;
+	font-size: 11px;
+	color: black;
+	}
+
+.inforow {
+	display:block;
+	}
+	
+.infofield {
+	display: inline-block;
+	}
+
+div.sessionBlockTitleRow {
+	display:block;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 99%;
+	padding: 0 1px 0 1px;
+	vertical-align:top;
+	}
+
+div.sessionBlockTitle {
+	display: inline-block;
+	color: black;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	vertical-align:3px;
+	}
+
+.my-ui-icon {
+	display: table-cell;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	width: 15px;
+	height: 15px;
+	background-image: url(images/ui-icons_808080_256x240.png);
+	}
+
+.schedulerGridContainer {
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	}
+
+th.schedulerGridRoom, td.schedulerGridRoom  {
+	width: 250px;
+	}
+
+td.schedulerGridSlot {
+	border: 2px solid black;
+	padding: 0;
+	vertical-align: top;
+	}
+
+.schedulerGrid th {
+	border: 2px solid black;
+	padding-left: 2px;
+	padding-right: 2px;
+	}
+
+.timeTop {
+	border-width: 2px;
+	border-color: black;
+	border-style: solid solid none solid;
+	height: 17px;
+	}
+
+.timeBottom {
+	border-width: 2px;
+	border-color: black;
+	border-style: none solid solid solid;
+	height: 17px;
+	}
+
+.gap {
+	border-width: 2px;
+	border-color: black;
+	border-style: solid;
+	padding-left: 2px;
+	padding-right: 2px;
+	color: white;
+	background-color: black;
+	}
+
+.sessionBlock {
+	width: 250px;
+	margin: 2px 0px 2px 0px;
+	border: 1px solid black;
+	background-color: white;
+	font-family: verdana, arial;
+	font-size: 11px;
+	}
+
+.scheduledSessionBlock {
+	width: 250px;
+	background-color: white;
+	font-family: verdana, arial;
+	font-size: 11px;
+	}
+
+#fullPageContainer {
+	position: absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	height:auto;
+	width:auto;
+	margin:0;
+	padding:0
+	}
+
+#headerContainer {
+	padding-left:20px;
+	padding-right:20px;
+}
+
+div.fullBlockContainer {
+	position: absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	height:auto;
+	width:auto;
+	margin:0;
+	padding:0
+	}
+
+div.topBand {
+	position: absolute;
+	top:0;
+	right:0;
+	left:0;
+	width:auto;
+	margin:0;
+	padding:0; 
+	}
+	
+div.secondaryFullWidthContainer {
+	position:absolute; 
+	right:0;
+	bottom:0;
+	left:0;
+	width:auto;
+	height:auto;
+	margin:0;
+	background-color:#ffffff;
+	font-size:13px;
+	color:black;
+	line-height:normal;
+	}
+
+#mainContentContainer {
+	top:147px;
+	padding:2px;
+	}
+
+.sessionBlockId {
+	color: blue;
+	display: inline-block;
+	width: 60px;
+	padding: 0 1px 0 1px;
+	}
+
+.sessionBlockDivis {
+	color: black;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 0 1px 0 1px;
+	}
+
+.sessionBlockType {
+	color: green;
+	display: inline-block;
+	width: 60px;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 0 1px 0 1px;
+	}
+
+.sessionBlockTrack {
+	color: black;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 0 1px 0 1px;
+	}
+
+.ui-tabs-widget-header LI A {
+	font-weight:normal;
+	line-height:1em;
+}
+
+.checkboxContainer input {
+	margin-top:-2px;
+	margin-left:2px;
+}
+
+.activeArea:hover {
+	background-color:#106a22;
+	color: white;
+}
+
+.schedulerGrid {
+	font-family:Arial;
+	color:black;
+	line-height:normal;
+}
+
+.schedulerGrid th {
+	background-color:#c0e4ff;
+}
+
+i.getSessionInfo {
+	margin-top:-2px;
+	margin-right:1px;
+}
+
+#tabsContent div div, #tabsContent div div li {
+	line-height:15px;
+}
+
+#tabs-rooms div[id^='roomidDIV_'] {
+	line-height:17px;
+}
+
+span.newformselectspan, span.newforminputspan {
+	float:none;
+	margin:0;
+}
+
+span.newformselectspan select {
+	font-size:11px;
+	line-height:normal;
+	margin:2px;
+	padding:0;
+	width:auto;
+	height:auto;
+	color:black;
+}
+
+span.newforminputspan input {
+	font-size:11px;
+	line-height:normal;
+	margin:2px;
+	padding:1px;
+	width:auto;
+	height:auto;
+	color:black;
+}
+
+span.newformnotetight {
+	font-size:11px;
+	line-height:normal;
+	color:black;
+}
+
+.onepage-titlebar {
+	border: 1px solid #106a22;
+	background: #ece8da url(jquery/ui-bg_gloss-wave_100_ece8da_500x100.png) 50% 50% repeat-x;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px; 
+	border-bottom-left-radius: 6px; 
+	border-bottom-right-radius: 6px;
+	text-align: center;
+	margin: 2px;
+	line-height:normal;
+}
+
+.onepage-title {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: Arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #106a22;
+	line-height:normal;
+}
+
+#sessionsToBeScheduled {
+	line-height:normal;
+}
