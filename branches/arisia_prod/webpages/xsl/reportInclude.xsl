@@ -14,7 +14,7 @@
         <xsl:param name="durationhrs" />
         <xsl:param name="durationmin" />
         <xsl:choose>
-            <xsl:when test="$durationhrs='0' and $durationhrs='0'">
+            <xsl:when test="$durationhrs='0' and $durationmin='0'">
                 <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
             </xsl:when>
             <xsl:when test="$durationhrs='0'">
