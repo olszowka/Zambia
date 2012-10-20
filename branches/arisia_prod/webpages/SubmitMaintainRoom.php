@@ -192,8 +192,8 @@ EOD;
 						continue;
 					if (!$conflictThisAddition)
 						{ // Need header for this session
-						$message.="<div class=\"conflictEditConfirmation\">Session $sessionid: {$addSession['title']}</div>\n";
-                        $message.="<div class=\"conflictList\"><ul>"; 
+						$message.="<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
+                        $message.="<ul>"; 
 						}
 					$conflictThisAddition=true;
 					$message.="<li>".htmlspecialchars($addToScheduleParticipants[$badgeid],ENT_NOQUOTES)." ($badgeid) ";
@@ -240,8 +240,8 @@ EOD;
 					if (!$conflictThisAddition) 
 						{
 						// Need header for this session
-						$message.="<div class=\"conflictEditConfirmation\">Session $sessionid: {$addSession['title']}</div>\n";
-                        $message.="<div class=\"conflictList\"><ul>"; 
+						$message.="<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
+                        $message.="<ul>"; 
 						}
 					$conflictThisAddition=true;
 					$message.="<li>".htmlspecialchars($addToScheduleParticipants[$addBadgeid],ENT_NOQUOTES)." ($addBadgeid) ";
@@ -294,7 +294,7 @@ function SubmitMaintainRoom($ignore_conflicts) {
 	}
     if (!$ignore_conflicts) {
         if (!check_room_sched_conflicts($deleteScheduleIds,$addToScheduleArray)) {
-            echo "<P class=\"errmsg\">Database not updated.  There were conflicts</P>\n";
+            echo "<P class=\"alert alert-warning\">Database not updated.  There were conflicts</P>\n";
             echo $message;
             return false;
             }

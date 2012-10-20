@@ -268,6 +268,12 @@ div.reportPageContent table td a,
   vertical-align: middle;
   float: none;
 }
+.compressed {
+  width: auto;
+}
+.table .myspan1 {
+  width: 71px;
+}
 @media (max-width: 780px) {
   .wide-only {
     display: none;

@@ -40,9 +40,9 @@
         exit();
         }
 	staff_header($title);
-	echo "<div style=\"font-style:italic\">".htmlspecialchars($description,ENT_NOQUOTES)."</div>\n";
+	echo "<div class=\"alert alert-info\">".htmlspecialchars($description,ENT_NOQUOTES)."</div>\n";
 	date_default_timezone_set('US/Eastern');
-    echo "<p style=\"text-align:center\"> Generated: ".date("D M j G:i:s T Y")."</p>\n";
+    echo "<p class=\"text-success center\"> Generated: ".date("D M j G:i:s T Y")."</p>\n";
 	//echo($resultXML->saveXML()); //for debugging only
 	$xsl = new DomDocument;
 	$xsl->loadXML($xmlstr);
