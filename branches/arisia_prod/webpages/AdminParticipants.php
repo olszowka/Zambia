@@ -86,7 +86,7 @@ if ($fbadgeid)
       	<div class="value"><INPUT type="password" size="10" id="cpassword" readonly="readonly" onchange="anyChange();" onkeyup="anyChange();"></div>
       </div>
       <div class="span4">
-      	<div class="newformlabel"><span class="cf">Participant roles:</span></div>
+      	<div class="newformlabel"><span class="clearfix">Participant roles:</span></div>
       	<div class="newforminput"><div id="partRoles" class="divbox" style="height: 3em; width: 25em; overflow: auto"></div></div>
       </div>
     </div>
