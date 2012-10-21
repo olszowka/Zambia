@@ -40,7 +40,7 @@ if (!$Sresult=mysql_query($query,$link)) {
     }
 echo "<FORM name=\"selsesform\" class=\"form-inline\"method=POST action=\"StaffAssignParticipants.php\">\n";
 echo "<DIV><LABEL for=\"selsess\">Select Session:</LABEL>\n";
-echo "<SELECT name=\"selsess\">\n";
+echo "<SELECT class=\"span6\"name=\"selsess\">\n";
 echo "     <OPTION value=0 ".(($selsessionid==0)?"selected":"").">Select Session</OPTION>\n";
 while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
     echo "     <OPTION value=\"".$sessionid."\" ".(($selsessionid==$sessionid)?"selected":"");
@@ -95,21 +95,21 @@ echo "<HR>\n";
 $query = <<<EOD
   SELECT
             POS.badgeid AS posbadgeid,
-            POS.moderator,
+            COALESCE(POS.moderator, 0) AS moderator,
             P.badgeid,
             P.pubsname,
 			      P.staff_notes,
-            PSI.rank,
+            COALESCE(PSI.rank, 99) AS rank,
             PSI.willmoderate,
             PSI.comments
   FROM
             Participants AS P
   JOIN
-(select distinct badgeid, sessionid from
-(select badgeid, sessionid from ParticipantOnSession where sessionid=$selsessionid
-    union
-select badgeid, sessionid from ParticipantSessionInterest where sessionid=$selsessionid) as R2) as R
-        using (badgeid)
+            (select distinct badgeid, sessionid from
+            (select badgeid, sessionid from ParticipantOnSession where sessionid=$selsessionid
+    UNION
+            select badgeid, sessionid from ParticipantSessionInterest where sessionid=$selsessionid) as R2) as R
+    USING   (badgeid)
   LEFT JOIN ParticipantSessionInterest AS PSI
         on R.badgeid = PSI.badgeid and R.sessionid = PSI.sessionid
   LEFT JOIN ParticipantOnSession AS POS
@@ -117,7 +117,7 @@ select badgeid, sessionid from ParticipantSessionInterest where sessionid=$selse
   WHERE
         POS.sessionid=$selsessionid or POS.sessionid is null
   ORDER BY
-        PSI.rank DESC, (P.badgeid+0) ASC;
+        moderator DESC, rank ASC, (P.badgeid+0) ASC;
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
@@ -132,10 +132,11 @@ SELECT
             CD.lastname
     FROM
             Participants P
-       JOIN CongoDump CD USING(badgeid)
+    JOIN
+            CongoDump CD USING(badgeid)
     WHERE
             P.interested=1
-        AND P.badgeid not in
+      AND   P.badgeid not in
                    (Select badgeid
                         from ParticipantSessionInterest
                        where sessionid=$selsessionid)
@@ -175,7 +176,7 @@ for ($i=0;$i<$numrows;$i++) {
     echo "         </TD>\n";
     echo "      <TD class=\"\">".$bigarray[$i]["badgeid"]."</TD>\n";
     echo "      <TD class=\"\">".$bigarray[$i]["pubsname"]."</TD>\n";
-    echo "      <TD class=\"\">Rank: ".$bigarray[$i]["rank"]."</TD>\n";
+    echo "      <TD class=\"\">Rank: ".(($bigarray[$i]["rank"]==99)?"None":$bigarray[$i]["rank"])."</TD>\n";
     echo "      <TD class=\"\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
     echo "      </TR>\n";
     echo "   <TR ";
