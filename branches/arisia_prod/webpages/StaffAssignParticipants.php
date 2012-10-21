@@ -34,7 +34,7 @@ $query.="WHERE SS.may_be_scheduled=1 ";
 $query.="ORDER BY T.trackname, S.sessionid, S.title";
 if (!$Sresult=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
+    echo "<P class\"alert alert-error\">".$message."\n";
     staff_footer();
     exit();
     }
@@ -93,18 +93,18 @@ echo htmlspecialchars(mysql_result($result,0,"notesforprog"));
 echo "\n";
 echo "<HR>\n";
 $query = <<<EOD
-SELECT
+  SELECT
             POS.badgeid AS posbadgeid,
             POS.moderator,
             P.badgeid,
             P.pubsname,
-			P.staff_notes,
+			      P.staff_notes,
             PSI.rank,
             PSI.willmoderate,
             PSI.comments
-    FROM
+  FROM
             Participants AS P
-       JOIN
+  JOIN
 (select distinct badgeid, sessionid from
 (select badgeid, sessionid from ParticipantOnSession where sessionid=$selsessionid
     union
@@ -114,8 +114,10 @@ select badgeid, sessionid from ParticipantSessionInterest where sessionid=$selse
         on R.badgeid = PSI.badgeid and R.sessionid = PSI.sessionid
   LEFT JOIN ParticipantOnSession AS POS
         on R.badgeid = POS.badgeid and R.sessionid = POS.sessionid
-    where
-        POS.sessionid=$selsessionid or POS.sessionid is null;
+  WHERE
+        POS.sessionid=$selsessionid or POS.sessionid is null
+  ORDER BY
+        PSI.rank DESC, (P.badgeid+0) ASC;
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
