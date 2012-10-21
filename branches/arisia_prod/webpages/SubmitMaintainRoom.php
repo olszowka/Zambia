@@ -348,7 +348,7 @@ EOD;
         $query="INSERT INTO Schedule SET sessionid=$sessionid, roomid=$selroomid, starttime=\"$time\"";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"errmsg\">".$message."\n";
+            echo "<P class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }
@@ -357,7 +357,7 @@ EOD;
         $query="UPDATE Sessions SET statusid=$vs WHERE sessionid=$sessionid";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"errmsg\">".$message."\n";
+            echo "<P class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }
@@ -370,16 +370,16 @@ EOD;
         $query.="($sessionid,\"$badgeid\",\"$name\",\"$email\",null,4,$vs,\"".time_description($time)." in $selroomid\")";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"errmsg\">".$message."\n";
+            echo "<P class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }   
         }
     if ($completeRows) {
-        echo "<P class=\"regmsg\">$completeRows new schedule entr".($completeRows>1?"ies":"y")." written to database.\n";
+        echo "<P class=\"alert alert-success\">$completeRows new schedule entr".($completeRows>1?"ies":"y")." written to database.\n";
         }
     if ($incompleteRows) {
-        echo "<P class=\"errmsg\">$incompleteRows row".($incompleteRows>1?"s":"")." not entered due to incomplete data.\n";
+        echo "<P class=\"alert alert-error\">$incompleteRows row".($incompleteRows>1?"s":"")." not entered due to incomplete data.\n";
         }
     return (true);    
     }

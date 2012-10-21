@@ -192,7 +192,7 @@ echo "      <TH>Room Set</TH>\n";
 echo "      </TR>\n";
 for ($i=1;$i<=$numrows;$i++) {
     echo "   <TR>\n";
-    echo "      <TD class=\"border0010\"><INPUT type=\"checkbox\" name=\"del$i\" value=\"1\"></TD>\n";
+    echo "      <TD class=\"border0010\"><INPUT type=\"checkbox\" class=\"checkbox adjust\" name=\"del$i\" value=\"1\"></TD>\n";
     echo "<INPUT type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["scheduleid"]."\">";
     echo "<INPUT type=\"hidden\" name=\"rowsession$i\" value=\"{$bigarray[$i]["sessionid"]}\"></TD>\n";
     echo "      <TD class=\"vatop lrpad border0010\">".time_description($bigarray[$i]["starttime"])."</TD>\n";
