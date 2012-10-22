@@ -117,7 +117,7 @@ $query = <<<EOD
   WHERE
         POS.sessionid=$selsessionid or POS.sessionid is null
   ORDER BY
-        moderator DESC, rank ASC, (P.badgeid+0) ASC;
+        moderator DESC, rank ASC, P.pubsname ASC;
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
