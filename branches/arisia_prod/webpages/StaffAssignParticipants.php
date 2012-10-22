@@ -98,8 +98,8 @@ $query = <<<EOD
             COALESCE(POS.moderator, 0) AS moderator,
             P.badgeid,
             P.pubsname,
-			      P.staff_notes,
-            COALESCE(PSI.rank, 99) AS rank,
+			P.staff_notes,
+            IFNULL(PSI.rank, 99) AS rank,
             PSI.willmoderate,
             PSI.comments
   FROM
@@ -117,7 +117,7 @@ $query = <<<EOD
   WHERE
         POS.sessionid=$selsessionid or POS.sessionid is null
   ORDER BY
-        moderator DESC, rank ASC, P.pubsname ASC;
+        moderator DESC, IFNULL(POS.badgeid, "~") ASC, rank ASC, P.pubsname ASC;
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
