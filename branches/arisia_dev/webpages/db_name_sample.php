@@ -12,8 +12,16 @@ define("REG_EMAIL","registration@somewhere.net");
 define("CON_NUM_DAYS",5); // code works for 1 - 8
 define("CON_START_DATIM","2009-08-06 00:00:00"); // Intended for use by report scripts; currently used by static
         // grids only (just a checkin test)
-define("DAY_CUTOFF_HOUR",8) // times before this hour (of 0-23) are considered previous day
+define("DAY_CUTOFF_HOUR",8); // times before this hour (of 0-23) are considered previous day
 		// used for Participant Availability only
+define("FIRST_DAY_START_TIME","17:30");
+define("OTHER_DAY_STOP_TIME","25:00");
+define("OTHER_DAY_START_TIME","8:30");
+define("LAST_DAY_STOP_TIME","16:00");
+define("STANDARD_BLOCK_LENGTH","1:30");
+define("DURATION_IN_MINUTES","FALSE"); // TRUE: in mmm; False: in hh:mm
+        // affects session edit/create page only, not reports
+define("DEFAULT_DURATION","1:15"); // must correspond to DURATION_IN_MINUTES
 define("SMTP_ADDRESS","smtp-out.netbusters.com");
 define("SWIFT_DIRECTORY","/home/zambia_admin/Swift/"); //location of installed swift library
 define("PREF_TTL_SESNS_LMT",10); // Input data verification limit for preferred total number of sessions
@@ -28,9 +36,6 @@ define("SECOND_LANG","FRENCH");
 define("SECOND_TITLE_CAPTION","Titre en fran&ccedil;ais");
 define("SECOND_DESCRIPTION_CAPTION","Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION","Biographie en fran&ccedil;ais");
-define("DURATION_IN_MINUTES","FALSE"); // TRUE: in mmm; False: in hh:mm
-        // affects session edit/create page only, not reports
-define("DEFAULT_DURATION","1:15"); // must correspond to DURATION_IN_MINUTES
 define("BASESESSIONDIR","/var/lib/php5");
 define("SHOW_BRAINSTORM_LOGIN_HINT",FALSE);
 global $daymap;

@@ -5,7 +5,19 @@ require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
 function retrieveRoomsTable() {
-	global $link,$message_error;
+	global $link, $message_error, $unitsPerBlock, $standardRowHeight;
+	if (STANDARD_BLOCK_LENGTH == "1:30") {
+			$unitsPerBlock = 3;
+			$standardRowHeight = 17;
+			}
+		elseif (STANDARD_BLOCK_LENGTH == "1:00") {
+			$unitsPerBlock = 2;
+			$standardRowHeight = 22;
+			}
+		else {
+			RenderErrorAjax("Constant(configuration parameter) STANDARD_BLOCK_LENGTH undefined or defined incorrectly.\n");
+			exit();
+			}		
 	if (!isset($_POST["roomsToDisplayArray"]))
 		exit();
 	$roomsToDisplayArray = $_POST["roomsToDisplayArray"];
@@ -103,7 +115,7 @@ EOD;
 
 function getScheduleTimesArray($roomsToDisplayList)
 	{
-	global $message_error, $link, $daymap;
+	global $message_error, $link, $daymap, $unitsPerBlock, $standardRowHeight;
 	$htmlTimesArray = array();
 	$nextStartTimeUnits = 0;
 	list($firstDayStartTimeHour,$firstDayStartTimeMin) = sscanf(FIRST_DAY_START_TIME,"%d:%d");
@@ -119,23 +131,20 @@ function getScheduleTimesArray($roomsToDisplayList)
 	$nextStartTimeHour = 0;
 	$nextStartTimeMin = 0;
 	$gap = false;
-	for ($day = 1; $day <= CON_NUM_DAYS; $day++)
-		{
+	for ($day = 1; $day <= CON_NUM_DAYS; $day++) {
 		$dayName = $daymap["long"][$day];
 		if ($day < CON_NUM_DAYS)
 			$nextDayName = $daymap["long"][$day + 1];
 		$thisCutoffUnits = $cutoffUnits + $day * 48; // always next day even on 1st day
 		$thisCutoffTimeStr = convertUnitsToTimeStr($thisCutoffUnits);
-		if ($day == 1)
-				{
+		if ($day == 1) {
 				//calculate beginning for first day
 				// mode: -1 is gap; 0, 1, & 2 are rows of standard block
 				$htmlTimesArray[] = array("hr" => 0, "min" => 0, "mode" => -1, "units" => 0, "html" => "<th>".$dayName."</th>");
 
 				$query = "SELECT MIN(SCH.starttime) AS starttime FROM Schedule SCH WHERE roomid IN ($roomsToDisplayList);";
 				$result = mysql_query_with_error_handling($query);
-			    if (!$result)
-					{
+			    if (!$result) {
 			        RenderErrorAjax($message_error);
 			        exit();
 			        }
@@ -261,50 +270,42 @@ EOD;
 		$nowInUnits = $startTimeUnits;
 		$nowHour = 0;
 		$nowMin = 0;
+		// mode cycles 0, 1, 2 for 3 units per block and 1, 2 for 2 units per block
 		if ($day == 1)
-				$modeIndex = ($nowInUnits - $firstDayStartTimeUnits ) % 3;
+				$modeIndex = ($nowInUnits - $firstDayStartTimeUnits ) % $unitsPerBlock;
 			else
-				$modeIndex = ($nowInUnits - $otherDayStartTimeUnits ) % 3;
-		if ($modeIndex < 0)
-			$modeIndex += 3;
-		while ($nowInUnits <= $endTimeUnits)
-			{
+				$modeIndex = ($nowInUnits - $otherDayStartTimeUnits ) % $unitsPerBlock;
+		while ($modeIndex < (3 - $unitsPerBlock))
+			$modeIndex += $unitsPerBlock;
+		while ($nowInUnits <= $endTimeUnits) {
 			if ($modeIndex > 2)
-				$modeIndex = 0;
+				$modeIndex = (3 - $unitsPerBlock);
 			list($nowHour, $nowMin) = convertUnitsToHourMin($nowInUnits);
 			$htmlTimesArray[] = array("hr" => $nowHour, "min" => $nowMin, "units" => $nowInUnits, "mode" => $modeIndex);
 			end($htmlTimesArray);
 			$mykey = key($htmlTimesArray);
-			if ($nowHour < ($day * 24))
-					{
+			if ($nowHour < ($day * 24)) {
 					$titleStr = $dayName;
 					}
-				else
-					{
+				else {
 					$titleStr = $dayName." overnight into ".$nextDayName;
 					}
-			if ($nowMin == 0)
-					{
-					if ($nowHour%24==0)
-							{
-							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" title=\"$titleStr\" mode=\"$modeIndex\">12:00a</td>";
+			if ($nowMin == 0) {
+					if ($nowHour%24==0) {
+							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">12:00a</td>";
 							}
-						else if ($nowHour%24<12)
-							{
-							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" title=\"$titleStr\" mode=\"$modeIndex\">".($nowHour%24).":00a</td>";
+						else if ($nowHour%24<12) {
+							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">".($nowHour%24).":00a</td>";
 							}
-						else if ($nowHour%24==12)
-							{
-							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" title=\"$titleStr\" mode=\"$modeIndex\">12:00p</td>";
+						else if ($nowHour%24==12) {
+							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">12:00p</td>";
 							}
-						else
-							{
-							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" title=\"$titleStr\" mode=\"$modeIndex\">".(($nowHour%24)-12).":00p</td>";
+						else {
+							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">".(($nowHour%24)-12).":00p</td>";
 							}
 					}
-				else
-					{
-					$htmlTimesArray[$mykey]["html"] = "<td class=\"timeBottom\" title=\"$titleStr\" mode=\"$modeIndex\">&nbsp;</td>";
+				else {
+					$htmlTimesArray[$mykey]["html"] = "<td class=\"timeBottom\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">&nbsp;</td>";
 					}
 			$nowInUnits++;
 			$modeIndex++;
@@ -314,51 +315,43 @@ EOD;
 	return $htmlTimesArray;
 	}
 
-function getHTMLforRoom($roomId, $htmlTimesArray, $scheduleArray)
-	{
-	global $thisRoomSchedArray, $key, $thisSlotEndUnits, $blockHTML, $thisSlotLength, $thisSlotBeginUnits;
+function getHTMLforRoom($roomId, $htmlTimesArray, $scheduleArray) {
+	global $thisRoomSchedArray, $key, $thisSlotEndUnits, $blockHTML, $thisSlotLength, $thisSlotBeginUnits, $standardRowHeight;
 	$roomHTMLColumn = array();
 	$schedLength = count($htmlTimesArray);
 	$thisRoomSchedArray = $scheduleArray[$roomId];
 	reset($thisRoomSchedArray);
 	$key = key($thisRoomSchedArray);
 	$i = 1;
-	do //length counted from 0, but we're skipping 1st one (numbered 0)
-		{
-		if ($htmlTimesArray[$i]["mode"] == -1) // gap
-			{
+	do {//length counted from 0, but we're skipping 1st one (numbered 0)
+		if ($htmlTimesArray[$i]["mode"] == -1) {// gap
 			$roomHTMLColumn[$i]="<td class=\"gap schedulerGridRoom\">&nbsp;</td>";
 			$i++;
 			continue;
 			}
 		$thisSlotBeginUnits = $htmlTimesArray[$i]["units"];
-		switch($htmlTimesArray[$i]["mode"])
-			{
+		// mode cycles 0, 1, 2 for 3 units per block and 1, 2 for 2 units per block
+		switch($htmlTimesArray[$i]["mode"]) {
 			case "0":
-				if (!isset($htmlTimesArray[$i+1]["mode"]) || $htmlTimesArray[$i+1]["mode"]==-1)
-						{
+				if (!isset($htmlTimesArray[$i+1]["mode"]) || $htmlTimesArray[$i+1]["mode"]==-1) {
 						$thisSlotEndUnits = $thisSlotBeginUnits + 1;
 						$thisSlotLength = 1;
 						}
-					elseif (!isset($htmlTimesArray[$i+2]["mode"]) || $htmlTimesArray[$i+2]["mode"]==-1)
-						{
+					elseif (!isset($htmlTimesArray[$i+2]["mode"]) || $htmlTimesArray[$i+2]["mode"]==-1) {
 						$thisSlotEndUnits = $thisSlotBeginUnits + 2;
 						$thisSlotLength = 2;	
 						}
-					else
-						{
+					else {
 						$thisSlotEndUnits = $thisSlotBeginUnits + 3;
 						$thisSlotLength = 3;	
 						}
 				break;
 			case "1":
-				if (!isset($htmlTimesArray[$i+1]["mode"]) || $htmlTimesArray[$i+1]["mode"]==-1)
-						{
+				if (!isset($htmlTimesArray[$i+1]["mode"]) || $htmlTimesArray[$i+1]["mode"]==-1) {
 						$thisSlotEndUnits = $thisSlotBeginUnits + 1;
 						$thisSlotLength = 1;	
 						}
-					else
-						{
+					else {
 						$thisSlotEndUnits = $thisSlotBeginUnits + 2;
 						$thisSlotLength = 2;	
 						}
@@ -376,38 +369,33 @@ function getHTMLforRoom($roomId, $htmlTimesArray, $scheduleArray)
 	return $roomHTMLColumn;
 	}
 
-function doABlock($roomId)
-	{
-	global $thisRoomSchedArray, $key, $thisSlotEndUnits, $blockHTML, $thisSlotLength, $thisSlotBeginUnits, $thisSlot;
-	if (!isset($thisRoomSchedArray[$key]) || $thisRoomSchedArray[$key]["startTimeUnits"] >= $thisSlotEndUnits)
+function doABlock($roomId) {
+	global $thisRoomSchedArray, $key, $thisSlotEndUnits, $blockHTML, $thisSlotLength, $thisSlotBeginUnits, $thisSlot, $standardRowHeight;
+	if (!isset($thisRoomSchedArray[$key]) || $thisRoomSchedArray[$key]["startTimeUnits"] >= $thisSlotEndUnits) {
 		// room is empty
-		{
 		$blockHTML = emptySchedBlock($roomId);
 		return;
 		}
-	if ($thisRoomSchedArray[$key]["startTimeUnits"] > $thisSlotBeginUnits)
+	if ($thisRoomSchedArray[$key]["startTimeUnits"] > $thisSlotBeginUnits) {
 		// make empty slot before session start
-		{
 		$thisSlotEndUnits = $thisRoomSchedArray[$key]["startTimeUnits"];
 		$thisSlotLength = $thisSlotEndUnits - $thisSlotBeginUnits;
 		$blockHTML = emptySchedBlock($roomId);
 		return;
 		}
-	if ($thisRoomSchedArray[$key]["endTimeUnits"] != $thisSlotEndUnits)
+	if ($thisRoomSchedArray[$key]["endTimeUnits"] != $thisSlotEndUnits) {
 		// need to modify the slot -- shrink or stretch
-		{
 		$thisSlotEndUnits = $thisRoomSchedArray[$key]["endTimeUnits"];
 		$thisSlotLength = $thisSlotEndUnits - $thisSlotBeginUnits;
 		}
-	if (!isset($thisRoomSchedArray[$key + 1]) || $thisRoomSchedArray[$key + 1]["startTimeUnits"] >= $thisSlotEndUnits)
+	if (!isset($thisRoomSchedArray[$key + 1]) || $thisRoomSchedArray[$key + 1]["startTimeUnits"] >= $thisSlotEndUnits) {
 		// only one item in the slot
-		{
 		// render a simple block with one session
 		$blockHTML = "<td class=\"schedulerGridRoom schedulerGridSlot\"";
 		if ($thisSlotLength > 1)
 			$blockHTML .= " rowspan=\"$thisSlotLength\"";
 		$blockHTML .= ">";
-		$blockHTML .= "<div class=\"schedulerGridContainer\" style=\"height:".($thisSlotLength*18-2)."px;\">";
+		$blockHTML .= "<div class=\"schedulerGridContainer\" style=\"height:".($thisSlotLength*$standardRowHeight-2)."px;\">";
 		$blockHTML .= "<div id=\"sessionBlockDIV_{$thisRoomSchedArray[$key]["sessionid"]}\" class=\"scheduledSessionBlock\" ";
 		$blockHTML .=      "sessionid=\"{$thisRoomSchedArray[$key]["sessionid"]}\" scheduleid=\"{$thisRoomSchedArray[$key]["scheduleid"]}\" ";
 		$blockHTML .=      "roomid=\"$roomId\" startTimeUnits=\"$thisSlotBeginUnits\" endTimeUnits=\"$thisSlotEndUnits\" ";
@@ -434,16 +422,13 @@ function doABlock($roomId)
 		}
 	// need	to find all the sessions in the collection before a time border across which none extend
 	$i = 1;
-	while (isset($thisRoomSchedArray[$key + $i]))
-		{
-		if ($thisRoomSchedArray[$key + $i]["startTimeUnits"] >= $thisSlotEndUnits)
+	while (isset($thisRoomSchedArray[$key + $i])) {
+		if ($thisRoomSchedArray[$key + $i]["startTimeUnits"] >= $thisSlotEndUnits) {
 			// found a session outside the "cluster"
-			{
 			$i--;
 			break;
 			}
-		if ($thisRoomSchedArray[$key + $i]["endTimeUnits"] >= $thisSlotEndUnits)
-			{
+		if ($thisRoomSchedArray[$key + $i]["endTimeUnits"] >= $thisSlotEndUnits) {
 			$thisSlotEndUnits = $thisRoomSchedArray[$key + $i]["endTimeUnits"];
 			$thisSlotLength = $thisSlotEndUnits - $thisSlotBeginUnits;
 			}
@@ -454,17 +439,13 @@ function doABlock($roomId)
 		$i--;
 	// having found the cluster, need to determine whether any slots have more than two sessions occupying them.
 	$slotCounter = array();
-	for ($thisSlot = $thisSlotBeginUnits; $thisSlot < $thisSlotEndUnits; $thisSlot++)
-		{
+	for ($thisSlot = $thisSlotBeginUnits; $thisSlot < $thisSlotEndUnits; $thisSlot++) {
 		$slotCounter[$thisSlot] = 0;
-		for ($thisKey = $key; $thisKey <= $key + $i; $thisKey++)
-			{
+		for ($thisKey = $key; $thisKey <= $key + $i; $thisKey++) {
 			if ($thisSlot >= $thisRoomSchedArray[$thisKey]["startTimeUnits"] &&
-				$thisSlot < $thisRoomSchedArray[$thisKey]["endTimeUnits"])
-				{
+				$thisSlot < $thisRoomSchedArray[$thisKey]["endTimeUnits"]) {
 				$slotCounter[$thisSlot]++;
-				if ($slotCounter[$thisSlot] > 2)
-					{
+				if ($slotCounter[$thisSlot] > 2) {
 					renderComplicatedBlock($roomId);
 					$key += $i + 1;	
 					return;	
@@ -477,15 +458,14 @@ function doABlock($roomId)
 	if ($thisSlotLength > 1)
 		$blockHTML .= " rowspan=\"$thisSlotLength\"";
 	$blockHTML .= ">";
-	$blockHTML .= "<div class=\"scheduleGridCompoundDIV\" style=\"height:".floor($thisSlotLength*19.75-1.5)."px;\" roomid=\"$roomId\" ";
+	$blockHTML .= "<div class=\"scheduleGridCompoundDIV\" style=\"height:".floor($thisSlotLength*($standardRowHeight+2))."px;\" roomid=\"$roomId\" ";
 	$blockHTML .=      "startTimeUnits=\"$thisSlotBeginUnits\" endTimeUnits=\"$thisSlotEndUnits\">";
 	$blockHTML .= "<table class=\"scheduleGridCompTAB\">";
 	$AScheduledUpTo = $thisSlotBeginUnits;
 	$BScheduledUpTo = $thisSlotBeginUnits;
 	$thisKey = $key;
-	for ($thisSlot = $thisSlotBeginUnits; $thisSlot < $thisSlotEndUnits; $thisSlot++)
-		{
-		$blockHTML .= "<tr class=\"compoundTR\">";
+	for ($thisSlot = $thisSlotBeginUnits; $thisSlot < $thisSlotEndUnits; $thisSlot++) {
+		$blockHTML .= "<tr class=\"compoundTR\" style=\"height:".($standardRowHeight+2)."px\" >";
 		doACompSlot($AScheduledUpTo, $thisSlot, $thisKey, $i, $roomId);
         doACompSlot($BScheduledUpTo, $thisSlot, $thisKey, $i, $roomId);
         $blockHTML .= "</tr>";
@@ -495,35 +475,31 @@ function doABlock($roomId)
 	$key += $i + 1;
 	}
 
-function doACompSlot(&$ScheduledUpTo, $thisSlot, &$thisKey, $i, $roomId) 
-	{
-	global $key, $thisSlotBeginUnits, $thisSlotEndUnits, $blockHTML, $thisRoomSchedArray;
-	if ($ScheduledUpTo == $thisSlot)
-		{
-		if ($thisKey > $key + $i)
+function doACompSlot(&$ScheduledUpTo, $thisSlot, &$thisKey, $i, $roomId) {
+	global $key, $thisSlotBeginUnits, $thisSlotEndUnits, $blockHTML, $thisRoomSchedArray, $standardRowHeight;
+	if ($ScheduledUpTo == $thisSlot) {
+		if ($thisKey > $key + $i) {
 				// no more sessions to put into the compound block; just put in blanks through the end
-				{
 				$thisCBlockLength = $thisSlotEndUnits - $thisSlot;
 				$blockHTML .= "<td";
 				if ($thisCBlockLength > 1)
 					$blockHTML .= " rowspan=\"$thisCBlockLength\"";
 				$blockHTML .= " class=\"compoundTD\">";
-				$blockHTML .= "<div class=\"scheduleGridCompoundEmptyDIV\" style=\"height:" . floor($thisCBlockLength * 18.75 - 0.5) . "px\" ";
+				$blockHTML .= "<div class=\"scheduleGridCompoundEmptyDIV\" style=\"height:".($thisCBlockLength * $standardRowHeight)."px\" ";
 				$blockHTML .=      " roomid=\"$roomId\" startTimeUnits=\"$thisSlot\">&nbsp;</div>";
 				$blockHTML .= "</td>";
 				$ScheduledUpTo = $thisSlotEndUnits;
 				}
 				// can assume we are not done with blocks at this point
-			else if ($thisRoomSchedArray[$thisKey]["startTimeUnits"] == $thisSlot)
+			else if ($thisRoomSchedArray[$thisKey]["startTimeUnits"] == $thisSlot) {
 				// put in a real session
-				{
 				$thisCBlockLength = $thisRoomSchedArray[$thisKey]["endTimeUnits"] - $thisRoomSchedArray[$thisKey]["startTimeUnits"];
 				$ScheduledUpTo = $thisRoomSchedArray[$thisKey]["endTimeUnits"];
                 $blockHTML .= "<td";
                 if ($thisCBlockLength > 1)
                     $blockHTML .= " rowspan=\"$thisCBlockLength\"";
-                $blockHTML .= " class=\"compoundTD\">";
-				$blockHTML .= "<div class=\"scheduleGridCompoundSessContainer\" style=\"height:" . floor($thisCBlockLength * 18.75 - 0.5) . "px\">";
+                $blockHTML .= " class=\"compoundTD\" style=\"height:".($thisCBlockLength * ($standardRowHeight+2))."px\" >";
+				$blockHTML .= "<div class=\"scheduleGridCompoundSessContainer\" style=\"height:".($thisCBlockLength * ($standardRowHeight+2)-2)."px\" >";
 				$blockHTML .= "<div id=\"sessionBlockDIV_{$thisRoomSchedArray[$thisKey]["sessionid"]}\" class=\"scheduledSessionBlock\" ";
 				$blockHTML .=     "sessionid=\"{$thisRoomSchedArray[$thisKey]["sessionid"]}\" ";
 				$blockHTML .=     "scheduleid=\"{$thisRoomSchedArray[$thisKey]["scheduleid"]}\" ";
@@ -549,17 +525,16 @@ function doACompSlot(&$ScheduledUpTo, $thisSlot, &$thisKey, $i, $roomId)
 				$blockHTML .= "</td>";
 				$thisKey++;
 				}
-			else
+			else {
 				// put in a blank spot up to the next session
 				// don't have to worry about "reserving" the session, the next
 				// one will necessarily go here
-				{
 				$thisCBlockLength = $thisRoomSchedArray[$thisKey]["startTimeUnits"] - $thisSlot;
 				$blockHTML .= "<td";
 				if ($thisCBlockLength > 1)
 					$blockHTML .= " rowspan=\"$thisCBlockLength\"";
 				$blockHTML .= " class=\"compoundTD\">";
-				$blockHTML .= "<div class=\"scheduleGridCompoundEmptyDIV\" style=\"height:" . floor($thisCBlockLength * 18.75 - 0.5) . "px\" ";
+				$blockHTML .= "<div class=\"scheduleGridCompoundEmptyDIV\" style=\"height:".($thisCBlockLength * $standardRowHeight)."px\" ";
 				$blockHTML .=      " roomid=\"$roomId\" startTimeUnits=\"$thisSlot\">&nbsp;</div>";
 				$blockHTML .= "</td>";
 				$ScheduledUpTo = $thisRoomSchedArray[$thisKey]["startTimeUnits"];
@@ -573,18 +548,18 @@ function renderComplicatedBlock($roomId) {
     if ($thisSlotLength > 1)
         $blockHTML .= " rowspan=\"$thisSlotLength\"";
     $blockHTML .= ">";
-    $blockHTML .= "<div class=\"scheduleGridComplexDIV\" style=\"height:".($thisSlotLength*20-2)."px;\" roomid=\"$roomId\" ";
+    $blockHTML .= "<div class=\"scheduleGridComplexDIV\" style=\"height:".($thisSlotLength*$standardRowHeight)."px;\" roomid=\"$roomId\" ";
     $blockHTML .=      "startTimeUnits=\"$thisSlotBeginUnits\" endTimeUnits=\"$thisSlotEndUnits\">";
     $blockHTML .= "Block too complicated to render</div></td>";
 }
 
 function emptySchedBlock($roomId) {
-	global $thisSlotLength, $thisSlotBeginUnits, $thisSlotEndUnits;
+	global $thisSlotLength, $thisSlotBeginUnits, $thisSlotEndUnits, $standardRowHeight;
 	$blockHTML = "<td class=\"schedulerGridRoom schedulerGridSlot\"";
 	if ($thisSlotLength > 1)
 		$blockHTML .= " rowspan=\"$thisSlotLength\"";
 	$blockHTML .= ">";
-	$blockHTML .= "<div class=\"scheduleGridEmptyDIV\" style = \"height:" . ($thisSlotLength * 19 - 8) . "px\" ";
+	$blockHTML .= "<div class=\"scheduleGridEmptyDIV\" style = \"height:" . ($thisSlotLength * $standardRowHeight) . "px\" ";
 	$blockHTML .=      "roomid=\"$roomId\" startTimeUnits=\"$thisSlotBeginUnits\" endTimeUnits=\"$thisSlotEndUnits\">";
 	$blockHTML .= "&nbsp;</div></td>";
 	return $blockHTML;
@@ -599,7 +574,7 @@ SELECT
 		S.sessionid, S.title, S.progguiddesc, S.notesforprog, TR.trackname, TY.typename, D.divisionname,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') as starttime,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',ADDTIME(SCH.starttime, S.duration)),'%a %l:%i %p') as endtime,
-		TIME_FORMAT(S.duration, '%l:%i') AS duration, SCH.roomid, R.roomname
+		TIME_FORMAT(S.duration, '%H:%i') AS duration, SCH.roomid, R.roomname
 	FROM Sessions S JOIN Tracks TR USING (trackid) JOIN Types TY USING (typeid)
 		JOIN Divisions D USING (divisionid) LEFT JOIN Schedule SCH USING (sessionid)
 		LEFT JOIN Rooms R USING (roomid)
