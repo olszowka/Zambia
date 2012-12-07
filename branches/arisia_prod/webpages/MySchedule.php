@@ -117,11 +117,11 @@ EOD;
     echo "<P>Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on which you'd still like to participate.\n";
     echo "<P>Your registration status is <SPAN class=\"hilit\">$regmessage.</SPAN>\n";
     echo "<P>Thank you -- <A HREF=\"mailto:$PROGRAM_EMAIL\"> Programming </a>\n";
-    echo "    <TABLE>\n";
+    echo "    <TABLE class=\"table table-condensed\">\n";
     echo "        <COL><COL width=\"30%\"><COL width=\"20%\"><COL><COL width=\"6%\"><COL><COL width=\"18%\">\n";
     for ($i=0; $i<$schdrows; $i++) {
-        echo "        <TR>\n";
-        echo "            <TD class=\"sched_hd\">".$schdarray[$i]["sessionid"]."</TD>\n";
+        echo "        <TR class=\"label\">\n";
+        echo "            <TD class=\"badge\">".$schdarray[$i]["sessionid"]."</TD>\n";
         echo "            <TD class=\"sched_hd\">".htmlspecialchars($schdarray[$i]["title"])."</TD>\n";
         echo "            <TD class=\"sched_hd\">".$schdarray[$i]["roomname"]."</TD>\n";
         echo "            <TD class=\"sched_hd\">".$schdarray[$i]["trackname"]."</TD>\n";
@@ -135,7 +135,7 @@ EOD;
             echo "            </TR>\n";
             }
         if (($x=$schdarray[$i]["persppartinfo"])!='') {
-            echo "        <TR><TD>&nbsp;</TD>\n";
+            echo "        <TR class=\"alert\"><TD>&nbsp;</TD>\n";
             echo "            <TD colspan=6 class=\"border0010\">".htmlspecialchars($x)."</TD>\n";
             echo "            </TR>\n";
             }
@@ -146,11 +146,10 @@ EOD;
             }
         echo "        <TR><TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
         echo "        <TR><TD>&nbsp;</TD>\n";
-        echo "            <TD class=\"usrinp\">Panelists' Publication Names (Badge Names)</TD>\n";
-        echo "            <TD class=\"usrinp\">Email addresses</TD>\n";
-        echo "            <TD colspan=4 class=\"usrinp\">Comments</TD>\n";
+        echo "            <TD class=\"badge\">Panelists' Publication Names (Badge Names)</TD>\n";
+        echo "            <TD class=\"badge\">Email addresses</TD>\n";
+        echo "            <TD colspan=4 class=\"badge\">Comments</TD>\n";
         echo "            </TR>\n";
-        echo "        <TR><TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
         for ($j=0; $j<$partrows; $j++) {
             if ($partarray[$j]["sessionid"]!=$schdarray[$i]["sessionid"]) {
                 continue;
