@@ -20,6 +20,9 @@ header label {
 header .imgButton {
   cursor: pointer;
 }
+a {
+  color: #04C;
+}
 #loginBox,
 #welcome {
   float: right;
