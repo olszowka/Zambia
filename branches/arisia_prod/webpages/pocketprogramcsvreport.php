@@ -2,6 +2,17 @@
 require_once('db_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
+$query="SET group_concat_max_len=25000";
+if (!$result=mysql_query($query,$link)) {
+	require_once('StaffHeader.php');
+	require_once('StaffFooter.php');
+	$title="Send CSV file of Panel Merge Report for Publications";
+	staff_header($title);
+	$message=$query."<BR>Error querying database. Unable to continue.<BR>";
+    echo "<P class\"errmsg\">".$message."\n";
+    staff_footer();
+    exit();
+    }
 $query=<<<EOD
 SELECT
             S.sessionid, 
