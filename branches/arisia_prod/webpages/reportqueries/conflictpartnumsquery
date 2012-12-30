@@ -4,7 +4,8 @@ CONFLICTWANTS=1
 REGWANTS=1
 QUERY="
  select PA.badgeid, 
-        P.pubsname, 
+        P.pubsname,
+         CONCAT('<a href=\"mailto:',C.email,'\">',C.email,'</a>') as email, 
         if ((fridaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',fridaymaxprog,'</div>')) as 'Fri Reqd.', 
 	if ((frisched is NULL), '-', frisched) as 'Fri Asgnd.', 
         if ((saturdaymaxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',saturdaymaxprog,'</div>')) as 'Sat Reqd.', 
@@ -16,7 +17,8 @@ QUERY="
         if ((maxprog is NULL), '<div style=background:lightgray\;>-</div>',concat('<div style=background:lightgray\;>',maxprog,'</div>')) as 'Total Reqd.', 
 	if ((totsched is NULL), '-', totsched) as 'Tot Asgnd.'
    from ParticipantAvailability PA,  
-        Participants P 
+        CongoDump C,
+        Participants P
         left join (  select badgeid, 
                             sum(if(starttime<'24:00:00',1,0)) as frisched, 
                             sum(if((starttime>='24:00:00' 
@@ -43,4 +45,5 @@ QUERY="
                 on P.badgeid = PAD.badgeid
    where PA.badgeid = P.badgeid 
       and P.interested=1 
+      and C.badgeid = P.badgeid
 order by cast(PA.badgeid as unsigned);"
