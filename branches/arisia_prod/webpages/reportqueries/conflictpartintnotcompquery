@@ -4,7 +4,8 @@ CONFLICTWANTS=1
 REGWANTS=1
 QUERY="
   select P.badgeid, 
-         P.pubsname, 
+         P.pubsname,
+         CONCAT('<a href=\"mailto:',C.email,'\">',C.email,'</a>') as email, 
          if (X.Schd is NULL, 0, X.Schd) Schd, 
          if (Y.Intr is NULL, 0, Y.Intr) Intr
     from CongoDump C, 
