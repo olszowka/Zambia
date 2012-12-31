@@ -74,12 +74,13 @@
   rentering their data. In this case, go directly to the next section.
 
 ** Ouside Suggestions
+#+HTML: <A HREF="../webpages/BrainstormSuggestPresenter.php">BrainstormSuggestPresenter.php</A>
    
    Depending on your convention, many of the folks who are going to
    present either applied to do so (once you put the call for
    presenters) or are recommended by other folk.  Either way they
    will probably have been entered in the Brainstorm Suggest a
-   Presenter form ([[BrainstormSuggestPresenter.php]]).
+   Presenter form.
 
 #+CAPTION: Brainstorm Suggest Presenter
 #+LABEL: fig:Zambia_Presenter_Flow_Brainstorm_Suggest_Presenter
@@ -107,13 +108,16 @@
    be helpful in facilitating the contact.
 
 ** By a Liaison person
-
+#+LaTeX: \label{StaffEditCreateParticipant.php}
+#+HTML: <A NAME="StaffEditCreateParticipant.php" ID="StaffEditCreateParticipant.php"></A>   
+#+HTML: <A HREF="../webpages/StaffEditCreateParticipant.php?action=create">StaffEditCreateParticipant.php</A>
+   
    Often a Liaison person is tapped to enter in a participant because
    of negotiations done using other chanels.  Entering in the
    Presenter's information is slightly more comprehensive on the Enter
-   Participant page ([[StaffEditCreateParticipant.php?action=create]])
-   which can also be found by going to the "Manage Participant &
-   Schedule" tab, and then choosing the "Enter Participants" link.
+   Participant page which can also be found by going to the "Manage
+   Participant & Schedule" tab, and then choosing the "Enter
+   Participants" link.
 
 
 #+CAPTION: Add Participant
@@ -184,14 +188,14 @@
    + Don't forget to hit the "Save" button, please.
 
 * Updating Presenter Information
-  
+#+HTML: <A HREF="../AdminParticipants.php">AdminParticipants.php</A>
+
   Once in the system, the most common request by presenters is to have
   their password reset so that they can update the rest of their
   profile.  To do this, go to the Administer Participants link under
-  the Manage Participants & Schedule tab ([[AdminParticipants.php]]).
-  Select the presenter from the drop-down menu and, once selected you
-  may change their password, their interested and available setting,
-  and their published name.
+  the Manage Participants & Schedule tab.  Select the presenter from
+  the drop-down menu and, once selected you may change their password,
+  their interested and available setting, and their published name.
 
 #+CAPTION: Administer Participants
 #+LABEL: fig:Zambia_Presenter_Flow_Administer_Participants
@@ -210,24 +214,25 @@
 
   At the bottom of the Admin Participants page, there are several
   different links.  The next-most useful page is the first one: "Edit
-  PUBNAME further" ([[StaffEditCreateParticipant.php?action=edit]]). When
-  using the direct link, you will need to reselect the participant
-  from the top of the page.
+  PUBNAME further". When using the direct link, you will need to
+  reselect the participant from the top of the page.
+
+#+HTML: <A HREF="../webpages/StaffEditCreateParticipant.php?action=edit">StaffEditCreateParticipant.php</A>
 
   This link will take you back to the page you should be familiar
   with, when you were creating the participant.  You can add to or
   change any of the extant information at this time.  If you want to
-  see the importance of the fields, please see section 2.2 for diagram
-  and instructions.
+  see the importance of the fields, please see section on
+  [[StaffEditCreateParticipant.php]] for diagram and instructions.
 
 * Entering Compensation
+#+HTML: <A HREF="../webpages/StaffEditCompensation.php">StaffEditCompensation.php</A>
 
   There are two ways to reach the place to enter Compensation for a
   Presenter.  One way is to go to the bottom of the Admin Participants
   page mentioned in the last section, then select the second link:
-  "Set Compensation for PUBNAME" ([[StaffEditCompensation.php)]] when
-  using the direct link, you will need to reselect the participant
-  from the top of the page.
+  "Set Compensation for PUBNAME".  When using the direct link, you
+  will need to reselect the participant from the top of the page.
 
 #+CAPTION: Compensation Update
 #+LABEL: fig:Zambia_Presenter_Flow_Compensation_Update
@@ -241,7 +246,9 @@
   is in lines with your conference's policies.
 
   You can also select the presenter name from the Presenter
-  Compensation table ([[PresenterCompensation.php]]).
+  Compensation table.
+
+#+HTML: <A HREF="../webpages/PresenterCompensation.php">PresenterCompensation.php</A>
 
 #+CAPTION: Compensation Information
 #+LABEL: fig:Zambia_Presenter_Flow_Compensation_Information
@@ -272,6 +279,7 @@
   ways.
 
 ** Outside suggestion
+#+HTML: <A HREF="../webpages/BrainstormCreateSession.php">BrainstormCreateSession.php</A>
    
    The Schedule Elements entered in from the outside, or by a
    presenter themselves, will have certain fields filled in, but not
@@ -281,7 +289,7 @@
    They might have also suggested a specific person for the Schedule
    Element.  The information asked for should be fairly
    straight forward. This is found on the Brainstorm screen under the
-   Suggest a Session tab ([[BrainstormCreateSession.php]]).
+   Suggest a Session tab.
 
 #+CAPTION: Brainstorm New Session
 #+LABEL: fig:Zambia_Presenter_Flow_Brainstorm New Session
@@ -289,10 +297,11 @@
 [[./Images/Brainstorm_New_Session.png]]
    
 ** By a Liaison person
+#+HTML: <A HREF="../webpages/CreateSession.php">CreateSession.php</A>
 
    This form isn't overly complex, but there are some very important
    pieces here.  This can be found from the "Create a New Session"
-   link under the "Manage Sessions" tab ([[CreateSession.php]]).
+   link under the "Manage Sessions" tab.
 
 #+CAPTION: Add New Session
 #+LABEL: fig:Zambia_Presenter_Flow_Add_New_Session
@@ -456,9 +465,9 @@
    the "Session #" number, you will be in the right place.
 
    A fifth path is under the "Manage Participants & Schedule" tab,
-   using the "Assign participants to a session" link
-   ([[StaffAssignParticipants.php]]) and choosing the Schedule Element
-   from the pull-down menu at the top of the page.
+   using the "Assign participants to a session" link and choosing the
+   Schedule Element from the pull-down menu at the top of the page.
+#+HTML: <A HREF="../webpages/StaffAssignParticipants.php">StaffAssignParticipants.php</A>
 
    Once you are on the "Assign Participants" page with the correct
    Schedule Element, go to the bottom of the page where the "Assign

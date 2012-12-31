@@ -28,9 +28,7 @@
 	 :footnotes t
 	 :priority t
 	 :table-of-contents t
-	 :auto-sitemap t
-	 :sitemap-title "Site Map"
-	 :sitemap-sort-folders first
+	 :html-table-tag "<TABLE border=\"1\" rules=\"all\" frame=\"border\">"
 	 :style "<link rel=\"stylesheet\" href=\"../webpages/Common.css\" type=\"text/css\"/>"
 	 :html-preamble t)
 
@@ -62,6 +60,7 @@
 	 :drawers t
 	 :footnotes t
 	 :priority t
+	 :link-validation-function org-publish-validate-link
 	 :auto-sitemap t
 	 :sitemap-title "Site Map"
 	 :sitemap-sort-folders first
@@ -79,4 +78,4 @@
 	 :publishing-directory "~/nelaroot/www/FFF-NE-38/Documentation"
 	 :publishing-function org-publish-attachment)
 
-	("Zambia" :components ("Zambia-html" "Zambia-pdf" "Zambia-images" "Zambia-other"))))
+	("Zambia" :components ("Zambia-other" "Zambia-images" "Zambia-pdf" "Zambia-html"))))
