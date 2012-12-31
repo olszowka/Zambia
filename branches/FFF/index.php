@@ -120,21 +120,29 @@ if ($phase_array['Vol Available'] == '0' ) {
   <LI><A HREF="webpages/Descriptions.php?volunteer=y">Volunteer Job Descriptions</A></LI>
 <?php 
   }
-if ($nowis < $constart) { ?>
+if ($nowis < $constart) { 
+?>
   <LI><A HREF="webpages/">Presenter/Vendor Login</A></LI>
+<?php
+  if ($phase_array['Brainstorm'] == '0' ) {
+?>
   <LI><FORM name="brainstormform" method="POST" action="webpages/doLogin.php">
   <INPUT type="hidden" name="badgeid" value="100">
   <INPUT type="hidden" name="passwd" value="submit">
   <INPUT type="hidden" name="target" value="brainstorm">
   <INPUT type="submit" name="submit" value="Suggest a Session/Presenter">
   </FORM>
+<?php 
+  }
+  if ($phase_array['Vendor'] == '0' ) {
+?>
   <LI><FORM name="vendorform" method="POST" action="webpages/doLogin.php">
   <INPUT type="hidden" name="badgeid" value="100">
   <INPUT type="hidden" name="passwd" value="submit">
   <INPUT type="hidden" name="target" value="vendor">
   <INPUT type="submit" name="submit" value="New Vendor Application">
   </FORM>
-<?php } else { ?>
+<?php }} else { ?>
   <LI><A HREF="webpages/Feedback.php">Feedback</A></LI>
   <LI><A HREF="webpages/">Presenter Login</A></LI>
 <?php } ?>
