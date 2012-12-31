@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>Bios Editing in Zambia</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="November 2011"/>
+<meta name="author" content="Percy"/>
+<meta name="description" content="Zambia is a piece of Con Management Software.  This document is a "How To" guide assisting in the way of editing the Bios for the Zambia FFF-branch instance for your convention.  This is still a work in progress."/>
+<meta name="keywords" content="Zambia, Documentation, FFF branch"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="../webpages/Common.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="content">
+
+<h1 class="title">Bios Editing in Zambia</h1>
+
+<p>Zambia is a piece of Con Management Software.  This document is a "How To" guide assisting in the way of editing the Bios for the Zambia FFF-branch instance for your convention.  This is still a work in progress.<br/>
+<h2>Abstract:<br></h2><p>Zambia is a piece of Con Management Software.  This document is a "How To" guide assisting in the way of editing the Bios for the Zambia FFF-branch instance for your convention.  This is still a work in progress.</p>
+</p>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Introduction </a></li>
+<li><a href="#sec-2">2 Biographical Information Matrix </a>
+<ul>
+<li><a href="#sec-2_1">2.1 Types </a></li>
+<li><a href="#sec-2_2">2.2 States </a></li>
+<li><a href="#sec-2_3">2.3 Languages </a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Pages </a>
+<ul>
+<li><a href="#sec-3_1">3.1 StaffManageBios.php </a></li>
+<li><a href="#sec-3_2">3.2 StaffEditBios.php </a></li>
+<li><a href="#sec-3_3">3.3 StaffEditCreateParticipant.php </a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction </h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+The biographical information for your presenters is an important<br/>
+part of the convention experience that Zambia manages.  This is part<br/>
+of how people decide they want to attend your convention and part of<br/>
+what they might want to do when there.  From a presenter's point of<br/>
+view, the biographical information is a way to connect with their<br/>
+fan-base, and allow contact, give information, or arrange for<br/>
+continued interactions.  From a con manager's point of view,<br/>
+managing biographical information is fairly work-intensive, and one<br/>
+of the things that doesn't exactly scale.<br/>
+</p>
+<p><br/>
+There are several pieces that make up the biographical information<br/>
+matrix within Zambia.  Few, any, or all of the elements can be<br/>
+chosen to be deployed and customized to the desire of your<br/>
+particular convention or set of conventions.  Currently the<br/>
+biographical information information is designed to be held in a<br/>
+shared database, outside of a specific convention, so that, while<br/>
+the information is available and editable within that convention,<br/>
+when the information is updated, it is updated across all the<br/>
+conventions served from the same server, and information is<br/>
+available across multiple convention instances.  Not all of the<br/>
+conventions will necessarily use all of the information.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Biographical Information Matrix </h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p><br/>
+The biographical information Matrix is made up of three different<br/>
+values.  The types of biographical information, the status of a<br/>
+biographical element, and the language that that element is written<br/>
+in.<br/>
+</p>
+</div>
+
+<div id="outline-container-2_1" class="outline-3">
+<h3 id="sec-2_1"><span class="section-number-3">2.1</span> Types </h3>
+<div class="outline-text-3" id="text-2_1">
+
+
+<p><br/>
+The (extendable) types that are currently in use in Zambia are:<br/>
+</p><ul>
+<li>
+Web: The verbose biographical information, limited by variables<br/>
+in the db_name.php file, that is shared on your Zambia site, for<br/>
+all to browse to, often less limited than the published<br/>
+information.  Most HTML markup works with this type.<br/>
+</li>
+<li>
+Book: The biographical information that is published in your<br/>
+convention book, handout, or other printed materials that is<br/>
+often more limited by space concerns, and publishing costs.<br/>
+These limits are set in the db_name.php file.  This will be<br/>
+published so markup and hypertext is discouraged.<br/>
+</li>
+<li>
+URI: The set of Uniform Resource Identifiers (URLs, URNs, etc)<br/>
+that are available on your Zambia site, for people to follow.<br/>
+Most HTML markup works with this type.<br/>
+</li>
+<li>
+Picture: This is a URI reference to either an outside (http)<br/>
+picture or, preferably, a copy of said picture residing on the<br/>
+serving machine (/path/to/picture), so if the original gets<br/>
+hacked, Zambia isn't compromised.<br/>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-2_2" class="outline-3">
+<h3 id="sec-2_2"><span class="section-number-3">2.2</span> States </h3>
+<div class="outline-text-3" id="text-2_2">
+
+<ul>
+<li>
+raw: This is the information provided by the presenter when they<br/>
+are permitted to, within Zambia.  This might be as far as the<br/>
+involvement with the biographical information that the Zambia<br/>
+staff will have.  This allows for unknown people to put unknown<br/>
+references and information on your web-site.  Beware.<br/>
+</li>
+<li>
+edited: This is intended to be the mid-step, the negotiation<br/>
+point between the people responsible for what is being published<br/>
+in the literature and on the web, and the individual presenters,<br/>
+it is presented to them, so dialogue can happen, and they can see<br/>
+how it is to be presented, should it be approved.  This might be<br/>
+as far as the involvement with the biographical information that<br/>
+the Zambia staff will have.  Once in the edited mode it might be<br/>
+considered published.<br/>
+</li>
+<li>
+good: This is intended to be what is published.  Once the edited<br/>
+matches the raw, it should be promoted to the good level, then if<br/>
+changes to the raw show up, they can go back through the vetting<br/>
+process and, once again, be promoted to good, and then available<br/>
+for the various publishing media.<br/>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-2_3" class="outline-3">
+<h3 id="sec-2_3"><span class="section-number-3">2.3</span> Languages </h3>
+<div class="outline-text-3" id="text-2_3">
+
+
+<p><br/>
+The language field is designed to contain any of the various<br/>
+language elements.  Currently en-us and fr-ca are the two expected<br/>
+ones, as a hold-over from the original "secondary language" concept<br/>
+of Zambia when it was used for a Canadian event.  Starting any<br/>
+language will allow it to be flexible enough to have it show up in<br/>
+the appropriate tables.  Just adding to the LANGUAGE_LIST searches<br/>
+for each/all of the languages listed.  While this is a first step<br/>
+in the internationalization of this software, expanding the rest,<br/>
+along these lines is expected and planned for.  Each of the other<br/>
+elements, the various verbiage on the pages, and in the reports<br/>
+will pull from similar tables, able to be customized off of, or<br/>
+feed concurrently, depending on the design the multiple languages<br/>
+available.  All of the biographical information is designed to be<br/>
+subsequently displayed, rather than switched on the<br/>
+$_SESSION['language'] variable.<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Pages </h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3_1" class="outline-3">
+<h3 id="sec-3_1"><span class="section-number-3">3.1</span> StaffManageBios.php </h3>
+<div class="outline-text-3" id="text-3_1">
+
+
+<A NAME="StaffManageBios.php" ID="StaffManageBios.php"></A>
+<A HREF="../webpages/StaffManageBios.php">StaffManageBios.php</A>
+
+<p>
+The starting point for managing the biographical information data.<br/>
+This is set to work with only those folks who will be published.<br/>
+This is all the presenters, and the any of the super-volunteers.<br/>
+They might not be chosen to be published, or they might be,<br/>
+depending on the choice of the convention, and the relative space<br/>
+in the various publications.<br/>
+</p>
+<p><br/>
+The rows are organized around the states so that if there is<br/>
+missing raw, edited (if used), and good (if used) elements, they<br/>
+are reported first, then if the raw elements and the edited<br/>
+elements don't match (if used) or the edited elements and the good<br/>
+elements don't match (if used) they are reported next.  Then,<br/>
+lastly, if everything matches, that is reported last.  Hopefully,<br/>
+come publication time, and con-time, all the elements will be in<br/>
+the last row.<br/>
+</p>
+<p><br/>
+The columns are a combination of the various languages available<br/>
+(somewhat useless if only one language is used, but there, as a<br/>
+place-holder) and the type of the element.<br/>
+</p>
+<p><br/>
+To bring up the list of individuals in any particular category of<br/>
+missing, incorrect, or even correct information, simply click on<br/>
+the number of elements in the state you wish to work with.  In the<br/>
+example below, there are seven individuals who do not have an<br/>
+edited en-us web entry in the biographical information matrix.  By<br/>
+clicking on the "7" in that section of the table, you bring up the<br/>
+list of participants who's elements need editing.<br/>
+</p>
+<p><br/>
+The table might resemble the following:<br/>
+</p><TABLE  border="1" rules="all" frame="all">
+<a name="tbl:staffmanageparticipantbiographies" id="tbl:staffmanageparticipantbiographies"></a>
+<caption>Staff - Manage Participant Biographies</caption>
+<colgroup><col align="left" /><col align="right" /><col align="right" /><col align="right" /><col align="right" /><col align="right" /><col align="right" /><col align="right" /><col align="right" />
+</colgroup>
+<thead>
+<tr><th scope="col">Count of the States of the bios</th><th scope="col">en-us web</th><th scope="col">fr-ca web</th><th scope="col">en-us book</th><th scope="col">fr-ca book</th><th scope="col">en-us uri</th><th scope="col">fr-ca uri</th><th scope="col">en-us picture</th><th scope="col">fr-ca picture</th></tr>
+</thead>
+<tbody>
+<tr><td>Missing raw bio</td><td></td><td></td><td>3</td><td>6</td><td>59</td><td>61</td><td>14</td><td>61</td></tr>
+<tr><td>Missing edited bio</td><td>7</td><td>16</td><td>21</td><td>5</td><td>48</td><td>61</td><td>14</td><td>61</td></tr>
+<tr><td>Missing good bio</td><td>59</td><td>59</td><td>59</td><td>59</td><td>59</td><td>61</td><td>14</td><td>61</td></tr>
+<tr><td>Raw bio doesn't match edited bio</td><td>17</td><td>11</td><td>18</td><td>19</td><td>9</td><td></td><td></td><td></td></tr>
+<tr><td>Edited bio doesn't match good bio</td><td>12</td><td>9</td><td>28</td><td>46</td><td>9</td><td></td><td></td><td></td></tr>
+<tr><td>All bios match</td><td>5</td><td>3</td><td>4</td><td></td><td></td><td>61</td><td>47</td><td>61</td></tr>
+</tbody>
+</table>
+
+
+<p><br/>
+Once the particular subsection of the editing has been picked, you<br/>
+will be provided with a matrix of names in this category, so you<br/>
+might choose the one(s) to be edited.<br/>
+</p>
+<p><br/>
+The three columns in this table are:<br/>
+</p><ul>
+<li>
+Participant: If the link that is this name is chosen from this<br/>
+column, you will be brought to the <a href="#StaffEditBios.php">StaffEditBios.php</a> page<br/>
+relevant to the participant chosen, for editing purposes.<br/>
+</li>
+<li>
+Edit Full: If the link that is this name is chosen from this<br/>
+column, you will be brought to the <a href="#StaffEditCreateParticipant.php">StaffEditCreateParticipant.php</a><br/>
+page, in the mode of editing the participant chosen, in case that<br/>
+is necessary to find out more about who they are, or if there are<br/>
+any notes, or the like to assist you with the biographical<br/>
+information editing.<br/>
+</li>
+<li>
+Currently being edited by: This shows you the individual who<br/>
+presumes that they are the one editing the particular<br/>
+information.  Please, do not choose to edit biographical<br/>
+information for someone who is locked by someone other than you.<br/>
+
+<p><br/>
+</p></li>
+</ul>
+
+<p>The table might resemble the following:<br/>
+</p><TABLE  border="1" rules="all" frame="all">
+<a name="tbl:staffmanageparticipantbiographiessubedit" id="tbl:staffmanageparticipantbiographiessubedit"></a>
+<caption>Staff - Manage Participant Biographies Subedit</caption>
+<colgroup><col align="left" /><col align="left" /><col align="left" />
+</colgroup>
+<thead>
+<tr><th scope="col">Participant</th><th scope="col">Edit Full</th><th scope="col">Currently being edited by</th></tr>
+</thead>
+<tbody>
+<tr><td>Mr E.</td><td>Mr E.</td><td></td></tr>
+<tr><td>Joker</td><td>Joker</td><td>Str8mn</td></tr>
+<tr><td>Batman</td><td>Batman</td><td>The Riddler</td></tr>
+<tr><td>The Riddler</td><td>The Riddler</td><td>Batman</td></tr>
+<tr><td>Catwoman</td><td>Catwoman</td><td></td></tr>
+<tr><td>Cartman</td><td>Cartman</td><td></td></tr>
+<tr><td>Robin</td><td>Robin</td><td></td></tr>
+</tbody>
+</table>
+
+
+<p><br/>
+There is also the "return" link, just above the table, that brings<br/>
+you back to the <a href="#tbl:staffmanageparticipantbiographies">Staff - Manage Participant Biographies</a>, in case you<br/>
+are done with this particular subset of individuals, and wish to<br/>
+deal with another.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-3_2" class="outline-3">
+<h3 id="sec-3_2"><span class="section-number-3">3.2</span> StaffEditBios.php </h3>
+<div class="outline-text-3" id="text-3_2">
+
+
+<A NAME="StaffEditBios.php" ID="StaffEditBios.php"></A>
+<A HREF="../webpages/StaffEditBios.php">StaffEditBios.php</A>
+
+<p>
+If the edited and/or good states are to be used, this page is where<br/>
+an individual's information is edited.  If just the raw information<br/>
+is used, there is no need to use this page.  Once this page is<br/>
+opened for a participant, the editing individual's name will be<br/>
+placed in the "Currently being edited by" column, so two people<br/>
+don't try to edit the same bio information at the same time.  <br/>
+</p>
+<p><br/>
+There are two links at the top of the page.  The first, being the<br/>
+individuals name, will lead you to the<br/>
+<a href="#StaffEditCreateParticipant.php">StaffEditCreateParticipant.php</a> page, in the mode of editing the<br/>
+participant chosen, and the return link, which will bring you right<br/>
+back to the table <a href="#tbl:staffmanageparticipantbiographiessubedit">Staff - Manage Participant Biographies Subedit</a> on<br/>
+the <a href="#StaffManageBios.php">StaffManageBios.php</a> page.<br/>
+</p>
+<p><br/>
+Of course, any of the "Save Whole Page" buttons will save the<br/>
+current state of the entire page, and clear the "Currently being<br/>
+edited by" flag.<br/>
+</p>
+<p><br/>
+This design of this page has a series of elements, broken down<br/>
+first by state element (raw, edited, good) state, then by language<br/>
+(en-us, fr-ca), and then by the type (web, book, uri, picture)<br/>
+allowing for the editing of the edited (if used) and good (if used)<br/>
+information.  The raw information is there for reference and<br/>
+copying purposes only and is not in a malleable state.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-3_3" class="outline-3">
+<h3 id="sec-3_3"><span class="section-number-3">3.3</span> StaffEditCreateParticipant.php </h3>
+<div class="outline-text-3" id="text-3_3">
+
+
+<A NAME="StaffEditCreateParticipant.php" ID="StaffEditCreateParticipant.php"></A>
+<A HREF="../webpages/StaffEditCreateParticipant.php?action=edit">StaffEditCreateParticipant.php</A>
+
+<p>
+While this page is of more general use (which is documented<br/>
+elsewhere) if absolutely necessary, it can be used to modify the<br/>
+raw biographical information. This is most useful should that be<br/>
+the only state of the information chosen for this instance of<br/>
+Zambia.  The raw state of all of the types (web, book, URI,<br/>
+picture) and languages are available to be edited on this page.<br/>
+</p></div>
+</div>
+</div>
+<div id="postamble">
+<p class="author"> Author: Percy
+<a href="mailto:NELA.Percy@gmail.com">&lt;NELA.Percy@gmail.com&gt;</a>
+</p>
+</div>
+</div>
+</body>
+</html>

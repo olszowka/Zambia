@@ -1,0 +1,1444 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>Setting Up Zambia from Scratch</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="July 2011"/>
+<meta name="author" content="Percy, Bendyogagirl"/>
+<meta name="description" content="Zambia is a piece of Con Management Software.  This document is a "How To" guide to help set up your Zambia FFF-branch instance from scratch for your convention.  This is still a work in progress."/>
+<meta name="keywords" content="Zambia, Documentation, FFF branch"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="../webpages/Common.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="content">
+
+<h1 class="title">Setting Up Zambia from Scratch</h1>
+
+<p>Zambia is a piece of Con Management Software.  This document is a "How To" guide to help set up your Zambia FFF-branch instance from scratch for your convention.  This is still a work in progress.<br/>
+<h2>Abstract:<br></h2><p>Zambia is a piece of Con Management Software.  This document is a "How To" guide to help set up your Zambia FFF-branch instance from scratch for your convention.  This is still a work in progress.</p>
+</p>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Before beginning </a>
+<ul>
+<li><a href="#sec-1_1">1.1 Definitions </a></li>
+<li><a href="#sec-1_2">1.2 Decisions </a>
+<ul>
+<li><a href="#sec-1_2_1">1.2.1 Standalone/Combination </a></li>
+<li><a href="#sec-1_2_2">1.2.2 Single/Multiple installation </a></li>
+<li><a href="#sec-1_2_3">1.2.3 Webserver </a></li>
+<li><a href="#sec-1_2_4">1.2.4 db_name.php file </a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 Downloading </a></li>
+<li><a href="#sec-3">3 Local file setup </a>
+<ul>
+<li><a href="#sec-3_1">3.1 db_name.php </a></li>
+<li><a href="#sec-3_2">3.2 FooterTemplate.html </a></li>
+<li><a href="#sec-3_3">3.3 HeaderTemplate.html </a></li>
+<li><a href="#sec-3_4">3.4 Participant_Images </a></li>
+<li><a href="#sec-3_5">3.5 Verbiage </a>
+<ul>
+<li><a href="#sec-3_5_1">3.5.1 BrainstormWelcome_0 </a></li>
+<li><a href="#sec-3_5_2">3.5.2 Introduction_Blurb_0 </a></li>
+<li><a href="#sec-3_5_3">3.5.3 Schedule_Blurb_0 </a></li>
+<li><a href="#sec-3_5_4">3.5.4 StaffPage_0 </a></li>
+<li><a href="#sec-3_5_5">3.5.5 Volunteer_Jobs_0 </a></li>
+<li><a href="#sec-3_5_6">3.5.6 Welcome_Letter_Presenters_0 </a></li>
+<li><a href="#sec-3_5_7">3.5.7 Welcome_Letter_Presenters_and_Volunteers_0 </a></li>
+<li><a href="#sec-3_5_8">3.5.8 Welcome_Letter_Volunteers_0 </a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Database setup </a>
+<ul>
+<li><a href="#sec-4_1">4.1 Hosted server </a></li>
+<li><a href="#sec-4_2">4.2 Your own MySQL Setup </a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 Database populate </a></li>
+<li><a href="#sec-6">6 Database tweaks </a></li>
+<li><a href="#sec-7">7 Account creation </a>
+<ul>
+<li><a href="#sec-7_1">7.1 Standalone </a></li>
+<li><a href="#sec-7_2">7.2 Congo </a></li>
+<li><a href="#sec-7_3">7.3 Not Congo </a></li>
+</ul>
+</li>
+<li><a href="#sec-8">8 First steps </a>
+<ul>
+<li><a href="#sec-8_1">8.1 Schedule </a></li>
+<li><a href="#sec-8_2">8.2 Brainstorming </a></li>
+</ul>
+</li>
+<li><a href="#sec-9">9 Backing up </a></li>
+<li><a href="#sec-10">10 Quick and dirty </a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Before beginning </h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p><br/>
+There are some required programs to run the Zambia software.  The<br/>
+following programs must be running on whatever server is going to<br/>
+serve up your Zambia instance: (LAMP or WAMP (WAMP is untested))<br/>
+</p><ul>
+<li>
+apache<br/>
+</li>
+<li>
+php<br/>
+</li>
+<li>
+mysql<br/>
+</li>
+<li>
+some form of email sending software (MTA)<br/>
+</li>
+<li>
+SFTP/SCP<br/>
+
+<p><br/>
+</p></li>
+</ul>
+
+<p>Either on your staging machine (where you will be uploading the<br/>
+information from) or on your server (if you are loading directly to<br/>
+there) you must also have:<br/>
+</p><ul>
+<li>
+svn<br/>
+</li>
+<li>
+text editing program<br/>
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-1_1" class="outline-3">
+<h3 id="sec-1_1"><span class="section-number-3">1.1</span> Definitions </h3>
+<div class="outline-text-3" id="text-1_1">
+
+<TABLE  border="1" rules="all" frame="all">
+<a name="tbl:acronymsdefinitions" id="tbl:acronymsdefinitions"></a>
+<caption>Acronyms and Definitions</caption>
+<colgroup><col align="left" /><col align="left" />
+</colgroup>
+<thead>
+<tr><th scope="col">Acronym or Term</th><th scope="col">Definition</th></tr>
+</thead>
+<tbody>
+<tr><td>precis</td><td>An element in your schedule.  Could be a class, panel, gathering, party, room-coverage, lounge, or whatever else you might have on your schedule</td></tr>
+<tr><td>LAMP</td><td>Linux + Apache + MySQL + PHP/Perl/Python</td></tr>
+<tr><td>WAMP</td><td>Windows + Apache + MySQL + PHP/Perl/Python</td></tr>
+</tbody>
+</table>
+
+
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1_2" class="outline-3">
+<h3 id="sec-1_2"><span class="section-number-3">1.2</span> Decisions </h3>
+<div class="outline-text-3" id="text-1_2">
+
+<p>You will need to decide the following before you install initially:<br/>
+</p>
+</div>
+
+<div id="outline-container-1_2_1" class="outline-4">
+<h4 id="sec-1_2_1"><span class="section-number-4">1.2.1</span> Standalone/Combination </h4>
+<div class="outline-text-4" id="text-1_2_1">
+
+<p>Is this system going to be a standalone system, or are you going<br/>
+to interface it with Congo, or another piece of registration software?<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1_2_2" class="outline-4">
+<h4 id="sec-1_2_2"><span class="section-number-4">1.2.2</span> Single/Multiple installation </h4>
+<div class="outline-text-4" id="text-1_2_2">
+
+<p>Is this going to be a single instantce of Zambia, or are you going<br/>
+to have multiple instances of Zambia running on the same machine<br/>
+with some shared resources?<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1_2_3" class="outline-4">
+<h4 id="sec-1_2_3"><span class="section-number-4">1.2.3</span> Webserver </h4>
+<div class="outline-text-4" id="text-1_2_3">
+
+<p>Where is your web installation location (whatever directory you<br/>
+will be putting your files into)?  Often something like<br/>
+/var/www/Zambia-Con or /home/username/public_html/Zambia-Con or<br/>
+the like.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-1_2_4" class="outline-4">
+<h4 id="sec-1_2_4"><span class="section-number-4">1.2.4</span> db_name.php file </h4>
+<div class="outline-text-4" id="text-1_2_4">
+
+<p>This information will go in the db_name.php file when you install it.<br/>
+</p><ul>
+<li id="sec-1_2_4_1">Required information for the program to run: <br/>
+<ul>
+<li>
+Database hostname (<b>DBHOSTNAME</b>). If you are setting things up on<br/>
+the same machine that MySQL is running on, <i>localhost</i> should be<br/>
+what you are using for <b>DBHOSTNAME</b>.<br/>
+</li>
+<li>
+Database username (<b>DBUSERNAME</b>).  The user created for the<br/>
+Zambia program to access the database(s).<br/>
+</li>
+<li>
+Database password (<b>DBPASSOWRD</b>).  The password created for the<br/>
+Zambia program to access the database(s).<br/>
+</li>
+<li>
+Main database name (<b>DBDB</b>).  The database for all the single<br/>
+convention specific information to live in.<br/>
+</li>
+<li>
+Biographical information database name (<b>BIODB</b>).  The database<br/>
+for all the (possibly shared between Zambia instances)<br/>
+biographical data.  If you are having the same people either for<br/>
+multiple years, or for multiple activities, it makes sense to<br/>
+centralize the information, otherwise it could be a one-shot for<br/>
+the particular convention.<br/>
+</li>
+<li>
+The Reports databasse name (<b>REPORTDB</b>) points to where the<br/>
+reports are kept.  It is on of the main ways of interation with<br/>
+the data about the convention.  If you have multiple Zambia<br/>
+instances it makes sense for this to be a single, shared<br/>
+resource.<br/>
+</li>
+<li>
+The CongoDump database name (<b>CONGODB</b>). Congo is another piece of<br/>
+software designed to interact with Zambia. The information in<br/>
+that set of databases can be accessed in a variety of ways.<br/>
+</li>
+<li>
+The Limits (<b>LIMITDB</b>) and Localizations (<b>LOCALDB</b>) databases<br/>
+are used to key things that are specific to a convention, but<br/>
+might all want to live in a central database, for ease of<br/>
+deploying new conventions.<br/>
+</li>
+<li>
+The TimeCard database (<b>TIMECARDDB</b>) might want to be specific to<br/>
+a convention, or generalized across many different activities of<br/>
+your organization, it often is local to the convention instance,<br/>
+but there are some reasons to have it in a single, externally<br/>
+served database.<br/>
+</li>
+<li>
+The convention database keying tag (<b>CON_KEY</b>) is useful when the<br/>
+Limits and Localizations are stored in a single table, to<br/>
+distinguish between which instance needs to be pulled.<br/>
+</li>
+<li>
+your host name (<b>MYHOST</b>) (If you are setting things up on the same<br/>
+machine that MySQL is running on, <i>localhost</i> should be what you<br/>
+are using for <b>MYHOST</b>) (this doesn't actually go in the file)<br/>
+</li>
+</ul>
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_4_2">Extremely useful information: <br/>
+Most of this information, currently in the db_name.php file,<br/>
+would all be candidtates to be inthe Localization database.<br/>
+<ul>
+<li>
+Con name.<br/>
+</li>
+<li>
+Zambia administrator email.<br/>
+</li>
+<li>
+Brainstorm email.<br/>
+</li>
+<li>
+Programming email.<br/>
+</li>
+<li>
+Registration email.<br/>
+</li>
+<li>
+Number of days the con will run (code works for 1-8 currently.) <br/>
+</li>
+<li>
+Date and time the con will start (In the format of yyyy-mm-dd<br/>
+HH:MM:DD for parsing purposes.  Suggested 00:00:00 for the<br/>
+start time.) <br/>
+</li>
+<li>
+URL of the con (without the leading <a href="http://">http://</a> in the URL.)<br/>
+</li>
+<li>
+Logo for the con (gif, png, etc.)<br/>
+</li>
+<li>
+Availabilty Records (starting number of "availability" fields<br/>
+to render in the "when I am available" form, 8 is a good<br/>
+default.)<br/>
+</li>
+<li>
+Are kids avaiable (This should probably be set to "FALSE", it<br/>
+is a hold-over from backwards compatibility.)<br/>
+</li>
+<li>
+Default Duration of the classes. (How long, in H:MM format that<br/>
+the classes are expected to be.)<br/>
+</li>
+<li>
+Duration in Minutes (Should probably be "FALSE": TRUE: in mmm;<br/>
+False: in hh:mm - affects session edit/create page only, not<br/>
+reports.)<br/>
+</li>
+<li>
+Grid Spacer (The time divisions in the fixed grid produced, in<br/>
+seconds.  For example 1800 is 60 sec/min and 30 min, and a good<br/>
+default.)<br/>
+</li>
+</ul>
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_4_3">Very useful information <br/>
+<ul>
+<li>
+Guests of Honor badgelist (if you have specific featured Guests<br/>
+of Honor, the badgeids get listed here, comma seperated.)<br/>
+(This is being migrated as a flag for a presenter.)<br/>
+</li>
+<li>
+Prefered total number of sessions upper limit (so your<br/>
+presenters don't oversubscribe themselves 5 is good default for<br/>
+a 3-4 day con.) (This should move to the Limits database.)<br/>
+</li>
+<li>
+Prefered daily number of sessions upper limit (3 is a good<br/>
+default.) (This should move to the Limits database.)<br/>
+</li>
+</ul>
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_4_4">Description minimums and maximums <br/>
+All of this information should be migrated to the Limits<br/>
+database.  Only set a value if you need it, unset values are<br/>
+simply presume there is no limit to the information in that<br/>
+direction.  At some point, the precis descriptions will be folded<br/>
+into the same, or a similar structure to the Biographical<br/>
+Information is, currently.<br/>
+<ul>
+<li>
+Minimum web biography character length (Some cons have minimum<br/>
+biographical information requirements.)<br/>
+</li>
+<li>
+Maximum web biography character length (Some cons have a<br/>
+different limits for what is on the web, and what is in the<br/>
+book, 3000 characters is a good starting default for the WWW.) <br/>
+</li>
+<li>
+Minimum book biography character length (Some cons have minimum<br/>
+biographical information requirements.)<br/>
+</li>
+<li>
+Maximum book biography character length (if there isn't a<br/>
+difference in the limit, but still, there is a limit, set to<br/>
+the same as the web maximum.)<br/>
+</li>
+<li>
+Minimum uri biography character length (the URI block is often<br/>
+unlimited in either direction.)<br/>
+</li>
+<li>
+Maximum uri biography character length (the URI block is often<br/>
+unlimited in either direction.)<br/>
+</li>
+<li>
+Minimum picture biography character length (the picture line is<br/>
+often unlimited in either direction.)<br/>
+</li>
+<li>
+Maximum picture biography character length (the picture line is<br/>
+often unlimited in either direction.)<br/>
+</li>
+<li>
+Minimum web precis character length (You need a precis<br/>
+description of at least this long to be acceptable, 10 as a<br/>
+good default.)<br/>
+</li>
+<li>
+Maximum web precis character length (3000 as a good default.)<br/>
+</li>
+<li>
+Minimum book precis character length (if there isn't a<br/>
+difference in the limit, set it to the same as above for these,<br/>
+as well.)<br/>
+</li>
+<li>
+Maximum book precis character length<br/>
+</li>
+<li>
+Minimum precis title character length (You need a precis title<br/>
+of at least this long to be acceptable, 5 as a good default.) <br/>
+</li>
+<li>
+Maximum precis title character length (50 as a good default.)<br/>
+</li>
+<li>
+Minimum name character length (if there is a need to make sure<br/>
+all names are of at least a specifc length.)<br/>
+</li>
+<li>
+Maximum name character length (if there is a need to make sure<br/>
+all names are no more than a specifc length.)<br/>
+</li>
+</ul>
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_4_5">Other interesting settings <br/>
+The linguistic settings (below) will go away once the precis<br/>
+descriptions are migrated to a similar format as the Biographical<br/>
+information currently resides.<br/>
+<ul>
+<li>
+Is this a bilingual event (This should probably be set to<br/>
+"FALSE" due to it's lack of complete support across the system,<br/>
+and the next few elements in this list, ignored.) <br/>
+</li>
+<li>
+What the second language is.<br/>
+</li>
+<li>
+Title caption in second language.<br/>
+</li>
+<li>
+Description caption in second language.<br/>
+</li>
+<li>
+Biography caption in second language.<br/>
+</li>
+</ul>
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_4_6">The rest of the file should not have to change. <br/>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Downloading </h2>
+<div class="outline-text-2" id="text-2">
+
+<p>If you are checking the code out directly on the hosting machine,<br/>
+replace the final "Zambia" with what you decided the web install<br/>
+location will be.  If not, you can rename it to whatever you wish to<br/>
+call your staging area.<br/>
+</p>
+<p><br/>
+Please, check out the code from:<br/>
+</p>
+<p><br/>
+svn co <a href="https://zambia.svn.sourceforge.net/svnroot/zambia/branches/FFF/">https://zambia.svn.sourceforge.net/svnroot/zambia/branches/FFF/</a> Zambia<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Local file setup </h2>
+<div class="outline-text-2" id="text-3">
+
+<p>There are certain localisms you want to set up, outside the svn<br/>
+tree. This is so (should you need to) if an upgrade to the code-base<br/>
+is desired, it can be done, without writing over your<br/>
+customizations.<br/>
+</p>
+<p><br/>
+To begin the process change to your web install location.  There you<br/>
+should see a list of files, and you will add one called "Local".<br/>
+When done your list of files should be:<br/>
+These files you will have to create or modify.<br/>
+</p>
+</div>
+
+<div id="outline-container-3_1" class="outline-3">
+<h3 id="sec-3_1"><span class="section-number-3">3.1</span> db_name.php </h3>
+<div class="outline-text-3" id="text-3_1">
+
+<p>Copy the example webpages/db_name_sample.php to Local/db_name.php<br/>
+as a start, and then put in the values you decided upon before<br/>
+starting the install process.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-3_2" class="outline-3">
+<h3 id="sec-3_2"><span class="section-number-3">3.2</span> FooterTemplate.html </h3>
+<div class="outline-text-3" id="text-3_2">
+
+<p>This is where you will put your standard footer, that will be<br/>
+below all the public pages, to customize the look and feel to<br/>
+match your event's presentation.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-3_3" class="outline-3">
+<h3 id="sec-3_3"><span class="section-number-3">3.3</span> HeaderTemplate.html </h3>
+<div class="outline-text-3" id="text-3_3">
+
+<p>This is where you will put your standard header, that will be<br/>
+above all the public pages, to customize the look and feel to<br/>
+match your event's presentation.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-3_4" class="outline-3">
+<h3 id="sec-3_4"><span class="section-number-3">3.4</span> Participant_Images </h3>
+<div class="outline-text-3" id="text-3_4">
+
+<p>If you choose to have images of your participants with their<br/>
+bios, make this directory, and any pictures that match the<br/>
+badgename of the participant will be put next to the bios.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-3_5" class="outline-3">
+<h3 id="sec-3_5"><span class="section-number-3">3.5</span> Verbiage </h3>
+<div class="outline-text-3" id="text-3_5">
+
+<p>If you wish to customize what is put forth to your participants,<br/>
+many of the pages allow for customization.  The list of them will<br/>
+grow as more are done.  Any information in these files will<br/>
+replace the default text.  Some examples of these files are:<br/>
+</p>
+</div>
+
+<div id="outline-container-3_5_1" class="outline-4">
+<h4 id="sec-3_5_1"><span class="section-number-4">3.5.1</span> BrainstormWelcome_0 </h4>
+<div class="outline-text-4" id="text-3_5_1">
+
+
+<p><br/>
+<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span> Here you can submit new suggestions or look at existing ideas for
+panels, Meet and Greets, Special Interest Groups, Birds Of a Feathers,
+Author Readings, and Author Signings.<span style="color: #98fb98;">&lt;/P&gt;</span>
+<span style="color: #98fb98;">&lt;P&gt;</span> As suggestions come in and we read through them, we will rework
+them, combine similar ideas into a single item, split large ones into
+pieces that will fit in their alloted time, etc.  Please expect the
+suggestions you submit to evolve over time.<span style="color: #98fb98;">&lt;/P&gt;</span>
+<span style="color: #98fb98;">&lt;P&gt;</span> Also, please note that we always have more suggestions than are
+physically possible with the space and time we have, so not everything
+will make it.  We do save good ideas for future conventions.<span style="color: #98fb98;">&lt;/P&gt;</span>
+<span style="color: #98fb98;">&lt;UL&gt;</span> 
+  <span style="color: #98fb98;">&lt;LI&gt;</span> <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormSearchSession.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">Search</span><span style="color: #00ffff;">&lt;/A&gt;</span> for similar
+  ideas or get inspiration.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Email <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"mailto:program@ourcon.org"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">
+  program@ourcon.org</span><span style="color: #00ffff;">&lt;/A&gt;</span> to suggest modifications on existing
+  suggestion.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormCreateSession.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">Enter a panel, MnG, SIG,
+  BOF, et al suggestion.</span><span style="color: #00ffff;">&lt;/A&gt;</span>
+  <span style="color: #98fb98;">&lt;LI&gt;</span> <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormSuggestPresenter.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">Enter a suggestion for
+  a Presenter.</span><span style="color: #00ffff;">&lt;/A&gt;</span>
+  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportAll.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">All</span><span style="color: #00ffff;">&lt;/A&gt;</span>
+  suggestions (we've seen some and not see others).
+  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportUnseen.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">New</span><span style="color: #00ffff;">&lt;/A&gt;</span>
+  suggestions that have been entered recently (may not be fit for
+  young eyes, we haven't see these yet).
+  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportReviewed.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">
+  Reviewed</span><span style="color: #00ffff;">&lt;/A&gt;</span> suggestions we are currently working through.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportLikely.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">Likely to
+  Occur</span><span style="color: #00ffff;">&lt;/A&gt;</span> suggestions we are or will allow participants to sign up
+  for.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> See the list of <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"BrainstormReportScheduled.php"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">
+  Scheduled</span><span style="color: #00ffff;">&lt;/A&gt;</span> suggestions.  These are very likely to happen at con.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Email <span style="color: #00ffff;">&lt;A HREF=</span><span style="color: #ffa07a;">"mailto:vols@ourcon.org"</span><span style="color: #00ffff;">&gt;</span><span style="color: #7fffd4;">vols@ourcon.org</span><span style="color: #00ffff;">&lt;/A&gt;</span> to
+  volunteer to help process these ideas.
+<span style="color: #98fb98;">&lt;/UL&gt;</span>
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-3_5_2" class="outline-4">
+<h4 id="sec-3_5_2"><span class="section-number-4">3.5.2</span> Introduction_Blurb_0 </h4>
+<div class="outline-text-4" id="text-3_5_2">
+
+
+<p><br/>
+<pre class="src src-html">and before I introduce our speaker, let me ask, How many of you are
+new?  Well, let me tell you, you are in for one heck of a ride.&lt;br
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-3_5_3" class="outline-4">
+<h4 id="sec-3_5_3"><span class="section-number-4">3.5.3</span> Schedule_Blurb_0 </h4>
+<div class="outline-text-4" id="text-3_5_3">
+
+
+<p><br/>
+<pre class="src src-html">Welcome to the Circus Fantastique.  We really appreciate all your
+efforts to make this weekend go so well.  Below is your schedule for
+the weekend.  If you have any questions, please, do not hesitate to
+find our staff in the Green Room, or whomever our point-person is at
+that time.  <span style="color: #98fb98;">&lt;/P&gt;&lt;P&gt;</span>I hope you will have all the fun you can!<span style="color: #98fb98;">&lt;hr&gt;</span>
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-3_5_4" class="outline-4">
+<h4 id="sec-3_5_4"><span class="section-number-4">3.5.4</span> StaffPage_0 </h4>
+<div class="outline-text-4" id="text-3_5_4">
+
+
+<p><br/>
+<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span> Please note the tabs above.  One of them will take you to your
+participant view.  Another will allow you to manage Sessions.  Note
+that Sessions is the generic term we are using for all Events,
+Classes, Panels, BOF/SIG/MnG, other activities, etc. <span style="color: #98fb98;">&lt;/P&gt;</span>
+
+<span style="color: #98fb98;">&lt;P&gt;</span>Current roles:
+<span style="color: #98fb98;">&lt;UL&gt;</span>
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Pre-con Logistics: That tall guy, with the 'stash
+  <span style="color: #98fb98;">&lt;LI&gt;</span>At-con Logistics: Bill(1)
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Speaker Liaison: Kat (with a "K")
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Assistant Speaker Liaison: Bill(2)
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Volunteer Captain: Cat
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Assistant Volunteer Captain: The Other Cat
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Green Room Czar: Tim
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Point People: Helium 1, Helium 2, and the Stupid But Cute.
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Schedule Wranglers: The group as a whole
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Technical support: Will
+  <span style="color: #98fb98;">&lt;LI&gt;</span>(Tentative) Technical Support: Nyot
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Bio/copy editing: Rupert
+<span style="color: #98fb98;">&lt;/UL&gt;&lt;/P&gt;</span>
+
+<span style="color: #98fb98;">&lt;P&gt;</span>The general flow of sessions over time is: <span style="color: #98fb98;">&lt;UL&gt;</span> <span style="color: #98fb98;">&lt;LI&gt;</span>Brainstorm -
+New session idea put in to the system by one of our brainstorm
+users. The idea may or may not be sane or good.  It could be too big
+or too small or duplicative.
+
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Edit Me - New session idea that a participant or staff member
+entered.  An idea entered by a brainstorm user that is non-offensive
+should be moved to this status.  These are still rough and may well
+have issues.  Still could be duplicates.
+
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Vetted - A real session that we would like to see happen.  At
+this point the language should be fairly close to final in the
+description. Spell checking and grammar checking should have happened.
+It needs have publication status, a type, kid category, division and a
+room set.  Please check the duration (defaults to 1 hour) and the
+various things the session might need (like power, mirrors, etc.)
+This is the minimal status that participants are allowed to sign up
+for.  Avoid duplicates (however the list is still approximately 3
+times what will actually run).
+
+  <span style="color: #98fb98;">&lt;LI&gt;</span>Assigned - Session has participants assigned to it.
+
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Scheduled - Session is in the schedule (do not set this by hand
+as the tool actually sets this for you when you schedule it in a
+room!)  The language needs to match what you want to see
+<span style="color: #98fb98;">&lt;b&gt;</span><span style="font-weight: bold;">published</span><span style="color: #98fb98;">&lt;/b&gt;</span>.
+
+<span style="color: #98fb98;">&lt;/UL&gt;</span>
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-3_5_5" class="outline-4">
+<h4 id="sec-3_5_5"><span class="section-number-4">3.5.5</span> Volunteer_Jobs_0 </h4>
+<div class="outline-text-4" id="text-3_5_5">
+
+
+<p><br/>
+<pre class="src src-html"><span style="color: #98fb98;">&lt;UL&gt;</span>
+<span style="color: #98fb98;">&lt;H3&gt;</span><span style="font-weight: bold;">Introducer: (in room)</span><span style="color: #98fb98;">&lt;/H3&gt;</span>
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Sign in at the Green Room, so we know everything is covered.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Collect anything needful, like handouts and blank surveys, or
+  if it is the first class of the day, the signs, from the Green Room.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Be at class 10 minutes early (at the actual end of the previous
+  class).
+  <span style="color: #98fb98;">&lt;LI&gt;</span> You may, if you wish, pre-stage surveys on people's seats for
+  when they arrive.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> At the beginning of class, move to the front of the room and do
+  the introduction.  The Con Blurb and the speaker(s) bio(s) as
+  provided.
+  <span style="color: #98fb98;">&lt;UL&gt;</span>
+    <span style="color: #98fb98;">&lt;LI&gt;</span>NOTE: A board member or member of the organizing team may step
+    forward to do the introduction, in which case, please hand them
+    the paper to do it off of.
+  <span style="color: #98fb98;">&lt;/UL&gt;</span>
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Take the head count of the class (twice) and write them in the
+  spots provided on the introduction paper.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Be in the back of the room during class so:
+  <span style="color: #98fb98;">&lt;UL&gt;</span>
+     <span style="color: #98fb98;">&lt;LI&gt;</span> When the Runner comes to check on the room, you can let them
+     know if there is anything needed.
+     <span style="color: #98fb98;">&lt;LI&gt;</span> If there is vending in the class, you might need to mind the
+     table, while the presenter is presenting, if they don't already
+     have someone assisting them.
+     <span style="color: #98fb98;">&lt;LI&gt;</span> Using the signs provided, give the 10 minute, 5 minute, and
+     Done warnings.
+     <span style="color: #98fb98;">&lt;LI&gt;</span> Hand out/collect surveys and pencils at the end of class.
+  <span style="color: #98fb98;">&lt;/UL&gt;</span>
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Do the hand-off to the next Introducer, which includes the
+  blank surveys and the signs.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Return the filled out surveys collected folded in the class
+  sheet, when you are checking in at the end of your stint.
+<span style="color: #98fb98;">&lt;H3&gt;</span><span style="font-weight: bold;">Volunteer: (outside room)</span><span style="color: #98fb98;">&lt;/H3&gt;</span>
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Check that people coming into the room have the correct
+  wristbands.  If they do not, politely send them to registration (if
+  it is open) to get them.  If there is an issue, notify the point
+  person.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Stay at the door during class to ensure that excessive ins and
+  outs don't occur.
+<span style="color: #98fb98;">&lt;H3&gt;</span><span style="font-weight: bold;">Runner: (all over con)</span><span style="color: #98fb98;">&lt;/H3&gt;</span>
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Ensure that every class room has what it needs.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Ensure that that A/V and supply needs of a class are met prior
+  to it beginning.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> You can quietly and respectfully bring any supplies into the
+  room as a class is going on, and make sure the Introducer knows what
+  was delivered.
+<span style="color: #98fb98;">&lt;H3&gt;</span><span style="font-weight: bold;">Green Room: (green room)</span><span style="color: #98fb98;">&lt;/H3&gt;</span>
+The green room is a space designated for Presenters, Programming
+Volunteers, Panelists, and Assistants only.  While you are welcome to
+hang out there, it is also the Programming Team's Ground Zero, so, you
+might be pressed into service.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Assist the Program Participants, including disseminating their
+  packets as necessary.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Check in and out the Introducers and Volunteers as they come on
+  and off their stints.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Make sure all necessary supplies are available for the
+  volunteers as they arrive for check in, including any handouts.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Be available to collect the surveys, etc as they arrive.
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Stay in the room and hang out with everyone!
+  <span style="color: #98fb98;">&lt;LI&gt;</span> Be in contact with the Programming Point Person for any
+  problem.
+<span style="color: #98fb98;">&lt;/UL&gt;</span>
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-3_5_6" class="outline-4">
+<h4 id="sec-3_5_6"><span class="section-number-4">3.5.6</span> Welcome_Letter_Presenters_0 </h4>
+<div class="outline-text-4" id="text-3_5_6">
+
+
+<p><br/>
+<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span>Dude!
+
+<span style="color: #98fb98;">&lt;P&gt;</span>Thanks for helping us, man.  You really came through.  Like,
+everyone learned bags of info, and your flow was rad!
+
+<span style="color: #98fb98;">&lt;P&gt;</span>Every hand was good, yours were great!  High-five!
+
+<span style="color: #98fb98;">&lt;P&gt;</span>Dude!
+
+<span style="color: #98fb98;">&lt;P&gt;</span>The org-folk.
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-3_5_7" class="outline-4">
+<h4 id="sec-3_5_7"><span class="section-number-4">3.5.7</span> Welcome_Letter_Presenters_and_Volunteers_0 </h4>
+<div class="outline-text-4" id="text-3_5_7">
+
+
+<p><br/>
+<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span>We would like to express our gratitude for your contribution to the
+Ancient Order of the Spies Convention.  Your expertise, wisdom,
+experience, and willingness to share your knowledge are critical
+elements in what will make our event a success.  We here at Opsidec do
+all we can to create a safe and inviting environment for all
+secretive/spying/hiding people, but we must also rely on support from
+generous allies such as yourself.  Your time and effort are much
+appreciated, and are a benefit to all in this lifestyle.
+
+<span style="color: #98fb98;">&lt;P&gt;</span>You contribution is helping us to create an event in which any and
+all people can learn and access information that they may not have
+available to them in their general life.  This process is crucial to
+expand knowledge and support throughout our cities and also throughout
+the world.  You are assisting in constructing a safe and supportive
+atmosphere that truly fosters our community.  Thank you again for your
+participation in the Ancient Order of the Spies Convention.  Your
+addition to this event is an advantage to all.
+
+<span style="color: #98fb98;">&lt;P&gt;</span>With much gratitude,
+
+<span style="color: #98fb98;">&lt;P&gt;</span>Opsidec Limited Organizers
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-3_5_8" class="outline-4">
+<h4 id="sec-3_5_8"><span class="section-number-4">3.5.8</span> Welcome_Letter_Volunteers_0 </h4>
+<div class="outline-text-4" id="text-3_5_8">
+
+
+<p><br/>
+<pre class="src src-html"><span style="color: #98fb98;">&lt;P&gt;</span>We would like to express our gratitude for your contribution to the
+Con of your Dreams.  Your willingness to share your time and energy
+are critical elements in what will make our event a success.  We here
+at Dream Productions do all we can to create a safe and inviting
+environment for all sleapers, but we must also rely on support from
+generous allies such as yourself.  Your effort is much appreciated,
+and is a benefit to all in this lifestyle.
+
+<span style="color: #98fb98;">&lt;P&gt;</span>You contribution is helping us to create an event in which any and
+all people can learn and access information that they may not have
+available to them in their general life.  This process is crucial to
+expand knowledge and support throughout our cities and also throughout
+the world.  You are assisting in constructing a safe and supportive
+atmosphere that truly fosters our community.  Thank you again for your
+participation in the Con of your Dreams.  Your addition to this event
+is an advantage to all.
+
+<span style="color: #98fb98;">&lt;P&gt;</span>With much gratitude,
+
+<span style="color: #98fb98;">&lt;P&gt;</span>The Programming Team
+</pre>
+
+
+
+
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Database setup </h2>
+<div class="outline-text-2" id="text-4">
+
+<p>You should already have mysql set up.  If mysql is not already set<br/>
+up, a good guide to setting up a mysql server is:<br/>
+</p>
+<p><br/>
+<a href="http://www.linuxhomenetworking.com/wiki/index.php/Quick_HOWTO_:_Ch34_:_Basic_MySQL_Configuration">http://www.linuxhomenetworking.com/wiki/index.php/Quick\_HOWTO\_:\_Ch34\_:\_Basic\_MySQL\_Configuration</a><br/>
+</p>
+<p><br/>
+The pieces of information you will need are from the above decisions<br/>
+for the db_name.php file:<br/>
+</p>
+<p><br/>
+</p><ul>
+<li>
+database hostname: (<b>DBHOSTNAME</b>) (If you are setting things up on<br/>
+the same machine that MySQL is running on, <i>localhost</i> should be<br/>
+what you are using for <b>DBHOSTNAME</b>).<br/>
+</li>
+<li>
+database username: (<b>DBUSERNAME</b>)<br/>
+</li>
+<li>
+database password: (<b>DBPASSOWRD</b>)<br/>
+</li>
+<li>
+database name: (<b>DBNAME</b>)<br/>
+</li>
+<li>
+Each of the alternate database locators that will be used:<br/>
+(<b>BIODB</b>), (<b>REPORTDB</b>), (<b>CONGODB</b>), (<b>LIMITDB</b>), (<b>LOCALDB</b>),<br/>
+(<b>TIMECARDDB</b>) <br/>
+</li>
+<li>
+your host name (<b>MYHOST</b>) (If you are setting things up on the<br/>
+same machine that MySQL is running on, <i>localhost</i> should be what<br/>
+you are using for <b>MYHOST</b>)<br/>
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-4_1" class="outline-3">
+<h3 id="sec-4_1"><span class="section-number-3">4.1</span> Hosted server </h3>
+<div class="outline-text-3" id="text-4_1">
+
+<p>If you are going to have your database served from a machine that<br/>
+is running cpanel or some other menu-based software, the method of<br/>
+setting up your database should be documented there.<br/>
+</p>
+<p><br/>
+The chances are your setup will have you:<br/>
+</p><ul>
+<li>
+create a database or databases<br/>
+</li>
+<li>
+possibly create a MySQL user<br/>
+</li>
+<li>
+add MySQL user to the database or databases<br/>
+</li>
+<li>
+grant the MySQL user all privs.<br/>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-4_2" class="outline-3">
+<h3 id="sec-4_2"><span class="section-number-3">4.2</span> Your own MySQL Setup </h3>
+<div class="outline-text-3" id="text-4_2">
+
+<p>If you are setting up your own MySQL server, and need to set up the<br/>
+database by hand the following steps should work for you.  Don't<br/>
+forget to replace the instances of <b>DBHOSTNAME</b>, <b>DBUSERNAME</b>,<br/>
+etc. with the proper bits of information.<br/>
+</p>
+<p><br/>
+</p><ul>
+<li>
+Log into the database: (it should ask you for your MySQL root password) <br/>
+</li>
+</ul>
+
+
+<p><br/>
+<pre class="src src-html">mysql -h*DBHOSTNAME* -p -u root
+</pre>
+
+
+
+
+</p><ul>
+<li>
+Create your database:<br/>
+</li>
+</ul>
+
+
+<p><br/>
+<pre class="src src-html">create database DBNAME;
+</pre>
+
+
+
+
+</p><ul>
+<li>
+Grant <b>DBUSERNAME</b> user access with the password of <b>DBPASSWORD</b>:<br/>
+</li>
+</ul>
+
+
+<p><br/>
+<pre class="src src-html">grant all on DBNAME.* to 'DBUSERNAME'@'MYHOST' identified by 'DBPASSOWRD';
+grant lock tables on DBNAME.* to 'DBUSERNAME'@'MYHOST';
+</pre>
+
+
+
+
+</p><ul>
+<li>
+Reset the privilages<br/>
+</li>
+</ul>
+
+
+<p><br/>
+<pre class="src src-html">flush privileges;
+</pre>
+
+
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Database populate </h2>
+<div class="outline-text-2" id="text-5">
+
+<p>change directories until you are in the Install directory, then:<br/>
+</p>
+<p><br/>
+<pre class="src src-html">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./EmptyDbase.dump
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Database tweaks </h2>
+<div class="outline-text-2" id="text-6">
+
+<p>Some of the tables in the database don't yet have appropriate<br/>
+front-ends, so, to customize them for your particular event, you<br/>
+will need to modify them directly from the MySQL client.  As<br/>
+development proceeds, these will get fewer over time.<br/>
+</p>
+<p><br/>
+Currently, they are:<br/>
+</p><ul>
+<li>
+Divisions:: If you want some other divisions than Other,<br/>
+Programming, Events, Fixed Functions, Hotel, Unspecified, and<br/>
+Volunteer.<br/>
+</li>
+<li>
+EmailCC:: Needs to be customized for your convention.<br/>
+</li>
+<li>
+EmailFrom:: Needs to be customized for your convention.<br/>
+</li>
+<li>
+EmailTo:: Might need to be customized.<br/>
+</li>
+<li>
+Features:: List of things that can be in a room.  Might need to be<br/>
+customized.<br/>
+</li>
+<li>
+Phases:: The "Phase" you are in will need to be changed as your<br/>
+phase changes.<br/>
+</li>
+<li>
+PreconHours:: If you are tracking volunteer hours, the PreconHours<br/>
+will probably need to be added to.<br/>
+</li>
+<li>
+PubStatuses:: Depending on the useage of the software, you might<br/>
+need more statuses than Prog Staff, Public, Do Not Print, and<br/>
+Volunteer.<br/>
+</li>
+<li>
+QuestionsForSurvey:: You might want to change these.<br/>
+</li>
+<li>
+RegTypes:: Depending on how you use it, the RegTypes may change.<br/>
+</li>
+<li>
+Roles:: Fairly standard, but might want to be customized for your<br/>
+convention.<br/>
+</li>
+<li>
+RoomSets: Fairly standard, but might want to be customized for<br/>
+your convention.<br/>
+</li>
+<li>
+Rooms:: This definitely wants to be customized for your<br/>
+convention.<br/>
+</li>
+<li>
+Services:: List of services that can be provided to a room.  Might<br/>
+need to be customized.<br/>
+</li>
+<li>
+SessionStatuses:: Might need to be customized for your<br/>
+convention.<br/>
+</li>
+<li>
+Tracks:: Probably will want to be customized for your convention<br/>
+</li>
+<li>
+Types:: May want to be customized for your convention.<br/>
+
+<p><br/>
+</p></li>
+</ul>
+
+<p>Also, some of the Permission interconnects might have to be<br/>
+customized for your convention.<br/>
+</p>
+<p><br/>
+One set of tables that you might be updating across the life of this<br/>
+instance of Zambia is the Reports table.  As people generate useful<br/>
+reports, they do tend to get shared.  We hope that, should you<br/>
+develop noteworthy reports, you share them back with the community<br/>
+at large, as well.<br/>
+</p>
+<p><br/>
+Loading such reports are often as simple as:<br/>
+</p>
+<p><br/>
+<pre class="src src-html">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./NewReports.sql
+</pre>
+
+
+
+
+
+Sharing them is as simple as, say, exporting your new report called<br/>
+<i>voltimepanelists</i>:<br/>
+</p>
+<p><br/>
+<pre class="src src-html">echo "SELECT * FROM Reports WHERE reportname='voltimepanelists';" | 
+mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &gt; ./NewReports.sql
+</pre>
+
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Account creation </h2>
+<div class="outline-text-2" id="text-7">
+
+
+</div>
+
+<div id="outline-container-7_1" class="outline-3">
+<h3 id="sec-7_1"><span class="section-number-3">7.1</span> Standalone </h3>
+<div class="outline-text-3" id="text-7_1">
+
+<p>If you are going to be using Zambia and not some other registration<br/>
+package, you are going to need access to the program, to begin<br/>
+adding the people who are going to be working with the system.<br/>
+</p>
+<p><br/>
+Currently the easiest way to do so is to add the first three users,<br/>
+by pulling in the Initial_Users.sql file from the <i>Install</i><br/>
+directory.<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-html">mysql -hDBHOSTNAME -p -uDBUSERNAME DBNAME &lt; ./Inital_Users.sql
+</pre>
+
+
+
+
+
+Once you have done that, you can log in to Zambia using the badgeid<br/>
+of <b>101</b> and the password of <b>changeme</b>.<br/>
+</p>
+<p><br/>
+You then can modify the appropriate information.  Under the <i>Manage    Participants &amp; Schedule</i> tab, there is an <i>Administer Participants</i><br/>
+choice.  Selecting that will allow you to update your password<br/>
+(<span style="text-decoration:underline;">important step</span>) and the "Edit Further" link at the bottom of<br/>
+the page will allow you to update the information so it actually<br/>
+matches you.<br/>
+</p>
+<p><br/>
+Feel free to then go and add the rest of your staff, off of the<br/>
+<i>Enter Participants</i> link.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-7_2" class="outline-3">
+<h3 id="sec-7_2"><span class="section-number-3">7.2</span> Congo </h3>
+<div class="outline-text-3" id="text-7_2">
+
+<p>You might want to complete the activites above, just to make sure<br/>
+you have access, but once you do, you can migrate the congo data<br/>
+into the system, so all the other folks have their information<br/>
+added.<br/>
+</p>
+<p><br/>
+From congo, do:<br/>
+</p>
+<p><br/>
+<pre class="src src-html">export_program_participants_congo.sql
+</pre>
+
+
+
+
+
+This generates sql that can be, in turn, locaded into Zambia.<br/>
+</p>
+<p><br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-7_3" class="outline-3">
+<h3 id="sec-7_3"><span class="section-number-3">7.3</span> Not Congo </h3>
+<div class="outline-text-3" id="text-7_3">
+
+<p>Tying this into another registration system is slightly more<br/>
+complicated.  The easiest way is to use the "regtype" field to<br/>
+track the registration number that the various other registration<br/>
+programs give you, and see if there is a way to massage their data<br/>
+into the "CongoDump" format.<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> First steps </h2>
+<div class="outline-text-2" id="text-8">
+
+
+</div>
+
+<div id="outline-container-8_1" class="outline-3">
+<h3 id="sec-8_1"><span class="section-number-3">8.1</span> Schedule </h3>
+<div class="outline-text-3" id="text-8_1">
+
+<p>Establishing the schedule of activities in the form of a "todo"<br/>
+list is probably the first thing you wish to do.<br/>
+</p>
+<p><br/>
+</p>
+<p><br/>
+<pre class="src src-html">YourWebPath/webpages/genreport.php?reportname=tasklistdisplay
+</pre>
+
+
+
+
+
+Replacing, of course <i>YourWebPath</i> with the proper URL to get to<br/>
+your Zambia-FFF branch install.<br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-8_2" class="outline-3">
+<h3 id="sec-8_2"><span class="section-number-3">8.2</span> Brainstorming </h3>
+<div class="outline-text-3" id="text-8_2">
+
+<p>The Brainstorming links should work immediately.  From the top<br/>
+directory (index) page of your site, you should be able to click on<br/>
+the "Suggest a Session/Presenter" button and get right into it.<br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> Backing up </h2>
+<div class="outline-text-2" id="text-9">
+
+<p>Under the <i>scripts</i> directory there is a nice little shell-script<br/>
+that you can call with cron to back your information up.  If you are<br/>
+to use it, make sure you create the <i>Data_Backup</i> directory under<br/>
+the <i>Local</i> directory before you use it.  I back up weekly several<br/>
+months before the con, start in on daily once heavy changes are<br/>
+being made, so we loose less information if there is a problem, and<br/>
+then about a month or so after the con, back off to weekly or<br/>
+monthly.  At one point in time, I was running it hourly, just to be<br/>
+sure.<br/>
+</p>
+<p><br/>
+The script is invoked as:<br/>
+</p>
+<p><br/>
+<pre class="src src-html">backup_mysql /your/path/to/Zambia-FFF/instance
+</pre>
+
+
+
+
+</p></div>
+
+</div>
+
+<div id="outline-container-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> Quick and dirty </h2>
+<div class="outline-text-2" id="text-10">
+
+<p>To build a quick and dirty copy on the same machine as another running version: <br/>
+</p><ul>
+<li>
+for i in ../Zambia-FFF/* ; do ln -s $i . ; done<br/>
+</li>
+<li>
+rm Local<br/>
+</li>
+<li>
+rm webpages<br/>
+</li>
+<li>
+mkdir Local webpages<br/>
+</li>
+<li>
+cd webpages<br/>
+</li>
+<li>
+for i in ../../Zambia-FFF/webpages/* ; do ln -s $i . ; done<br/>
+</li>
+<li>
+cd ../Local<br/>
+</li>
+<li>
+mkdir Verbiage<br/>
+</li>
+<li>
+for i in ../../Zambia-FFF/Local/*.html ; do ln -s $i . ; done<br/>
+</li>
+<li>
+ln -s ../../Zambia-FFF/Local/Participant_Images .<br/>
+</li>
+</ul>
+
+<p>Finally, copy over, and modify the db_name.php as appropraite<br/>
+To update them all do:<br/>
+</p>
+<p><br/>
+<pre class="src src-html">for i in FFF-[34]*
+  do 
+    pushd $i/webpages
+    for j in ../../Zambia-FFF/webpages/*
+      do 
+        ln -s $j .
+      done
+    popd
+  done
+</pre>
+
+
+
+
+</p></div>
+</div>
+<div id="postamble">
+<p class="author"> Author: Percy, Bendyogagirl
+<a href="mailto:NELA.Percy@gmail.com">&lt;NELA.Percy@gmail.com&gt;</a>
+</p>
+</div>
+</div>
+</body>
+</html>
