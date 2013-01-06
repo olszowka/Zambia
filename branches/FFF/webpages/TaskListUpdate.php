@@ -108,7 +108,7 @@ $permrolecheck_string=implode(",",$permrolecheck_array);
 $Pquery=<<<EOD
 SELECT
     badgeid,
-    pubsname 
+  CONCAT(pubsname, " (", GROUP_CONCAT(permrolename SEPARATOR ", "), ")") AS Participant
   FROM
       $ReportDB.Participants
     JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
@@ -116,7 +116,7 @@ SELECT
   WHERE
     UHPR.conid=$conid AND
     permrolename in ($permrolecheck_string)
-  ORDER BY
+  GROUP BY
     pubsname
 EOD;
 
