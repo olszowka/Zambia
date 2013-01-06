@@ -105,7 +105,7 @@ for ($i=1; $i<=$permrole_rows; $i++) {
  }
 $permrolecheck_string=implode(",",$permrolecheck_array);
 
-$query=<<<EOD
+$Pquery=<<<EOD
 SELECT
     badgeid,
     pubsname 
