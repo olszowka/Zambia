@@ -29,7 +29,7 @@ $group=$_GET['group'];
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
 
 ## If an individual request, make sure it pulls all of the schedule for that person
-if ($individual != "") {$group = "Participant','Programming','General";}
+if ($individual != "") {$group = "Participant','Programming','General','Watch','Registration','Vendor','Events','Logistics','Sales','Fasttrack";}
 
 ## If no group is set, presume that you want the Participants
 if ($group == "") {$group='Participant';}
@@ -38,7 +38,7 @@ $description="<P>A way to <A HREF=\"SchedulePrint.php?print_p=T&group=$group";
 if ($individual != "") {$description.="&individual=$individual";}
 $description.="\">print</A> the appropriate schedule";
 if ($individual == "") {$description.="s";}
-$description.=".</P>\n<hr>\n";
+$description.=".  <A HREF=\"StaffAssignParticipants.php\">Adjust</A> the results.</P>\n<hr>\n";
 
 // Document information
 class MYPDF extends TCPDF {
