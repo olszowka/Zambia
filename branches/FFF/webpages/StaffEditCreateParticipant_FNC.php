@@ -116,8 +116,9 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
                 </DIV>
 <?php
               if ((may_I("Programming")) or
-		  (may_I("Super Programming")) or
+		  (may_I("SuperProgramming")) or
 		  (may_I("Liaison")) or
+		  (may_I("SuperVendor")) or
 		  (may_I("SuperLiaison"))) {
 		/* We are only updating the raw bios here, so only a 2-depth
 		   search happens on biolang and biotypename. */
