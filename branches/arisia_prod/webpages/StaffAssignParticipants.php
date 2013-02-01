@@ -94,32 +94,36 @@ echo htmlspecialchars(mysql_result($result,0,"notesforprog"));
 echo "\n";
 echo "<HR>\n";
 $query = <<<EOD
-  SELECT
-            POS.badgeid AS posbadgeid,
-            COALESCE(POS.moderator, 0) AS moderator,
-            P.badgeid,
-            P.pubsname,
-      			P.staff_notes,
-            IFNULL(PSI.rank, 99) AS rank,
-            PSI.willmoderate,
-            PSI.comments,
-            P.bio
-  FROM
-            Participants AS P
-  JOIN
-            (select distinct badgeid, sessionid from
-            (select badgeid, sessionid from ParticipantOnSession where sessionid=$selsessionid
-    UNION
-            select badgeid, sessionid from ParticipantSessionInterest where sessionid=$selsessionid) as R2) as R
-    USING   (badgeid)
-  LEFT JOIN ParticipantSessionInterest AS PSI
-        on R.badgeid = PSI.badgeid and R.sessionid = PSI.sessionid
-  LEFT JOIN ParticipantOnSession AS POS
-        on R.badgeid = POS.badgeid and R.sessionid = POS.sessionid
-  WHERE
-        POS.sessionid=$selsessionid or POS.sessionid is null
-  ORDER BY
-        moderator DESC, IFNULL(POS.badgeid, "~") ASC, rank ASC, P.pubsname ASC;
+SELECT
+		POS.badgeid AS posbadgeid,
+		COALESCE(POS.moderator, 0) AS moderator,
+		P.badgeid,
+		P.pubsname,
+		P.staff_notes,
+		IFNULL(PSI.rank, 99) AS rank,
+		PSI.willmoderate,
+		PSI.comments,
+		P.bio,
+		PHR.roleid
+	FROM
+					Participants AS P
+			JOIN
+					(SELECT DISTINCT badgeid, sessionid FROM
+						(SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
+						UNION
+						SELECT badgeid, sessionid FROM ParticipantSessionInterest WHERE sessionid=$selsessionid) AS R2
+						) AS R USING (badgeid)
+		LEFT JOIN	ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
+		LEFT JOIN	ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
+		LEFT JOIN	ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10
+	WHERE
+			POS.sessionid=$selsessionid
+		OR	POS.sessionid is null
+	ORDER BY
+		moderator DESC,
+		IFNULL(POS.badgeid, "~") ASC,
+		rank ASC,
+		P.pubsname ASC;
 EOD;
 if (!$result=mysql_query($query,$link)) {
     $message=$query."<BR>Error querying database. Unable to continue.<BR>";
@@ -179,7 +183,18 @@ for ($i=0;$i<$numrows;$i++) {
     echo "      <TD class=\"\">".$bigarray[$i]["badgeid"]."</TD>\n";
     echo "      <TD class=\"\">".$bigarray[$i]["pubsname"]."&nbsp;&nbsp;&nbsp;<button type=\"button\" rel=\"popover\" class=\"btn btn-info btn-mini\" data-content=\"".htmlspecialchars($bigarray[$i]["bio"])."\" data-original-title=\"Bio for ".$bigarray[$i]["pubsname"]."\">Bio</button></TD>\n";
     echo "      <TD class=\"\">Rank: ".(($bigarray[$i]["rank"]==99)?"None":$bigarray[$i]["rank"])."</TD>\n";
-    echo "      <TD class=\"\">".(($bigarray[$i]["willmoderate"]==1)?"Volunteered to moderate.":"")."</TD>\n";
+	if ($bigarray[$i]["willmoderate"]==1 && $bigarray[$i]["roleid"]) {
+			echo "      <td title=\"Volunteered to moderate this panel and in general\">Mod this or any</td>\n";
+			}
+		elseif ($bigarray[$i]["willmoderate"]==1) {
+			echo "      <td title=\"Volunteered to moderate this panel, but not in general\">Mod this</td>\n";
+			}
+		elseif ($bigarray[$i]["roleid"]) {
+			echo "      <td title=\"Volunteered to moderate in general, but not this panel\">Mod any but not this</td>\n";
+			}
+		else {
+			echo "      <td>&nbsp;</td>\n";
+			}
     echo "      </TR>\n";
     echo "   <TR ";
     echo (($bigarray[$i]["moderator"])?"class=\"success\"":"");
