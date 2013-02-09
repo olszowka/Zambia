@@ -276,15 +276,17 @@ function SubmitMaintainRoom($ignore_conflicts) {
             }
         $delSchedIdList=substr($delSchedIdList,0,-1); // remove trailing comma
 //  Set status of deleted entries back to vetted.
-        $vs=get_idlist_from_db("$ReportDB.SessionStatuses",'statusid','statusname',"'vetted'");
-        $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=$vs WHERE S.sessionid=SC.sessionid AND ";
-        $query.="SC.scheduleid IN ($delSchedIdList)";
-        if (!mysql_query($query,$link)) {
+	$vs=get_idlist_from_db("$ReportDB.SessionStatuses",'statusid','statusname',"'vetted'");
+	if ($_POST["nostatchange"] != "True") {
+	  $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=$vs WHERE S.sessionid=SC.sessionid AND ";
+	  $query.="SC.scheduleid IN ($delSchedIdList)";
+	  if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
             echo "<P class=\"errmsg\">".$message."\n";
             staff_footer();
             exit();
-            }
+	  }
+	}
         $query="DELETE FROM Schedule WHERE scheduleid in ($delSchedIdList)";
         if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
@@ -325,14 +327,16 @@ EOD;
             exit();
             }
 // Set status of scheduled entries to Scheduled.
-        $vs=get_idlist_from_db("$ReportDB.SessionStatuses",'statusid','statusname',"'scheduled'");
-        $query="UPDATE Sessions SET statusid=$vs WHERE sessionid=$sessionid";
-        if (!mysql_query($query,$link)) {
+	$vs=get_idlist_from_db("$ReportDB.SessionStatuses",'statusid','statusname',"'scheduled'");
+	if ($_POST["nostatchange"] != "True") {
+          $query="UPDATE Sessions SET statusid=$vs WHERE sessionid=$sessionid";
+	  if (!mysql_query($query,$link)) {
             $message=$query."<BR>Error updating database.<BR>";
             echo "<P class=\"errmsg\">".$message."\n";
             staff_footer();
             exit();
-            }
+	  }
+	}
 // Record history of new entries to schedule
 // WAS: (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
 // AND: $query.="($sessionid,\"$badgeid\",\"$name\",\"$email\",null,4,$vs,\"".time_description($time)." in $selroomid\")";
