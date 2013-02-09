@@ -533,9 +533,13 @@ function queryreport($query,$link,$title,$description,$reportid) {
     exit ();
   }
   if (0==($rows=mysql_num_rows($result))) {
-    $message="$description\n<P>This report retrieved no results matching the criteria.</P>\n";
+    $header_array[0]="This report retrieved no results matching the criteria.";
+    $element_array[$header_array[0]]='';
+    $rows=0;
+    return array ($rows,$header_array,$element_array);
+    /* $message="$description\n<P>This report retrieved no results matching the criteria.</P>\n";
     RenderError($title,$message);
-    exit();
+    exit(); */
   }
   for ($i=1; $i<=$rows; $i++) {
     $element_array[$i]=mysql_fetch_assoc($result);
