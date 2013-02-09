@@ -1,5 +1,6 @@
 <?php
 require_once('StaffCommonCode.php');
+/* include "../phpqrcode-master/qrlib.php"; */
 
 /* Global Variables */
 global $link;
@@ -13,6 +14,7 @@ if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 if ($BiotDB=="BIODB") {unset($BIODB);}
 
 $ConLogo="NELA-LOGO.eps";
+/* $ConLogo=QRcode::eps("https://nelaonline.org/FFF-NE-40/webpages/VolunteerCheckIn.php?badgeid=123"); */
 $BoundingBox="0 0 759 222";
 
 // LOCALIZATIONS
@@ -239,14 +241,14 @@ while ($k <= $rows) {
 	echo " ";
 	echo $positional_array[$j]['row'];
 	echo "\ntranslate\n";
-	echo "3 3 translate\n".$BoundingBox." picinsert\ngsave\ninsertlogo run\ngrestore\n%%Trailer\nEndEPSF\n-3 -3 translate\n";    
-        echo "labelclip\nnewpath\nISOArial 16 scalefont setfont\n3.000000 60.000000 moveto\n( ";
+	echo "3 28 translate\n".$BoundingBox." picinsert\ngsave\ninsertlogo run\ngrestore\n%%Trailer\nEndEPSF\n-3 -28 translate\n";    
+        echo "labelclip\nnewpath\nISOArial 16 scalefont setfont\n3.000000 75.000000 moveto\n( ";
 	echo $participant_array[$k]['Role'];
 	echo ") show\n";
-	echo "ISOArial 16 scalefont setfont\n3.000000 40.000000 moveto\n( ";
+	echo "ISOArial 16 scalefont setfont\n3.000000 55.000000 moveto\n( ";
 	echo $ConName;
 	echo ") show\n";
-	echo "ISOArial-Bold 24 scalefont setfont\n3.000000 80.000000 moveto\n( ";
+	echo "ISOArial-Bold 24 scalefont setfont\n3.000000 95.000000 moveto\n( ";
 	echo $participant_array[$k++]['pubsname'];
 	echo ") show\nstroke\ngrestore\n\n";
       }
