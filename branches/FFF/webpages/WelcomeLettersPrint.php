@@ -23,6 +23,26 @@ $_SESSION['return_to_page']="WelcomeLettersPrint.php";
 $title="Welcome Letters Printing";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
+$type_array=array("'Panel'","'Class'","'Author Reading'","'SIG/BOF/MnG'","'Lounge'");
+$role_array=array("'Participant'","'Programming'","'SuperProgramming'");
+$type_string=implode(",",$type_array);
+$role_string=implode(",",$role_array);
+
+$replace_array = array("/"," ");
+$drop_array = array("'");
+
+foreach ($role_array as $role) {
+  $firstrole = str_replace($drop_array,"",$role);
+  $rolecheck_array[$role]=$firstrole;
+  $secondrole = str_replace($replace_array,"_",$firstrole);
+  $rolename_array[$role]=$secondrole;
+}
+foreach ($type_array as $type) {
+  $firsttype = str_replace($drop_array,"",$type);
+  $typecheck_array[$type]=$firsttype;
+  $secondtype = str_replace($replace_array,"_",$firsttype);
+  $typename_array[$type]=$secondtype;
+}
 
 ## If the individual isn't a staff member, only serve up their schedule information
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
@@ -65,22 +85,27 @@ $pdf->SetFont('freesans', '', 12, '', true);
  participants who are either Presenters or Volunteers who are
  attending.  The individual switch lets us work from the premise of
  printing just one person's information. */
+
 $query = <<<EOD
 SELECT 
     pubsname,
-    GROUP_CONCAT(DISTINCT permrolename) as Role
+    GROUP_CONCAT(DISTINCT permrolename) as Role,
+    GROUP_CONCAT(DISTINCT typename) as Type
   FROM
       ParticipantOnSession
     JOIN $ReportDB.Participants USING (badgeid)
     JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
     JOIN $ReportDB.PermissionRoles USING (permroleid)
+    JOIN Sessions USING (sessionid)
+    JOIN $ReportDB.Types USING (typeid)
   WHERE
     UHPR.conid=$conid AND
-    permrolename IN ('Participant', 'Programming')
+    permrolename IN ($role_string) AND
+    typename IN ($type_string)
 
 EOD;
 if ($individual) {$query.=" and
-    P.badgeid='$individual'";}
+    badgeid='$individual'";}
 $query.="
   GROUP BY
     pubsname
@@ -93,36 +118,31 @@ list($rows,$participant_header,$participant_array)=queryreport($query,$link,$tit
 if ($print_p =="") {topofpagereport($title,$description,$additionalinfo);}
 
 foreach ($participant_array as $participant) {
-  // Generic header info.
   $printstring = "<P>&nbsp;</P><P>Dear ".$participant['pubsname'].",</P>";
-
-  // Determine what letter.
-  if (($participant['Role'] == 'Participant,Programming') OR ($participant['Role'] == 'Programming,Participant')) {
-    if (file_exists("../Local/Verbiage/Welcome_Letter_Presenters_and_Volunteers_0")) {
-      $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Presenters_and_Volunteers_0");
-    } else {
-      if (file_exists("../Local/Verbiage/Welcome_Letter_Presenters_0")) {
-	$printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Presenters_0");
+  if (file_exists("../Local/Verbiage/Welcome_Letter_0")) {
+    $printstring .= file_get_contents("../Local/Verbiage/Welcome_Letter_0");
+  }
+  foreach ($role_array as $role) {
+    foreach ($type_array as $type) {
+      $filename="../Local/Verbiage/Welcome_Letter_".$rolename_array[$role]."_".$typename_array[$type]."_0";
+      if ((strpos($participant['Role'],$rolecheck_array[$role]) !== false) AND (strpos($participant['Type'],$typecheck_array[$type]) !== false)) {
+	if (file_exists($filename)) {      
+	  $checkstring = file_get_contents($filename);
+          if (strpos($printstring,$checkstring) === false) { $printstring .= $checkstring; }
+	}
       }
     }
-  } elseif ($participant['Role'] == 'Participant') {
-    if (file_exists("../Local/Verbiage/Welcome_Letter_Presenters_0")) {
-      $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Presenters_0");
-    }
-  } elseif ($participant['Role'] == 'Programming') {
-    if (file_exists("../Local/Verbiage/Welcome_Letter_Volunteers_0")) {
-      $printstring.= file_get_contents("../Local/Verbiage/Welcome_Letter_Volunteers_0");
-    }
   }
-
-  // Display, with the option of printing.
+  if (file_exists("../Local/Verbiage/Welcome_Letter_1")) {
+    $printstring .= file_get_contents("../Local/Verbiage/Welcome_Letter_1");
+  }
   if ($print_p == "") {
-    echo "$printstring<hr>";
+    echo "$printstring\n<hr>\n";
   } else {
     $pdf->AddPage();
     $pdf->writeHTMLCell($w=0, $h=0, $x='', $y='', $printstring, $border=0, $ln=1, $fill=0, $reseth=true, $align='', $autopadding=false);
   }
- }
+}
 
 if ($print_p == "") {
   staff_footer();

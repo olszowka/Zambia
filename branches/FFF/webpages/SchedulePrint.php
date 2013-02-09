@@ -29,7 +29,7 @@ $group=$_GET['group'];
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
 
 ## If an individual request, make sure it pulls all of the schedule for that person
-if ($individual != "") {$group = "Participant','Programming','General','Watch','Registration','Vendor','Events','Logistics','Sales','Fasttrack";}
+if ($individual != "") {$group = "Participant','Programming','SuperProgramming','General','Watch','Registration','Vendor','Events','Logistics','Sales','Fasttrack";}
 
 ## If no group is set, presume that you want the Participants
 if ($group == "") {$group='Participant';}
@@ -105,7 +105,7 @@ SELECT
     UHPR.conid=$conid
 EOD;
 if ($individual) {$query.=" and
-    POS.badgeid='$individual'";}
+    badgeid='$individual'";}
 $query.="
   ORDER BY
     starttime";
