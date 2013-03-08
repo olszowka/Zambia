@@ -73,6 +73,8 @@ SELECT
 	    RoomSets RS
         WHERE
 	  S.roomsetid=RS.roomsetid) Z USING (sessionid)
+  WHERE
+    R.display_order < 10
   ORDER BY
 
 EOD;

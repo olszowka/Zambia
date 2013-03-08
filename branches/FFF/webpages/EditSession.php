@@ -94,7 +94,7 @@ EOD;
  }
 
 // Set up for Rendering
-$message_warn="";
+$message_warn=$message2;
 $action="edit";
 
 // Actually do the rendering work
