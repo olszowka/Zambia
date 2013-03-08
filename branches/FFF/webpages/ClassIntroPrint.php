@@ -23,6 +23,7 @@ $_SESSION['return_to_page']="ClassIntroPrint.php";
 $title="Class Introduction Printing";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
+$print_short=$_GET['print_short'];
 
 ## If the individual isn't a staff member, only serve up their schedule information
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
@@ -187,10 +188,12 @@ for ($i=1; $i<=$classcount; $i++) {
   if ($print_p == "") {
     echo "$printstring<hr>";
   } else {
-    if ($classlist_array[$i-1]['pubsname'] != $name) {
-      $pdf->AddPage();
-      $pdf->writeHTML($roles, true, false, true, false, '');
-    }
+    if ($print_short != "True") {
+      if ($classlist_array[$i-1]['pubsname'] != $name) {
+        $pdf->AddPage();
+        $pdf->writeHTML($roles, true, false, true, false, '');
+        }
+      }
     $pdf->AddPage();
     $pdf->writeHTML($printstring, true, false, true, false, '');
   }
