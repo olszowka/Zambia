@@ -5,6 +5,7 @@ $ConStartDatim=CON_START_DATIM; //make it a variable so it will be substituted
 $ProgramEmail=PROGRAM_EMAIL; //Use it a variable locally
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
+$conid=$_SESSION['conid'];  // make it a variable so it can be substituted
 
 // Tests for the substituted variables
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
@@ -118,6 +119,7 @@ SELECT
     roomname,
     pocketprogtext,
     progguiddesc,
+    if ((THQT.conid=$conid),if((THQT.questiontypeid IS NULL),"",THQT.questiontypeid),"") AS questiontypeid,
     DATE_FORMAT(ADDTIME('$ConStartDatim', starttime),'%a %l:%i %p') as 'Start Time',
     CASE
       WHEN HOUR(duration) < 1 THEN
@@ -141,6 +143,7 @@ SELECT
     JOIN ParticipantOnSession POS USING (sessionid)
     JOIN Rooms R USING (roomid)
     JOIN $ReportDB.Tracks T USING (trackid)
+    LEFT JOIN $ReportDB.TypeHasQuestionType THQT USING (typeid)
     LEFT JOIN (SELECT
            S.sessionid, 
            title,
@@ -190,7 +193,7 @@ for ($i=1; $i<=$schdrows; $i++) {
   }
   if (isset($feedback_array['graph'][$schdarray[$i]["sessionid"]])) {
     $schdarray[$i]["autofeedbackgraph"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Feedback graph from surveys:<br>";
-    $schdarray[$i]["autofeedbackgraph"].="<img alt=\"".$feedback_array['key']." title=\"".$feedback_array['key']."\" src=\"ChartFeedback.php?sessionid=".$schdarray[$i]["sessionid"]."\"></TD>\n  </TR>\n";
+    $schdarray[$i]["autofeedbackgraph"].="<img alt=\"".$feedback_array['key'][$schdarray[$i]['questiontypeid']]." title=\"".$feedback_array['key'][$schdarray[$i]['questiontypeid']]."\" src=\"ChartFeedback.php?sessionid=".$schdarray[$i]["sessionid"]."\"></TD>\n  </TR>\n";
     $schdarray[$i]["autofeedbackgraph"].="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6>".$feedback_array['key']."</TD>\n  </TR>\n";
   }
   if (isset($feedback_array[$schdarray[$i]["sessionid"]])) {

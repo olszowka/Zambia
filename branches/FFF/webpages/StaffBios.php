@@ -10,6 +10,7 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
+$conid=$_SESSION['conid'];  // make it a variable so it can be substituted
 
 // Tests for the substituted variables
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
@@ -69,6 +70,7 @@ SELECT
     R.roomname as Roomname,
     S.estatten AS Attended,
     S.sessionid AS Sessionid,
+    if ((THQT.conid=$conid),if((THQT.questiontypeid IS NULL),"",THQT.questiontypeid),"") AS questiontypeid,
     concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',S.sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=StaffFeedback.php?sessionid=',S.sessionid,'>(Feedback)</A>') AS Feedback,
     badgeid
@@ -79,6 +81,7 @@ SELECT
     JOIN $ReportDB.Tracks T USING (trackid)
     LEFT JOIN ParticipantOnSession USING (sessionid)
     LEFT JOIN $ReportDB.Participants P USING (badgeid)
+    LEFT JOIN $ReportDB.TypeHasQuestionType THQT USING (typeid)
     JOIN PubStatuses PS USING (pubstatusid)
   WHERE
     PS.pubstatusname in ($pubstatus_string) AND
@@ -223,7 +226,7 @@ for ($i=1; $i<=$elements; $i++) {
     }
     if (isset($feedback_array['graph'][$element_array[$i]["Sessionid"]])) {
       echo "  </DD>\n  <DD>Feedback graph from surveys:\n<br>\n";
-      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'],$feedback_array['key'],$element_array[$i]["Sessionid"]);
+      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'][$element_array[$i]['questiontypeid']],$feedback_array['key'][$element_array[$i]['questiontypeid']],$element_array[$i]["Sessionid"]);
     }
     if ($feedback_array[$element_array[$i]["Sessionid"]]) {
       echo "  </DD>\n    <DD>Written feedback from surveys:\n<br>\n";

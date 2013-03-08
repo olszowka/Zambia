@@ -58,13 +58,14 @@ list($elements,$header_array,$element_array)=queryreport($query,$link,$title,"<P
 for ($i=1; $i<=$elements; $i++) {
   $question_array[$element_array[$i]['questionid']]['value']+=$element_array[$i]['questionvalue'];
   $question_array[$element_array[$i]['questionid']]['count']++;
+  $questioncount_array[$i]=$element_array[$i]['questionid'];
  }
 
 // How many questions
 $numquestions=count($question_array);
 
 // Walk each of the questions, and establish the mean value
-for ($i=1; $i<=$numquestions; $i++) {
+foreach ($questioncount_array as $i) {
   $question_array[$i]['mean']=$question_array[$i]['value']/$question_array[$i]['count'];
 }
 
@@ -134,8 +135,7 @@ for ($i=1; $i<=$possible_values; $i++) {
   ImageLine($image,$longest_title_length,$height-$bottom_margin-($i*$bar_unit),$longest_title_length+ceil($legend_bar_length/2),$height-$bottom_margin-($i*$bar_unit),$black);
  }
 
-
-for ($i=1; $i<=$numquestions; $i++) {
+foreach ($questioncount_array as $i) {
 
   //Output question number
   $questionlabel="Q: ".$i;

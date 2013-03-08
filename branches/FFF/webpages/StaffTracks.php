@@ -10,6 +10,7 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
+$conid=$_SESSION['conid'];  // make it a variable so it can be substituted
 
 // Tests for the substituted variables
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
@@ -63,6 +64,7 @@ SELECT
     GROUP_CONCAT(DISTINCT roomname SEPARATOR ', ') as Roomname,
     estatten AS Attended,
     Sessionid,
+    if ((THQT.conid=$conid),if((THQT.questiontypeid IS NULL),"",THQT.questiontypeid),"") AS questiontypeid,
     GROUP_CONCAT(DISTINCT concat('<A NAME=\"',trackname,'\">',trackname,'</A>',if((DATE_ADD('$ConStartDatim',INTERVAL $ConNumDays DAY)>NOW()),concat(' <A HREF=StaffTrackScheduleIcal.php?trackid=',trackid,'><I>(iCal)</I></A>'),''))) as 'Track',
     concat('<A HREF=StaffPrecisScheduleIcal.php?sessionid=',sessionid,'>(iCal)</A>') AS iCal,
     concat('<A HREF=StaffFeedback.php?sessionid=',sessionid,'>(Feedback)</A>') AS Feedback,
@@ -76,6 +78,7 @@ SELECT
     JOIN $ReportDB.Tracks T USING (trackid)
     LEFT JOIN ParticipantOnSession USING (sessionid)
     LEFT JOIN $ReportDB.Participants USING (badgeid)
+    LEFT JOIN $ReportDB.TypeHasQuestionType THQT USING (typeid)
     JOIN PubStatuses USING (pubstatusid)
   WHERE
     pubstatusname in ($pubstatus_string) AND
@@ -132,7 +135,7 @@ for ($i=1; $i<=$elements; $i++) {
     }
     if (isset($feedback_array['graph'][$element_array[$i]["Sessionid"]])) {
       echo "  </DD>\n  <DD>Feedback graph from surveys:\n<br>\n";
-      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'],$feedback_array['key'],$element_array[$i]["Sessionid"]);
+      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'][$element_array[$i]['questiontypeid']],$feedback_array['key'][$element_array[$i]['questiontypeid']],$element_array[$i]["Sessionid"]);
     }
     if ($feedback_array[$element_array[$i]["Sessionid"]]['comments']) {
       echo "  </DD>\n    <DD>Written feedback from surveys:\n<br>\n";

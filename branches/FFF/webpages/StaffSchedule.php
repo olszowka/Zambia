@@ -10,6 +10,7 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
+$conid=$_SESSION['conid'];  // make it a variable so it can be substituted
 
 // Tests for the substituted variables
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
@@ -64,6 +65,7 @@ SELECT
     roomname AS Roomname,
     estatten AS Attended,
     Sessionid,
+    if ((THQT.conid=$conid),if((THQT.questiontypeid IS NULL),"",THQT.questiontypeid),"") AS questiontypeid,
     concat('<A HREF=\"StaffTracks.php$feedbackp#',trackname,'\">',trackname,'</A>')) AS 'Track',
     concat('<A HREF=\"StaffDescriptions.php$feedbackp#',sessionid,'\">',title,'</A>') AS Title,
     secondtitle AS Subtitle,
@@ -78,6 +80,7 @@ SELECT
     JOIN $ReportDB.Tracks USING (trackid)
     LEFT JOIN ParticipantOnSession USING (sessionid)
     LEFT JOIN $ReportDB.Participants USING (badgeid)
+    LEFT JOIN $ReportDB.TypeHasQuestionType THQT USING (typeid)
     JOIN PubStatuses USING (pubstatusid)
   WHERE
     pubstatusname in ($pubstatus_string) AND
@@ -104,6 +107,7 @@ SELECT
     GROUP_CONCAT(DISTINCT roomname SEPARATOR ', ') AS Roomname,
     estatten AS Attended,
     Sessionid,
+    if ((THQT.conid=$conid),if((THQT.questiontypeid IS NULL),"",THQT.questiontypeid),"") AS questiontypeid,
     GROUP_CONCAT(DISTINCT concat('<A HREF=\"StaffTracks.php$feedbackp#',trackname,'\">',trackname,'</A>')) AS 'Track',
     concat('<A HREF=\"StaffDescriptions.php$feedbackp#',sessionid,'\">',title,'</A>') AS Title,
     secondtitle AS Subtitle,
@@ -118,6 +122,7 @@ SELECT
     JOIN $ReportDB.Tracks USING (trackid)
     LEFT JOIN ParticipantOnSession USING (sessionid)
     LEFT JOIN $ReportDB.Participants USING (badgeid)
+    LEFT JOIN $ReportDB.TypeHasQuestionType THQT USING (typeid)
     JOIN PubStatuses USING (pubstatusid)
   WHERE
     pubstatusname in ($pubstatus_string) AND
@@ -181,7 +186,7 @@ for ($i=1; $i<=$elements; $i++) {
     }
     if (isset($feedback_array['graph'][$element_array[$i]["Sessionid"]])) {
       echo "  </DD>\n  <DD>Feedback graph from surveys:\n<br>\n";
-      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'],$feedback_array['key'],$element_array[$i]["Sessionid"]);
+      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'][$element_array[$i]['questiontypeid']],$feedback_array['key'][$element_array[$i]['questiontypeid']],$element_array[$i]["Sessionid"]);
     }
     if ($feedback_array[$element_array[$i]["Sessionid"]]['comments']) {
       echo "  </DD>\n    <DD>Written feedback from surveys:\n<br>\n";

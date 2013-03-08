@@ -1486,6 +1486,13 @@ EOD;
  Returns session_array*/
 function getFeedbackData($badgeid) {
   global $message_error,$message2,$link;
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
   $query = <<<EOD
 SELECT
     sessionid,
@@ -1548,9 +1555,10 @@ EOD;
   $query = <<<EOD
 SELECT
     questionid,
-    questiontext
+    questiontext,
+    questiontypeid
   FROM
-      QuestionsForSurvey
+      $ReportDB.QuestionsForSurvey
   ORDER BY
     questionid
 EOD;
@@ -1561,7 +1569,7 @@ EOD;
   }
 
   while ($row=mysql_fetch_assoc($result)) {
-    $session_array['key'].="Q: ".$row['questionid']. " &mdash; " .$row['questiontext']. "\n";
+    $session_array['key'][$row['questiontypeid']].="Q: ".$row['questionid']. " &mdash; " .$row['questiontext']. "\n";
   }
 
   return($session_array);
