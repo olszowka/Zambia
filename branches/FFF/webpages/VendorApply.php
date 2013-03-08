@@ -27,7 +27,7 @@ if (($result=mysql_query($namequery,$link)) === false) {
   $message_error.="<BR>".$namequery."Cannot find the name to go with the badgeid.";
 }
 list($tmp_pubsname)=mysql_fetch_array($result, MYSQL_NUM);
-$pubsname=htmlspecialchars($tmp_pubsname);
+$pubsname=mysql_real_escape_string(htmlspecialchars($tmp_pubsname));
 
 /* Submit goes here */
 get_session_from_post();
@@ -220,18 +220,21 @@ if ($session['statusname']=="Vendor Approved") {
   echo "Should you be accepted for the event, payment will be expected promptly.</P>\n";
 }
 ?>
-    <DIV class="formbox">
-
-        <FORM name="sessform" class="bb"  method=POST action="VendorApply.php">
-        <INPUT type="hidden" name="partid" value="<?php echo $badgeid; ?>">
-        <?php foreach ($session as $key => $value) { echo "<INPUT type=\"hidden\" name=\"$key\" value=\"$value\">\n"; } ?>
-        <TABLE><COL><COL>
-          <TR>
-            <TD>
-               <SPAN><LABEL for="vendorspace">Space Requested: </LABEL><SELECT name="vendorspace">
-  <?php $query="SELECT vendorspaceid, vendorspacename from $ReportDB.VendorSpaces WHERE conid=".$_SESSION['conid']." ORDER BY display_order";
-        populate_select_from_query($query, $session["vendorspaceid"], "SELECT", FALSE); ?>
-                     </SELECT>&nbsp;&nbsp;</SPAN></TD></TR>
+<DIV class="formbox">
+  <FORM name="sessform" class="bb"  method=POST action="VendorApply.php">
+    <INPUT type="hidden" name="partid" value="<?php echo $badgeid; ?>">
+    <?php foreach ($session as $key => $value) { echo "<INPUT type=\"hidden\" name=\"$key\" value=\"$value\">\n"; } ?>
+    <TABLE><COL><COL>
+      <TR>
+        <TD>
+          <SPAN><LABEL for="vendorspace">Space Requested: </LABEL>
+            <SELECT name="vendorspace">
+              <?php $query="SELECT vendorspaceid, vendorspacename from $ReportDB.VendorSpaces WHERE conid=".$_SESSION['conid']." ORDER BY display_order";
+              populate_select_from_query($query, $session["vendorspaceid"], "SELECT", FALSE); ?>
+            </SELECT><br><br>
+          </SPAN>
+        </TD>
+      </TR>
 <?php /*
         <TR>
         <TD class="nospace">
@@ -262,19 +265,39 @@ if ($session['statusname']=="Vendor Approved") {
                         </DIV>
                 </DIV> <!-- VendorFeatures --> 
       */ ?>
-          <TR>
-            <TD>
-		     <SPAN><LABEL for="vendfeatdest">Extras (Use the Control-Click to select multiple extras.):</LABEL><BR><SELECT name="vendfeatdest[]" size=8 multiple >
-                     <?php populate_multiselect_from_table("$ReportDB.VendorFeatures", $session["vendfeatdest"]); ?>
-                     </SELECT>&nbsp;&nbsp;</SPAN></TD></TR>
-	<TR>
-           <TD>
-				<SPAN><LABEL for="servnotes" id="servnotes">Please tell us what you sell, why should you be accepted to vend at this event, and any other important information (like if there is a requested load in time [note that you are not guarenteed a requested load in time] or if you will self carry) that we should know:</LABEL><BR>
-		     <TEXTAREA cols="70" rows="5" name="servnotes"><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES); ?></TEXTAREA></SPAN></TD></TR>
-        <TR>
-           <TD>
-              <INPUT type=submit ID="sButtonBottom" value="Save"></TD></TR>
-      </TABLE>
-    </FORM>
+      <TR>
+        <TD>
+          <SPAN><LABEL for="vendfeatdest">Extras (Use the Control-Click to select multiple extras.):</LABEL><BR>
+            <SELECT name="vendfeatdest[]" size=8 multiple >
+              <?php populate_multiselect_from_table("$ReportDB.VendorFeatures", $session["vendfeatdest"]); ?>
+            </SELECT><br><br>
+          </SPAN>
+        </TD>
+      </TR>
+      <TR>
+        <TD>
+          <SPAN><LABEL for="vendorloadin">What time do you prefer for load in?  Note: You are not guaranteed a requested load-in time.</LABEL><BR>
+            <SELECT name="vendorloadin">
+              <?php $query="SELECT vendorloadinid, vendorloadinname from $ReportDB.VendorLoadin WHERE conid=".$_SESSION['conid']." ORDER BY display_order";
+              populate_select_from_query($query, $session["vendorloadinid"], "SELECT", FALSE); ?>
+            </SELECT><br>
+            &nbsp;&nbsp; * Are arriving after 7:30pm on Friday and will be responsible for own load-in.  The function rooms will be locked at 8pm on Friday, and will not open again until 9am on Saturday.<br><br>
+          </SPAN>
+        </TD>
+      </TR>
+      <TR>
+        <TD>
+          <SPAN><LABEL for="servnotes" id="servnotes">Please tell us what you sell, why should you be accepted to vend at this event, and any other important information that we should know:</LABEL><BR>
+	    <TEXTAREA cols="70" rows="5" name="servnotes"><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES); ?></TEXTAREA>
+          </SPAN>
+        </TD>
+      </TR>
+      <TR>
+        <TD>
+          <INPUT type=submit ID="sButtonBottom" value="Save">
+        </TD>
+      </TR>
+    </TABLE>
+  </FORM>
 </DIV>
 <?php correct_footer(); ?>

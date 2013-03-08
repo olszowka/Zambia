@@ -2,6 +2,9 @@
 require_once('PostingCommonCode.php');
 global $link;
 $conid=$_SESSION['conid'];
+if ($conid=='') {
+  $conid=CON_KEY;
+}
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $ConNumDays=CON_NUM_DAYS; // make it a variable so it can be substituted
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
@@ -22,16 +25,23 @@ $description="<P>List of all Vendors.</P>\n";
  the post-processing. The bio information is grabbed seperately. */
 $query = <<<EOD
 SELECT
-    concat('<A NAME=\"',pubsname,'\"></A>',pubsname) as 'Participants',
+    concat('<A NAME=\"',pubsname,'\"></A>',pubsname) AS 'Participants',
+    if((secondtitle!=''),concat('<A NAME=\"', sessionid, '\">', secondtitle, '</A>'),"") AS 'Location',
     pubsname,
     badgeid
   FROM
       $ReportDB.Participants
-    JOIN $ReportDB.UserHasPermissionRole USING (badgeid)
+    JOIN $ReportDB.UserHasPermissionRole UHPR USING (badgeid)
     JOIN $ReportDB.PermissionRoles USING (permroleid)
+    JOIN $ReportDB.Interested I USING (badgeid)
+    JOIN $ReportDB.InterestedTypes USING (interestedtypeid)
+    LEFT JOIN ParticipantOnSession USING (badgeid)
+    LEFT JOIN Sessions USING (sessionid)
   WHERE
-    interested=1 AND
-    permrolename in ('Vendor')
+    interestedtypename in ('Yes') AND
+    permrolename in ('Vendor') AND
+    UHPR.conid=$conid AND
+    I.conid=$conid
   ORDER BY
   pubsname
 EOD;
@@ -86,8 +96,10 @@ for ($i=1; $i<=$elements; $i++) {
 	  $tablecount++;
 	}
       }
-      if (isset($bioout['location']) AND ($bioout['location'] != "")) {
-	echo sprintf("<B>%s</B> - %s<br>\n",$printparticipant,$bioout['location']);
+/*    if (isset($bioout['location']) AND ($bioout['location'] != "")) {
+	echo sprintf("<B>%s</B> - %s<br>\n",$printparticipant,$bioout['location']); */
+      if ($element_array[$i]['Location'] != "") {
+        echo sprintf("<B>%s</B> - %s<br>\n",$printparticipant,$element_array[$i]['Location']);
 	$namecount++;
       }
       if (isset($bioout['web']) AND ($bioout['web'] != "")) {

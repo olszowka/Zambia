@@ -689,6 +689,10 @@ TD#smallspacer {
     width: 13em;
     }
 
+.selectffwidth {
+    width: 18em;
+    }
+
 .textwithlabel {
     display: table-row; 
     }

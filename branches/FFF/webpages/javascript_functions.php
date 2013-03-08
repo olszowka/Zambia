@@ -53,6 +53,12 @@ function mysubmit() {
     for ( i = 0 ; i < document.sessform.servdest.length ; i++ ) {
         document.sessform.servdest.options[i].selected=true;
         }
+    for ( i = 0 ; i < document.sessform.vendfeatdest.length ; i++ ) {
+        document.sessform.vendfeatdest.options[i].selected=true;
+        }
+    for ( i = 0 ; i < document.sessform.spacedest.length ; i++ ) {
+        document.sessform.spacedest.options[i].selected=true;
+        }
     }
 
 //  End -->

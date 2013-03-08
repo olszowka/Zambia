@@ -182,7 +182,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 </TABLE>
 		</DIV>
         <HR class="withspace"><DIV class="thinbox">
-        <TABLE><COL><COL>
+        <TABLE><COL><COL><COL>
         <TR>
         <TD class="nospace">
         <DIV class="thinbox" style="margin-top: 1em; width: 37em; font-size: 85%">
@@ -196,7 +196,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <DIV class="tab-row">
                         <SPAN class="tab-cell">
                              <SELECT class="selectfwidth" id="featsrc" name="featsrc" size=6 multiple>
-                                <?php populate_multisource_from_table("Features", $session["featdest"]); ?></SELECT>
+                                <?php populate_multisource_from_table("$ReportDB.Features", $session["featdest"]); ?></SELECT>
                              </SPAN>
                         <SPAN class="thickobject">
                             <BUTTON onclick="fadditems(document.sessform.featsrc,document.sessform.featdest)"
@@ -207,7 +207,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <DIV class="tab-row">
                         <SPAN class="tab-cell">
                             <SELECT class="selectfwidth" id="featdest" name="featdest[]" size=6 multiple >
-                                <?php populate_multidest_from_table("Features", $session["featdest"]); ?></SELECT>
+                                <?php populate_multidest_from_table("$ReportDB.Features", $session["featdest"]); ?></SELECT>
                             </SPAN>
                         </DIV>
                 </DIV> <!-- Features -->
@@ -246,7 +246,64 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     <DIV style="font-size: 85%">
         <SELECT id="pubchardest" name="pubchardest[]" multiple><?php populate_multiselect_from_table("PubCharacteristics",
             $session["pubchardest"]); ?></SELECT>&nbsp;</TD>
-        </DIV>
+
+        <TD class="nospace">
+        <DIV class="thinbox" style="margin-top: 1em; width: 59em; font-size: 85%">
+            <DIV class="blockwbox" style="width: 55em; padding-left: 0.5em; padding-right: 0.5em; margin: 0.5em"> <!-- VendorFeatures Box; -->
+                <DIV class="blockstitle"><LABEL>Additional Vendor Features for the Space</LABEL></DIV>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-celltitle"><LABEL for="vendfeatsrc">Possible Features</LABEL></SPAN>
+                        <SPAN class="tab-cell"><LABEL>&nbsp;</LABEL></SPAN>
+                        <SPAN class="tab-celltitle"><LABEL for="vendfeatdest[]">Selected Features</LABEL></SPAN>
+                        </DIV>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-cell">
+                             <SELECT class="selectffwidth" id="vendfeatsrc" name="vendfeatsrc" size=6 multiple>
+                                <?php populate_multisource_from_table("$ReportDB.VendorFeatures", $session["vendfeatdest"]); ?></SELECT>
+                             </SPAN>
+                        <SPAN class="thickobject">
+                            <BUTTON onclick="fadditems(document.sessform.vendfeatsrc,document.sessform.vendfeatdest)"
+                                name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
+                            <BUTTON onclick="fdropitems(document.sessform.vendfeatsrc,document.sessform.vendfeatdest)"
+                                name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
+                            </SPAN>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-cell">
+                            <SELECT class="selectffwidth" id="vendfeatdest" name="vendfeatdest[]" size=6 multiple >
+                                <?php populate_multidest_from_table("$ReportDB.VendorFeatures", $session["vendfeatdest"]); ?></SELECT>
+                            </SPAN>
+                        </DIV>
+                </DIV> <!-- VendorFeatures -->
+</DIV>
+            <DIV class="blockwbox" style="width: 55em; padding-left: 0.5em; padding-right: 0.5em; margin: 0.5em"> <!-- Spaces Box; -->
+                <DIV class="blockstitle"><LABEL>Spaces Requested</LABEL></DIV>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-celltitle"><LABEL for="spacesrc">Possible Spaces</LABEL></SPAN>
+                        <SPAN class="tab-cell"><LABEL>&nbsp;</LABEL></SPAN>
+                        <SPAN class="tab-celltitle"><LABEL for="spacedest[]">Selected Spaces</LABEL></SPAN>
+                        </DIV>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-cell">
+                             <SELECT class="selectffwidth" id="spacesrc" name="spacesrc" size=6 multiple>
+                                <?php populate_multisource_from_table("$ReportDB.VendorSpaces", $session["spacedest"]); ?></SELECT>
+                             </SPAN>
+                        <SPAN class="thickobject">
+                            <BUTTON onclick="fadditems(document.sessform.spacesrc,document.sessform.spacedest)"
+                                name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
+                            <BUTTON onclick="fdropitems(document.sessform.spacesrc,document.sessform.spacedest)"
+                                name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
+                            </SPAN>
+                    <DIV class="tab-row">
+                        <SPAN class="tab-cell">
+                            <SELECT class="selectffwidth" id="spacedest" name="spacedest[]" size=6 multiple >
+                                <?php populate_multidest_from_table("$ReportDB.VendorSpaces", $session["spacedest"]); ?></SELECT>
+                            </SPAN>
+                        </DIV>
+                </DIV> <!-- Services -->
+            </DIV>
+</DIV></TD>
+</DIV>
+
 </TR></TABLE>
             </DIV>
         <HR class="withspace">

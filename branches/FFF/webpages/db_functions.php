@@ -328,7 +328,6 @@ function update_session() {
 	$message_error.=" query=$query";
 	return $message_error;
         }
-    $id=$session["sessionid"];
     if ($session["vendfeatdest"]!="") {
         for ($i=0 ; $session["vendfeatdest"][$i]!="" ; $i++ ) {
             $query="INSERT into $ReportDB.SessionHasVendorFeature set sessionid=".$id.", vendorfeatureid=";
@@ -350,17 +349,18 @@ function update_session() {
 	$message_error.=" query=$query";
 	return $message_error;
         }
-    $id=$session["sessionid"];
-    if ($session["vendorspace"]!=0) {
-        $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
-	$query.=$session["vendorspace"];
-	$query.=", conid=".$_SESSION['conid'];
-        $message2=$query;
-        if (!mysql_query($query,$link)) {
-	    $message_error.=mysql_error($link);
-	    $message_error.=" query=$query";
-	    return $message_error;
-            }
+    if ($session["spacedest"]!="") {
+        for ($i=0 ; $session["spacedest"][$i]!="" ; $i++ ) {
+	    $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
+	    $query.=$session["spacedest"][$i];
+	    $query.=", conid=".$_SESSION['conid'];
+	    $message2=$query;
+	    if (!mysql_query($query,$link)) {
+	        $message_error.=mysql_error($link);
+	        $message_error.=" query=$query";
+	        return $message_error;
+                }
+	    }
         }
     $query="DELETE from $ReportDB.SessionHasVendorAdjust where sessionid=".$session["sessionid"];
     $query.=" AND conid=".$_SESSION['conid'];
@@ -505,16 +505,18 @@ function insert_session() {
 	        }
             }
         }
-    if ($session["vendorspace"]!=0) {
-        $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
-        $query.=$session["vendorspace"];
-        $query.=", conid=".$_SESSION['conid'];
-        $result = mysql_query($query,$link);
-	if (!$result) {
-	    $message_error.=mysql_error($link);
-	    $message_error.=" query=$query";
-	    return $message_error;
-	    }
+    if ($session["spacedest"]!="") {
+        for ($i=0 ; $session["spacedest"][$i]!="" ; $i++ ) {
+	  $query="INSERT into $ReportDB.SessionHasVendorSpace set sessionid=".$id.", vendorspaceid=";
+	  $query.=$session["spacedest"];
+	  $query.=", conid=".$_SESSION['conid'];
+	  $result = mysql_query($query,$link);
+	  if (!$result) {
+	      $message_error.=mysql_error($link);
+	      $message_error.=" query=$query";
+	      return $message_error;
+	      }
+	  }
         }
     if (($session["vendoradjustvalue"]!="") or ($session["vendoradjustnote"]!="")) {
         $query="INSERT into $ReportDB.SessionHasVendorAdjust set sessionid=".$id." ";
@@ -538,12 +540,20 @@ function insert_session() {
     }
 
 // Function retrieve_session_from_db()
-// Reads Sessions, SessionHasFeature, and SessionHasService tables
+// Reads Sessions, SessionHasFeature, and SessionHasService 
+// SessionHasVendorFeature, and SessionHasVeondorSpace tables
 // from db to populate global array $session.
 //
 function retrieve_session_from_db($sessionid) {
     global $session;
     global $link,$message2;
+    $ReportDB=REPORTDB; // make it a variable so it can be substituted
+    $BioDB=BIODB; // make it a variable so it can be substituted
+
+    // Tests for the substituted variables
+    if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+    if ($BiotDB=="BIODB") {unset($BIODB);}
+
     $query= <<<EOD
 select
         sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
@@ -621,6 +631,24 @@ EOD;
     unset($session["pubchardest"]);
     while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
         $session["pubchardest"][]=$row[0];
+        }
+    $result=mysql_query("SELECT vendorfeatureid FROM $ReportDB.SessionHasVendorFeature where sessionid=".$sessionid,$link);
+    if (!$result) {
+        $message2=mysql_error($link);
+        return (-3);
+        }
+    unset($session["vendfeatdest"]);
+    while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
+        $session["vendfeatdest"][]=$row[0];
+        }
+    $result=mysql_query("SELECT vendorspaceid FROM $ReportDB.SessionHasVendorSpace where sessionid=".$sessionid,$link);
+    if (!$result) {
+        $message2=mysql_error($link);
+        return (-3);
+        }
+    unset($session["spacedest"]);
+    while ($row=mysql_fetch_array($result, MYSQL_NUM)) {
+        $session["spacedest"][]=$row[0];
         }
     return (37);
     }

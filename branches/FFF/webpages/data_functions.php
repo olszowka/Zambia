@@ -88,7 +88,7 @@ function get_session_from_post() {
     //error_log("Zambia->get_session_from_post->\$session[\"featdest\"]: ".print_r($session["featdest"],TRUE)); // for debugging only
     $session["servdest"]=$_POST["servdest"];
     $session["vendfeatdest"]=$_POST["vendfeatdest"];
-    $session["vendorspace"]=$_POST["vendorspace"];
+    $session["spacedest"]=$_POST["spacedest"];
     $session["duration"]=stripslashes($_POST["duration"]);
     $session["atten"]=$_POST["atten"];
     $session["kids"]=$_POST["kids"];
