@@ -31,8 +31,8 @@ if (may_I("Vendor")) {
 // Get the list of all the vendors in our system
 $query= <<<EOD
 SELECT
-    $badgeid_string
     DISTINCT if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",pubsname,"</A>"),pubsname) AS "Business Name",
+    $badgeid_string
     if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",firstname,"</A>"),"") AS "Contact First Name",
     if (badgeid="$mybadgeid",concat("<A HREF=\"VendorSubmitVendor.php\">",lastname,"</A>"),"") AS "Contact Last Name"
   FROM
