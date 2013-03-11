@@ -64,6 +64,7 @@ if (isset($_POST['badgeid'])) {
  } elseif (isset($_GET['badgeid'])) {
   $badgeid=$_GET['badgeid'];
  } else {
+  $_SESSION['return_to_page']="VolunteerCheckIn.php";
   topofpagereport($title,$description,$additionalinfo);
   echo "<FORM name=\"whichvol\" method=POST action=\"VolunteerCheckIn.php\">";
   echo "  <DIV style=\"text-align:center\">\n    <LABEL for=\"badgeid\">Volunteer: </LABEL>\n";
@@ -81,11 +82,15 @@ if (isset($_POST['voltimein'])) {
   $element_array = array('badgeid', 'voltimein', 'volinbadgeid');
   $value_array=array($badgeid,$_POST['voltimein'],$_SESSION['badgeid']);
   $message.=submit_table_element($link, $title, "$TimecardDB.TimeCard", $element_array, $value_array);
-  /* if (isset($_SESSION['return_to_page'])) {
+  if (isset($_POST['onepageprog'])) {
+    header("Location: genreport.php?reportname=progvolexpected"); // Redirect back to the progvolexpected report
+  } elseif (isset($_POST['onepagegen'])) {
+    header("Location: genreport.php?reportname=genvolexpected"); // Redirect back to the progvolexpected report
+  } elseif (isset($_SESSION['return_to_page'])) {
     header("Location: ".$_SESSION['return_to_page']); // Redirect back to what send you here
-    } else { */
+  } else {
     header("Location: VolunteerCheckIn.php"); // Redirect back to here, with a blank slate
-  /* } */
+  }
   /* topofpagereport($title,$description,$additionalinfo);
   echo "<P>Database: $TimecardDB.Timecard</P>\n";
   correct_footer(); */

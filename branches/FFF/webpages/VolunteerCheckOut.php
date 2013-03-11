@@ -62,6 +62,7 @@ if (isset($_POST['voltimeid'])) {
  } elseif (isset($_GET['voltimeid'])) {
   $voltimeid=$_GET['voltimeid'];
  } else {
+  $_SESSION['return_to_page']="VolunteerCheckIn.php";
   topofpagereport($title,$description,$additionalinfo);
   echo "<FORM name=\"whichvol\" method=POST action=\"VolunteerCheckOut.php\">";
   echo "  <DIV style=\"text-align:center\">\n    <LABEL for=\"voltimeid\">Volunteer: </LABEL>\n";
@@ -78,7 +79,11 @@ if (isset($_POST['voltimeid'])) {
 if (isset($_POST['voltimeout'])) {
   $pairedvalue_array=array("voltimeout='".$_POST['voltimeout']."'","voloutbadgeid='".$_SESSION['badgeid']."'");
   $message.=update_table_element($link, $title, "$TimecardDB.TimeCard", $pairedvalue_array, "voltimeid", $_POST['voltimeid']);
-  if (isset($_SESSION['return_to_page'])) {
+  if (isset($_POST['onepageprog'])) {
+    header("Location: genreport.php?reportname=progvolexpected"); // Redirect back to the progvolexpected report
+  } elseif (isset($_POST['onepagegen'])) {
+    header("Location: genreport.php?reportname=genvolexpected"); // Redirect back to the progvolexpected report
+  } elseif (isset($_SESSION['return_to_page'])) {
     header("Location: ".$_SESSION['return_to_page']); // Redirect back to what send you here
   } else {
     header("Location: VolunteerCheckOut.php"); // Redirect back to here, with a blank slate
