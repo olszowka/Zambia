@@ -35,7 +35,7 @@ if (isset($_GET['volunteer'])) {
   $pubstatus_check="'Public'";
 }
 
-## LOCALIZATIONS
+// LOCALIZATIONS
 $_SESSION['return_to_page']="Postgrid.php";
 $title="Sessions Grid";
 $description="<P>Grid of all sessions.</P>\n";
@@ -61,7 +61,7 @@ SELECT
     	  display_order;
 EOD;
 
-## Retrieve query
+// Retrieve query
 list($rooms,$unneeded_array_a,$header_array)=queryreport($query,$link,$title,$description,0);
 
 /* This set of queries finds the appropriate presenters for a session element,
@@ -84,7 +84,7 @@ SELECT
       sessionid;
 EOD;
 
-## Retrieve query
+// Retrieve query
 list($presenters,$unneeded_array_b,$presenters_tmp_array)=queryreport($query,$link,$title,$description,0);
 for ($i=1; $i<=$presenters; $i++) {
   $presenters_array[$presenters_tmp_array[$i]['sessionid']]=$presenters_tmp_array[$i]['allpubsnames'];
@@ -246,7 +246,7 @@ for ($i = $grid_start_sec; $i < $grid_end_sec; $i = ($i + $Grid_Spacer)) {
  }
 $breakon[++$newtableline] = $element_row;
 
-## Page Rendering
+// Page Rendering
 /* Check for the csv variable, to see if we should be dropping a table,
  instead of displaying one.  If so, feed a continuous table, otherwise
  split up the tables on "skip" spaces, to make them flow more naturally.

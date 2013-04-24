@@ -13,7 +13,7 @@ $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
 $Grid_Spacer=GRID_SPACER; // make it a variable so it can be substituted
 $logo=CON_LOGO; // make it a variable so it can be substituted
 
-## LOCALIZATIONS
+// LOCALIZATIONS
 $_SESSION['return_to_page']="LogisticsPrint.php";
 $title="Logistics";
 $description="<P>Logistics information for each of the rooms.</P>\n";

@@ -18,7 +18,7 @@ $BioDB=BIODB; // make it a variable so it can be substituted
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 if ($BiotDB=="BIODB") {unset($BIODB);}
 
-## LOCALIZATIONS
+// LOCALIZATIONS
 $_SESSION['return_to_page']="WelcomeLettersPrint.php";
 $title="Welcome Letters Printing";
 $print_p=$_GET['print_p'];
@@ -44,7 +44,7 @@ foreach ($type_array as $type) {
   $typename_array[$type]=$secondtype;
 }
 
-## If the individual isn't a staff member, only serve up their schedule information
+// If the individual isn't a staff member, only serve up their schedule information
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
 
 $description="<P>A way to <A HREF=\"WelcomeLettersPrint.php?print_p=T";
@@ -112,7 +112,7 @@ $query.="
   ORDER BY
     pubsname";
 
-## Retrieve query
+// Retrieve query
 list($rows,$participant_header,$participant_array)=queryreport($query,$link,$title,$description,0);
 
 if ($print_p =="") {topofpagereport($title,$description,$additionalinfo);}
@@ -138,15 +138,11 @@ foreach ($participant_array as $participant) {
   }
   if ($print_p == "") {
     echo "$printstring\n<hr>\n";
+    correct_footer();
   } else {
     $pdf->AddPage();
     $pdf->writeHTMLCell($w=0, $h=0, $x='', $y='', $printstring, $border=0, $ln=1, $fill=0, $reseth=true, $align='', $autopadding=false);
   }
-}
-
-if ($print_p == "") {
-  staff_footer();
- } else {
   if ($individual != "") {
     $pdf->Output('WelcomeLetterFor'.$participant_array[1]['pubsname'].'.pdf', 'I');
   } else {

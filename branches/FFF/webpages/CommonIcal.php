@@ -1,7 +1,7 @@
 <?php
-  ## iCalendar Header
-  ## Might have to change the method: METHOD:REQUEST for an "Accept/Reject" PUBLISH is a "Save/Cancel"
-  ## If con runs in a different TZ, adjust for there, or, somehow, make it automatic.
+// iCalendar Header
+// Might have to change the method: METHOD:REQUEST for an "Accept/Reject" PUBLISH is a "Save/Cancel"
+// If con runs in a different TZ, adjust for there, or, somehow, make it automatic.
 
     function add_ical_header() {
         $icalheader = <<<EOD

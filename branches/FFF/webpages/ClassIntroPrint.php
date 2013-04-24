@@ -18,14 +18,14 @@ $BioDB=BIODB; // make it a variable so it can be substituted
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 if ($BiotDB=="BIODB") {unset($BIODB);}
 
-## LOCALIZATIONS
+// LOCALIZATIONS
 $_SESSION['return_to_page']="ClassIntroPrint.php";
 $title="Class Introduction Printing";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
 $print_short=$_GET['print_short'];
 
-## If the individual isn't a staff member, only serve up their schedule information
+// If the individual isn't a staff member, only serve up their schedule information
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
 
 $description="<P>A way to <A HREF=\"ClassIntroPrint.php?print_p=T";
@@ -96,7 +96,7 @@ $query.="
   ORDER BY
     pubsname, SCH.starttime";
 
-## Retrieve query
+// Retrieve query
 list($classcount,$classcount_header,$classlist_array)=queryreport($query,$link,$title,$description,0);
 
 /* Get the Bio(s) of the presenter(s). This is currently skipped

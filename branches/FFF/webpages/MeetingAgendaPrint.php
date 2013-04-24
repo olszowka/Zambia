@@ -5,7 +5,7 @@ require_once('../../tcpdf/tcpdf.php');
 global $link;
 $logo=CON_LOGO; // make it a variable so it can be substituted
 
-## LOCALIZATIONS
+// LOCALIZATIONS
 $_SESSION['return_to_page']="genreport.php?reportname=meetingagendadisplay";
 $title="Agenda Printing";
 $print_p=$_GET['print_p'];
@@ -92,7 +92,7 @@ SELECT
 
 EOD;
 
-## Retrieve query
+// Retrieve query
 list($rows,$agenda_header,$agenda_array)=queryreport($query,$link,$title,$description,0);
 
 if ($print_p =="") {topofpagereport($title,$description,$additionalinfo);}
