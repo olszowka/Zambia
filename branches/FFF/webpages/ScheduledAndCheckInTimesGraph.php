@@ -19,7 +19,6 @@ if ($BiotDB=="BIODB") {unset($BIODB);}
 
 
 /* Notes:
-Alphabetical
 25 per graph, if more than one graph is needed, go to second or third, et al
 12 hour chunks and/or limit it like the grid.
 Top and bottom of grid, class blocks, and how many not filled along with the times.
@@ -126,6 +125,8 @@ SELECT
   WHERE
     $wherestring AND
     UHPR.conid=$conid
+  ORDER BY
+    pubsname
 EOD;
 
 list($timecard_rows,$timecard_header_array,$timecard_array)=queryreport($query,$link,$title,$description,0);
@@ -162,6 +163,7 @@ SELECT
     badgeid,
     pubsname,
     sessionid,
+    title,
     TIME_TO_SEC(starttime) DIV $GridSpacer AS Starttime,
     (TIME_TO_SEC(starttime) DIV $GridSpacer )+(TIME_TO_SEC(duration) DIV $GridSpacer) AS Endtime
   FROM
@@ -204,14 +206,14 @@ for ($i=0; $i<$badgeid_rows; $i++) {
 $nums_array=array_flip($badgeid_array);
 
 // The font size for the labels
-$fontsize=10;
+$fontsize=12;
 
 // Should become programmatic, somehow off of the fontsize.
 $fontwidth=$fontsize*.6;
 
 // The size of each of the grid-boxes
-$xoffset=30;
-$yoffset=25;
+$xoffset=$fontsize*3;
+$yoffset=$fontsize*3;
 
 /* x is the space at the right, allow for 6 characters, y is the space
    at the top visually one character height. */
@@ -264,14 +266,17 @@ echo '<?xml version="1.0" standalone="no"?>';
 </clipPath>
 
 <?php 
-  /* Make the bars pretty.  The gradient0 is red/yellow, the gradient1
-     is blue/white.  Using gradient1 for scheduled and gradient0 for
-     clocked in times. */
+  /* Make the bars pretty.  The gradient0 is red/yellow, the gradient1 
+     is blue/white, the gradient2 is green/yellow.  Using gradient0
+     for scheduled and gradient2 for clocked in times. */
 ?>
-<linearGradient id="gradient1" x1="0" x2="0" y1="0" y2="100%"><stop offset="0%" stop-color="red"/>
+<linearGradient id="gradient0" x1="0" x2="0" y1="0" y2="100%"><stop offset="0%" stop-color="red"/>
 <stop offset="100%" stop-color="yellow"/>
 </linearGradient>
-<linearGradient id="gradient0" x1="0" x2="0" y1="0" y2="100%"><stop offset="0%" stop-color="green"/>
+<linearGradient id="gradient1" x1="0" x2="0" y1="0" y2="100%"><stop offset="0%" stop-color="blue"/>
+<stop offset="100%" stop-color="white"/>
+</linearGradient>
+<linearGradient id="gradient2" x1="0" x2="0" y1="0" y2="100%"><stop offset="0%" stop-color="green"/>
 <stop offset="100%" stop-color="yellow"/>
 </linearGradient>
 </defs>
@@ -358,8 +363,8 @@ echo '" stroke="#666"/>
    starting at 1/6th down, the second at the halfway point, leaving a
    blank 1/6th above and below, the x should be their start time, the
    width should be how long they are clocked in for, the id should just
-   be generated, and the style has gradient0 for the clocked in time
-   and gradient1 as the scheduled time. */
+   be generated, and the style has gradient2 for the clocked in time
+   and gradient0 as the scheduled time. */
 
 for ($i=1; $i<=$timecard_rows; $i++) {
   echo '<rect height="',($yoffset/3);
@@ -368,7 +373,7 @@ for ($i=1; $i<=$timecard_rows; $i++) {
   echo '" width="',($xoffset*($timecard_array[$i]['Endtime']-$timecard_array[$i]['Starttime']));
   echo '" id="barelement',$i;
   echo '" onmousemove="ShowTooltipUpper(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',htmlspecialchars($timecard_array[$i]['pubsname']);
-  echo '" style="stroke:#000;stroke-width:1px;fill:url(#gradient0);"/>
+  echo '" style="stroke:#000;stroke-width:1px;fill:url(#gradient2);"/>
 ';
 }
 
@@ -379,8 +384,8 @@ for ($i=1; $i<=$sched_rows; $i++) {
   echo '" x="',($xstart+($sched_array[$i]['Starttime']*$xoffset));
   echo '" width="',($xoffset*($sched_array[$i]['Endtime']-$sched_array[$i]['Starttime']));
   echo '" id="barelement',$i;
-  echo '" onmousemove="ShowTooltipLower(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',htmlspecialchars($sched_array[$i]['pubsname']);
-  echo '" style="stroke:#000;stroke-width:1px;fill:url(#gradient1);"/></a>
+  echo '" onmousemove="ShowTooltipLower(evt)" onmouseout="HideTooltip(evt)" mouseovertext="',htmlspecialchars($sched_array[$i]['title']),' - ',htmlspecialchars($sched_array[$i]['pubsname']);
+  echo '" style="stroke:#000;stroke-width:1px;fill:url(#gradient0);"/></a>
 ';
 }
 
