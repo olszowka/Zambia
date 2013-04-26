@@ -18,20 +18,20 @@ $BioDB=BIODB; // make it a variable so it can be substituted
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 if ($BiotDB=="BIODB") {unset($BIODB);}
 
-## LOCALIZATIONS
+// LOCALIZATIONS
 $_SESSION['return_to_page']="SchedulePrint.php";
 $title="Schedule Printing";
 $print_p=$_GET['print_p'];
 $individual=$_GET['individual'];
 $group=$_GET['group'];
 
-## If the individual isn't a staff member, only serve up their schedule information
+// If the individual isn't a staff member, only serve up their schedule information
 if ($_SESSION['role']=="Participant") {$individual=$_SESSION['badgeid'];}
 
-## If an individual request, make sure it pulls all of the schedule for that person
+// If an individual request, make sure it pulls all of the schedule for that person
 if ($individual != "") {$group = "Participant','Programming','SuperProgramming','General','Watch','Registration','Vendor','Events','Logistics','Sales','Fasttrack";}
 
-## If no group is set, presume that you want the Participants
+// If no group is set, presume that you want the Participants
 if ($group == "") {$group='Participant';}
 
 $description="<P>A way to <A HREF=\"SchedulePrint.php?print_p=T&group=$group";
@@ -110,10 +110,9 @@ $query.="
   ORDER BY
     starttime";
 
-## Retrieve query
+// Retrieve query
 list($rows,$schedule_header,$schedule_array)=queryreport($query,$link,$title,$description,0);
 
-if ($print_p =="") {topofpagereport($title,$description,$additionalinfo);}
 for ($i=1; $i<=$rows; $i++) {
   $name=$schedule_array[$i]['pubsname'];
   $participant_array[$name]['name']=$schedule_array[$i]['pubsname'];
@@ -125,7 +124,7 @@ ksort($participant_array);
 
 foreach ($participant_array as $participant) {
   // Generic header info.
-  $printstring = "<P>&nbsp;</P><P>Greetings ".$participant['name'].",</P>";
+  $printstring.= "<P>&nbsp;</P><P>Greetings ".$participant['name'].",</P>";
 
   // Pull in the intro-blurb.
   if (file_exists("../Local/Verbiage/Schedule_Blurb_0")) {
@@ -135,23 +134,27 @@ foreach ($participant_array as $participant) {
   // Add the schedule.
   $printstring.= $participant['schedule'];
 
-  // Display, with the option of printing.
+  // If not on paper, add a <hr>, else a new page.
   if ($print_p == "") {
-    echo "$printstring<hr>";
-  } else {
-    $pdf->AddPage();
-    $pdf->writeHTMLCell($w=0, $h=0, $x='', $y='', $printstring, $border=0, $ln=1, $fill=0, $reseth=true, $align='', $autopadding=false);
+    echo "$printstring<hr>\n";
   }
- }
+  else {
+    $pdf->AddPage();
+  }
+}
 
+// Display, with the option of printing.
 if ($print_p == "") {
-  staff_footer();
- } else {
+  topofpagereport($title,$description,$additionalinfo);
+  echo "$printstring";
+  correct_footer();
+} else {
+  $pdf->AddPage();
+  $pdf->writeHTMLCell($w=0, $h=0, $x='', $y='', $printstring, $border=0, $ln=1, $fill=0, $reseth=true, $align='', $autopadding=false);
   if ($individual != "") {
     $pdf->Output('Schedule'.$name.'.pdf', 'I');
   } else {
     $pdf->Output('ScheduleAll.pdf', 'I');
   }
- }
-
+}
 ?>
