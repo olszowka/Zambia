@@ -1152,10 +1152,10 @@ function send_fixed_email_info($emailto,$subject,$body,$link,$title,$description
 function remove_flow_report ($flowid,$table,$title,$description) {
   global $link;
 
-  ## Establish the table name
+  // Establish the table name
   $tablename=$table."Flow";
 
-  ## Establish the table element or fail
+  // Establish the table element or fail
   if (strpos($table,"Group")) {
     $tableelement="gflowid";
   } elseif (strpos($table,"Personal")) {
@@ -1166,10 +1166,10 @@ function remove_flow_report ($flowid,$table,$title,$description) {
     exit ();
   }
 
-  ## Set up the query
+  // Set up the query
   $query="DELETE FROM $tablename where $tableelement=$flowid";
 
-  ## Execute the query and test the results
+  // Execute the query and test the results
   if (($result=mysql_query($query,$link))===false) {
     $message="<P>Error updating $tablename table.  Database not updated.</P>\n<P>";
     $message.=$query;
@@ -1190,17 +1190,17 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
   $mybadgeid=$_SESSION['badgeid'];
   $conid=$_SESSION['conid'];
 
-  ## Get phasetypeid list
+  // Get phasetypeid list
   $query="SELECT phasetypeid FROM $ReportDB.PhaseTypes ORDER BY phasetypeid";
 
-  ## Retrieve query
+  // Retrieve query
   list($phasecount,$unneeded_array_a,$phase_array)=queryreport($query,$link,$title,$description,0);
 
-  ## Build the limits
+  // Build the limits
   $firstphase=$phase_array[1]['phasetypeid'];
   $lastphase=$phase_array[$phasecount]['phasetypeid'];
 
-  ## Set the phase, if it is within the phasetypeid list
+  // Set the phase, if it is within the phasetypeid list
   $phasecheck="";
   if (($addphase<=$lastphase) AND ($addphase>=$firstphase)) {
     $phasecheck="phasetypeid='$addphase'";
@@ -1208,10 +1208,10 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
     $phasecheck="phasetypeid is NULL";
   }
 
-  ## Establish the table name
+  // Establish the table name
   $tablename=$table."Flow";
 
-  ## Establish the table element or fail
+  // Establish the table element or fail
   if (strpos($table,"Group")) {
     $torder="gfloworder";
     $tname="gflowname";
@@ -1228,10 +1228,10 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
     exit ();
   }
 
-  ## Get the last element number, to increment
+  // Get the last element number, to increment
   $query="SELECT $torder AS floworder FROM $tablename where $tname='$cname' AND $phasecheck ORDER BY $torder DESC LIMIT 0,1";
 
-  ## Execute the query, test the results and assign the array values
+  // Execute the query, test the results and assign the array values
   if (($result=mysql_query($query,$link))===false) {
     $message="<P>Error retrieving data from database.</P>\n<P>";
     $message.=$query;
@@ -1240,17 +1240,17 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
   }
   $floworder_array[1]=mysql_fetch_assoc($result);
 
-  ## Increment so we don't have redundant keys
+  // Increment so we don't have redundant keys
   $nextfloworder=$floworder_array[1]['floworder']+1;
 
-  ## Insert query
+  // Insert query
   if ($phasecheck!="phasetypeid is NULL") {
     $query="INSERT INTO $tablename (reportid,$tname,$torder,phasetypeid,conid) VALUES ($addreport,'$cname',$nextfloworder,$addphase,$conid)";
   } else {
     $query="INSERT INTO $tablename (reportid,$tname,$torder,conid) VALUES ($addreport,'$cname',$nextfloworder,$conid)";
   }
 
-  ## Execute query
+  // Execute query
   if (!mysql_query($query,$link)) {
     $message=$query."<BR>Error updating $tablename database.  Database not updated.";
     RenderError($title,$message);
@@ -1261,10 +1261,10 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
 function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
   global $link;
  
-  ## Establish the table name;
+  // Establish the table name;
   $tablename=$table."Flow";
 
-  ## Estabilsh the table elements, or fail;
+  // Estabilsh the table elements, or fail;
   if (strpos($table,"Group")) {
     $torder="gfloworder";
     $tname="gflowname";
@@ -1279,15 +1279,15 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
     exit ();
   }
 
-  ## Get element from table;
+  // Get element from table;
   $query="SELECT $torder,$tname,phasetypeid FROM $tablename WHERE $tid=$flowid";
   list($phaserows,$phaseheader_array,$phasereport_array)=queryreport($query,$link,$title,$description,0);
 
-  ## Set the current flow order number;
+  // Set the current flow order number;
   $corder=$phasereport_array[1][$torder];
   $cname=$phasereport_array[1][$tname];
 
-  ## Determine the next flow order number, depending on $direction;
+  // Determine the next flow order number, depending on $direction;
   if ($direction=="Up") {
     $norder=$corder-1;
     if ($norder<1) {
@@ -1303,7 +1303,7 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
     exit ();
   }
 
-  ## Determine if there is a phasetypeid attached to this particular flow element;
+  // Determine if there is a phasetypeid attached to this particular flow element;
   if (isset($phasereport_array[1]['phasetypeid'])) {
     $phase=$phasereport_array[1]['phasetypeid'];
     $phasecheck="phasetypeid='$phase'";
@@ -1311,7 +1311,7 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
     $phasecheck="phasetypeid is NULL";
   }
 
-  ## Get element to be swapped with from table, based on current element floworder and $norder
+  // Get element to be swapped with from table, based on current element floworder and $norder
   $query="SELECT $tid FROM $tablename WHERE $torder=$norder AND $tname='$cname' AND $phasecheck LIMIT 0,1";
   if (($result=mysql_query($query,$link))===false) {
     $message="<P>Error retrieving data from database.</P>\n<P>";
@@ -1320,10 +1320,10 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
     exit ();
   }
 
-  ## Swap the elements, checking for errors each time
+  // Swap the elements, checking for errors each time
   $query1="UPDATE $tablename set $torder=$norder where $tid=$flowid";
 
-  ## Execute the query and test the results
+  // Execute the query and test the results
   if (($result1=mysql_query($query1,$link))===false) {
     $message="<P>Error updating $tablename table.  Database not updated.</P>\n<P>";
     $message.=$query;
@@ -1331,13 +1331,13 @@ function deltarank_flow_report ($flowid,$table,$direction,$title,$description) {
     exit ();
   }
 
-  ## If there is nothing to swap with, simply stop here.
+  // If there is nothing to swap with, simply stop here.
   if (1==($row=mysql_num_rows($result))) {
     $replace_array[1]=mysql_fetch_assoc($result);
     $rtid=$replace_array[1][$tid];
     $query="UPDATE $tablename set $torder=$corder where $tid=$rtid";
 
-    ## Execute the query and test the results;
+    // Execute the query and test the results;
     if (($result=mysql_query($query,$link))===false) {
       $message="<P>Error updating $tablename table.  Database not updated.</P>\n<P>";
       $message.=$query;

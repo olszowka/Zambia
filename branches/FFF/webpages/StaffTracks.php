@@ -21,7 +21,7 @@ if (isset($_GET['feedback'])) {
 } else {
   $feedbackp='';
 }
-## LOCALIZATIONS
+// LOCALIZATIONS
 $_SESSION['return_to_page']="StaffTracks.html$feedbackp";
 $title="Event Tracks Schedule";
 $description="<P>Track Schedules for all sessions.</P>\n";
