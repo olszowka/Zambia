@@ -193,8 +193,8 @@ for ($i=1; $i<=$schdrows; $i++) {
   }
   if (isset($feedback_array['graph'][$schdarray[$i]["sessionid"]])) {
     $schdarray[$i]["autofeedbackgraph"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Feedback graph from surveys:<br>";
-    $schdarray[$i]["autofeedbackgraph"].="<img alt=\"".$feedback_array['key'][$schdarray[$i]['questiontypeid']]." title=\"".$feedback_array['key'][$schdarray[$i]['questiontypeid']]."\" src=\"ChartFeedback.php?sessionid=".$schdarray[$i]["sessionid"]."\"></TD>\n  </TR>\n";
-    $schdarray[$i]["autofeedbackgraph"].="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6>".$feedback_array['key']."</TD>\n  </TR>\n";
+    $schdarray[$i]["autofeedbackgraph"].=generateSvgString($schdarray[$i]["sessionid"]);
+    $schdarray[$i]["autofeedbackgraph"].="</TD>\n  </TR>\n";
   }
   if (isset($feedback_array[$schdarray[$i]["sessionid"]])) {
     $schdarray[$i]["feedbackwritten"]="  <TR>\n    <TD>&nbsp;</TD>\n    <TD colspan=6 class=border1000>Written feedback from surveys:\n";

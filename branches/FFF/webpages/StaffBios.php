@@ -226,7 +226,8 @@ for ($i=1; $i<=$elements; $i++) {
     }
     if (isset($feedback_array['graph'][$element_array[$i]["Sessionid"]])) {
       echo "  </DD>\n  <DD>Feedback graph from surveys:\n<br>\n";
-      echo sprintf("<img alt=\"%s\" title=\"%s\" src=\"ChartFeedback.php?sessionid=%s\">\n<br>\n",$feedback_array['key'][$element_array[$i]['questiontypeid']],$feedback_array['key'][$element_array[$i]['questiontypeid']],$element_array[$i]["Sessionid"]);
+      $graphstring=generateSvgString($element_array[$i]["Sessionid"]);
+      echo $graphstring;
     }
     if ($feedback_array[$element_array[$i]["Sessionid"]]) {
       echo "  </DD>\n    <DD>Written feedback from surveys:\n<br>\n";

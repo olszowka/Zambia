@@ -1480,6 +1480,194 @@ EOD;
   return ($message);
 }
 
+function generateSvgString($sessionid) {
+  /* Global Variables */
+  global $message_error,$message,$link;
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+  $conid=$_SESSION['conid'];  // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
+  /* Local Variables */
+  // Number of values offered
+  $possible_value_count=5;
+
+  // Number of offset and blank lines for the key
+  //  1 for "Out of", 1 for "Q#", 1 for the space above the title
+  //  1 for the title, 1 for the space below the title,
+  //  1 for the space between the two sets of information
+  //  1 for the bottom space
+  $key_blank_lines=7;
+
+  //should match $possible_values
+  $value_title[1]="Totally Disagree";
+  $value_title[2]="Somewhat Disagree";
+  $value_title[3]="Neutral";
+  $value_title[4]="Somewhat Agree";
+  $value_title[5]="Totally Agree";
+
+  $value_color[1]="red";
+  $value_color[2]="orange";
+  $value_color[3]="yellow";
+  $value_color[4]="green";
+  $value_color[5]="blue";
+
+  //Some fixed and calculated values
+  $fontsize=9;
+  $textyoffset=$fontsize;
+  $left_offset=$fontsize*6;
+  $top_offset=$fontsize;
+  $spacer=$fontsize;
+  $bar_width=($fontsize*9);
+  $short_bar_width=($bar_width/$possible_value_count);
+  $grid_percent=20;
+  $grid_count=100/$grid_percent;
+  $height=($bar_width*$grid_count);
+
+  // Get the count of each questionid mapped to questionvalue
+  $query=<<<EOD
+SELECT
+    concat(questionid,":",questionvalue) AS QQ,
+    count(*) AS tot,
+    questionid,
+    questionvalue
+  FROM
+      Feedback
+  WHERE
+    sessionid=$sessionid
+  GROUP BY
+    1
+EOD;
+
+  // Retrieve query
+  list($questidvalnos,$questidvalheader_array,$questidval_array)=queryreport($query,$link,$title,$description,0);
+
+  /* Create the graph_return array indexed by questionid and questionvalue.
+     This array holds the count of each of the values of the question answers per question.*/
+  for ($i=1; $i<=$questidvalnos; $i++) {
+    $graph_return[$questidval_array[$i]['questionid']][$questidval_array[$i]['questionvalue']]=$questidval_array[$i]['tot'];
+  }
+
+  // Get the total count of each questionid
+  $query=<<<EOD
+SELECT
+    questionid,
+    count(*) AS tot,
+    questiontext
+  FROM
+      Feedback
+    JOIN $ReportDB.QuestionsForSurvey USING (questionid)
+  WHERE
+    sessionid=$sessionid
+  GROUP BY
+    questionid
+
+EOD;
+
+  // Retrieve query
+  list($questvalnos,$questvalheader_array,$questval_array)=queryreport($query,$link,$title,$description,0);
+
+  /* Create the questid_array of the list of questions,
+     the graph_count array which is the total number answers for each question
+     and the qdesc for the key which is the actual question, mapped to the number.*/
+  for ($i=1; $i<=$questvalnos; $i++) {
+    $questid_array[]=$questval_array[$i]['questionid'];
+    $graph_count[$questval_array[$i]['questionid']]=$questval_array[$i]['tot'];
+    $qdesc[$questval_array[$i]['questionid']]=$questval_array[$i]['questiontext'];
+  }
+
+  $number_of_questions=count($questid_array);
+  $width=($number_of_questions*($bar_width+$spacer))+($left_offset*2);
+  $fullheight=($top_offset+$height+(($textyoffset+$fontsize)*($key_blank_lines+$possible_value_count+$number_of_questions)));
+
+  $svgstring="<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"".$width."px\" height=\"".$fullheight."px\" version=\"1.1\">\n";
+
+  // Get the precis name as graph_title
+  $query=<<<EOD
+SELECT
+    concat(title, if(secondtitle,concat(": ",secondtitle),"")) as Title
+  FROM
+      Sessions
+  WHERE
+    sessionid=$sessionid
+    
+EOD;
+
+  // Retrieve query
+  list($titlenos,$titleheader_array,$title_array)=queryreport($query,$link,$title,$description,0);
+
+  $graph_title=htmlspecialchars($title_array[1]['Title']);
+
+  // Begin grouping
+  $svgstring.='<g font-size="'.$fontsize.'px" font-family="helvetica" fill="#000">'."\n";
+
+  // Left side percentage counts
+  for ($i=0; $i<=$grid_count; $i++) {
+    $svgstring.='<text x="'.($left_offset-2).'" ';
+    $svgstring.='y="'.($top_offset+$textyoffset+$height-((($i*$grid_percent)/100)*$height)).'" ';
+    $svgstring.='text-anchor="end">'.$i*$grid_percent.'%-</text>'."\n";
+  }
+
+  // The bars
+  $k=0;
+  foreach ($questid_array as $i) {
+    for ($j=$possible_value_count; $j>=1; $j--) {
+      if ((isset($graph_return[$i][$j])) and ($graph_return[$i][$j] > 0)) {
+	$graph_percent=(($graph_return[$i][$j]/$graph_count[$i])*100);
+	$svgstring.='<rect height="'.(($graph_percent/$grid_percent)*$bar_width).'" ';
+	$svgstring.='x="'.((($bar_width+$spacer)*$k)+$left_offset).'" ';
+	$svgstring.='y="'.($top_offset+$height-(($graph_percent/$grid_percent)*$bar_width)).'" ';
+	$svgstring.='width="'.($short_bar_width*$j).'" ';
+	$svgstring.='style="stroke:#000;stroke-width:1ps;fill:'.$value_color[$j].';"/>'."\n";
+      }
+    }
+    $svgstring.='<text x="'.((($bar_width+$spacer)*$k)+$left_offset+($bar_width/2)).'" ';
+    $svgstring.='y="'.($top_offset+$height+$textyoffset+$fontsize).'" ';
+    $svgstring.='text-anchor="middle">Q'.$i.'</text>'."\n";
+    $svgstring.='<text x="'.((($bar_width+$spacer)*$k)+$left_offset+($bar_width/2)).'" ';
+    $svgstring.='y="'.($top_offset+$height+(($textyoffset+$fontsize)*2)).'" ';
+    $svgstring.='text-anchor="middle">Out of '.$graph_count[$i].'</text>'."\n";
+    $k++;			      
+  }
+
+  // Right-side percentage counts
+  for ($i=0; $i<=$grid_count; $i++) {
+    $svgstring.='<text x="'.((($bar_width+$spacer)*$k)+$left_offset+2).'" ';
+    $svgstring.='y="'.($top_offset+$textyoffset+$height-((($i*$grid_percent)/100)*$height)).'" ';
+    $svgstring.='text-anchor="start">-'.$i*$grid_percent.'%</text>'."\n";
+  }
+
+  // Key
+  $l=4;
+  $svgstring.='<text x="'.(((($bar_width+$spacer)*$k)+($left_offset*2)+2)/2).'" ';
+  $svgstring.='y="'.($top_offset+$height+(($textyoffset+$fontsize)*$l)).'" ';
+  $svgstring.='text-anchor="middle">Feedback results for '.$graph_title.'</text>'."\n";
+  $l++;
+  for ($i=$possible_value_count; $i>=1; $i--) {
+    $l++;
+    $svgstring.='<text x="'.$left_offset.'" ';
+    $svgstring.='y="'.($top_offset+$height+(($textyoffset+$fontsize)*$l)).'" ';
+    $svgstring.='fill="'.$value_color[$i].'" ';
+    $svgstring.='text-anchor="start">'.$value_title[$i].'='.$value_color[$i].'</text>'."\n";
+  }
+  $l++;
+  foreach ($questid_array as $i) {
+    $l++;
+    $svgstring.='<text x="'.$left_offset.'" ';
+    $svgstring.='y="'.($top_offset+$height+(($textyoffset+$fontsize)*$l)).'" ';
+    $svgstring.='text-anchor="start">Q '.$i.': '.$qdesc[$i].'</text>'."\n";
+  } 
+
+  // Close the group, and the SVG
+  $svgstring.="</g>\n";
+  $svgstring.="</svg>\n";
+
+  return($svgstring);
+}
+
 /* These three selects build session_array, list of comments associated with each class into
  session_array['sessionid'] if there should be a graph for that sessionid into
  session_array['graph']['sessionid'] and the key in session_array['key']
@@ -1549,27 +1737,6 @@ EOD;
 
   while ($row=mysql_fetch_assoc($result)) {
     $session_array['graph'][$row['sessionid']]++;
-  }
-
-  // Get the questions, in questionid order, and put them in session_array['key']
-  $query = <<<EOD
-SELECT
-    questionid,
-    questiontext,
-    questiontypeid
-  FROM
-      $ReportDB.QuestionsForSurvey
-  ORDER BY
-    questionid
-EOD;
-  if (!$result=mysql_query($query,$link)) {
-    $message.=$query."<BR>Error querying database.<BR>";
-    RenderError($title,$message);
-    exit();
-  }
-
-  while ($row=mysql_fetch_assoc($result)) {
-    $session_array['key'][$row['questiontypeid']].="Q: ".$row['questionid']. " &mdash; " .$row['questiontext']. "\n";
   }
 
   return($session_array);
