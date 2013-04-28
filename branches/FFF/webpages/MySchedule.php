@@ -45,10 +45,10 @@ $query = <<<EOD
 SELECT
     message
   FROM
-      $ReportDB.CongoDump C
-    LEFT JOIN RegTypes R on C.regtype=R.regtype
+      $ReportDB.CongoDump
+    LEFT JOIN $ReportDB.RegTypes USING (regtype)
   WHERE
-    C.badgeid="$badgeid"
+    badgeid="$badgeid"
 EOD;
 if (!$result=mysql_query($query,$link)) {
   $message.=$query."<BR>Error querying database.<BR>";

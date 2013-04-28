@@ -170,8 +170,9 @@ function RenderEditCreateParticipant ($action, $participant_arr, $permrole_arr, 
             <DIV class="denseform">
                 <SPAN><LABEL for="phone">Phone: </LABEL><INPUT type="text" size=14 name="phone"
                      value="<?php echo htmlspecialchars($participant_arr["phone"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
-                <SPAN><LABEL for="regtype">Registration Type: </LABEL><INPUT type="text" size=14 name="regtype"
-                     value="<?php echo htmlspecialchars($participant_arr["regtype"],ENT_COMPAT);?>">&nbsp;&nbsp;</SPAN>
+                <SPAN><LABEL for="regtype">Registration Type: </LABEL><SELECT name="regtype">
+                    <?php populate_select_from_query("SELECT regtype, regtype FROM $ReportDB.RegTypes", $participant_arr['regtype'], "SELECT", FALSE); ?>
+                    </SELECT>
                 </DIV>
             <DIV style="margin: 0.5em; padding: 0em"><TABLE style="margin: 0em; padding: 0em" ><COL width=600><COL>
               <TR style="margin: 0em; padding: 0em">
