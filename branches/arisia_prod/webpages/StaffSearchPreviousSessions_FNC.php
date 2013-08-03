@@ -216,7 +216,7 @@ function RenderSearchPrevSessionResults() {
     echo "<div class=\"clearfix\"><BUTTON type=submit class=\"btn btn-primary pull-right\" value=\"submitimport\">Import</BUTTON></div>\n";
     echo "<TABLE class=\"table-condensed\">\n";
     foreach ($result_array as $resultrowindex => $resultrow) {
-        echo "<TR><TD colspan=6><hr /></TD></TR>\n";
+        echo "<TR><TD colspan=6><hr style='margin: 0;'/></TD></TR>\n";
         echo "<TR><TD rowspan=3>&nbsp;</TD>";
         echo "<TD colspan=5><strong>".htmlspecialchars($resultrow['title'],ENT_NOQUOTES)."<strong></TD></TR>\n";
         echo "<TR><TD><LABEL class=\"checkbox\"><INPUT type=\"checkbox\" name=\"import$resultrowindex\"";
