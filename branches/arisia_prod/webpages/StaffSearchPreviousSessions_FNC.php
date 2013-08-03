@@ -20,18 +20,20 @@ function RenderSearchPreviousSessions() {
             }
 ?>
 
-<P>Use this page to search for session records from previous cons to import to the current list of sessions.</P>
-<FORM method=POST action="ShowPreviousSessions.php">
-<SPAN class="controlwithlabel">
-    <SPAN class="newlabel"><LABEL for="currenttrack">Current Track</LABEL></SPAN>
-    <SPAN class="control"><SELECT name="currenttrack">
-        <?php populate_select_from_table("Tracks", $SessionSearchParameters['currenttrack'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
-        </SELECT></SPAN>
-    </SPAN>
-<SPAN class="controlwithlabel">
-    <SPAN class="newlabel"><LABEL for="previoustrack">Obsolete Track</LABEL></SPAN>
-    <SPAN class="control"><SELECT name="previoustrack">
-        <?php $query=<<<EOD
+<FORM method="POST" action="ShowPreviousSessions.php" class="well form-inline">
+  <fieldset>
+    <P>Use this page to search for session records from previous cons to import to the current list of sessions.</P>
+      <DIV class="row-fluid">
+        <DIV class="span2">
+            <LABEL for="currenttrack" class="control-label">Current Track: </LABEL>
+                <SELECT name="currenttrack" class="xspan2">
+                    <?php populate_select_from_table("Tracks", $SessionSearchParameters['currenttrack'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
+                </SELECT>
+        </DIV>
+        <DIV class="span2">
+            <LABEL for="previoustrack" class="control-label">Obsolete Track: </LABEL>
+                <SELECT name="previoustrack" class="xspan2">
+                    <?php $query=<<<EOD
 SELECT
         CONCAT(PC.previousconid,"a",PCT.previoustrackid), CONCAT(PC.previousconname,": ",PCT.trackname)
     FROM
@@ -43,25 +45,25 @@ SELECT
     ORDER BY
         PC.display_order, PCT.previoustrackid
 EOD;
-        populate_select_from_query($query, $SessionSearchParameters['previouscontrack'], "ANY", TRUE); ?>
-        </SELECT></SPAN>
-    </SPAN>
-<SPAN class="controlwithlabel">
-    <SPAN class="newlabel"><LABEL for="previouscon">Previous Con</LABEL></SPAN>
-    <SPAN class="control"><SELECT name="previouscon">
-        <?php populate_select_from_table("PreviousCons", $SessionSearchParameters['previouscon'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
-        </SELECT></SPAN>
-    </SPAN>
-<SPAN class="controlwithlabel">
-    <SPAN class="newlabel"><LABEL for="type">Type</LABEL></SPAN>
-    <SPAN class="control"><SELECT name="type">
-        <?php populate_select_from_table("Types", $SessionSearchParameters['type'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
-        </SELECT></SPAN>
-    </SPAN>
-<SPAN class="controlwithlabel">
-    <SPAN class="newlabel"><LABEL for="status">Status</LABEL></SPAN>
-    <SPAN class="control"><SELECT name="status">
-        <?php $query=<<<EOD
+                            populate_select_from_query($query, $SessionSearchParameters['previouscontrack'], "ANY", TRUE); ?>
+                </SELECT>
+        </DIV>
+        <div class="span2">
+            <LABEL class="control-label" for="previouscon">Previous Con: </LABEL>
+                <SELECT name="previouscon" class="xspan2">
+                    <?php populate_select_from_table("PreviousCons", $SessionSearchParameters['previouscon'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
+                </SELECT>
+        </div>
+        <div class="span2">
+            <LABEL class="control-label" for="type">Type: </LABEL>
+                <SELECT name="type" class="xspan2">
+                    <?php populate_select_from_table("Types", $SessionSearchParameters['type'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
+                </SELECT>
+        </div>
+        <div class="span2">
+            <LABEL class="control-label" for="status">Status: </LABEL>
+                <SELECT name="status" class="xspan2">
+                    <?php $query=<<<EOD
 SELECT
         ST.statusid, ST.statusname
     FROM
@@ -71,21 +73,26 @@ SELECT
     ORDER BY
         ST.display_order
 EOD;
-        populate_select_from_query($query, $SessionSearchParameters['status'], "ANY", TRUE); ?>
-        </SELECT></SPAN>
-    </SPAN>
-<SPAN class="controlwithlabel">
-    <SPAN class="newlabel"><LABEL for="title">Title</LABEL></SPAN>
-    <SPAN class="control"><INPUT type="text" name="title" size="40" value="<?php echo $SessionSearchParameters['title'];?>"></SPAN>
-    <SPAN class="caption"><LABEL for="title">Enter a word or phrase for which to search.  Leave blank for any.</LABEL></SPAN>
-    </SPAN>
-<SPAN class="controlwithlabel">
-    <SPAN><INPUT type="checkbox" name="showimported" <?php echo $SessionSearchParameters['showimported']?'checked':''; ?>></SPAN>
-    <SPAN><LABEL for="showimported">Include in results sessions which have been imported already.</LABEL></SPAN>
-    </SPAN>
-    <DIV><BUTTON type=submit value="search">&nbsp;Search&nbsp;</BUTTON></DIV>
-  </FORM>
-<BR>
+                populate_select_from_query($query, $SessionSearchParameters['status'], "ANY", TRUE); ?>
+                </SELECT>
+        </div>
+    </div><br />
+    <DIV class="row-fluid">
+            <LABEL class="control-label" for="title">Title: </LABEL>
+                <INPUT type="text" name="title" size="40" value="<?php echo $SessionSearchParameters['title'];?>">
+                <span class="help-inline">Enter a word or phrase for which to search. Leave blank for any.</span>
+    </div><br />
+    <DIV class="row-fluid">
+            <label class="checkbox">
+                    <INPUT type="checkbox" name="showimported" <?php echo $SessionSearchParameters['showimported']?'checked':''; ?>>
+                    Include in results sessions which have been imported already.
+                </label>
+    </div><br />
+    <DIV class="row-fluid">
+        <BUTTON type="submit" class="btn btn-primary" value="search">Search</BUTTON>
+    </div>
+  </fieldset>
+</FORM>
 <?php } // End of RenderSearchPreviousSessions()
 
 function HandleSearchParameters() {
@@ -191,7 +198,7 @@ function PerformPrevSessionSearch () {
     $query.=" ORDER BY PC.display_order, PS.previoustrackid";
     $result=mysql_query($query,$link);
     if (!$result) {
-        $message_error=$query."<BR>Error querying database.";
+        $message_error=$query."Error querying database.";
         Return(FALSE);
         }
     if(mysql_num_rows($result)==0) {
@@ -205,30 +212,28 @@ function RenderSearchPrevSessionResults() {
     global $result;
     while ($result_array[]=mysql_fetch_array($result,MYSQL_ASSOC));
     array_pop($result_array);
-    echo "<FORM method=POST action=\"SubmitImportSessions.php\">\n";
-    echo "<BUTTON type=submit value=\"submitimport\">&nbsp;Import&nbsp;</BUTTON>\n";
-    echo "<TABLE><COL><COL><COL><COL><COL><COL>\n";
-    echo "<TR><TD colspan=6 class=\"border0020\">&nbsp;</TD></TR>\n";
+    echo "<div class=\"row-fluid\"><FORM method=POST action=\"SubmitImportSessions.php\" class=\"form-horizontal\">\n";
+    echo "<div class=\"clearfix\"><BUTTON type=submit class=\"btn btn-primary pull-right\" value=\"submitimport\">Import</BUTTON></div>\n";
+    echo "<TABLE class=\"table-condensed\">\n";
     foreach ($result_array as $resultrowindex => $resultrow) {
-        echo "<TR><TD colspan=6 class=\"border0000\">&nbsp;</TD></TR>\n";
+        echo "<TR><TD colspan=6><hr /></TD></TR>\n";
         echo "<TR><TD rowspan=3>&nbsp;</TD>";
-        echo "<TD colspan=5 class=\"emphasis\">".htmlspecialchars($resultrow['title'],ENT_NOQUOTES)."</TD></TR>\n";
-        echo "<TR><TD><INPUT type=\"checkbox\" name=\"import$resultrowindex\"";
+        echo "<TD colspan=5><strong>".htmlspecialchars($resultrow['title'],ENT_NOQUOTES)."<strong></TD></TR>\n";
+        echo "<TR><TD><LABEL class=\"checkbox\"><INPUT type=\"checkbox\" name=\"import$resultrowindex\"";
         if ($resultrow['importedsessionid']!='') {
             echo " disabled checked";
             }
-        echo "><LABEL for=\"import$resultrowindex\">&nbsp;Import</LABEL>";
+        echo ">Import</LABEL>";
         echo "<INPUT type=\"hidden\" name=\"previousconid$resultrowindex\" value=\"{$resultrow['previousconid']}\">";
         echo "<INPUT type=\"hidden\" name=\"previoussessionid$resultrowindex\" value=\"{$resultrow['previoussessionid']}\"></TD>";
-        echo "<TD>{$resultrow['trackname']}</TD>";
-        echo "<TD>{$resultrow['typename']}</TD>";
-        echo "<TD>{$resultrow['statusname']}</TD>";
-        echo "<TD>{$resultrow['previousconname']}</TD></TR>\n";
+        echo "<TD><span class=\"label\">{$resultrow['trackname']}</span></TD>";
+        echo "<TD><span class=\"label\">{$resultrow['typename']}</span></TD>";
+        echo "<TD><span class=\"label\">{$resultrow['statusname']}</span></TD>";
+        echo "<TD><span class=\"label label-info\">{$resultrow['previousconname']}</span></TD></TR>\n";
         echo "<TD colspan=5 class=\"padding2000\">".htmlspecialchars($resultrow['progguiddesc'],ENT_NOQUOTES)."</TD></TR>\n";
-        echo "<TR><TD colspan=6 class=\"border0020\">&nbsp;</TD></TR>\n";
         }
     echo "<INPUT type=\"hidden\" name=\"lastrownum\" value=\"$resultrowindex\">\n";
-    echo "</TABLE><BUTTON type=submit value=\"submitimport\">&nbsp;Import&nbsp;</BUTTON></FORM>\n";
+    echo "</TABLE><hr /><div class=\"clearfix\"><BUTTON type=submit class=\"btn btn-primary pull-right \" value=\"submitimport\">Import</BUTTON></div></FORM>\n";
     }  // End of RenderSearchPrevSessionResults()
     
 function ProcessImportSessions() {
@@ -278,14 +283,14 @@ function ProcessImportSessions() {
                 Return(FALSE);
                 }
             if (($x=mysql_affected_rows($link))!=1) { 
-                $message_error=$query2."<BR>There was a problem because 1 row was expected to ";
+                $message_error=$query2."There was a problem because 1 row was expected to ";
                 $message_error.="be inserted, but $x rows were actually inserted. ";
                 rollback();
                 Return(FALSE);
                 }
             $sessionid=mysql_insert_id($link);
             if ($sessionid==0 || !$sessionid) { 
-                $message_error=$query2."<BR>Insert id not returned as expected from previous query. ";
+                $message_error=$query2."Insert id not returned as expected from previous query. ";
                 rollback();
                 Return(FALSE);
                 }
@@ -295,12 +300,12 @@ function ProcessImportSessions() {
         	$query3.="        previoussessionid=$previoussessionid\n";
         	$result=mysql_query($query3,$link);
             if (!$result) {
-                $message_error=$query3."<BR>Error querying database.";
+                $message_error=$query3."Error querying database.";
                 rollback();
                 Return(FALSE);
                 }
             if (($x=mysql_affected_rows($link))!=1) { 
-                $message_error=$query3."<BR>There was a problem because 1 row was expected to ";
+                $message_error=$query3."There was a problem because 1 row was expected to ";
                 $message_error.="be inserted, but $x rows were actually inserted. ";
                 rollback();
                 Return(FALSE);
@@ -310,19 +315,19 @@ function ProcessImportSessions() {
            $query4.="    Values($sessionid, \"$badgeid\", \"$name\", \"$email\", NULL, 6, 6, NULL)\n";
            $result=mysql_query($query4,$link);
            if (!$result) {
-               $message_error=$query4."<BR>Error querying database.";
+               $message_error=$query4."Error querying database.";
                rollback();
                Return(FALSE);
                }
            if (($x=mysql_affected_rows($link))!=1) { 
-               $message_error=$query4."<BR>There was a problem because 1 row was expected to ";
+               $message_error=$query4."There was a problem because 1 row was expected to ";
                $message_error.="be inserted, but $x rows were actually inserted. ";
                rollback();
                Return(FALSE);
                }
            $result=mysql_query("COMMIT",$link);
            if (!$result) {
-               $message_error="COMMIT<BR>Error querying database.";
+               $message_error="COMMIT: Error querying database.";
                Return(FALSE);
                }
             $success_rows++;
