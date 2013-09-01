@@ -1,7 +1,7 @@
 <?php
     // This function will output the page with the form to add or create a session
     // Variables
-    //     action: "create" or "edit"
+    //     action: "create"/"edit"/"brainstorm"/"propose"
     //     session: array with all data of record to edit or defaults for create
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
@@ -16,26 +16,31 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     if ($BiotDB=="BIODB") {unset($BIODB);}
 
     if ($action=="create") {
-            $title="Add New Session";
-	    $description="<P>Saving an added session presumes you are going to add another new session next.</P>";
-            }
-        elseif ($action=="edit") {
-            $title="Edit Session";
-            $description="<P>Hit either the top or the bottom \"Save\" button when you are done with your changes.</P>\n";
-	    $additionalinfo ="<P>Clicking on the session number will allow you to assign participants to your session.";
-	    $additionalinfo.=" A specific person's class should have their Invited Guests Only box checked so other";
-	    $additionalinfo.=" presenters won't be presented with the option of that class.</P>\n";
-            }
-        else {
-            exit();
-            }
+      $title="Add New Session";
+      $description="<P>Saving an added session presumes you are going to add another new session next.</P>";
+    } elseif ($action=="edit") {
+      $title="Edit Session";
+      $description="<P>Hit either the top or the bottom \"Save\" button when you are done with your changes.</P>\n";
+      $additionalinfo ="<P>Clicking on the session number will allow you to assign participants to your session.";
+      $additionalinfo.=" A specific person's class should have their Invited Guests Only box checked so other";
+      $additionalinfo.=" presenters won't be presented with the option of that class.</P>\n";
+    } elseif ($action=="propose") {
+      $title="Propose Session";
+      $description="<P>Saving a propopsed session presumes you are going to propose another new session next.</P>";
+      $additionalinfo ="<P>Here are the sessions you previously proposed:</P>\n";
+    } elseif ($action=="brainstorm") {
+      $title="Proposed Session";
+      $description="<P>Saving a propopsed session presumes you are going to propose another new session next.</P>";
+    } else {
+      exit();
+    }
 
     // Get the various length limits
     $limit_array=getLimitArray();
 
     topofpagereport($title,$description,$additionalinfo);
     
-    // still inside function RenderAddCreateSession
+    // still inside function RenderEditCreateSession
     if (strlen($message1)>0) {
       echo "<P id=\"message1\"><font color=red>".$message1."</font></P>\n";
     }
@@ -58,36 +63,59 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
                 <TD style="margin: 0em; padding: 0em">
-<?php /*                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON> Dyked out for safety purposes */ ?>
                     <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
                     </TD></TR></TABLE>
                 </DIV>
             <DIV class="denseform">
+		<?php if ($action=="brainstorm") { ?>
+		<SPAN><LABEL for="name">Your name: </LABEL>
+		      <INPUT type="TEXT" name="name" value="<?php echo htmlspecialchars($name,ENT_COMPAT);?>"></SPAN>
+		<SPAN><LABEL for="email">Your email address: </LABEL>
+		      <INPUT type="TEXT" name="email" value="<?php echo htmlspecialchars($email,ENT_COMPAT);?>"></SPAN>
+                </DIV><DIV class="denseform">
+                <?php } else { ?>
+                <INPUT type="hidden" name="name" value="<?php echo htmlspecialchars($name,ENT_COMPAT);?>">
+                <INPUT type="hidden" name="email" value="<?php echo htmlspecialchars($email,ENT_COMPAT);?>">
+                <?php } ?>
+                <?php if (($action=="propose") or ($action=="brainstorm")) { ?>
+                <INPUT type="hidden" name="divisionid" value="Programming">
+                <INPUT type="hidden" name="sessionid" value="<?php echo $session["sessionid"];?>">
+                <?php } else { ?>
                 <SPAN><LABEL for="sessionid">Session #: </LABEL><A HREF=StaffAssignParticipants.php?selsess=<?php echo $session["sessionid"];?>>
                       <?php echo $session["sessionid"];?></A>
                       <INPUT type="hidden" name="sessionid" value="<?php echo $session["sessionid"];?>"></SPAN>
                 <SPAN><LABEL for="divisionid">Division: </LABEL><SELECT name="divisionid">
                      <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
                      </SELECT>&nbsp;&nbsp;</SPAN>
+                <?php } ?>
                 <SPAN><LABEL for="track">Track: </LABEL><SELECT name="track">
                     <?php populate_select_from_table("$ReportDB.Tracks", $session["track"], "SELECT", FALSE); ?>
                     </SELECT>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="type">Type: </LABEL><SELECT name="type">
                     <?php populate_select_from_table("$ReportDB.Types", $session["type"], "SELECT", FALSE); ?>
                     </SELECT>&nbsp;&nbsp;</SPAN>
+                <?php if (($action=="propose") or ($action=="brainstorm")) { ?>
+                <INPUT type="hidden" name="pubsttausid" value="Public">
+                <?php } else { ?>
                 <SPAN><LABEL for="pubstatusid">Pub. Status: </LABEL><SELECT name="pubstatusid">
                     <?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT", FALSE); ?>
                     </SELECT></SPAN>
+                <?php } ?>
                 </DIV>
             <DIV class="denseform">
                 <SPAN><LABEL for="title">Title: </LABEL><INPUT type=text size="50" name="title"
                     value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT); ?>">&nbsp;&nbsp;</SPAN>
+                <?php if (($action=="propose") or ($action=="brainstorm")) { ?>
+                <INPUT type="hidden" name="invguest" value="invguest">
+                <INPUT type="hidden" name="signup" value="">
+                <?php } else { ?>
                 <SPAN id="sinvguest"><LABEL for="invguest">Invited Guests Only? </LABEL>
                     <INPUT type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?>
                     name="invguest">&nbsp;&nbsp;</SPAN>
                 <SPAN id="ssignup"><LABEL for="signup">Sign up Req.?</LABEL>
                     <INPUT type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?>
                     name="signup">&nbsp;&nbsp;</SPAN>
+		<?php } ?>
                 <?php if (strtoupper(MY_AVAIL_KIDS)=="FALSE") { ?>
 	        <SPAN><INPUT type="hidden" name="kids" value="<?php echo $session["kids"];?>"></SPAN>
 		<?php } else { ?>
@@ -119,18 +147,31 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 }
 ?>
             <DIV class="denseform">
+                <?php if (($action=="propose") or ($action=="brainstorm")) { ?>
+                <INPUT type="hidden" name="atten" value="">
+                <INPUT type="hidden" name="duration" value="<?php echo htmlspecialchars($session["duration"],ENT_COMPAT) ?>";
+                <?php } else { ?>
                 <SPAN><LABEL for="atten">Est. Atten.:</LABEL>
                     <INPUT type=text size="3" name="atten" value="<?php
                     echo htmlspecialchars($session["atten"],ENT_COMPAT)."\">"; ?>&nbsp;&nbsp;</SPAN>
                 <SPAN><LABEL for="duration">Duration:</LABEL>
                     <INPUT type=text size="5" name="duration" value="<?php
                     echo htmlspecialchars($session["duration"],ENT_COMPAT)."\">"; ?>&nbsp;&nbsp;</SPAN>
+		<?php } ?>
+                <?php if ($action=="brainstorm") { ?>
+                <INPUT type="hidden" name="roomset" value="unspecified">
+                <?php } else { ?>
                 <SPAN><LABEL for="roomset">Room Set: </LABEL>
                     <SELECT name="roomset"><?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
                     </SELECT>&nbsp;&nbsp;</SPAN>
+		<?php } ?>
+                <?php if (($action=="propose") or ($action=="brainstorm")) { ?>
+                <INPUT type="hidden" name="status" value="Brainstrom">
+                <?php } else { ?>
                 <SPAN><LABEL for="status">Status:</LABEL>
                     <SELECT name="status"><?php populate_select_from_table("$ReportDB.SessionStatuses", $session["status"], "", FALSE); ?></SELECT>
                     </SPAN>
+		<?php } ?>
                 </DIV>
         <HR class="withspace">
         <DIV class="thinbox">
@@ -140,11 +181,13 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=80 rows=5 name="progguiddesc" 
                             ><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
+                <?php if ($action!="brainstorm") { ?>
                 <TR>
                     <TD class="txtalbl"><LABEL class="dense" for="pocketprogtext">Program Book Description (<?php echo $limit_array['min']['book']['desc']."-".$limit_array['max']['book']['desc'] ?>):</LABEL></TD>
                     <TD class="txta"><TEXTAREA class="textlabelarea" cols=80 name="pocketprogtext" 
                             ><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
+		<?php } ?>
 <?php
         if (strtoupper(BILINGUAL)=="TRUE") {
                 echo "                <TR>\n";
@@ -155,13 +198,30 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 echo "                    </TR>\n";
                 }
 ?>
+                <?php if (($action=="propose") or ($action=="brainstorm")) { ?>
+                <INPUT type="hidden" name="persppartinfo" value="">
+                <?php } else { ?>
                 <TR id="trprospartinfo">
                     <TD class="txtalbl-last"><LABEL class="dense" for="persppartinfo">Prospective Participant Info:</LABEL></TD>
                     <TD class="txta-last"><TEXTAREA class="textlabelarea" cols=80 name="persppartinfo"
                             ><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></TEXTAREA></TD>
                     </TR>
+		<?php } ?>
+                <?php if ($action=="brainstorm") { ?>
+                <TR id="trprognotes">
+                    <TD class="txtalbl-last" colspan=2><LABEL class="dense" for="notesforprog">Additional info (including if there is a particular presenter you want to present this) for Programming Committee:</LABEL></TD></TR>
+                    <TD></TD><TD class="txta-last"><TEXTAREA class="textlabelarea" cols=80 name="notesforprog"><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES);?></TEXTAREA></TD>
+                    </TR>
+                <?php } ?>
                 </TABLE>
             </DIV>
+            <?php if ($action=="propose") { ?>
+            <INPUT type="hidden" name="notesforprog" value="">
+            <?php } ?>
+            <?php if (($action=="propose") or ($action=="brainstorm")) { ?>
+            <INPUT type="hidden" name="notesforpart" value="<?php echo "$name $email $badgeid" ?>">
+            <INPUT type="hidden" name="servnotes" value="">
+            <?php } else { ?>
             <DIV class="thinbox">
             <TABLE><COL width="100"><COL>
                 <TR>
@@ -181,6 +241,11 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </TR>
                 </TABLE>
 		</DIV>
+	    <?php } ?>
+            <?php if ($action=="brainstorm") { ?>
+            <INPUT type="hidden" name="servdest[]" value="">
+            <INPUT type="hidden" name="featdest[]" value="">
+            <?php } else { ?> 
         <HR class="withspace"><DIV class="thinbox">
         <TABLE><COL><COL><COL>
         <TR>
@@ -239,6 +304,12 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 </DIV> <!-- Services -->
             </DIV>
 </DIV></TD>
+<?php } ?>
+<?php if (($action=="propose") or ($action=="brainstorm")) { ?>
+<INPUT type="hidden" name="pubchardest[]" value="">
+<INPUT type="hidden" name="vendfeatdest[]" value="">
+<INPUT type="hidden" name="spacedest[]" value="">
+<?php } else { ?>
 <TD style="vertical-align: top; padding-left: 1em" id="spubchar">
     <DIV>
         <LABEL class="dense" for="pubchardest">Publication<BR>Characteristics</LABEL>
@@ -299,9 +370,10 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                                 <?php populate_multidest_from_table("$ReportDB.VendorSpaces", $session["spacedest"]); ?></SELECT>
                             </SPAN>
                         </DIV>
-                </DIV> <!-- Services -->
+                </DIV> <!-- Spaces -->
             </DIV>
 </DIV></TD>
+<?php } ?>
 </DIV>
 
 </TR></TABLE>
@@ -311,17 +383,10 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
               <TR style="margin: 0em; padding: 0em">
                 <TD style="margin: 0em; padding: 0em">&nbsp;</TD>
                 <TD style="margin: 0em; padding: 0em">
-<?php /*                    <BUTTON class="ib" type=reset value="reset">Reset</BUTTON> Dyked out for safety purposes */ ?>
                     <BUTTON class="ib" type=submit value="save" onclick="mysubmit()">Save</BUTTON>
                     </TD></TR></TABLE>
                 </DIV>
-      <?php
-        if ($action=="create") {
-          echo "<INPUT type=\"hidden\" name=\"action\" value=\"create\">";
-        } else {
-          echo "<INPUT type=\"hidden\" name=\"action\" value=\"edit\">";
-        }
-      ?>
+      <?php echo "<INPUT type=\"hidden\" name=\"action\" value=\"$action\">";?>
       </FORM>
     </DIV>
-<?php staff_footer(); } ?>
+<?php correct_footer(); } ?>

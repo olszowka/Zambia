@@ -11,7 +11,7 @@ $BioDB=BIODB; // make it a variable so it can be substituted
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
 if ($BiotDB=="BIODB") {unset($BIODB);}
 
-$title="Brainstorm Suggested Presenter";
+$title="Suggest a Presenter";
 
 // Begin the display
 brainstorm_header($title);
@@ -77,7 +77,7 @@ $participant_arr['password']=md5("unassigned");
 $participant_arr['bestway']="Email";
 $participant_arr['interested']=$interested;
 $participant_arr['prognotes']="Suggested via Brainstorm"; 
-$participant_arr['regtype']="Suggested Presenter";
+$participant_arr['regtype']="SuggestedPresenter";
 
 global $youremail, $yourname;
 
@@ -163,13 +163,11 @@ function checkSubmitButton() {
 <DIV class="formbox">
   <FORM name="presenterform" class="bb"  method=POST action="BrainstormSuggestPresenter.php">
     <INPUT type="submit" ID="sButtonTop" value="Save">&nbsp;
-    <INPUT type="reset" value="Reset">
     <INPUT type="hidden" name="update" value="Yes">
     <?php foreach ($participant_arr as $key => $value) { echo "<INPUT type=\"hidden\" name=\"$key\" value=\"$value\">\n"; } ?>
     <P>Note: items in red must be completed before you can save.</P>
     <P>Please make sure your name and email address are valid as well as the presenter's.
-       If they aren't going to resolve properly the chance that we might invite the
-       presenter you are suggesting, decreases exponentially.</P>
+       If they are not, the chance that we might invite them decreases exponentially.</P>
     <TABLE>
       <TR>
         <TD class="form1">
@@ -200,7 +198,6 @@ function checkSubmitButton() {
     </TABLE>
     <BR>
     <INPUT type="submit" ID="sButtonBottom" value="Save">&nbsp;
-    <INPUT type="reset" value="Reset">
   </FORM>
 </DIV>
 <script language="javascript" type="text/javascript">

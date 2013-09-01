@@ -16,7 +16,7 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
     if ($BiotDB=="BIODB") {unset($BIODB);}
 
     $_SESSION['return_to_page']='BrainstormRenderCreateSession.php';
-    $title="Brainstorm New Session";
+    $title="Proposed Session";
     brainstorm_header($title);
     
     // still inside function RenderAddCreateSession
@@ -30,7 +30,7 @@ function BrainstormRenderCreateSession ($action, $session, $message1, $message2)
     //error_log("Zambia: ".print_r($session,TRUE));
   ?>
 <script language="javascript" type="text/javascript">
-var phase1required=new Array("name", "email", "track", "roomset", "title", "progguiddesc");
+var phase1required=new Array("name", "email", "track", "title", "progguiddesc");
 var currentPhase, unhappyColour, happyColor;
 
 function colourCodeElements(phaseName, unhappyC, happyC) {
@@ -116,8 +116,8 @@ var enable = true;
         <INPUT type="hidden" name="atten" value="<?php echo htmlspecialchars($session["atten"],ENT_COMPAT);?>">
         <INPUT type="hidden" name="kids" value="<?php echo $session["kids"];?>">
         <INPUT type="hidden" name="status" value="<?php echo $session["status"];?>">
+	<INPUT type="hidden" name="roomset" value="<?php echo $session["roomset"];?>">
         <INPUT type="hidden" name="action" value="brainstorm">
-        <INPUT type=reset value="Reset">&nbsp;
         <INPUT type=submit ID="sButtonTop" value="Save">
 	<p>Note: items in red must be completed before you can save.</p>
         <TABLE>
@@ -146,10 +146,6 @@ var enable = true;
                            <LABEL for="type" ID="type">Type:</LABEL><BR><SELECT name="type" onChange="return checkSubmitButton();">
                            <?php populate_select_from_table("$ReportDB.Types", $session["type"], "Panel", FALSE); ?>
                            </SELECT></TD>
-                       <TD class="form1">&nbsp;<BR>
-                           <LABEL for="roomset" ID="roomset">Room Set:</LABEL><BR><SELECT name="roomset" onChange="return checkSubmitButton();">
-                           <?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
-                           </SELECT></TD>
                        </TR>
 		   </TABLE>
                 </TR>
@@ -168,12 +164,11 @@ var enable = true;
              </TR>
             <TR>
                 <TD class="form1">&nbsp;<BR>
-          <LABEL for="notesforprog">Additional info for Programming Committee:</LABEL><BR>
+          <LABEL for="notesforprog">Additional info (including if there is a particular presenter you want to present this) for Programming Committee:</LABEL><BR>
             <TEXTAREA cols="70" rows="7" name="notesforprog" ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES); ?></TEXTAREA>
                 </TD>
              </TR>
          </TABLE><BR>
-        <INPUT type=reset value="Reset">&nbsp;
         <INPUT type=submit ID="sButtonBottom" value="Save">
       </FORM>
   </DIV>

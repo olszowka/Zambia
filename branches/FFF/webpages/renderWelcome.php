@@ -208,7 +208,7 @@ if (may_I('BrainstormSubmit')) {
     echo file_get_contents("../Local/Verbiage/Welcome_8");
   } else {
 ?>
-  <p> Use the <A HREF="BrainstormWelcome.php">"Suggest a Session"</A> tab above, at any point to:
+  <p> Use the <A HREF="MyProposals.php">"Submit a Proposal"</A> tab above, at any point to:
     <ul>
       <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
       <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner. 

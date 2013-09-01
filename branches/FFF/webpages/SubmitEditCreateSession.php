@@ -1,12 +1,13 @@
 <?php
-$action=$_POST["action"]; // "create" or "edit" or "brainstorm"
+$action=$_POST["action"]; // "create" or "edit" or "brainstorm" or "propose"
 if ($action=="brainstorm") {
   require_once ('BrainstormCommonCode.php');
+} elseif ($action=="propose") {
+  require_once ('PartCommonCode.php');
 } else {
   require_once ('StaffCommonCode.php');
 }
 require_once ('RenderEditCreateSession.php');
-require_once ('BrainstormRenderCreateSession.php');
 //session_start();
 global $name, $email, $messages;
 $messages="";
@@ -23,11 +24,7 @@ if ($status==false || $email_status==false) {
   $message_warn=$messages; // warning message
   $message_warn.="<BR>The data you entered was incorrect.  Database not updated.";
   //error_log($message_warn);
-  if ($action=='brainstorm') {
-    BrainstormRenderCreateSession($action,$session,$message_warn,$message_error);
-  } else {
-    RenderEditCreateSession($action,$session,$message_warn,$message_error);
-  }
+  RenderEditCreateSession($action,$session,$message_warn,$message_error);
   exit();
 }
 if ($action=="edit") {
@@ -51,16 +48,12 @@ if ($action=="edit") {
     exit();
   }
 }
-// action = create or brainstorm
+// action = create/brainstorm/propose
 $id=insert_session();
 if (!$id) {
   $message_warn=""; // warning message
   $message_warn.="<BR>".$query."\nUnknown error creating record.  Database not updated successfully.";
-  if ($action=='brainstorm') {
-    BrainstormRenderCreateSession($action,$session,$message_warn,$message_error);
-  } else {
-    RenderEditCreateSession($action,$session,$message_warn,$message_error);
-  }
+  RenderEditCreateSession($action,$session,$message_warn,$message_error);
   exit();
 }
 if ($id!=$session["sessionid"]) {
@@ -70,17 +63,13 @@ if ($id!=$session["sessionid"]) {
   $message_error="";
 }
 $message_warn="Session record created.  Database updated successfully.";
-// 1 is brainstorm; 2 is normal create
+// 1 is brainstorm; 2 is normal create ; should probably put something in there about proposals
 record_session_history($id, $badgeid, $name, $email, ($action=='brainstorm'?1:2), $session['status']);
 set_session_defaults();
 $id=get_next_session_id();
 if (!$id)
   exit();
 $session["sessionid"]=$id;
-if ($action=='brainstorm') {
-  BrainstormRenderCreateSession($action,$session,$message_warn,$message_error);
-} else {
-  RenderEditCreateSession($action,$session,$message_warn,$message_error);
-}
+RenderEditCreateSession($action,$session,$message_warn,$message_error);
 exit();
 ?>
