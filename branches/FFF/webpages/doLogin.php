@@ -79,9 +79,10 @@ if (retrieve_participant_from_db($badgeid)==0) {
   } elseif (may_I('Participant')) {
     require ('renderWelcome.php');
   } elseif (may_I('public_login')) {
-    require ('renderBrainstormWelcome.php');
+    require ('BrainstormWelcome.php');
   } else {
-    $message_error="There is a problem with your userid's permission configuration:  It doesn't have ";
+    $message_error.=print_r($_SESSION);
+    $message_error.="There is a problem with your userid's permission configuration:  It doesn't have ";
     $message_error.="permission to access any welcome page.  Please contact Zambia staff.";
     RenderError($title,$message_error);
   }
