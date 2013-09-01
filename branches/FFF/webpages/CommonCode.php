@@ -7,8 +7,10 @@ require_once('validation_functions.php');
 require_once('php_functions.php');
 require_once('error_functions.php');
 
+global $link;
 $ReportDB=REPORTDB; // make it a variable so it can be substituted
 $BioDB=BIODB; // make it a variable so it can be substituted
+$ConKey=CON_KEY; // make it a variable so it can be substituted
 
 // Tests for the substituted variables
 if ($ReportDB=="REPORTDB") {unset($ReportDB);}
@@ -26,6 +28,65 @@ if (isLoggedIn()==false and !isset($logging_in)) {
   require ('login.php');
   exit();
  };
+
+
+// Establish the con info
+$query= <<<EOF
+SELECT
+    conname,
+    constartdate,
+    connumdays,
+    conurl,
+    conlogo,
+    condefaultduration,
+    condurationminutes,
+    congridspacer
+  FROM
+      $ReportDB.ConInfo
+  WHERE
+      conid=$ConKey
+EOF;
+
+// Retrieve query fail if database can't be found, and if there isn't just one result
+if (($result=mysql_query($query,$link))===false) {
+  $message_error="Error retrieving data from database<BR>\n";
+  $message_error.=$query;
+  RenderError($title,$message_error);
+  exit();
+}
+if (0==($rows=mysql_num_rows($result))) {
+  $message_error.="Database query did not return any rows.<BR>\n";
+  $message_error.=$query;
+  RenderError($title,$message_error);
+  exit();
+}
+if (1<($rows=mysql_num_rows($result))) {
+  $message_error.="Too many results found.<BR>\n";
+  $message_error.=$query;
+  RenderError($title,$message_error);
+  exit();
+}
+
+$ConInfo_array=mysql_fetch_assoc($result);
+$ConInfo_array_keys=array_keys($ConInfo_array);
+foreach ($ConInfo_array_keys as $element) {
+  if ($_SESSION["$element"]=="") {$_SESSION["$element"]=$ConInfo_array["$element"];}
+}
+
+define("CON_NAME",$ConInfo_array['conname']);
+define("CON_START_DATIM",$ConInfo_array['constartdate']);
+define("CON_NUM_DAYS",$ConInfo_array['connumdays']);
+define("CON_URL",$ConInfo_array['conurl']);
+define("CON_LOGO",$ConInfo_array['conlogo']);
+define("DEFAULT_DURATION",$ConInfo_array['condefaultduration']);
+define("DURATION_IN_MINUTES",$ConInfo_array['condurationminutes']);
+define("GRID_SPACER",$ConInfo_array['congridspacer']);
+global $daymap;
+for ($i=0;$i<CON_NUM_DAYS;$i++) {
+  $today=strtotime(CON_START_DATIM)+(86400 * $i); // 86400 seconds in a day
+  $daymap['long'][$i+1]=strftime("%A",$today);
+  $daymap['short'][$i+1]=strftime("%a",$today);
+ }
 
 // function to generate a clickable tab.
 // 'text' contains the text that should appear in the tab.
@@ -184,7 +245,7 @@ function participant_header($title) {
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
     maketab("My Schedule",may_I('my_schedule'),"MySchedule.php");
     echo "</td>\n    <td class=\"tabblocks border0020\" colspan=2>\n       ";
-    maketab("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormWelcome.php");
+    maketab("Submit a Proposal",may_I('my_suggestions_write'),"MyProposals.php");
     echo "</td>\n    <td class=\"tabblocks border0020 smallspacer\">&nbsp;";
     echo "</td>\n  </tr>\n</table>\n";
     echo "<table class=\"header\">\n  <tr>\n    <td style=\"height:5px\"></td>\n  </tr>\n";
@@ -742,11 +803,20 @@ function refrom ($transstring) {
 
 /* Used to add a note on a participant as part of flow, and allowing for participant change. */
 function submit_participant_note ($note, $partid) {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
   global $link;
-  $query = "INSERT INTO NotesOnParticipants (badgeid,rbadgeid,note) VALUES ('";
+
+  $query = "INSERT INTO $ReportDB.NotesOnParticipants (badgeid,rbadgeid,note,conid) VALUES ('";
   $query.=$partid."','";
   $query.=$_SESSION['badgeid']."','";
-  $query.=mysql_real_escape_string($note)."')";
+  $query.=mysql_real_escape_string($note)."','";
+  $query.=$_SESSION['conid']."')";
   if (!mysql_query($query,$link)) {
     $message=$query."<BR>Error updating database with note.  Database not updated.";
     echo "<P class=\"errmsg\">".$message."\n";
@@ -760,17 +830,25 @@ function submit_participant_note ($note, $partid) {
 // I'm no longer sure why the below is here ...
 //"SELECT PR.pubsname, PB.pubsname, N.timestamp, N.note FROM NotesOnParticipants N, $ReportDB.Participants PR, $ReportDB.Participants PB WHERE N.rbadgeid=PR.badgeid AND N.badgeid=PB.badgeid;
 function show_participant_notes ($partid) {
+  $ReportDB=REPORTDB; // make it a variable so it can be substituted
+  $BioDB=BIODB; // make it a variable so it can be substituted
+
+  // Tests for the substituted variables
+  if ($ReportDB=="REPORTDB") {unset($ReportDB);}
+  if ($BiotDB=="BIODB") {unset($BIODB);}
+
   global $link;
+
   $query = <<<EOD
 SELECT
-    N.timestamp as'When',
-    P.pubsname as 'Who',
-    N.note as 'What Was Done'
+    timestamp as 'When',
+    pubsname as 'Who',
+    note as 'What Was Done',
+    conid as "Con"
   FROM
-      NotesOnParticipants N,
-      $ReportDB.Participants P
+      $ReportDB.NotesOnParticipants N
+      JOIN $ReportDB.Participants P ON N.rbadgeid=P.badgeid
   WHERE
-    N.rbadgeid=P.badgeid AND
     N.badgeid=$partid
   ORDER BY
     timestamp DESC
@@ -939,11 +1017,12 @@ function create_participant ($participant_arr,$permrole_arr) {
   }
 
   // Submit a note about what was done.
-  $element_array = array('badgeid', 'rbadgeid', 'note');
+  $element_array = array('badgeid', 'rbadgeid', 'note','conid');
   $value_array=array($newbadgeid,
                      $_SESSION['badgeid'],
-                     htmlspecialchars_decode($participant_arr['note']));
-  $message.=submit_table_element($link, $title, "NotesOnParticipants", $element_array, $value_array);
+                     mysql_real_escape_string(htmlspecialchars_decode($participant_arr['note'])),
+		     $_SESSION['conid']);
+  $message.=submit_table_element($link, $title, "$ReportDB.NotesOnParticipants", $element_array, $value_array);
 
   // Make $message additive (.=) to get all the information
   $message="Database updated successfully with ".$participant_arr["badgename"].".<BR>";
@@ -1069,11 +1148,12 @@ function edit_participant ($participant_arr,$permrole_arr) {
   }
 
   // Submit a note about what was done.
-  $element_array = array('badgeid', 'rbadgeid', 'note');
+  $element_array = array('badgeid', 'rbadgeid', 'note','conid');
   $value_array=array($participant_arr['partid'],
                      $_SESSION['badgeid'],
-                     mysql_real_escape_string($participant_arr['note']));
-  $message.=submit_table_element($link, $title, "NotesOnParticipants", $element_array, $value_array);
+                     mysql_real_escape_string(htmlspecialchars_decode($participant_arr['note'])),
+		     $_SESSION['conid']);
+  $message.=submit_table_element($link, $title, "$ReportDB.NotesOnParticipants", $element_array, $value_array);
 
   // Update permissions
   for ($i=2; $i<=count($permrole_arr); $i++) {
@@ -1188,7 +1268,6 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
   if ($BiotDB=="BIODB") {unset($BIODB);}
 
   $mybadgeid=$_SESSION['badgeid'];
-  $conid=$_SESSION['conid'];
 
   // Get phasetypeid list
   $query="SELECT phasetypeid FROM $ReportDB.PhaseTypes ORDER BY phasetypeid";
@@ -1245,9 +1324,9 @@ function add_flow_report ($addreport,$addphase,$table,$group,$title,$description
 
   // Insert query
   if ($phasecheck!="phasetypeid is NULL") {
-    $query="INSERT INTO $tablename (reportid,$tname,$torder,phasetypeid,conid) VALUES ($addreport,'$cname',$nextfloworder,$addphase,$conid)";
+    $query="INSERT INTO $tablename (reportid,$tname,$torder,phasetypeid) VALUES ($addreport,'$cname',$nextfloworder,$addphase)";
   } else {
-    $query="INSERT INTO $tablename (reportid,$tname,$torder,conid) VALUES ($addreport,'$cname',$nextfloworder,$conid)";
+    $query="INSERT INTO $tablename (reportid,$tname,$torder) VALUES ($addreport,'$cname',$nextfloworder)";
   }
 
   // Execute query
