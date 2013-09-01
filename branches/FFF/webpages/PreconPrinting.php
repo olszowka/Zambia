@@ -30,4 +30,10 @@ staff_header($title);
   <DT id="feedback"><A HREF="StaffFeedback.php">Feedback forms</A></DT>
   <DD id="feedback">Feedback forms for the various days or types to be printed, probably on different colour paper, for easier sorting.</DD>
 </DL>
-<?php staff_footer(); ?>
+<HR>
+<P>And one that is useful after the event feedback is done.</P>
+<DL>
+  <DT id="returnedfeedback"><A HREF="FeedbackPrint.php">Returned Feedback</A></DT>
+  <DD id="returnedfeedback">All the feedback on all the schedule elements that we have.</DD>
+</DL>
+<?php correct_footer(); ?>
