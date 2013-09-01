@@ -99,7 +99,10 @@ if ($nowis < $constart) {
  } else { 
 echo "<H2>Check out the below links to give us/see your feedback and learn about the great programming we had at $ConName!</H2>\n";
  }
-echo "<UL>\n";
+?>
+<UL>
+  <LI><A HREF="webpages/ConStaffBios.php">Con Staff</A></LI>
+<?php
 if ($phase_array['Prog Available'] == '0' ) {
 ?>
   <LI><A HREF="webpages/Postgrid.php">Schedule Grid</A></LI>
