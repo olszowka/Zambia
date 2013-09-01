@@ -220,7 +220,7 @@ if ($standard=="y") {
 $query ="SELECT roomname, roomid";
 $query.=" FROM Rooms";
 $query.=" WHERE";
-$query.=" roomid in (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid) JOIN PubStatuses USING (pubstatusid)";
+$query.=" roomid in (SELECT DISTINCT roomid FROM Schedule JOIN Sessions USING (sessionid) JOIN $ReportDB.PubStatuses USING (pubstatusid)";
 if ($goh=="y") {$query.=" JOIN ParticipantOnSession USING (sessionid) WHERE badgeid in $GohBadgeList AND";} else {$query.=" WHERE";}
 $query.=$pubstatus_check;
 $query.=") ORDER BY display_order";
@@ -275,7 +275,7 @@ $query="SELECT TIME_TO_SEC(starttime) as 'beginschedule' FROM Schedule ORDER BY 
 list($earliest,$unneeded_array_c,$grid_start_sec_array)=queryreport($query,$link,$title,$description,0);
 $grid_start_sec=$grid_start_sec_array[1]['beginschedule'];
 
-$query="SELECT (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) as 'endschedule' FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN PubStatuses USING (pubstatusid) where $pubstatus_check ORDER BY endschedule DESC LIMIT 0,1";
+$query="SELECT (TIME_TO_SEC(SCH.starttime) + TIME_TO_SEC(S.duration)) as 'endschedule' FROM Schedule SCH JOIN Sessions S USING (sessionid) JOIN $ReportDB.PubStatuses USING (pubstatusid) where $pubstatus_check ORDER BY endschedule DESC LIMIT 0,1";
 list($latest,$unneeded_array_d,$grid_end_sec_array)=queryreport($query,$link,$title,$description,0);
 $grid_end_sec=$grid_end_sec_array[1]['endschedule'];
 
@@ -318,7 +318,7 @@ for ($time=$grid_start_sec; $time<=$grid_end_sec; $time = $time + $Grid_Spacer) 
   }
   $query.=" FROM Schedule SCH JOIN Sessions S USING (sessionid)";
   $query.=" JOIN Rooms R USING (roomid) JOIN $ReportDB.Types T USING (typeid)";
-  $query.=" JOIN PubStatuses USING (pubstatusid)";
+  $query.=" JOIN $ReportDB.PubStatuses USING (pubstatusid)";
   $query.=" WHERE";
   if ($goh=="y") {$query.=" S.sessionid in (SELECT DISTINCT sessionid from ParticipantOnSession WHERE badgeid IN $GohBadgeList) AND";}
   $query.=$pubstatus_check." AND";

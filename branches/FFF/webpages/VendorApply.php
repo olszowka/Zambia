@@ -163,11 +163,11 @@ SELECT
     pubstatusid,
     statusid AS status
   FROM
-      Divisions,
+      $ReportDB.Divisions,
       $ReportDB.Tracks,
       $ReportDB.Types,
-      RoomSets,
-      PubStatuses,
+      $ReportDB.RoomSets,
+      $ReportDB.PubStatuses,
       $ReportDB.SessionStatuses
   WHERE
     divisionname='Vendor' and

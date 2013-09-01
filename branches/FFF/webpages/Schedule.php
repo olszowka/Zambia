@@ -74,7 +74,7 @@ SELECT
     JOIN $ReportDB.Tracks USING (trackid)
     LEFT JOIN ParticipantOnSession USING (sessionid)
     LEFT JOIN $ReportDB.Participants USING (badgeid)
-    JOIN PubStatuses USING (pubstatusid)
+    JOIN $ReportDB.PubStatuses USING (pubstatusid)
   WHERE
     pubstatusname in ($pubstatus_check) AND
     (volunteer=0 OR volunteer IS NULL) AND
@@ -112,7 +112,7 @@ SELECT
     JOIN $ReportDB.Tracks USING (trackid)
     LEFT JOIN ParticipantOnSession USING (sessionid)
     LEFT JOIN $ReportDB.Participants USING (badgeid)
-    JOIN PubStatuses USING (pubstatusid)
+    JOIN $ReportDB.PubStatuses USING (pubstatusid)
   WHERE
     pubstatusname in ($pubstatus_check) AND
     (volunteer=0 OR volunteer IS NULL) AND

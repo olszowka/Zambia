@@ -70,7 +70,7 @@ SELECT
 	  RS.roomsetname
         FROM
 	    Sessions S,
-	    RoomSets RS
+	    $ReportDB.RoomSets RS
         WHERE
 	  S.roomsetid=RS.roomsetid) Z USING (sessionid)
   WHERE

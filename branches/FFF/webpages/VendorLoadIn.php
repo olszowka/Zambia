@@ -103,7 +103,7 @@ SELECT
       Schedule
     JOIN Sessions USING (sessionid)
     JOIN $ReportDB.Tracks USING (trackid)
-    JOIN RoomSets USING (roomsetid)
+    JOIN $ReportDB.RoomSets USING (roomsetid)
     JOIN $ReportDB.SessionStatuses USING (statusid),
     (SELECT @rownum:=0) AS R
   WHERE

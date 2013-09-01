@@ -132,7 +132,7 @@ echo "         </TR>\n";
 echo "      </TABLE>\n";
 echo "<H4>Room Sets</H4>\n";
 $query = <<<EOD
-SELECT RS.roomsetname, RHS.capacity FROM RoomSets RS, RoomHasSet RHS WHERE
+SELECT RS.roomsetname, RHS.capacity FROM $ReportDB.RoomSets RS, RoomHasSet RHS WHERE
 RS.roomsetid=RHS.roomsetid AND RHS.roomid=$selroomid
 EOD;
 if (!$result=mysql_query($query,$link)) {
@@ -171,7 +171,7 @@ SELECT
       Schedule SC,
       Sessions S,
       $ReportDB.Tracks T,
-      RoomSets ST
+      $ReportDB.RoomSets ST
   WHERE
     SC.sessionid = S.sessionid AND
     S.trackid = T.trackid AND

@@ -63,7 +63,7 @@ SELECT
       Sessions
     JOIN $ReportDB.Tracks USING (trackid)
     JOIN $ReportDB.SessionStatuses USING (statusid)
-    JOIN PubStatuses USING (pubstatusid)
+    JOIN $ReportDB.PubStatuses USING (pubstatusid)
   WHERE
     may_be_scheduled=1 AND
     pubstatusname in ($pubstatus_string)

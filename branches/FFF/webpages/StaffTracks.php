@@ -79,7 +79,7 @@ SELECT
     LEFT JOIN ParticipantOnSession USING (sessionid)
     LEFT JOIN $ReportDB.Participants USING (badgeid)
     LEFT JOIN $ReportDB.TypeHasQuestionType THQT USING (typeid)
-    JOIN PubStatuses USING (pubstatusid)
+    JOIN $ReportDB.PubStatuses USING (pubstatusid)
   WHERE
     pubstatusname in ($pubstatus_string) AND
     (volunteer=0 OR volunteer IS NULL) AND

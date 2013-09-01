@@ -85,7 +85,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                       <?php echo $session["sessionid"];?></A>
                       <INPUT type="hidden" name="sessionid" value="<?php echo $session["sessionid"];?>"></SPAN>
                 <SPAN><LABEL for="divisionid">Division: </LABEL><SELECT name="divisionid">
-                     <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
+                     <?php populate_select_from_table("$ReportDB.Divisions", $session["divisionid"], "SELECT", FALSE); ?>
                      </SELECT>&nbsp;&nbsp;</SPAN>
                 <?php } ?>
                 <SPAN><LABEL for="track">Track: </LABEL><SELECT name="track">
@@ -98,7 +98,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <INPUT type="hidden" name="pubsttausid" value="Public">
                 <?php } else { ?>
                 <SPAN><LABEL for="pubstatusid">Pub. Status: </LABEL><SELECT name="pubstatusid">
-                    <?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT", FALSE); ?>
+                    <?php populate_select_from_table("$ReportDB.PubStatuses", $session["pubstatusid"], "SELECT", FALSE); ?>
                     </SELECT></SPAN>
                 <?php } ?>
                 </DIV>
@@ -162,7 +162,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <INPUT type="hidden" name="roomset" value="unspecified">
                 <?php } else { ?>
                 <SPAN><LABEL for="roomset">Room Set: </LABEL>
-                    <SELECT name="roomset"><?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
+                    <SELECT name="roomset"><?php populate_select_from_table("$ReportDB.RoomSets", $session["roomset"], "SELECT", FALSE); ?>
                     </SELECT>&nbsp;&nbsp;</SPAN>
 		<?php } ?>
                 <?php if (($action=="propose") or ($action=="brainstorm")) { ?>
