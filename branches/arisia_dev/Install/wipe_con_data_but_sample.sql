@@ -1,5 +1,5 @@
--- this script can be run to wipe any con specific data out of a dbase
--- it is used to build the script for building an empty dbase
+-- this script can be run to wipe most con specific data out of a dbase
+-- it is used to build the script for building dbase with only minimal sample data
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE EmailHistory;
 TRUNCATE TABLE EmailQueue;
