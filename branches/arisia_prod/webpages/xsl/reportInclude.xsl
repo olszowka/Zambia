@@ -9,6 +9,11 @@
         <xsl:param name="pubsname" />
         <a href="AdminParticipants.php?badgeid={$badgeid}" title="Administer participants"><xsl:value-of select="$pubsname" /></a>
     </xsl:template>
+    <xsl:template name="showPubsnameWithBadgeid">
+        <xsl:param name="badgeid" />
+        <xsl:param name="pubsname" />
+        <a href="AdminParticipants.php?badgeid={$badgeid}" title="Administer participants"><xsl:value-of select="$pubsname" /> (<xsl:value-of select="$badgeid" />)</a>
+    </xsl:template>
     
     <xsl:template name="showDuration">
         <xsl:param name="durationhrs" />
