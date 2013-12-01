@@ -10,7 +10,7 @@
 	// first query which people are on which sessions
 	$query = <<<EOD
 SELECT
-		SCH.sessionid, P.badgeid, P.pubsname
+		SCH.sessionid, P.badgeid, P.pubsname, POS.moderator
 	FROM
 			 Schedule SCH
 		JOIN Sessions S USING (sessionid)
@@ -27,7 +27,7 @@ EOD;
 	$sessionHasParticipant = array();
 	$participantOnSession = array();
 	while($row = mysql_fetch_assoc($result)) {
-		$sessionHasParticipant[$row["sessionid"]][] = array("id" => $row["badgeid"], "name" => $row["pubsname"]);
+		$sessionHasParticipant[$row["sessionid"]][] = array("id" => $row["badgeid"], "name" => $row["pubsname"].($row["moderator"] == "1" ? " (moderator)" : ""));
 		$participantOnSession[$row["badgeid"]][] = $row["sessionid"];
 		}
 	$query = <<<EOD
@@ -56,7 +56,7 @@ EOD;
 			"tags" => array("track:".$row["trackname"],"type:".$row["typename"]),
 			"date" => $row["date"],
 			"time" => $row["time"],
-			"loc" => $row["loc"],
+			"loc" => array($row["loc"]),
 			"people" => $sessionHasParticipant[$row["id"]],
 			"desc" => $row["desc"]
 			);
@@ -87,6 +87,7 @@ EOD;
 			);
 		$people[] = $peopleRow;
 		}
-	header('Content-type: application/json');
-	echo json_encode(array("program" => $program, "people" => $people));
+	//header('Content-type: application/json');
+	echo "var program = ".json_encode($program).";\n";
+	echo "var people = ".json_encode($people).";\n";
 ?>
