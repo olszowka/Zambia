@@ -1,93 +1,74 @@
 <?php
-    require_once('data_functions.php');
-    require_once('db_functions.php');
-    if (prepare_db()===false) {
-        $message_error="Unable to connect to database.<BR>No further execution possible.";
-        RenderError($title,$message_error);
-        exit();
-        };
-	$ConStartDatim = CON_START_DATIM;
-	// first query which people are on which sessions
-	$query = <<<EOD
-SELECT
-		SCH.sessionid, P.badgeid, P.pubsname, POS.moderator
-	FROM
-			 Schedule SCH
-		JOIN Sessions S USING (sessionid)
-		JOIN ParticipantOnSession POS USING (sessionid)
-		JOIN Participants P USING (badgeid)
-	WHERE
-		S.pubstatusid = 2 /* Public */
-	ORDER BY
-		SCH.sessionid,
-		POS.moderator DESC,
-		P.badgeid;
-EOD;
-	$result = mysql_query_with_error_handling($query);
-	$sessionHasParticipant = array();
-	$participantOnSession = array();
-	while($row = mysql_fetch_assoc($result)) {
-		$sessionHasParticipant[$row["sessionid"]][] = array("id" => $row["badgeid"], "name" => $row["pubsname"].($row["moderator"] == "1" ? " (moderator)" : ""));
-		$participantOnSession[$row["badgeid"]][] = $row["sessionid"];
-		}
-	$query = <<<EOD
-SELECT
-		S.sessionid AS id, S.title, TR.trackname, TY.typename, R.roomname AS loc,
-		DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins, S.progguiddesc AS `desc`, 
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time
-	FROM
-			 Schedule SCH
-		JOIN Sessions S USING (sessionid)
-		JOIN Tracks TR USING (trackid)
-		JOIN Types TY USING (typeid)
-		JOIN Rooms R USING (roomid)
-	WHERE
-		S.pubstatusid = 2 /* Public */
-	ORDER BY
-		S.sessionid;
-EOD;
-	$result = mysql_query_with_error_handling($query);
-	$program = array();
-	while($row = mysql_fetch_assoc($result)) {
-		$programRow = array(
-			"id" => $row["id"],
-			"title" => $row["title"],
-			"tags" => array("track:".$row["trackname"],"type:".$row["typename"]),
-			"date" => $row["date"],
-			"time" => $row["time"],
-			"loc" => array($row["loc"]),
-			"people" => $sessionHasParticipant[$row["id"]],
-			"desc" => $row["desc"]
-			);
-		$program[] = $programRow;
-		}
-	$query = <<<EOD
-SELECT
-		P.badgeid, P.pubsname, P.bio
-	FROM
-		Participants P
-	WHERE
-		P.badgeid IN (
-			SELECT POS.badgeid FROM
-					 ParticipantOnSession POS
-				JOIN Sessions S USING (sessionid)
-				JOIN Schedule SCH USING (sessionid)
-				WHERE S.pubstatusid = 2 /* Public */
-			)
-EOD;
-	$result = mysql_query_with_error_handling($query);
-	$people = array();
-	while($row = mysql_fetch_assoc($result)) {
-		$peopleRow = array(
-			"id" => $row["badgeid"],
-			"name" => array($row["pubsname"]),
-			"prog" => $participantOnSession[$row["badgeid"]],
-			"bio" => $row["bio"]
-			);
-		$people[] = $peopleRow;
-		}
-	//header('Content-type: application/json');
-	echo "var program = ".json_encode($program).";\n";
-	echo "var people = ".json_encode($people).";\n";
+	error_reporting(E_ERROR);
+    require_once('konOpas_func.php');
+	    if (!function_exists('http_response_code')) {
+			function http_response_code($code = NULL) {
+				if ($code !== NULL) {
+						switch ($code) {
+							case 100: $text = 'Continue'; break;
+							case 101: $text = 'Switching Protocols'; break;
+							case 200: $text = 'OK'; break;
+							case 201: $text = 'Created'; break;
+							case 202: $text = 'Accepted'; break;
+							case 203: $text = 'Non-Authoritative Information'; break;
+							case 204: $text = 'No Content'; break;
+							case 205: $text = 'Reset Content'; break;
+							case 206: $text = 'Partial Content'; break;
+							case 300: $text = 'Multiple Choices'; break;
+							case 301: $text = 'Moved Permanently'; break;
+							case 302: $text = 'Moved Temporarily'; break;
+							case 303: $text = 'See Other'; break;
+							case 304: $text = 'Not Modified'; break;
+							case 305: $text = 'Use Proxy'; break;
+							case 400: $text = 'Bad Request'; break;
+							case 401: $text = 'Unauthorized'; break;
+							case 402: $text = 'Payment Required'; break;
+							case 403: $text = 'Forbidden'; break;
+							case 404: $text = 'Not Found'; break;
+							case 405: $text = 'Method Not Allowed'; break;
+							case 406: $text = 'Not Acceptable'; break;
+							case 407: $text = 'Proxy Authentication Required'; break;
+							case 408: $text = 'Request Time-out'; break;
+							case 409: $text = 'Conflict'; break;
+							case 410: $text = 'Gone'; break;
+							case 411: $text = 'Length Required'; break;
+							case 412: $text = 'Precondition Failed'; break;
+							case 413: $text = 'Request Entity Too Large'; break;
+							case 414: $text = 'Request-URI Too Large'; break;
+							case 415: $text = 'Unsupported Media Type'; break;
+							case 500: $text = 'Internal Server Error'; break;
+							case 501: $text = 'Not Implemented'; break;
+							case 502: $text = 'Bad Gateway'; break;
+							case 503: $text = 'Service Unavailable'; break;
+							case 504: $text = 'Gateway Time-out'; break;
+							case 505: $text = 'HTTP Version not supported'; break;
+							default:
+								exit('Unknown http status code "' . htmlentities($code) . '"');
+							break;
+							}
+						$protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+						header($protocol . ' ' . $code . ' ' . $text);
+						$GLOBALS['http_response_code'] = $code;
+						}
+					else {
+						$code = (isset($GLOBALS['http_response_code']) ? $GLOBALS['http_response_code'] : 200);
+						}		
+				return $code;
+			}
+			}
+    $results = retrieveKonOpasData();
+	if ($results["message_error"]) {
+			error_log("konOpas.php: ".$results["message_error"]);
+			http_response_code(500); // internal server error
+			exit();
+			}
+		else if ($results["json"]) {
+			echo $results["json"];
+			exit();
+			}
+		else {
+			error_log("konOpas.php: retrieveKonOpasData() did not return expected result or error indicator.");
+			http_response_code(500); // internal server error
+			exit();
+			}
 ?>
