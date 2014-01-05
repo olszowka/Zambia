@@ -33,21 +33,24 @@ function update_participant() {
     global $link,$message_error;
     $partid = $_POST["badgeid"];
     $password = $_POST["password"];
+	$biodirty = isset($_POST["bio"]);
     $bio = stripslashes($_POST["bio"]);
+	$pubsnamedirty = isset($_POST["pname"]);
     $pubsname = stripslashes($_POST["pname"]);
+	$staffnotesdirty = isset($_POST["staffnotes"]);
     $staffnotes = stripslashes($_POST["staffnotes"]);
     $interested = $_POST["interested"];
     $query = "UPDATE Participants SET ";
     if ($password) {
         $query.="password=\"".md5($password)."\", ";
         }
-    if ($bio) {
+    if ($biodirty) {
         $query.="bio=\"".mysql_real_escape_string($bio)."\", ";
         }
-    if ($pubsname) {
+    if ($pubsnamedirty) {
         $query.="pubsname=\"".mysql_real_escape_string($pubsname)."\", ";
         }
-    if ($staffnotes) {
+    if ($staffnotesdirty) {
         $query.="staff_notes=\"".mysql_real_escape_string($staffnotes)."\", ";
         }
     if ($interested) {
