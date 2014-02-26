@@ -17,7 +17,7 @@
                 </thead>
                 <tbody>
                   <xsl:for-each select="/doc/query[@queryName='searchParticipants']/row">
-                      <tr class="action" id="actionDIV_{@badgeid}" onclick="chooseParticipant({@badgeid}, false);">
+                      <tr class="action" id="actionDIV_{@badgeid}" onclick="chooseParticipant('{@badgeid}', false);">
                           <td class="action" id="lnameSPAN_{@badgeid}"><xsl:value-of select="@lastname"/>, <xsl:value-of select="@firstname"/></td>
                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
