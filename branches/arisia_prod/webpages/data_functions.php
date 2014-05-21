@@ -192,12 +192,7 @@ function set_session_defaults() {
     $session["featdest"]="";
     $session["servdest"]="";
     $session["pubchardest"]="";
-    if (DURATION_IN_MINUTES=="TRUE") {
-            $session["duration"]=" 60";
-            }
-        else {
-            $session["duration"]=" 1:15";
-            } 
+    $session["duration"] = DEFAULT_DURATION; //should be specified corresponding to DURATION_IN_MINUTES preference
     $session["atten"]="";
     $session["kids"]=2; // "Kids Welcome"
     $session["signup"]=false; // leave checkbox blank initially

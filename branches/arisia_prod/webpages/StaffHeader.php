@@ -37,6 +37,7 @@
 	var thisPage="<?php echo $title; ?>";
 	var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
 	var alwaysShowLargeHeader = false;
+	var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
 </script>
 <?php
 load_jquery();
