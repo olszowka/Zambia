@@ -1,4 +1,5 @@
 <?php
+	// $Header$
 	global $participant,$message_error,$message2,$congoinfo;
 	$title="Reports in Category";
 	require_once('db_functions.php');
@@ -64,11 +65,7 @@ EOD;
 				</xsl:otherwise>
 			</xsl:choose>
 			<div style="margin-top:0.75em; font-style: italic">
-				<span>Most reports are now generated when the link is clicked. Those marked with<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
-				<div style="display: inline-block; border:none">
-				    <span class="icon-time"></span>
-				</div>
-				<span><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>are generated periodically <xsl:text disable-output-escaping="yes">&amp;mdash;</xsl:text> about every 15 minutes.</span>
+				<span>Most reports are now generated when the link is clicked. </span>
 			</div>
 		</xsl:template>
 		<xsl:template match="/doc/query[@queryName='reportTypes']/row">
