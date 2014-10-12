@@ -10,14 +10,15 @@ define("BRAINSTORM_EMAIL","brain@somewhere.net");
 define("PROGRAM_EMAIL","program@somewhere.net");
 define("REG_EMAIL","registration@somewhere.net");
 define("CON_NUM_DAYS",5); // code works for 1 - 8
-define("CON_START_DATIM","2009-08-06 00:00:00"); // Used by reports on new report engine
+define("CON_START_DATIM","2009-08-06 00:00:00"); // Used by reports
 define("DAY_CUTOFF_HOUR",8); // times before this hour (of 0-23) are considered previous day
-		// used for Participant Availability and grid scheduler
+		// used for Participant Availability only
 define("FIRST_DAY_START_TIME","17:30"); // next 5 are for grid scheduler
 define("OTHER_DAY_STOP_TIME","25:00");
 define("OTHER_DAY_START_TIME","8:30");
 define("LAST_DAY_STOP_TIME","16:00");
-define("STANDARD_BLOCK_LENGTH","1:30");
+define("STANDARD_BLOCK_LENGTH","1:30"); // "1:00" and "1:30" are only values supported
+        // Block includes length of panel plus time to get to next panel, e.g. 55 min plus 5 min.
 define("DURATION_IN_MINUTES","FALSE"); // TRUE: in mmm; False: in hh:mm
         // affects session edit/create page only, not reports
 define("DEFAULT_DURATION","1:15"); // must correspond to DURATION_IN_MINUTES
