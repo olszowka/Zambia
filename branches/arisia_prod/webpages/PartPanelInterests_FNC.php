@@ -1,4 +1,5 @@
 <?php
+// $Header$
 // Function get_session_interests_from_db($badgeid)
 // Returns count; Will render its own errors
 // Populates global $session_interest with
@@ -12,7 +13,7 @@ SELECT sessionid, rank, willmoderate, comments FROM ParticipantSessionInterest
     WHERE badgeid='$badgeid' ORDER BY IFNULL(rank,9999), sessionid
 EOD;
     if (!$result=mysql_query($query,$link)) {
-        $message.=$query."<BR>Error querying database.<BR>";
+        $message.=$query."<br />Error querying database.<br />";
         RenderError($title,$message);
         exit();
         }
@@ -118,17 +119,20 @@ function update_session_interests_in_db($badgeid,$session_interest_count) {
 		$deleteSessionIds=substr($deleteSessionIds,0,-2); //drop trailing ", "
 		$query="DELETE FROM ParticipantSessionInterest WHERE badgeid=\"$badgeid\" and sessionid in ($deleteSessionIds)";
 		if (!mysql_query($query,$link)) {
-	        $message=$query."<BR>Error updating database.  Database not updated.";
+	        $message=$query."<br />Error updating database.  Database not updated.";
 	        RenderError($title,$message);
 	        exit();
 			}
 		$deleteCount=mysql_affected_rows($link);
-    	$message="$deleteCount record(s) deleted.<BR>\n";
+    	$message="$deleteCount record(s) deleted.<br />\n";
         }
 	if ($noDeleteCount) {
+		$noDeleteCount = 0;
 		$query = "REPLACE INTO ParticipantSessionInterest (badgeid, sessionid, rank, willmoderate, comments) values ";
     	for ($i=1;$i<=$session_interest_count;$i++) {
-			if ($session_interests[$i]['delete']) continue;
+			if ($session_interests[$i]['delete'])
+				continue;
+			$noDeleteCount++;
 			$query.="(\"$badgeid\",{$session_interests[$i]['sessionid']},";
 			$rank=$session_interests[$i]['rank'];
 			$query.=($rank==""?"null":$rank).",";
@@ -137,12 +141,11 @@ function update_session_interests_in_db($badgeid,$session_interest_count) {
 			}
 		$query=substr($query,0,-1); // drop trailing ","
         if (!mysql_query($query,$link)) {
-            $message=$query."<BR>Error updating database.  Database not updated.";
+            $message=$query."<br />Error updating database.  Database not updated.";
             RenderError($title,$message);
             exit();
             }
-		$noDeleteCount=mysql_affected_rows($link)/2; // Replace affects twice as many rows because it deletes then inserts
-		$message.="$noDeleteCount record(s) updated or saved.<BR>\n";
+		$message.="$noDeleteCount sessions recorded.<br />\n";
         }
 	return (true);
 }
