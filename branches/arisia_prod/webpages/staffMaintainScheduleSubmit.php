@@ -113,8 +113,7 @@ EOD;
 	echo "</table>\n";
 }
 
-function getScheduleTimesArray($roomsToDisplayList)
-	{
+function getScheduleTimesArray($roomsToDisplayList) {
 	global $message_error, $link, $daymap, $unitsPerBlock, $standardRowHeight;
 	$htmlTimesArray = array();
 	$nextStartTimeUnits = 0;
@@ -136,7 +135,7 @@ function getScheduleTimesArray($roomsToDisplayList)
 		if ($day < CON_NUM_DAYS)
 			$nextDayName = $daymap["long"][$day + 1];
 		$thisCutoffUnits = $cutoffUnits + $day * 48; // always next day even on 1st day
-		$thisCutoffTimeStr = convertUnitsToTimeStr($thisCutoffUnits);
+		$thisCutoffTimeStr = "MAKETIME(".floor($thisCutoffUnits/2).",0,0)";
 		if ($day == 1) {
 				//calculate beginning for first day
 				// mode: -1 is gap; 0, 1, & 2 are rows of standard block
@@ -148,94 +147,86 @@ function getScheduleTimesArray($roomsToDisplayList)
 			        RenderErrorAjax($message_error);
 			        exit();
 			        }
-				if (mysql_num_rows($result) == 0)
+				$scalarResult = mysql_result($result, 0);
+				if ($scalarResult === null)
 						$startTimeUnits = $firstDayStartTimeUnits;
-					else
-						{
-						list($startTimeHour,$startTimeMin,$foo) = sscanf(mysql_result($result, 0), "%d:%d:%d");
+					else {
+						list($startTimeHour,$startTimeMin,$foo) = sscanf($scalarResult, "%d:%d:%d");
 						$startTimeUnits = convertStartTimeToUnits($startTimeHour, $startTimeMin);
-						if ($startTimeHour == null || $firstDayStartTimeUnits < $startTimeUnits)
+						if ($startTimeHour === null || $firstDayStartTimeUnits < $startTimeUnits)
 							$startTimeUnits = $firstDayStartTimeUnits;
 						}
 				}
-			else
-				{
+			else {
 				// calculate beginning for other than first day
 				$startTimeUnits = $nextStartTimeUnits;
 				if ($gap)
 					$htmlTimesArray[] = array("hr" => 0, "min" => 0, "mode" => -1, "units" => 0, "html" => "<td class=\"gap\">".$dayName."</td>");
 				}
 		// found beginning; now find ending
-		if ($day<CON_NUM_DAYS)
-				{
+		if ($day<CON_NUM_DAYS) {
 				$previousCutoffUnits = $cutoffUnits + ($day - 1) * 48;
-				$previousCutoffTimeStr = convertUnitsToTimeStr($previousCutoffUnits);
+				$previousCutoffTimeStr = "MAKETIME(".floor($timeUnits/2).",0,0)";
 				$query =<<<EOD
 SELECT MAX(ADDTIME(SCH.starttime, S.duration)) AS endtime
 	FROM Schedule SCH JOIN Sessions S USING(sessionid)
 	WHERE
 			SCH.roomid IN ($roomsToDisplayList)
-		AND ADDTIME(SCH.starttime, S.duration) < '$thisCutoffTimeStr'
-		AND SCH.starttime >= '$previousCutoffTimeStr';
+		AND ADDTIME(SCH.starttime, S.duration) < $thisCutoffTimeStr
+		AND SCH.starttime >= $previousCutoffTimeStr;
 EOD;
 				$result = mysql_query_with_error_handling($query);
-			    if (!$result)
-					{
+			    if (!$result) {
 			        RenderErrorAjax($message_error);
 			        exit();
 			        }
-				if (mysql_num_rows($result) == 0)
+				$scalarResult = mysql_result($result, 0);
+				if ($scalarResult == null) {
+						$foo = 1;
 						$endTimeUnits = $otherDayEndTimeUnits + ($day - 1) * 48;
-					else
-						{
-						list($endTimeHour,$endTimeMin,$foo) = sscanf(mysql_result($result, 0), "%d:%d:%d");
+						}
+					else {
+						list($endTimeHour,$endTimeMin,$foo) = sscanf($scalarResult, "%d:%d:%d");
 						$endTimeUnits = convertEndTimeToUnits($endTimeHour, $endTimeMin);
 						if ($endTimeHour == null || $endTimeUnits < $otherDayEndTimeUnits + ($day - 1) * 48)
 							$endTimeUnits = $otherDayEndTimeUnits + ($day - 1) * 48;
 						}
-				if ($endTimeUnits >= $thisCutoffUnits)
-						{
+				if ($endTimeUnits >= $thisCutoffUnits) {
 						$gap = false;
 						$endTimeUnits = $thisCutoffUnits - 1;
 						$nextStartTimeUnits = $thisCutoffUnits;
 						}
-					else
-						{
+					else {
 						$query =<<<EOD
 SELECT MIN(SCH.starttime) AS starttime
 	FROM Schedule SCH JOIN Sessions S USING(sessionid)
 	WHERE
 			SCH.roomid IN ($roomsToDisplayList)
-		AND ADDTIME(SCH.starttime, S.duration) >= '$thisCutoffTimeStr';
+		AND ADDTIME(SCH.starttime, S.duration) >= $thisCutoffTimeStr;
 EOD;
 						$result = mysql_query_with_error_handling($query);
-						if (!$result)
-							{
+						if (!$result) {
 						    RenderErrorAjax($message_error);
 						    exit();
 						    }
-						if (mysql_num_rows($result) == 0)
-								{
+						$scalarResult = mysql_result($result, 0);
+						if ($scalarResult === null) {
 								$gap = true;
 								$nextStartTimeUnits = $otherDayStartTimeUnits + $day * 48;
 								}
-							else
-								{
-								list($nextStartTimeHour,$nextStartTimeMin,$foo) = sscanf(mysql_result($result, 0), "%d:%d");
+							else {
+								list($nextStartTimeHour,$nextStartTimeMin,$foo) = sscanf($scalarResult, "%d:%d");
 								$nextStartTimeUnits = convertStartTimeToUnits($nextStartTimeHour,$nextStartTimeMin);
-								if ($nextStartTimeHour == null)
-										{
+								if ($nextStartTimeHour == null) {
 										$gap = true;
 										$nextStartTimeUnits = $otherDayStartTimeUnits + $day * 48;
 										}
-									elseif (($nextStartTimeUnits - $endTimeUnits) >= 2)
-										{
+									elseif (($nextStartTimeUnits - $endTimeUnits) >= 2) {
 										$gap = true;
 										if ($nextStartTimeUnits > $otherDayStartTimeUnits + $day * 48)
 											$nextStartTimeUnits = $otherDayStartTimeUnits + $day * 48;
 										}
-									else
-										{
+									else {
 										$gap = false;
 										$endTimeUnits = $thisCutoffUnits - 1;
 										$nextStartTimeUnits = $thisCutoffUnits;
@@ -243,8 +234,7 @@ EOD;
 								}
 						}
 				}	
-			else
-				{
+			else {
 				//finding end for last day now
 				$query =<<<EOD
 SELECT MAX(ADDTIME(SCH.starttime, S.duration)) AS endtime
@@ -252,16 +242,15 @@ SELECT MAX(ADDTIME(SCH.starttime, S.duration)) AS endtime
 	WHERE SCH.roomid IN ($roomsToDisplayList);
 EOD;
 				$result = mysql_query_with_error_handling($query);
-				if (!$result)
-					{
+				if (!$result) {
 				    RenderErrorAjax($message_error);
 				    exit();
 				    }
-				if (mysql_num_rows($result) == 0)
+				$scalarResult = mysql_result($result, 0);
+				if ($scalarResult === null)
 						$endTimeUnits = $lastDayEndTimeUnits + ($day - 1) * 48;
-					else
-						{
-						list($endTimeHour,$endTimeMin,$foo) = sscanf(mysql_result($result, 0), "%d:%d:%d");
+					else {
+						list($endTimeHour,$endTimeMin,$foo) = sscanf($scalarResult, "%d:%d:%d");
 						$endTimeUnits = convertEndTimeToUnits($endTimeHour, $endTimeMin);
 						if ($endTimeHour == null || $endTimeUnits < $lastDayEndTimeUnits + ($day - 1) * 48)
 							$endTimeUnits = $lastDayEndTimeUnits + ($day - 1) * 48;
@@ -284,33 +273,25 @@ EOD;
 			$htmlTimesArray[] = array("hr" => $nowHour, "min" => $nowMin, "units" => $nowInUnits, "mode" => $modeIndex);
 			end($htmlTimesArray);
 			$mykey = key($htmlTimesArray);
-			if ($nowHour < ($day * 24)) {
+			if ($nowHour < ($day * 24))
 					$titleStr = $dayName;
-					}
-				else {
+				else
 					$titleStr = $dayName." overnight into ".$nextDayName;
-					}
 			if ($nowMin == 0) {
-					if ($nowHour%24==0) {
+					if ($nowHour%24==0)
 							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">12:00a</td>";
-							}
-						else if ($nowHour%24<12) {
+						else if ($nowHour%24<12)
 							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">".($nowHour%24).":00a</td>";
-							}
-						else if ($nowHour%24==12) {
+						else if ($nowHour%24==12)
 							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">12:00p</td>";
-							}
-						else {
+						else
 							$htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">".(($nowHour%24)-12).":00p</td>";
-							}
 					}
-				else {
+				else
 					$htmlTimesArray[$mykey]["html"] = "<td class=\"timeBottom\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">&nbsp;</td>";
-					}
 			$nowInUnits++;
 			$modeIndex++;
 			}
-		//break;
 		}
 	return $htmlTimesArray;
 	}
