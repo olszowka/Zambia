@@ -361,7 +361,7 @@ span.newformnotetight {
 
 .onepage-titlebar {
 	border: 1px solid #106a22;
-	background: #ece8da url(jquery/ui-bg_gloss-wave_100_ece8da_500x100.png) 50% 50% repeat-x;
+	background: #ece8da url(../jquery/ui-bg_gloss-wave_100_ece8da_500x100.png) 50% 50% repeat-x;
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px; 
 	border-bottom-left-radius: 6px; 
