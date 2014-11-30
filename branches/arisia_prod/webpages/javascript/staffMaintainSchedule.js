@@ -10,10 +10,6 @@ function StaffMaintainSchedule() {
 	var helperElem = "";
 	var dragParent = "";
 
-	this.addToSchedule1 = function addToSchedule1(pEvent, pUi, pThis) {
-		// dropped an unscheduled session onto an empty scheduling block
-	}
-
 	this.anyChange = function anyChange(element) {
 	}
 	
@@ -90,6 +86,7 @@ function StaffMaintainSchedule() {
 	}
 
 	this.dropOnEmptySlot = function dropOnEmptySlot(pEvent, pUi, pThis) {
+		$("#myhelper").hide();
 		var newSessionDiv = $(pThis).clone();
 		$(pThis).remove();
 		if (newSessionDiv.attr("durationUnits") !=3 || parseInt(dropTarget.attr("endtimeunits"),10) - parseInt(dropTarget.attr("starttimeunits"),10) != 3) {
@@ -493,7 +490,7 @@ function StaffMaintainSchedule() {
     							top: destTop,
     							left: destLeft
   								},
-							750,
+							750 /* ms */,
 							function() {
 								$(this).remove();
 								elemToAdd.css("visibility","visible");
