@@ -304,6 +304,7 @@ div.reportPageContent table td a,
 .sessionWhyMe {
 	height: 4.3em !important;
 }
+
 select,
 textarea,
 input[type="text"],
@@ -323,3 +324,10 @@ input[type="color"],
 .uneditable-input {
 	padding:0 1px !important;
 }
+input.search-query {
+    padding:0 4px 0 8px !important;
+    }
+form.navbar-search {
+    margin-top: 9px !important;
+    }
+
