@@ -331,3 +331,9 @@ form.navbar-search {
     margin-top: 9px !important;
     }
 
+@media (min-width: 480px) {
+	label[for="use_photo"] {
+		width:auto !important;
+		text-align: left !important;
+	}
+}

@@ -77,6 +77,8 @@ function MyProfile() {
 			postdata.interested = $("#interested").val();
 		if (dirtyInputArr["share_email"])
 			postdata.share_email = $("#share_email").val();
+		if (dirtyInputArr["use_photo"])
+			postdata.use_photo = $("#use_photo").val();
 		if (dirtyInputArr["bestway"])
 			if ($("#bwemailRB").attr('checked'))
 					postdata.bestway = "Email";

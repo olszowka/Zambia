@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	my_profile
-	Created by Peter Olszowka on 2011-07-24.
-	Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+	my_profile.xsl
+	Created by Peter Olszowka on 2011-07-24; Updated 2015-08-29
+	Copyright (c) 2011-2015 Peter Olszowka. All rights reserved.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output encoding="UTF-8" indent="yes" method="xml" />
@@ -11,6 +11,7 @@
     <xsl:variable name="enableBioEdit"><xsl:value-of select="/doc/options/@enableBioEdit"/></xsl:variable>
     <xsl:variable name="interested"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@interested"/></xsl:variable>
     <xsl:variable name="share_email"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@share_email"/></xsl:variable>
+    <xsl:variable name="use_photo"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@use_photo"/></xsl:variable>
     <xsl:variable name="bestway"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bestway"/></xsl:variable>
     <xsl:variable name="bioNote"><xsl:value-of select="/doc/customText/@biography_note"/></xsl:variable>
     <script type="text/javascript">var maxBioLen = <xsl:value-of select="/doc/options/@maxBioLen"/>;</script>
@@ -77,6 +78,39 @@
             </xsl:when>
             <xsl:otherwise>
               <input name="share_email" type="hidden" value="{$share_email}"/>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:choose>
+            <xsl:when test="/doc/options/@enable_use_photo_question">
+              <fieldset>
+                <div class="control-group">
+                  <label for="use_photo" class="control-label">I give permission for <xsl:value-of select="$conName"/> to photograph me while I am on panels and to use those
+				  images in the promotion of the convention: <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></label>
+                  <div class="controls">
+                    <select id="use_photo" name="use_photo" class="span2" onchange="myProfile.anyChange('use_photo')"
+                        onkeyup="myProfile.anyChange('use_photo')">
+                    <option value="null">
+                        <xsl:if test="not($use_photo) and $use_photo!='0'"><!-- is there an explicit test for null? -->
+                            <xsl:attribute name="selected">selected</xsl:attribute>
+                        </xsl:if>
+                        <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></option>
+                    <option value="0">
+                        <xsl:if test="$use_photo='0'">
+                            <xsl:attribute name="selected">selected</xsl:attribute>
+                        </xsl:if>
+                        No</option>
+                    <option value="1">
+                        <xsl:if test="$use_photo='1'">
+                            <xsl:attribute name="selected">selected</xsl:attribute>
+                        </xsl:if>
+                        Yes</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+            </xsl:when>
+            <xsl:otherwise>
+              <input name="use_photo" type="hidden" value="{$use_photo}"/>
             </xsl:otherwise>
           </xsl:choose>
           <xsl:choose>

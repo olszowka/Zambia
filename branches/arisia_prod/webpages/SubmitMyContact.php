@@ -1,5 +1,8 @@
 <?php
-    $title="My Profile";
+	// SubmitMyContact.php
+	// Created by Peter Olszowka on ?; Updated 2015-08-29
+	// Copyright (c) 2008-2015 Peter Olszowka. All rights reserved.
+	$title="My Profile";
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
 	global $message_error;
@@ -30,6 +33,13 @@
 				$updateClause.="share_email=$x, ";
 			else
 				$updateClause.="share_email=null, ";
+		}			
+	if (isset($_POST['use_photo'])) {
+		$x=$_POST['use_photo'];
+		if ($x==0 || $x==1)
+				$updateClause.="use_photo=$x, ";
+			else
+				$updateClause.="use_photo=null, ";
 		}			
 	if (isset($_POST['bestway'])) {
 		$x=$_POST['bestway'];
