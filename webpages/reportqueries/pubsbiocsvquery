@@ -1,6 +1,0 @@
-TITLE='CSV - Biographies for publication'
-DESCRIPTION='Show the badgeid, all names, and bio for each participant who is on at least one scheduled session. [On&nbsp;Demand]'
-CSVSWANTS=1
-QUERY="x"
-MIGRATED=true
-

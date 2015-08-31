@@ -11,15 +11,16 @@
         exit();
         }
     // set $badgeid from session
-    $query= <<<EOD
+	$queryArr = array();
+	$queryArr["sessions"] = <<<EOD
 SELECT
             POS.sessionid,
             T.trackname,
             S.title,
             R.roomname,
             S.progguiddesc,
-            DATE_FORMAT(ADDTIME('$CON_START_DATIM', SCH.starttime),'%a %l:%i %p') as 'Start Time',
-            left(duration,5) as 'S.Duration',
+            DATE_FORMAT(ADDTIME('$CON_START_DATIM', SCH.starttime),'%a %l:%i %p') AS starttime,
+            left(S.duration, 5) AS duration,
             S.persppartinfo,
             S.notesforpart
     FROM
@@ -31,59 +32,31 @@ SELECT
     WHERE
             POS.badgeid="$badgeid"
     ORDER BY
-            SCH.starttime
+            SCH.starttime;
 EOD;
-    //error_log("Zambia: $query");
-    if (!$result=mysql_query($query,$link)) {
-        $message.=$query."<BR>Error querying database.<BR>";
-        RenderError($title,$message);
-        exit();
-        }
-    $schdrows=mysql_num_rows($result);
-    for ($i=0; $i<$schdrows; $i++) {
-        list(
-            $schdarray[$i]["sessionid"],
-            $schdarray[$i]["trackname"],
-            $schdarray[$i]["title"],
-            $schdarray[$i]["roomname"],
-            $schdarray[$i]["progguiddesc"],
-            $schdarray[$i]["starttime"],
-            $schdarray[$i]["duration"],
-            $schdarray[$i]["persppartinfo"],
-            $schdarray[$i]["notesforpart"])
-                =mysql_fetch_array($result, MYSQL_NUM);
-        }
-    $query= <<<EOD
+	$queryArr["participants"] = <<<EOD
 SELECT
-            POS.sessionid, CD.badgename, P.pubsname, 
-            IF (P.share_email=1,CD.email,null) 'email',
-            POS.moderator, PSI.comments
+        POS.sessionid, CD.badgename, P.pubsname, 
+        IF (P.share_email=1, CD.email, NULL) AS email,
+        POS.moderator, PSI.comments
     FROM
-            ParticipantOnSession POS
-       JOIN CongoDump CD USING(badgeid)
-       JOIN Participants P USING(badgeid)
-  LEFT JOIN ParticipantSessionInterest PSI USING(sessionid,badgeid)
+				ParticipantOnSession POS
+		   JOIN CongoDump CD USING(badgeid)
+		   JOIN Participants P USING(badgeid)
+	  LEFT JOIN ParticipantSessionInterest PSI USING(sessionid, badgeid)
     WHERE
-            POS.sessionid in
-                    (select sessionid from ParticipantOnSession where badgeid='$badgeid')
-            ORDER BY sessionid, moderator desc
+        POS.sessionid IN (
+            SELECT sessionid FROM ParticipantOnSession WHERE badgeid='$badgeid'
+			)
+    ORDER BY sessionid, moderator DESC;
 EOD;
-    if (!$result=mysql_query($query,$link)) {
-        $message.=$query."<BR>Error querying database.<BR>";
-        RenderError($title,$message);
+	$resultXML=mysql_query_XML($queryArr);
+    if (!$resultXML) {
+        RenderErrorAjax($message_error);
         exit();
         }
-    $partrows=mysql_num_rows($result);
-    for ($i=0; $i<$partrows; $i++) {
-        list(
-            $partarray[$i]["sessionid"],
-            $partarray[$i]["badgename"],
-            $partarray[$i]["pubsname"],
-            $partarray[$i]["email"],
-            $partarray[$i]["moderator"],
-	        $partarray[$i]["comments"])
-	            =mysql_fetch_array($result, MYSQL_NUM);
-        }
+	//echo($resultXML->saveXML());
+	//exit();
     $query="SELECT message FROM CongoDump C LEFT JOIN RegTypes R on C.regtype=R.regtype ";
     $query.="WHERE C.badgeid=\"$badgeid\"";
     if (!$result=mysql_query($query,$link)) {
@@ -117,65 +90,15 @@ EOD;
     echo "<P>Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on which you'd still like to participate.\n";
     echo "<P>Your registration status is <SPAN class=\"hilit\">$regmessage.</SPAN>\n";
     echo "<P>Thank you -- <A HREF=\"mailto:$PROGRAM_EMAIL\"> Programming </a>\n";
-    echo "    <TABLE>\n";
-    echo "        <COL><COL width=\"30%\"><COL width=\"20%\"><COL><COL width=\"6%\"><COL><COL width=\"18%\">\n";
-    for ($i=0; $i<$schdrows; $i++) {
-        echo "        <TR>\n";
-        echo "            <TD class=\"sched_hd\">".$schdarray[$i]["sessionid"]."</TD>\n";
-        echo "            <TD class=\"sched_hd\">".htmlspecialchars($schdarray[$i]["title"])."</TD>\n";
-        echo "            <TD class=\"sched_hd\">".$schdarray[$i]["roomname"]."</TD>\n";
-        echo "            <TD class=\"sched_hd\">".$schdarray[$i]["trackname"]."</TD>\n";
-        echo "            <TD class=\"sched_hd\">&nbsp;</TD>\n";
-        echo "            <TD class=\"sched_hd\">".$schdarray[$i]["starttime"]."</TD>\n";
-        echo "            <TD class=\"sched_hd\">Duration: ".$schdarray[$i]["duration"]."</TD>\n";
-        echo "            </TR>\n";
-        if (($x=$schdarray[$i]["progguiddesc"])!='') {
-            echo "        <TR><TD>&nbsp;</TD>\n";
-            echo "            <TD colspan=6 class=\"border0010\">".htmlspecialchars($x)."</TD>\n";
-            echo "            </TR>\n";
-            }
-        if (($x=$schdarray[$i]["persppartinfo"])!='') {
-            echo "        <TR><TD>&nbsp;</TD>\n";
-            echo "            <TD colspan=6 class=\"border0010\">".htmlspecialchars($x)."</TD>\n";
-            echo "            </TR>\n";
-            }
-        if (($x=$schdarray[$i]["notesforpart"])!='') {
-            echo "        <TR><TD>&nbsp;</TD>\n";
-            echo "            <TD colspan=6 class=\"border0010\">".htmlspecialchars($x)."</TD>\n";
-            echo "            </TR>\n";
-            }
-        echo "        <TR><TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
-        echo "        <TR><TD>&nbsp;</TD>\n";
-        echo "            <TD class=\"usrinp\">Panelists' Publication Names (Badge Names)</TD>\n";
-        echo "            <TD class=\"usrinp\">Email addresses</TD>\n";
-        echo "            <TD colspan=4 class=\"usrinp\">Comments</TD>\n";
-        echo "            </TR>\n";
-        echo "        <TR><TD colspan=7 class=\"smallspacer\">&nbsp;</TD></TR>\n";
-        for ($j=0; $j<$partrows; $j++) {
-            if ($partarray[$j]["sessionid"]!=$schdarray[$i]["sessionid"]) {
-                continue;
-                }
-            if ($partarray[$j+1]["sessionid"]==$schdarray[$i]["sessionid"]) {
-                    $class="border0010";
-                    }
-                else {
-                    $class="";
-                    }
-            echo "        <TR><TD>&nbsp;</TD>\n";
-            echo "            <TD class=\"$class\">".htmlspecialchars($partarray[$j]["pubsname"]);
-	    if ($partarray[$j]["pubsname"]!=$partarray[$j]["badgename"]) echo " (".htmlspecialchars($partarray[$j]["badgename"]).")";
-            if ($partarray[$j]["moderator"]) {
-                echo " <I>mod</I> ";
-                }
-            echo "</TD>\n";
-            echo "            <TD class=\"$class\">".htmlspecialchars(fix_slashes($partarray[$j]["email"]));
-            echo "            <TD colspan=4 class=\"$class\">".htmlspecialchars(fix_slashes($partarray[$j]["comments"]));
-            echo "</TD>\n";
-            echo "            </TR>\n";
-            }
-        echo "        <TR><TD colspan=7 class=\"border0020\">&nbsp;</TD></TR>\n";
-        echo "        <TR><TD colspan=7 class=\"border0000\">&nbsp;</TD></TR>\n";
-        }
-    echo "        </TABLE>\n"; 
+	$xsl = new DomDocument;
+	$xsl->load('xsl/my_schedule.xsl');
+	$xslt = new XsltProcessor();
+	$xslt->importStylesheet($xsl);
+	if ($html = $xslt->transformToXML($resultXML)) {
+		    echo $html;
+			}
+		else {
+		    trigger_error('XSL transformation failed.', E_USER_ERROR);
+			}
     participant_footer();
 ?>

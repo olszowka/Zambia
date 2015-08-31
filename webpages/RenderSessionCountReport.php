@@ -8,8 +8,7 @@
       require_once('StaffCommonCode.php');
       staff_header($title);
 ?>
-    <TABLE>
-        <COL><COL>
+    <TABLE class="table table-condensed table-hover">
         <TR>
             <TH class="y1">Track</TH>
             <TH class="y2">Status</TH>

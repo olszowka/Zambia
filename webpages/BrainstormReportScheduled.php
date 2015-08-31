@@ -1,8 +1,9 @@
 <?php
     require_once ('db_functions.php');
     require_once('BrainstormCommonCode.php');
-    require_once('BrainstormHeader.php');
     $title="Scheduled Suggestions";
+	$ConStartDatim = CON_START_DATIM;
+    global $message_error;
     $showlinks=$_GET["showlinks"];
     $_SESSION['return_to_page']="ViewPrecis.php?showlinks=$showlinks";
     if ($showlinks=="1") {
@@ -17,22 +18,27 @@
         exit ();
         }
    $query = <<<EOD
-SELECT sessionid, trackname, null typename, title, 
-       concat( if(left(duration,2)=00, '', 
-               if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))),
-               if(date_format(duration,'%i')=00, '', 
-               if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), 
-                  concat(date_format(duration,'%i'),'min')))) Duration,
-       estatten, progguiddesc, persppartinfo
-  from Sessions, Tracks, SessionStatuses 
- where Sessions.trackid=Tracks.trackid  
-   and SessionStatuses.statusid=Sessions.statusid  
-   and SessionStatuses.statusname in ('Assigned','Scheduled')
-   and Sessions.invitedguest=0
- order by trackname, title
+SELECT
+        sessionid, trackname, null typename, title, 
+        CONCAT( IF(LEFT(duration,2)=00, '', 
+                IF(LEFT(duration,1)=0, CONCAT(RIGHT(LEFT(duration,2),1),'hr '), CONCAT(LEFT(duration,2),'hr '))),
+                IF(DATE_FORMAT(duration,'%i')=00, '', 
+                IF(LEFT(DATE_FORMAT(duration,'%i'),1)=0, CONCAT(RIGHT(DATE_FORMAT(duration,'%i'),1),'min'), 
+            CONCAT(DATE_FORMAT(duration,'%i'),'min')))) Duration,
+        estatten, progguiddesc, persppartinfo, roomname,
+		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime
+    FROM
+    	          Sessions S
+    	     JOIN Tracks TR USING (trackid)
+    	     JOIN SessionStatuses SS USING (statusid)
+		LEFT JOIN Schedule SCH USING (sessionid)
+		LEFT JOIN Rooms R USING (roomid)
+    WHERE
+            SS.statusname IN ('Assigned','Scheduled')
+        AND S.invitedguest=0;
 EOD;
-    if (($result=mysql_query($query,$link))===false) {
-        $message="Error retrieving data from database.";
+    if (!$result = mysql_query_with_error_handling($query,$link)) {
+        $message="Error retrieving data from database." . $message_error;
         RenderError($title,$message);
         exit ();
         }

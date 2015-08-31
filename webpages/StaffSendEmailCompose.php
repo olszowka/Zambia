@@ -20,10 +20,18 @@ if ($_POST['navigate']!='send') {
     render_send_email($email,$message_warning);
     exit(0);
     }
-// Queue email to be sent into db.  Cron job will actually send it at a pace not to trigger outgoing spam filters. 
+// put code to send email here.
+// render_send_email_engine($email,$message_warning);
 $title="Staff Send Email";
 $subst_list=array("\$BADGEID\$","\$FIRSTNAME\$","\$LASTNAME\$","\$EMAILADDR\$","\$PUBNAME\$","\$BADGENAME\$");
 $email=get_email_from_post();
+//Create the Transport
+$transport = Swift_SmtpTransport::newInstance(SMTP_ADDRESS,2525);
+//Create the Mailer using your created Transport
+$mailer = Swift_Mailer::newInstance($transport);
+//$swift =& new Swift(new Swift_Connection_SMTP(SMTP_ADDRESS)); // Is machine name of SMTP host defined in db_name.php
+//$log =& Swift_LogContainer::getLog();
+//$log->setLogLevel(0); // 0 is minimum logging; 4 is maximum logging
 $query="SELECT emailtoquery FROM EmailTo where emailtoid=".$email['sendto'];
 if (!$result=mysql_query($query,$link)) {
     db_error($title,$query,$staff=true); // outputs messages regarding db error
@@ -53,41 +61,46 @@ if (!$result=mysql_query($query,$link)) {
     exit(0);
     }
 $emailcc=mysql_result($result,0);
-$goodCount=0;
-$badCount=0;
-unset($arrayOfGood);
-unset($arrayOfBad);
 for ($i=0; $i<$recipient_count; $i++) {
-    $name=(strlen($recipientinfo[$i]['pubsname'])>0)?$recipientinfo[$i]['pubsname']:$recipientinfo[$i]['firstname']." ".$recipientinfo[$i]['lastname'];
-    if (!filter_var($recipientinfo[$i]['email'],FILTER_VALIDATE_EMAIL)) {
-             // bad email address
-             $badCount++;
-             $arrayOfBad[]=array('badgeid'=>$recipientinfo[$i]['badgeid'],'name'=>$name,'email'=>$recipientinfo[$i]['email']);
-             }
-        else {
-             $goodCount++;
-             $arrayOfGood[]=array('badgeid'=>$recipientinfo[$i]['badgeid'],'name'=>$name,'email'=>$recipientinfo[$i]['email']);
-             $repl_list=array($recipientinfo[$i]['badgeid'],$recipientinfo[$i]['firstname'],$recipientinfo[$i]['lastname']);
-             $repl_list=array_merge($repl_list,array($recipientinfo[$i]['email'],$recipientinfo[$i]['pubsname'],$recipientinfo[$i]['badgename']));
-             $emailverify['body']=str_replace($subst_list,$repl_list,$email['body']);
-             $query="INSERT INTO EmailQueue (emailqueueid, emailto, emailfrom, emailcc, emailsubject, body, status) ";
-             // to address
-             $query.="values(null, \"".mysql_real_escape_string($recipientinfo[$i]['email'],$link)."\",";
-             // from address
-             $query.="\"".mysql_real_escape_string($emailfrom,$link)."\",";
-             // cc (bcc) address
-             $query.="\"".mysql_real_escape_string($emailcc,$link)."\",";
-             // subject
-             $query.="\"".mysql_real_escape_string($email['subject'],$link)."\",";
-             // body
-             $query.="\"".mysql_real_escape_string(wordwrap(preg_replace("/(?<!\\r)\\n/","\r\n",$emailverify['body']),70,"\r\n"),$link)."\",";
-             // status 1 is unsent (queued)
-             $query.="1);";
-             if (!$result=mysql_query($query,$link)) {
-                 db_error($title,$query,$staff=true); // outputs messages regarding db error
-                 exit(0);
-                 }
-             }
-    }   
-renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad);
+    $ok=TRUE;
+    //Create the message
+    $message = Swift_Message::newInstance();
+    $repl_list=array($recipientinfo[$i]['badgeid'],$recipientinfo[$i]['firstname'],$recipientinfo[$i]['lastname']);
+    $repl_list=array_merge($repl_list,array($recipientinfo[$i]['email'],$recipientinfo[$i]['pubsname'],$recipientinfo[$i]['badgename']));
+    $emailverify['body']=str_replace($subst_list,$repl_list,$email['body']);
+    //Give the message a subject
+        $message->setSubject($email['subject']);
+    //Define from address
+	$message->setFrom($emailfrom);
+    //Define body
+        $message->setBody($emailverify['body'],'text/plain');
+    //$message =& new Swift_Message($email['subject'],$emailverify['body']);
+    echo ($recipientinfo[$i]['pubsname']." - ".$recipientinfo[$i]['email'].": ");
+    try {
+        $message->addTo($recipientinfo[$i]['email']);
+        }
+    catch (Swift_SwiftException $e) {
+        echo $e->getMessage()."<BR>\n";
+	$ok=FALSE;
+        }
+    //$recipients =& new Swift_RecipientList();
+    //$recipients->addTo($recipientinfo[$i]['email']); // define the To: field
+    if ($emailcc!="") {
+	$message->addBcc($emailcc);
+        //$recipients->addBcc($emailcc); // define the BCC: field
+        }
+    //if ($swift->send($message, $recipients, $emailfrom)) {
+    try {
+        $mailer->send($message);
+        }
+    catch (Swift_SwiftException $e) {
+        echo $e->getMessage()."<BR>\n";
+	$ok=FALSE;
+        }
+    if ($ok==TRUE) {
+            echo "Sent<BR>";
+            }
+    }
+//$log =& Swift_LogContainer::getLog();
+//echo $log->dump(true);
 ?>

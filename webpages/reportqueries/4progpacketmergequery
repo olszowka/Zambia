@@ -1,6 +1,0 @@
-TITLE='Full Participant Schedule for the Program Packet Merge'
-DESCRIPTION='pubsname, (day, time, duration, room, mod)'
-PUBSWANTS=1
-CSVONLY=1
-GENCSV=1
-QUERY="set group_concat_max_len=25000; select POS.badgeid, pubsname, group_concat(roomname,' MAKEMEACOMMA ',DATE_FORMAT(ADDTIME('2009-01-16 00:00:00',starttime),'%a %l:%i %p'),' MAKEMEACOMMA ',concat('(', if(left(duration,2)=00, '', if(left(duration,1)=0, concat(right(left(duration,2),1),'hr '), concat(left(duration,2),'hr '))), if(date_format(duration,'%i')=00, '', if(left(date_format(duration,'%i'),1)=0, concat(right(date_format(duration,'%i'),1),'min'), concat(date_format(duration,'%i'),'min'))),')'),' MAKEMEACOMMA ',trackname,' MAKEMEACOMMA ', title,' MAKEMEACOMMA ', if(moderator=1,'M',''),' MAKEMEACOMMA ' order by starttime ) panelinfo from Participants P, Rooms R, Sessions S, Schedule SCH, ParticipantOnSession POS, CongoDump C , Tracks T where P.badgeid=C.badgeid and S.sessionid=SCH.sessionid and POS.sessionid=S.sessionid and POS.badgeid=C.badgeid and T.trackid=S.trackid and SCH.roomid = R.roomid and SCH.sessionid = S.sessionid group by badgeid order by pubsname;"

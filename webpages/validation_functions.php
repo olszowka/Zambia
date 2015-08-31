@@ -196,6 +196,9 @@ function validate_session() {
 // Reads global $partAvail and performs tests.
 // If a test fails, then the global $message is populated
 // with the HTML of an error message.
+// This validation code assumes the times in Times table for start and end are
+// strictly monoticially increasing with the index--start and end are part of same
+// monotonic sequence.
 //
 function validate_participant_availability() {
     global $partAvail, $messages;
@@ -203,14 +206,14 @@ function validate_participant_availability() {
     $messages="";
     if (!($partAvail["maxprog"]>=0 and $partAvail["maxprog"]<=PREF_TTL_SESNS_LMT)) {
         $x=PREF_TTL_SESNS_LMT;
-        $messages="For the overall maximum number of panels, enter a number between 0 and $x.<BR>\n";
+        $messages="For the overall maximum number of sessions, enter a number between 0 and $x.<BR>\n";
         $flag=false;
         }
     if (CON_NUM_DAYS>1) {
         for ($i=1; $i<=CON_NUM_DAYS; $i++) {
             if (!($partAvail["maxprogday$i"]>=0 and $partAvail["maxprogday$i"]<=10)) {
                 $x=PREF_DLY_SESNS_LMT;
-                $messages.="For each daily maximum number of panels, enter a number between 0 and $x.<BR>\n";
+                $messages.="For each daily maximum number of sessions, enter a number between 0 and $x.<BR>\n";
                 $flag=false;
                 break;
                 }

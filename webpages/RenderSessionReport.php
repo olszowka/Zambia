@@ -9,7 +9,7 @@
     staff_header($title);
 ?>
 <p> Here are the results of your search.  The report includes Session id, track, title, duration, estimated attendance, pocket program text, notes for prospective participants.
-<table>
+<table class="table table-condensed table-hover">
 <?php
     while (list($sessionid,$trackname,$title,$duration,$estatten,$pocketprogtext, $persppartinfo)= mysql_fetch_array($result, MYSQL_NUM)) {
         echo "        <TR>\n";
