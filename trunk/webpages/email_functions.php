@@ -100,19 +100,21 @@ function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad) {
     echo "$badCount message(s) failed.</P>\n";
     echo "<P>List of messages successfully queued:<BR>\n";
     echo "Badgeid, Name for Publications, Email Address<BR>\n";
-    foreach ($arrayOfGood as $recipient) {
-        echo htmlspecialchars($recipient['badgeid']).", ";
-        echo htmlspecialchars($recipient['name']).", ";
-        echo htmlspecialchars($recipient['email'])."<BR>\n";
-        }
+	if ($arrayOfGood)
+	    foreach ($arrayOfGood as $recipient) {
+	        echo htmlspecialchars($recipient['badgeid']).", ";
+	        echo htmlspecialchars($recipient['name']).", ";
+	        echo htmlspecialchars($recipient['email'])."<BR>\n";
+	        }
     echo"</P>\n";
     echo "<P>List of recipients which failed:<BR>\n";
     echo "Badgeid, Name for Publications, Email Address<BR>\n";
-    foreach ($arrayOfBad as $recipient) {
-        echo htmlspecialchars($recipient['badgeid']).", ";
-        echo htmlspecialchars($recipient['name']).", ";
-        echo htmlspecialchars($recipient['email'])."<BR>\n";
-        }
+	if ($arrayOfBad)
+	    foreach ($arrayOfBad as $recipient) {
+	        echo htmlspecialchars($recipient['badgeid']).", ";
+	        echo htmlspecialchars($recipient['name']).", ";
+	        echo htmlspecialchars($recipient['email'])."<BR>\n";
+	        }
     echo"</P>\n";
     staff_footer();
     }

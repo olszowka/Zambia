@@ -1,9 +1,0 @@
-TITLE='Attending Query (all info)'
-DESCRIPTION='Shows who has responding and if they are attending. (Interested, 1=yes, 2=no, 0=did not pick, NULL=did not hit save)'
-PROGWANTS=1
-EVENTSWANTS=1
-PUBSWANTS=1
-QUERY='
-	select P.pubsname, P.badgeid, P.interested, P.bestway 
-	from Participants P 
-	order by P.pubsname;'

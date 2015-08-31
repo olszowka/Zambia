@@ -1,10 +1,10 @@
 
 In the Upgrade_dbase directory you'll find a series of files starting 
 with a 2 digit number.  These are the database updates that need to be 
-completed when you pick up the latest cvs checkout.   Without them 
+completed when you pick up the latest svn checkout.   Without them 
 certain functionality will not work.  
 
-These updates are already applied to EmptyDbase.dump:
+These updates are already applied to EmptyDbase.dump, SampleDbase.dump and DemoDbase.dump:
 01_addpermtables.sql
 02_pubstats.sql
 03_pubstat_constraints.sql
@@ -25,7 +25,15 @@ These updates are already applied to EmptyDbase.dump:
 17_partavailnull.sql
 18_editbioperms.sql
 19_partavail.sql
+20_bilingual.sql
+21_more_bios.sql
+22_validate_session.sql
+29_email_queue.sql
+30_congodump_address.sql
+31_session_edit_history.sql
+32_import_sessions.sql
+33_import_participant_bios.sql
+34_share_email.sql
+35_staff_notes.sql
 
-I'm really not sure what the status of  DemoDbase.dump is.  It has at least the first 4. 
-
-any further updates need to be applied
+Any further updates need to be applied.

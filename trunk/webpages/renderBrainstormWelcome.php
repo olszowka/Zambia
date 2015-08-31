@@ -6,10 +6,10 @@
 ?>
 
 <?php if ($message_error!="") { ?>
-	<P class="errmsg"><?php echo $message_error; ?></P>
+	<P class="alert alert-error"><?php echo $message_error; ?></P>
 	<?php } ?>
 <?php if ($message!="") { ?>
-	<P class="regmsg"><?php echo $message; ?></P>
+	<P class="alert alert-success"><?php echo $message; ?></P>
 	<?php } ?>
 <?php
     $chpw=($participant["password"]=="4cb9c8a8048fd02294477fcb1a41191a");

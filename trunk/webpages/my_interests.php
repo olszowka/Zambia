@@ -1,6 +1,6 @@
 <?php
     global $participant,$message_error,$message2,$congoinfo;
-    $title="My General Interests";
+    $title="General Interests";
     require ('PartCommonCode.php'); // initialize db; check login;
     require_once('ParticipantHeader.php');
     require_once('renderMyInterests.php');
