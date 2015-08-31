@@ -1,0 +1,9 @@
+2014-10-12
+
+The file reportsTables.dump contains schema and data for the tables which implement
+the report engine.  These tables are included in EmptyDbase.dump, SampleDbase.dump, and DemoDbase.dump, but the data are included in only the latter two.
+
+The plan is build scripts for importing from and exporting to an XML file so that the 
+reports are more readily tracked by version control.  However, those scripts have not yet
+been implemented.
+
