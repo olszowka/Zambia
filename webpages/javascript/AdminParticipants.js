@@ -2,136 +2,176 @@ var bioDirty = false;
 var pnameDirty = false;
 var snotesDirty = false;
 var originalInterested = 0;
+var fbadgeid;
+var resultsHidden = true;
 
 function anyChange() {
-	var x = document.getElementById("password").value;
-	var y = document.getElementById("cpassword").value;
-	if (!x && !y && (document.getElementById("interested").value != originalInterested || 
+	var x = $("#password").val();
+	var y = $("#cpassword").val();
+	if (!x && !y && ($("#interested").val() != originalInterested || 
 			bioDirty || pnameDirty || snotesDirty) ||
 		(x && x == y) ) {
-			document.getElementById("updateBUTN").disabled = false;
+			$("#updateBUTN").prop("disabled", false);
 			}
 		else {
-			document.getElementById("updateBUTN").disabled = true;			
+			$("#updateBUTN").prop("disabled", true);
 			}
-	var z = document.getElementById("passwordsDontMatch");
+	var z = $("#passwordsDontMatch");
 	if (x && y && x!=y)
-			z.style.display = "inline-block";
+			z.show();
 		else
-			z.style.display = "none";
+			z.hide();
 }
 
-function cancelSearchPartsBUTN() {
-	$("#searchPartsDIV").dialog("close");
-}
-
-function chooseParticipant(badgeid) {
+function checkIfDirty(mode) {
+	//called when user clicks "Search for participants" on the page
 	//debugger;
-	$("#searchPartsDIV").dialog("close");
-	document.getElementById("badgeid").value = document.getElementById("bidSPAN_" + badgeid).innerHTML;
-	document.getElementById("lname_fname").value = document.getElementById("lnameSPAN_" + badgeid).innerHTML;
-	document.getElementById("bname").value = document.getElementById("bnameSPAN_" + badgeid).innerHTML;
-	document.getElementById("pname").value = document.getElementById("pnameSPAN_" + badgeid).innerHTML;
-	document.getElementById("pname").readOnly = false;
-	originalInterested = document.getElementById("interestedHID_" + badgeid).value;
-	document.getElementById("interested").value = originalInterested;
-	document.getElementById("interested").disabled = false;
-	document.getElementById("bio").value = document.getElementById("bioHID_" + badgeid).value;
-	document.getElementById("bio").readOnly = false;
-	document.getElementById("staffnotes").value = document.getElementById("staffnotesHID_" + badgeid).value;
-	document.getElementById("staffnotes").readOnly = false;
-	document.getElementById("password").readOnly = false;
-	document.getElementById("password").value = "";
-	document.getElementById("cpassword").readOnly = false;
-	document.getElementById("cpassword").value = "";
+	if (!mode && (bioDirty || pnameDirty || snotesDirty || 
+		$("#interested").val() != originalInterested ||
+		($("#password").val()) && 
+			$("#cpassword").val())) {
+			$("#unsavedWarningDIV").modal('show');
+			$("#cancelOpenSearchBUTN").blur();
+			return false;	
+			}
+	if (mode)
+		$("#unsavedWarningDIV").modal('hide');
+	if (mode=="cancel")
+		return false;
+	return true;
+}
+
+function chooseParticipant(badgeid, override) {
+	//debugger;
+	if (!checkIfDirty(override)) {
+		$('#warnName').html($("#pname").val());
+		$('#warnNewBadgeID').html(badgeid);
+		return;
+		}
+	hideSearchResults();
+	$("#badgeid").val($("#bidSPAN_" + badgeid).html());
+	$("#lname_fname").val($("#lnameSPAN_" + badgeid).html());
+	$("#bname").val($("#bnameSPAN_" + badgeid).html());
+	var pname = $("#pnameSPAN_" + badgeid).html();
+	$("#pname").val(pname).prop("defaultValue", pname).prop("readOnly", false);
+	originalInterested = $("#interestedHID_" + badgeid).val();
+	if (originalInterested=="")
+		originalInterested = 0;
+	$("#interested").val(originalInterested);
+	$("#interested").prop("disabled", false);
+	var bio = $("#bioHID_" + badgeid).val();
+	$("#bio").val(bio).prop("defaultValue", bio).prop("readOnly", false);
+	var staffnotes = $("#staffnotesHID_" + badgeid).val();
+	$("#staffnotes").val(staffnotes).prop("defaultValue", staffnotes).prop("readOnly", false);
+	$("#password").val("").prop("readOnly", false);
+	$("#cpassword").val("").prop("readOnly", false);
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
-	document.getElementById("updateBUTN").disabled = true;
-	$("#resultBoxDIV").html("");
+	$('#resultsDiv').show();
+	$("#updateBUTN").prop("disabled", true);
+	$("#resultBoxDIV").html("").hide();
+	$("#passwordsDontMatch").hide();
 }
 
 function doSearchPartsBUTN() {
+	if (!checkIfDirty())
+		return;
 	//called when user clicks "Search" within dialog
 	var x = document.getElementById("searchPartsINPUT").value;
 	if (!x)
 		return;
+	$('#searchPartsBUTN').button('loading');
 	$.ajax({
 		url: "SubmitAdminParticipants.php",
 		dataType: "html",
-		data: ({ searchString : x,
-				ajax_request_action : "perform_search" }),
-		success: writeSearchResults
+		data: ({
+			searchString : x,
+			ajax_request_action : "perform_search"
+			}),
+		success: writeSearchResults,
+		type: "POST"
 		});
 }
 
-function highlight(dohighlight, id) {
-	if (dohighlight) {
-			document.getElementById("actionDIV_" + id).className="action_hover";
-			document.getElementById("lnameSPAN_" + id).className="action_hover";
-			document.getElementById("pnameSPAN_" + id).className="actionB_hover";
-			document.getElementById("bnameSPAN_" + id).className="action_hover";
-			document.getElementById("bidSPAN_" + id).className="action_hover";
-			}
-		else {
-			document.getElementById("actionDIV_" + id).className="action";
-			document.getElementById("lnameSPAN_" + id).className="action";
-			document.getElementById("pnameSPAN_" + id).className="actionB";
-			document.getElementById("bnameSPAN_" + id).className="action";
-			document.getElementById("bidSPAN_" + id).className="action";
-			}
+function fetchParticipant(badgeid) {
+	$.ajax({
+		url: "SubmitAdminParticipants.php",
+		dataType: "xml",
+		data: ({
+			badgeid : badgeid,
+			ajax_request_action : "fetch_participant"
+			}),
+		success: fetchParticipantCallback,
+		type: "GET"
+		});
+}
+
+function fetchParticipantCallback(data, textStatus, jqXHR) {
+	//debugger;
+	var node=data.firstChild.firstChild.firstChild;
+	$("#badgeid").val(node.getAttribute("badgeid"));
+	$("#lname_fname").val(node.getAttribute("lastname")+", "+node.getAttribute("firstname"));
+	$("#bname").val(node.getAttribute("badgename"));
+	$("#pname").val(node.getAttribute("pubsname")).prop("defaultValue", node.getAttribute("pubsname")).prop("readOnly", false);
+	originalInterested = node.getAttribute("interested");
+	if (originalInterested=="")
+		originalInterested = 0;
+	$("#interested").val(originalInterested);
+	$("#interested").prop("disabled", false);
+	$("#bio").val(node.getAttribute("bio")).prop("defaultValue", node.getAttribute("bio")).prop("readOnly", false);
+	$("#staffnotes").val(node.getAttribute("staff_notes")).prop("defaultValue", node.getAttribute("staff_notes")).prop("readOnly", false);
+	$("#password").prop("readOnly", false);
+	$("#password").val("");
+	$("#cpassword").prop("readOnly", false);
+	$("#cpassword").val("");
+	bioDirty = false;
+	pnameDirty = false;
+	snotesDirty = false;
+	$('#resultsDiv').show();
+	$('#resultBoxDIV').show();
+	$("#updateBUTN").prop("disabled", true);	
+	$("#passwordsDontMatch").hide();
+	hideSearchResults();
+}
+
+function hideSearchResults() {
+	resultsHidden = true;
+	$("#searchResultsDIV").hide("fast");
+	$("#toggleSearchResultsBUTN").prop("disabled", false);
+	$("#toggleText").html("Show");
 }
 
 function initializeAdminParticipants() {
 	//called when JQuery says AdminParticipants page has loaded
-	//just a filler for now
 	//debugger;
-	$("#searchPartsDIV").dialog({
-		title: "Search for participants",
-		height: "450",
-		width: "550",
-		modal: true,
-		autoOpen: false,
-		resizable: false,
-		draggable: true
-		});
-	$("#unsavedWarningDIV").dialog({
-		title: "Data not saved",
-		height: "175",
-		width: "350",
-		modal: true,
-		autoOpen: false,
-		resizable: false,
-		draggable: true
-		});
-	$("#doSearchPartsBUTN").button();
-	$("#doSearchPartsBUTN").click(doSearchPartsBUTN);
-	$("#cancelSearchPartsBUTN").button();
-	$("#cancelSearchPartsBUTN").click(cancelSearchPartsBUTN);
+	$("#passwordsDontMatch").hide();
+	$('#resultsDiv').hide();
+	$('#resultBoxDIV').hide();
+	$("#unsavedWarningDIV").modal({backdrop: 'static', keyboard: true, show: false});
+	$("#toggleSearchResultsBUTN").click(toggleSearchResultsBUTN);
+	$("#toggleSearchResultsBUTN").prop("disabled", true);
+	resultsHidden = true;
+	$("#searchPartsBUTN").click(doSearchPartsBUTN);
 	$("#cancelOpenSearchBUTN").button();
 	$("#overrideOpenSearchBUTN").button();
-	//window.status="Reached initializeAdminParticipants."
+	$("#searchResultsDIV").html("").hide('fast');
+	if (fbadgeid)  // signal from page initializer that page was requested to
+					       // to be preloaded with a participant
+		fetchParticipant(fbadgeid);
 }
 
-function openSearchPartsBUTN(mode) {
-	//called when user clicks "Search for participants" on the page
-	//just a filler for now
-	//debugger;
-	if (!mode && (bioDirty || pnameDirty || snotesDirty || 
-		document.getElementById("interested").value != originalInterested ||
-		(document.getElementById("password").value) && 
-			document.getElementById("cpassword").value)) {
-			$("#unsavedWarningDIV").dialog("open");
-			$("#cancelOpenSearchBUTN").blur();
-			return;	
-			}
-	if (mode)
-		$("#unsavedWarningDIV").dialog("close");
-	if (mode=="cancel")
-		return;
-	document.getElementById("searchPartsINPUT").value="";
-	document.getElementById("searchResultsDIV").innerHTML="";
-	$("#searchPartsDIV").dialog("open");
+function loadNewParticipant() {
+	var id = $('#warnNewBadgeID').html();
+	chooseParticipant(id, 'override');
+	return true;
+}
+
+function showSearchResults() {
+	resultsHidden = false;
+	$("#searchResultsDIV").show("fast");
+	$("#toggleSearchResultsBUTN").prop("disabled", false);
+	$("#toggleText").html("Hide");
 }
 
 function showUpdateResults(data, textStatus, jqXHR) {
@@ -139,31 +179,39 @@ function showUpdateResults(data, textStatus, jqXHR) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
-	document.getElementById("updateBUTN").disabled = true;
+	$("#password").val("");
+	$("#cpassword").val("");
+	$('#updateBUTN').button('reset');
 	originalInterested = $("#interested").val();
+	setTimeout(function() {$("#updateBUTN").button().attr("disabled","disabled");}, 0);
 	$("#resultBoxDIV").html(data);
+	$('#resultBoxDIV').show();
 }
 
 function textChange(which) {
 	switch(which) {
 		case 'bio':
-			if ($("#bio").val())
-				bioDirty = true;
+			bioDirty = ($("#bio").val() != $("#bio").prop("defaultValue"));
 			break;
 		case 'snotes':
-			if ($("#staffnotes").val())
-				snotesDirty = true;
+			snotesDirty = ($("#staffnotes").val() != $("#staffnotes").prop("defaultValue"));
 			break;
 		case 'pname':
-			if ($("#pname").val())
-				pnameDirty = true;
+			pnameDirty = ($("#pname").val() != $("#pname").prop("defaultValue"));
 			break;
 		}
 	anyChange();
 }
 
+function toggleSearchResultsBUTN() {
+	$("#searchResultsDIV").slideToggle("fast");
+	resultsHidden = !resultsHidden;
+	$("#toggleText").html((resultsHidden ? "Show" : "Hide"));
+}
+
 function updateBUTN() {
 	//debugger;
+	$('#updateBUTN').button('loading');
 	var postdata = {
 		ajax_request_action : "update_participant",
 		badgeid : $("#badgeid").val()
@@ -182,12 +230,15 @@ function updateBUTN() {
 		url: "SubmitAdminParticipants.php",
 		dataType: "html",
 		data: postdata,
-		success: showUpdateResults
+		success: showUpdateResults,
+		type: "POST"
 		});
 }
 
 function writeSearchResults(data, textStatus, jqXHR) {
 	//ajax success callback function
-	document.getElementById("searchResultsDIV").innerHTML = data;
+	$("#searchResultsDIV").html(data).show('fast');
+	$('#searchPartsBUTN').button('reset');
+	showSearchResults();
 }
 
