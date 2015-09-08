@@ -1,0 +1,406 @@
+// $Header$
+// Colors and other variables
+@blue: #00c;
+@green: #0c0;
+@light_blue: @blue + #666;
+@dark_blue: @blue - #333;
+@light_green: @green + #333;
+@dark_green: @green - #333;
+@darker_green: @green - #222;
+@font: Verdana;
+@contrast: white;
+@color: black;
+@staffColor: @darker_green;
+@participantColor: @light_blue;
+
+////////////
+// LAYOUT //
+////////////
+
+// header
+header {
+	img, h1 {
+		float: left;
+		padding-left: 1em;
+	}
+}
+
+////////////
+// STYLES //
+////////////
+
+
+body {
+	background-image: url('../images/light_honeycomb.png');
+	xxbackground-image: url('../images/old_mathematics.png');
+	background-repeat: repeat;
+}
+
+header#top {
+	xxbackground-color: gray;
+}
+
+header {
+	label {
+		color: @color;
+		display: block;
+		text-align: right;
+		font-size: 1.1em;
+	}
+	.imgButton {
+	 cursor: pointer;
+	}
+}
+
+a {
+  color: #04C;
+}
+#loginBox,
+#welcome {
+	float: right;
+	margin: 1em 1em 0 0;
+  p {
+    color: @contrast;
+    text-align: right;
+  }
+}
+
+#altHeader p {
+    color: @contrast;
+    text-align: right;
+    padding-right: 0.5em;
+}
+
+#showHeader {
+  height: 20px;
+  padding-left: 0.5em;
+}
+
+#buttonBox {
+  margin: 0.4em;
+  xposition: relative;
+  xtop: -3em;
+}
+
+.borderBox {
+  border: black thin solid;
+  padding: 5px;
+  margin: 0;
+  color: @color;
+}
+
+input[type="text"],
+input[type="password"] {
+  height: 28px;
+} 
+
+.navbar {
+  margin-bottom: 0.2em;
+}
+
+.staff {
+  xxbackground-color: @staffColor;
+  background-image: url('../images/staffheadbg.png');
+  background-repeat: repeat-x;
+  background-color: white;
+  color: black;
+}
+
+#staffView {
+  color: @staffColor;
+}
+
+#staffView:hover {
+  color: (@staffColor + #444);
+}
+
+.participant {
+  xxbackground-color: @participantColor;
+  background-image: url('../images/partheadbg.png');
+  background-repeat: repeat-x;
+  background-color: white;
+  color: black;
+}
+
+#ParticipantView {
+  color: @participantColor;
+}
+
+#ParticipantView:hover {
+  color: (@participantColor + #444);
+}
+
+@adjustment: 5px;
+.checkbox.inline {
+  padding-top: 0px;
+  margin-bottom: @adjustment;
+}
+.checkbox.inline.long {
+  padding-top: 0px;
+  margin-bottom: @adjustment;
+  width: 14em;
+}
+
+.checkbox.adjust {
+  padding-top: 0px;
+  margin-bottom: @adjustment + 3;
+}
+
+.padded {
+  margin-top: 0.5em;
+}
+
+#resultsDiv {
+  padding-top: 1.0em;
+}
+
+#searchPartsINPUT {
+  margin-bottom: 0px;
+}
+.nowidth {
+  width: auto!important;
+  padding-right: 1em;
+  text-align: right;
+}
+
+.note {
+  font-size: 0.85em;
+}
+#login {
+	float: right;
+}
+
+label {
+  xxtext-align: right;
+  xxmargin-bottom: 0;
+}
+
+.compact {
+  margin-bottom: 0px;
+}
+.congo_table {
+  margin-top: 1em;
+}
+
+@border:  2px solid white;
+.topBorder {
+  border-top: @border;
+  border-left: @border;
+  border-right: @border;
+}
+
+.edgeBorder {
+  border-left: @border;
+  border-right: @border;
+}
+
+.bottomBorder {
+  border-bottom: @border;
+  border-left: @border;
+  border-right: @border;
+}
+
+h1 {
+	font-family: @font;
+	font-size: 2em;
+	padding: 1em;
+	color: @color;
+	a {
+		color: @contrast;
+		text-decoration: none;
+	}
+}
+h2 {
+	font-family: @font;
+	font-size: 1.5em;
+	padding: 0;
+	color: #666;
+	background-color: #ccc;
+	text-align: center;
+}
+
+.center {
+	text-align: center;
+}
+
+input.search-query {
+	height:21px !important;
+}
+
+.reportPageContent {
+	line-height:normal;
+	}
+
+div.reportPageContent table, table.report {
+	border-collapse: collapse;
+	margin: 10px;
+	border: 1px solid black;
+	font-family: Arial;
+	font-size: 12px;
+	}
+		
+div.reportPageContent table th, th.report {
+	border: 1px solid black;
+	background-color: #c0e4ff;
+	padding-right: 0.2em;
+	padding-left: 0.2em;
+	}
+
+div.reportPageContent table td, td.report {
+	border: 1px solid black;
+	vertical-align: top;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	}
+
+div.reportPageContent table td a, .report A {
+	color: #1c30b0;
+	}
+
+.arisiaLens {
+	padding: 3px;
+	display: table-cell;
+	float: none;
+}
+.pageHeader {
+	padding:0;
+	width:100%;
+	display: table;
+	margin-top:0;
+	margin-bottom:0;
+}
+.pageHeader div.pageHeaderText {
+	width:88%;
+	margin-left:0;
+	display: table-cell;
+	vertical-align: middle;
+	float:none;
+}
+ul#boxes li {
+	font-family: @font;
+	font-size: 1.33em;
+	padding: 2.5em 0;
+	color: #999;
+	background-color: #e5e5e5;
+	text-align: center;
+}
+
+.reportPageContent {
+	line-height:normal;
+}
+
+div.reportPageContent table, table.report {
+	border-collapse: collapse;
+	margin: 10px;
+	border: 1px solid black;
+	font-family: Arial;
+	font-size: 12px;
+}
+		
+div.reportPageContent table th, th.report {
+	border: 1px solid black;
+	background-color: #c0e4ff;
+	padding-right: 0.2em;
+	padding-left: 0.2em;
+}
+
+div.reportPageContent table td, td.report {
+	border: 1px solid black;
+	vertical-align: top;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+}
+
+div.reportPageContent table td a, .report A {
+	color: #1c30b0;
+}
+
+.arisiaLens {
+	padding: 3px;
+	display: table-cell;
+	float: none;
+}
+
+.pageHeader {
+	padding:0;
+	width:100%;
+	display: table;
+	margin-top:0;
+	margin-bottom:0;
+}
+
+.pageHeader div.pageHeaderText {
+	width:88%;
+	margin-left:0;
+	display: table-cell;
+	vertical-align: middle;
+	float:none;
+}
+
+.compressed {
+  width: auto;
+}
+
+.table .myspan1 {
+  width: 71px;
+}
+/////////////////
+// RESPONSIVE  //
+/////////////////
+@media (max-width: 780px) {
+	.wide-only {
+		display: none;
+	}
+	label {
+	   xxtext-align: left;
+	}
+}
+
+@media (max-width: 480px) {
+	.wide-medium-only {
+		display: none;
+	}
+	#loginBox {
+		margin: 0 1em 0 0;
+	}
+	h2, .label {
+	 text-align: left;
+	}
+}
+.rankINP {
+	width: 2em !important;
+}
+.sessionWhyMe {
+	height: 4.3em !important;
+}
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+	padding:0 1px !important;
+}
+input.search-query {
+    padding:0 4px 0 8px !important;
+    }
+form.navbar-search {
+    margin-top: 9px !important;
+    }
+@media (min-width: 480px) {
+	label[for="use_photo"] {
+		width:auto !important;
+		text-align: left !important;
+	}
+}

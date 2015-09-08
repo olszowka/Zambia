@@ -1,0 +1,339 @@
+/* $Header$ */
+header img,
+header h1 {
+  float: left;
+  padding-left: 1em;
+}
+body {
+  background-image: url('../images/light_honeycomb.png');
+  xxbackground-image: url('../images/old_mathematics.png');
+  background-repeat: repeat;
+}
+header#top {
+  xxbackground-color: gray;
+}
+header label {
+  color: #000000;
+  display: block;
+  text-align: right;
+  font-size: 1.1em;
+}
+header .imgButton {
+  cursor: pointer;
+}
+a {
+  color: #04C;
+}
+#loginBox,
+#welcome {
+  float: right;
+  margin: 1em 1em 0 0;
+}
+#loginBox p,
+#welcome p {
+  color: #ffffff;
+  text-align: right;
+}
+#altHeader p {
+  color: #ffffff;
+  text-align: right;
+  padding-right: 0.5em;
+}
+#showHeader {
+  height: 20px;
+  padding-left: 0.5em;
+}
+#buttonBox {
+  margin: 0.4em;
+  xposition: relative;
+  xtop: -3em;
+}
+.borderBox {
+  border: black thin solid;
+  padding: 5px;
+  margin: 0;
+  color: #000000;
+}
+input[type="text"],
+input[type="password"] {
+  height: 28px;
+}
+.navbar {
+  margin-bottom: 0.2em;
+}
+.staff {
+  xxbackground-color: #00aa00;
+  background-image: url('../images/staffheadbg.png');
+  background-repeat: repeat-x;
+  background-color: white;
+  color: black;
+}
+#staffView {
+  color: #00aa00;
+}
+#staffView:hover {
+  color: #22ee22;
+}
+.participant {
+  xxbackground-color: #6666ff;
+  background-image: url('../images/partheadbg.png');
+  background-repeat: repeat-x;
+  background-color: white;
+  color: black;
+}
+#ParticipantView {
+  color: #6666ff;
+}
+#ParticipantView:hover {
+  color: #aaaaff;
+}
+.checkbox.inline {
+  padding-top: 0px;
+  margin-bottom: 5px;
+}
+.checkbox.inline.long {
+  padding-top: 0px;
+  margin-bottom: 5px;
+  width: 14em;
+}
+.checkbox.adjust {
+  padding-top: 0px;
+  margin-bottom: 8px;
+}
+.padded {
+  margin-top: 0.5em;
+}
+#resultsDiv {
+  padding-top: 1.0em;
+}
+#searchPartsINPUT {
+  margin-bottom: 0px;
+}
+.nowidth {
+  width: auto!important;
+  padding-right: 1em;
+  text-align: right;
+}
+.note {
+  font-size: 0.85em;
+}
+#login {
+  float: right;
+}
+label {
+  xxtext-align: right;
+  xxmargin-bottom: 0;
+}
+.compact {
+  margin-bottom: 0px;
+}
+.congo_table {
+  margin-top: 1em;
+}
+.topBorder {
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+}
+.edgeBorder {
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+}
+.bottomBorder {
+  border-bottom: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+}
+h1 {
+  font-family: Verdana;
+  font-size: 2em;
+  padding: 1em;
+  color: #000000;
+}
+h1 a {
+  color: #ffffff;
+  text-decoration: none;
+}
+h2 {
+  font-family: Verdana;
+  font-size: 1.5em;
+  padding: 0;
+  color: #666;
+  background-color: #ccc;
+  text-align: center;
+}
+.center {
+  text-align: center;
+}
+input.search-query {
+  height: 21px !important;
+}
+.reportPageContent {
+  line-height: normal;
+}
+div.reportPageContent table,
+table.report {
+  border-collapse: collapse;
+  margin: 10px;
+  border: 1px solid black;
+  font-family: Arial;
+  font-size: 12px;
+}
+div.reportPageContent table th,
+th.report {
+  border: 1px solid black;
+  background-color: #c0e4ff;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+}
+div.reportPageContent table td,
+td.report {
+  border: 1px solid black;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+div.reportPageContent table td a,
+.report A {
+  color: #1c30b0;
+}
+.arisiaLens {
+  padding: 3px;
+  display: table-cell;
+  float: none;
+}
+.pageHeader {
+  padding: 0;
+  width: 100%;
+  display: table;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.pageHeader div.pageHeaderText {
+  width: 88%;
+  margin-left: 0;
+  display: table-cell;
+  vertical-align: middle;
+  float: none;
+}
+ul#boxes li {
+  font-family: Verdana;
+  font-size: 1.33em;
+  padding: 2.5em 0;
+  color: #999;
+  background-color: #e5e5e5;
+  text-align: center;
+}
+.reportPageContent {
+  line-height: normal;
+}
+div.reportPageContent table,
+table.report {
+  border-collapse: collapse;
+  margin: 10px;
+  border: 1px solid black;
+  font-family: Arial;
+  font-size: 12px;
+}
+div.reportPageContent table th,
+th.report {
+  border: 1px solid black;
+  background-color: #c0e4ff;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+}
+div.reportPageContent table td,
+td.report {
+  border: 1px solid black;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+div.reportPageContent table td a,
+.report A {
+  color: #1c30b0;
+}
+.arisiaLens {
+  padding: 3px;
+  display: table-cell;
+  float: none;
+}
+.pageHeader {
+  padding: 0;
+  width: 100%;
+  display: table;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.pageHeader div.pageHeaderText {
+  width: 88%;
+  margin-left: 0;
+  display: table-cell;
+  vertical-align: middle;
+  float: none;
+}
+.compressed {
+  width: auto;
+}
+.table .myspan1 {
+  width: 71px;
+}
+@media (max-width: 780px) {
+  .wide-only {
+    display: none;
+  }
+  label {
+    xxtext-align: left;
+  }
+}
+@media (max-width: 480px) {
+  .wide-medium-only {
+    display: none;
+  }
+  #loginBox {
+    margin: 0 1em 0 0;
+  }
+  h2,
+  .label {
+    text-align: left;
+  }
+}
+.rankINP {
+	width: 2em !important;
+}
+.sessionWhyMe {
+	height: 4.3em !important;
+}
+
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+	padding:0 1px !important;
+}
+input.search-query {
+    padding:0 4px 0 8px !important;
+    }
+form.navbar-search {
+    margin-top: 9px !important;
+    }
+
+@media (min-width: 480px) {
+	label[for="use_photo"] {
+		width:auto !important;
+		text-align: left !important;
+	}
+}
