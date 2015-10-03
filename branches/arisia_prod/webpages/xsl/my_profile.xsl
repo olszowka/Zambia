@@ -288,7 +288,7 @@
                   </div>
                   <div class="pull-left span7">
                     <p class="congo_table">Please confirm your contact information.  If it is not correct, please log into Arisia's
-                        <a HREF="http://arisia.stonekeep.com" target="_blank">on-line registration system</a> and correct it there.
+                        <a HREF="https://eventj.com/arisia/public/Welcome.action" target="_blank">on-line registration system</a> and correct it there.
                         Please note that the password there is <span style="font-weight: bold">not the same</span> as the one you use
                         in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>
                   </div>
