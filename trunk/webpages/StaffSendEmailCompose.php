@@ -23,6 +23,11 @@ if ($_POST['navigate']!='send') {
 // put code to send email here.
 // render_send_email_engine($email,$message_warning);
 $title="Staff Send Email";
+$timeLimitSuccess = set_time_limit(300);
+if (!$timeLimitSuccess) {
+	RenderError($title,"Error extending time limit.");
+	exit(0);
+}
 $subst_list=array("\$BADGEID\$","\$FIRSTNAME\$","\$LASTNAME\$","\$EMAILADDR\$","\$PUBNAME\$","\$BADGENAME\$");
 $email=get_email_from_post();
 //Create the Transport
