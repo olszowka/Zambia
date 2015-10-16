@@ -85,7 +85,7 @@ load_javascript();
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="brand" href="<? echo $_SERVER['PATH_INFO'] ?>"><? echo $title ?></a>
+					<a class="brand" href="<?php echo $_SERVER['PATH_INFO'] ?>"><?php echo $title ?></a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							<li class="dropdown">
