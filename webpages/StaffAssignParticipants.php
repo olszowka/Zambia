@@ -136,7 +136,7 @@ if (may_I('EditSesNtsAsgnPartPg')) {
 }
 echo($resultXML->saveXML()); //for debugging only
 $xsl = new DomDocument;
-$xsl->load('xsl/StaffAssignParticipants_sessionInfo.xsl');
+$xsl->load('xsl/StaffAssignParticipants.xsl');
 $xslt = new XsltProcessor();
 $xslt->importStylesheet($xsl);
 $html = $xslt->transformToXML($resultXML);
