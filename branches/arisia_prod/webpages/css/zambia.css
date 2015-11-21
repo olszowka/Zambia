@@ -337,3 +337,31 @@ form.navbar-search {
 		text-align: left !important;
 	}
 }
+/* Staff Assign Participants */
+#selsesformtop {
+	margin-top:1em;
+}
+#selsesform .row-fluid > div[class*='span'] {
+	padding:0.1em 0.5em
+}
+#NPS_TXTA {
+	width: 50%;
+}
+.stAsPa-sesInfRow {
+	margin-bottom: 6px;
+}
+/* Bootstrap extensions */
+.success-bg {
+	background-color: #dff0d8;
+}
+.info-bg {
+	background-color: #d9edf7;
+}
+.warning-bg {
+	background-color: #fcf8e3;
+}
+.row-container {
+	padding:0;
+	width:100%;
+	margin:0 0 1.5em 0;
+}
