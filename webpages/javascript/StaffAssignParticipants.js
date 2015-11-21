@@ -21,6 +21,23 @@ function initAssignParticipants() {
                               content: function() {return bio;}});
   $('#popoverClose').click(function(e) {$('#BioBtn').prop("disabled", false); $('#partDropdown').popover('hide');});
   $('[rel="popover"]').popover();
+  $("#editNPS_BUT").on("click", onClickEditNPS);
+}
+
+function onClickEditNPS(event) {
+	if ($("#editNPS_BUT").text() == "Edit") {
+			$("#editNPS_BUT").text("Cancel");
+			var $NPS_SPN = $("#NPS_SPN");
+			var NPStext = $NPS_SPN.text();
+			$NPS_SPN.hide();
+			var $NPS_TXTA = $("<textarea id=\"NPS_TXTA\" name=\"NPStext\">" + NPStext + "</textarea>");
+			$NPS_SPN.after($NPS_TXTA);
+			}
+		else {
+			$("#editNPS_BUT").text("Edit");
+			$("#NPS_TXTA").remove();
+			$("#NPS_SPN").show();
+			}
 }
 
 function showPopover() {
