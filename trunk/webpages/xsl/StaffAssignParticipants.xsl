@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
     $Header$
-	StaffAssignParticipants_sessionInfo.xsl
-	Created by Peter Olszowka on 2015-10-16; Updated 2015-10-16
+	Created by Peter Olszowka on 2015-10-16;
 	Copyright (c) 2011-2015 Peter Olszowka. All rights reserved.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:output encoding="UTF-8" indent="yes" method="xml" />
+	<xsl:output encoding="UTF-8" indent="yes" method="html" />
 	<xsl:template match="/">
 		<xsl:variable name="editSessionNotes" select="doc/parameters/@editSessionNotes = 'true'" />
 		<hr />
