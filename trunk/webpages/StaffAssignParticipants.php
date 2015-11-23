@@ -134,7 +134,7 @@ $parametersNode = $docNode->appendChild($parametersNode);
 if (may_I('EditSesNtsAsgnPartPg')) {
 	$parametersNode->setAttribute("editSessionNotes", "true");
 }
-echo($resultXML->saveXML()); //for debugging only
+//echo($resultXML->saveXML()); //for debugging only
 $xsl = new DomDocument;
 $xsl->load('xsl/StaffAssignParticipants.xsl');
 $xslt = new XsltProcessor();
