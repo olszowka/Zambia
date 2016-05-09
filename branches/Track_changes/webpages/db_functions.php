@@ -1,4 +1,6 @@
 <?php
+//	$Header: https://svn.code.sf.net/p/zambia/code/branches/Track_changes/webpages/xsl/StaffAssignParticipants.xsl 1151 2015-11-23 13:31:52Z polszowka $
+//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 
 function mysql_query_XML($query_array) {
 	global $link, $message_error;
@@ -8,23 +10,35 @@ function mysql_query_XML($query_array) {
 	foreach ($query_array as $queryName => $query) {
 		if (!$result=mysql_query_with_error_handling($query))
 			return(FALSE);
-		$queryNode = $xml->createElement("query");
-		$queryNode = $doc->appendChild($queryNode);
-		$queryNode->setAttribute("queryName", $queryName);
-		while($row = mysql_fetch_assoc($result)) {
-			$rowNode = $xml->createElement("row");
-			$rowNode = $queryNode->appendChild($rowNode);
-			//print_r($row);
-			foreach ($row as $fieldname => $fieldvalue) {
-				if ($fieldvalue!="" && $fieldvalue!==null)
-					$rowNode->setAttribute($fieldname, $fieldvalue);
+		if ($result !== TRUE) {
+			$queryNode = $xml->createElement("query");
+			$queryNode = $doc->appendChild($queryNode);
+			$queryNode->setAttribute("queryName", $queryName);
+			while($row = mysql_fetch_assoc($result)) {
+				$rowNode = $xml->createElement("row");
+				$rowNode = $queryNode->appendChild($rowNode);
+				//print_r($row);
+				foreach ($row as $fieldname => $fieldvalue) {
+					if ($fieldvalue!="" && $fieldvalue!==null)
+						$rowNode->setAttribute($fieldname, $fieldvalue);
+					}
 				}
 			}
-
 		}
 	return ($xml);
 	}
 
+function mysql_query_exit_on_error($query) {
+	global $link, $message_error;
+	$result = mysql_query_with_error_handling($query);
+	if (!$result) {
+		echo "<p class=\"alert alert-error\">Error updating database.<br>$message_error<br>\n</p>";
+		staff_footer();
+		exit();
+		}
+	return $result;
+	}
+	
 function mysql_query_with_error_handling($query) {
 	global $link, $message_error;
 	$result = mysql_query($query,$link);
@@ -37,7 +51,7 @@ function mysql_query_with_error_handling($query) {
 	
 function rollback() { 
 	global $link, $message_error;
-    mysql_query_with_error_handling("ROLLBACK",$link);
+    mysql_query_with_error_handling("ROLLBACK");
     }
 
 function populateCustomTextArray() {

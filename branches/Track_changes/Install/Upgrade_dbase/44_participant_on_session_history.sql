@@ -1,4 +1,9 @@
 ## This script modifies one table and creates another for code changes to track changes to participants on sessions.
+##
+##	$Header: https://svn.code.sf.net/p/zambia/code/branches/Track_changes/webpages/xsl/StaffAssignParticipants.xsl 1151 2015-11-23 13:31:52Z polszowka $
+##	Created by Peter Olszowka on 2016-05-01;
+## 	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+##
 INSERT INTO Participants (badgeid, password, pubsname) VALUES ('unrecorded', '12345678901234567890123456789012', 'unrecorded')
     ON DUPLICATE KEY UPDATE badgeid = 'unrecorded', password = '12345678901234567890123456789012', pubsname = 'unrecorded';
 
@@ -29,7 +34,9 @@ CREATE TABLE ParticipantOnSessionHistory (
     KEY badgeid (badgeid),
     KEY sessionid (sessionid),
     CONSTRAINT ParticipantOnSessionHistory_ibfk_1 FOREIGN KEY (badgeid) REFERENCES Participants (badgeid),
-    CONSTRAINT ParticipantOnSessionHistory_ibfk_2 FOREIGN KEY (sessionid) REFERENCES Sessions (sessionid)
+    CONSTRAINT ParticipantOnSessionHistory_ibfk_2 FOREIGN KEY (sessionid) REFERENCES Sessions (sessionid),
+	CONSTRAINT ParticipantOnSessionHistory_ibfk_3 FOREIGN KEY (createdbybadgeid) REFERENCES Participants (badgeid),
+	CONSTRAINT ParticipantOnSessionHistory_ibfk_4 FOREIGN KEY (inactivatedbybadgeid) REFERENCES Participants (badgeid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  
 INSERT INTO ParticipantOnSessionHistory (badgeid, sessionid, moderator, participantonsessionid, createdts, createdbybadgeid)
