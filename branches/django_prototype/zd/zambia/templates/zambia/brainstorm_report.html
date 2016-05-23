@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Brainstorm Report{% endblock %}
+{% block headline %}Brainstorm Report{% endblock %}
+{% block content %}
 {% autoescape off %}{{ text }}{% endautoescape %}
 <p> If you want to help, email us at <a href="mailto:{{ PROGRAM_EMAIL }}">{{ PROGRAM_EMAIL }}</a></p>
 {% if sessions %}
@@ -33,6 +37,7 @@
   </tbody>
 </table>
 {% else %}
-<p>No sessions found.
+<hr>
+<p>No sessions found.</p>
 {% endif %}
-
+{% endblock %}

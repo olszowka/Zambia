@@ -82,6 +82,8 @@
 
 {% if error %}    <p><strong>{{ error }}</strong></p>{% endif %}
 
+{% if message %}    <p><strong>{{ message }}</strong></p>{% endif %}
+
     <div class="formbox">
       <form name="sessform" class="bb"  method=POST action="{% url 'BrainstormCreateSession' %}">
 {% csrf_token %}
@@ -129,13 +131,13 @@
           <tr>
             <td class="form1">
               <label for="progguiddesc" id="progguiddesc">Description:</label><br>
-              <textarea cols="70" rows="5" name="progguiddesc" onKeyPress="return checkSubmitButton();">{{progguidedest}}</textarea>
+              <textarea cols="70" rows="5" name="progguiddesc" onKeyPress="return checkSubmitButton();">{{ pgd }}</textarea>
             </td>
           </tr>
           <tr>
             <td class="form1">&nbsp;<BR>
               <label for="notesforprog">Additional info for Programming Committee:</label><br>
-              <textarea cols="70" rows="7" name="notesforprog" >{{notesforprog}}</textarea>
+              <textarea cols="70" rows="7" name="notesforprog" >{{ notesforprog }}</textarea>
             </td>
           </tr>
         </table>

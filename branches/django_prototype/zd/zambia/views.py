@@ -58,9 +58,16 @@ def view_logout(request):
 
 @login_required
 def index(request):
+    if request.user.has_perm('zambia.staff'):
+        return redirect('StaffPage')
+    if request.user.has_perm('zambia.participant'):
+        return redirect('welcome')
+    if request.user.has_perm('zambia.public'):
+        return redirect('BrainstormWelcome')
     template = loader.get_template('zambia/index.html')
     context = {}
     return HttpResponse(template.render(context, request))
+
 
 @login_required
 def welcome(request):
@@ -84,6 +91,7 @@ def brainstorm_welcome(request):
 
 @login_required
 def brainstorm_create_session(request):
+    message = None
     error = None
     name = None
     email = None
@@ -134,6 +142,10 @@ def brainstorm_create_session(request):
         duration = hms2time(duration)
         s = Session(track = trid, type = tyid, division = dvid, pubstatus = psid, languagestatus = laid, kidscat = kcid, roomset = rsid, status = stid, title = title, progguiddesc = pgd, notesforprog = notesforprog, pubsno = pubsno, invitedguest = 0, warnings = 0, duration = duration, ts = datetime.datetime.now())
         s.save()
+        title = ''
+        pgd = ''
+        notesforprog = ''
+        message = 'Suggestion successfully saved!'
 
     template = loader.get_template('zambia/brainstorm_create.html')
     tlist = get_track_names(False)
@@ -142,7 +154,7 @@ def brainstorm_create_session(request):
         'email': email,
         'tracks': tlist,
         'title': title,
-        'progguidedesc': pgd,
+        'pgd': pgd,
         'notesforprog': notesforprog,
 
         'type': def_type,
@@ -156,6 +168,7 @@ def brainstorm_create_session(request):
         'kids': def_kids,
         'status': def_status,
 
+        'message': message,
         'error': error,
     }
     return HttpResponse(template.render(context, request))
@@ -175,7 +188,7 @@ def session_row(s, room, time):
     }
 
 @login_required
-def brainstorm_report(request, qtype = 'All', track = None, title = None):
+def brainstorm_report(request, qtype = 'All', track = None, title = None, text = None):
     template = loader.get_template('zambia/brainstorm_report.html')
     kw = {}
     error = None
@@ -216,6 +229,8 @@ and hoping to find a time machine so we can do it all.</p>
             kw['track__trackname'] = track
         if title is not None and title != '':
             kw['title__icontains'] = title
+        if text is not None and text != '':
+            kw['progguiddesc__icontains'] = text
         caption = 'Sessions'
         valid_statuses = ('Edit Me', 'Brainstorm', 'Vetted', 'Assigned', 'Scheduled')
         text = """<p This list includes ALL ideas that have been submitted.   Some may require Peril Sensitive Sunglasses.</p>
@@ -261,7 +276,8 @@ def brainstorm_search_session(request):
     if request.method == 'POST':
         track = request.POST['track']
         title = request.POST['title']
-        return brainstorm_report(request, 'Search', track, title)
+        text = request.POST['text']
+        return brainstorm_report(request, 'Search', track, title, text)
     template = loader.get_template('zambia/brainstorm_search.html')
     context = {
         'tracks': get_track_names(True)
