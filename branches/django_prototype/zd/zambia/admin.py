@@ -90,6 +90,9 @@ admin.site.register(Session)
 from .models import ParticipantOnSession
 admin.site.register(ParticipantOnSession)
 
+from .models import ParticipantOnSessionHistory
+admin.site.register(ParticipantOnSessionHistory)
+
 from .models import ParticipantSessionInterest
 admin.site.register(ParticipantSessionInterest)
 

@@ -14,8 +14,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from zambia import views
 
 urlpatterns = [
-    url(r'^zambia/', include('zambia.urls')),
+    url(r'^$', views.index, name='index'),
+    url(r'^login$', views.view_login, {'reason': None}, name='login'),
+    url(r'^logout$', views.view_logout, name='logout'),
     url(r'^admin/', include(admin.site.urls)),
 ]

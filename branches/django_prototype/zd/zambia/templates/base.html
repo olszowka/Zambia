@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <style>{% block style %}{% endblock %}</style>
+  </head>
+  <body>
+    <div style="text-align: center">
+      <h1>{% block headline %}{% endblock %}</h1>
+      <hr>
+    </div>
+{% block content %}{% endblock %}
+    <div style="text-align: center">
+      <hr>
+{% block footer %}
+      <a href="{% url 'index' %}">Return Home</a><br>
+      <a href="{% url 'logout' %}">Log Out</a>
+{% endblock %}
+    </div>
+  </body>
+</html>

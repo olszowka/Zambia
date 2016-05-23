@@ -16,7 +16,7 @@ class ReportCategory(models.Model):
     description = models.CharField(max_length=50, blank=True, null=True)
     display_order = models.IntegerField()
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.reportcategoryid) + ': ' + self.description
 
     class Meta:
@@ -39,7 +39,7 @@ class ReportType(models.Model):
     downloadfilename = models.CharField(max_length=25, blank=True, null=True)
     display_order = models.IntegerField(blank=True, null=True)
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.reporttypeid) + ': ' + self.title
 
     class Meta:
@@ -51,9 +51,9 @@ class ReportType(models.Model):
 class CategoryHasReport(models.Model):
     reportcategory = models.ForeignKey(ReportCategory, db_column='reportcategoryid')
     reporttype = models.ForeignKey(ReportType, db_column='reporttypeid')
-    djangoid = models.AutoField(primary_key = True)
+    categoryhasreportid = models.AutoField(primary_key = True)
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return self.reportcategory.__unicode__() + ' has ' + self.reporttype.__unicode__()
 
     class Meta:
@@ -78,7 +78,7 @@ class CongoDump(models.Model):
     postcountry = models.CharField(max_length=25, blank=True, null=True)
     regtype = models.CharField(max_length=40, blank=True, null=True)
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.badgeid) + ': ' + self.firstname + ' ' + self.lastname
 
     class Meta:
@@ -92,7 +92,7 @@ class CustomText(models.Model):
     tag = models.CharField(max_length=25, blank=True, null=True)
     textcontents = models.TextField(blank=True, null=True)
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.customtextid) + ': ' + self.page + ' ' + self.tag
 
     class Meta:
@@ -107,7 +107,7 @@ class EmailCC(models.Model):
     display_order = models.IntegerField()
     emailaddress = models.CharField(max_length=255, blank=True, null=True)
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.emailccid) + ': ' + self.description + ' ' + self.emailaddress
 
     class Meta:
@@ -121,7 +121,7 @@ class EmailFrom(models.Model):
     display_order = models.IntegerField()
     emailfromaddress = models.CharField(max_length=255, blank=True, null=True)
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.emailfromid) + ': ' + self.emailfromdescription + ' ' + self.emailfromaddress
 
     class Meta:
@@ -139,7 +139,7 @@ class EmailQueue(models.Model):
     status = models.IntegerField()
     emailtimestamp = models.DateTimeField()
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.emailqueueid) + ': to ' + self.emailto + ' from ' + self.emailfrom + ' on ' + self.emailsubject
 
     class Meta:
@@ -153,7 +153,7 @@ class EmailTo(models.Model):
     display_order = models.IntegerField()
     emailtoquery = models.TextField(blank=True, null=True)
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.emailtoid) + ': ' + self.emailtodescription + ' ' + self.emailtoquery
 
     class Meta:
@@ -166,7 +166,7 @@ class Feature(models.Model):
     featurename = models.CharField(max_length=50, blank=True, null=True)
     display_order = models.IntegerField(blank=True, null=True)
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return str(self.featureid) + ': ' + self.featurename
 
     class Meta:
@@ -230,7 +230,7 @@ class ParticipantAvailabilityDay(models.Model):
     badge = models.ForeignKey(Participant, db_column='badgeid')
     day = models.SmallIntegerField()
     maxprog = models.IntegerField(blank=True, null=True)
-    djangoid = models.AutoField(primary_key = True)
+    participantavailabilitydayid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ': ' + str(self.day)
@@ -246,7 +246,7 @@ class ParticipantAvailabilityTime(models.Model):
     availabilitynum = models.IntegerField()
     starttime = models.TimeField(blank=True, null=True)
     endtime = models.TimeField(blank=True, null=True)
-    djangoid = models.AutoField(primary_key = True)
+    participantavailabilitytime = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ': ' + str(self.availabilitynum)
@@ -273,7 +273,7 @@ class Credential(models.Model):
 class ParticipantHasCredential(models.Model):
     badge = models.ForeignKey(Participant, db_column='badgeid')
     credential = models.ForeignKey(Credential, db_column='credentialid')
-    djangoid = models.AutoField(primary_key = True)
+    participanthascredentialid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ' has ' + self.credential.__unicode__()
@@ -300,7 +300,7 @@ class Role(models.Model):
 class ParticipantHasRole(models.Model):
     badge = models.ForeignKey(Participant, db_column='badgeid')
     role = models.ForeignKey(Role, db_column='roleid')
-    djangoid = models.AutoField(primary_key = True)
+    participanthasroleid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ' has ' + self.role.__unicode__()
@@ -479,11 +479,10 @@ class Session(models.Model):
 
 
 class ParticipantOnSession(models.Model):
+    participantonsessionid = models.AutoField(primary_key = True)
     badge = models.ForeignKey(Participant, db_column='badgeid')
     session = models.ForeignKey(Session, db_column='sessionid')
     moderator = models.IntegerField(blank=True, null=True)
-    ts = models.DateTimeField()
-    djangoid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ' on ' + self.session.__unicode__()
@@ -494,13 +493,33 @@ class ParticipantOnSession(models.Model):
         unique_together = (('badge', 'session'),)
 
 
+class ParticipantOnSessionHistory(models.Model):
+    participantonsessionhistoryid = models.AutoField(primary_key = True)
+    badge = models.ForeignKey(Participant, db_column='badgeid')
+    session = models.ForeignKey(Session, db_column='sessionid')
+    moderator = models.IntegerField(blank=True, null=True)
+    createdts = models.DateTimeField()
+    createdbybadgeid = models.CharField(max_length=15)
+    inactivatedts = models.DateTimeField()
+    inactivatedbybadgeid = models.CharField(max_length = 15, null = True, blank = True)
+
+    def __unicode__(self):
+        return str(self.participantonsessionhistoryid) + ': ' + self.badge.__unicode__() + ' on ' + self.session.__unicode__()
+
+    class Meta:
+        managed = False
+        db_table = 'ParticipantOnSessionHistory'
+        verbose_name = 'Participant on session history'
+        verbose_name_plural = 'Participant on session histories'
+
+
 class ParticipantSessionInterest(models.Model):
     badge = models.ForeignKey(Participant, db_column='badgeid')
     session = models.ForeignKey(Session, db_column='sessionid')
     rank = models.IntegerField(blank=True, null=True)
     willmoderate = models.IntegerField(blank=True, null=True)
     comments = models.TextField(blank=True, null=True)
-    djangoid = models.AutoField(primary_key = True)
+    participantsessioninterestid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ' interested in ' + self.session.__unicode__()
@@ -611,11 +630,12 @@ class PreviousCon(models.Model):
 
 class PreviousConTrack(models.Model):
     previouscon = models.ForeignKey(PreviousCon, db_column='previousconid')
-    previoustrackid = models.AutoField(primary_key = True)
+    previoustrackid = models.IntegerField()
     trackname = models.CharField(max_length=50, blank=True, null=True)
+    previouscontrackid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
-        return self.previouscon.__unicode__() + ': ' + str(self.previoustrackid) + ' ' + self.trackname
+        return self.previouscon.__unicode__() + '.' + str(self.previoustrackid) + ' ' + self.trackname
 
     class Meta:
         managed = False
@@ -639,7 +659,7 @@ class PreviousParticipant(models.Model):
 class PreviousSession(models.Model):
     previouscon = models.ForeignKey(PreviousCon, db_column='previousconid')
     previoussessionid = models.IntegerField()
-    previoustrack = models.ForeignKey(PreviousConTrack, db_column='previoustrackid')
+    previoustrackid = models.IntegerField()
     previousstatus = models.ForeignKey(SessionStatus, db_column='previousstatusid')
     type = models.ForeignKey(Type, db_column='typeid')
     division = models.ForeignKey(Division, db_column='divisionid')
@@ -657,10 +677,10 @@ class PreviousSession(models.Model):
     notesforprog = models.TextField(blank=True, null=True)
     invitedguest = models.IntegerField(blank=True, null=True)
     importedsessionid = models.IntegerField(blank=True, null=True)
-    djangoid = models.AutoField(primary_key = True)
+    melvin = models.AutoField(primary_key = True)
 
     def __unicode__(self):
-        return self.previouscon.__unicode__() + ': ' + str(self.previoussessionid) + ' ' + self.title
+        return self.previouscon.__unicode__() + ':' + str(self.previoussessionid) + ' ' + self.title
 # self.previoustrack.__unicode__() + self.
 
     class Meta:
@@ -741,7 +761,7 @@ class RoomHasSet(models.Model):
     room = models.ForeignKey(Room, db_column='roomid')
     roomset = models.ForeignKey(RoomSet, db_column='roomsetid')
     capacity = models.IntegerField(blank=True, null=True)
-    djangoid = models.AutoField(primary_key = True)
+    roomhassetid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.room.__unicode__() + ': ' + self.roomset.__unicode__()
@@ -801,7 +821,7 @@ class SessionEditHistory(models.Model):
     sessioneditcode = models.ForeignKey(SessionEditCode, db_column='sessioneditcode')
     status = models.ForeignKey(SessionStatus, db_column='statusid')
     editdescription = models.TextField(blank=True, null=True)
-    djangoid = models.AutoField(primary_key = True)
+    sessionedithistoryid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.sessionid.__unicode__() + ' ' + self.timestamp
@@ -817,7 +837,7 @@ class SessionEditHistory(models.Model):
 class SessionHasFeature(models.Model):
     session = models.ForeignKey(Session, db_column='sessionid')
     feature = models.ForeignKey(Feature, db_column='featureid')
-    djangoid = models.AutoField(primary_key = True)
+    sessionhasfeatureid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.session.__unicode__() + ' has ' + self.feature.__unicode__()
@@ -831,7 +851,7 @@ class SessionHasFeature(models.Model):
 class SessionHasPubChar(models.Model):
     session = models.ForeignKey(Session, db_column='sessionid')
     pubchar = models.ForeignKey(PubCharacteristic, db_column='pubcharid')
-    djangoid = models.AutoField(primary_key = True)
+    sessionhaspubcharid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.session.__unicode__() + ' has ' + self.pubchar.__unicode__()
@@ -845,7 +865,7 @@ class SessionHasPubChar(models.Model):
 class SessionHasService(models.Model):
     session = models.ForeignKey(Session, db_column='sessionid')
     service = models.ForeignKey(Service, db_column='serviceid')
-    djangoid = models.AutoField(primary_key = True)
+    sessionhasserviceid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.session.__unicode__() + ' has ' + self.service.__unicode__()
@@ -875,17 +895,17 @@ class TimeSlot(models.Model):
 
 class TrackCompatibility(models.Model):
     previouscon = models.ForeignKey(PreviousCon, db_column='previousconid')
-    previoustrack = models.ForeignKey(PreviousConTrack, db_column='previoustrackid')
+    previoustrackid = models.IntegerField()
     currenttrack = models.ForeignKey(Track, db_column='currenttrackid')
-    djangoid = models.AutoField(primary_key = True)
+    trackcompatibilityid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
-        return self.previoustrack.__unicode__() + ' to ' + self.currenttrack.__unicode__()
+        return self.previouscon.__unicode__() + '.' + str(self.previoustrackid) + ' to ' + self.currenttrack.__unicode__()
 
     class Meta:
         managed = False
         db_table = 'TrackCompatibility'
-        unique_together = (('previouscon', 'previoustrack'),)
+        unique_together = (('previouscon', 'previoustrackid'),)
         verbose_name = 'Track compatibility'
         verbose_name_plural = 'Track compatibilities'
 
@@ -893,7 +913,7 @@ class TrackCompatibility(models.Model):
 class UserHasPermissionRole(models.Model):
     badge = models.ForeignKey(Participant, db_column='badgeid')
     permrole = models.ForeignKey(PermissionRole, db_column='permroleid')
-    djangoid = models.AutoField(primary_key = True)
+    userhaspermissionroleid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ' has ' + self.permrole.__unicode__()
