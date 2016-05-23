@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Brainstorm Home{% endblock %}
+{% block headline %}Brainstorm Home{% endblock %}
+{% block content %}
+    <script language="javascript" type="text/javascript">
+  var phase1required=new Array("name", "email", "track", "title", "progguiddesc");
+  var currentPhase, unhappyColour, happyColor;
+  function colourCodeElements(phaseName, unhappyC, happyC) {
+    var i, o;
+    currentPhase = phaseName;
+    unhappyColor = unhappyC;
+    happyColor = happyC;
+    eval('var requiredElements = ' + phaseName + 'required');
+    if (requiredElements == null)
+      return;
+    for (i = 0; i < requiredElements.length; i++) {
+      o = document.getElementById(requiredElements[i]);
+      if (o != null) {
+        o.style.color = unhappyC;
+      }
+    }
+  }
+
+  function checkSubmitButton() {
+    var i, j, o, relatedO, controls;
+    var enable = true;
+    eval('var requiredElements = ' + currentPhase + 'required');
+    if (requiredElements == null)
+      return;
+    for (i = 0; i < requiredElements.length; i++) {
+      controls = document.getElementsByName(requiredElements[i]);
+      if (controls != null) {
+        for (j = 0; j < controls.length; j++) {
+          o = controls[j];
+          relatedO = document.getElementById(requiredElements[i]);
+          switch (o.tagName) {
+
+          case "LABEL":
+            break;
+
+          case "SELECT":
+            if (o.options[o.selectedIndex].value == 0) {
+              enable = false;
+              relatedO.style.color = unhappyColor;
+            } else {
+              relatedO.style.color = happyColor;
+            }
+            break;
+
+          case "TEXTAREA":
+            if (o.value == "") {
+              enable = false;
+              relatedO.style.color = unhappyColor;
+            } else {
+              relatedO.style.color = happyColor;
+            }
+            break;
+
+          case "INPUT":
+            if (o.value == "") {
+              enable = false;
+              relatedO.style.color = unhappyColor;
+            } else {
+              relatedO.style.color = happyColor;
+            }
+            break;
+          }
+        }
+      }
+    }
+    var saveButton = document.getElementById("sButtonTop");
+    if (saveButton != null) {
+      saveButton.disabled = !enable;
+    }	
+    var saveButton = document.getElementById("sButtonBottom");
+    if (saveButton != null) {
+      saveButton.disabled = !enable;
+    }	
+  }
+    </script>
+    <h1>Welcome to Brainstorming</h1>
+
+{% if error %}    <p><strong>{{ error }}</strong></p>{% endif %}
+
+    <div class="formbox">
+      <form name="sessform" class="bb"  method=POST action="{% url 'BrainstormCreateSession' %}">
+{% csrf_token %}
+        <input type="hidden" name="type" value="{{type}}">
+        <input type="hidden" name="divisionid" value="{{divisionid}}">
+        <input type="hidden" name="roomset" value="{{roomset}}">
+        <input type="hidden" name="languagestatusid" value="{{languagestatusid}}">
+        <input type="hidden" name="pubstatusid" value="{{pubstatusid}}">
+        <input type="hidden" name="pubno" value="{{pubno}}">
+        <input type="hidden" name="duration" value="{{duration}}">
+        <input type="hidden" name="atten" value="{{atten}}">
+        <input type="hidden" name="kids" value="{{ kids }}">
+        <input type="hidden" name="status" value="{{ status }}">
+        <input type="hidden" name="action" value="brainstorm">
+        <input type=reset value="Reset">&nbsp;
+        <input type=submit ID="sButtonTop" value="Save">
+	<p>Note: items in red must be completed before you can save.</p>
+        <table>
+          <tr>
+            <td class="form1">
+              <label for="name" ID="name">Your name:</label><br>
+              <input type="text" name="name" onKeyPress="return checkSubmitButton();"{% if name %}value="{{name}}"{% endif %}>
+            </td>
+          </tr>
+          <tr>
+            <td class="form1">
+              <label for="email" id="email">Your email address:</label><br>
+              <input type="text" name="email" size="50" onKeyPress="return checkSubmitButton();" {% if email %}value="{{email}}"{% endif %}>
+            </td>
+          </tr>
+          <tr>
+            <td class="form1">
+              <label for="track" ID="track">Track:</label><br>
+              <select name="track" onChange="return checkSubmitButton();">{% for t in tracks %}
+                <option value="{{ t.value }}">{{ t.name }}</option>{% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="form1">
+              <label for="title" ID="title">Title: </label><br>
+              <input type="text" size="50" name="title" value="{{title}}" onKeyPress="return checkSubmitButton();">
+            </td>
+          </tr>
+          <tr>
+            <td class="form1">
+              <label for="progguiddesc" id="progguiddesc">Description:</label><br>
+              <textarea cols="70" rows="5" name="progguiddesc" onKeyPress="return checkSubmitButton();">{{progguidedest}}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="form1">&nbsp;<BR>
+              <label for="notesforprog">Additional info for Programming Committee:</label><br>
+              <textarea cols="70" rows="7" name="notesforprog" >{{notesforprog}}</textarea>
+            </td>
+          </tr>
+        </table>
+        <input type=reset value="Reset">&nbsp;
+        <input type=submit ID="sButtonBottom" value="Save">
+      </form>
+    </div>
+    <script language="javascript" type="text/javascript">
+  colourCodeElements("phase1", "red", "blue");
+  checkSubmitButton();
+    </script>
+{% endblock %}

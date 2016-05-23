@@ -209,6 +209,13 @@ class Participant(models.Model):
     class Meta:
         managed = False
         db_table = 'Participants'
+        permissions = (
+            ("participant", "Can access participant functionality"),
+            ("public", "Can view public functionality (ie brainstorm)"),
+            ("brainstorm", "Can make brainstorm changes"),
+            ("brainstorm_search", "Can search brainstorm sessions"),
+        )
+
 
 
 class ParticipantAvailability(models.Model):
@@ -476,7 +483,6 @@ class Session(models.Model):
     class Meta:
         managed = False
         db_table = 'Sessions'
-
 
 class ParticipantOnSession(models.Model):
     participantonsessionid = models.AutoField(primary_key = True)
@@ -779,7 +785,7 @@ class Schedule(models.Model):
     starttime = models.TimeField()
 
     def __unicode__(self):
-        return str(self.scheduleid) + ': ' + self.session.__unicode__() + ' ' + self.room.__unicode__() + ' ' + self.starttime
+        return str(self.scheduleid) + ': ' + self.session.__unicode__() + ' ' + self.room.__unicode__() + ' ' + self.starttime.isoformat()
 
     class Meta:
         managed = False

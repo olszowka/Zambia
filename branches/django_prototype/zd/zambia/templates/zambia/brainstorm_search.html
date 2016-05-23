@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Brainstorm Search{% endblock %}
+{% block headline %}Brainstorm Search{% endblock %}
+{% block content %}
+    <h1>Welcome to Brainstorming</h1>
+    <form method="post" action="{% url 'BrainstormSearchSession' %}">
+{% csrf_token %}
+      <table>
+        <tr>
+          <td>Track: </td>
+          <td>
+            <select class="tcell" name="track">{% for t in tracks %}
+              <option value="{{ t.value }}">{{ t.name }}</option>
+{% endfor %}            </select>
+          </td>
+          <td>Title Search:</td>
+          <td><input name="title"></input></td>
+        </tr>
+        <tr><td colspan=5, align=right><button type=submit value="search">Search</button></td></tr>
+      </table>
+      <p>Clicking Search without making any selections will display all panels.</p>
+    </form>
+{% endblock %}

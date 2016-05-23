@@ -1,0 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+  <head>
+    <title>Error</title>
+  </head>
+  <body>
+    <h1>A Fatal Error Occurred</h1>
+{% if text %}    <p><strong>{{ text }}</strong></p><br>{% endif %}
+    <p>Please return to the <a href="{% url 'login' %}">login</a> page to start over from scratch and try again.</p>
+  </body>
+</html>
