@@ -171,3 +171,5 @@ admin.site.register(TrackCompatibility)
 from .models import UserHasPermissionRole
 admin.site.register(UserHasPermissionRole)
 
+from .models import Config
+admin.site.register(Config)

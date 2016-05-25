@@ -3,8 +3,8 @@
 {% block headline %}Brainstorm Home{% endblock %}
 {% block content %}
     <h1>Welcome to Brainstorming</h1>
-{% if can_brainstorm %}
-    <p> We are accepting suggestions for {{ CON_NAME }}.</p>
+{% if perms.brainstorm %}
+    <p> We are accepting suggestions for {{ con_config.CON_NAME }}.</p>
     <p> Here you can submit new suggestions or look at existing ideas for
     panels, events, movies, films, presentations, speeches, concerts, etc.</p>
     <p> As suggestions come in and we read through them, we will rework
@@ -15,24 +15,24 @@
     physically possible with the space and time we have, so not
     everything will make it.   We do save good ideas for future conventions.</p>
 {% else %}
-    <p> We are not accepting suggestions at this time for {{ CON_NAME }}.</p>
+    <p> We are not accepting suggestions at this time for {{ con_config.CON_NAME }}.</p>
     <p> You may still use the "Search Sessions" tab to view the sessions which have been selected and to read their precis. Note,
 many of these sessions will still not be scheduled if there is too little participant interest or if a suitable location and time
 slot is not available. </p>
 {% endif %}
     <ul>
-      <li> <a href="{% url 'BrainstormSearchSession' %}">Search for similar ideas or get inspiration.</a>
-{% if can_brainstorm %}
-      <li> <a href="mailto:{{BRAINSTORM_EMAIL}}">Email {{BRAINSTORM_EMAIL}} to suggest modifications on existing suggestion.</a>
+{% if perms.brainstorm_search %}      <li> <a href="{% url 'BrainstormSearchSession' %}">Search for similar ideas or get inspiration.</a>{% endif %}
+{% if perms.brainstorm %}
+      <li> <a href="mailto:{{ con_config.BRAINSTORM_EMAIL }}">Email {{ con_config.BRAINSTORM_EMAIL }} to suggest modifications on existing suggestion.</a>
       <li> <a href="{% url 'BrainstormCreateSession' %}">Enter a new suggestion. </a>
       <li> <a href="{% url 'BrainstormReportAll' %}">See the list of All suggestions</a> (we've seen some and not see others).
       <li> <a href="{% url 'BrainstormReportUnseen' %}">See the list of New suggestions that have been entered recently </a>(may not be fit for young eyes, we haven't see these yet).
       <li> <a href="{% url 'BrainstormReportReviewed' %}">See the list of Reviewed suggestions we are currently working through.</a>
       <li> <a href="{% url 'BrainstormReportLikely' %}">See the list of Likely to Occur suggestions we are or will allow participants to sign up for.</a>
       <li> <a href="{% url 'BrainstormReportScheduled' %}">See the list of Scheduled suggestions.</a> These are very likely to happen at con.
-      <li> <a href="mailto:{{PROGRAM_EMAIL}}">Email {{PROGRAM_EMAIL}} to volunteer to help process these ideas.</a>
+      <li> <a href="mailto:{{ con_config.PROGRAM_EMAIL }}">Email {{ con_config.PROGRAM_EMAIL }} to volunteer to help process these ideas.</a>
 {% endif %}
-{% if is_participant %}
+{% if perms.participant %}
       <li> <a href="{% url 'welcome' %}">Return To Participant View</a>
 {% endif %}
     </ul>

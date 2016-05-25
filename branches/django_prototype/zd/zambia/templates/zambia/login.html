@@ -1,18 +1,30 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en">
-  <head>
-    <title>Log In</title>
-  </head>
-<body>
-  <h1>Please Log In</h1>
-
-{% if reason %}  <p><strong>{{ reason }}</strong></p>{% endif %}
-
-  <form action="{% url 'login' %}" method="post">
-{% csrf_token %}
-    <input type="text" name="username" id="username"/>
-    <input type="password" name="password" id="password"/>
-    <br><input type="submit" value="Log In" />
-  </form>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block headline %}Login{% endblock %}
+{% block messages %}{% endblock %}
+{% block header_content %}
+{% if con_config.SHOW_BRAINSTORM_LOGIN_HINT %}<p>To access brainstorm functions, log in as "public" with password of the last name of the author of Lud-in-the-Mist (properly capitalized).</p>{% endif %}
+          <div class="span3">
+            <form id="loginForm" name="loginform" class="form-horizontal" method="post" action="{% url 'login' %}">
+              {% csrf_token %}
+              <fieldset id="loginBox">{% if login_error %}                <b class="alert alert-error pull-right">{{ login_error }}</b>
+{% endif %}                <div class="control-group">
+                  <label class="control-label" for="badgeid">Badge ID:</label>
+                  <div class="controls">
+                    <input type="text" name="badgeid" id="badgeid" class="input-small" placeholder="Badge ID" title="Enter your badge ID"/>
+                  </div>
+                  <label class="control-label" for="passwd">Password:</label>
+                  <div class="controls">
+                    <input type="password" id="passwd" name="passwd" class="input-small" placeholder="Password" title="Enter your password"/>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <input type="submit" value="Login" class="btn btn-primary pull-right" title="Click to log in">
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <script type="text/javascript">   var alwaysShowLargeHeader = true;</script>
+{% endblock %}

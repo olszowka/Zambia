@@ -22,16 +22,23 @@ def get_track_names(allow_all = False):
         ret.append({'name': t.trackname, 'value': t.trackname })
     return ret
 
+def get_user_perms(user, perm_list):
+    ret = {}
+    for p in perm_list:
+        ret[p] = user.has_perm('zambia.' + p)
+    return ret
+
 def error_page(request, text):
     template = loader.get_template('zambia/error.html')
-    context = { 'text': text }
+    context = { 'title': 'Error', 'text': text }
     return HttpResponse(template.render(context, request))
 
 def view_login(request, reason = None):
+    error = None
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
+        username = request.POST['badgeid']
+        password = request.POST['passwd']
+        user = authenticate(username = username, password = password)
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -43,12 +50,14 @@ def view_login(request, reason = None):
                     return redirect('BrainstormWelcome')
                 return error_page(request, "The logged in user has no permissions.")
             else:
-                reason='Not active'
+                error='Not active'
         else:
-            reason='Invalid user or password'
+            error='Incorrect badgeid or password.'
     template = loader.get_template('zambia/login.html')
     context = {
-        'reason': reason,
+        'title': 'Login',
+        'login_error': error,
+        'con_config': get_all_con_configs(),
     }
     return HttpResponse(template.render(context, request))
 
@@ -65,27 +74,30 @@ def index(request):
     if request.user.has_perm('zambia.public'):
         return redirect('BrainstormWelcome')
     template = loader.get_template('zambia/index.html')
-    context = {}
+    context = {
+        'title': 'Index',
+        'con_config': get_all_con_configs(),
+    }
     return HttpResponse(template.render(context, request))
 
 
 @login_required
 def welcome(request):
-    return error_page(request, 'Welcome is not implemented yet.')
+#    return error_page(request, 'Welcome is not implemented yet.')
+    return redirect('BrainstormWelcome')
 
 @login_required
 def staff_page(request):
-    return error_page(request, 'StaffPage is not implemented yet.')
+#    return error_page(request, 'StaffPage is not implemented yet.')
+    return redirect('BrainstormWelcome')
 
 @login_required
 def brainstorm_welcome(request):
     template = loader.get_template('zambia/brainstorm_welcome.html')
     context = {
-        'CON_NAME':         CON_NAME,
-        'BRAINSTORM_EMAIL': BRAINSTORM_EMAIL,
-        'PROGRAM_EMAIL':    PROGRAM_EMAIL,
-        'can_brainstorm':   request.user.has_perm('zambia.brainstorm'),
-        'is_participant':   request.user.has_perm('zambia.participant')
+        'title': 'Brainstorm Welcome',
+        'con_config': get_all_con_configs(),
+        'perms': get_user_perms(request.user, ('brainstorm', 'participant', 'brainstorm_search')),
     }
     return HttpResponse(template.render(context, request))
 
@@ -149,11 +161,16 @@ def brainstorm_create_session(request):
 
     template = loader.get_template('zambia/brainstorm_create.html')
     tlist = get_track_names(False)
+    user = { 'name': name, 'email': email }
     context = {
-        'name': name,
-        'email': email,
+        'title': 'Brainstorm Create Session',
+        'message': message,
+        'error': error,
+        'con_config': get_all_con_configs(),
+        'user': user,
+
         'tracks': tlist,
-        'title': title,
+        'sesstitle': title,
         'pgd': pgd,
         'notesforprog': notesforprog,
 
@@ -168,8 +185,6 @@ def brainstorm_create_session(request):
         'kids': def_kids,
         'status': def_status,
 
-        'message': message,
-        'error': error,
     }
     return HttpResponse(template.render(context, request))
 
@@ -250,21 +265,23 @@ No promises, but we are doing our best to have this happen.</p>"""
     kw['status__statusname__in'] = valid_statuses
     kw['invitedguest'] = 0
     slist = []
+    start = get_con_config('CON_START_DATIM')
     for s in Session.objects.filter(**kw ).order_by('track__display_order', 'title'):
         added = False
         for t in s.schedule_set.all():
             added = True
-            slist.append(session_row(s, conditional_escape(t.room.roomname), (CON_START_DATIM+datetime.timedelta(hours=t.starttime.hour, minutes = t.starttime.minute, seconds = t.starttime.second)).isoformat()))
+            slist.append(session_row(s, conditional_escape(t.room.roomname), (start + datetime.timedelta(hours=t.starttime.hour, minutes = t.starttime.minute, seconds = t.starttime.second)).isoformat()))
         if not added:
             slist.append(session_row(s, '&nbsp;', '&nbsp;'))
     context = {
+        'title': 'Branstorm Report',
         'error': error,
+        'con_config': get_all_con_configs(),
         'caption': caption,
         'date': datetime.datetime.now().isoformat(),
         'showlinks': False,
         'text': text,
         'sessions': slist,
-        'PROGRAM_EMAIL': PROGRAM_EMAIL,
     }
     return HttpResponse(template.render(context, request))
 
@@ -280,6 +297,8 @@ def brainstorm_search_session(request):
         return brainstorm_report(request, 'Search', track, title, text)
     template = loader.get_template('zambia/brainstorm_search.html')
     context = {
+        'title': 'Brainstorm Search Session',
+        'con_config': get_all_con_configs(),
         'tracks': get_track_names(True)
     }
     return HttpResponse(template.render(context, request))

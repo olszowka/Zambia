@@ -102,6 +102,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/zambia/'
 
-LOGIN_URL = '/login'
+STATICFILES_DIRS = [
+    '/var/www/html/zambia/',
+]
+
+LOGIN_URL = '/zd/login'

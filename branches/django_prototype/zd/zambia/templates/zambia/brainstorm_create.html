@@ -80,10 +80,6 @@
     </script>
     <h1>Welcome to Brainstorming</h1>
 
-{% if error %}    <p><strong>{{ error }}</strong></p>{% endif %}
-
-{% if message %}    <p><strong>{{ message }}</strong></p>{% endif %}
-
     <div class="formbox">
       <form name="sessform" class="bb"  method=POST action="{% url 'BrainstormCreateSession' %}">
 {% csrf_token %}
@@ -105,13 +101,13 @@
           <tr>
             <td class="form1">
               <label for="name" ID="name">Your name:</label><br>
-              <input type="text" name="name" onKeyPress="return checkSubmitButton();"{% if name %}value="{{name}}"{% endif %}>
+              <input type="text" name="name" onKeyPress="return checkSubmitButton();"{% if user.name %}value="{{ user.name }}"{% endif %}>
             </td>
           </tr>
           <tr>
             <td class="form1">
               <label for="email" id="email">Your email address:</label><br>
-              <input type="text" name="email" size="50" onKeyPress="return checkSubmitButton();" {% if email %}value="{{email}}"{% endif %}>
+              <input type="text" name="email" size="50" onKeyPress="return checkSubmitButton();" {% if user.email %}value="{{ user.email }}"{% endif %}>
             </td>
           </tr>
           <tr>
@@ -125,7 +121,7 @@
           <tr>
             <td class="form1">
               <label for="title" ID="title">Title: </label><br>
-              <input type="text" size="50" name="title" value="{{title}}" onKeyPress="return checkSubmitButton();">
+              <input type="text" size="50" name="title" value="{{ sesstitle }}" onKeyPress="return checkSubmitButton();">
             </td>
           </tr>
           <tr>

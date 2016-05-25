@@ -928,3 +928,76 @@ class UserHasPermissionRole(models.Model):
         managed = False
         db_table = 'UserHasPermissionRole'
         unique_together = (('badge', 'permrole'),)
+
+# EnumField looted from a public comment on stackoverflow.com
+# http://stackoverflow.com/questions/21454/specifying-a-mysql-enum-in-a-django-model
+class EnumField(models.Field):
+    def __init__(self, *args, **kwargs):
+        super(EnumField, self).__init__(*args, **kwargs)
+        assert self.choices, "Need choices for enumeration"
+
+    def db_type(self, connection):
+        if not all(isinstance(col, basestring) for col, _ in self.choices):
+            raise ValueError("MySQL ENUM values should be strings")
+        return "ENUM({})".format(','.join("'{}'".format(col) 
+                                          for col, _ in self.choices))
+
+class ConfigType(EnumField, models.CharField):
+    def __init__(self, *args, **kwargs):
+        types = [('string', 'String'),
+                 ('number', 'Number'),
+                 ('date', 'Date'),
+                 ('bool', 'Boolean'),
+        ]
+        kwargs['choices'] = types
+        super(ConfigType, self).__init__(*args, **kwargs)
+
+class ConfigConfig(EnumField, models.CharField):
+    def __init__(self, *args, **kwargs):
+        types = [
+            ('CON_START_DATIM', 'CON_START_DATIM'),
+            ('CON_NUM_DAYS', 'CON_NUM_DAYS'),
+            ('DAY_CUTOFF_HOUR', 'DAY_CUTOFF_HOUR'),
+            ('PREF_TTL_SESNS_LMT', 'PREF_TTL_SESNS_LMT'),
+            ('PREF_DLY_SESNS_LMT', 'PREF_DLY_SESNS_LMT'),
+            ('AVAILABILITY_ROWS', 'AVAILABILITY_ROWS'),
+            ('MAX_BIO_LEN', 'MAX_BIO_LEN'),
+            ('DURATION_IN_MINUTES', 'DURATION_IN_MINUTES'),
+            ('MY_AVAIL_KIDS', 'MY_AVAIL_KIDS'),
+            ('ENABLE_SHARE_EMAIL_QUESTION','ENABLE_SHARE_EMAIL_QUESTION'),
+            ('ENABLE_BESTWAY_QUESTION', 'ENABLE_BESTWAY_QUESTION'),
+            ('BILINGUAL', 'BILINGUAL'),
+            ('SHOW_BRAINSTORM_LOGIN_HINT', 'SHOW_BRAINSTORM_LOGIN_HINT'),
+            ('ANALYTICS_ENABLED', 'ANALYTICS_ENABLED'),
+            ('CON_NAME', 'CON_NAME'),
+            ('ADMIN_EMAIL', 'ADMIN_EMAIL'),
+            ('BRAINSTORM_EMAIL', 'BRAINSTORM_EMAIL'),
+            ('PROGRAM_EMAIL', 'PROGRAM_EMAIL'),
+            ('REG_EMAIL', 'REG_EMAIL'),
+            ('FIRST_DAY_START_TIME', 'FIRST_DAY_START_TIME'),
+            ('OTHER_DAY_START_TIME', 'OTHER_DAY_START_TIME'),
+            ('OTHER_DAY_STOP_TIME', 'OTHER_DAY_STOP_TIME'),
+            ('LAST_DAY_STOP_TIME', 'LAST_DAY_STOP_TIME'),
+            ('STANDARD_BLOCK_LENGTH', 'STANDARD_BLOCK_LENGTH'),
+            ('DEFAULT_DURATION', 'DEFAULT_DURATION'),
+            ('SMTP_ADDRESS', 'SMTP_ADDRESS'),
+            ('SWIFT_DIRECTORY', 'SWIFT_DIRECTORY'),
+            ('SECOND_LANG', 'SECOND_LANG'),
+            ('SECOND_TITLE_CAPTION', 'SECOND_TITLE_CAPTION'),
+            ('SECOND_DESCRIPTION_CAPTION', 'SECOND_DESCRIPTION_CAPTION'),
+            ('SECOND_BIOGRAPHY_CAPTION', 'SECOND_BIOGRAPHY_CAPTION'),
+            ('BASESESSIONDIR', 'BASESESSIONDIR'),
+            ('CON_LOGO_IMAGE', 'CON_LOGO_IMAGE'),
+        ]
+        kwargs['choices'] = types
+        super(ConfigConfig, self).__init__(*args, **kwargs)
+
+
+class Config(models.Model):
+    configid = models.AutoField(primary_key = True)
+    configtype = ConfigType(max_length = 6)
+    configname = ConfigConfig(max_length=40, unique = True)
+    configvalue = models.CharField(max_length=255)
+    configdescription = models.TextField()
+    def __unicode__(self):
+        return self.config
