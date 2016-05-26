@@ -30,9 +30,6 @@ admin.site.register(EmailTo)
 from .models import Feature
 admin.site.register(Feature)
 
-from .models import BioEditStatus
-admin.site.register(BioEditStatus)
-
 from .models import Participant
 admin.site.register(Participant)
 

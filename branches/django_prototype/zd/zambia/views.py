@@ -194,7 +194,7 @@ def session_row(s, room, time):
         'trackname': s.track.trackname,
         'typename': '',
         'title': s.title,
-        'duration': s.duration.isoformat(),
+        'duration': str(s.duration),
         'roomname': room,
         'starttime': time,
         'estatten': s.estatten,
@@ -270,7 +270,7 @@ No promises, but we are doing our best to have this happen.</p>"""
         added = False
         for t in s.schedule_set.all():
             added = True
-            slist.append(session_row(s, conditional_escape(t.room.roomname), (start + datetime.timedelta(hours=t.starttime.hour, minutes = t.starttime.minute, seconds = t.starttime.second)).isoformat()))
+            slist.append(session_row(s, conditional_escape(t.room.roomname), (start + t.starttime).isoformat()))
         if not added:
             slist.append(session_row(s, '&nbsp;', '&nbsp;'))
     context = {

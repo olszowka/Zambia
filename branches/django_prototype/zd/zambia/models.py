@@ -108,7 +108,9 @@ class EmailCC(models.Model):
     emailaddress = models.CharField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):
-        return str(self.emailccid) + ': ' + self.description + ' ' + self.emailaddress
+        a = self.description if self.description is not None else ''
+        b = self.emailaddress if self.emailaddress is not None else ''
+        return str(self.emailccid) + ': ' + a + ' ' + b
 
     class Meta:
         managed = False
@@ -174,37 +176,20 @@ class Feature(models.Model):
         db_table = 'Features'
 
 
-class BioEditStatus(models.Model):
-    bioeditstatusid = models.AutoField(primary_key=True)
-    bioeditstatusname = models.CharField(max_length=60, blank=True, null=True)
-    display_order = models.IntegerField()
-
-    def __unicode__(self):
-        return str(self.bioeditstatusid) + ': ' + self.bioeditstatusname
-
-    class Meta:
-        managed = False
-        db_table = 'BioEditStatuses'
-        verbose_name = 'Bio edit status'
-        verbose_name_plural = 'Bio edit statuses'
-
-
 class Participant(models.Model):
     badgeid = models.CharField(primary_key=True, max_length=15)
     password = models.CharField(max_length=32, blank=True, null=True)
     bestway = models.CharField(max_length=12, blank=True, null=True)
     interested = models.IntegerField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
-    editedbio = models.TextField(blank=True, null=True)
-    scndlangbio = models.TextField(blank=True, null=True)
-    bioeditstatus = models.ForeignKey(BioEditStatus, db_column='bioeditstatusid')
-    biolockedby = models.CharField(max_length=15, blank=True, null=True)
     pubsname = models.CharField(max_length=50, blank=True, null=True)
     share_email = models.IntegerField(blank=True, null=True)
     staff_notes = models.TextField(blank=True, null=True)
+    use_photo = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
-        return self.badgeid + ': ' + self.bestway
+        a = self.bestway if self.bestway is not None else ''
+        return self.badgeid + ': ' + a
 
     class Meta:
         managed = False
@@ -237,7 +222,7 @@ class ParticipantAvailabilityDay(models.Model):
     badge = models.ForeignKey(Participant, db_column='badgeid')
     day = models.SmallIntegerField()
     maxprog = models.IntegerField(blank=True, null=True)
-    participantavailabilitydayid = models.AutoField(primary_key = True)
+    participantavailabilitydaysid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ': ' + str(self.day)
@@ -253,7 +238,7 @@ class ParticipantAvailabilityTime(models.Model):
     availabilitynum = models.IntegerField()
     starttime = models.TimeField(blank=True, null=True)
     endtime = models.TimeField(blank=True, null=True)
-    participantavailabilitytime = models.AutoField(primary_key = True)
+    participantavailabilitytimesid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
         return self.badge.__unicode__() + ': ' + str(self.availabilitynum)
@@ -785,7 +770,7 @@ class Schedule(models.Model):
     starttime = models.TimeField()
 
     def __unicode__(self):
-        return str(self.scheduleid) + ': ' + self.session.__unicode__() + ' ' + self.room.__unicode__() + ' ' + self.starttime.isoformat()
+        return str(self.scheduleid) + ': ' + self.session.__unicode__() + ' ' + self.room.__unicode__() + ' ' + str(self.starttime)
 
     class Meta:
         managed = False
@@ -830,7 +815,7 @@ class SessionEditHistory(models.Model):
     sessionedithistoryid = models.AutoField(primary_key = True)
 
     def __unicode__(self):
-        return self.sessionid.__unicode__() + ' ' + self.timestamp
+        return self.session.__unicode__() + ' ' + self.timestamp.isoformat()
 
     class Meta:
         managed = False
@@ -892,7 +877,7 @@ class TimeSlot(models.Model):
     avail_end = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
-        return str(self.timeid) + ': ' + self.timedisplay + ' ' + self.timevalue
+        return str(self.timeid) + ': ' + self.timedisplay + ' ' + str(self.timevalue)
 
     class Meta:
         managed = False
@@ -1000,4 +985,4 @@ class Config(models.Model):
     configvalue = models.CharField(max_length=255)
     configdescription = models.TextField()
     def __unicode__(self):
-        return self.config
+        return self.configname

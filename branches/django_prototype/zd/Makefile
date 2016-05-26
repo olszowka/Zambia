@@ -11,7 +11,7 @@ install:
 	cp zd.conf /etc/httpd/conf.d/
 	service httpd restart
 svn:
-	cp manage.py create-db-name.py Makefile schema.diff zd.conf $S
+	cp update-database.py manage.py create-db-name.py Makefile schema.diff zd.conf $S
 	cp -r zd/*.py $S/zd
 	cp -r zambia/*.py $S/zambia
 	cp -r zambia/migrations/*.py $S/zambia/migrations
