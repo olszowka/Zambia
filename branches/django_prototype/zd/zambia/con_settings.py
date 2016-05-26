@@ -56,7 +56,6 @@ def get_all_con_configs():
                 ('bool', 'SHOW_BRAINSTORM_LOGIN_HINT', 'False', 'If TRUE, the hint on how to log in to brainstorming is shown on the login screen.'),
                 ('bool', 'ANALYTICS_ENABLED', 'False', 'If True, Google Analytics javascript is included in the footers of pages.  See Ben for details.'),
             ):
-                print i
                 c = Config(configtype=i[0], configname = i[1], configvalue = i[2], configdescription = i[3])
                 c.save()
             return get_all_con_configs()
