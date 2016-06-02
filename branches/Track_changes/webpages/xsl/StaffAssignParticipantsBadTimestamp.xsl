@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
     $Header: https://svn.code.sf.net/p/zambia/code/branches/Track_changes/webpages/xsl/StaffAssignParticipants.xsl 1151 2015-11-23 13:31:52Z polszowka $
-	Created by Peter Olszowka on 2015-10-16;
+	Created by Peter Olszowka on 2016-05-05;
 	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

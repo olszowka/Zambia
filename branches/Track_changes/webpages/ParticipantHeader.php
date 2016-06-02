@@ -1,4 +1,6 @@
 <?php
+//	$Header: https://svn.code.sf.net/p/zambia/code/branches/arisia_prod/webpages/StaffAssignParticipants.php 1150 2015-11-21 22:40:54Z polszowka $
+//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
     function participant_header($title) {
     require_once ("javascript_functions.php");
     global $badgeid, $message;
@@ -37,7 +39,7 @@
 </script>
 <?php
 load_jquery();
-load_javascript();
+load_javascript($title);
 ?>
   <div class="container-fluid">
 	<!-- Header -->

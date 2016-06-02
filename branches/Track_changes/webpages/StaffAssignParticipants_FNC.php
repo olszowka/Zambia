@@ -13,8 +13,12 @@ function SubmitAssignParticipants() {
     global $link;
 	$message="";
 	$userbadgeid = $_SESSION['badgeid'];
-//    print_r($_POST);
-	$pageTimestamp = DateTime::createFromFormat('Y-m-d G:i:s', $_POST["maxtimestamp"]);
+	if ($_POST["maxtimestamp"] != "") {
+			$pageTimestamp = DateTime::createFromFormat('Y-m-d G:i:s', $_POST["maxtimestamp"]);
+			}
+		else {
+			$pageTimestamp = "empty";
+			}
     $asgnpart=filter_var($_POST["asgnpart"], FILTER_VALIDATE_INT);
     $numrows=$_POST["numrows"];
     $moderator=mysql_real_escape_string($_POST["moderator"], $link);
@@ -29,7 +33,13 @@ function SubmitAssignParticipants() {
 	mysql_query_exit_on_error($query);
 	$query = "SELECT IF(@maxcr IS NULL, @maxin, IF(@maxin IS NULL, @maxcr, IF(@maxcr > @maxin, @maxcr, @maxin))) AS maxtimestamp;";
 	$result = mysql_query_exit_on_error($query);
-	$recentTimestamp = DateTime::createFromFormat('Y-m-d G:i:s', mysql_result($result, 0));
+	$recentTimestampResult = mysql_result($result, 0);
+	if ($recentTimestampResult != null) {
+			$recentTimestamp = DateTime::createFromFormat('Y-m-d G:i:s', $recentTimestampResult);
+			}
+		else {
+			$recentTimestamp = "empty";
+			}
 	if ($pageTimestamp != $recentTimestamp) {
 			$badgeidQueryArray = [];
 			$addParticipantArray = [];

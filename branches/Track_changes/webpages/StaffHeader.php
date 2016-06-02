@@ -1,4 +1,6 @@
 <?php
+//	$Header: https://svn.code.sf.net/p/zambia/code/branches/arisia_prod/webpages/StaffAssignParticipants.php 1150 2015-11-21 22:40:54Z polszowka $
+//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
     function staff_header($title) {
     require_once ("javascript_functions.php");
     global $badgeid, $message, $fullPage;
@@ -34,14 +36,14 @@
 	</head>
 <body <?php if ($fullPage) echo "class =\"fullPage\""; ?>>
 <script type="text/javascript">
-	var thisPage="<?php echo $title; ?>";
-	var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
+	var thisPage="<?php echo $title ?>";
+	var conStartDateTime = new Date("<?php echo CON_START_DATIM ?>".replace(/-/g,"/"));
 	var alwaysShowLargeHeader = false;
-	var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
+	var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH ?>";
 </script>
 <?php
 load_jquery();
-load_javascript();
+load_javascript($title);
 ?>
 	<div <?php if ($fullPage) echo "id=\"fullPageContainer\""; ?> class="container-fluid">
 	<div id="myhelper"></div><!-- used for drag-and-drop operations -->
@@ -85,7 +87,7 @@ load_javascript();
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="brand" href="<?php echo $_SERVER['PATH_INFO'] ?>"><?php echo $title ?></a>
+					<a class="brand" href="/<?php echo $_SERVER['REQUEST_URI']."\">$title"; ?></a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							<li class="dropdown">
@@ -106,6 +108,7 @@ load_javascript();
 									<li><a href="AdminParticipants.php">Administer</a></li>
 									<li><a href="InviteParticipants.php">Invite to a Session</a></li>
 									<li><a href="StaffAssignParticipants.php">Assign to a Session</a></li>
+									<li><a href="participantAssignmentHistory.php">Participant Assignment History</a></li>
 									<?php makeMenuItem("Send email",may_I('SendEmail'),"StaffSendEmailCompose.php",false); ?>
 								</ul>
 							</li>
