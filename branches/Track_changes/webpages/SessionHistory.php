@@ -1,9 +1,9 @@
 <?php
-//	$Header: https://svn.code.sf.net/p/zambia/code/branches/arisia_prod/webpages/StaffAssignParticipants.php 1150 2015-11-21 22:40:54Z polszowka $
+//	$Header$
 //	Created by Peter Olszowka on 2016-05-11;
 //	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 
-$title="Participant Assignment History";
+$title="Session History";
 require_once('db_functions.php');
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');
@@ -90,7 +90,7 @@ $parametersNode = $docNode->appendChild($parametersNode);
 $parametersNode->setAttribute("selsessionid", $selsessionid);
 echo(mb_ereg_replace("<(row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 $xsl = new DomDocument;
-$xsl->load('xsl/participantAssignmentHistory.xsl');
+$xsl->load('xsl/SessionHistory.xsl');
 $xslt = new XsltProcessor();
 $xslt->importStylesheet($xsl);
 $html = $xslt->transformToXML($resultXML);

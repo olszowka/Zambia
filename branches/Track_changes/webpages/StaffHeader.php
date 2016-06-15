@@ -1,5 +1,5 @@
 <?php
-//	$Header: https://svn.code.sf.net/p/zambia/code/branches/arisia_prod/webpages/StaffAssignParticipants.php 1150 2015-11-21 22:40:54Z polszowka $
+//	$Header$
 //	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
     function staff_header($title) {
     require_once ("javascript_functions.php");
@@ -100,6 +100,7 @@ load_javascript($title);
 									<li><a href="ViewPrecis.php?showlinks=0">View Precis</a></li>
 									<li><a href="ViewPrecis.php?showlinks=1">View Precis with Links</a></li>
 									<li><a href="StaffSearchPreviousSessions.php">Import Sessions</a></li>
+									<li><a href="SessionHistory.php">Session History</a></li>
 								</ul>
 							</li>
 							<li class="dropdown">
@@ -108,7 +109,6 @@ load_javascript($title);
 									<li><a href="AdminParticipants.php">Administer</a></li>
 									<li><a href="InviteParticipants.php">Invite to a Session</a></li>
 									<li><a href="StaffAssignParticipants.php">Assign to a Session</a></li>
-									<li><a href="participantAssignmentHistory.php">Participant Assignment History</a></li>
 									<?php makeMenuItem("Send email",may_I('SendEmail'),"StaffSendEmailCompose.php",false); ?>
 								</ul>
 							</li>

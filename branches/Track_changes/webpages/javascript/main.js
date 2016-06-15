@@ -26,8 +26,8 @@ $(document).ready(function() {
 		case "Panel Interests":
 			panelInterests.initialize();
 			break;
-		case "Participant Assignment History":
-			participantAssignmentHistory.initializePage();
+		case "Session History":
+			sessionHistory.initializePage();
 			break;
 		default:
 			window.status="Ready."

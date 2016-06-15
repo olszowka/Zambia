@@ -17,8 +17,8 @@ function load_javascript($title) {
 		case "Assign Participants":
 			echo "<script src=\"javascript/StaffAssignParticipants.js\"></script>\n";
 			break;
-		case "Participant Assignment History":
-			echo "<script src=\"javascript/ParticipantAssignmentHistory.js\"></script>\n";
+		case "Session History":
+			echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
 			break;
 		default:
 ?>

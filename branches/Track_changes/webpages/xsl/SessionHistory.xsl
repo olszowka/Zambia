@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-    $Header: https://svn.code.sf.net/p/zambia/code/branches/Track_changes/webpages/xsl/StaffAssignParticipants.xsl 1151 2015-11-23 13:31:52Z polszowka $
+    $Header$
 	Created by Peter Olszowka on 2016-05-11;
 	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 -->
@@ -8,7 +8,7 @@
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
 	<xsl:variable name="selsessionid" select="/doc/parameters/@selsessionid" />
 	<xsl:template match="/">
-		<form id="selsesformtop" name="selsesform" class="form-inline" method="get" action="participantAssignmentHistory.php">
+		<form id="selsesformtop" name="selsesform" class="form-inline" method="get" action="SessionHistory.php">
 			<div>
 				<label for="selsess">Select Session:</label>
 				<xsl:text> </xsl:text>
