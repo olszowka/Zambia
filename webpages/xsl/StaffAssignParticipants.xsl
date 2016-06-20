@@ -143,8 +143,8 @@
 							<xsl:text>Mod this</xsl:text>
 						</xsl:when>
 						<xsl:when test="@roleid">
-							<xsl:attribute name="title">Volunteered to moderate in general, but not this panel</xsl:attribute>
-							<xsl:text>Mod any but not this</xsl:text>
+							<xsl:attribute name="title">Volunteered to moderate in general, but not this panel in particular</xsl:attribute>
+							<xsl:text>Mod any</xsl:text>
 						</xsl:when>
 						<xsl:otherwise><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:otherwise>
 					</xsl:choose>
