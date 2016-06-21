@@ -1,4 +1,6 @@
 <?php
+//	$Header$
+//	Copyright (c) 2011-2016 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('db_functions.php');
 	function retrieveKonOpasData() {
 		$results = array();
@@ -32,16 +34,17 @@ EOD;
 			}
 		$query = <<<EOD
 SELECT
-		S.sessionid AS id, S.title, TR.trackname, TY.typename, R.roomname AS loc,
+		S.sessionid AS id, S.title, TR.trackname, TY.typename, R.roomname AS loc, R.floor, SHPC.sessionid AS featured,
 		DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins, S.progguiddesc AS `desc`, 
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time
 	FROM
-			 Schedule SCH
-		JOIN Sessions S USING (sessionid)
-		JOIN Tracks TR USING (trackid)
-		JOIN Types TY USING (typeid)
-		JOIN Rooms R USING (roomid)
+				  Schedule SCH
+			 JOIN Sessions S USING (sessionid)
+			 JOIN Tracks TR USING (trackid)
+			 JOIN Types TY USING (typeid)
+			 JOIN Rooms R USING (roomid)
+		LEFT JOIN SessionHasPubChar SHPC ON S.sessionid = SHPC.sessionid AND SHPC.pubcharid = 5 /* Featured */
 	WHERE
 		S.pubstatusid = 2 /* Public */
 	ORDER BY
@@ -50,15 +53,22 @@ EOD;
 		$result = mysql_query_with_error_handling($query);
 		$program = array();
 		while($row = mysql_fetch_assoc($result)) {
+			$tagsArray = array("track:".$row["trackname"],"type:".$row["typename"]);
+			if ($row["featured"])
+				$tagsArray[] = 'Featured';
+			$locArray = array($row["loc"]);
+			if ($row["floor"] && $row["floor"] != "")
+				$locArray[] = $row["floor"];
 			$programRow = array(
 				"id" => $row["id"],
 				"title" => $row["title"],
-				"tags" => array("track:".$row["trackname"],"type:".$row["typename"]),
+				"tags" => $tagsArray,
 				"date" => $row["date"],
 				"time" => $row["time"],
-				"loc" => array($row["loc"]),
+				"loc" => $locArray,
 				"people" => $sessionHasParticipant[$row["id"]],
-				"desc" => $row["desc"]
+				"desc" => $row["desc"],
+                                "mins" => $row["mins"]
 				);
 			$program[] = $programRow;
 			}
