@@ -1,0 +1,5 @@
+The sample database is empty of users, participants, sessions, schedule, and history data.  It does contain sample 
+configuration data such as rooms, tracks, etc.  This configuration data will need to be deleted or overwritten.  Do 
+not edit tables PermissionAtoms, PermissionRoles, Permissions, SessionStatuses.  In the Phases table, edit only the 
+"current" field. 
+

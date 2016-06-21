@@ -1,0 +1,7 @@
+#!/bin/sh
+
+mkdir -p /home/trg/Arisia07 
+
+/usr/bin/mysql --password='arisia' arisia -e "\. /home/trg/bin/export_program_participants_arisia07.sql"  > /home/trg/Arisia07/latest_congo
+
+/usr/bin/scp -P 2600 /home/trg/Arisia07/latest_congo two-step.netbusters.com:Arisia07/latest_congo
