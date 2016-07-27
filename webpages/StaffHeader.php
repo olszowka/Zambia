@@ -1,4 +1,6 @@
 <?php
+// $Header$
+// This comment was added just to confirm that svn merges to arisia_prod2 branch are working correctly.
     function staff_header($title) {
     require_once ("javascript_functions.php");
     global $badgeid, $message, $fullPage;
