@@ -46,7 +46,7 @@ EOD;
 	$optionsNode->setAttribute("reg_url", REG_URL);
 	participant_header($title);
 	$resultXML = appendCustomTextArrayToXML($resultXML);
-	echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
+	//echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 	$xsl = new DomDocument;
 	$xsl->load('xsl/my_profile.xsl');
 	$xslt = new XsltProcessor();
