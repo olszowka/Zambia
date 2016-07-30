@@ -1,5 +1,9 @@
 <?php
 // This is an example file.  Please copy to db_name.php and edit as needed.
+// $Header$
+// Created by Peter Olszowka
+// Copyright (c) 2008-2016 Peter Olszowka. All rights reserved.
+// See copyright document for more details.
 define("DBHOSTNAME","localhost");
 define("DBUSERID","zambiademo");
 define("DBPASSWORD","4fandom");
@@ -39,6 +43,7 @@ define("SECOND_DESCRIPTION_CAPTION","Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION","Biographie en fran&ccedil;ais");
 define("BASESESSIONDIR","/var/lib/php5"); // vestigial
 define("SHOW_BRAINSTORM_LOGIN_HINT",FALSE);
+define("REG_URL", "https://reg.arisia.org"); // URL for logging into user self service portion of registration system -- appears on My Profile page
 global $daymap;
 $daymap = array ('long' => array(1 => "Thursday", 2 => "Friday", 3 => "Saturday", 4 => "Sunday", 5 => "Monday"),
     'short' => array(1 => 'Thu', 2 => 'Fri', 3 => 'Sat', 4 => 'Sun', 5 => 'Mon'));
