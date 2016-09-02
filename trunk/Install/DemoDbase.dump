@@ -78,15 +78,20 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `CongoDump`;
 CREATE TABLE `CongoDump` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `firstname` varchar(30) default NULL,
-  `lastname` varchar(40) default NULL,
-  `badgename` varchar(51) default NULL,
-  `phone` varchar(100) default NULL,
-  `email` varchar(100) default NULL,
-  `postaddress` varchar(100) default NULL,
-  `regtype` varchar(40) default NULL,
-  PRIMARY KEY  (`badgeid`)
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `firstname` varchar(30) DEFAULT NULL,
+  `lastname` varchar(40) DEFAULT NULL,
+  `badgename` varchar(51) DEFAULT NULL,
+  `phone` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `postaddress1` varchar(100) DEFAULT NULL,
+  `postaddress2` varchar(100) DEFAULT NULL,
+  `postcity` varchar(50) DEFAULT NULL,
+  `poststate` varchar(25) DEFAULT NULL,
+  `postzip` varchar(10) DEFAULT NULL,
+  `postcountry` varchar(25) DEFAULT NULL,
+  `regtype` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Contains user information from registration system.';
 
 --
@@ -95,7 +100,8 @@ CREATE TABLE `CongoDump` (
 
 LOCK TABLES `CongoDump` WRITE;
 /*!40000 ALTER TABLE `CongoDump` DISABLE KEYS */;
-INSERT INTO `CongoDump` VALUES ('1','First','Staff',NULL,'781-555-1212','someone@somewhere.com','123 First Street\\Arlington, MA 02474',''),('2','First','Participant',NULL,'617-555-1212','someoneelse@somewhereelse.com','123 Fifth Street\\Boston, MA 02100','');
+INSERT INTO `CongoDump` VALUES ('1','First','Staff','Staff','781-555-1212','someone@somewhere.com','123 First Street',NULL,'Arlington','MA','02474','USA',''),
+     ('2','First','Participant','Participant','617-555-1212','someoneelse@somewhereelse.com','123 Fifth Street',NULL,'Boston','MA','02100','USA','');
 /*!40000 ALTER TABLE `CongoDump` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -355,17 +361,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantAvailability`;
 CREATE TABLE `ParticipantAvailability` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `fridaymaxprog` int(11) default NULL,
-  `saturdaymaxprog` int(11) default NULL,
-  `sundaymaxprog` int(11) default NULL,
-  `maxprog` int(11) default NULL,
-  `preventconflict` varchar(255) default NULL,
-  `otherconstraints` varchar(255) default NULL,
-  `numkidsfasttrack` int(11) default NULL,
-  PRIMARY KEY  (`badgeid`),
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `maxprog` int(11) DEFAULT NULL,
+  `preventconflict` varchar(255) DEFAULT NULL,
+  `otherconstraints` varchar(255) DEFAULT NULL,
+  `numkidsfasttrack` int(11) DEFAULT NULL,
+  PRIMARY KEY (`badgeid`),
   CONSTRAINT `ParticipantAvailability_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant information captured by Zambia';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ParticipantAvailability`
@@ -373,7 +376,6 @@ CREATE TABLE `ParticipantAvailability` (
 
 LOCK TABLES `ParticipantAvailability` WRITE;
 /*!40000 ALTER TABLE `ParticipantAvailability` DISABLE KEYS */;
-INSERT INTO `ParticipantAvailability` VALUES ('1',1,2,3,4,'my navel','not really',3),('2',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `ParticipantAvailability` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -587,22 +589,17 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Participants`;
 CREATE TABLE `Participants` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `password` varchar(32) default NULL,
-  `bestway` varchar(12) default NULL,
-  `interested` tinyint(1) default NULL,
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `password` varchar(32) DEFAULT NULL,
+  `bestway` varchar(12) DEFAULT NULL,
+  `interested` tinyint(1) DEFAULT NULL,
   `bio` text,
-  `editedbio` text,
-  `scndlangbio` text,
-  `bioeditstatusid` int(11) NOT NULL DEFAULT '1',
-  `biolockedby` varchar(15) DEFAULT NULL,
-  `pubsname` varchar(50) character set utf8 collate utf8_general_ci default NULL,
+  `pubsname` varchar(50) DEFAULT NULL,
   `share_email` tinyint(11) DEFAULT '1',
   `staff_notes` text,
-  PRIMARY KEY  (`badgeid`),
-  KEY `bioeditstatusid` (`bioeditstatusid`),
-  CONSTRAINT `Participants_fkey1` FOREIGN KEY (`bioeditstatusid`) REFERENCES `BioEditStatuses` (`bioeditstatusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info -- import process must create row';
+  `use_photo` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Participants`
@@ -643,14 +640,18 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `PermissionAtoms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PermissionAtoms` (
-  `permatomid` int(11) NOT NULL auto_increment,
-  `permatomtag` varchar(20) NOT NULL default '',
-  `page` varchar(20) default NULL,
+  `permatomid` int(11) NOT NULL AUTO_INCREMENT,
+  `permatomtag` varchar(20) NOT NULL DEFAULT '',
+  `elementid` int(11) DEFAULT NULL,
+  `page` varchar(30) DEFAULT NULL,
   `notes` text,
-  PRIMARY KEY  (`permatomid`),
-  UNIQUE KEY `taginx` (`permatomtag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Non configurable -- tied to code';
+  PRIMARY KEY (`permatomid`),
+  UNIQUE KEY `taginx` (`permatomtag`,`elementid`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `PermissionAtoms`
@@ -1552,11 +1553,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `SessionStatuses`;
 CREATE TABLE `SessionStatuses` (
-  `statusid` int(11) NOT NULL auto_increment,
-  `statusname` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  PRIMARY KEY  (`statusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `statusid` int(11) NOT NULL AUTO_INCREMENT,
+  `statusname` varchar(50) DEFAULT NULL,
+  `validate` tinyint(4) NOT NULL DEFAULT '0',
+  `may_be_scheduled` tinyint(4) NOT NULL DEFAULT '0',
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`statusid`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `SessionStatuses`
@@ -1574,43 +1577,47 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Sessions`;
 CREATE TABLE `Sessions` (
-  `sessionid` int(11) NOT NULL auto_increment,
-  `trackid` int(11) NOT NULL default '0',
-  `typeid` int(11) NOT NULL default '0',
-  `divisionid` int(11) NOT NULL default '0',
-  `pubstatusid` int(11) default '0',
-  `pubsno` varchar(50) default NULL,
-  `title` varchar(100) default NULL,
+  `sessionid` int(11) NOT NULL AUTO_INCREMENT,
+  `trackid` int(11) NOT NULL DEFAULT '0',
+  `typeid` int(11) NOT NULL DEFAULT '0',
+  `divisionid` int(11) NOT NULL DEFAULT '0',
+  `pubstatusid` int(11) DEFAULT '0',
+  `languagestatusid` int(11) DEFAULT '1',
+  `pubsno` varchar(50) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `secondtitle` varchar(100) DEFAULT NULL,
   `pocketprogtext` text,
   `progguiddesc` text,
   `persppartinfo` text,
-  `duration` time default NULL,
-  `estatten` int(11) default NULL,
-  `kidscatid` int(11) NOT NULL default '0',
-  `signupreq` tinyint(1) default NULL,
-  `roomsetid` int(11) NOT NULL default '0',
+  `duration` time DEFAULT NULL,
+  `estatten` int(11) DEFAULT NULL,
+  `kidscatid` int(11) NOT NULL DEFAULT '0',
+  `signupreq` tinyint(1) DEFAULT NULL,
+  `roomsetid` int(11) NOT NULL DEFAULT '0',
   `notesforpart` text,
   `servicenotes` text,
-  `statusid` int(11) NOT NULL default '0',
+  `statusid` int(11) NOT NULL DEFAULT '0',
   `notesforprog` text,
-  `warnings` tinyint(1) default NULL,
-  `invitedguest` tinyint(1) default '0',
-  `ts` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`sessionid`),
+  `warnings` tinyint(1) DEFAULT NULL,
+  `invitedguest` tinyint(1) DEFAULT '0',
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sessionid`),
   KEY `trackid` (`trackid`),
   KEY `typeid` (`typeid`),
   KEY `kidscatid` (`kidscatid`),
   KEY `roomsetid` (`roomsetid`),
   KEY `statusid` (`statusid`),
-  KEY `Sessions_ibfk_6` (`pubstatusid`),
-  KEY `Sessions_ibfk_7` (`divisionid`),
+  KEY `divisionid` (`divisionid`),
+  KEY `pubstatusid` (`pubstatusid`),
+  KEY `languagestatusid` (`languagestatusid`),
   CONSTRAINT `Sessions_ibfk_1` FOREIGN KEY (`trackid`) REFERENCES `Tracks` (`trackid`),
   CONSTRAINT `Sessions_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `Types` (`typeid`),
   CONSTRAINT `Sessions_ibfk_3` FOREIGN KEY (`kidscatid`) REFERENCES `KidsCategories` (`kidscatid`),
   CONSTRAINT `Sessions_ibfk_4` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`),
   CONSTRAINT `Sessions_ibfk_5` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`),
   CONSTRAINT `Sessions_ibfk_6` FOREIGN KEY (`pubstatusid`) REFERENCES `PubStatuses` (`pubstatusid`),
-  CONSTRAINT `Sessions_ibfk_7` FOREIGN KEY (`divisionid`) REFERENCES `Divisions` (`divisionid`)
+  CONSTRAINT `Sessions_ibfk_7` FOREIGN KEY (`divisionid`) REFERENCES `Divisions` (`divisionid`),
+  CONSTRAINT `Sessions_ibfk_8` FOREIGN KEY (`languagestatusid`) REFERENCES `LanguageStatuses` (`languagestatusid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1620,7 +1627,13 @@ CREATE TABLE `Sessions` (
 
 LOCK TABLES `Sessions` WRITE;
 /*!40000 ALTER TABLE `Sessions` DISABLE KEYS */;
-INSERT INTO `Sessions` VALUES (1,9,1,1,2,'','Are Fans Interesting?','Who are these people at the Con and why do we care?\r\n',NULL,'Talk about people are cons and make fun of them.','01:00:00',20,2,0,1,'Don\'t come if you don\'t want to be made fun of.','',3,'',0,0,'2006-10-04 22:38:14'),(2,16,3,1,2,'','Book Signing - Jacqueline Carey','Guest of Honor Jacqueline Carey autographs her works including Kushiel\'s Avatar series and the Sundering duology. Books available for purchase at the signing session. No more than 3 autographs per person, please.',NULL,'','02:00:00',100,2,0,12,'Will JC attend a play party?','Will need credit card set up for book-seller table.',6,'Will need gopher for duration of signing',0,0,'2006-10-04 22:38:14'),(3,16,1,1,2,'','NaNoWriMo And You','The National Novel Writing Month project is in it\'s Umpteenth Year. Learn about NaNoWriMo from those who have completed it, and see if it\'s the key to completing your first (or next) novel in 30 days.',NULL,'This panel will be moderated by the new NaNoWriMo liason, and we\'re looking for panelists who have participated in NaNoWriMo before, whether they\'ve completed it or not.','01:00:00',30,2,0,3,'','',6,'',0,0,'2006-10-04 22:38:14'),(4,5,1,1,2,'','Coffee, Tea and Squee','Brewed Beverages and Fandom go hand in hand - Sample offerings from Dean\'s Beans and CooksShopHere and learn about the latest trends in coffee, tea and more. This panel will include sampling of beverages - Children with responsible adult present only.',NULL,'We\'ve got representatives from Dean\'s Beans and Cooks Shop Here (a NoHo tea shop) but are interested in other panelists who can provide similar non-alcoholic beverage samples. Please contact Jess Hartley at piconpanels@gmail.com if you think you can provide such.','01:00:00',0,3,0,12,'','',6,'',0,0,'2006-10-04 22:38:14'),(5,11,2,1,2,'','Midnight Filk','Open Mic Filk Session ',NULL,'We\'d like facilitators to keep things moving for this open mic, collaborative session.','01:00:00',0,2,0,9,'','',6,'',0,0,'2006-10-04 22:38:14');
+INSERT INTO `Sessions` (`sessionid`, `trackid`, `typeid`, `divisionid`, `pubstatusid`, `languagestatusid`, `pubsno`, `title`, `secondtitle`, `pocketprogtext`, `progguiddesc`, `persppartinfo`, `duration`, `estatten`, `kidscatid`, `signupreq`, `roomsetid`, `notesforpart`, `servicenotes`, `statusid`, `notesforprog`, `warnings`, `invitedguest`, `ts`)
+VALUES
+	(1,9,1,1,2,1,'','Are Fans Interesting?',NULL,'','Who are these people at the Con and why do we care?\r\n','Talk about people are cons and make fun of them.','01:00:00',20,2,0,1,'Don\'t come if you don\'t want to be made fun of.','',3,'',0,0,'2006-10-04 22:38:14'),
+	(2,16,3,1,2,1,'','Book Signing - Jacqueline Carey',NULL,'','Guest of Honor Jacqueline Carey autographs her works including Kushiel\'s Avatar series and the Sundering duology. Books available for purchase at the signing session. No more than 3 autographs per person, please.','','02:00:00',100,2,0,12,'Will JC attend a play party?','Will need credit card set up for book-seller table.',6,'Will need gopher for duration of signing',0,0,'2006-10-04 22:38:14'),
+	(3,16,1,2,2,1,'','NaNoWriMo And You','','','The National Novel Writing Month project is in it\'s Umpteenth Year. Learn about NaNoWriMo from those who have completed it, and see if it\'s the key to completing your first (or next) novel in 30 days.','This panel will be moderated by the new NaNoWriMo liason, and we\'re looking for panelists who have participated in NaNoWriMo before, whether they\'ve completed it or not.','01:00:00',30,2,0,3,'','',2,'',0,0,'2016-08-31 23:29:26'),
+	(4,5,1,1,2,1,'','Coffee, Tea and Squee',NULL,'','Brewed Beverages and Fandom go hand in hand - Sample offerings from Dean\'s Beans and CooksShopHere and learn about the latest trends in coffee, tea and more. This panel will include sampling of beverages - Children with responsible adult present only.','We\'ve got representatives from Dean\'s Beans and Cooks Shop Here (a NoHo tea shop) but are interested in other panelists who can provide similar non-alcoholic beverage samples. Please contact Jess Hartley at piconpanels@gmail.com if you think you can provide such.','01:00:00',0,3,0,12,'','',6,'',0,0,'2006-10-04 22:38:14'),
+	(5,11,2,1,2,1,'','Midnight Filk','',NULL,'Open Mic Filk Session ','We\'d like facilitators to keep things moving for this open mic, collaborative session.','01:00:00',0,2,0,9,'','',6,'',0,0,'2006-10-04 22:38:14');
 /*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1709,10 +1722,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Types`;
 CREATE TABLE `Types` (
-  `typeid` int(11) NOT NULL auto_increment,
-  `typename` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  PRIMARY KEY  (`typeid`)
+  `typeid` int(11) NOT NULL AUTO_INCREMENT,
+  `typename` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `selfselect` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`typeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1721,7 +1735,7 @@ CREATE TABLE `Types` (
 
 LOCK TABLES `Types` WRITE;
 /*!40000 ALTER TABLE `Types` DISABLE KEYS */;
-INSERT INTO `Types` VALUES (1,'Panel',1),(2,'Workshop',2),(3,'Special',3),(4,'Lecture',4),(5,'Meeting',5),(6,'Large Tent',6),(7,'Small Tent',9),(8,'Reading',7),(9,'Group Reading',8),(10,'TV - Live Event',10),(11,'TV - Previous Event',11),(12,'Movie',12),(13,'TV Show',13),(14,'Open Gaming',30),(15,'Scheduled Game',30),(16,'TV - Movie',11);
+INSERT INTO `Types` VALUES (1,'Panel',1,1),(2,'Workshop',2,0),(3,'Room Turn',500,0),(4,'Lecture',6,0),(5,'Meeting',20,0),(6,'Interview',9,0),(7,'Signing',13,0),(8,'Reading',7,0),(9,'Rehearsal',100,0),(10,'TV - Live Event',10,0),(11,'TV - Previous Event',11,0),(12,'Projected Media',8,0),(14,'Open Gaming',18,0),(15,'Scheduled Game',19,0),(16,'TV - Movie/Show',12,0),(17,'I do not know',700,0),(18,'Concert',4,0),(19,'Participatory Event',3,0),(20,'Drama',5,0),(21,'Setup',200,0),(22,'Refresh',499,0);
 /*!40000 ALTER TABLE `Types` ENABLE KEYS */;
 UNLOCK TABLES;
 

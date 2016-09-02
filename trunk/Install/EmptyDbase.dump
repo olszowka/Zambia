@@ -615,16 +615,11 @@ CREATE TABLE `Participants` (
   `bestway` varchar(12) DEFAULT NULL,
   `interested` tinyint(1) DEFAULT NULL,
   `bio` text,
-  `editedbio` text,
-  `scndlangbio` text,
-  `bioeditstatusid` int(11) NOT NULL DEFAULT '1',
-  `biolockedby` varchar(15) DEFAULT NULL,
   `pubsname` varchar(50) DEFAULT NULL,
   `share_email` tinyint(11) DEFAULT '1',
   `staff_notes` text,
-  PRIMARY KEY (`badgeid`),
-  KEY `bioeditstatusid` (`bioeditstatusid`),
-  CONSTRAINT `Participants_fkey1` FOREIGN KEY (`bioeditstatusid`) REFERENCES `BioEditStatuses` (`bioeditstatusid`)
+  `use_photo` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
