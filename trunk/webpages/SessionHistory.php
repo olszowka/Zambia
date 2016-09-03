@@ -11,7 +11,7 @@ require_once('StaffCommonCode.php');
 
 staff_header($title);
 
-$queryArray = [];
+$queryArray = array();
 if (isset($_POST["selsess"])) {
         $selsessionid=filter_var($_POST["selsess"], FILTER_VALIDATE_INT);
 		}
