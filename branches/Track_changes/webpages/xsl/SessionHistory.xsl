@@ -42,14 +42,13 @@
 			<xsl:choose>
 				<xsl:when test="count(doc/query[@queryName='currentAssignments']/row) > 0">
 					<xsl:apply-templates select="doc/query[@queryName='currentAssignments']/row" />
-					<h4>Edits</h4>
-					<xsl:apply-templates select="doc/query[@queryName='timestamps']/row" />
 				</xsl:when>
 				<xsl:otherwise>
 					<p>No participants are currently assigned.</p>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+			<h4>Edits</h4>
+			<xsl:apply-templates select="doc/query[@queryName='timestamps']/row" />
 		</xsl:if>
 		
 	</xsl:template>
@@ -64,45 +63,55 @@
 	<xsl:template match="doc/query[@queryName='currentAssignments']/row">
 		<div class="row-fluid">
 			<span class="span11 offset1">
-				<xsl:value-of select="@pubsname"/> (<xsl:value-of select="@badgeid" />) <xsl:if test="@moderator='1'"><span class="zam-partAsgnHist-moderator">moderator</span></xsl:if>
+				<xsl:value-of select="@pubsname"/> (<xsl:value-of select="@badgeid" />) <xsl:if test="@moderator='1'"><span class="za-sessionHistory-moderator">moderator</span></xsl:if>
 			</span>
 		</div>
 	</xsl:template>
 	
 	<xsl:template match="doc/query[@queryName='timestamps']/row">
 		<xsl:variable name="timestamp" select="@timestamp" />
-		<xsl:variable name="createRow" select="/doc/query[@queryName='edits']/row[@createdts = $timestamp][1]" />
-		<xsl:variable name="inactivateRow" select="/doc/query[@queryName='edits']/row[@inactivatedts = $timestamp][1]" />
-		<xsl:if test="count($createRow) > 0 or count($inactivateRow) > 0">
+		<xsl:variable name="createParticipantRow" select="/doc/query[@queryName='participantedits']/row[@createdts = $timestamp][1]" />
+		<xsl:variable name="inactivateParticipantRow" select="/doc/query[@queryName='participantedits']/row[@inactivatedts = $timestamp][1]" />
+		<xsl:variable name="editSessionRow" select="/doc/query[@queryName='sessionedits']/row[@timestamp = $timestamp][1]" />
+		<xsl:if test="count($createParticipantRow) > 0 or count($inactivateParticipantRow) > 0 or count($editSessionRow) > 0">
 			<div class="row-fluid">
-				<span class="span11 offset1">
-					<span class="label">
-						<xsl:choose>
-							<xsl:when test="count($createRow) > 0">
-								<xsl:value-of select="$createRow/@crPubsname"/> (<xsl:value-of select="$createRow/@createdbybadgeid" />) <xsl:value-of select="$createRow/@createdtsFormat" />
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$inactivateRow/@inactPubsname"/> (<xsl:value-of select="$inactivateRow/@inactivatedbybadgeid" />) <xsl:value-of select="$inactivateRow/@inactivatedtsFormat" />
-							</xsl:otherwise>
-						</xsl:choose>
-					</span>	
-				</span>
+				<div class="span6 offset3 za-sessionHistory-editBanner">
+					<div class="row-fluid">
+						<div class="span9 offset3">
+							<xsl:choose>
+								<xsl:when test="count($createParticipantRow) > 0">
+									<xsl:value-of select="$createParticipantRow/@crpubsname"/> (<xsl:value-of select="$createParticipantRow/@createdbybadgeid" />)
+									<xsl:value-of select="$createParticipantRow/@createdtsformat" />
+								</xsl:when>
+								<xsl:when test="count($inactivateParticipantRow) > 0">
+									<xsl:value-of select="$inactivateParticipantRow/@inactpubsname"/> (<xsl:value-of select="$inactivateParticipantRow/@inactivatedbybadgeid" />)
+									<xsl:value-of select="$inactivateParticipantRow/@inactivatedtsformat" />
+								</xsl:when>
+								<xsl:when test="count($editSessionRow) > 0">
+									<xsl:value-of select="$editSessionRow/@name"/> (<xsl:value-of select="$editSessionRow/@badgeid" />)
+									<xsl:value-of select="$editSessionRow/@tsformat" />
+								</xsl:when>
+							</xsl:choose>
+						</div>
+					</div>	
+				</div>
 			</div>
 			<xsl:call-template name="processModeratorEdit">
 				<xsl:with-param name="timestamp" select = "$timestamp" />
 			</xsl:call-template>
-			<xsl:apply-templates mode="additions" select="/doc/query[@queryName='edits']/row[@createdts = $timestamp]" />
-			<xsl:apply-templates mode="deletions" select="/doc/query[@queryName='edits']/row[@inactivatedts = $timestamp]" />
+			<xsl:apply-templates mode="additions" select="/doc/query[@queryName='participantedits']/row[@createdts = $timestamp]" />
+			<xsl:apply-templates mode="deletions" select="/doc/query[@queryName='participantedits']/row[@inactivatedts = $timestamp]" />
+			<xsl:apply-templates select="/doc/query[@queryName='sessionedits']/row[@timestamp = $timestamp]" />
 		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template name="processModeratorEdit">
         <xsl:param name="timestamp" />
-		<xsl:variable name="addModeratorRow" select="/doc/query[@queryName='edits']/row[@createdts = $timestamp and @moderator='1']" />
-		<xsl:variable name="deleteModeratorRow" select="/doc/query[@queryName='edits']/row[@inactivatedts = $timestamp and @moderator='1']" />
+		<xsl:variable name="addModeratorRow" select="/doc/query[@queryName='participantedits']/row[@createdts = $timestamp and @moderator='1']" />
+		<xsl:variable name="deleteModeratorRow" select="/doc/query[@queryName='participantedits']/row[@inactivatedts = $timestamp and @moderator='1']" />
 		<xsl:if test="count($addModeratorRow) > 0 or count($deleteModeratorRow) > 0">
 			<div class="row-fluid">
-				<span class="span10 offset2">
+				<span class="span5 offset1">
 					<xsl:choose>
 						<xsl:when test="count($addModeratorRow) > 0 and count($deleteModeratorRow) > 0">
 							Change moderator from <xsl:value-of select="$deleteModeratorRow/@pubsname"/> (<xsl:value-of select="$deleteModeratorRow/@badgeid" />)
@@ -120,27 +129,39 @@
 		</xsl:if>
     </xsl:template>
 	
-	<xsl:template mode="additions" match="doc/query[@queryName='edits']/row">
+	<xsl:template mode="additions" match="doc/query[@queryName='participantedits']/row">
 		<xsl:variable name="timestamp" select="@createdts" />
 		<xsl:variable name="badgeid" select="@badgeid" />
-		<xsl:if test="count(/doc/query[@queryName='edits']/row[@inactivatedts = $timestamp and @badgeid = $badgeid]) = 0">
+		<xsl:if test="count(/doc/query[@queryName='participantedits']/row[@inactivatedts = $timestamp and @badgeid = $badgeid]) = 0">
 			<div class="row-fluid">
-				<span class="span10 offset2">
+				<span class="span5 offset1">
 					Add <xsl:value-of select="@pubsname"/> (<xsl:value-of select="$badgeid" />) to panel.
 				</span>
 			</div>
 		</xsl:if>
 	</xsl:template>
 	
-	<xsl:template mode="deletions" match="doc/query[@queryName='edits']/row">
+	<xsl:template mode="deletions" match="doc/query[@queryName='participantedits']/row">
 		<xsl:variable name="timestamp" select="@inactivatedts" />
 		<xsl:variable name="badgeid" select="@badgeid" />
-		<xsl:if test="count(/doc/query[@queryName='edits']/row[@createdts = $timestamp and @badgeid = $badgeid]) = 0">
+		<xsl:if test="count(/doc/query[@queryName='participantedits']/row[@createdts = $timestamp and @badgeid = $badgeid]) = 0">
 			<div class="row-fluid">
-				<span class="span10 offset2">
+				<span class="span5 offset1">
 					Remove <xsl:value-of select="@pubsname"/> (<xsl:value-of select="$badgeid" />) from panel.
 				</span>
 			</div>
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="doc/query[@queryName='sessionedits']/row">
+		<xsl:variable name="timestamp" select="@timestamp" />
+		<xsl:variable name="badgeid" select="@badgeid" />
+		<div class="row-fluid">
+			<span class="span6 offset6">
+				<xsl:value-of select="@codedescription" /> —
+				<xsl:if test="@editdescription"><xsl:value-of select="@editdescription" /> — </xsl:if>
+				status:<xsl:value-of select="@statusname" />
+			</span>
+		</div>
 	</xsl:template>
 </xsl:stylesheet>

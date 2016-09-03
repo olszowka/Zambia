@@ -41,6 +41,8 @@ EOD;
 (SELECT createdts AS timestamp FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid)
 	UNION
 (SELECT inactivatedts AS timestamp FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid)
+	UNION
+(SELECT timestamp FROM SessionEditHistory WHERE sessionid = $selsessionid)
 ORDER BY timestamp DESC;
 EOD;
 	$queryArray["currentAssignments"]=<<<EOD
@@ -56,19 +58,19 @@ SELECT
 	ORDER BY
 		moderator DESC;
 EOD;
-	$queryArray["edits"]=<<<EOD
+	$queryArray["participantedits"]=<<<EOD
 SELECT
 		POSH.badgeid,
 		COALESCE(POSH.moderator, 0) AS moderator,
 		POSH.createdbybadgeid,
 		POSH.createdts,
-		DATE_FORMAT(POSH.createdts, "%c/%e/%y %l:%i %p") AS createdtsFormat,
+		DATE_FORMAT(POSH.createdts, "%c/%e/%y %l:%i %p") AS createdtsformat,
 		POSH.inactivatedbybadgeid,
 		POSH.inactivatedts,
-		DATE_FORMAT(POSH.inactivatedts, "%c/%e/%y %l:%i %p") AS inactivatedtsFormat,
+		DATE_FORMAT(POSH.inactivatedts, "%c/%e/%y %l:%i %p") AS inactivatedtsformat,
 		PartOS.pubsname,
-		PartCR.pubsname AS crPubsname,
-		PartInact.pubsname AS inactPubsname
+		PartCR.pubsname AS crpubsname,
+		PartInact.pubsname AS inactpubsname
 	FROM
 				  ParticipantOnSessionHistory POSH
 			 JOIN Participants PartOS ON PartOS.badgeid = POSH.badgeid
@@ -76,6 +78,22 @@ SELECT
 		LEFT JOIN Participants PartInact ON PartInact.badgeid = POSH.inactivatedbybadgeid
 	WHERE
 		POSH.sessionid=$selsessionid;
+EOD;
+	$queryArray["sessionedits"]=<<<EOD
+SELECT
+		SEH.badgeid,
+		SEH.name,
+		SEH.editdescription,
+		SEH.timestamp,
+		DATE_FORMAT(SEH.timestamp, "%c/%e/%y %l:%i %p") AS tsformat,
+		SEC.description AS codedescription,
+		SS.statusname
+	FROM
+			 SessionEditHistory SEH
+		JOIN SessionEditCodes SEC USING (sessioneditcode)
+		JOIN SessionStatuses SS USING (statusid)
+	WHERE
+		SEH.sessionid=$selsessionid;
 EOD;
 	}
 if (($resultXML=mysql_query_XML($queryArray))===false) {
