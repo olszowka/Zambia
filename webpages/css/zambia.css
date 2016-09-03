@@ -1,4 +1,3 @@
-/* $Header$ */
 header img,
 header h1 {
   float: left;
@@ -13,7 +12,7 @@ header#top {
   xxbackground-color: gray;
 }
 header label {
-  color: #000000;
+  color: black;
   display: block;
   text-align: right;
   font-size: 1.1em;
@@ -31,11 +30,11 @@ a {
 }
 #loginBox p,
 #welcome p {
-  color: #ffffff;
+  color: white;
   text-align: right;
 }
 #altHeader p {
-  color: #ffffff;
+  color: white;
   text-align: right;
   padding-right: 0.5em;
 }
@@ -52,7 +51,7 @@ a {
   border: black thin solid;
   padding: 5px;
   margin: 0;
-  color: #000000;
+  color: black;
 }
 input[type="text"],
 input[type="password"] {
@@ -131,27 +130,27 @@ label {
   margin-top: 1em;
 }
 .topBorder {
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+  border-right: 2px solid white;
 }
 .edgeBorder {
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
+  border-left: 2px solid white;
+  border-right: 2px solid white;
 }
 .bottomBorder {
-  border-bottom: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid white;
+  border-left: 2px solid white;
+  border-right: 2px solid white;
 }
 h1 {
   font-family: Verdana;
   font-size: 2em;
   padding: 1em;
-  color: #000000;
+  color: black;
 }
 h1 a {
-  color: #ffffff;
+  color: white;
   text-decoration: none;
 }
 h2 {
@@ -299,12 +298,11 @@ div.reportPageContent table td a,
   }
 }
 .rankINP {
-	width: 2em !important;
+  width: 2em !important;
 }
 .sessionWhyMe {
-	height: 4.3em !important;
+  height: 4.3em !important;
 }
-
 select,
 textarea,
 input[type="text"],
@@ -322,46 +320,60 @@ input[type="search"],
 input[type="tel"],
 input[type="color"],
 .uneditable-input {
-	padding:0 1px !important;
+  padding: 0 1px !important;
 }
 input.search-query {
-    padding:0 4px 0 8px !important;
-    }
+  padding: 0 4px 0 8px !important;
+}
 form.navbar-search {
-    margin-top: 9px !important;
-    }
-
+  margin-top: 9px !important;
+}
 @media (min-width: 480px) {
-	label[for="use_photo"] {
-		width:auto !important;
-		text-align: left !important;
-	}
+  label[for="use_photo"] {
+    width: auto !important;
+    text-align: left !important;
+  }
 }
 /* Staff Assign Participants */
 #selsesformtop {
-	margin-top:1em;
+  margin-top: 1em;
 }
 #selsesform .row-fluid > div[class*='span'] {
-	padding:0.1em 0.5em
+  padding: 0.1em 0.5em;
 }
 #NPS_TXTA {
-	width: 50%;
+  width: 50%;
 }
 .stAsPa-sesInfRow {
-	margin-bottom: 6px;
+  margin-bottom: 6px;
 }
 /* Bootstrap extensions */
 .success-bg {
-	background-color: #dff0d8;
+  background-color: #dff0d8;
 }
 .info-bg {
-	background-color: #d9edf7;
+  background-color: #d9edf7;
 }
 .warning-bg {
-	background-color: #fcf8e3;
+  background-color: #fcf8e3;
 }
 .row-container {
-	padding:0;
-	width:100%;
-	margin:0 0 1.5em 0;
+  padding: 0;
+  width: 100%;
+  margin: 0 0 1.5em 0;
+}
+.za-sessionHistory-moderator {
+  text-decoration: underline;
+  font-style: italic;
+}
+.za-sessionHistory-editBanner {
+  background-color: #b5b5b5;
+  border: 1px solid #7b7b7b;
+  border-radius: 3px;
+  padding: 3px 4px;
+  color: white;
+  margin-bottom: 3px;
+}
+.za-sessionHistory-editBanner [class*='span'] {
+  min-height: 0;
 }

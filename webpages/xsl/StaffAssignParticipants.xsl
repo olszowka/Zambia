@@ -2,7 +2,7 @@
 <!--
     $Header$
 	Created by Peter Olszowka on 2015-10-16;
-	Copyright (c) 2011-2015 Peter Olszowka. All rights reserved.
+	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -55,7 +55,7 @@
 				<div class="row-fluid">
 					<div class="span4">
 						<label for="no-moderator" class="radio">
-							<input type="radio" name="moderator" id="no-moderator" value="0">
+							<input type="radio" name="moderator" id="no-moderator" value="">
 								<xsl:if test="count(doc/query[@queryName='participantInterest']/row[@moderator=1]/@moderator) = 0">
 									<xsl:attribute name="checked">checked</xsl:attribute>
 								</xsl:if>
@@ -69,6 +69,7 @@
 				</div>
 			</div>
 			<xsl:apply-templates select="doc/query[@queryName='participantInterest']/row" />
+			<input type="hidden" name="maxtimestamp" value="{doc/query[@queryName='maxtimestamp']/row/@maxtimestamp}" />
 			<input type="hidden" name="selsess" value="{doc/query[@queryName='sessionInfo']/row/@sessionid}" />
 			<input type="hidden" name="numrows" value="{count(doc/query[@queryName='participantInterest']/row)}" />
 			<input type="hidden" name="wasmodid" value="{doc/query[@queryName='participantInterest']/row[@moderator=1]/@badgeid}" />
