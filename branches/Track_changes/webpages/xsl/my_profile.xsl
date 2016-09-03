@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	my_profile.xsl
+	$Header$
 	Created by Peter Olszowka on 2011-07-24; Updated 2015-08-29
-	Copyright (c) 2011-2015 Peter Olszowka. All rights reserved.
+	Copyright (c) 2011-2016 Peter Olszowka. All rights reserved.
+	See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output encoding="UTF-8" indent="yes" method="xml" />
@@ -14,6 +15,7 @@
     <xsl:variable name="use_photo"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@use_photo"/></xsl:variable>
     <xsl:variable name="bestway"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bestway"/></xsl:variable>
     <xsl:variable name="bioNote"><xsl:value-of select="/doc/customText/@biography_note"/></xsl:variable>
+    <xsl:variable name="regURL"><xsl:value-of select="/doc/options/@reg_url"/></xsl:variable>
     <script type="text/javascript">var maxBioLen = <xsl:value-of select="/doc/options/@maxBioLen"/>;</script>
     <div class="alert-block" id="resultBoxDIV">
       <span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.
@@ -234,7 +236,7 @@
             <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN" data-loading-text="Updating..." onclick="myProfile.updateBUTN();">Update</button>
             <div id="congo_section">
         		  <fieldset>
-          			<legend>Congo Data</legend>
+          			<legend>Data from Registration System</legend>
           			<div class="row-fluid">
             			<div class="pull-left span5">
                     <div class="congo_table">
@@ -274,9 +276,12 @@
                         </xsl:if>
                         <div class="congo_data row-fluid">
                             <span class="label span4"><xsl:text disable-output-escaping="yes">Postal City</xsl:text></span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcity"/>, <xsl:value-of
-                                select="/doc/query[@queryName='participant_info']/row/@poststate"/> <xsl:value-of
-                                select="/doc/query[@queryName='participant_info']/row/@postzip"/></span>
+                            <span class="value span7">
+								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcity"/>,
+								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@poststate"/>
+								<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postzip"/>
+							</span>
                         </div>
                         <xsl:if test="/doc/query[@queryName='participant_info']/row/@postcountry">
                             <div class="congo_data row-fluid">
@@ -287,8 +292,8 @@
                     </div>
                   </div>
                   <div class="pull-left span7">
-                    <p class="congo_table">Please confirm your contact information.  If it is not correct, please log into Arisia's
-                        <a HREF="https://eventj.com/arisia/public/Welcome.action" target="_blank">on-line registration system</a> and correct it there.
+                    <p class="congo_table">Please confirm your contact information.  If it is not correct, please log into <xsl:value-of select="$conName"/>'s
+                        <a href="{$regURL}" target="_blank">on-line registration system</a> and correct it there.
                         Please note that the password there is <span style="font-weight: bold">not the same</span> as the one you use
                         in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>
                   </div>
@@ -298,11 +303,13 @@
         </form>
       </div>
     </div>
+	<!--
     <script type="text/javascript">
       $(document).ready(
         function() {
         }
       );
     </script>
+	-->
 </xsl:template>
 </xsl:stylesheet>
