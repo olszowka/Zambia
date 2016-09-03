@@ -1,3 +1,6 @@
+-- $Header$
+-- Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+--
 -- MySQL dump 10.9
 --
 -- Host: localhost    Database: zambiademo
@@ -510,15 +513,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantOnSession`;
 CREATE TABLE `ParticipantOnSession` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `sessionid` int(11) NOT NULL default '0',
-  `moderator` tinyint(4) default '0',
-  `ts` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`badgeid`,`sessionid`),
+  `participantonsessionid` int(11) NOT NULL AUTO_INCREMENT,
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `moderator` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`participantonsessionid`),
+  UNIQUE KEY `uniqueness` (`badgeid`,`sessionid`),
   KEY `sessionid` (`sessionid`),
   CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.  Set by staff.';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.  Set by staff.';
 
 --
 -- Dumping data for table `ParticipantOnSession`
@@ -526,9 +530,96 @@ CREATE TABLE `ParticipantOnSession` (
 
 LOCK TABLES `ParticipantOnSession` WRITE;
 /*!40000 ALTER TABLE `ParticipantOnSession` DISABLE KEYS */;
-INSERT INTO `ParticipantOnSession` VALUES ('1',1,1,'2006-04-30 18:04:56');
+INSERT INTO `ParticipantOnSession` (`participantonsessionid`, `badgeid`, `sessionid`, `moderator`)
+VALUES
+	(3,'1',1,0),
+	(4,'2',1,1);
 /*!40000 ALTER TABLE `ParticipantOnSession` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DELIMITER //
+CREATE TRIGGER POS_insert_trig AFTER INSERT ON ParticipantOnSession FOR EACH ROW
+    IF (
+        SELECT count(*) FROM ParticipantOnSession
+            WHERE sessionid = NEW.sessionid AND moderator = 1)
+        > 1 THEN
+        SIGNAL sqlstate '45000' SET MESSAGE_TEXT = 'Attempted to insert more than one record with moderator = 1 for a single session into ParticipantOnSession.';
+    END IF;
+//
+DELIMITER ;
+
+-- Dump of table ParticipantOnSessionHistory
+
+DROP TABLE IF EXISTS `ParticipantOnSessionHistory`;
+
+CREATE TABLE `ParticipantOnSessionHistory` (
+  `participantonsessionhistoryid` int(11) NOT NULL AUTO_INCREMENT,
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `moderator` tinyint(4) NOT NULL DEFAULT '0',
+  `participantonsessionid` int(11) DEFAULT NULL,
+  `createdts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdbybadgeid` varchar(15) NOT NULL DEFAULT '',
+  `inactivatedts` timestamp NULL DEFAULT NULL,
+  `inactivatedbybadgeid` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`participantonsessionhistoryid`),
+  KEY `badgeid` (`badgeid`),
+  KEY `sessionid` (`sessionid`),
+  KEY `ParticipantOnSessionHistory_ibfk_3` (`createdbybadgeid`),
+  KEY `ParticipantOnSessionHistory_ibfk_4` (`inactivatedbybadgeid`),
+  CONSTRAINT `ParticipantOnSessionHistory_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantOnSessionHistory_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `ParticipantOnSessionHistory_ibfk_3` FOREIGN KEY (`createdbybadgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantOnSessionHistory_ibfk_4` FOREIGN KEY (`inactivatedbybadgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+LOCK TABLES `ParticipantOnSessionHistory` WRITE;
+/*!40000 ALTER TABLE `ParticipantOnSessionHistory` DISABLE KEYS */;
+
+INSERT INTO `ParticipantOnSessionHistory` (`participantonsessionhistoryid`, `badgeid`, `sessionid`, `moderator`, `participantonsessionid`, `createdts`, `createdbybadgeid`, `inactivatedts`, `inactivatedbybadgeid`)
+VALUES
+	(1,'1',1,1,1,'2006-04-30 18:04:56','unrecorded','2016-09-03 14:05:30','1'),
+	(2,'2',1,0,NULL,'2016-09-03 14:05:16','1','2016-09-03 14:05:30','1'),
+	(3,'1',1,0,NULL,'2016-09-03 14:05:30','1',NULL,NULL),
+	(4,'2',1,1,NULL,'2016-09-03 14:05:30','1',NULL,NULL);
+
+/*!40000 ALTER TABLE `ParticipantOnSessionHistory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DELIMITER ;;
+/*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
+/*!50003 CREATE */ /*!50003 TRIGGER `POSH_insert_trig` BEFORE INSERT ON `ParticipantOnSessionHistory` FOR EACH ROW BEGIN
+        IF NEW.inactivatedts IS NOT NULL OR NEW.inactivatedbybadgeid IS NOT NULL THEN
+            SIGNAL sqlstate '45000' SET MESSAGE_TEXT = 'Insert table ParticipantOnSessionHistory with non null inactivated... field.';
+        END IF;
+        INSERT INTO ParticipantOnSession (badgeid, sessionid, moderator)
+            VALUES (NEW.badgeid, NEW.sessionid, NEW.moderator);
+    END */;;
+/*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
+/*!50003 CREATE */ /*!50003 TRIGGER `POSH_update_trig` BEFORE UPDATE ON `ParticipantOnSessionHistory` FOR EACH ROW BEGIN
+        IF NEW.inactivatedts IS NULL OR NEW.inactivatedbybadgeid IS NULL THEN
+            SIGNAL sqlstate '45000' SET message_text = 'Update table ParticipantOnSessionHistory with null inactivated... field.';
+        END IF;
+        IF OLD.inactivatedts IS NOT NULL OR OLD.inactivatedbybadgeid IS NOT NULL THEN
+            SIGNAL sqlstate '45000' SET message_text = 'Update table ParticipantOnSessionHistory when record previously inactivated.';
+        END IF;
+        IF NOT(NEW.participantonsessionhistoryid <=> OLD.participantonsessionhistoryid) OR
+            NOT(NEW.badgeid <=> OLD.badgeid) OR
+            NOT(NEW.sessionid <=> OLD.sessionid) OR
+            NOT(NEW.moderator <=> OLD.moderator) OR
+            NOT(NEW.createdts <=> OLD.createdts) OR
+            NOT(NEW.createdbybadgeid <=> OLD.createdbybadgeid) THEN
+            SIGNAL sqlstate '45000' SET message_text = 'Update field other than inactivated... in table ParticipantOnSessionHistory.';
+        END IF;	
+        DELETE FROM ParticipantOnSession
+            WHERE
+                    badgeid = OLD.badgeid
+                AND sessionid = OLD.sessionid
+                AND moderator = OLD.moderator;
+	END */;;
+/*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
+/*!50003 CREATE */ /*!50003 TRIGGER `POSH_delete_trig` BEFORE DELETE ON `ParticipantOnSessionHistory` FOR EACH ROW SIGNAL sqlstate '45000' SET MESSAGE_TEXT = 'May only insert and update table ParticipantOnSessionHistory.' */;;
+DELIMITER ;
 
 --
 -- Table structure for table `ParticipantSessionInterest`
@@ -607,8 +698,11 @@ CREATE TABLE `Participants` (
 
 LOCK TABLES `Participants` WRITE;
 /*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
-INSERT INTO `Participants` (badgeid, password, interested, share_email)
-	VALUES ('1','fe01ce2a7fbac8fafaed7c982a04e229',1,1),('2','fe01ce2a7fbac8fafaed7c982a04e229',1,1);
+INSERT INTO `Participants` (`badgeid`, `password`, `bestway`, `interested`, `bio`, `pubsname`, `share_email`, `staff_notes`, `use_photo`)
+VALUES
+	('1','fe01ce2a7fbac8fafaed7c982a04e229',NULL,1,NULL,'Joe Staff',1,NULL,NULL),
+	('2','fe01ce2a7fbac8fafaed7c982a04e229',NULL,1,NULL,'Jane Participant',1,NULL,NULL),
+	('unrecorded','12345678901234567890123456789012',NULL,NULL,NULL,'unrecorded',1,NULL,NULL);
 /*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
 UNLOCK TABLES;
 

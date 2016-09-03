@@ -1,6 +1,6 @@
 <?php
-// $Header$
-// This comment was added just to confirm that svn merges to arisia_prod2 branch are working correctly.
+//	$Header$
+//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
     function staff_header($title) {
     require_once ("javascript_functions.php");
     global $badgeid, $message, $fullPage;
@@ -43,7 +43,7 @@
 </script>
 <?php
 load_jquery();
-load_javascript();
+load_javascript($title);
 ?>
 	<div <?php if ($fullPage) echo "id=\"fullPageContainer\""; ?> class="container-fluid">
 	<div id="myhelper"></div><!-- used for drag-and-drop operations -->
@@ -87,7 +87,7 @@ load_javascript();
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="brand" href="<?php echo $_SERVER['PATH_INFO'] ?>"><?php echo $title ?></a>
+					<a class="brand" href="/<?php echo $_SERVER['REQUEST_URI']."\">$title"; ?></a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							<li class="dropdown">
@@ -100,6 +100,7 @@ load_javascript();
 									<li><a href="ViewPrecis.php?showlinks=0">View Precis</a></li>
 									<li><a href="ViewPrecis.php?showlinks=1">View Precis with Links</a></li>
 									<li><a href="StaffSearchPreviousSessions.php">Import Sessions</a></li>
+									<li><a href="SessionHistory.php">Session History</a></li>
 								</ul>
 							</li>
 							<li class="dropdown">
