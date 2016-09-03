@@ -1,3 +1,6 @@
+-- $Header$
+-- Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+--
 -- MySQL dump 10.13  Distrib 5.1.49, for debian-linux-gnu (x86_64)
 --
 -- Host: mysql.zambia.dreamhosters.com    Database: arisia13_prod
@@ -525,15 +528,16 @@ DROP TABLE IF EXISTS `ParticipantOnSession`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ParticipantOnSession` (
+  `participantonsessionid` int(11) NOT NULL AUTO_INCREMENT,
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `sessionid` int(11) NOT NULL DEFAULT '0',
   `moderator` tinyint(4) DEFAULT '0',
-  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`badgeid`,`sessionid`),
+  PRIMARY KEY (`participantonsessionid`),
+  UNIQUE KEY `uniqueness` (`badgeid`,`sessionid`),
   KEY `sessionid` (`sessionid`),
   CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.  Set by staff.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -544,6 +548,77 @@ LOCK TABLES `ParticipantOnSession` WRITE;
 /*!40000 ALTER TABLE `ParticipantOnSession` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ParticipantOnSession` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DELIMITER //
+CREATE TRIGGER POS_insert_trig AFTER INSERT ON ParticipantOnSession FOR EACH ROW
+    IF (
+        SELECT count(*) FROM ParticipantOnSession
+            WHERE sessionid = NEW.sessionid AND moderator = 1)
+        > 1 THEN
+        SIGNAL sqlstate '45000' SET MESSAGE_TEXT = 'Attempted to insert more than one record with moderator = 1 for a single session into ParticipantOnSession.';
+    END IF;
+//
+DELIMITER ;
+
+-- Dump of table ParticipantOnSessionHistory
+
+DROP TABLE IF EXISTS `ParticipantOnSessionHistory`;
+
+CREATE TABLE `ParticipantOnSessionHistory` (
+  `participantonsessionhistoryid` int(11) NOT NULL AUTO_INCREMENT,
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `moderator` tinyint(4) NOT NULL DEFAULT '0',
+  `participantonsessionid` int(11) DEFAULT NULL,
+  `createdts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdbybadgeid` varchar(15) NOT NULL DEFAULT '',
+  `inactivatedts` timestamp NULL DEFAULT NULL,
+  `inactivatedbybadgeid` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`participantonsessionhistoryid`),
+  KEY `badgeid` (`badgeid`),
+  KEY `sessionid` (`sessionid`),
+  KEY `ParticipantOnSessionHistory_ibfk_3` (`createdbybadgeid`),
+  KEY `ParticipantOnSessionHistory_ibfk_4` (`inactivatedbybadgeid`),
+  CONSTRAINT `ParticipantOnSessionHistory_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantOnSessionHistory_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+  CONSTRAINT `ParticipantOnSessionHistory_ibfk_3` FOREIGN KEY (`createdbybadgeid`) REFERENCES `Participants` (`badgeid`),
+  CONSTRAINT `ParticipantOnSessionHistory_ibfk_4` FOREIGN KEY (`inactivatedbybadgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+DELIMITER ;;
+/*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
+/*!50003 CREATE */ /*!50003 TRIGGER `POSH_insert_trig` BEFORE INSERT ON `ParticipantOnSessionHistory` FOR EACH ROW BEGIN
+        IF NEW.inactivatedts IS NOT NULL OR NEW.inactivatedbybadgeid IS NOT NULL THEN
+            SIGNAL sqlstate '45000' SET MESSAGE_TEXT = 'Insert table ParticipantOnSessionHistory with non null inactivated... field.';
+        END IF;
+        INSERT INTO ParticipantOnSession (badgeid, sessionid, moderator)
+            VALUES (NEW.badgeid, NEW.sessionid, NEW.moderator);
+    END */;;
+/*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
+/*!50003 CREATE */ /*!50003 TRIGGER `POSH_update_trig` BEFORE UPDATE ON `ParticipantOnSessionHistory` FOR EACH ROW BEGIN
+        IF NEW.inactivatedts IS NULL OR NEW.inactivatedbybadgeid IS NULL THEN
+            SIGNAL sqlstate '45000' SET message_text = 'Update table ParticipantOnSessionHistory with null inactivated... field.';
+        END IF;
+        IF OLD.inactivatedts IS NOT NULL OR OLD.inactivatedbybadgeid IS NOT NULL THEN
+            SIGNAL sqlstate '45000' SET message_text = 'Update table ParticipantOnSessionHistory when record previously inactivated.';
+        END IF;
+        IF NOT(NEW.participantonsessionhistoryid <=> OLD.participantonsessionhistoryid) OR
+            NOT(NEW.badgeid <=> OLD.badgeid) OR
+            NOT(NEW.sessionid <=> OLD.sessionid) OR
+            NOT(NEW.moderator <=> OLD.moderator) OR
+            NOT(NEW.createdts <=> OLD.createdts) OR
+            NOT(NEW.createdbybadgeid <=> OLD.createdbybadgeid) THEN
+            SIGNAL sqlstate '45000' SET message_text = 'Update field other than inactivated... in table ParticipantOnSessionHistory.';
+        END IF;	
+        DELETE FROM ParticipantOnSession
+            WHERE
+                    badgeid = OLD.badgeid
+                AND sessionid = OLD.sessionid
+                AND moderator = OLD.moderator;
+	END */;;
+/*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
+/*!50003 CREATE */ /*!50003 TRIGGER `POSH_delete_trig` BEFORE DELETE ON `ParticipantOnSessionHistory` FOR EACH ROW SIGNAL sqlstate '45000' SET MESSAGE_TEXT = 'May only insert and update table ParticipantOnSessionHistory.' */;;
+DELIMITER ;
 
 --
 -- Table structure for table `ParticipantSessionInterest`
@@ -615,16 +690,11 @@ CREATE TABLE `Participants` (
   `bestway` varchar(12) DEFAULT NULL,
   `interested` tinyint(1) DEFAULT NULL,
   `bio` text,
-  `editedbio` text,
-  `scndlangbio` text,
-  `bioeditstatusid` int(11) NOT NULL DEFAULT '1',
-  `biolockedby` varchar(15) DEFAULT NULL,
   `pubsname` varchar(50) DEFAULT NULL,
   `share_email` tinyint(11) DEFAULT '1',
   `staff_notes` text,
-  PRIMARY KEY (`badgeid`),
-  KEY `bioeditstatusid` (`bioeditstatusid`),
-  CONSTRAINT `Participants_fkey1` FOREIGN KEY (`bioeditstatusid`) REFERENCES `BioEditStatuses` (`bioeditstatusid`)
+  `use_photo` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

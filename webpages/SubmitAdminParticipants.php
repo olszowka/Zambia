@@ -31,7 +31,7 @@ EOD;
 
 function update_participant() {
     global $link,$message_error;
-    $partid = $_POST["badgeid"];
+    $partid = mysql_real_escape_string($_POST["badgeid"], $link);
     $password = $_POST["password"];
 	$biodirty = isset($_POST["bio"]);
     $bio = stripslashes($_POST["bio"]);
@@ -45,26 +45,32 @@ function update_participant() {
         $query.="password=\"".md5($password)."\", ";
         }
     if ($biodirty) {
-        $query.="bio=\"".mysql_real_escape_string($bio)."\", ";
+        $query.="bio=\"".mysql_real_escape_string($bio, $link)."\", ";
         }
     if ($pubsnamedirty) {
-        $query.="pubsname=\"".mysql_real_escape_string($pubsname)."\", ";
+        $query.="pubsname=\"".mysql_real_escape_string($pubsname, $link)."\", ";
         }
     if ($staffnotesdirty) {
-        $query.="staff_notes=\"".mysql_real_escape_string($staffnotes)."\", ";
+        $query.="staff_notes=\"".mysql_real_escape_string($staffnotes, $link)."\", ";
         }
     if ($interested) {
-        $query.="interested=".mysql_real_escape_string($interested).", ";
+        $query.="interested=".mysql_real_escape_string($interested, $link).", ";
         }
 	$query = mb_substr($query,0,-2); //drop two characters at end: ", "
-    $query.=" WHERE badgeid=\"".mysql_real_escape_string($partid)."\"";
+    $query.=" WHERE badgeid=\"$partid\"";
     if (!mysql_query_with_error_handling($query)) {
         echo "<p class=\"alert alert-error\">".$message_error."</p>";
         return;
         }
     $message="<p class=\"alert alert-success\">Database updated successfully.</p>";
     if ($interested==2) {
-        $query="DELETE FROM ParticipantOnSession where badgeid = \"$partid\"";
+		$query=<<<EOD
+UPDATE ParticipantOnSessionHistory
+    SET inactivatedts = NOW(), inactivatedbybadgeid = "{$_SESSION['badgeid']}"
+	WHERE
+	        badgeid = "$partid"
+		AND inactivatedts IS NULL;
+EOD;
 	    if (!mysql_query_with_error_handling($query)) {
 	        echo "<p class=\"alert alert-error\">".$message_error."</p>";
 	        return;
@@ -75,7 +81,8 @@ function update_participant() {
     }
 
 function perform_search() {
-	$searchString = mysql_real_escape_string(stripslashes($_POST["searchString"]));
+	global $link;
+	$searchString = mysql_real_escape_string(stripslashes($_POST["searchString"]), $link);
 	if ($searchString=="")
 		exit();
 	if (is_numeric($searchString)) {

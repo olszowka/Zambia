@@ -1,5 +1,6 @@
 <?php
 //$Header$
+//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 $title="Assign Participants";
 require_once('db_functions.php');
 require_once('StaffHeader.php');
@@ -14,19 +15,20 @@ if (isset($_POST["numrows"])) {
     SubmitAssignParticipants();
     }
 
-if (isset($_POST["selsess"])) { // room was selected by this form
+if (isset($_POST["selsess"])) {
         $selsessionid=filter_var($_POST["selsess"], FILTER_VALIDATE_INT);
         if ($selsessionid != 0) {
-          $topsectiononly=false;
-          //unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.          
-        }
-      }
-    elseif (isset($_GET["selsess"])) { // room was select by external page such as a report
+			$topsectiononly = false;
+			}
+		}
+    elseif (isset($_GET["selsess"])) {
         $selsessionid=filter_var($_GET["selsess"], FILTER_VALIDATE_INT);
-        $topsectiononly=false;
+        if ($selsessionid != 0) {
+			$topsectiononly = false;
+			}
         }
     else {
-        $selsessionid=0; // room was not yet selected.
+        $selsessionid = 0; // room was not yet selected.
         unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
         }
 
@@ -41,25 +43,28 @@ if (!$Sresult=mysql_query($query,$link)) {
     staff_footer();
     exit();
     }
-echo "<FORM id=\"selsesformtop\" name=\"selsesform\" class=\"form-inline\" method=POST action=\"StaffAssignParticipants.php\">\n";
-echo "<DIV><LABEL for=\"selsess\">Select Session:</LABEL>\n";
-echo "<SELECT id=\"sessionDropdown\" class=\"span6\"name=\"selsess\">\n";
-echo "     <OPTION value=0".(($selsessionid==0)?"selected":"").">Select Session</OPTION>\n";
+echo "<form id=\"selsesformtop\" name=\"selsesform\" class=\"form-inline\" method=\"get\" action=\"StaffAssignParticipants.php\">\n";
+echo "<div><label for=\"selsess\">Select Session:</label>\n";
+echo "<select id=\"sessionDropdown\" class=\"span6\" name=\"selsess\">\n";
+echo "     <option value=0".(($selsessionid==0)?"selected":"").">Select Session</option>\n";
 while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$sessionid."\" ".(($selsessionid==$sessionid)?"selected":"");
-    echo ")>".htmlspecialchars($trackname)." - ";
-    echo htmlspecialchars($sessionid)." - ".htmlspecialchars($title)."</OPTION>\n";
+    echo "     <option value=\"$sessionid\" ".(($selsessionid==$sessionid)?"selected":"");
+    echo ">".htmlspecialchars($trackname)." - ";
+    echo htmlspecialchars($sessionid)." - ".htmlspecialchars($title)."</option>\n";
     }
-echo "</SELECT>\n";
-echo "<BUTTON id=\"sessionBtn\" type=\"submit\" name=\"submit\" class=\"btn btn-primary\">Select Session</BUTTON>\n";
+echo "</select>\n";
+echo "<button id=\"sessionBtn\" type=\"submit\" name=\"submit\" class=\"btn btn-primary\">Select Session</button>\n";
 if (isset($_SESSION['return_to_page'])) {
-    echo "<A HREF=\"".$_SESSION['return_to_page']."\">Return to report</A>";
+    echo "<a href=\"".$_SESSION['return_to_page']."\">Return to report</a>";
     }
-echo "</DIV></FORM>\n";
+echo "</div></form>\n";
 if ($topsectiononly) {
     staff_footer();
     exit();
     }
+$queryArray["timestampsetup1"] = "SET @maxcr = (SELECT max(createdts) FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid);";
+$queryArray["timestampsetup2"] = "SET @maxin = (SELECT max(inactivatedts) FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid);";
+$queryArray["maxtimestamp"] = "SELECT IF(@maxcr IS NULL, @maxin, IF(@maxin IS NULL, @maxcr, IF(@maxcr > @maxin, @maxcr, @maxin))) AS maxtimestamp;";
 $queryArray["sessionInfo"]=<<<EOD
 SELECT
 		sessionid, title, progguiddesc, persppartinfo, notesforpart, notesforprog
