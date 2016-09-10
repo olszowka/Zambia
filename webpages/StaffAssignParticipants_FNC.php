@@ -41,9 +41,9 @@ function SubmitAssignParticipants() {
 			$recentTimestamp = "empty";
 			}
 	if ($pageTimestamp != $recentTimestamp) {
-			$badgeidQueryArray = [];
-			$addParticipantArray = [];
-			$removeParticipantArray = [];
+			$badgeidQueryArray = array();
+			$addParticipantArray = array();
+			$removeParticipantArray = array();
 			if ($moderator == $wasmodid) {
 					$moderatorChangeCode = "";
 					}
@@ -80,7 +80,7 @@ function SubmitAssignParticipants() {
 				$badgeidQueryArray[] = "'$asgnpart'";
 				}
 			$badgeidQueryString = join(',', $badgeidQueryArray);
-			$queryArray = [];
+			$queryArray = array();
 			$queryArray["participants"] = "SELECT DISTINCT P.badgeid, P.pubsname FROM Participants P WHERE P.badgeid in ($badgeidQueryString);";
 			if (($resultXML=mysql_query_XML($queryArray))===false) {
 				$message=$query."<BR>Error querying database. Unable to continue.<BR>";
@@ -132,7 +132,7 @@ function SubmitAssignParticipants() {
 			// If moderator is changing, must inactivate old one before inserting new one because trigger will not
 			//     permit more than 1 moderator for the session, even momentarily.
 			$firstQueryArray = array("SET AUTOCOMMIT = 0;", "START TRANSACTION;", "SET @mynow = NOW();");
-			$queryArray = [];
+			$queryArray = array();
 			for ($i=1; $i<=$numrows; $i++) {
 				$badgeid=mysql_real_escape_string($_POST["row$i"], $link);
 				$ismod=($moderator==$badgeid);
