@@ -1,4 +1,6 @@
 <?php
+//	$Header$
+//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 function retrieve_select_from_db($trackidlist,$statusidlist,$typeidlist,$sessionid,$divisionid,$searchtitle){
     global $result;
     global $link, $message2;
@@ -17,7 +19,8 @@ SELECT
 		progguiddesc,
 		persppartinfo,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
-		roomname
+		roomname,
+		SS.statusname
 	FROM 
 				Sessions S
 		   JOIN Tracks TR using (trackid)
