@@ -109,7 +109,7 @@ input[type="password"] {
   margin-bottom: 0px;
 }
 .nowidth {
-  width: auto!important;
+  width: auto !important;
   padding-right: 1em;
   text-align: right;
 }
@@ -196,24 +196,17 @@ div.reportPageContent table td a,
 .report A {
   color: #1c30b0;
 }
-.arisiaLens {
-  padding: 3px;
-  display: table-cell;
-  float: none;
+td.za-report-firstColCell {
+  border-left: 2px solid black;
 }
-.pageHeader {
-  padding: 0;
-  width: 100%;
-  display: table;
-  margin-top: 0;
-  margin-bottom: 0;
+td.za-report-lastColCell {
+  border-right: 2px solid black;
 }
-.pageHeader div.pageHeaderText {
-  width: 88%;
-  margin-left: 0;
-  display: table-cell;
-  vertical-align: middle;
-  float: none;
+td.za-report-firstRowCell {
+  border-top: 2px solid black;
+}
+td.za-report-lastRowCell {
+  border-bottom: 2px solid black;
 }
 ul#boxes li {
   font-family: Verdana;
@@ -222,35 +215,6 @@ ul#boxes li {
   color: #999;
   background-color: #e5e5e5;
   text-align: center;
-}
-.reportPageContent {
-  line-height: normal;
-}
-div.reportPageContent table,
-table.report {
-  border-collapse: collapse;
-  margin: 10px;
-  border: 1px solid black;
-  font-family: Arial;
-  font-size: 12px;
-}
-div.reportPageContent table th,
-th.report {
-  border: 1px solid black;
-  background-color: #c0e4ff;
-  padding-right: 0.2em;
-  padding-left: 0.2em;
-}
-div.reportPageContent table td,
-td.report {
-  border: 1px solid black;
-  vertical-align: top;
-  padding-left: 0.2em;
-  padding-right: 0.2em;
-}
-div.reportPageContent table td a,
-.report A {
-  color: #1c30b0;
 }
 .arisiaLens {
   padding: 3px;
