@@ -5,11 +5,7 @@ header h1 {
 }
 body {
   background-image: url('../images/light_honeycomb.png');
-  xxbackground-image: url('../images/old_mathematics.png');
   background-repeat: repeat;
-}
-header#top {
-  xxbackground-color: gray;
 }
 header label {
   color: black;
@@ -61,10 +57,8 @@ input[type="password"] {
   margin-bottom: 0.2em;
 }
 .staff {
-  xxbackground-color: #00aa00;
-  background-image: url('../images/staffheadbg.png');
-  background-repeat: repeat-x;
-  background-color: white;
+  background-color: #a7d2a5;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
   color: black;
 }
 #staffView {
@@ -74,10 +68,8 @@ input[type="password"] {
   color: #22ee22;
 }
 .participant {
-  xxbackground-color: #6666ff;
-  background-image: url('../images/partheadbg.png');
-  background-repeat: repeat-x;
-  background-color: white;
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #e8e8e8 24%, #c3c1db 57%, #928dc4 77%, #1000a3 100%);
   color: black;
 }
 #ParticipantView {

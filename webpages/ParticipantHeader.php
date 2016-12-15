@@ -47,7 +47,7 @@ load_javascript($title);
 		  <div id="regHeader" class="span12">
   		  <div class="span9">
     			<img src="images/logo.gif" title="Arisia logo" class="pull-left" />
-    			<h1 class="pull-left wide-medium-only">Zambia<br/><span class="wide-only">The <?php echo CON_NAME; ?> Scheduling Tool</span></h1>
+    			<h1 class="pull-left wide-medium-only">Zambia: <span class="wide-only">The <?php echo CON_NAME; ?> Scheduling Tool</span></h1>
     		</div>
   <?php if (isset($_SESSION['badgeid'])) { ?>
   			<div class="span3" id="welcome">
