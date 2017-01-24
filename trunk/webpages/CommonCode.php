@@ -1,4 +1,6 @@
 <?php
+// $Header$
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
     require_once('Constants.php');
     require_once('data_functions.php');
     require_once('db_functions.php');
@@ -38,6 +40,7 @@
     //
     // if the tab is not usable, the tab will use class 'unusabletab'
     
+	// used by old (non-bootstrap menuing system)
     Function maketab($text,$usable,$url) {
 	if ($usable) {
 		echo '<SPAN class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
@@ -56,6 +59,7 @@
 	    }
     }
 
+	// used by new (bootstrap) menuing system
 	Function makeMenuItem($text,$usable,$url,$sep=false) {
 		//plain menu item looks like
 		//<li><a href="StaffAssignParticipants.php">Assign to a Session</a></li>

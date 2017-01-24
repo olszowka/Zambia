@@ -1,4 +1,6 @@
 <?php
+// $Header$
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30)
@@ -180,7 +182,7 @@ function set_session_defaults() {
     //$session["sessionid"] set elsewhere
     $session["track"]=0; // prompt with "SELECT"
     $session["type"]=1; // default to "Panel"
-    $session["divisionid"]=1; // default to "Programming"
+    $session["divisionid"]=2; // default to "Programming"
     $session["pubstatusid"]=2; // default to "Public"
     $session["languagestatusid"]=1; // default to "English"
     $session["pubno"]="";
@@ -199,10 +201,25 @@ function set_session_defaults() {
     $session["roomset"]=0; // prompt with "SELECT"
     $session["notesforpart"]="";
     $session["servnotes"]="";
-    $session["status"]=2; // default to "Edit Me"
+    $session["status"]=6; // default to "Edit Me"
     $session["notesforprog"]="";
     $session["invguest"]=false; // leave checkbox blank initially
     }
+	
+// Function set_brainstorm_session_defaults	
+// Populates the $session global variable with default data
+// for use when creating a new session in brainstorm.  Note that if a field is
+// an index into a table of options, the default value of "0" signifies
+// that "Select" will be displayed in the gui.
+//
+function set_brainstorm_session_defaults() {
+	global $session;
+	$session["roomset"] = 4; // "Unspecified"
+    if (!may_I('Staff')) {
+        $session["status"] = 1; // brainstorm
+        }	
+	}
+
 // Function parse_mysql_time($time)
 // Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
 //
