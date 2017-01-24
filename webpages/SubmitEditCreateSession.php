@@ -1,4 +1,6 @@
 <?php
+// $Header$
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
     $action=$_POST["action"]; // "create" or "edit" or "brainstorm"
     if ($action=="brainstorm") {
             require_once ('BrainstormCommonCode.php');
@@ -22,10 +24,10 @@
         global $messages */
     if ($status==false || $email_status==false) {
         $message_warn=$messages; // warning message
-        $message_warn.="<BR>The data you entered was incorrect.  Database not updated.";
+        $message_warn.="<br>The data you entered was incorrect.  Database not updated.";
         //error_log($message_warn);
         if ($action=='brainstorm') {
-                BrainstormRenderCreateSession($action,$session,$message_warn,$message_error);
+                BrainstormRenderCreateSession($session,$message_warn,$message_error);
                 }
             else {
                 RenderEditCreateSession($action,$session,$message_warn,$message_error);
@@ -36,7 +38,7 @@
         $status=update_session();
         if (!$status) {
                 $message_warn=$message2; // warning message
-                $message_warn.="<BR>Unknown error updating record.  Database not updated successfully.";
+                $message_warn.="<br>Unknown error updating record.  Database not updated successfully.";
                 RenderEditCreateSession($action,$session,$message_warn,$message_error);
                 exit();
                 }
@@ -61,7 +63,7 @@
         $message_warn=""; // warning message
         $message_warn.="<BR>".$query."\nUnknown error creating record.  Database not updated successfully.";
         if ($action=='brainstorm') {
-                BrainstormRenderCreateSession($action,$session,$message_warn,$message_error);
+                BrainstormRenderCreateSession($session,$message_warn,$message_error);
                 }
             else {
                 RenderEditCreateSession($action,$session,$message_warn,$message_error);
@@ -84,7 +86,8 @@
        exit();
     $session["sessionid"]=$id;
     if ($action=='brainstorm') {
-            BrainstormRenderCreateSession($action,$session,$message_warn,$message_error);
+			set_brainstorm_session_defaults();
+            BrainstormRenderCreateSession($session,$message_warn,$message_error);
             }
         else {
             RenderEditCreateSession($action,$session,$message_warn,$message_error);

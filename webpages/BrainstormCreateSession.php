@@ -1,4 +1,6 @@
 <?php
+// $Header$
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
     require ('BrainstormCommonCode.php');
     require ('BrainstormRenderCreateSession.php');
     global $email, $name, $badgeid, $session;
@@ -7,14 +9,10 @@
     $message_error="";
     $message_warn="";
     set_session_defaults();
-    $session["roomset"]=4; // "Unspecified"
-    if (!(may_I('Participant')||may_I('Staff'))) { // must be brainstorm user
-        $session["status"]=1; // brainstorm
-        }
+    set_brainstorm_session_defaults();
     $id=get_next_session_id();
     if (!$id) { exit(); }
     $session["sessionid"]=$id;
-    $action="create";
-    BrainstormRenderCreateSession($action,$session,$message_warn,$message_error);
+    BrainstormRenderCreateSession($session,$message_warn,$message_error);
     exit();
 ?>
