@@ -686,8 +686,8 @@ EOD;
             }
         }
     $query= <<<EOD
-SELECT badgeid, availabilitynum, DATE_FORMAT(starttime,'%T') AS starttime, 
-	DATE_FORMAT(endtime,'%T') AS endtime FROM ParticipantAvailabilityTimes
+SELECT badgeid, availabilitynum, TIME_FORMAT(starttime,'%H:%i:%s') AS starttime, 
+	TIME_FORMAT(endtime,'%H:%i:%s') AS endtime FROM ParticipantAvailabilityTimes
 	WHERE badgeid="$badgeid" ORDER BY starttime;
 EOD;
     $result=mysql_query($query,$link);
