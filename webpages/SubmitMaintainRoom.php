@@ -1,4 +1,6 @@
 <?php
+//	$Header$
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
 function check_room_sched_conflicts($deleteScheduleIds,$addToScheduleArray)
 {
 	//
@@ -27,13 +29,11 @@ function check_room_sched_conflicts($deleteScheduleIds,$addToScheduleArray)
 	//[durationmin]
 	//[participants] array of []=>badgeid
 	global $title, $link, $message;
-	if (!$addToScheduleArray)
+	if (count($addToScheduleArray) < 1)
 		return (true); // If there are no additions, then
 		// there are only deletions and these can't cause conflicts.
-	$sessionidlist="";
-	foreach ($addToScheduleArray as $sessionid => $starttime)
-		$sessionidlist.=$sessionid.",";
-	$sessionidlist=substr($sessionidlist,0,-1); // remove trailing comma
+	$sessionidlist=implode(",", $addToScheduleArray);
+	$addToScheduleParticipants = array();
 	$query= <<<EOD
 SELECT
 		S.sessionid, hour(S.duration)*60+minute(S.duration) as durationmin, S.title
@@ -44,7 +44,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-			$message=$query."<br>\nError querying database.<br>\n";
+			$message=$query."<br />\nError querying database.<br />\n";
 			RenderError($title,$message);
 			exit();
 		}
@@ -65,7 +65,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-		$message=$query."<br>\nError querying database.<br>\n";
+		$message=$query."<br />\nError querying database.<br />\n";
 		RenderError($title,$message);
 		exit();
 		}
@@ -74,13 +74,10 @@ EOD;
 		$addToScheduleArray2[$sessionid]['participants'][]=$badgeid;
 		$addToScheduleParticipants[$badgeid]=1;
 		}
-	if (!$addToScheduleParticipants)
+	if (count($addToScheduleParticipants) < 1)
 		return(true); // if none of the sessions added to the schedule
 		// had any participants, then there can be no participant conflicts.
-	$badgeidlist="";
-	foreach ($addToScheduleParticipants as $badgeid => $x)
-		$badgeidlist.="'$badgeid',";
-	$badgeidlist=substr($badgeidlist,0,-1); // remove trailing comma
+	$badgeidlist=implode(",", $addToScheduleParticipants);
 	$query= <<<EOD
 SELECT
 		badgeid, pubsname
@@ -91,7 +88,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-		$message=$query."<br>\nError querying database.<br>\n";
+		$message=$query."<br />\nError querying database.<br />\n";
 		RenderError($title,$message);
 		exit();
 		}
@@ -113,7 +110,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-		$message=$query."<br>\nError querying database.<br>\n";
+		$message=$query."<br />\nError querying database.<br />\n";
 		RenderError($title,$message);
 		exit();
 		}
@@ -160,7 +157,7 @@ SELECT
 EOD;
 	if (!$result=mysql_query($query,$link))
 		{
-		$message=$query."<br>\nError querying database.<br>\n";
+		$message=$query."<br />\nError querying database.<br />\n";
 		RenderError($title,$message);
 		exit();
 		}
@@ -205,12 +202,12 @@ EOD;
 			}
 		// check #2 not available conflict
 		// Don't report conflict if there are no availabilities at all for the participant
-		//echo "Participant Availability Times:<BR>\n";
+		//echo "Participant Availability Times:<br />\n";
 		//print_r($participantAvailabilityTimes);
-		//echo "<BR>\n";
-		//echo "addSession:<BR>\n";
+		//echo "<br />\n";
+		//echo "addSession:<br />\n";
 		//print_r($addSession);
-		//echo "<BR>\n";
+		//echo "<br />\n";
 		if ($addSession['participants'])
 			{
 			$addParts=$addSession['participants'];
@@ -265,19 +262,25 @@ function SubmitMaintainRoom($ignore_conflicts) {
     global $link,$message;
 //    print_r($_POST);
     $numrows=$_POST["numrows"];
-    $selroomid=$_POST["selroom"];
+    $selroomid=getInt("selroom");
     get_name_and_email($name, $email); // populates them from session data or db as necessary
     $name=mysql_real_escape_string($name,$link);
     $email=mysql_real_escape_string($email,$link);
     $badgeid=mysql_real_escape_string($_SESSION['badgeid'],$link);
+	$deleteScheduleIds = array();
+	$deleteSessionIds = array();
     for ($i=1; $i<=$numrows; $i++) { //***** need to update render as well to start at 1********
-        if($_POST["del$i"]!=1) continue;
-        $deleteScheduleIds[$_POST["row$i"]]=$_POST["rowsession$i"];
+        if(!isset($_POST["del$i"]) || $_POST["del$i"]!="1")
+			continue;
+		$deleteSessionIds[]=getInt("rowsession$i");
+		$deleteScheduleIds[]=getInt("row$i");
         }
     $incompleteRows=0;
     $completeRows=0;
+	$addToScheduleArray=array();
     for ($i=1;$i<=newroomslots;$i++) {
-        if ($_POST["sess$i"]=="unset") continue;
+        if ($_POST["sess$i"]=="unset")
+			continue;
         if (CON_NUM_DAYS==1) {
                 $day=1;
                 }
@@ -294,61 +297,58 @@ function SubmitMaintainRoom($ignore_conflicts) {
 	}
     if (!$ignore_conflicts) {
         if (!check_room_sched_conflicts($deleteScheduleIds,$addToScheduleArray)) {
-            echo "<P class=\"alert alert-warning\">Database not updated.  There were conflicts</P>\n";
+            echo "<p class=\"alert alert-warning\">Database not updated.  There were conflicts.</p>\n";
             echo $message;
             return false;
             }
         }
-    if ($deleteScheduleIds!="") {
-        $delSchedIdList="";
-        foreach ($deleteScheduleIds as $delid=>$delsessionid) { 
-            $delSchedIdList.="$delid,";
-            }
-        $delSchedIdList=substr($delSchedIdList,0,-1); // remove trailing comma
+    if (count($deleteScheduleIds) > 0) {
+        $delSchedIdList=implode(",", $deleteScheduleIds);
 //  Set status of deleted entries back to vetted.
         $vs=get_idlist_from_db('SessionStatuses','statusid','statusname',"'vetted'");
         $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=$vs WHERE S.sessionid=SC.sessionid AND ";
         $query.="SC.scheduleid IN ($delSchedIdList)";
         if (!mysql_query($query,$link)) {
-            $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"alert alert-error\">".$message."\n";
+            $message=$query."<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">".$message."\n</p>";
             staff_footer();
             exit();
             }
         $query="DELETE FROM Schedule WHERE scheduleid in ($delSchedIdList)";
         if (!mysql_query($query,$link)) {
-            $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"alert alert-error\">".$message."\n";
+            $message=$query."<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }
         $rows=mysql_affected_rows($link);
-        echo "<P class=\"alert\">$rows session".($rows>1?"s":"")." removed from schedule.\n";
+        echo "<p class=\"alert\">$rows session".($rows>1?"s":"")." removed from schedule.\n</p>";
         $query = <<<EOD
 INSERT INTO SessionEditHistory
         (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
         Values
 EOD;
-        foreach ($deleteScheduleIds as $delid=>$delsessionid) { 
+        foreach ($deleteSessionIds as $delsessionid) { 
             $query.="($delsessionid,\"$badgeid\",\"$name\",\"$email\",null,5,$vs,null),";
             }
         $query=substr($query,0,-1); // remove trailing comma
         if (!mysql_query($query,$link)) {
-            $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"alert alert-error\">".$message."\n";
+            $message=$query."<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">".$message."\n</p>";
             staff_footer();
             exit();
             }
         }
-    if (!$addToScheduleArray) return (true); // nothing to add
+    if (count($addToScheduleArray) < 1)
+		return (true); // nothing to add
     foreach ($addToScheduleArray as $sessionid => $startmin) {
         $hour=floor($startmin/60); // convert to hours since start of con
         $min=$startmin%60;
         $time=sprintf("%03d:%02d:00",$hour,$min);
         $query="INSERT INTO Schedule SET sessionid=$sessionid, roomid=$selroomid, starttime=\"$time\"";
         if (!mysql_query($query,$link)) {
-            $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"alert alert-error\">".$message."\n";
+            $message=$query."<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }
@@ -356,8 +356,8 @@ EOD;
         $vs=get_idlist_from_db('SessionStatuses','statusid','statusname',"'scheduled'");
         $query="UPDATE Sessions SET statusid=$vs WHERE sessionid=$sessionid";
         if (!mysql_query($query,$link)) {
-            $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"alert alert-error\">".$message."\n";
+            $message=$query."<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }
@@ -369,17 +369,17 @@ INSERT INTO SessionEditHistory
 EOD;
         $query.="($sessionid,\"$badgeid\",\"$name\",\"$email\",null,4,$vs,\"".time_description($time)." in $selroomid\")";
         if (!mysql_query($query,$link)) {
-            $message=$query."<BR>Error updating database.<BR>";
-            echo "<P class=\"alert alert-error\">".$message."\n";
+            $message=$query."<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">".$message."\n";
             staff_footer();
             exit();
             }   
         }
     if ($completeRows) {
-        echo "<P class=\"alert alert-success\">$completeRows new schedule entr".($completeRows>1?"ies":"y")." written to database.\n";
+        echo "<p class=\"alert alert-success\">$completeRows new schedule entr".($completeRows>1?"ies":"y")." written to database.\n";
         }
     if ($incompleteRows) {
-        echo "<P class=\"alert alert-error\">$incompleteRows row".($incompleteRows>1?"s":"")." not entered due to incomplete data.\n";
+        echo "<p class=\"alert alert-error\">$incompleteRows row".($incompleteRows>1?"s":"")." not entered due to incomplete data.\n";
         }
     return (true);    
     }
