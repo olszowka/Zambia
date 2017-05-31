@@ -1,4 +1,9 @@
 <?xml version='1.0'?>
+<!--
+    $Header: svn+ssh://polszowka@svn.code.sf.net/p/zambia/code/branches/arisia_prod2/webpages/xsl/StaffAssignParticipantsBadTimestamp.xsl 1190 2016-09-03 19:18:43Z polszowka $
+        Created by Peter Olszowka;
+        Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:template name="showBadgeid">
         <xsl:param name="badgeid" />
@@ -57,4 +62,9 @@
         <a href="EditSession.php?id={$sessionid}" title="{$title}"><xsl:value-of select="$sessionid" /></a>
     </xsl:template>
     
+    <xsl:template name="showSessionHistoryLink">
+        <xsl:param name="sessionid" />
+        <a href="SessionHistory.php?selsess={$sessionid}" title="Show session history page">History</a>
+    </xsl:template>
+
 </xsl:stylesheet>
