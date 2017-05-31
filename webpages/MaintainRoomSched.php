@@ -1,4 +1,6 @@
 <?php
+//	$Header: svn+ssh://polszowka@svn.code.sf.net/p/zambia/code/branches/arisia_prod2/webpages/db_functions.php 1200 2017-02-12 23:19:32Z polszowka $
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
 define ("newroomslots",5); // number of rows at bottom of page for new schedule entries
 $title="Maintain Room Schedule";
 require_once('db_functions.php');
@@ -11,10 +13,11 @@ global $daymap;
 
 staff_header($title);
 $topsectiononly=true; // no room selected -- flag indicates to display only the top section of the page
-
+$conflict=false; // initialize
 if (isset($_POST["numrows"])) {
 	$ignore_conflicts=(isset($_POST['override']))?true:false;
-	if(!SubmitMaintainRoom($ignore_conflicts)) $conflict=true;
+	if(!SubmitMaintainRoom($ignore_conflicts))
+	    $conflict=true;
     }
 
 if (isset($_POST["selroom"]) && $_POST["selroom"]!="0") { // room was selected by this form
@@ -91,55 +94,55 @@ SELECT roomid, roomname, opentime1, closetime1, opentime2, closetime2, opentime3
 function, floor, height, dimensions, area, notes FROM Rooms WHERE roomid=$selroomid
 EOD;
 if (!$result=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"alert alert-error\">".$message."\n";
+    $message=$query."<br />Error querying database. Unable to continue.<br />";
+    echo "<p class\"alert alert-error\">".$message."\n";
     staff_footer();
     exit();
     }
 echo "<h2>$selroomid - ".htmlspecialchars(mysql_result($result,0,"roomname"))."</h2>";
-//echo "|".mysql_result($result,0,"opentime1")."|<BR>\n";
+//echo "|".mysql_result($result,0,"opentime1")."|<br />\n";
 echo "<h4 class=\"label\">Open Times</h4>\n";
-echo "<div class=\"border1111 lrpad lrmargin\"><P class=\"lrmargin\">";
+echo "<div class=\"border1111 lrpad lrmargin\"><p class=\"lrmargin\">";
 if (mysql_result($result,0,"opentime1")!="") {
-    echo time_description(mysql_result($result,0,"opentime1"))." through ".time_description(mysql_result($result,0,"closetime1"))."<BR>\n";
+    echo time_description(mysql_result($result,0,"opentime1"))." through ".time_description(mysql_result($result,0,"closetime1"))."<br />\n";
     }
 if (mysql_result($result,0,"opentime2")!="") {
-    echo time_description(mysql_result($result,0,"opentime2"))." through ".time_description(mysql_result($result,0,"closetime2"))."<BR>\n";
+    echo time_description(mysql_result($result,0,"opentime2"))." through ".time_description(mysql_result($result,0,"closetime2"))."<br />\n";
     }
 if (mysql_result($result,0,"opentime3")!="") {
-    echo time_description(mysql_result($result,0,"opentime3"))." through ".time_description(mysql_result($result,0,"closetime3"))."<BR>\n";
+    echo time_description(mysql_result($result,0,"opentime3"))." through ".time_description(mysql_result($result,0,"closetime3"))."<br />\n";
     }
 echo "</div>\n";
-echo "<H4 class=\"label\">Characteristics</H4>\n";
-echo "   <TABLE class=\"table table-condensed compressed\">\n";
-echo "      <TR>\n";
-echo "         <TH class=\"lrpad border1111\">Function</TH>\n";
-echo "         <TH class=\"lrpad border1111\">Floor</TH>\n";
-echo "         <TH class=\"lrpad border1111\">Dimensions</TH>\n";
-echo "         <TH class=\"lrpad border1111\">Area</TH>\n";
-echo "         <TH class=\"lrpad border1111\">Height</TH>\n";
-echo "         </TR>\n";
-echo "      <TR>\n";
-echo "         <TD class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"function"))."</TD>\n";
-echo "         <TD class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"floor"))."</TD>\n";
-echo "         <TD class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"dimensions"))."</TD>\n";
-echo "         <TD class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"area"))."</TD>\n";
-echo "         <TD class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"height"))."</TD>\n";
-echo "         </TR>\n";
+echo "<h4 class=\"label\">Characteristics</H4>\n";
+echo "   <table class=\"table table-condensed compressed\">\n";
+echo "      <tr>\n";
+echo "         <th class=\"lrpad border1111\">Function</th>\n";
+echo "         <th class=\"lrpad border1111\">Floor</th>\n";
+echo "         <th class=\"lrpad border1111\">Dimensions</th>\n";
+echo "         <th class=\"lrpad border1111\">Area</th>\n";
+echo "         <th class=\"lrpad border1111\">Height</th>\n";
+echo "         </tr>\n";
+echo "      <tr>\n";
+echo "         <td class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"function"))."</td>\n";
+echo "         <td class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"floor"))."</td>\n";
+echo "         <td class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"dimensions"))."</td>\n";
+echo "         <td class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"area"))."</td>\n";
+echo "         <td class=\"lrpad border1111\">".htmlspecialchars(mysql_result($result,0,"height"))."</td>\n";
+echo "         </tr>\n";
 if (mysql_result($result,0,"notes")!="") {
-echo "        <TR>\n";
-echo "          <TD colspan=5 class=\"alert alert-info\">".htmlspecialchars(mysql_result($result,0,"notes"))."</TD>\n";
-echo "        </TR>\n";
+echo "        <tr>\n";
+echo "          <td colspan=5 class=\"alert alert-info\">".htmlspecialchars(mysql_result($result,0,"notes"))."</td>\n";
+echo "        </tr>\n";
 }
-echo "      </TABLE>\n";
-echo "<H4 class=\"label\">Room Sets</H4>\n";
+echo "      </table>\n";
+echo "<h4 class=\"label\">Room Sets</H4>\n";
 $query = <<<EOD
 SELECT RS.roomsetname, RHS.capacity FROM RoomSets RS, RoomHasSet RHS WHERE
 RS.roomsetid=RHS.roomsetid AND RHS.roomid=$selroomid
 EOD;
 if (!$result=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"alert alert-error\">".$message."\n";
+    $message=$query."<br />Error querying database. Unable to continue.<br />";
+    echo "<p class\"alert alert-error\">".$message."\n";
     staff_footer();
     exit();
     }
@@ -148,18 +151,18 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     $i++;
     }
 $numrows=$i;
-echo "   <TABLE class=\"table table-condensed compressed\">\n";
-echo "      <TR>\n";
-echo "         <TH class=\"lrpad border1111\">Room Set</TH>\n";
-echo "         <TH class=\"lrpad border1111\">Capacity</TH>\n";
-echo "         </TR>\n";
+echo "   <table class=\"table table-condensed compressed\">\n";
+echo "      <tr>\n";
+echo "         <th class=\"lrpad border1111\">Room Set</th>\n";
+echo "         <th class=\"lrpad border1111\">Capacity</th>\n";
+echo "         </tr>\n";
 for ($i=1;$i<=$numrows;$i++) {
-    echo "   <TR>\n";
-    echo "      <TD class=\"vatop lrpad border1111\">".$bigarray[$i]["roomsetname"]."</TD>\n";
-    echo "      <TD class=\"vatop lrpad border1111\">".$bigarray[$i]["capacity"]."</TD>\n";
-    echo "      </TR>\n";
+    echo "   <tr>\n";
+    echo "      <td class=\"vatop lrpad border1111\">".$bigarray[$i]["roomsetname"]."</td>\n";
+    echo "      <td class=\"vatop lrpad border1111\">".$bigarray[$i]["capacity"]."</td>\n";
+    echo "      </tr>\n";
     }
-echo "      </TABLE>\n";
+echo "      </table>\n";
 $query = <<<EOD
 SELECT SC.scheduleid, SC.starttime, S.duration, SC.sessionid, T.trackname, S.title, ST.roomsetname 
 FROM Schedule SC, Sessions S, Tracks T, RoomSets ST WHERE
@@ -167,8 +170,8 @@ SC.sessionid = S.sessionid AND S.trackid = T.trackid AND S.roomsetid=ST.roomseti
 AND SC.roomid=$selroomid ORDER BY SC.starttime
 EOD;
 if (!$result=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"errmsg\">".$message."\n";
+    $message=$query."<br />Error querying database. Unable to continue.<br />";
+    echo "<p class\"errmsg\">".$message."\n";
     staff_footer();
     exit();
     }
@@ -178,34 +181,34 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     }
 $numrows=--$i;
 
-echo "<HR>\n";
-echo "<H4 class=\"label\">Current Room Schedule</H4>\n";
-echo "<TABLE class=\"table table-condensed compressed\">\n";
-echo "   <TR>\n";
-echo "      <TH>Delete</TH>\n";
-echo "      <TH>Start Time</TH>\n";
-echo "      <TH>Duration</TH>\n";
-echo "      <TH>Track</TH>\n";
-echo "      <TH>Session ID</TH>\n";
-echo "      <TH>Title</TH>\n";
-echo "      <TH>Room Set</TH>\n";
-echo "      </TR>\n";
+echo "<hr />\n";
+echo "<h4 class=\"label\">Current Room Schedule</H4>\n";
+echo "<table class=\"table table-condensed compressed\">\n";
+echo "   <tr>\n";
+echo "      <th>Delete</th>\n";
+echo "      <th>Start Time</th>\n";
+echo "      <th>Duration</th>\n";
+echo "      <th>Track</th>\n";
+echo "      <th>Session ID</th>\n";
+echo "      <th>Title</th>\n";
+echo "      <th>Room Set</th>\n";
+echo "      </tr>\n";
 for ($i=1;$i<=$numrows;$i++) {
-    echo "   <TR>\n";
-    echo "      <TD class=\"border0010\"><INPUT type=\"checkbox\" class=\"checkbox adjust\" name=\"del$i\" value=\"1\"></TD>\n";
-    echo "<INPUT type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["scheduleid"]."\">";
-    echo "<INPUT type=\"hidden\" name=\"rowsession$i\" value=\"{$bigarray[$i]["sessionid"]}\"></TD>\n";
-    echo "      <TD class=\"vatop lrpad border0010\">".time_description($bigarray[$i]["starttime"])."</TD>\n";
-    echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["duration"]."</TD>\n";
-    echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["trackname"]."</TD>\n";
-    echo "      <TD class=\"vatop lrpad border0010\"> <a href=EditSession.php?id=".$bigarray[$i]["sessionid"].">".$bigarray[$i]["sessionid"]."</TD>\n";
-    echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["title"]."</TD>\n";
-    echo "      <TD class=\"vatop lrpad border0010\">".$bigarray[$i]["roomsetname"]."</TD>\n";
-    echo "      </TR>\n";
+    echo "   <tr>\n";
+    echo "      <td class=\"border0010\"><input type=\"checkbox\" class=\"checkbox adjust\" name=\"del$i\" value=\"1\"></td>\n";
+    echo "<input type=\"hidden\" name=\"row$i\" value=\"".$bigarray[$i]["scheduleid"]."\">";
+    echo "<input type=\"hidden\" name=\"rowsession$i\" value=\"{$bigarray[$i]["sessionid"]}\"></td>\n";
+    echo "      <td class=\"vatop lrpad border0010\">".time_description($bigarray[$i]["starttime"])."</td>\n";
+    echo "      <td class=\"vatop lrpad border0010\">".$bigarray[$i]["duration"]."</td>\n";
+    echo "      <td class=\"vatop lrpad border0010\">".$bigarray[$i]["trackname"]."</td>\n";
+    echo "      <td class=\"vatop lrpad border0010\"> <a href=EditSession.php?id=".$bigarray[$i]["sessionid"].">".$bigarray[$i]["sessionid"]."</td>\n";
+    echo "      <td class=\"vatop lrpad border0010\">".$bigarray[$i]["title"]."</td>\n";
+    echo "      <td class=\"vatop lrpad border0010\">".$bigarray[$i]["roomsetname"]."</td>\n";
+    echo "      </tr>\n";
     }
-echo "   </TABLE>\n";
-echo "<H4 class=\"label\">Add To Room Schedule</H4>\n";
-echo "<TABLE class=\"table table-condensed compressed\">\n";
+echo "   </table>\n";
+echo "<h4 class=\"label\">Add To Room Schedule</H4>\n";
+echo "<table class=\"table table-condensed compressed\">\n";
 $query = <<<EOD
 SELECT
         S.sessionid, T.trackname, S.title, SCH.roomid
@@ -222,8 +225,8 @@ SELECT
         T.trackname, S.sessionid
 EOD;
 if (!$result=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    echo "<P class\"alert alert-error\">".$message."\n";
+    $message=$query."<br />Error querying database. Unable to continue.<br />";
+    echo "<p class\"alert alert-error\">".$message."\n";
     staff_footer();
     exit();
     }
@@ -233,71 +236,84 @@ while ($bigarray[$i] = mysql_fetch_array($result, MYSQL_ASSOC)) {
     }
 $numsessions=--$i;
 for ($i=1;$i<=newroomslots;$i++) {
-    echo "   <TR>\n";
-    echo "      <TD>";
+    echo "   <tr>\n";
+    echo "      <td>";
     // ****DAY****
     if (CON_NUM_DAYS>1) {
-        echo "<Select class=\"span2\" name=day$i><Option value=0 ";
-        if ((!isset($_POST["day$i"])) or $_POST["day$i"]==0) echo "selected";
-        echo ">Day&nbsp;</Option>";
+        echo "<Select class=\"span2\" name=day$i><option value=0 ";
+        if ((!isset($_POST["day$i"])) or $_POST["day$i"]==0)
+            echo "selected";
+        echo ">Day&nbsp;</option>";
         for ($j=1; $j<=CON_NUM_DAYS; $j++) {
             $x=$daymap["long"]["$j"];
-            echo"         <OPTION value=$j ";
-            if ($_POST["day$i"]==$j) echo "selected";
-            echo ">$x</OPTION>\n";
+            echo"         <option value=$j ";
+            if (isset($_POST["day$i"]) && $_POST["day$i"]==$j)
+                echo "selected";
+            echo ">$x</option>\n";
             }
         echo "</Select>&nbsp;\n";
         }
 	// ****HOUR****
-    echo "          <Select class=\"span1 myspan1\" name=\"hour$i\"><Option value=\"-1\" ";
-    if (!isset($_POST["hour$i"])) $_POST["hour$i"]=-1;
-    if ($_POST["hour$i"]==-1) echo "selected";
-    echo ">Hour&nbsp;</Option><Option value=0 ";
-	if ($_POST["hour$i"]==0) echo "selected";
-	echo ">12</Option>";
+    echo "          <Select class=\"span1 myspan1\" name=\"hour$i\"><option value=\"-1\" ";
+    if (!isset($_POST["hour$i"]))
+        $_POST["hour$i"]=-1;
+    if ($_POST["hour$i"]==-1)
+        echo "selected";
+    echo ">Hour&nbsp;</option><option value=0 ";
+	if ($_POST["hour$i"]==0)
+	    echo "selected";
+	echo ">12</option>";
     for ($j=1;$j<=11;$j++) {
-        echo "<Option value=$j ";
-        if ($_POST["hour$i"]==$j) echo "selected";
-        echo ">$j</Option>";
+        echo "<option value=$j ";
+        if ($_POST["hour$i"]==$j)
+            echo "selected";
+        echo ">$j</option>";
         }
     echo "</select>\n";
 	// ****MIN****
-    echo "          <Select class=\"span1 myspan1\" name=\"min$i\"><Option value=\"-1\" ";
-	if (!isset($_POST["min$i"])) $_POST["min$i"]=-1;
-    if ($_POST["min$i"]==-1) echo "selected";
-	echo">Min&nbsp;</Option>";
+    echo "          <Select class=\"span1 myspan1\" name=\"min$i\"><option value=\"-1\" ";
+	if (!isset($_POST["min$i"]))
+	    $_POST["min$i"]=-1;
+    if ($_POST["min$i"]==-1)
+        echo "selected";
+	echo">Min&nbsp;</option>";
     for ($j=0;$j<=55;$j+=5) {
-        echo "<Option value=$j ";
-        if ($_POST["min$i"]==$j) echo "selected";
-		echo ">".($j<10?"0":"").$j."</Option>";
+        echo "<option value=$j ";
+        if ($_POST["min$i"]==$j)
+            echo "selected";
+		echo ">".($j<10?"0":"").$j."</option>";
         }
     echo "</select>\n";
 	// ****AM/PM****
-    echo "          <Select class=\"span1 myspan1\" name=\"ampm$i\"><Option value=0 ";
-    if ((!isset($_POST["ampm$i"])) or $_POST["ampm$i"]==0) echo "selected";
-    echo ">AM&nbsp;</Option><Option value=1 ";
-    if ($_POST["ampm$i"]==1) echo "selected";
-	echo ">PM</Option>";
+    echo "          <Select class=\"span1 myspan1\" name=\"ampm$i\"><option value=0 ";
+    if ((!isset($_POST["ampm$i"])) or $_POST["ampm$i"]==0)
+        echo "selected";
+    echo ">AM&nbsp;</option><option value=1 ";
+    if (isset($_POST["ampm$i"]) && $_POST["ampm$i"]==1)
+        echo "selected";
+	echo ">PM</option>";
     echo "</select>\n";
-    echo "          </TD>";
+    echo "          </td>";
     // ****Session****
-    echo "      <TD><Select class=\"span8\" name=\"sess$i\"><Option value=\"unset\" ";
-	if ((!isset($_POST["sess$i"])) or $_POST["sess$i"]=="unset") echo "selected";
-    echo ">Select Session</Option>\n";
+    echo "      <td><Select class=\"span8\" name=\"sess$i\"><option value=\"unset\" ";
+	if ((!isset($_POST["sess$i"])) or $_POST["sess$i"]=="unset")
+	    echo "selected";
+    echo ">Select Session</option>\n";
     for ($j=1;$j<=$numsessions;$j++) {
-        echo "          <Option value=\"".$bigarray[$j]["sessionid"]."\" ";
-        if ($_POST["sess$i"]==$bigarray[$j]["sessionid"]) echo "selected";
+        echo "          <option value=\"".$bigarray[$j]["sessionid"]."\" ";
+        if (isset($_POST["sess$i"]) && $_POST["sess$i"]==$bigarray[$j]["sessionid"])
+            echo "selected";
 		echo ">{$bigarray[$j]['trackname']} - {$bigarray[$j]['sessionid']} - {$bigarray[$j]['title']}</option>\n";
         }
     echo "</select>\n";
-    echo "          </TD>\n";
-    echo "       </TR>\n";
+    echo "          </td>\n";
+    echo "       </tr>\n";
     }
-echo "</TABLE>";
-echo "<INPUT type=\"hidden\" name=\"selroom\" value=\"$selroomid\">\n";
-echo "<INPUT type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
-echo "<DIV class=\"SubmitDiv\"><BUTTON type=\"submit\" name=\"update\" class=\"btn btn-primary\">Update</BUTTON></DIV>\n";
-echo "</FORM>\n";
+echo "</table>";
+echo "<input type=\"hidden\" name=\"selroom\" value=\"$selroomid\">\n";
+echo "<input type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
+echo "<div class=\"SubmitDiv\"><button type=\"submit\" name=\"update\" class=\"btn btn-primary\">Update</button></div>\n";
+echo "</form>\n";
 staff_footer();
 ?>
 
