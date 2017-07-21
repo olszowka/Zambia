@@ -8,4 +8,4 @@ participants, and rooms.
 * Comprehensive conflict checking
 * Participants log in to enter availability, provide biography, etc.
 * Reports for various departments such as technical services and hotel liaison
-* Includes interface to KonOpas, a free tool for publishing the schedule to mobile devices
+* Includes interface to KonOpas (https://github.com/eemeli/konopas), a free tool for publishing the schedule to mobile devices
