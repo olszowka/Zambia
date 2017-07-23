@@ -1,5 +1,4 @@
 <?php
-//	$Header: svn+ssh://polszowka@svn.code.sf.net/p/zambia/code/branches/arisia_prod2/webpages/db_functions.php 1200 2017-02-12 23:19:32Z polszowka $
 //	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
 define ("newroomslots",5); // number of rows at bottom of page for new schedule entries
 $title="Maintain Room Schedule";
@@ -9,7 +8,7 @@ require_once('StaffHeader.php');
 require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
-global $daymap;
+global $daymap, $message_error, $link;
 
 staff_header($title);
 $topsectiononly=true; // no room selected -- flag indicates to display only the top section of the page
@@ -240,7 +239,7 @@ for ($i=1;$i<=newroomslots;$i++) {
     echo "      <td>";
     // ****DAY****
     if (CON_NUM_DAYS>1) {
-        echo "<Select class=\"span2\" name=day$i><option value=0 ";
+        echo "<select class=\"span2\" name=day$i><option value=0 ";
         if ((!isset($_POST["day$i"])) or $_POST["day$i"]==0)
             echo "selected";
         echo ">Day&nbsp;</option>";
@@ -254,7 +253,7 @@ for ($i=1;$i<=newroomslots;$i++) {
         echo "</Select>&nbsp;\n";
         }
 	// ****HOUR****
-    echo "          <Select class=\"span1 myspan1\" name=\"hour$i\"><option value=\"-1\" ";
+    echo "          <select class=\"span1 myspan1\" name=\"hour$i\"><option value=\"-1\" ";
     if (!isset($_POST["hour$i"]))
         $_POST["hour$i"]=-1;
     if ($_POST["hour$i"]==-1)
@@ -271,7 +270,7 @@ for ($i=1;$i<=newroomslots;$i++) {
         }
     echo "</select>\n";
 	// ****MIN****
-    echo "          <Select class=\"span1 myspan1\" name=\"min$i\"><option value=\"-1\" ";
+    echo "          <select class=\"span1 myspan1\" name=\"min$i\"><option value=\"-1\" ";
 	if (!isset($_POST["min$i"]))
 	    $_POST["min$i"]=-1;
     if ($_POST["min$i"]==-1)

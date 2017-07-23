@@ -1,22 +1,23 @@
 <?php
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
     require_once ('StaffCommonCode.php');
     require_once ('RenderSearchSessionResults.php');
-    if ($_POST["track"] or $_POST["status"] or $_POST["type"] or $_POST["sessionid"]
-        or $_POST["divisionid"] or $_POST["searchtitle"]) {
-            $status=$_POST["status"]; 
-            $track=$_POST["track"];
-            $type=$_POST["type"];
-            $sessionid=$_POST["sessionid"];
-            $divisionid=$_POST["divisionid"];
-            $searchtitle=$_POST["searchtitle"];
+    if (!empty($_POST["track"]) or !empty($_POST["status"]) or !empty($_POST["type"]) or !empty($_POST["sessionid"])
+        or !empty($_POST["divisionid"]) or !empty($_POST["searchtitle"])) {
+            $status = isset($_POST["status"]) ? $_POST["status"] : "";
+            $track = isset($_POST["track"]) ? $_POST["track"] : "";
+            $type = isset($_POST["type"]) ? $_POST["type"] : "";
+            $sessionid = isset($_POST["sessionid"]) ? $_POST["sessionid"] : "";
+            $divisionid = isset($_POST["divisionid"]) ? $_POST["divisionid"] : "";
+            $searchtitle = isset($_POST["searchtitle"]) ? $_POST["searchtitle"] : "";
             }
         else {
-            $status=$_GET["status"]; 
-            $track=$_GET["track"]; 
-            $type=$_GET["type"];
-            $sessionid=$_GET["sessionid"];
-            $divisionid=$_GET["divisionid"];
-            $searchtitle=$_GET["searchtitle"];
+            $status = isset($_GET["status"])? $_GET["status"] : "";
+            $track = isset($_GET["track"]) ? $_GET["track"] : "";
+            $type = isset($_GET["type"]) ? $_GET["type"] : "";
+            $sessionid = isset($_GET["sessionid"]) ? $_GET["sessionid"] : "";
+            $divisionid = isset($_GET["divisionid"]) ? $_GET["divisionid"] : "";
+            $searchtitle = isset($_GET["searchtitle"]) ? $_GET["searchtitle"] : "";
             }
     //echo ("ShowSessions -- Divisionid: $divisionid:<BR>\n");
     //echo ("ShowSessions -- Track: $track:<BR>\n");

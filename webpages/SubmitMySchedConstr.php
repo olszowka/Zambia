@@ -1,4 +1,5 @@
 <?php
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
     $title="My Availability";
     global $participant,$message_error,$messages,$congoinfo;
     global $partAvail,$availability;
@@ -24,7 +25,7 @@
                    }
                 }
     if ($status==false) {
-            $message_error="The data you entered was incorrect.  Database not updated.<BR>".$messages; // error message
+            $message_error="The data you entered was incorrect.  Database not updated.<br />".$messages; // error message
             unset($messages);
             }
         else {  /* Update DB */
@@ -35,7 +36,7 @@
             $query .="otherconstraints=\"".mysql_real_escape_string($partAvail["otherconstraints"],$link)."\", ";
             $query .="numkidsfasttrack=".$partAvail["numkidsfasttrack"];
             if (!mysql_query($query,$link)) {
-                $message=$query."<BR>Error updating database.  Database not updated.";
+                $message=$query."<br />Error updating database.  Database not updated.";
                 RenderError($title,$message);
                 exit();
                 }
@@ -53,7 +54,7 @@
 					$findit = strpos($time,':');
 					$hour = substr($time,0,$findit);
 					//var_dump($hour);
-					//echo("<BR>");
+					//echo("<br />");
 					$restOfTime = substr($time,$findit);
 					//var_dump($restOfTime);
 					$starttime = (($partAvail["availstartday_$i"]-1+$nextday)*24+$hour).$restOfTime;
@@ -69,7 +70,7 @@
                     $query = "REPLACE ParticipantAvailabilityTimes set ";
                     $query .="badgeid=\"$badgeid\",availabilitynum=$i,starttime=\"$starttime\",endtime=\"$endtime\"";
                     if (!mysql_query($query,$link)) {
-                        $message=$query."<BR>Error updating database.  Database not updated.";
+                        $message=$query."<br />Error updating database.  Database not updated.";
                         RenderError($title,$message);
                         exit();
                         }
@@ -83,7 +84,7 @@
                     }
                 $query = substr($query,0,-1); // remove extra trailing comma
                 if (!mysql_query($query,$link)) {
-                    $message=$query."<BR>Error updating database.  Database not updated.";
+                    $message=$query."<br />Error updating database.  Database not updated.";
                     RenderError($title,$message);
                     exit();
                     }
@@ -100,7 +101,7 @@
             if ($deleteany) {
                 $query = substr($query,0,-2).")";
                 if (!mysql_query($query,$link)) {
-                    $message=$query."<BR>Error updating database.  Database not updated.";
+                    $message=$query."<br />Error updating database.  Database not updated.";
                     RenderError($title,$message);
                     exit();
                     }
