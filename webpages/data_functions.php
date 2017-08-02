@@ -1,5 +1,6 @@
 <?php
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+//    Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+//    Testing commit and pull process for updating production server 
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30)
