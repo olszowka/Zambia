@@ -5,11 +5,7 @@ header h1 {
 }
 body {
   background-image: url('../images/light_honeycomb.png');
-  xxbackground-image: url('../images/old_mathematics.png');
   background-repeat: repeat;
-}
-header#top {
-  xxbackground-color: gray;
 }
 header label {
   color: black;
@@ -61,10 +57,8 @@ input[type="password"] {
   margin-bottom: 0.2em;
 }
 .staff {
-  xxbackground-color: #00aa00;
-  background-image: url('../images/staffheadbg.png');
-  background-repeat: repeat-x;
-  background-color: white;
+  background-color: #a7d2a5;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
   color: black;
 }
 #staffView {
@@ -74,10 +68,8 @@ input[type="password"] {
   color: #22ee22;
 }
 .participant {
-  xxbackground-color: #6666ff;
-  background-image: url('../images/partheadbg.png');
-  background-repeat: repeat-x;
-  background-color: white;
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #e8e8e8 24%, #c3c1db 57%, #928dc4 77%, #1000a3 100%);
   color: black;
 }
 #ParticipantView {
@@ -109,7 +101,7 @@ input[type="password"] {
   margin-bottom: 0px;
 }
 .nowidth {
-  width: auto!important;
+  width: auto !important;
   padding-right: 1em;
   text-align: right;
 }
@@ -196,24 +188,8 @@ div.reportPageContent table td a,
 .report A {
   color: #1c30b0;
 }
-.arisiaLens {
-  padding: 3px;
-  display: table-cell;
-  float: none;
-}
-.pageHeader {
-  padding: 0;
-  width: 100%;
-  display: table;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.pageHeader div.pageHeaderText {
-  width: 88%;
-  margin-left: 0;
-  display: table-cell;
-  vertical-align: middle;
-  float: none;
+td.za-report-lastRowCell {
+  border-bottom: 2px solid black;
 }
 ul#boxes li {
   font-family: Verdana;
@@ -376,4 +352,46 @@ form.navbar-search {
 }
 .za-sessionHistory-editBanner [class*='span'] {
   min-height: 0;
+}
+.grid-table-cell {
+  padding: 5px;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+}
+.grid-table-cell:last-child {
+  border-right: 1px solid black;
+}
+.grid-table-cell.span3 {
+  margin-left: 0;
+  width: 25%;
+}
+.grid-table-cell.span6 {
+  margin-left: 0;
+  width: 50%;
+}
+.grid-table-row:first-child .grid-table-cell:first-child {
+  border-top-left-radius: 4px;
+}
+.grid-table-row:first-child .grid-table-cell:last-child {
+  border-top-right-radius: 4px;
+}
+.grid-table-row:last-child {
+  margin-bottom: 10px;
+}
+.grid-table-row:last-child .grid-table-cell {
+  border-bottom: 1px solid black;
+}
+.grid-table-row:last-child .grid-table-cell:first-child {
+  border-bottom-left-radius: 4px;
+}
+.grid-table-row:last-child .grid-table-cell:last-child {
+  border-bottom-right-radius: 4px;
+}
+.grid-table-row.info .grid-table-cell {
+  border-color: #3a87ad;
+  background-color: #d9edf7;
+}
+.well.well-info {
+  background-color: #dff0d8;
+  border-color: #468847;
 }
