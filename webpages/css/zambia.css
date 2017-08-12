@@ -188,15 +188,6 @@ div.reportPageContent table td a,
 .report A {
   color: #1c30b0;
 }
-td.za-report-firstColCell {
-  border-left: 2px solid black;
-}
-td.za-report-lastColCell {
-  border-right: 2px solid black;
-}
-td.za-report-firstRowCell {
-  border-top: 2px solid black;
-}
 td.za-report-lastRowCell {
   border-bottom: 2px solid black;
 }
@@ -207,6 +198,35 @@ ul#boxes li {
   color: #999;
   background-color: #e5e5e5;
   text-align: center;
+}
+.reportPageContent {
+  line-height: normal;
+}
+div.reportPageContent table,
+table.report {
+  border-collapse: collapse;
+  margin: 10px;
+  border: 1px solid black;
+  font-family: Arial;
+  font-size: 12px;
+}
+div.reportPageContent table th,
+th.report {
+  border: 1px solid black;
+  background-color: #c0e4ff;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+}
+div.reportPageContent table td,
+td.report {
+  border: 1px solid black;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+div.reportPageContent table td a,
+.report A {
+  color: #1c30b0;
 }
 .arisiaLens {
   padding: 3px;
@@ -332,4 +352,46 @@ form.navbar-search {
 }
 .za-sessionHistory-editBanner [class*='span'] {
   min-height: 0;
+}
+.grid-table-cell {
+  padding: 5px;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+}
+.grid-table-cell:last-child {
+  border-right: 1px solid black;
+}
+.grid-table-cell.span3 {
+  margin-left: 0;
+  width: 25%;
+}
+.grid-table-cell.span6 {
+  margin-left: 0;
+  width: 50%;
+}
+.grid-table-row:first-child .grid-table-cell:first-child {
+  border-top-left-radius: 4px;
+}
+.grid-table-row:first-child .grid-table-cell:last-child {
+  border-top-right-radius: 4px;
+}
+.grid-table-row:last-child {
+  margin-bottom: 10px;
+}
+.grid-table-row:last-child .grid-table-cell {
+  border-bottom: 1px solid black;
+}
+.grid-table-row:last-child .grid-table-cell:first-child {
+  border-bottom-left-radius: 4px;
+}
+.grid-table-row:last-child .grid-table-cell:last-child {
+  border-bottom-right-radius: 4px;
+}
+.grid-table-row.info .grid-table-cell {
+  border-color: #3a87ad;
+  background-color: #d9edf7;
+}
+.well.well-info {
+  background-color: #dff0d8;
+  border-color: #468847;
 }
