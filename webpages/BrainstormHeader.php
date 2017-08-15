@@ -1,9 +1,10 @@
 <?php
-    function brainstorm_header($title) {
-      require_once ("javascript_functions.php");
+// $Header$
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+function brainstorm_header($title) {
+    require_once ("javascript_functions.php");
 ?>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/TR/xhtml1/transitional">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -11,12 +12,10 @@
   <link rel="stylesheet" href="BrainstormSection.css" type="text/css">
   <meta name="keywords" content="Questionnaire">
   <?php load_javascript(); ?>
-
 </head>
 <body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
-<H1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</H1>
+<h1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</h1>
 <hr>
-
 <?php if (isset($_SESSION['badgeid'])) { ?>
   <table class="tabhead">
     <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
@@ -66,7 +65,7 @@
             </td>
           <td class="Welcome">Welcome <?php echo $_SESSION['badgename']; ?>
             </td>
-          <td><A class="logout" HREF="logout.php">&nbsp;Logout&nbsp;</A>
+          <td><A class="logout" HREF="brainstormLogout.php">&nbsp;Logout&nbsp;</A>
             </td>
           <td width="25">&nbsp;
             </td>
@@ -76,6 +75,5 @@
     </tr>
 <?php } ?>
   </table>
-
-<H2 class="head"><?php echo $title ?></H2>
+<h2 class="head"><?php echo $title ?></h2>
 <?php } ?>

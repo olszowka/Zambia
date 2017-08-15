@@ -1,11 +1,12 @@
 <?php
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
 participant_header($title);
 if (!isset($daymap)) {
     error_log("zambia-render_my_avail: \$daymap is not set.");
     }
 ?>
 
-<?php if ($message_error!="") { ?>
+<?php if (isset($message_error)) { ?>
     <p class="alert alert-error"><?php echo $message_error; ?></p>
     <?php } ?>
 <?php if ($message!="") { ?>

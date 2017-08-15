@@ -1,6 +1,5 @@
 <?php
-//	$Header$
-//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
 
 function mysql_query_XML($query_array) {
 	global $link, $message_error;
@@ -38,7 +37,7 @@ function mysql_query_exit_on_error($query) {
 		}
 	return $result;
 	}
-	
+
 function mysql_query_with_error_handling($query) {
 	global $link, $message_error;
 	$result = mysql_query($query,$link);
@@ -76,7 +75,7 @@ if (!include ('../db_name.php'))
 function prepare_db() {
     global $link;
     $link = mysql_connect(DBHOSTNAME,DBUSERID,DBPASSWORD);
-    if ($link===false)
+    if ($link === false)
 		return (false);
 	if (!mysql_select_db(DBDB,$link))
 		return (false);
@@ -512,12 +511,7 @@ function isLoggedIn() {
         return false;
         }
 
-// remember, $_SESSION['password'] will be encrypted.
-
-    if(!get_magic_quotes_gpc()) { //get global configuration setting
-        $_SESSION['badgeid'] = addslashes($_SESSION['badgeid']);
-        }
-// addslashes to session username before using in a query.
+// remember, $_SESSION['password'] will be encrypted. $_SESSION['badgeid'] should already be escaped
 
     $result=mysql_query("SELECT password FROM Participants where badgeid='".$_SESSION['badgeid']."'",$link);
     if (!$result) {
@@ -686,8 +680,8 @@ EOD;
             }
         }
     $query= <<<EOD
-SELECT badgeid, availabilitynum, TIME_FORMAT(starttime,'%H:%i:%s') AS starttime, 
-	TIME_FORMAT(endtime,'%H:%i:%s') AS endtime FROM ParticipantAvailabilityTimes
+SELECT badgeid, availabilitynum, DATE_FORMAT(starttime,'%T') AS starttime, 
+	DATE_FORMAT(endtime,'%T') AS endtime FROM ParticipantAvailabilityTimes
 	WHERE badgeid="$badgeid" ORDER BY starttime;
 EOD;
     $result=mysql_query($query,$link);
@@ -797,6 +791,7 @@ function get_idlist_from_db($table_name,$id_col_name,$desc_col_name,$desc_col_ma
 //and all locks held by the user known from the session
 //call with $badgeid='' to unlock based on user only
 
+// PBO 1/23/2017 Currently no biolockedby field in Participants table, so don't use this function.
 function unlock_participant($badgeid) {
     global $query,$link;
     $query='UPDATE Participants SET biolockedby=NULL WHERE ';

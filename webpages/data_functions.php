@@ -1,6 +1,6 @@
 <?php
 //    Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
-//    Testing commit and pull process for updating production server 
+//    Testing commit and pull process for updating production server
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30)
@@ -205,8 +205,8 @@ function set_session_defaults() {
     $session["notesforprog"]="";
     $session["invguest"]=false; // leave checkbox blank initially
     }
-	
-// Function set_brainstorm_session_defaults	
+
+// Function set_brainstorm_session_defaults
 // Populates the $session global variable with default data
 // for use when creating a new session in brainstorm.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -217,7 +217,7 @@ function set_brainstorm_session_defaults() {
 	$session["roomset"] = 4; // "Unspecified"
     if (!may_I('Staff')) {
         $session["status"] = 1; // brainstorm
-        }	
+        }
 	}
 
 // Function parse_mysql_time($time)
