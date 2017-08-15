@@ -1,5 +1,4 @@
 <?php
-//	$Header$
 //	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
 
 function mysql_query_XML($query_array) {
@@ -76,7 +75,7 @@ if (!include ('../db_name.php'))
 function prepare_db() {
     global $link;
     $link = mysql_connect(DBHOSTNAME,DBUSERID,DBPASSWORD);
-    if ($link===false)
+    if ($link === false)
 		return (false);
 	if (!mysql_select_db(DBDB,$link))
 		return (false);

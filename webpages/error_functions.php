@@ -25,15 +25,15 @@ function BrainstormRenderError ($title, $message) {
     brainstorm_footer();
     }
 
-function RenderError($title,$message) {
-    if ($_SESSION['role'] == "Brainstorm") {
-            BrainstormRenderError($title,$message);
+function RenderError($title, $message) {
+    if (isset($_SESSION['role']) && $_SESSION['role'] === "Brainstorm") {
+            BrainstormRenderError($title, $message);
             }
-        elseif ($_SESSION['role'] == "Participant") {
-            PartRenderError($title,$message);
+        elseif (isset($_SESSION['role']) && $_SESSION['role'] === "Participant") {
+            PartRenderError($title, $message);
             }
-        elseif ($_SESSION['role'] == "Staff") {
-            StaffRenderError($title,$message);
+        elseif (isset($_SESSION['role']) && $_SESSION['role'] === "Staff") {
+            StaffRenderError($title, $message);
             }
         else {
             // do something generic here (though this might be way too generic)
