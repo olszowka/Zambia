@@ -49,43 +49,47 @@ function set_email_defaults() {
 // $message_warning will be displayed at the top, only if set
 // This function will render the entire page.
 // This page will next go to the StaffSendEmailCompose_POST page
-function render_send_email($email,$message_warning) {
+function render_send_email($email, $message_warning) {
     $title="Send Email to Participants";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title);
 
-    if (strlen($message_warning)>0) {
-        echo "<P class=\"message_warning\">$message_warning</P>\n";
+    if (isset($message_warning) && strlen($message_warning)>0) {
+        echo "<p class=\"alert\">$message_warning</p>\n";
     }
-    echo "<H3>Step 1 -- Compose Email</H3>\n";
-    echo "<FORM name=\"emailform\" method=POST action=\"StaffSendEmailCompose_POST.php\">\n";
-    echo "<TABLE><TR>";
-    echo "    <TD><LABEL for=\"sendto\">To: </LABEL></TD>\n";
-    echo "    <TD><SELECT name=\"sendto\">\n";
+    echo "<h3>Step 1 -- Compose Email</h3>\n";
+    echo "<form name=\"emailform\" method=POST action=\"StaffSendEmailCompose_POST.php\">\n";
+    echo "<table>";
+    echo "    <tr><td><label for=\"sendto\">To: </label></td>\n";
+    echo "    <td><select name=\"sendto\">\n";
     populate_select_from_table("EmailTo", $email['sendto'], "", false);
-    echo "    </SELECT></TD></TR>";
-    echo "<TR><TD><LABEL for=\"sendfrom\">From: </LABEL></TD>\n";
-    echo "    <TD><SELECT name=\"sendfrom\">\n";
+    echo "    </select></td></tr>";
+    echo "<tr><td><label for=\"sendfrom\">From: </label></td>\n";
+    echo "    <td><select name=\"sendfrom\">\n";
     populate_select_from_table("EmailFrom", $email['sendfrom'], "", false);
-    echo "    </SELECT></TD></TR>";
-    echo "<TR><TD><LABEL for=\"sendcc\">CC: </LABEL></TD>\n";
-    echo "    <TD><SELECT name=\"sendcc\">\n";
+    echo "    </select></td></tr>";
+    echo "<tr><td><label for=\"sendcc\">CC: </label></td>\n";
+    echo "    <td><select name=\"sendcc\">\n";
     populate_select_from_table("EmailCC", $email['sendcc'], "", false);
-    echo "    </SELECT></TD></TR>";
-    echo "<TR><TD><LABEL for=\"subject\">Subject: </LABEL></TD>\n";
-    echo "    <TD><INPUT name=\"subject\" type=\"text\" size=\"40\" value=\"";
+    echo "    </select></td></tr>";
+    echo "<tr><td><label for=\"subject\">Subject: </label></td>\n";
+    echo "    <td><input name=\"subject\" type=\"text\" size=\"40\" value=\"";
         echo htmlspecialchars($email['subject'],ENT_NOQUOTES)."\">\n";
-    echo "    </TD></TR></TABLE><BR>\n";
-    echo "<TEXTAREA name=\"body\" cols=\"80\" rows=\"25\">";
-        echo htmlspecialchars($email['body'],ENT_NOQUOTES)."</TEXTAREA><BR>\n";
-    echo "<BUTTON class=\"ib\" type=\"reset\" value=\"reset\">Reset</BUTTON>\n";
-    echo "<BUTTON class=\"ib\" type=\"submit\" value=\"seeit\">See it</BUTTON>\n";
-    echo "</FORM><BR>\n";
-    echo "<P>Available substitutions:</P>\n";
-    echo "<TABLE><TR><TD>\$BADGEID\$</TD><TD>\$EMAILADDR\$</TD></TR>\n";
-    echo "<TR><TD>\$FIRSTNAME\$</TD><TD>\$PUBNAME\$</TD></TR>\n";
-    echo "<TR><TD>\$LASTNAME\$</TD><TD>\$BADGENAME\$</TD></TR></TABLE>\n";
+    echo "    </td></tr>";
+    echo "</table><br>\n";
+    echo "<textarea name=\"body\" cols=\"80\" rows=\"25\" style=\"width: 1000px;\">";
+        echo htmlspecialchars($email['body'],ENT_NOQUOTES)."</textarea><br>\n";
+    echo "<button class=\"ib\" type=\"reset\" value=\"reset\">Reset</button>\n";
+    echo "<button class=\"ib\" type=\"submit\" value=\"seeit\">See it</button>\n";
+    echo "</form><br>\n";
+    echo "<p>Available substitutions:</p>\n";
+    echo "<table class=\"multcol-list\">\n";
+    echo "<tr><td>\$BADGEID\$</td><td>\$EMAILADDR\$</td></tr>\n";
+    echo "<tr><td>\$FIRSTNAME\$</td><td>\$PUBNAME\$</td></tr>\n";
+    echo "<tr><td>\$LASTNAME\$</td><td>\$BADGENAME\$</td></tr>\n";
+    echo "<tr><td>\$EVENTS_SCHEDULE\$</td><td>\$FULL_SCHEDULE\$</td></tr>\n";
+    echo "</table>\n";
     staff_footer();
     }
 
@@ -96,26 +100,26 @@ function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad) {
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title);
-    echo "<P>$goodCount message(s) were queued for email transmission.<BR>\n";
-    echo "$badCount message(s) failed.</P>\n";
-    echo "<P>List of messages successfully queued:<BR>\n";
-    echo "Badgeid, Name for Publications, Email Address<BR>\n";
+    echo "<p>$goodCount message(s) were queued for email transmission.<br>\n";
+    echo "$badCount message(s) failed.</p>\n";
+    echo "<p>List of messages successfully queued:<br>\n";
+    echo "Badgeid, Name for Publications, Email Address<br>\n";
 	if ($arrayOfGood)
 	    foreach ($arrayOfGood as $recipient) {
 	        echo htmlspecialchars($recipient['badgeid']).", ";
 	        echo htmlspecialchars($recipient['name']).", ";
-	        echo htmlspecialchars($recipient['email'])."<BR>\n";
+	        echo htmlspecialchars($recipient['email'])."<br>\n";
 	        }
-    echo"</P>\n";
-    echo "<P>List of recipients which failed:<BR>\n";
-    echo "Badgeid, Name for Publications, Email Address<BR>\n";
+    echo"</p>\n";
+    echo "<p>List of recipients which failed:<br>\n";
+    echo "Badgeid, Name for Publications, Email Address<br>\n";
 	if ($arrayOfBad)
 	    foreach ($arrayOfBad as $recipient) {
 	        echo htmlspecialchars($recipient['badgeid']).", ";
 	        echo htmlspecialchars($recipient['name']).", ";
-	        echo htmlspecialchars($recipient['email'])."<BR>\n";
+	        echo htmlspecialchars($recipient['email'])."<br>\n";
 	        }
-    echo"</P>\n";
+    echo"</p>\n";
     staff_footer();
     }
 
@@ -126,31 +130,31 @@ function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad) {
 //   recipient_list, emailfrom, body
 // This function will render the entire page.
 // This page will next go to the StaffSendEmailResults_POST page
-function render_verify_email($email,$email_verify,$message_warning) {
+function render_verify_email($email, $email_verify, $message_warning) {
     $title="Send Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title);
 
     if (strlen($message_warning)>0) {
-        echo "<P class=\"message_warning\">$message_warning</P>\n";
+        echo "<p class=\"alert\">$message_warning</p>\n";
     }
-    echo "<H3>Step 2 -- Verify </H3>\n";
-    echo "<FORM name=\"emailverifyform\" method=POST action=\"StaffSendEmailCompose.php\">\n";
-    echo "<P>Recipient List:<BR>\n";
-    echo "<TEXTAREA readonly rows=\"8\" cols=\"70\">";
-    echo $email_verify['recipient_list']."</TEXTAREA></P>\n";
-    echo "<P>Rendering of message body to first recipient:<BR>\n";
-    echo "<TEXTAREA readonly rows=\"12\" cols=\"70\">";
-    echo $email_verify['body']."</TEXTAREA></P>\n";
-    echo "<INPUT type=\"hidden\" name=\"sendto\" value=\"".$email['sendto']."\">\n";
-    echo "<INPUT type=\"hidden\" name=\"sendfrom\" value=\"".$email['sendfrom']."\">\n";
-    echo "<INPUT type=\"hidden\" name=\"sendcc\" value=\"".$email['sendcc']."\">\n";
-    echo "<INPUT type=\"hidden\" name=\"subject\" value=\"".htmlspecialchars($email['subject'])."\">\n";
-    echo "<INPUT type=\"hidden\" name=\"body\" value=\"".htmlspecialchars($email['body'])."\">\n";
-    echo "<BUTTON class=\"ib\" type=\"submit\" name=\"navigate\" value=\"goback\">Go Back</BUTTON>\n";
-    echo "<BUTTON class=\"ib\" type=\"submit\" name=\"navigate\" value=\"send\">Send</BUTTON>\n";
-    echo "</FORM><BR>\n";
+    echo "<h3>Step 2 -- Verify </h3>\n";
+    echo "<form name=\"emailverifyform\" method=POST action=\"StaffSendEmailCompose.php\">\n";
+    echo "<p>Recipient List:<br>\n";
+    echo "<textarea readonly rows=\"8\" cols=\"70\" style=\"width:400px;\">";
+    echo $email_verify['recipient_list']."</textarea></P>\n";
+    echo "<p>Rendering of message body to first recipient:<br>\n";
+    echo "<textarea readonly rows=\"25\" cols=\"80\" style=\"width:1000px;font-family: monospace, Monospaced;\">";
+    echo $email_verify['body']."</textarea></p>\n";
+    echo "<input type=\"hidden\" name=\"sendto\" value=\"".$email['sendto']."\">\n";
+    echo "<input type=\"hidden\" name=\"sendfrom\" value=\"".$email['sendfrom']."\">\n";
+    echo "<input type=\"hidden\" name=\"sendcc\" value=\"".$email['sendcc']."\">\n";
+    echo "<input type=\"hidden\" name=\"subject\" value=\"".htmlspecialchars($email['subject'])."\">\n";
+    echo "<input type=\"hidden\" name=\"body\" value=\"".htmlspecialchars($email['body'])."\">\n";
+    echo "<button class=\"ib\" type=\"submit\" name=\"navigate\" value=\"goback\">Go Back</button>\n";
+    echo "<button class=\"ib\" type=\"submit\" name=\"navigate\" value=\"send\">Send</button>\n";
+    echo "</form><br>\n";
     staff_footer();
     }
 
@@ -161,10 +165,96 @@ function render_send_email_engine($email,$message_warning) {
     staff_header($title);
 
     if (strlen($message_warning)>0) {
-        echo "<P class=\"message_warning\">$message_warning</P>\n";
+        echo "<p class=\"message_warning\">$message_warning</p>\n";
     }
-    echo "<H3>Step 3 -- Actually Send Email </H3>\n";
+    echo "<h3>Step 3 -- Actually Send Email </h3>\n";
     staff_footer();
     }
+
+// "0" don't show schedule; "1" show events schedule; "2" show full schedule; "3" error condition
+function checkForShowSchedule($body) {
+    global $message;
+    $body = "\r\n" . $body . "\r\n";
+    if (preg_match('/\\$EVENTS_SCHEDULE\\$/u', $body) === 1) {
+        if (preg_match('/\\$FULL_SCHEDULE\\$/u', $body) === 1) {
+            $message = "You may not include both events schedule and full schedule";
+            return "3";
+        } else if (preg_match('/\\$EVENTS_SCHEDULE\\$.*\\$EVENTS_SCHEDULE\\$/su', $body) === 1) {
+            $message = "You may not include the schedule more than once in the body.";
+            return "3";
+        } else if (preg_match('/\\r\\n\\$EVENTS_SCHEDULE\\$\\r\\n/u', $body) === 0) {
+            $message = "The schedule may appear only by itself on a line.";
+            return "3";
+        } else {
+            return "1";
+        }
+    } else if (preg_match('/\\$FULL_SCHEDULE\\$/u', $body) === 1) {
+        if (preg_match('/\\$FULL_SCHEDULE\\$.*\\$FULL_SCHEDULE\\$/su', $body) === 1) {
+            $message = "You may not include the schedule more than once in the body.";
+            return "3";
+        } else if (preg_match('/\\r\\n\\$FULL_SCHEDULE\\$\\r\\n/u', $body) === 0) {
+            $message = "The schedule may appear only by itself on a line.";
+            return "3";
+        } else {
+            return "2";
+        }
+    } else {
+        return "0";
+    }
+}
+
+function renderDuration($durMin, $durHrs) {
+    if (($durMin === "0" || $durMin === "00") && ($durHrs === "0" || $durHrs === "00")) {
+        return "";
+    } else if ($durHrs === "0" || $durHrs === "00") {
+        return $durMin." Min";
+    } else if ($durMin === "0" || $durMin === "00") {
+        return $durHrs." Hr";
+    } else {
+        return $durHrs." Hr ".$durMin." Min";
+    }
+}
+
+// status: "1" show events schedule; "2" show full schedule;
+function generateSchedules($status, $recipientinfo) {
+    $ConStartDatim = CON_START_DATIM;
+    if ($status === "1") {
+        $extraWhereClause = "        AND S.divisionid=3"; // events
+    } else {
+        $extraWhereClause = "";
+    }
+    $badgeidArr = array_column($recipientinfo, 'badgeid');
+    $badgeidList = implode(",", $badgeidArr);
+    $query = <<<EOD
+SELECT
+        POS.badgeid, RM.roomname, S.title, DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime),'%a %l:%i %p') as starttime,
+        DATE_FORMAT(S.duration, '%i') as durationmin, DATE_FORMAT(S.duration, '%k') as durationhrs, SCH.sessionid
+    FROM
+             Schedule SCH
+        JOIN Rooms RM USING (roomid)
+        JOIN Sessions S USING (sessionid)
+        JOIN ParticipantOnSession POS USING (sessionid)
+    WHERE
+            POS.badgeid IN ($badgeidList)
+$extraWhereClause
+    ORDER BY
+        POS.badgeid, 
+        SCH.starttime;
+EOD;
+    $result = mysql_query_exit_on_error($query);
+    $returnResult = array();
+    while ($rowArr = mysql_fetch_assoc($result)) {
+        $scheduleRow = str_pad($rowArr["starttime"], 15); // Fri 12:00 AM (plus 3 spaces)
+        $scheduleRow .= str_pad(renderDuration($rowArr["durationmin"], $rowArr["durationhrs"]), 14); // 10 Hr 59 Min (plus 2 spaces)
+        $scheduleRow .= str_pad(substr($rowArr["roomname"], 0, 25), 27); // Commonwealth Ballroom ABC (plus 2 spaces)
+        $scheduleRow .= str_pad($rowArr["sessionid"], 12); // Session ID (plus 2 spaces)
+        $scheduleRow .= str_pad($rowArr["title"], 50); // Video 201: Advanced Live Television Production
+        if (!isset($returnResult[$rowArr["badgeid"]])) {
+            $returnResult[$rowArr["badgeid"]] = array();
+        }
+        $returnResult[$rowArr["badgeid"]][] = $scheduleRow;
+    }
+    return $returnResult;
+}
 
 ?>

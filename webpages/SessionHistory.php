@@ -106,7 +106,7 @@ $parametersNode = $resultXML->createElement("parameters");
 $docNode = $resultXML->getElementsByTagName("doc")->item(0);
 $parametersNode = $docNode->appendChild($parametersNode);
 $parametersNode->setAttribute("selsessionid", $selsessionid);
-//echo(mb_ereg_replace("<(row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
+echo(mb_ereg_replace("<(row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 $xsl = new DomDocument;
 $xsl->load('xsl/SessionHistory.xsl');
 $xslt = new XsltProcessor();

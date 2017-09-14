@@ -327,7 +327,7 @@ INSERT INTO SessionEditHistory
         (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
         Values
 EOD;
-        foreach ($deleteSessionIds as $delsessionid) {
+        foreach ($deleteSessionIds as $delsessionid) { 
             $query.="($delsessionid,\"$badgeid\",\"$name\",\"$email\",null,5,$vs,null),";
             }
         $query=substr($query,0,-1); // remove trailing comma
