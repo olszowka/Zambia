@@ -31,7 +31,7 @@ function mysql_query_exit_on_error($query) {
 	global $link, $message_error;
 	$result = mysql_query_with_error_handling($query);
 	if (!$result) {
-		echo "<p class=\"alert alert-error\">Error updating database.<br>$message_error<br>\n</p>";
+		echo "<p class=\"alert alert-error\">Error querying or updating database.<br />$message_error\n</p>";
 		staff_footer();
 		exit();
 		}
@@ -42,7 +42,7 @@ function mysql_query_with_error_handling($query) {
 	global $link, $message_error;
 	$result = mysql_query($query,$link);
 	if (!$result) {
-		$message_error .= $query."<br/>".mysql_error($link)."<br/>";
+		$message_error .= $query."<br />".mysql_error($link)."<br />";
 		error_log($message_error);
 		}
 	return $result;
