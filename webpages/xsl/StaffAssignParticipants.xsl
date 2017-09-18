@@ -82,7 +82,9 @@
 					<div class="span3">
 						<select id="partDropdown" name="asgnpart">
 							<option value="0" selected="selected">Assign Participant</option>
-							<xsl:apply-templates select="doc/query[@queryName='otherParticipants']/row" />
+							<xsl:apply-templates select="doc/query[@queryName='otherParticipants']/row" >
+                                <xsl:sort select="@sortableNameLc" />
+                            </xsl:apply-templates>
 						</select>
 					</div>
 					<div class="span1">
@@ -188,6 +190,6 @@
 		</div>
 	</xsl:template>
 	<xsl:template match="doc/query[@queryName='otherParticipants']/row">
-		<option value="{@badgeid}"><xsl:value-of select="@pubsname" /><xsl:text> - </xsl:text><xsl:value-of select="@badgeid" /></option>
+		<option value="{@badgeid}"><xsl:value-of select="@sortableName" /><xsl:text> - </xsl:text><xsl:value-of select="@badgeid" /></option>
 	</xsl:template>
 </xsl:stylesheet>
