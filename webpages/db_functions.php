@@ -50,7 +50,7 @@ function mysql_query_with_error_handling($query) {
 	
 function rollback() { 
 	global $link, $message_error;
-    mysql_query_with_error_handling("ROLLBACK");
+    mysql_query_with_error_handling("ROLLBACK;");
     }
 
 function populateCustomTextArray() {
