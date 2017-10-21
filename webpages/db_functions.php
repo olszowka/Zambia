@@ -638,6 +638,7 @@ EOD;
 function retrieve_participantAvailability_from_db($badgeid) {
     global $partAvail;
     global $link,$message2,$message_error;
+    $partAvail = array();
     $query= <<<EOD
 Select badgeid, maxprog, preventconflict, otherconstraints, numkidsfasttrack FROM ParticipantAvailability
 EOD;
@@ -680,8 +681,8 @@ EOD;
             }
         }
     $query= <<<EOD
-SELECT badgeid, availabilitynum, DATE_FORMAT(starttime,'%T') AS starttime, 
-	DATE_FORMAT(endtime,'%T') AS endtime FROM ParticipantAvailabilityTimes
+SELECT badgeid, availabilitynum, TIME_FORMAT(starttime,'%T') AS starttime, 
+	TIME_FORMAT(endtime,'%T') AS endtime FROM ParticipantAvailabilityTimes
 	WHERE badgeid="$badgeid" ORDER BY starttime;
 EOD;
     $result=mysql_query($query,$link);
