@@ -11,15 +11,16 @@ if (!isset($title)) {
     $title = "";
 }
 session_start();
+date_default_timezone_set(defined("PHP_DEFAULT_TIMEZONE") ? PHP_DEFAULT_TIMEZONE : "AMERICA/NEW_YORK");
 if (prepare_db() === false) {
-    $message_error = "Unable to connect to database.<BR>No further execution possible.";
+    $message_error = "Unable to connect to database.<br>No further execution possible.";
     RenderError($title, $message_error);
     exit();
 };
 if (isLoggedIn() == false and !isset($logging_in)) {
     $message = "Session expired. Please log in again.";
     if (isset($_GET["ajax_request_action"]) || isset($_POST["ajax_request_action"])) {
-        RenderErrorAjax("Session expired. Please <a HREF=\"index.php\">log in</a> again.");
+        RenderErrorAjax("Session expired. Please <a href=\"index.php\">log in</a> again.");
         exit();
     }
     require('login.php');
@@ -43,25 +44,25 @@ if (!populateCustomTextArray()) {
 // if the tab is not usable, the tab will use class 'unusabletab'
 
 // used by old (non-bootstrap menuing system)
-Function maketab($text, $usable, $url) {
+function maketab($text, $usable, $url) {
 	if ($usable) {
-		echo '<SPAN class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
-		echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
-		echo '<A HREF="' . $url . '">';// XXX link needs to be quoted
+		echo '<span class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
+		echo '<img class="tabborder" src="images/leftCorner.gif" alt="&nbsp;">';
+		echo '<a href="' . $url . '">';// XXX link needs to be quoted
 		echo $text;                     // XXX needs to be quoted
-		echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
-		echo '</SPAN>';
+		echo '<img class="tabborder" src="images/rightCorner.gif" alt="&nbsp;">';
+		echo '</span>';
 	} else {
-		echo '<SPAN class="unusabletab">';
-		echo '<IMG class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
+		echo '<span class="unusabletab">';
+		echo '<img class="tabborder" src="images/leftCorner.gif" alt="&nbsp;">';
 		echo $text;                     // XXX needs to be quoted
-		echo '<IMG class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
-		echo '</SPAN>';
+		echo '<img class="tabborder" src="images/rightCorner.gif" alt="&nbsp;">';
+		echo '</span>';
 	}
 }
 
 // used by new (bootstrap) menuing system
-Function makeMenuItem($text, $usable, $url, $sep=false) {
+function makeMenuItem($text, $usable, $url, $sep=false) {
 	//plain menu item looks like
 	//<li><a href="StaffAssignParticipants.php">Assign to a Session</a></li>
 	if ($usable) {
