@@ -9,7 +9,7 @@ if (!isset($daymap)) {
 <?php if (isset($message_error)) { ?>
     <p class="alert alert-error"><?php echo $message_error; ?></p>
 <?php } ?>
-<?php if ($message != "") { ?>
+<?php if (!empty($message)) { ?>
     <p class="alert alert-success"><?php echo $message; ?></p>
 <?php } ?>
 <div id=constraint>
@@ -21,8 +21,7 @@ if (!isset($daymap)) {
             You may indicate a total for each day as well as an overall maximum for
             the whole con. Please note that Zambia limits you to <?php echo PREF_TTL_SESNS_LMT; ?> or fewer
             total sessions and <?php echo PREF_DLY_SESNS_LMT; ?> each day. There is no need for the numbers to add up.
-            We'll use this
-            for guidance when assigning and scheduling sessions. </p>
+            We'll use this for guidance when assigning and scheduling sessions. </p>
         <div class="row-fluid">
             <div class="control-group">
                 <div class="controls">
@@ -32,7 +31,7 @@ if (!isset($daymap)) {
                 <?php
                 // Don't ask about day limits at all if only 1 day con
                 if (CON_NUM_DAYS > 1) {
-// 1st row on page contains up to 4 days of inputs
+                    // 1st row on page contains up to 4 days of inputs
                     echo "<div class=\"control-group padded\">\n";
                     echo "<div class=\"controls span12 padded\">\n";
                     for ($i = 1; $i <= min(4, CON_NUM_DAYS); $i++) {
@@ -93,7 +92,7 @@ if (!isset($daymap)) {
                     $sel = isset($partAvail["availstartday_$i"]) ? "" : " selected";
                     echo "        <option value=0$sel>&nbsp;</option>\n";
                     for ($j = 1; $j <= CON_NUM_DAYS; $j++) {
-                        $sel = ($partAvail["availstartday_$i"] == $j) ? " selected" : "";
+                        $sel = (isset($partAvail["availstartday_$i"]) && $partAvail["availstartday_$i"] == $j) ? " selected" : "";
                         $day = $daymap["long"][$j];
                         echo "        <option value=$j $sel>$day</option>\n";
                     }
@@ -113,7 +112,7 @@ if (!isset($daymap)) {
                     $sel = isset($partAvail["availendday_$i"]) ? "" : " selected";
                     echo "        <option value=0$sel>&nbsp;</option>\n";
                     for ($j = 1; $j <= CON_NUM_DAYS; $j++) {
-                        $sel = ($partAvail["availendday_$i"] == $j) ? " selected" : "";
+                        $sel = (isset($partAvail["availendday_$i"]) && $partAvail["availendday_$i"] == $j) ? " selected" : "";
                         $day = $daymap["long"][$j];
                         echo "        <option value=$j $sel>$day</option>\n";
                     }
