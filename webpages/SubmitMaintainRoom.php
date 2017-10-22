@@ -1,39 +1,38 @@
 <?php
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
-function check_room_sched_conflicts($deleteScheduleIds,$addToScheduleArray)
-{
-	//
-	// $addToScheduleArray is an array of $sessionid => $startmin
-	//     sessions to add to schedule with starttime measured in minutes from start of con
-	// $deleteScheduleIds is an array of $scheduleid => 1
-	// Perform following checks on the participants in the new schedule entries (taking into account deleted entries):
-	//    1. Are any participants double booked?
-	//    2. Are any participants scheduled outside available times?
-	//    3. Are any participants scheduled for more sessions than limits (daily and total)? (not implemented yet!!!)
-	//
-	// Process
-	//
-	// Get the data of entries added -- Get the list of participants affected
-	//      If there are no additions, then there are only deletions and these can't cause conflicts.
-	// Get their existing schedule
-	// Remove the deleted items from the existing schedule data to be compare
-	// Check 1
-	// Retrieve availability info
-	// Check 2
-	// Retrieve session limit info
-	// Check 3
-	//
-	// $addToScheduleArray2 [sessionid]
-	//[startmin]
-	//[durationmin]
-	//[participants] array of []=>badgeid
-	global $title, $link, $message;
-	if (count($addToScheduleArray) < 1)
-		return (true); // If there are no additions, then
-		// there are only deletions and these can't cause conflicts.
-	$sessionidlist=implode(",", $addToScheduleArray);
-	$addToScheduleParticipants = array();
-	$query= <<<EOD
+//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+function check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray) {
+    //
+    // $addToScheduleArray is an array of $sessionid => $startmin
+    //     sessions to add to schedule with starttime measured in minutes from start of con
+    // $deleteScheduleIds is an array of $scheduleid's
+    // Perform following checks on the participants in the new schedule entries (taking into account deleted entries):
+    //    1. Are any participants double booked?
+    //    2. Are any participants scheduled outside available times?
+    //    3. Are any participants scheduled for more sessions than limits (daily and total)? (not implemented yet!!!)
+    //
+    // Process
+    //
+    // Get the data of entries added -- Get the list of participants affected
+    //      If there are no additions, then there are only deletions and these can't cause conflicts.
+    // Get their existing schedule
+    // Remove the deleted items from the existing schedule data to be compare
+    // Check 1
+    // Retrieve availability info
+    // Check 2
+    // Retrieve session limit info
+    // Check 3
+    //
+    // $addToScheduleArray2 [sessionid]
+    //[startmin]
+    //[durationmin]
+    //[participants] array of []=>badgeid
+    global $title, $link, $message;
+    if (count($addToScheduleArray) < 1)
+        return (true); // If there are no additions, then
+    // there are only deletions and these can't cause conflicts.
+    $sessionidlist = implode(",", array_keys($addToScheduleArray));
+    $addToScheduleParticipants = array();
+    $query = <<<EOD
 SELECT
 		S.sessionid, hour(S.duration)*60+minute(S.duration) as durationmin, S.title
 	FROM
@@ -41,19 +40,17 @@ SELECT
 	WHERE
 		S.sessionid in ($sessionidlist)
 EOD;
-	if (!$result=mysql_query($query,$link))
-		{
-			$message=$query."<br />\nError querying database.<br />\n";
-			RenderError($title,$message);
-			exit();
-		}
-	while (list($sessionid,$durationmin,$title)=mysql_fetch_array($result,MYSQL_NUM))
-		{
-		$addToScheduleArray2[$sessionid]['startmin']=$addToScheduleArray[$sessionid];
-		$addToScheduleArray2[$sessionid]['endmin']=$addToScheduleArray[$sessionid]+$durationmin;
-		$addToScheduleArray2[$sessionid]['title']=$title;
-		}	
-	$query= <<<EOD
+    if (!$result = mysql_query($query, $link)) {
+        $message = $query . "<br />\nError querying database.<br />\n";
+        RenderError($title, $message);
+        exit();
+    }
+    while (list($sessionid, $durationmin, $title) = mysql_fetch_array($result, MYSQL_NUM)) {
+        $addToScheduleArray2[$sessionid]['startmin'] = $addToScheduleArray[$sessionid];
+        $addToScheduleArray2[$sessionid]['endmin'] = $addToScheduleArray[$sessionid] + $durationmin;
+        $addToScheduleArray2[$sessionid]['title'] = $title;
+    }
+    $query = <<<EOD
 SELECT
 		S.sessionid, POS.badgeid
 	FROM
@@ -62,22 +59,20 @@ SELECT
 	WHERE
 		S.sessionid in ($sessionidlist)
 EOD;
-	if (!$result=mysql_query($query,$link))
-		{
-		$message=$query."<br />\nError querying database.<br />\n";
-		RenderError($title,$message);
-		exit();
-		}
-	while (list($sessionid, $badgeid)=mysql_fetch_array($result,MYSQL_NUM))
-		{
-		$addToScheduleArray2[$sessionid]['participants'][]=$badgeid;
-		$addToScheduleParticipants[$badgeid]=1;
-		}
-	if (count($addToScheduleParticipants) < 1)
-		return(true); // if none of the sessions added to the schedule
-		// had any participants, then there can be no participant conflicts.
-	$badgeidlist=implode(",", $addToScheduleParticipants);
-	$query= <<<EOD
+    if (!$result = mysql_query($query, $link)) {
+        $message = $query . "<br />\nError querying database.<br />\n";
+        RenderError($title, $message);
+        exit();
+    }
+    while (list($sessionid, $badgeid) = mysql_fetch_array($result, MYSQL_NUM)) {
+        $addToScheduleArray2[$sessionid]['participants'][] = $badgeid;
+        $addToScheduleParticipants[$badgeid] = 1;
+    }
+    if (count($addToScheduleParticipants) < 1)
+        return (true); // if none of the sessions added to the schedule
+    // had any participants, then there can be no participant conflicts.
+    $badgeidlist = implode(",", array_keys($addToScheduleParticipants));
+    $query = <<<EOD
 SELECT
 		badgeid, pubsname
 	FROM
@@ -85,17 +80,16 @@ SELECT
 	WHERE
 		badgeid in ($badgeidlist)
 EOD;
-	if (!$result=mysql_query($query,$link))
-		{
-		$message=$query."<br />\nError querying database.<br />\n";
-		RenderError($title,$message);
-		exit();
-		}
-	while ($x=mysql_fetch_array($result,MYSQL_ASSOC))
-		$addToScheduleParticipants[$x['badgeid']]=$x['pubsname'];
-	// starttime and duration in minutes from start of con -- simpler time comparison
-	// Get participant availabilities
-	$query = <<<EOD
+    if (!$result = mysql_query($query, $link)) {
+        $message = $query . "<br />\nError querying database.<br />\n";
+        RenderError($title, $message);
+        exit();
+    }
+    while ($x = mysql_fetch_array($result, MYSQL_ASSOC))
+        $addToScheduleParticipants[$x['badgeid']] = $x['pubsname'];
+    // starttime and duration in minutes from start of con -- simpler time comparison
+    // Get participant availabilities
+    $query = <<<EOD
 SELECT
 		badgeid,
 		HOUR(starttime) * 60 + MINUTE(starttime) AS startmin,
@@ -107,37 +101,29 @@ SELECT
 	ORDER BY
 		badgeid, startmin;
 EOD;
-	if (!$result=mysql_query($query,$link))
-		{
-		$message=$query."<br />\nError querying database.<br />\n";
-		RenderError($title,$message);
-		exit();
-		}
-	$oldbadgeid="";
-	while (list($badgeid,$startmin,$endmin)=mysql_fetch_array($result,MYSQL_NUM))
-		{
-		if ($oldbadgeid!=$badgeid)
-				{ 
-				$oldbadgeid=$badgeid;
-				$i=1;
-				$participantAvailabilityTimes[$badgeid][$i]['startmin']=$startmin;
-				$participantAvailabilityTimes[$badgeid][$i]['endmin']=$endmin;
-				}
-			else
-				{ 
-				if ($startmin<$participantAvailabilityTimes[$badgeid][$i]['endmin'])
-						{ 
-						$participantAvailabilityTimes[$badgeid][$i]['endmin']=max($endmin,$participantAvailabilityTimes[$badgeid][$i]['endmin']);
-						}
-					else
-						{ 
-						$i++;
-						$participantAvailabilityTimes[$badgeid][$i]['startmin']=$startmin;
-						$participantAvailabilityTimes[$badgeid][$i]['endmin']=$endmin;
-						}
-				}
-		}
-	$query= <<<EOD
+    if (!$result = mysql_query($query, $link)) {
+        $message = $query . "<br />\nError querying database.<br />\n";
+        RenderError($title, $message);
+        exit();
+    }
+    $oldbadgeid = "";
+    while (list($badgeid, $startmin, $endmin) = mysql_fetch_array($result, MYSQL_NUM)) {
+        if ($oldbadgeid != $badgeid) {
+            $oldbadgeid = $badgeid;
+            $i = 1;
+            $participantAvailabilityTimes[$badgeid][$i]['startmin'] = $startmin;
+            $participantAvailabilityTimes[$badgeid][$i]['endmin'] = $endmin;
+        } else {
+            if ($startmin < $participantAvailabilityTimes[$badgeid][$i]['endmin']) {
+                $participantAvailabilityTimes[$badgeid][$i]['endmin'] = max($endmin, $participantAvailabilityTimes[$badgeid][$i]['endmin']);
+            } else {
+                $i++;
+                $participantAvailabilityTimes[$badgeid][$i]['startmin'] = $startmin;
+                $participantAvailabilityTimes[$badgeid][$i]['endmin'] = $endmin;
+            }
+        }
+    }
+    $query = <<<EOD
 SELECT
 		SCH.scheduleid,
 		SCH.sessionid,
@@ -154,232 +140,219 @@ SELECT
 	WHERE
 		POS.badgeid in ($badgeidlist)
 EOD;
-	if (!$result=mysql_query($query,$link))
-		{
-		$message=$query."<br />\nError querying database.<br />\n";
-		RenderError($title,$message);
-		exit();
-		}
-	while ($x=mysql_fetch_array($result,MYSQL_ASSOC))
-		{
-		if ($deleteScheduleIds[$x['scheduleid']]==1)
-			continue; //skip the scheduleids that will be deleted anyway
-		$refScheduleArray[]=$x;
-		}
-	if (!$refScheduleArray)
-		return (true); //If net of deletes there are no sessions for relevant participants then 
-	// there can be no conflicts
-	$message="";
-	foreach ($addToScheduleArray2 as $sessionid => $addSession)
-		{
-		$conflictThisAddition=false;
-		// check #1 two place at once conflict
-		foreach ($refScheduleArray as $refSession)
-			{
-			if ($addSession['startmin']>=$refSession['endmin'] or
-				$refSession['startmin']>=$addSession['endmin'])
-				continue;
-			$participants=$addSession['participants'];
-			if ($participants)
-				{
-				foreach ($participants as $badgeid)
-					{ 
-					if ($badgeid!=$refSession['badgeid'])
-						continue;
-					if (!$conflictThisAddition)
-						{ // Need header for this session
-						$message.="<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
-                        $message.="<ul>"; 
-						}
-					$conflictThisAddition=true;
-					$message.="<li>".htmlspecialchars($addToScheduleParticipants[$badgeid],ENT_NOQUOTES)." ($badgeid) ";
-					$message.="has conflict with ".htmlspecialchars($refSession['title'],ENT_NOQUOTES)." ({$refSession['sessionid']}) in ";
-					$message.="{$refSession['roomname']}.</li>\n";
-					// conflict!
-					}
-				}
-			}
-		// check #2 not available conflict
-		// Don't report conflict if there are no availabilities at all for the participant
-		//echo "Participant Availability Times:<br />\n";
-		//print_r($participantAvailabilityTimes);
-		//echo "<br />\n";
-		//echo "addSession:<br />\n";
-		//print_r($addSession);
-		//echo "<br />\n";
-		if ($addSession['participants'])
-			{
-			$addParts=$addSession['participants'];
-			foreach ($addParts as $addBadgeid)
-				{ 
-				$availability_match=false;
-				$partAvailTimeSet=$participantAvailabilityTimes[$addBadgeid];
-				if ($partAvailTimeSet)
-						{
-						foreach ($partAvailTimeSet as $partAvailTime)
-							{
-							if ($partAvailTime['startmin']>$addSession['startmin'])
-								continue;
-							if ($partAvailTime['endmin']<$addSession['endmin'])
-								continue;
-							$availability_match=true;
-							break;
-							}
-						}
-					else
-						{ 
-						$availability_match=true;
-						// Don't report conflict if there are no availabilities at all for the participant
-						}
-				if (!$availability_match)
-					{ 
-					if (!$conflictThisAddition) 
-						{
-						// Need header for this session
-						$message.="<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
-                        $message.="<ul>"; 
-						}
-					$conflictThisAddition=true;
-					$message.="<li>".htmlspecialchars($addToScheduleParticipants[$addBadgeid],ENT_NOQUOTES)." ($addBadgeid) ";
-					$message.="is not available.</li>\n";
-					}
-				}
-			}
-		if ($conflictThisAddition)
-			{ 
-			$message.="</ul></div>";
-			}
-		}
-	return (($message)?false:true); // empty message == no conflicts.
+    if (!$result = mysql_query($query, $link)) {
+        $message = $query . "<br />\nError querying database.<br />\n";
+        RenderError($title, $message);
+        exit();
+    }
+    $refScheduleArray = array();
+    while ($x = mysql_fetch_array($result, MYSQL_ASSOC)) {
+        if (array_search($x['scheduleid'], $deleteScheduleIds) !== false) {
+            continue; //skip the scheduleids that will be deleted anyway
+        }
+        $refScheduleArray[] = $x;
+    }
+    if (count($refScheduleArray) < 1)
+        return (true); //If net of deletes there are no sessions for relevant participants then
+    // there can be no conflicts
+    $message = "";
+    foreach ($addToScheduleArray2 as $sessionid => $addSession) {
+        $conflictThisAddition = false;
+        // check #1 two place at once conflict
+        foreach ($refScheduleArray as $refSession) {
+            if ($addSession['startmin'] >= $refSession['endmin'] or
+                $refSession['startmin'] >= $addSession['endmin'])
+                continue;
+            $participants = $addSession['participants'];
+            if ($participants) {
+                foreach ($participants as $badgeid) {
+                    if ($badgeid != $refSession['badgeid'])
+                        continue;
+                    if (!$conflictThisAddition) { // Need header for this session
+                        $message .= "<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
+                        $message .= "<ul>";
+                    }
+                    $conflictThisAddition = true;
+                    $message .= "<li>" . htmlspecialchars($addToScheduleParticipants[$badgeid], ENT_NOQUOTES) . " ($badgeid) ";
+                    $message .= "has conflict with " . htmlspecialchars($refSession['title'], ENT_NOQUOTES) . " ({$refSession['sessionid']}) in ";
+                    $message .= "{$refSession['roomname']}.</li>\n";
+                    // conflict!
+                }
+            }
+        }
+        // check #2 not available conflict
+        // Don't report conflict if there are no availabilities at all for the participant
+        //echo "Participant Availability Times:<br />\n";
+        //print_r($participantAvailabilityTimes);
+        //echo "<br />\n";
+        //echo "addSession:<br />\n";
+        //print_r($addSession);
+        //echo "<br />\n";
+        if ($addSession['participants']) {
+            $addParts = $addSession['participants'];
+            foreach ($addParts as $addBadgeid) {
+                $availability_match = false;
+                if (array_key_exists($addBadgeid, $participantAvailabilityTimes) !== false) {
+                    $partAvailTimeSet = $participantAvailabilityTimes[$addBadgeid];
+                    foreach ($partAvailTimeSet as $partAvailTime) {
+                        if ($partAvailTime['startmin'] > $addSession['startmin'])
+                            continue;
+                        if ($partAvailTime['endmin'] < $addSession['endmin'])
+                            continue;
+                        $availability_match = true;
+                        break;
+                    }
+                } else {
+                    $availability_match = true;
+                    // Don't report conflict if there are no availabilities at all for the participant
+                }
+                if (!$availability_match) {
+                    if (!$conflictThisAddition) {
+                        // Need header for this session
+                        $message .= "<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
+                        $message .= "<ul>";
+                    }
+                    $conflictThisAddition = true;
+                    $message .= "<li>" . htmlspecialchars($addToScheduleParticipants[$addBadgeid], ENT_NOQUOTES) . " ($addBadgeid) ";
+                    $message .= "is not available.</li>\n";
+                }
+            }
+        }
+        if ($conflictThisAddition) {
+            $message .= "</ul></div>";
+        }
+    }
+    return (($message) ? false : true); // empty message == no conflicts.
 }
-			
-function SubmitMaintainRoom($ignore_conflicts) {
+
+function SubmitMaintainRoom($ignore_conflicts)
+{
 //
 //  This is hardcoded to follow the workflow of editme -> vetted -> scheduled -> assigned
 //  We need to find a way to make it more configurable and flexible
 //
-    global $link,$message;
+    global $link, $message;
 //    print_r($_POST);
-    $numrows=$_POST["numrows"];
-    $selroomid=getInt("selroom");
+    $numrows = $_POST["numrows"];
+    $selroomid = getInt("selroom");
     get_name_and_email($name, $email); // populates them from session data or db as necessary
-    $name=mysql_real_escape_string($name,$link);
-    $email=mysql_real_escape_string($email,$link);
-    $badgeid=mysql_real_escape_string($_SESSION['badgeid'],$link);
-	$deleteScheduleIds = array();
-	$deleteSessionIds = array();
-    for ($i=1; $i<=$numrows; $i++) { //***** need to update render as well to start at 1********
-        if(!isset($_POST["del$i"]) || $_POST["del$i"]!="1")
-			continue;
-		$deleteSessionIds[]=getInt("rowsession$i");
-		$deleteScheduleIds[]=getInt("row$i");
+    $name = mysql_real_escape_string($name, $link);
+    $email = mysql_real_escape_string($email, $link);
+    $badgeid = mysql_real_escape_string($_SESSION['badgeid'], $link);
+    $deleteScheduleIds = array();
+    $deleteSessionIds = array();
+    for ($i = 1; $i <= $numrows; $i++) { //***** need to update render as well to start at 1********
+        if (!isset($_POST["del$i"]) || $_POST["del$i"] != "1")
+            continue;
+        $deleteSessionIds[] = getInt("rowsession$i");
+        $deleteScheduleIds[] = getInt("row$i");
+    }
+    $incompleteRows = 0;
+    $completeRows = 0;
+    $addToScheduleArray = array();
+    for ($i = 1; $i <= newroomslots; $i++) {
+        if ($_POST["sess$i"] == "unset")
+            continue;
+        if (CON_NUM_DAYS == 1) {
+            $day = 1;
+        } else {
+            $day = $_POST["day$i"];
         }
-    $incompleteRows=0;
-    $completeRows=0;
-	$addToScheduleArray=array();
-    for ($i=1;$i<=newroomslots;$i++) {
-        if ($_POST["sess$i"]=="unset")
-			continue;
-        if (CON_NUM_DAYS==1) {
-                $day=1;
-                }
-            else {
-                $day=$_POST["day$i"];
-                }
-        if ($day==0 or $_POST["hour$i"]==-1 or $_POST["min$i"]==-1) {
+        if ($day == 0 or $_POST["hour$i"] == -1 or $_POST["min$i"] == -1) {
             $incompleteRows++;
             continue;
-            }
-		// starttimes in minutes from start of con
-        $addToScheduleArray[$_POST["sess$i"]]=($day-1)*1440+$_POST["ampm$i"]*720+$_POST["hour$i"]*60+$_POST["min$i"];
-	$completeRows++;
-	}
+        }
+        // starttimes in minutes from start of con
+        $addToScheduleArray[$_POST["sess$i"]] = ($day - 1) * 1440 + $_POST["ampm$i"] * 720 + $_POST["hour$i"] * 60 + $_POST["min$i"];
+        $completeRows++;
+    }
     if (!$ignore_conflicts) {
-        if (!check_room_sched_conflicts($deleteScheduleIds,$addToScheduleArray)) {
+        if (!check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray)) {
             echo "<p class=\"alert alert-warning\">Database not updated.  There were conflicts.</p>\n";
             echo $message;
             return false;
-            }
         }
+    }
     if (count($deleteScheduleIds) > 0) {
-        $delSchedIdList=implode(",", $deleteScheduleIds);
+        $delSchedIdList = implode(",", $deleteScheduleIds);
 //  Set status of deleted entries back to vetted.
-        $vs=get_idlist_from_db('SessionStatuses','statusid','statusname',"'vetted'");
-        $query="UPDATE Sessions AS S, Schedule as SC SET S.statusid=$vs WHERE S.sessionid=SC.sessionid AND ";
-        $query.="SC.scheduleid IN ($delSchedIdList)";
-        if (!mysql_query($query,$link)) {
-            $message=$query."<br />Error updating database.<br />";
-            echo "<p class=\"alert alert-error\">".$message."\n</p>";
+        $vs = get_idlist_from_db('SessionStatuses', 'statusid', 'statusname', "'vetted'");
+        $query = "UPDATE Sessions AS S, Schedule as SC SET S.statusid=$vs WHERE S.sessionid=SC.sessionid AND ";
+        $query .= "SC.scheduleid IN ($delSchedIdList)";
+        if (!mysql_query($query, $link)) {
+            $message = $query . "<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">" . $message . "\n</p>";
             staff_footer();
             exit();
-            }
-        $query="DELETE FROM Schedule WHERE scheduleid in ($delSchedIdList)";
-        if (!mysql_query($query,$link)) {
-            $message=$query."<br />Error updating database.<br />";
-            echo "<p class=\"alert alert-error\">".$message."\n";
+        }
+        $query = "DELETE FROM Schedule WHERE scheduleid in ($delSchedIdList)";
+        if (!mysql_query($query, $link)) {
+            $message = $query . "<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">" . $message . "\n";
             staff_footer();
             exit();
-            }
-        $rows=mysql_affected_rows($link);
-        echo "<p class=\"alert\">$rows session".($rows>1?"s":"")." removed from schedule.\n</p>";
+        }
+        $rows = mysql_affected_rows($link);
+        echo "<p class=\"alert\">$rows session" . ($rows > 1 ? "s" : "") . " removed from schedule.\n</p>";
         $query = <<<EOD
 INSERT INTO SessionEditHistory
         (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
-        Values
+        VALUES
 EOD;
-        foreach ($deleteSessionIds as $delsessionid) { 
-            $query.="($delsessionid,\"$badgeid\",\"$name\",\"$email\",null,5,$vs,null),";
-            }
-        $query=substr($query,0,-1); // remove trailing comma
-        if (!mysql_query($query,$link)) {
-            $message=$query."<br />Error updating database.<br />";
-            echo "<p class=\"alert alert-error\">".$message."\n</p>";
-            staff_footer();
-            exit();
-            }
+        foreach ($deleteSessionIds as $delsessionid) {
+            $query .= "($delsessionid,\"$badgeid\",\"$name\",\"$email\",null,5,$vs,null),";
         }
+        $query = substr($query, 0, -1); // remove trailing comma
+        if (!mysql_query($query, $link)) {
+            $message = $query . "<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">" . $message . "\n</p>";
+            staff_footer();
+            exit();
+        }
+    }
     if (count($addToScheduleArray) < 1)
-		return (true); // nothing to add
+        return (true); // nothing to add
     foreach ($addToScheduleArray as $sessionid => $startmin) {
-        $hour=floor($startmin/60); // convert to hours since start of con
-        $min=$startmin%60;
-        $time=sprintf("%03d:%02d:00",$hour,$min);
-        $query="INSERT INTO Schedule SET sessionid=$sessionid, roomid=$selroomid, starttime=\"$time\"";
-        if (!mysql_query($query,$link)) {
-            $message=$query."<br />Error updating database.<br />";
-            echo "<p class=\"alert alert-error\">".$message."\n";
+        $hour = floor($startmin / 60); // convert to hours since start of con
+        $min = $startmin % 60;
+        $time = sprintf("%03d:%02d:00", $hour, $min);
+        $query = "INSERT INTO Schedule SET sessionid=$sessionid, roomid=$selroomid, starttime=\"$time\"";
+        if (!mysql_query($query, $link)) {
+            $message = $query . "<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">" . $message . "\n";
             staff_footer();
             exit();
-            }
+        }
 // Set status of scheduled entries to Scheduled.
-        $vs=get_idlist_from_db('SessionStatuses','statusid','statusname',"'scheduled'");
-        $query="UPDATE Sessions SET statusid=$vs WHERE sessionid=$sessionid";
-        if (!mysql_query($query,$link)) {
-            $message=$query."<br />Error updating database.<br />";
-            echo "<p class=\"alert alert-error\">".$message."\n";
+        $vs = get_idlist_from_db('SessionStatuses', 'statusid', 'statusname', "'scheduled'");
+        $query = "UPDATE Sessions SET statusid=$vs WHERE sessionid=$sessionid";
+        if (!mysql_query($query, $link)) {
+            $message = $query . "<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">" . $message . "\n";
             staff_footer();
             exit();
-            }
+        }
 // Record history of new entries to schedule 
         $query = <<<EOD
 INSERT INTO SessionEditHistory
         (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
-        Values
+        VALUES
 EOD;
-        $query.="($sessionid,\"$badgeid\",\"$name\",\"$email\",null,4,$vs,\"".time_description($time)." in $selroomid\")";
-        if (!mysql_query($query,$link)) {
-            $message=$query."<br />Error updating database.<br />";
-            echo "<p class=\"alert alert-error\">".$message."\n";
+        $query .= "($sessionid,\"$badgeid\",\"$name\",\"$email\",null,4,$vs,\"" . time_description($time) . " in $selroomid\")";
+        if (!mysql_query($query, $link)) {
+            $message = $query . "<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">" . $message . "\n";
             staff_footer();
             exit();
-            }   
         }
-    if ($completeRows) {
-        echo "<p class=\"alert alert-success\">$completeRows new schedule entr".($completeRows>1?"ies":"y")." written to database.\n";
-        }
-    if ($incompleteRows) {
-        echo "<p class=\"alert alert-error\">$incompleteRows row".($incompleteRows>1?"s":"")." not entered due to incomplete data.\n";
-        }
-    return (true);    
     }
+    if ($completeRows) {
+        echo "<p class=\"alert alert-success\">$completeRows new schedule entr" . ($completeRows > 1 ? "ies" : "y") . " written to database.\n";
+    }
+    if ($incompleteRows) {
+        echo "<p class=\"alert alert-error\">$incompleteRows row" . ($incompleteRows > 1 ? "s" : "") . " not entered due to incomplete data.\n";
+    }
+    return (true);
+}
+
 ?>
