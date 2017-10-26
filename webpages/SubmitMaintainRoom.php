@@ -107,6 +107,7 @@ EOD;
         exit();
     }
     $oldbadgeid = "";
+    $participantAvailabilityTimes = array();
     while (list($badgeid, $startmin, $endmin) = mysql_fetch_array($result, MYSQL_NUM)) {
         if ($oldbadgeid != $badgeid) {
             $oldbadgeid = $badgeid;
@@ -222,7 +223,7 @@ EOD;
             $message .= "</ul></div>";
         }
     }
-    return (($message) ? false : true); // empty message == no conflicts.
+    return (empty($message) ? true : false); // empty message == no conflicts.
 }
 
 function SubmitMaintainRoom($ignore_conflicts)
