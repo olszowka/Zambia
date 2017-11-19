@@ -17,8 +17,8 @@ if (!$result = mysql_query($query, $link)) {
 $query=<<<EOD
 SELECT
         S.title, S.sessionid, R.roomname,
-        DATE_FORMAT(ADDTIME('2018-01-12 00:00:00', SCH.starttime),'%a') as day, 
-        DATE_FORMAT(ADDTIME('2018-01-12 00:00:00', SCH.starttime),'%l:%i %p') as time, 
+        DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime),'%a') as day, 
+        DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime),'%l:%i %p') as time, 
         concat(if(left(duration,2)=00, '', 
             if(left(duration,1)=0, 
                 concat(right(left(duration,2),1), 'hr '),
