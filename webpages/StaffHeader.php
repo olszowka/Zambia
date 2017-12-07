@@ -1,7 +1,6 @@
 <?php
-//	$Header$
-//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
-    function staff_header($title) {
+//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+    function staff_header($title, $is_report = false) {
     require_once ("javascript_functions.php");
     global $badgeid, $message, $fullPage;
 ?>
@@ -14,21 +13,14 @@
 		<meta name="description" content="Zambia, the Arisia scheduling tool">
 		<meta name="author" content="PeterO, DDA, others">
 
-		<!-- Le styles -->
 		<link rel="stylesheet" href="jquery/jquery-ui-1.8.16.custom.css" type="text/css">
-		<link href="css/bootstrap.css" rel="stylesheet">
-		<link href="css/bootstrap-responsive.css" rel="stylesheet">
-		<link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
-		<link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
-		<!--   <link rel="stylesheet" href="ParticipantSection.css" type="text/css" /> -->
-
-		<!-- Scripts -->
-		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-		<!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
-
-		<!-- Le fav and touch icons -->
+		<link rel="stylesheet" href="css/bootstrap.css" type="text/css" >
+		<link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css" >
+        <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
+    <?php if ($is_report) { ?>
+        <link rel="stylesheet" href="css/datatables.css" type="text/css" />
+    <?php } ?>
 		<link rel="shortcut icon" href="images/favicon.ico">
 		<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 		<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
@@ -43,7 +35,7 @@
 </script>
 <?php
 load_jquery();
-load_javascript($title);
+load_javascript($title, $is_report);
 ?>
 	<div <?php if ($fullPage) echo "id=\"fullPageContainer\""; ?> class="container-fluid">
 	<div id="myhelper"></div><!-- used for drag-and-drop operations -->

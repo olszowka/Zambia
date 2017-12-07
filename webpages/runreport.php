@@ -39,7 +39,7 @@
 	    RenderError($title,$message_error);
         exit();
         }
-	staff_header($title);
+	staff_header($title, true);
 	echo "<div class=\"alert alert-info\">".htmlspecialchars($description,ENT_NOQUOTES)."</div>\n";
 	date_default_timezone_set('US/Eastern');
     echo "<p class=\"text-success center\"> Generated: ".date("D M j G:i:s T Y")."</p>\n";
@@ -51,5 +51,6 @@
 	$html = $xslt->transformToXML($resultXML);
 	// some browsers do not support empty div, iframe, script and textarea tags
 	echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+	echo "<div class=\"clearfix\"></div>\n";
 	staff_footer();
 ?>
