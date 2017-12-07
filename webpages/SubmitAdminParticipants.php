@@ -134,9 +134,13 @@ EOD;
 	exit();
 }
 // Start here.  Should be AJAX requests only
-if (!$ajax_request_action=$_POST["ajax_request_action"])
- 	if (!$ajax_request_action=$_GET["ajax_request_action"])
-		exit();
+if (!empty($_POST["ajax_request_action"])) {
+    $ajax_request_action = $_POST["ajax_request_action"];
+} elseif (!empty($_GET["ajax_request_action"])) {
+    $ajax_request_action = $_GET["ajax_request_action"];
+} else {
+    exit();
+}
 //error_log("Reached SubmitAdminParticpants. ajax_request_action: $ajax_request_action");
 switch ($ajax_request_action) {
 	case "fetch_participant":
