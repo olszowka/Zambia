@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
     <?php if ($is_report) { ?>
-        <link rel="stylesheet" href="css/datatables.css" type="text/css" />
+        <link rel="stylesheet" href="css/dataTables.css" type="text/css" />
     <?php } ?>
 		<link rel="shortcut icon" href="images/favicon.ico">
 		<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
