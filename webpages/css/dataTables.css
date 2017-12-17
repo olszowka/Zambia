@@ -1,8 +1,7 @@
 table.dataTable {
     clear: both;
     margin: 0.5em 0 !important;
-    max-width: none !important;
-    width: 100%;
+    max-width: none;
 }
 
 table.dataTable td,

@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30)
@@ -26,13 +26,22 @@ function convertUnitsToHourMin($timeUnits) {
 	return array($hour, $min);
 }
 
-function showCustomText($pre,$tag,$post) {
-	global $customTextArray;
-	if (strlen($x = $customTextArray[$tag])>0) {
-		echo $pre.$x.$post;
-		}
-	}
-	
+function showCustomText($pre, $tag, $post) {
+    global $customTextArray;
+    if (!empty($customTextArray[$tag])) {
+        echo $pre . $customTextArray[$tag] . $post;
+    }
+}
+
+function fetchCustomText($tag) {
+    global $customTextArray;
+    if (!empty($customTextArray[$tag])) {
+        return $customTextArray[$tag];
+    } else {
+        return "";
+    }
+}
+
 function appendCustomTextArrayToXML($xmlDoc) {
 	global $customTextArray;
 	$customTextNode = $xmlDoc->createElement("customText");
