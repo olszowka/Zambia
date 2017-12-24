@@ -26,7 +26,7 @@ SELECT
               permroleid = 6 /* Event Organizer */
       ) AS EO USING (badgeid)
     WHERE
-            S.divisionid = 2 /* Events */
+            S.divisionid = 3 /* Events */
         AND EXISTS (SELECT *
             FROM
                 UserHasPermissionRole UHPR
@@ -37,7 +37,7 @@ SELECT
                     )
             )
     ORDER BY
-            SCH.starttime, R.roomname
+            SCH.starttime, S.sessionid, IF(ISNULL(EO.badgeid), 2, 1);
 EOD;
 if (!$result=mysql_query($query,$link)) {
 	require_once('StaffHeader.php');
