@@ -86,11 +86,8 @@ if (!$regmessage) {
 participant_header($title);
 echo "<p>Below is the list of all the panels for which you are scheduled.  If you need any changes";
 echo " to this schedule please contact <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>.</p>\n";
-echo "<p>In order to put together the entire schedule, we had to schedule some panels outside of the times that certain panelists requested.  If this ";
-echo "happened to you, we would love to have you on the panel, but understand if you cannot make it.  Please let us know if you cannot.</p>\n";
-echo "<p>Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to ";
-echo "place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so ";
-echo "feel free to check with us to see if a space has opened up on a panel on which you'd still like to participate.</p>\n";
+showCustomText("<p>","all_panelists_1","</p>");
+showCustomText("<p>","all_panelists_2","</p>");
 echo "<p>Your registration status is <span class=\"hilit\">$regmessage.</span>\n";
 echo "<p>Thank you -- <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>\n";
 $xsl = new DomDocument;
