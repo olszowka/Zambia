@@ -20,6 +20,7 @@ SELECT
             S.title,
             R.roomname,
             S.progguiddesc,
+            TY.typename,
             DATE_FORMAT(ADDTIME('$CON_START_DATIM', SCH.starttime),'%a %l:%i %p') AS starttime,
             left(S.duration, 5) AS duration,
             S.persppartinfo,
@@ -30,6 +31,7 @@ SELECT
        JOIN Schedule SCH USING (sessionid)
        JOIN Rooms R USING (roomid)
        JOIN Tracks T USING (trackid)
+       JOIN Types TY USING (typeid)
     WHERE
             POS.badgeid="$badgeid"
     ORDER BY
