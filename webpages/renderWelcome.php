@@ -14,8 +14,8 @@ if ($message!="") {
 $chint=($participant["interested"]==0);
 if (may_I('postcon')) { ?>
     <p>Thank you for your participation in <?php echo CON_NAME;?>.  With your help it was a great con.  We look forward to your participation again next year.</p>
-    <p>We will post instructions for participating in brainstorming for next year soon.</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--Arisia Program and Events Committees</p>
+    <p>You can suggest programming items for Arisia 2019 our <a href="https://www.arisia.org/Brainstorm">brainstorm page.</a></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--Arisia Programming and Events Committees</p>
     <?php
     participant_footer();
     exit();
