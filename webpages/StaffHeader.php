@@ -43,10 +43,10 @@ load_javascript($title, $is_report);
 	<!-- Header -->
 		<header class="row-fluid staff" id="top">
 		  <div id="regHeader" class="span12">
-  			<div class="span9">
-  				<h1 class="pageHeader pull-left">
-  					<img id="arisiaLens" src="images/logo.gif" title="Arisia logo" class="arisiaLens wide-only" />
-  					<div class="pageHeaderText span9"> Zambia<span class="wide-medium-only">: The <?php echo CON_NAME; ?> Scheduling Tool</span></div>
+  			<div class="span10">
+                <img id="arisiaLens" src="images/cc-logo-white.png" title="CC37 Logo" class="arisiaLens wide-only cc37logo" />
+  				<h1 class="pageHeader">
+  					<div class="pageHeaderText"> Zambia<span class="wide-medium-only">: The <?php echo CON_NAME; ?> Scheduling Tool</span></div>
   				</h1>
   			</div>
   <?php if (isset($_SESSION['badgeid'])) {
@@ -57,7 +57,7 @@ load_javascript($title, $is_report);
             exit();
       }
   ?>
-  			<div class="span3" id="welcome">
+  			<div class="span2" id="welcome">
   				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
           <img id="hideHeader" class="imgButton pull-right" src="images/green-up.png" alt="Shrink header to a thin strip" title="Shrink header to a thin strip"/>
   				<a id="logoutButton" class="btn btn-primary pull-right" href="logout.php" title="Click to log out">Log out</a>

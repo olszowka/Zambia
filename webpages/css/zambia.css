@@ -3,6 +3,17 @@ header h1 {
   float: left;
   padding-left: 1em;
 }
+img.cc37logo {
+  width: 200px;
+  padding-top: 12px;
+  padding-right: 10px;
+}
+.pageHeader {
+  padding: 20px 0;
+  display: table;
+  margin-top: 0;
+  margin-bottom: 0;
+}
 body {
   background-image: url('../images/light_honeycomb.png');
   background-repeat: repeat;
@@ -198,25 +209,6 @@ ul#boxes li {
   color: #999;
   background-color: #e5e5e5;
   text-align: center;
-}
-.arisiaLens {
-  padding: 3px;
-  display: table-cell;
-  float: none;
-}
-.pageHeader {
-  padding: 0;
-  width: 100%;
-  display: table;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.pageHeader div.pageHeaderText {
-  width: 88%;
-  margin-left: 0;
-  display: table-cell;
-  vertical-align: middle;
-  float: none;
 }
 .compressed {
   width: auto;
