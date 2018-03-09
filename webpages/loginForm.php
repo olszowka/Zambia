@@ -1,4 +1,4 @@
-      <div class="span3">
+      <div class="span2">
   			<form id="loginForm" name="loginform" class="form-horizontal" method="post" action="doLogin.php">
   				<fieldset id="loginBox">
 <?php

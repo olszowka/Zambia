@@ -17,7 +17,7 @@
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
 <!--   <link rel="stylesheet" href="ParticipantSection.css" type="text/css" /> -->
 
     <!-- Scripts -->
@@ -34,40 +34,40 @@
   </head>
 <body>
 <script type="text/javascript">
-	var thisPage="<?php echo $title; ?>";
-	var alwaysShowLargeHeader = false;
+    var thisPage="<?php echo $title; ?>";
+    var alwaysShowLargeHeader = false;
 </script>
 <?php
 load_jquery();
 load_javascript($title);
 ?>
-  <div class="container-fluid">
-	<!-- Header -->
-		<header class="row-fluid participant" id="top">
-		  <div id="regHeader" class="span12">
-  		  <div class="span9">
-    			<img src="images/cc-logo-white.png" title="CC37 Logo" class="pull-left cc37logo" alt="CC37 Banner"/>
-    			<h1 class="pull-left wide-medium-only">Zambia: <span class="wide-only">The <?php echo CON_NAME; ?> Scheduling Tool</span></h1>
-    		</div>
-  <?php if (isset($_SESSION['badgeid'])) { ?>
-  			<div class="span3" id="welcome">
-  				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
-          <img id="hideHeader" class="imgButton pull-right" src="images/blue-up.png" alt="Shrink header to a thin strip" title="Shrink header to a thin strip"/>
-  				<a id="logoutButton" href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
-  			</div>
-      </div>
-  		<div id="altHeader" class="row-fluid">
-  		  <div id="welcomeSmall">
-  				<img src="images/blue-down.png" id="showHeader" class="pull-right" alt="Expand header to normal size" title="Expand header to normal size"/>
-  				<a id="logoutButton" class="btn btn-primary btn-mini pull-right" href="logout.php" title="Click to log out">Log out</a>
-  				<p class="pull-right">Welcome, <?php echo $_SESSION['badgename']; ?></p>
-        </div>
-  		</div>
-		</header>
-    <nav id="participantNav" class="navbar navbar-inverse">
-      <div class="navbar-inner">
-        <div class="container" style="width: auto;">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    <div class="container-fluid">
+    <!-- Header -->
+        <header class="row-fluid participant" id="top">
+            <div id="regHeader" class="span12">
+                <div class="span10">
+                    <img src="images/cc-logo-white.png" title="CC37 Logo" class="pull-left cc37logo" alt="CC37 Banner"/>
+                    <h1 class="pull-left wide-medium-only">Zambia: <span class="wide-only">The <?php echo CON_NAME; ?> Scheduling Tool</span></h1>
+                </div>
+<?php if (isset($_SESSION['badgeid'])) { ?>
+                <div class="span2" id="welcome">
+                    <p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
+                    <img id="hideHeader" class="imgButton pull-right" src="images/blue-up.png" alt="Shrink header to a thin strip" title="Shrink header to a thin strip"/>
+                    <a id="logoutButton" href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
+                </div>
+            </div>
+            <div id="altHeader" class="row-fluid">
+                <div id="welcomeSmall">
+                    <img src="images/blue-down.png" id="showHeader" class="pull-right" alt="Expand header to normal size" title="Expand header to normal size"/>
+                    <a id="logoutButton" class="btn btn-primary btn-mini pull-right" href="logout.php" title="Click to log out">Log out</a>
+                    <p class="pull-right">Welcome, <?php echo $_SESSION['badgename']; ?></p>
+                </div>
+            </div>
+        </header>
+        <nav id="participantNav" class="navbar navbar-inverse">
+            <div class="navbar-inner">
+                <div class="container" style="width: auto;">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -76,31 +76,31 @@ load_javascript($title);
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="my_contact.php">Profile</a></li>
-        	  <?php makeMenuItem("Availability",may_I('my_availability'),"my_sched_constr.php",false); ?>
-         	  <?php makeMenuItem("Session Interests",may_I('my_panel_interests'),"PartPanelInterests.php",false); ?>
-		 	 <!-- XXX this should have a may_I -->
-         	  <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
-         	  <?php makeMenuItem("My Schedule",may_I('my_schedule'),"MySchedule.php",false); ?>
-         	  <?php makeMenuItem("Search Sessions",may_I('search_panels'),"my_sessions1.php",may_I('search_panels')); ?>
-         	  <?php makeMenuItem("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormWelcome.php",may_I('BrainstormSubmit')); ?>
-      		  <li class="divider-vertical"></li>
+              <?php makeMenuItem("Availability",may_I('my_availability'),"my_sched_constr.php",false); ?>
+              <?php makeMenuItem("Session Interests",may_I('my_panel_interests'),"PartPanelInterests.php",false); ?>
+             <!-- XXX this should have a may_I -->
+              <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
+              <?php makeMenuItem("My Schedule",may_I('my_schedule'),"MySchedule.php",false); ?>
+              <?php makeMenuItem("Search Sessions",may_I('search_panels'),"my_sessions1.php",may_I('search_panels')); ?>
+              <?php makeMenuItem("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormWelcome.php",may_I('BrainstormSubmit')); ?>
+              <li class="divider-vertical"></li>
             <li><a href="welcome.php">Overview</a></li>
-      		  <li class="divider-vertical"></li>
+              <li class="divider-vertical"></li>
             </ul>
-			<?php if (may_I('Staff')) {
-				echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="staffView" href="StaffPage.php">Staff View</a></li></ul>';
-			}?>
+            <?php if (may_I('Staff')) {
+                echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="staffView" href="StaffPage.php">Staff View</a></li></ul>';
+            }?>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </nav>
 <?php }
-	  else {
-		require_once("loginForm.php");
-		echo "<script type=\"text/javascript\">";
-		echo "   var alwaysShowLargeHeader = true;";
-		echo "</script>";
+      else {
+        require_once("loginForm.php");
+        echo "<script type=\"text/javascript\">";
+        echo "   var alwaysShowLargeHeader = true;";
+        echo "</script>";
 ?>
-		</header>
+        </header>
 <?php } 
 } ?>
