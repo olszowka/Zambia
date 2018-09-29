@@ -1,5 +1,5 @@
 <?php
-function convert_timestamp_to_timeindex($timestamp,$start) {
+function convert_timestamp_to_timeindex($timestamp, $start) {
 	// $timestamp in hh:mm:ss or hhh:mm:ss from start of con
 	// start = 1 if starttime; 0 if endtime
 	global $timesXPath;
@@ -28,7 +28,7 @@ function convert_timestamp_to_timeindex($timestamp,$start) {
 }
 
 function retrieve_timesXML() {
-	global $timesXML, $timesXPath, $variablesNode;
+	global $timesXML, $timesXPath, $title, $message_error, $variablesNode;
 	$query["times"] = "SELECT timeid, DATE_FORMAT(timevalue,'%T') AS timevalue, timedisplay, next_day, avail_start, avail_end FROM Times ";
 	$query["times"] .= "WHERE avail_start = 1 or avail_end = 1";
 	if (!$timesXML=mysql_query_XML($query)) {
@@ -39,5 +39,25 @@ function retrieve_timesXML() {
 	$variablesNode = $timesXML->createElement("variables");
 	$docNode = $timesXML->getElementsByTagName("doc")->item(0);
 	$variablesNode = $docNode->appendChild($variablesNode);
+}
+
+function retrieve_participant_conflict_session_info($badgeid) {
+    $query = <<<EOD
+SELECT S.title, POS.badgeid
+    FROM
+                  Sessions S 
+        LEFT JOIN ParticipantOnSession POS USING (sessionid)
+    WHERE
+            S.pubstatusid = 4 /* Prevent Conflict Only */
+        AND (POS.badgeid = '$badgeid' OR POS.badgeid IS NULL)
+    ORDER BY
+         S.sessionid;
+EOD;
+    $conflictBlockSessionInfo = [];
+    $result = mysql_query_with_error_handling($query);
+    while ($row = mysql_fetch_array($result, MYSQLI_ASSOC)) {
+        $conflictBlockSessionInfo.push($row);
+    }
+    return $conflictBlockSessionInfo;
 }
 ?>

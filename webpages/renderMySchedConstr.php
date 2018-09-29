@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 participant_header($title);
 if (!isset($daymap)) {
     error_log("zambia-render_my_avail: \$daymap is not set.");
@@ -13,7 +13,6 @@ if (!isset($daymap)) {
     <p class="alert alert-success"><?php echo $message; ?></p>
 <?php } ?>
 <div id=constraint>
-    <?php /* print_r($partAvail); */ ?>
     <form class="form-inline" name="constrform" method=POST action="SubmitMySchedConstr.php">
 
         <h4 class="alert-info center">Number of Program Items I'm Willing to Participate In</h4>
@@ -38,7 +37,7 @@ if (!isset($daymap)) {
                         $D = $daymap["long"][$i];
                         echo "<label class=\"control-label\" for=\"maxprogday$i\">$D maximum:</label>\n";
                         $N = $partAvail["maxprogday$i"];
-                        echo "<input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>\n";
+                        echo "<input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=\"$N\">\n";
                     }
                 }
                 // 2nd row on page contains up to 4 more if needed
@@ -47,7 +46,7 @@ if (!isset($daymap)) {
                         $D = $daymap["long"][$i];
                         echo "<label class=\"control-label\" for=\"maxprogday$i\">$D maximum:</label>\n";
                         $N = $partAvail["maxprogday$i"];
-                        echo "    <input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>\n";
+                        echo "    <input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=\"$N\">\n";
                     }
                 }
                 echo "</div>\n";
@@ -150,8 +149,8 @@ if (!isset($daymap)) {
         <?php
         if (MY_AVAIL_KIDS === TRUE) {
             echo("<div class=\"row-fluid padded\">\n");
-            echo "<P>We are looking for a rough count of children attending FastTrack (programming for children";
-            echo " ages 6-13).</P>\n";
+            echo "<p>We are looking for a rough count of children attending FastTrack (programming for children";
+            echo " ages 6-13).</p>\n";
             $x = $partAvail["numkidsfasttrack"];
             echo("  <div class=\"span12\">\n");
             echo("    <label class=\"control-label\">Please indicate how many children will be attending with you:</label>");
@@ -159,8 +158,13 @@ if (!isset($daymap)) {
             echo "  </div>\n";
             echo "</div>\n";
         }
+        if (SHOW_PREVENT_CONFLICT_SESSIONS && count($conflictBlockSessionInfo) > 0) {
+            echo("<div class=\"row-fluid padded\">\n");
+            echo "    <p>Please indicate which of the following events you should not be scheduled against.</p>\n";
+            echo "</div>\n";
+        }
         ?>
-
+        
         <div class="padded">
             <button class="btn btn-primary" type=submit value="Save">Save</button>
         </div>

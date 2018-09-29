@@ -29,6 +29,9 @@ while (isset($partAvail["starttimestamp_$i"])) {
     $partAvail["availendtime_$i"] = $x["hour"];
     $i++;
 }
+if (SHOW_PREVENT_CONFLICT_SESSIONS) {
+    $conflictBlockSessionInfo = retrieve_participant_conflict_session_info($badgeid);
+}
 require('renderMySchedConstr.php');
 exit();
 ?>

@@ -1,7 +1,7 @@
 <?php
 // This is an example file.  Please copy to db_name.php and edit as needed.
 // Created by Peter Olszowka
-// Copyright (c) 2008-2017 Peter Olszowka. All rights reserved.
+// Copyright (c) 2008-2018 Peter Olszowka. All rights reserved.
 // See copyright document for more details.
 define("DBHOSTNAME","localhost");
 define("DBUSERID","zambiademo");
@@ -31,6 +31,7 @@ define("SWIFT_DIRECTORY","/home/zambia_admin/Swift/"); //location of installed s
 define("PREF_TTL_SESNS_LMT",10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT",5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS",8); // Number of rows of availability records to render
+define("SHOW_PREVENT_CONFLICT_SESSIONS", true); // Enable functionality where participants may select certain sessions they should not be scheduled against.
 define("MAX_BIO_LEN",1000); // Maximum length (in characters) permitted for participant biographies
 define("MY_AVAIL_KIDS","FALSE"); // Enables questions regarding no. of kids in Fasttrack on "My Availability"
 define("ENABLE_SHARE_EMAIL_QUESTION",true); // Enables question regarding sharing participant email address
