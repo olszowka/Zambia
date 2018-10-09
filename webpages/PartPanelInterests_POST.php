@@ -1,5 +1,4 @@
 <?php
-	// $Header$
     //This file should be requested from post on "add" form
     require ('PartCommonCode.php'); // initialize db; check login; set $badgeid
     require ('PartPanelInterests_FNC.php');
@@ -43,6 +42,5 @@
     $session_interest_count = get_session_interests_from_db($badgeid); // Returns count; Will render its own errors
     // Get title, etc. of such data -- use global $session_interests
     get_si_session_info_from_db($session_interest_count); // Will render its own errors
-	$pageIsDirty = False;
-    render_session_interests($badgid, $session_interest_count, $message, $message_error, $pageIsDirty); // includes footer
+    render_session_interests($session_interest_count, $message, $message_error, false, false); // includes footer
 ?>

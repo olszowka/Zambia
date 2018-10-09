@@ -1,5 +1,4 @@
 <?php
-	// $Header$
     global $participant,$message_error,$message2,$congoinfo,$session_interests,$session_interest_index, $title;
     $title="Select Sessions";
     require ('PartCommonCode.php'); //define database functions
@@ -49,14 +48,12 @@
     if ($inscount>0) {
         $message.=$inscount." session(s) added to interest list.";
         }
-	$messageSave=$message;
-	$message="";
+	$messageSave = $message;
+	$message = "";
 // Get the participant's interest data -- use global $session_interests
     $session_interest_count=get_session_interests_from_db($badgeid); // Returns count; Will render its own errors
 // Get title, etc. of such data -- use global $session_interests
     get_si_session_info_from_db($session_interest_count); // Will render its own errors
-    $message=$messageSave.$message;
-    $message_error="";
-	$pageIsDirty = false;
-    render_session_interests($badgid,$session_interest_count,$message,$message_error, $pageIsDirty); // includes footer
+    $message = $messageSave . $message;
+    render_session_interests($session_interest_count, $message, "", false, false); // includes footer
 ?>        
