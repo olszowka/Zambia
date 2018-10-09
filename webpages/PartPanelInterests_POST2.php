@@ -31,5 +31,5 @@
 			$pageIsDirty = False;
             }
     get_si_session_info_from_db($session_interest_count); // Will render its own errors 
-    render_session_interests($badgid, $session_interest_count, $message, $message_error, $pageIsDirty); // includes footer
+    render_session_interests($session_interest_count, $message, $message_error, $pageIsDirty, false); // includes footer
 ?>

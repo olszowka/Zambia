@@ -1,5 +1,4 @@
 <?php
-    // $Header$
 	//This file should be requested from menu link only -- it doesn't process any posts
     require ('PartCommonCode.php'); // initialize db; check login; set $badgeid
     require ('PartPanelInterests_FNC.php');
@@ -17,6 +16,20 @@
     get_si_session_info_from_db($session_interest_count); // Will render its own errors
     $message="";
     $message_error="";
-	$pageIsDirty = False;
-    render_session_interests($badgid, $session_interest_count, $message, $message_error, $pageIsDirty); // includes footer
+	$pageIsDirty = false;
+    $query = <<<EOD
+SELECT
+        P.interested
+    FROM
+        Participants P
+    WHERE
+        P.badgeid = '$badgeid';
+EOD;
+    $results = mysql_query_with_error_handling($query);
+    if (!$results) {
+        exit(); // Should have existed already anyway.
+    }
+    $resultsArray = mysql_fetch_array($results, MYSQLI_ASSOC);
+    $showNotAttendingWarning = $resultsArray["interested"] !== '1';
+    render_session_interests($session_interest_count, $message, $message_error, $pageIsDirty, $showNotAttendingWarning); // includes footer
 ?>
