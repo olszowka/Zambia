@@ -254,6 +254,9 @@ EOD;
             $modeIndex = ($nowInUnits - $firstDayStartTimeUnits) % $unitsPerBlock;
         else
             $modeIndex = ($nowInUnits - $otherDayStartTimeUnits) % $unitsPerBlock;
+        if ($unitsPerBlock == 2) {
+            $modeIndex++;
+        }
         while ($modeIndex < (3 - $unitsPerBlock))
             $modeIndex += $unitsPerBlock;
         while ($nowInUnits <= $endTimeUnits) {
@@ -508,7 +511,7 @@ function doACompSlot(&$ScheduledUpTo, $thisSlot, &$thisKey, $i, $roomId) {
 }
 
 function renderComplicatedBlock($roomId) {
-    global $thisSlotLength, $thisSlotBeginUnits, $thisSlotEndUnits, $blockHTML;
+    global $thisSlotLength, $thisSlotBeginUnits, $thisSlotEndUnits, $blockHTML, $standardRowHeight;
     $blockHTML = "<td class=\"schedulerGridRoom schedulerGridSlot\" complicatedBlock=\"true\"";
     if ($thisSlotLength > 1)
         $blockHTML .= " rowspan=\"$thisSlotLength\"";
