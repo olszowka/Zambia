@@ -48,12 +48,24 @@ EOD;
         $queryArray["sessions"].="                     AND S.title LIKE \"%$x%\"\n";
         }
     $queryArray["sessions"].=") ORDER BY T.trackname, S.sessionid;";
-	$queryArray["may_I"] = "select ".(may_I('my_panel_interests') ? "1" : "0"). " AS my_panel_interests;";
+    $queryArray["interested"] = <<<EOD
+SELECT
+        P.interested
+    FROM
+        Participants P
+    WHERE
+        P.badgeid = '$badgeid';
+EOD;
 	if (($resultXML=mysql_query_XML($queryArray))===false) {
 	    RenderError($title,$message_error);
         exit();
         }
-	participant_header($title);
+    $docNode = $resultXML->getElementsByTagName("doc")->item(0);
+    $variablesNode = $resultXML->createElement("variables");
+    $variablesNode = $docNode->appendChild($variablesNode);
+    $variablesNode->setAttribute("may_I", may_I('my_panel_interests') ? "1" : "0");
+    $variablesNode->setAttribute("conName", CON_NAME);
+    participant_header($title);
 	//echo($resultXML->saveXML()); //for debugging only
 	$xsl = new DomDocument;
 	$xsl->load('xsl/SearchMySessions1.xsl');
