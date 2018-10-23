@@ -11,10 +11,14 @@ participants, and rooms.
 * Includes interface to KonOpas (https://github.com/eemeli/konopas), a free tool for publishing the schedule to mobile devices
 
 ## Requirements
-* PHP 5.6 (Probably runs on 5.3 - 5.5)
+* PHP 7.X (Tested on 7.0) (Should be able to run on PHP 5.6 if tweaked to use older version of Swift)
   * XSLT library
   * Multibyte library
-* Apache
+* Apache (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
 * MySQL
 * SMTP connection for use as mail relay (only if you want to send email from Zambia)
   * Note, many hosts limit use of their mail relays in ways not compatible with Zambia
+* Swift mailer (Tested on v 6.1.3)
+
+## Notice
+Latest version of HEAD (master) is still "beta" testing migration to PHP 7.
