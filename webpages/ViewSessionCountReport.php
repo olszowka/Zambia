@@ -1,160 +1,160 @@
 <?php
-    require_once ('db_functions.php');
-    require_once ('RenderSessionCountReport.php');
-    require_once ('render_functions.php');
-    $title="View Session Report";
-    if (prepare_db()===false) {
-        $message="Error connecting to database.";
-        RenderError($title,$message);
-        exit ();
-        }
-   $query = <<<EOD
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=1 
-  group by Sessions.statusid, Sessions.trackid 
+// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $title;
+require_once('db_functions.php');
+require_once('RenderSessionCountReport.php');
+require_once('error_functions.php');
+$title = "View Session Report";
+if (prepare_db() === false) {
+    $message = "Error connecting to database.";
+    RenderError($message);
+    exit();
+}
+$query = <<<EOD
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=1 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=1 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=1 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=2 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=2 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=2 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=2 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=3 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=3 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=3 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=3 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=4 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=4 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=4 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=4 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=5 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=5 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=5 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=5 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=6 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=6 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=6 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=6 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=7 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=7 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=7 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=7 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=8 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=8 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=8 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=8 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=9 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=9 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=9 
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=9 
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 UNION
-select trackname, statusname status, count(*) count 
-  from Sessions, Tracks, SessionStatuses 
-  where Sessions.trackid=Tracks.trackid 
-    and SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=10 
-  group by Sessions.statusid, Sessions.trackid 
+SELECT trackname, statusname status, count(*) count 
+  FROM Sessions, Tracks, SessionStatuses 
+  WHERE Sessions.trackid=Tracks.trackid 
+    AND SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=10 
+  GROUP BY Sessions.statusid, Sessions.trackid 
 UNION
-select "<b>Total", SessionStatuses.statusname, count(*)
-  from Sessions, SessionStatuses 
-  where SessionStatuses.statusid=Sessions.statusid 
-    and SessionStatuses.statusid=10
-  group by Sessions.statusid
-UNION select " ", " ", " " from dual
+SELECT "<b>Total", SessionStatuses.statusname, count(*)
+  FROM Sessions, SessionStatuses 
+  WHERE SessionStatuses.statusid=Sessions.statusid 
+    AND SessionStatuses.statusid=10
+  GROUP BY Sessions.statusid
+UNION SELECT " ", " ", " " FROM dual
 ;
 EOD;
-    if (($result=mysql_query($query,$link))===false) {
-        $message="Error retrieving data from database.";
-        RenderError($title,$message);
-        exit ();
-        }
-    RenderSessionCountReport();
-    exit();
+if (!$result = mysqli_query_exit_on_error($query)) {
+    exit(); // Should have exited already
+}
+RenderSessionCountReport($result);
+exit();
 ?>

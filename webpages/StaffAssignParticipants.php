@@ -1,34 +1,21 @@
 <?php
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
-$title="Assign Participants";
-require_once('db_functions.php');
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
+// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $title;
+$title = "Assign Participants";
 require_once('StaffCommonCode.php');
 require_once('StaffAssignParticipants_FNC.php');
-
 staff_header($title);
 
 $topsectiononly = true; // no room selected -- flag indicates to display only the top section of the page
 if (isset($_POST["numrows"])) {
     SubmitAssignParticipants();
 }
-
-if (isset($_POST["selsess"])) {
-    $selsessionid = filter_var($_POST["selsess"], FILTER_VALIDATE_INT);
-    if ($selsessionid != 0) {
-        $topsectiononly = false;
-    }
-} elseif (isset($_GET["selsess"])) {
-    $selsessionid = filter_var($_GET["selsess"], FILTER_VALIDATE_INT);
-    if ($selsessionid != 0) {
-        $topsectiononly = false;
-    }
+$selsessionid = getInt("selsess", 0);
+if ($selsessionid != 0) {
+    $topsectiononly = false;
 } else {
-    $selsessionid = 0; // room was not yet selected.
     unset($_SESSION['return_to_page']); // since edit originated with this page, do not return to another.
 }
-
 $query = <<<EOD
 SELECT
         T.trackname, S.sessionid, S.title
@@ -41,16 +28,17 @@ SELECT
     ORDER BY
         T.trackname, S.sessionid, S.title;
 EOD;
-$Sresult = mysql_query_exit_on_error($query);
+$Sresult = mysqli_query_exit_on_error($query);
 echo "<form id=\"selsesformtop\" name=\"selsesform\" class=\"form-inline\" method=\"get\" action=\"StaffAssignParticipants.php\">\n";
 echo "<div><label for=\"selsess\">Select Session:</label>\n";
 echo "<select id=\"sessionDropdown\" class=\"span6\" name=\"selsess\">\n";
 echo "     <option value=0" . (($selsessionid == 0) ? "selected" : "") . ">Select Session</option>\n";
-while (list($trackname, $sessionid, $title) = mysql_fetch_array($Sresult, MYSQL_NUM)) {
+while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
     echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "");
     echo ">" . htmlspecialchars($trackname) . " - ";
     echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
 }
+mysqli_free_result($Sresult);
 echo "</select>\n";
 echo "<button id=\"sessionBtn\" type=\"submit\" name=\"submit\" class=\"btn btn-primary\">Select Session</button>\n";
 if (isset($_SESSION['return_to_page'])) {
@@ -100,13 +88,13 @@ SELECT
 		OR	POS.sessionid IS NULL
 	ORDER BY
 		moderator DESC,
-		IFNULL(POS.badgeid, "~") ASC,
+		IFNULL(POS.badgeid, '~') ASC,
 		rank ASC,
 		P.pubsname ASC;
 EOD;
-if (($resultXML = mysql_query_XML($queryArray))===false) {
-    $message=$query."<br>Error querying database. Unable to continue.<br>";
-    echo "<p class\"alert alert-error\">".$message."</p>\n";
+if (($resultXML = mysql_query_XML($queryArray)) === false) {
+    $message = $query . "<br>Error querying database. Unable to continue.<br>";
+    echo "<p class\"alert alert-error\">" . $message . "</p>\n";
     staff_footer();
     exit();
 }
@@ -128,20 +116,21 @@ SELECT
 					AND badgeid = P.badgeid
             );
 EOD;
-$otherParticipantsResult = mysql_query_exit_on_error($otherParticipantsQuery);
+$otherParticipantsResult = mysqli_query_exit_on_error($otherParticipantsQuery);
 
 $docNode = $resultXML->getElementsByTagName("doc")->item(0);
 
 $queryNode = $resultXML->createElement("query");
 $queryNode = $docNode->appendChild($queryNode);
 $queryNode->setAttribute("queryName", "otherParticipants");
-while($row = mysql_fetch_assoc($otherParticipantsResult)) {
+$regexArr = array();
+while ($row = mysqli_fetch_assoc($otherParticipantsResult)) {
     $rowNode = $resultXML->createElement("row");
     $rowNode = $queryNode->appendChild($rowNode);
     $badgeid = $row["badgeid"];
     $rowNode->setAttribute("badgeid", $badgeid);
     $pubsname = $row["pubsname"];
-    if (mb_ereg_match ( "\w" , $pubsname )) {
+    if (mb_ereg_match("\w", $pubsname)) {
         $pattern = "(.*)(\b" . preg_quote($row["lastname"]) . "\b)(.*)";
         if (mb_ereg($pattern, $pubsname, $regexArr)) {
             $sortableName = $regexArr[2] . ($regexArr[3] ? $regexArr[3] : "") . ", " . $regexArr[1];
@@ -158,7 +147,7 @@ while($row = mysql_fetch_assoc($otherParticipantsResult)) {
 $parametersNode = $resultXML->createElement("parameters");
 $parametersNode = $docNode->appendChild($parametersNode);
 if (may_I('EditSesNtsAsgnPartPg')) {
-	$parametersNode->setAttribute("editSessionNotes", "true");
+    $parametersNode->setAttribute("editSessionNotes", "true");
 }
 //echo($resultXML->saveXML()); //for debugging only
 $xsl = new DomDocument;

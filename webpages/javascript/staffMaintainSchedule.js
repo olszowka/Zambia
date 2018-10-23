@@ -11,7 +11,7 @@ function StaffMaintainSchedule() {
 	var dragParent = "";
 
 	this.anyChange = function anyChange(element) {
-	}
+	};
 	
 	this.changeRoomDisplay = function changeRoomDisplay() {
 		var roomsToDisplayArray = [];
@@ -30,13 +30,13 @@ function StaffMaintainSchedule() {
 			success: staffMaintainSchedule.retrieveRoomsTableCallback,
 			type: "POST"
 			});
-	}
+	};
 	
 	this.clearAllClick = function clearAllClick() {
 		$("#sessionsToBeScheduled").html("&nbsp;");
 		sessionMasterArray = [];
 		$("#noSessionsFoundMSG").hide();
-	}
+	};
 
 	this.dragStart = function(event, ui) {
 		dragParent = $(this).parent();
@@ -45,7 +45,7 @@ function StaffMaintainSchedule() {
 		dropTarget = "";
 		$(this).css("visibility", "hidden");
 		ui.helper.css("opacity","0.75");
-	}
+	};
 	
 	this.dropOnCompoundEmptySlot = function dropOnCompoundEmptySlot(pEvent, pUi, pThis) {
 		// always redraw table if dropping in compound area
@@ -83,7 +83,7 @@ function StaffMaintainSchedule() {
 							})
 						});
 				}
-	}
+	};
 
 	this.dropOnEmptySlot = function dropOnEmptySlot(pEvent, pUi, pThis) {
 		$("#myhelper").hide();
@@ -234,7 +234,7 @@ function StaffMaintainSchedule() {
 						}	
 				dropTarget.removeAttr("roomid").removeAttr("starttimeunits").removeAttr("endtimeunits");
 				}
-	}
+	};
 
 	this.dropOnFileCab = function dropOnFileCab(pEvent, pUi, pThis) {
 		if ($(pThis).hasClass("scheduledSessionBlock")) {
@@ -243,7 +243,7 @@ function StaffMaintainSchedule() {
 				// if item was anything other than 3 units long in simple box, redraw the schedule
 				var starttimeunits = $(pThis).attr("starttimeunits");
 				var endtimeunits = $(pThis).attr("endtimeunits");
-				if (dragParent.hasClass("schedulerGridContainer") && (endtimeunits - starttimeunits == 3))
+				if (dragParent.hasClass("schedulerGridContainer") && (endtimeunits - starttimeunits === 3))
 					returnTable = false;
 				var editsArray = [];
 				editsArray[0] = {
@@ -289,12 +289,13 @@ function StaffMaintainSchedule() {
 				}
 			else {
 				// item was not in schedule/
-				staffMaintainSchedule.removeFromSessionArray($(pThis).attr("id").substring(16,999))
+				staffMaintainSchedule.removeFromSessionArray($(pThis).attr("id").substring(16,999));
 				$(pThis).remove();
 				}	
-	}
+	};
 
 	this.dropOnScheduledSlot = function dropOnScheduledSlot(pEvent, pUi, pThis) {
+		var dest, destLeft, destTop, helper;
 		// need to determine if source was already scheduled
 		// need to determine status of Swap Mode button
 		$("#myhelper").hide();
@@ -303,7 +304,7 @@ function StaffMaintainSchedule() {
 		var editsArray = [];
 		if ($(pThis).attr("scheduleid")) {
 				//dropped item was previously scheduled		
-				if ($("#swapModeCheck").attr("mychecked") == "true") {
+				if ($("#swapModeCheck").attr("mychecked") === "true") {
 						//swap mode (prev sched); 1 of 4; not done
 						var dropDurationUnits = parseInt($(pThis).attr("endtimeunits"),10) - parseInt($(pThis).attr("starttimeunits"),10);
 						var targetDurationUnits = parseInt(dropTarget.attr("endtimeunits"),10) - parseInt(dropTarget.attr("starttimeunits"),10);
@@ -336,12 +337,12 @@ function StaffMaintainSchedule() {
 						var orig = tarSessSEL.offset();
 						var origTop = parseInt(orig.top, 10);
 						var origLeft = parseInt(orig.left, 10);
-						var dest = $(pThis).offset();
-						var destTop = parseInt(dest.top, 10);
-						var destLeft = parseInt(dest.left, 10);
+						dest = $(pThis).offset();
+						destTop = parseInt(dest.top, 10);
+						destLeft = parseInt(dest.left, 10);
 						var dropItemClone = $(pThis).clone();
 						var targetItemClone = tarSessSEL.clone();
-						var helper = tarSessSEL.clone();
+						helper = tarSessSEL.clone();
 						$(pThis).hide();
 						tarSessSEL.hide();
 						dropTarget.prepend(dropItemClone);
@@ -374,7 +375,7 @@ function StaffMaintainSchedule() {
 									});
 								elemToAdd = "";
     							});
-						if ($(pThis).parent().hasClass("schedulerGridContainer") && dropDurationUnits == targetDurationUnits) {
+						if ($(pThis).parent().hasClass("schedulerGridContainer") && dropDurationUnits === targetDurationUnits) {
 								// can do simple swap
 								targetItemClone.attr("roomid",$(pThis).attr("roomid"));
 								dropItemClone.attr("roomid",tarSessSEL.attr("roomid"));
@@ -425,7 +426,7 @@ function StaffMaintainSchedule() {
 				}
 			else {
 				//dropped item was not previously scheduled
-				if ($("#swapModeCheck").attr("mychecked") == "true") {
+				if ($("#swapModeCheck").attr("mychecked") === "true") {
 						//swap mode (not prev sched); 3 of 4; done
 						editsArray[0] = {
 							action: "delete",
@@ -448,14 +449,15 @@ function StaffMaintainSchedule() {
 							};
 						// need to animate moving previously scheduled Session to Session Pool 
 						// and then actually do it
-						var helper = tarSessSEL.clone();
+						helper = tarSessSEL.clone();
 						helper.removeClass("scheduledSessionBlock");
 						helper.addClass("animHelper");
 						helper.css("top",tarSessSEL.offset().top);
 						helper.css("left",tarSessSEL.offset().left);
-						var dest = $("#sessionsToBeScheduled").offset();
-						var destTop = parseInt(dest.top, 10) + 2;
-						var destLeft = parseInt(dest.left, 10) + 1;
+						var $sessionsToBeScheduled = $("#sessionsToBeScheduled");
+						dest = $sessionsToBeScheduled.offset();
+						destTop = parseInt(dest.top, 10) + 2;
+						destLeft = parseInt(dest.left, 10) + 1;
 						$("#fullPageContainer").prepend(helper);
 
 						var unschDup = 	tarSessSEL.clone();
@@ -470,7 +472,7 @@ function StaffMaintainSchedule() {
 						unschDup.addClass("sessionBlock");
 						unschDup.css("visibility","hidden");
 						unschDup.find(".getSessionInfo").on("click", staffMaintainSchedule.onClickInfo);
-						$("#sessionsToBeScheduled").prepend(unschDup);
+                        $sessionsToBeScheduled.prepend(unschDup);
 						elemToAdd = unschDup; // will unhide and make draggable when animation ends
 						sessionMasterArray.push(tarSessSEL.attr("sessionid"));
 						$(pThis).addClass("scheduledSessionBlock");
@@ -507,7 +509,7 @@ function StaffMaintainSchedule() {
 								elemToAdd = "";
     							});
 						staffMaintainSchedule.removeFromSessionArray($(pThis).attr("sessionid"));
-						if ($(pThis).attr("durationUnits") == tarSessDurUnits) {
+						if ($(pThis).attr("durationUnits") === tarSessDurUnits) {
 								//don't reload table; do all page manipulation here
 								$(pThis).draggable({
 									addClasses: false,
@@ -551,7 +553,7 @@ function StaffMaintainSchedule() {
 							});
 						}
 				}
-	}
+	};
 
 	this.dropOnUnschedSessions = function dropOnUnschedSessions(pEvent, pUi, pThis) {
 		/// item was in schedule

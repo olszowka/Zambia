@@ -1,5 +1,4 @@
 <?php
-// $Header$
 //	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
     $action=$_POST["action"]; // "create" or "edit" or "brainstorm"
     if ($action=="brainstorm") {

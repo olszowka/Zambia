@@ -1,47 +1,48 @@
 <?php
+//	Copyright (c) 2006-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 // function $email=get_email_from_post()
 // reads post variable to populate email array
 // returns email array or false if an error was encountered.
 // A message describing the problem will be stored in global variable $message_error
 function get_email_from_post() {
     global $message_error;
-    $message_error="";
-    $email['sendto']=$_POST['sendto'];
-    $email['sendfrom']=$_POST['sendfrom'];
-    $email['sendcc']=$_POST['sendcc'];
-    $email['subject']=stripslashes($_POST['subject']);
-    $email['body']=stripslashes($_POST['body']);
-    return($email);
-    }
+    $message_error = "";
+    $email['sendto'] = getString('sendto');
+    $email['sendfrom'] = getString('sendfrom');
+    $email['sendcc'] = getString('sendcc');
+    $email['subject'] = stripslashes(getString('subject'));
+    $email['body'] = stripslashes(getString('body'));
+    return ($email);
+}
 
 // function $OK=validate_email($email)
 // Checks if values in $email array are acceptible
 function validate_email($email) {
     global $message;
-    $message="";
-    $OK=true;
-    if (strlen($email['subject'])<6) {
-        $message.="Please enter a more substantive subject.<BR>\n";
-        $OK=false;
-        }
-    if (strlen($email['body'])<16) {
-        $message.="Please enter a more substantive body.<BR>\n";
-        $OK=false;
-        }
-    return($OK);
+    $message = "";
+    $OK = true;
+    if (strlen($email['subject']) < 6) {
+        $message .= "Please enter a more substantive subject.<BR>\n";
+        $OK = false;
     }
+    if (strlen($email['body']) < 16) {
+        $message .= "Please enter a more substantive body.<BR>\n";
+        $OK = false;
+    }
+    return ($OK);
+}
 
 // function $email=set_email_defaults()
 // Sets values for $email array to be used as defaults for the email
 // form when first entering page.
 function set_email_defaults() {
-    $email['sendto']=1; // default to all participants
-    $email['sendfrom']=1; // default to Arisia Programming
-    $email['sendcc']=1; // default to None
-    $email['subject']="";
-    $email['body']="";
-    return($email);
-    }
+    $email['sendto'] = 1; // default to all participants
+    $email['sendfrom'] = 1; // default to Arisia Programming
+    $email['sendcc'] = 1; // default to None
+    $email['subject'] = "";
+    $email['body'] = "";
+    return ($email);
+}
 
 // function render_send_email($email,$message_warning)
 // $email is an array with all values for the send email form:
@@ -50,12 +51,13 @@ function set_email_defaults() {
 // This function will render the entire page.
 // This page will next go to the StaffSendEmailCompose_POST page
 function render_send_email($email, $message_warning) {
-    $title="Send Email to Participants";
+    global $title;
+    $title = "Send Email to Participants";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title);
 
-    if (isset($message_warning) && strlen($message_warning)>0) {
+    if (isset($message_warning) && strlen($message_warning) > 0) {
         echo "<p class=\"alert\">$message_warning</p>\n";
     }
     echo "<h3>Step 1 -- Compose Email</h3>\n";
@@ -75,11 +77,11 @@ function render_send_email($email, $message_warning) {
     echo "    </select></td></tr>";
     echo "<tr><td><label for=\"subject\">Subject: </label></td>\n";
     echo "    <td><input name=\"subject\" type=\"text\" size=\"40\" value=\"";
-        echo htmlspecialchars($email['subject'],ENT_NOQUOTES)."\">\n";
+    echo htmlspecialchars($email['subject'], ENT_NOQUOTES) . "\">\n";
     echo "    </td></tr>";
     echo "</table><br>\n";
     echo "<textarea name=\"body\" cols=\"80\" rows=\"25\" style=\"width: 1000px;\">";
-        echo htmlspecialchars($email['body'],ENT_NOQUOTES)."</textarea><br>\n";
+    echo htmlspecialchars($email['body'], ENT_NOQUOTES) . "</textarea><br>\n";
     echo "<button class=\"ib\" type=\"reset\" value=\"reset\">Reset</button>\n";
     echo "<button class=\"ib\" type=\"submit\" value=\"seeit\">See it</button>\n";
     echo "</form><br>\n";
@@ -91,12 +93,13 @@ function render_send_email($email, $message_warning) {
     echo "<tr><td>\$EVENTS_SCHEDULE\$</td><td>\$FULL_SCHEDULE\$</td></tr>\n";
     echo "</table>\n";
     staff_footer();
-    }
+}
 
 // function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad)
 //
-function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad) {
-    $title="Results of Queueing Email";
+function renderQueueEmail($goodCount, $arrayOfGood, $badCount, $arrayOfBad) {
+    global $title;
+    $title = "Results of Queueing Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title);
@@ -104,24 +107,24 @@ function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad) {
     echo "$badCount message(s) failed.</p>\n";
     echo "<p>List of messages successfully queued:<br>\n";
     echo "Badgeid, Name for Publications, Email Address<br>\n";
-	if ($arrayOfGood)
-	    foreach ($arrayOfGood as $recipient) {
-	        echo htmlspecialchars($recipient['badgeid']).", ";
-	        echo htmlspecialchars($recipient['name']).", ";
-	        echo htmlspecialchars($recipient['email'])."<br>\n";
-	        }
-    echo"</p>\n";
+    if ($arrayOfGood)
+        foreach ($arrayOfGood as $recipient) {
+            echo htmlspecialchars($recipient['badgeid']) . ", ";
+            echo htmlspecialchars($recipient['name']) . ", ";
+            echo htmlspecialchars($recipient['email']) . "<br>\n";
+        }
+    echo "</p>\n";
     echo "<p>List of recipients which failed:<br>\n";
     echo "Badgeid, Name for Publications, Email Address<br>\n";
-	if ($arrayOfBad)
-	    foreach ($arrayOfBad as $recipient) {
-	        echo htmlspecialchars($recipient['badgeid']).", ";
-	        echo htmlspecialchars($recipient['name']).", ";
-	        echo htmlspecialchars($recipient['email'])."<br>\n";
-	        }
-    echo"</p>\n";
+    if ($arrayOfBad)
+        foreach ($arrayOfBad as $recipient) {
+            echo htmlspecialchars($recipient['badgeid']) . ", ";
+            echo htmlspecialchars($recipient['name']) . ", ";
+            echo htmlspecialchars($recipient['email']) . "<br>\n";
+        }
+    echo "</p>\n";
     staff_footer();
-    }
+}
 
 // function render_verify_email($email,$emailverify)
 // $email is an array with all values for the send email form:
@@ -131,45 +134,47 @@ function renderQueueEmail($goodCount,$arrayOfGood,$badCount,$arrayOfBad) {
 // This function will render the entire page.
 // This page will next go to the StaffSendEmailResults_POST page
 function render_verify_email($email, $email_verify, $message_warning) {
-    $title="Send Email";
+    global $title;
+    $title = "Send Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title);
 
-    if (strlen($message_warning)>0) {
+    if (strlen($message_warning) > 0) {
         echo "<p class=\"alert\">$message_warning</p>\n";
     }
     echo "<h3>Step 2 -- Verify </h3>\n";
     echo "<form name=\"emailverifyform\" method=POST action=\"StaffSendEmailCompose.php\">\n";
     echo "<p>Recipient List:<br>\n";
     echo "<textarea readonly rows=\"8\" cols=\"70\" style=\"width:400px;\">";
-    echo $email_verify['recipient_list']."</textarea></P>\n";
+    echo $email_verify['recipient_list'] . "</textarea></P>\n";
     echo "<p>Rendering of message body to first recipient:<br>\n";
     echo "<textarea readonly rows=\"25\" cols=\"80\" style=\"width:1000px;font-family: monospace, Monospaced;\">";
-    echo $email_verify['body']."</textarea></p>\n";
-    echo "<input type=\"hidden\" name=\"sendto\" value=\"".$email['sendto']."\">\n";
-    echo "<input type=\"hidden\" name=\"sendfrom\" value=\"".$email['sendfrom']."\">\n";
-    echo "<input type=\"hidden\" name=\"sendcc\" value=\"".$email['sendcc']."\">\n";
-    echo "<input type=\"hidden\" name=\"subject\" value=\"".htmlspecialchars($email['subject'])."\">\n";
-    echo "<input type=\"hidden\" name=\"body\" value=\"".htmlspecialchars($email['body'])."\">\n";
+    echo $email_verify['body'] . "</textarea></p>\n";
+    echo "<input type=\"hidden\" name=\"sendto\" value=\"" . $email['sendto'] . "\">\n";
+    echo "<input type=\"hidden\" name=\"sendfrom\" value=\"" . $email['sendfrom'] . "\">\n";
+    echo "<input type=\"hidden\" name=\"sendcc\" value=\"" . $email['sendcc'] . "\">\n";
+    echo "<input type=\"hidden\" name=\"subject\" value=\"" . htmlspecialchars($email['subject']) . "\">\n";
+    echo "<input type=\"hidden\" name=\"body\" value=\"" . htmlspecialchars($email['body']) . "\">\n";
     echo "<button class=\"ib\" type=\"submit\" name=\"navigate\" value=\"goback\">Go Back</button>\n";
     echo "<button class=\"ib\" type=\"submit\" name=\"navigate\" value=\"send\">Send</button>\n";
     echo "</form><br>\n";
     staff_footer();
-    }
+}
 
-function render_send_email_engine($email,$message_warning) {
-    $title="Pretend to actually send email.";
+function render_send_email_engine($email, $message_warning) {
+    global $title;
+    $title = "Pretend to actually send email.";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title);
 
-    if (strlen($message_warning)>0) {
+    if (strlen($message_warning) > 0) {
         echo "<p class=\"message_warning\">$message_warning</p>\n";
     }
     echo "<h3>Step 3 -- Actually Send Email </h3>\n";
     staff_footer();
-    }
+}
 
 // "0" don't show schedule; "1" show events schedule; "2" show full schedule; "3" error condition
 function checkForShowSchedule($body) {
@@ -207,11 +212,11 @@ function renderDuration($durMin, $durHrs) {
     if (($durMin === "0" || $durMin === "00") && ($durHrs === "0" || $durHrs === "00")) {
         return "";
     } else if ($durHrs === "0" || $durHrs === "00") {
-        return $durMin." Min";
+        return $durMin . " Min";
     } else if ($durMin === "0" || $durMin === "00") {
-        return $durHrs." Hr";
+        return $durHrs . " Hr";
     } else {
-        return $durHrs." Hr ".$durMin." Min";
+        return $durHrs . " Hr " . $durMin . " Min";
     }
 }
 
@@ -241,9 +246,9 @@ $extraWhereClause
         POS.badgeid, 
         SCH.starttime;
 EOD;
-    $result = mysql_query_exit_on_error($query);
+    $result = mysqli_query_exit_on_error($query);
     $returnResult = array();
-    while ($rowArr = mysql_fetch_assoc($result)) {
+    while ($rowArr = mysqli_fetch_assoc($result)) {
         $scheduleRow = str_pad($rowArr["starttime"], 15); // Fri 12:00 AM (plus 3 spaces)
         $scheduleRow .= str_pad(renderDuration($rowArr["durationmin"], $rowArr["durationhrs"]), 14); // 10 Hr 59 Min (plus 2 spaces)
         $scheduleRow .= str_pad(substr($rowArr["roomname"], 0, 25), 27); // Commonwealth Ballroom ABC (plus 2 spaces)

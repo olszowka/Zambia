@@ -23,10 +23,10 @@ SELECT
 		POS.moderator DESC,
 		P.badgeid;
 EOD;
-		$result = mysql_query_with_error_handling($query);
+		$result = mysqli_query_with_error_handling($query);
 		$sessionHasParticipant = array();
 		$participantOnSession = array();
-		while($row = mysql_fetch_assoc($result)) {
+		while($row = mysqli_fetch_assoc($result)) {
 			$sessionHasParticipant[$row["sessionid"]][] = array("id" => $row["badgeid"], "name" => $row["pubsname"].($row["moderator"] == "1" ? " (moderator)" : ""));
 			$participantOnSession[$row["badgeid"]][] = $row["sessionid"];
 			}
@@ -47,9 +47,9 @@ SELECT
 	ORDER BY
 		S.sessionid;
 EOD;
-		$result = mysql_query_with_error_handling($query);
+		$result = mysqli_query_with_error_handling($query);
 		$program = array();
-		while($row = mysql_fetch_assoc($result)) {
+		while($row = mysqli_fetch_assoc($result)) {
 			$programRow = array(
 				"id" => $row["id"],
 				"title" => $row["title"],
@@ -76,9 +76,9 @@ SELECT
 				WHERE S.pubstatusid = 2 /* Public */
 			)
 EOD;
-		$result = mysql_query_with_error_handling($query);
+		$result = mysqli_query_with_error_handling($query);
 		$people = array();
-		while($row = mysql_fetch_assoc($result)) {
+		while($row = mysqli_fetch_assoc($result)) {
 			$peopleRow = array(
 				"id" => $row["badgeid"],
 				"name" => array($row["pubsname"]),

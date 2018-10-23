@@ -2,7 +2,8 @@
 //	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
     function staff_header($title, $is_report = false) {
     require_once ("javascript_functions.php");
-    global $badgeid, $message, $fullPage;
+    global $badgeid, $fullPage, $header_used, $message;
+    $header_used = HEADER_STAFF;
 ?>
 <!DOCTYPE html>
 <html lang="en" <?php if ($fullPage) echo "class =\"fullPage\""; ?> >
@@ -53,7 +54,7 @@ load_javascript($title, $is_report);
   	require_once('db_functions.php');
     	$queryArray["categories"] = "SELECT reportcategoryid, description FROM ReportCategories ORDER BY display_order;";
     	if (($resultXML=mysql_query_XML($queryArray))===false) {
-    	    RenderError($title,$message_error);
+    	    RenderError($message_error);
             exit();
       }
   ?>

@@ -1,5 +1,4 @@
 <?php
-// $Header$
 require_once('db_functions.php');
 require_once('data_functions.php');
 require_once('StaffCommonCode.php');

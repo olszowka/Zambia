@@ -1,12 +1,13 @@
 <?php
-    global $participant,$message_error,$message2,$congoinfo;
+//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+    global $participant, $message_error, $message2, $congoinfo, $title;
     global $partAvail,$availability;
     $title="Search Panels";
     require ('BrainstormCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     if (!may_I('BS_sear_sess')) {
         $message_error="You do not currently have permission to view this page.<BR>\n";
-        RenderError($title,$message_error);
+        RenderError($message_error);
         exit();
         }
     brainstorm_header($title);

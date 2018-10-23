@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	$Header$
 	Created by Peter Olszowka on 2011-07-24; Updated 2015-08-29
 	Copyright (c) 2011-2016 Peter Olszowka. All rights reserved.
 	See copyright document for more details.

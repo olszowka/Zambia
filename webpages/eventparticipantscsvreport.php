@@ -3,16 +3,9 @@
 require_once('db_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
-$query="SET group_concat_max_len=25000";
-if (!$result = mysql_query($query, $link)) {
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
-    $title = "Send CSV file of Event Schedule and Participants";
-    staff_header($title);
-    $message = $query . "<br>Error querying database. Unable to continue.<br>";
-    echo "<p class\"errmsg\">" . $message . "\n";
-    staff_footer();
-    exit();
+$query = "SET group_concat_max_len=25000";
+if (!$result = mysqli_query_exit_on_error($query)) {
+    exit(); // should have exited already
 }
 $query=<<<EOD
 SELECT
@@ -40,19 +33,10 @@ SELECT
     WHERE
         S.divisionid = 3; /* Events */
 EOD;
-if (!$result = mysql_query($query, $link)) {
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
-    $title = "Pocket Program CSV Report";
-    staff_header($title);
-    $message = $query . "<br>Error querying database. Unable to continue.<br>";
-    echo "<p class\"errmsg\">" . $message . "\n";
-    staff_footer();
-    exit();
+if (!$result = mysqli_query_exit_on_error($query)) {
+    exit(); // should have exited already
 }
-if (mysql_num_rows($result) == 0) {
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
+if (mysqli_num_rows($result) == 0) {
     $title = "Pocket Program CSV Report";
     staff_header($title);
     $message = "Report returned no records.";
@@ -63,7 +47,7 @@ if (mysql_num_rows($result) == 0) {
 header('Content-disposition: attachment; filename=event_schedule_participants.csv');
 header('Content-type: text/csv');
 echo "title,sessionid,room,day,time,duration,track,\"pubs name\", \"last name\", \"first name\"\n";
-while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
+while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
     $betweenValues = false;
     foreach ($row as $value) {
         if ($betweenValues) {

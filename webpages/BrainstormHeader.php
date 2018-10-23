@@ -1,7 +1,8 @@
 <?php
-// $Header$
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
 function brainstorm_header($title) {
+    global $header_used;
+    $header_used = HEADER_BRAINSTORM;
     require_once ("javascript_functions.php");
 ?>
 <!DOCTYPE html>
@@ -11,7 +12,7 @@ function brainstorm_header($title) {
   <title>Zambia -- <?php echo $title ?></title>
   <link rel="stylesheet" href="BrainstormSection.css" type="text/css">
   <meta name="keywords" content="Questionnaire">
-  <?php load_javascript(); ?>
+  <?php load_javascript($title); ?>
 </head>
 <body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
 <h1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</h1>

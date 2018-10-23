@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('db_functions.php');
 require_once('data_functions.php');
 require_once('StaffCommonCode.php');
@@ -18,21 +18,16 @@ function retrieveRoomsTable() {
         RenderErrorAjax("Constant(configuration parameter) STANDARD_BLOCK_LENGTH undefined or defined incorrectly.\n");
         exit();
     }
-    if (!isset($_POST["roomsToDisplayArray"]))
+    if (empty($_POST["roomsToDisplayArray"]))
         exit();
     $roomsToDisplayArray = $_POST["roomsToDisplayArray"];
-    $roomsToDisplayList = "";
-    if (!$roomsToDisplayArray)
-        exit();
-    foreach ($roomsToDisplayArray as $i => $id)
-        $roomsToDisplayList .= intval($id) . ",";
-    $roomsToDisplayList = substr($roomsToDisplayList, 0, -1); //drop extra trailing comma
+    $roomsToDisplayList = implode(",", $roomsToDisplayArray);
     $queryArray["rooms"] = <<<EOD
 SELECT R.roomid, R.roomname FROM Rooms R WHERE R.roomid IN ($roomsToDisplayList)
 	ORDER BY R.display_order
 EOD;
     if (($resultXML = mysql_query_XML($queryArray)) === false) {
-        RenderError($title, $message_error);
+        RenderError($message_error);
         exit();
     }
     $xmlstr = <<<EOD
@@ -68,11 +63,11 @@ SELECT
 	ORDER BY
 		SCH.roomid, SCH.starttime, endtime DESC;
 EOD;
-    $result = mysql_query_with_error_handling($query);
+    $result = mysqli_query_with_error_handling($query);
     $scheduleArray = array();
     foreach ($roomsToDisplayArray as $roomIndex => $roomId)
         $scheduleArray[$roomId] = array();
-    while ($row = mysql_fetch_assoc($result)) {
+    while ($row = mysqli_fetch_assoc($result)) {
         list($startTimeHour, $startTimeMin, $foo) = sscanf($row["starttime"], "%d:%d:%d");
         list($endTimeHour, $endTimeMin, $foo) = sscanf($row["endtime"], "%d:%d:%d");
         $scheduleArray[$row["roomid"]][] = array(
@@ -139,12 +134,9 @@ function getScheduleTimesArray($roomsToDisplayList) {
             $htmlTimesArray[] = array("hr" => 0, "min" => 0, "mode" => -1, "units" => 0, "html" => "<th>" . $dayName . "</th>");
 
             $query = "SELECT MIN(SCH.starttime) AS starttime FROM Schedule SCH WHERE roomid IN ($roomsToDisplayList);";
-            $result = mysql_query_with_error_handling($query);
-            if (!$result) {
-                RenderErrorAjax($message_error);
-                exit();
-            }
-            $scalarResult = mysql_result($result, 0);
+            $result = mysqli_query_with_error_handling($query, true, true);
+            $row = mysqli_fetch_assoc($result);
+            $scalarResult = $row["starttime"];
             if ($scalarResult === null)
                 $startTimeUnits = $firstDayStartTimeUnits;
             else {
@@ -171,12 +163,13 @@ SELECT MAX(ADDTIME(SCH.starttime, S.duration)) AS endtime
 		AND ADDTIME(SCH.starttime, S.duration) < $thisCutoffTimeStr
 		AND SCH.starttime >= $previousCutoffTimeStr;
 EOD;
-            $result = mysql_query_with_error_handling($query);
+            $result = mysqli_query_with_error_handling($query);
             if (!$result) {
                 RenderErrorAjax($message_error);
                 exit();
             }
-            $scalarResult = mysql_result($result, 0);
+            $row = mysqli_fetch_assoc($result);
+            $scalarResult = $row["endtime"];
             if ($scalarResult == null) {
                 $foo = 1;
                 $endTimeUnits = $otherDayEndTimeUnits + ($day - 1) * 48;
@@ -198,12 +191,9 @@ SELECT MIN(SCH.starttime) AS starttime
 			SCH.roomid IN ($roomsToDisplayList)
 		AND ADDTIME(SCH.starttime, S.duration) >= $thisCutoffTimeStr;
 EOD;
-                $result = mysql_query_with_error_handling($query);
-                if (!$result) {
-                    RenderErrorAjax($message_error);
-                    exit();
-                }
-                $scalarResult = mysql_result($result, 0);
+                $result = mysqli_query_with_error_handling($query, true, true);
+                $row = mysqli_fetch_assoc($result);
+                $scalarResult = $row["starttime"];
                 if ($scalarResult === null) {
                     $gap = true;
                     $nextStartTimeUnits = $otherDayStartTimeUnits + $day * 48;
@@ -231,12 +221,9 @@ SELECT MAX(ADDTIME(SCH.starttime, S.duration)) AS endtime
 	FROM Schedule SCH JOIN Sessions S USING(sessionid)
 	WHERE SCH.roomid IN ($roomsToDisplayList);
 EOD;
-            $result = mysql_query_with_error_handling($query);
-            if (!$result) {
-                RenderErrorAjax($message_error);
-                exit();
-            }
-            $scalarResult = mysql_result($result, 0);
+            $result = mysqli_query_with_error_handling($query, true, true);
+            $row = mysqli_fetch_assoc($result);
+            $scalarResult = $row["endtime"];
             if ($scalarResult === null)
                 $endTimeUnits = $lastDayEndTimeUnits + ($day - 1) * 48;
             else {
@@ -285,6 +272,7 @@ EOD;
             $modeIndex++;
         }
     }
+
     return $htmlTimesArray;
 }
 
@@ -459,8 +447,8 @@ function doACompSlot(&$ScheduledUpTo, $thisSlot, &$thisKey, $i, $roomId) {
             $blockHTML .= " roomid=\"$roomId\" startTimeUnits=\"$thisSlot\">&nbsp;</div>";
             $blockHTML .= "</td>";
             $ScheduledUpTo = $thisSlotEndUnits;
-        } // can assume we are not done with blocks at this point
-        else if ($thisRoomSchedArray[$thisKey]["startTimeUnits"] == $thisSlot) {
+            // can assume we are not done with blocks at this point
+        } else if ($thisRoomSchedArray[$thisKey]["startTimeUnits"] == $thisSlot) {
             // put in a real session
             $thisCBlockLength = $thisRoomSchedArray[$thisKey]["endTimeUnits"] - $thisRoomSchedArray[$thisKey]["startTimeUnits"];
             $ScheduledUpTo = $thisRoomSchedArray[$thisKey]["endTimeUnits"];
@@ -534,7 +522,7 @@ function emptySchedBlock($roomId) {
 }
 
 function retrieveSessionInfo() {
-    global $link, $message_error;
+    global $message_error;
     $ConStartDatim = CON_START_DATIM;
     $sessionid = isset($_POST["sessionid"]) ? $_POST["sessionid"] : false;
     $query["sessions"] = <<<EOD
@@ -575,19 +563,20 @@ EOD;
 }
 
 function editSchedule() {
-    global $link, $message, $message_error;
+    global $linki, $message, $message_error;
     //usleep(500000);
     $returnTable = isset($_POST["returnTable"]) ? $_POST["returnTable"] : false;
-    $editsArray = isset($_POST["editsArray"]) ? $_POST["editsArray"] : false;
-    $roomsToDisplayArray = isset($_POST["roomsToDisplayArray"]) ? $_POST["roomsToDisplayArray"] : false;
-    if (!$editsArray)
+    $editsArray = isset($_POST["editsArray"]) ? $_POST["editsArray"] : array();
+    $roomsToDisplayArray = isset($_POST["roomsToDisplayArray"]) ? $_POST["roomsToDisplayArray"] : array();
+    if (count($editsArray) == 0) {
         exit();
+    }
     $name = "";
     $email = "";
     get_name_and_email($name, $email); // populates them from session data or db as necessary
-    $name = mysql_real_escape_string($name, $link);
-    $email = mysql_real_escape_string($email, $link);
-    $badgeid = mysql_real_escape_string($_SESSION['badgeid'], $link);
+    $name = mysqli_real_escape_string($linki, $name);
+    $email = mysqli_real_escape_string($linki, $email);
+    $badgeid = mysqli_real_escape_string($linki, $_SESSION['badgeid']);
     $addToScheduleArray = array(); // this is used for the conflict checker only
     $deleteScheduleIds = array(); // this is used for the conflict checker only
     $deleteScheduleIdList = ""; // these are actually removed from the schedule with a single query -- should include deletes and reschedules
@@ -632,44 +621,24 @@ function editSchedule() {
 
     if (count($SchedInsQueryArray) > 0) {
         foreach ($SchedInsQueryArray as $thisSessionId => $thisQuery) {
-            $result = mysql_query_with_error_handling($thisQuery);
-            if (!$result) {
-                RenderErrorAjax($message_error);
-                exit();
-            }
-            $SchedInsQueryArray[$thisSessionId] = mysql_insert_id($link);
+            $result = mysqli_query_with_error_handling($thisQuery, true, true);
+            $SchedInsQueryArray[$thisSessionId] = mysqli_insert_id($linki);
         }
         $SessStatSchedQu = substr($SessStatSchedQu, 0, -1) . ");"; //drop extra trailing comma and close quert
-        $result = mysql_query_with_error_handling($SessStatSchedQu);
-        if (!$result) {
-            RenderErrorAjax($message_error);
-            exit();
-        }
+        $result = mysqli_query_with_error_handling($SessStatSchedQu, true, true);
     }
     if ($SEHInsQu2) {
         $SEHInsQu = $SEHInsQu . $SEHInsQu2 . ";";
-        $result = mysql_query_with_error_handling($SEHInsQu);
-        if (!$result) {
-            RenderErrorAjax($message_error);
-            exit();
-        }
+        $result = mysqli_query_with_error_handling($SEHInsQu, true, true);
     }
     if ($deleteScheduleIdList) {
         $deleteQuery = "DELETE FROM Schedule WHERE scheduleid in ($deleteScheduleIdList);";
-        $result = mysql_query_with_error_handling($deleteQuery);
-        if (!$result) {
-            RenderErrorAjax($message_error);
-            exit();
-        }
+        $result = mysqli_query_with_error_handling($deleteQuery, true, true);
     }
     if ($deleteSessionIdList) {
         //  status 2 is "vetted"
         $SessStatVettedQu = "UPDATE Sessions SET statusid = 2 WHERE sessionid IN ($deleteSessionIdList);";
-        $result = mysql_query_with_error_handling($SessStatVettedQu);
-        if (!$result) {
-            RenderErrorAjax($message_error);
-            exit();
-        }
+        $result = mysqli_query_with_error_handling($SessStatVettedQu, true, true);
     }
     if ($returnTable == "true") {
         retrieveRoomsTable();
@@ -684,13 +653,13 @@ function editSchedule() {
 }
 
 function retrieveSessions() {
-    global $link, $message_error;
-    $currSessionIdArray = isset($_POST["currSessionIdArray"]) ? $_POST["currSessionIdArray"] : false;
+    global $linki, $message_error;
+    $currSessionIdArray = isset($_POST["currSessionIdArray"]) ? $_POST["currSessionIdArray"] : array();
     $trackId = intval($_POST["trackId"]);
     $typeId = intval($_POST["typeId"]);
     $divisionId = intval($_POST["divisionId"]);
     $sessionId = intval($_POST["sessionId"]);
-    $title = mysql_real_escape_string(stripslashes($_POST["title"]));
+    $title = mysqli_real_escape_string($linki, stripslashes($_POST["title"]));
     $query["sessions"] = <<<EOD
 SELECT S.sessionid, S.title, S.progguiddesc, TR.trackname, TY.typename, D.divisionname,
 	FLOOR((HOUR(S.duration) * 60 + MINUTE(S.duration) + 29) / 30) AS durationUnits,
@@ -751,7 +720,8 @@ EOD;
 }
 
 function update_participant() {
-    $searchString = mysql_real_escape_string(stripslashes($_POST["searchString"]));
+    global $linki, $message_error;
+    $searchString = mysqli_real_escape_string($linki, stripslashes($_POST["searchString"]));
     if ($searchString == "")
         exit();
     if (is_numeric($searchString)) {

@@ -1,5 +1,5 @@
 <?php
-	// $Header$
+// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
     //This file should be requested from post on "session interests(ranks)" form
     require ('PartCommonCode.php'); // initialize db; check login; set $badgeid
     require ('PartPanelInterests_FNC.php');
@@ -9,12 +9,12 @@
     $error = false;
     if (!may_I('my_panel_interests')) {
         $message = "You do not currently have permission to view this page.<br />\n";
-        RenderError("Permission Error", $message);
+        RenderError($message);
         exit();
         }
     if (!isset($_POST["submitranks"])) { //That should be "save" button on "session interests" form.
         $message = "This page was reached from an unexpected place.<br />\n";
-        RenderError("Page Flow Error", $message);
+        RenderError($message);
         exit();
         }
     $session_interest_count = get_session_interests_from_post();

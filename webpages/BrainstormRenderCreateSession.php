@@ -1,6 +1,5 @@
 <?php
-// $Header$
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
     // This function will output the page with the form to add or create a session
     // Variables
     //     action: "brainstorm"
@@ -8,7 +7,7 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function BrainstormRenderCreateSession ($session, $message1, $message2) {
-    global $name, $email;
+    global $name, $email, $title;
     require_once("BrainstormCommonCode.php");
     $_SESSION['return_to_page']='BrainstormRenderCreateSession.php';
     $title="Brainstorm New Session";

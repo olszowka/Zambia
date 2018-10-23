@@ -1,9 +1,6 @@
 <?php
-	// $Header$
-	// Created by Peter Olszowka
-	// Copyright (c) 2008-2016 Peter Olszowka. All rights reserved.
-	// See copyright document for more details.
-    global $participant, $message, $message_error, $message2, $congoinfo;
+// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+    global $participant, $message, $message_error, $message2, $congoinfo, $title;
     $title="My Profile";
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
@@ -28,7 +25,7 @@ SELECT
 			AND PHC.badgeid="$badgeid";
 EOD;
 	if (($resultXML=mysql_query_XML($queryArray))===false) {
-	    RenderError($title,$message_error);
+	    RenderError($message_error);
         exit();
         }
 	$optionsNode = $resultXML->createElement("options");

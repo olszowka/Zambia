@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2010-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 function SetSessionSearchParameterDefaults() {
     global $SessionSearchParameters;
     $SessionSearchParameters['currenttrack'] = 0;
@@ -8,7 +8,7 @@ function SetSessionSearchParameterDefaults() {
     $SessionSearchParameters['type'] = 0;
     $SessionSearchParameters['status'] = 0;
     $SessionSearchParameters['title'] = '';
-    $SessionSearchParameters['showimported'] = FALSE;
+    $SessionSearchParameters['showimported'] = false;
 }
 
 function RenderSearchPreviousSessions() {
@@ -28,7 +28,7 @@ function RenderSearchPreviousSessions() {
                 <div class="span2">
                     <label for="currenttrack" class="control-label">Current Track: </label>
                     <select name="currenttrack" class="xspan2">
-                        <?php populate_select_from_table("Tracks", $SessionSearchParameters['currenttrack'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
+                        <?php populate_select_from_table("Tracks", $SessionSearchParameters['currenttrack'], "Any", true); //$table_name, $default_value, $option_0_text, $default_flag ?>
                     </select>
                 </div>
                 <div class="span2">
@@ -46,19 +46,19 @@ SELECT
     ORDER BY
         PC.display_order, PCT.previoustrackid
 EOD;
-                        populate_select_from_query($query, $SessionSearchParameters['previouscontrack'], "ANY", TRUE); ?>
+                        populate_select_from_query($query, $SessionSearchParameters['previouscontrack'], "ANY", true); ?>
                     </select>
                 </div>
                 <div class="span2">
                     <label class="control-label" for="previouscon">Previous Con: </label>
                     <select name="previouscon" class="xspan2">
-                        <?php populate_select_from_table("PreviousCons", $SessionSearchParameters['previouscon'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
+                        <?php populate_select_from_table("PreviousCons", $SessionSearchParameters['previouscon'], "Any", true); //$table_name, $default_value, $option_0_text, $default_flag ?>
                     </select>
                 </div>
                 <div class="span2">
                     <label class="control-label" for="type">Type: </label>
                     <select name="type" class="xspan2">
-                        <?php populate_select_from_table("Types", $SessionSearchParameters['type'], "Any", TRUE); //$table_name, $default_value, $option_0_text, $default_flag ?>
+                        <?php populate_select_from_table("Types", $SessionSearchParameters['type'], "Any", true); //$table_name, $default_value, $option_0_text, $default_flag ?>
                     </select>
                 </div>
                 <div class="span2">
@@ -74,7 +74,7 @@ SELECT
     ORDER BY
         ST.display_order
 EOD;
-                        populate_select_from_query($query, $SessionSearchParameters['status'], "ANY", TRUE); ?>
+                        populate_select_from_query($query, $SessionSearchParameters['status'], "ANY", true); ?>
                     </select>
                 </div>
             </div>
@@ -102,61 +102,61 @@ EOD;
 
 function HandleSearchParameters() {
     // parse parameters for Search of previous sessions and validate them
-    // return TRUE if successful, FALSE otherwise
-    global $SessionSearchParameters, $message_error;
+    // return true if successful, false otherwise
+    global $SessionSearchParameters, $message_error, $message;
     $message_error = "This page is intended to be reached from a form.  One or more required Post parameters were not provided. No further processing is possible.";
     $SessionSearchParameters = array();
     if (isset($_POST['currenttrack'])) {
         $SessionSearchParameters['currenttrack'] = $_POST['currenttrack'];
     } else {
-        Return (FALSE);
+        return (false);
     }
     if (isset($_POST['previoustrack'])) {
         $SessionSearchParameters['previouscontrack'] = $_POST['previoustrack'];
     } else {
-        Return (FALSE);
+        return (false);
     }
     if (isset($_POST['previouscon'])) {
         $SessionSearchParameters['previouscon'] = $_POST['previouscon'];
     } else {
-        Return (FALSE);
+        return (false);
     }
     if (isset($_POST['type'])) {
         $SessionSearchParameters['type'] = $_POST['type'];
     } else {
-        Return (FALSE);
+        return (false);
     }
     if (isset($_POST['status'])) {
         $SessionSearchParameters['status'] = $_POST['status'];
     } else {
-        Return (FALSE);
+        return (false);
     }
     if (isset($_POST['title'])) {
         $SessionSearchParameters['title'] = $_POST['title'];
     } else {
-        Return (FALSE);
+        return (false);
     }
-    $SessionSearchParameters['showimported'] = (isset($_POST['showimported'])) ? TRUE : FALSE;
+    $SessionSearchParameters['showimported'] = (isset($_POST['showimported'])) ? true : false;
     if ($SessionSearchParameters['previouscontrack'] != 0) {
         sscanf($SessionSearchParameters['previouscontrack'], "%da%d", $SessionSearchParameters['previouscon2'],
             $SessionSearchParameters['previoustrack']);
         if ($SessionSearchParameters['previouscon'] != 0 &&
             $SessionSearchParameters['previouscon'] != $SessionSearchParameters['previouscon2']) {
-            $message_error = "<I>Previous Track</I> is not from the con indicated by <I>Previous Con</I> so no results can be returned.";
-            Return (FALSE);
+            $message_error = "<i>Previous Track</i> is not from the con indicated by <i>Previous Con</i> so no results can be returned.";
+            return (false);
         }
     }
     if (isset($SessionSearchParameters['previoustrack']) && $SessionSearchParameters['previoustrack'] != 0 &&
         $SessionSearchParameters['currenttrack'] != 0) {
-        $message_error = "<I>Previous Track</I> and <I>Current Track</I> are both specified so no results can be returned.";
+        $message_error = "<i>Previous Track</i> and <i>Current Track</i> are both specified so no results can be returned.";
         Return (FALSE);
     }
     $message_error = '';
-    Return (TRUE);
+    return (true);
 } // End of HandleSearchParameters()
-
-function PerformPrevSessionSearch() {
-    global $SessionSearchParameters, $message_error, $result, $link;
+    
+function PerformPrevSessionSearch () {
+    global $SessionSearchParameters, $message_error,$message,$result,$link;
     $query= <<<EOD
 SELECT
         PS.title, PS.progguiddesc, PS.previousconid, PS.previoussessionid, PS.importedsessionid, TY.typename,
@@ -200,21 +200,22 @@ EOD;
         $query = substr($query, 0, -4);     //drop last 4 characters
     }
     $query .= " ORDER BY PC.display_order, PS.previoustrackid";
-    $result = mysql_query($query, $link);
+    $result = mysqli_query($linki, $query);
     if (!$result) {
         $message_error = $query . "Error querying database.";
-        Return (FALSE);
+        return (false);
     }
-    if (mysql_num_rows($result) == 0) {
+    if (mysqli_num_rows($result) == 0) {
         $message_error = "No matching sessions found.";
-        Return (FALSE);
+        return (false);
     }
-    Return (TRUE);
+    return (true);
 } // End of PerformPrevSessionSearch()
 
 function RenderSearchPrevSessionResults() {
     global $result;
-    while ($result_array[] = mysql_fetch_array($result, MYSQL_ASSOC)) ;
+    $result_array = array();
+    while ($result_array[] = mysqli_fetch_array($result, MYSQLI_ASSOC)) ;
     array_pop($result_array);
     echo "<div class=\"row-fluid\"><form method=POST action=\"SubmitImportSessions.php\" class=\"form-horizontal\">\n";
     echo "<div class=\"clearfix\"><button type=submit class=\"btn btn-primary pull-right\" value=\"submitimport\">Import</button></div>\n";
@@ -222,7 +223,7 @@ function RenderSearchPrevSessionResults() {
     foreach ($result_array as $resultrowindex => $resultrow) {
         echo "<tr><td colspan=6><hr style='margin: 0;'/></td></tr>\n";
         echo "<tr><td rowspan=3>&nbsp;</td>";
-        echo "<td colspan=5><strong>" . htmlspecialchars($resultrow['title'], ENT_NOQUOTES) . "<strong></td></TR>\n";
+        echo "<td colspan=5><strong>" . htmlspecialchars($resultrow['title'], ENT_NOQUOTES) . "<strong></td></tr>\n";
         echo "<tr><td><label class=\"checkbox\"><input type=\"checkbox\" name=\"import$resultrowindex\"";
         if ($resultrow['importedsessionid'] != '') {
             echo " disabled checked";
@@ -233,7 +234,7 @@ function RenderSearchPrevSessionResults() {
         echo "<td><span class=\"label\">{$resultrow['trackname']}</span></td>";
         echo "<td><span class=\"label\">{$resultrow['typename']}</span></td>";
         echo "<td><span class=\"label\">{$resultrow['statusname']}</span></td>";
-        echo "<td><span class=\"label label-info\">{$resultrow['previousconname']}</span></td></TR>\n";
+        echo "<td><span class=\"label label-info\">{$resultrow['previousconname']}</span></td></tr>\n";
         echo "<td colspan=5 class=\"padding2000\">" . htmlspecialchars($resultrow['progguiddesc'], ENT_NOQUOTES) . "</td></tr>\n";
     }
     echo "<input type=\"hidden\" name=\"lastrownum\" value=\"$resultrowindex\">\n";
@@ -241,22 +242,22 @@ function RenderSearchPrevSessionResults() {
 }  // End of RenderSearchPrevSessionResults()
 
 function ProcessImportSessions() {
-    global $message, $message_error, $link;
+    global $linki, $message, $message_error;
     if (!isset($_POST['lastrownum'])) {
         $message_error = "This page is intended to be reached from a form.  One or more required ";
         $message_error .= "Post parameters were not provided. No further processing is possible.";
-        Return (FALSE);
+        return (false);
     }
     get_name_and_email($name, $email); // populates them from session data or db as necessary
-    $name = mysql_real_escape_string($name, $link);
-    $email = mysql_real_escape_string($email, $link);
-    $badgeid = mysql_real_escape_string($_SESSION['badgeid'], $link);
+    $name = mysqli_real_escape_string($linki, $name);
+    $email = mysqli_real_escape_string($linki, $email);
+    $badgeid = mysqli_real_escape_string($linki, $_SESSION['badgeid']);
     $query1 = "START TRANSACTION";
     $success_rows = 0;
     for ($i = 0; $i <= $_POST['lastrownum']; $i++) {
         if (isset($_POST["import$i"])) {
-            $previousconid = mysql_real_escape_string($_POST["previousconid$i"], $link);
-            $previoussessionid = mysql_real_escape_string($_POST["previoussessionid$i"], $link);
+            $previousconid = mysqli_real_escape_string($linki, $_POST["previousconid$i"]);
+            $previoussessionid = mysqli_real_escape_string($linki, $_POST["previoussessionid$i"]);
             $query2 = "INSERT INTO Sessions\n";
             $query2 .= "        (sessionid, trackid, typeid, divisionid, pubstatusid, \n";
             $query2 .= "        languagestatusid, pubsno, title, secondtitle, pocketprogtext, \n";
@@ -276,69 +277,69 @@ function ProcessImportSessions() {
             $query2 .= "            previousconid=$previousconid AND\n";
             $query2 .= "            previoussessionid=$previoussessionid\n";
             //echo $query2;
-            $result = mysql_query_with_error_handling($query1);
+            $result = mysqli_query_with_error_handling($query1);
             if (!$result) {
-                rollback();
-                Return (FALSE);
+                rollback_mysqli();
+                return (false);
             }
-            $result = mysql_query_with_error_handling($query2);
+            $result = mysqli_query_with_error_handling($query2);
             if (!$result) {
-                rollback();
-                Return (FALSE);
+                rollback_mysqli();
+                return (false);
             }
-            if (($x = mysql_affected_rows($link)) != 1) {
+            if (($x = mysqli_affected_rows($linki)) != 1) {
                 $message_error = $query2 . "There was a problem because 1 row was expected to ";
                 $message_error .= "be inserted, but $x rows were actually inserted. ";
-                rollback();
-                Return (FALSE);
+                rollback_mysqli();
+                return (false);
             }
-            $sessionid = mysql_insert_id($link);
+            $sessionid = mysqli_insert_id($linki);
             if ($sessionid == 0 || !$sessionid) {
                 $message_error = $query2 . "Insert id not returned as expected from previous query. ";
-                rollback();
-                Return (FALSE);
+                rollback_mysqli();
+                return (false);
             }
             $query3 = "UPDATE PreviousSessions\n";
             $query3 .= "    SET importedsessionid=$sessionid WHERE\n";
             $query3 .= "        previousconid=$previousconid AND\n";
             $query3 .= "        previoussessionid=$previoussessionid\n";
-            $result = mysql_query($query3, $link);
+            $result = mysqli_query($linki, $query3);
             if (!$result) {
                 $message_error = $query3 . "Error querying database.";
-                rollback();
-                Return (FALSE);
+                rollback_mysqli();
+                return (false);
             }
-            if (($x = mysql_affected_rows($link)) != 1) {
+            if (($x = mysqli_affected_rows($linki)) != 1) {
                 $message_error = $query3 . "There was a problem because 1 row was expected to ";
                 $message_error .= "be inserted, but $x rows were actually inserted. ";
-                rollback();
-                Return (FALSE);
+                rollback_mysqli();
+                return (false);
             }
             $query4 = "INSERT INTO SessionEditHistory\n";
             $query4 .= "    (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)\n";
             $query4 .= "    Values($sessionid, \"$badgeid\", \"$name\", \"$email\", NULL, 6, 6, NULL)\n";
-            $result = mysql_query($query4, $link);
+            $result = mysqli_query($linki, $query4);
             if (!$result) {
                 $message_error = $query4 . "Error querying database.";
-                rollback();
-                Return (FALSE);
+                rollback_mysqli();
+                return (false);
             }
-            if (($x = mysql_affected_rows($link)) != 1) {
+            if (($x = mysqli_affected_rows($linki)) != 1) {
                 $message_error = $query4 . "There was a problem because 1 row was expected to ";
                 $message_error .= "be inserted, but $x rows were actually inserted. ";
-                rollback();
-                Return (FALSE);
+                rollback_mysqli();
+                return (false);
             }
-            $result = mysql_query("COMMIT", $link);
+            $result = mysqli_query($linki, "COMMIT");
             if (!$result) {
                 $message_error = "COMMIT: Error querying database.";
-                Return (FALSE);
+                return (false);
             }
             $success_rows++;
         }
     }
     $message = "$success_rows sessions(s) imported.";
     $message_error = "";
-    Return (TRUE);
+    return (true);
 } // End of ProcessImportSessions()
 ?>

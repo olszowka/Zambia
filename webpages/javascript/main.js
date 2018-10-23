@@ -1,4 +1,3 @@
-//	$Header$
 //	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 $(document).ready(function() {
 	//this function is run whenever any page finishes loading if JQuery has been loaded

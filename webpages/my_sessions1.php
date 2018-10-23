@@ -1,12 +1,13 @@
 <?php
-    global $participant,$message_error,$message2,$congoinfo;
-    global $partAvail,$availability;
+// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+    global $participant, $message_error, $message2, $congoinfo;
+    global $partAvail, $availability, $title;
     $title="Search Sessions";
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     if (!may_I('search_panels')) {
         $message_error="You do not currently have permission to view this page.<br>\n";
-        RenderError($title,$message_error);
+        RenderError($message_error);
         exit();
         }
     require_once('ParticipantHeader.php');

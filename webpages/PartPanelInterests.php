@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 	//This file should be requested from menu link only -- it doesn't process any posts
     require ('PartCommonCode.php'); // initialize db; check login; set $badgeid
     require ('PartPanelInterests_FNC.php');
@@ -7,7 +8,7 @@
     $title="Panel Interests";
     if (!may_I('my_panel_interests')) {
         $message="You do not currently have permission to view this page.<br />\n";
-        RenderError("Permission Error", $message);
+        RenderError($message);
         exit();
         }
     // Get the participant's interest data -- use global $session_interests
@@ -25,11 +26,11 @@ SELECT
     WHERE
         P.badgeid = '$badgeid';
 EOD;
-    $results = mysql_query_with_error_handling($query);
+    $results = mysqli_query_with_error_handling($query);
     if (!$results) {
         exit(); // Should have existed already anyway.
     }
-    $resultsArray = mysql_fetch_array($results, MYSQLI_ASSOC);
+    $resultsArray = mysqli_fetch_array($results, MYSQLI_ASSOC);
     $showNotAttendingWarning = $resultsArray["interested"] !== '1';
     render_session_interests($session_interest_count, $message, $message_error, $pageIsDirty, $showNotAttendingWarning); // includes footer
 ?>
