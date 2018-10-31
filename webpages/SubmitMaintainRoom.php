@@ -8,7 +8,8 @@ function check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray) {
     // Perform following checks on the participants in the new schedule entries (taking into account deleted entries):
     //    1. Are any participants double booked?
     //    2. Are any participants scheduled outside available times?
-    //    3. Are any participants scheduled for more sessions than limits (daily and total)? (not implemented yet!!!)
+    //    3. Are any participants not currently set as attending?
+    //    4. Are any participants scheduled for more sessions than limits (daily and total)? (not implemented yet!!!)
     //
     // Process
     //
@@ -32,6 +33,7 @@ function check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray) {
     // there are only deletions and these can't cause conflicts.
     $sessionidlist = implode(",", array_keys($addToScheduleArray));
     $addToScheduleParticipants = array();
+    $addToScheduleParticipantsAttending = array();
     $query = <<<EOD
 SELECT
 		S.sessionid, hour(S.duration)*60+minute(S.duration) as durationmin, S.title
@@ -74,7 +76,7 @@ EOD;
     $badgeidlist = implode(",", array_keys($addToScheduleParticipants));
     $query = <<<EOD
 SELECT
-		badgeid, pubsname
+		badgeid, pubsname, if (interested = 1, 1, 0) as attending
 	FROM
 		Participants
 	WHERE
@@ -85,8 +87,10 @@ EOD;
         RenderError($title, $message);
         exit();
     }
-    while ($x = mysql_fetch_array($result, MYSQL_ASSOC))
+    while ($x = mysql_fetch_array($result, MYSQL_ASSOC)) {
         $addToScheduleParticipants[$x['badgeid']] = $x['pubsname'];
+        $addToScheduleParticipantsAttending[$x['badgeid']] = $x['attending'];
+    }
     // starttime and duration in minutes from start of con -- simpler time comparison
     // Get participant availabilities
     $query = <<<EOD
@@ -183,12 +187,6 @@ EOD;
         }
         // check #2 not available conflict
         // Don't report conflict if there are no availabilities at all for the participant
-        //echo "Participant Availability Times:<br />\n";
-        //print_r($participantAvailabilityTimes);
-        //echo "<br />\n";
-        //echo "addSession:<br />\n";
-        //print_r($addSession);
-        //echo "<br />\n";
         if ($addSession['participants']) {
             $addParts = $addSession['participants'];
             foreach ($addParts as $addBadgeid) {
@@ -219,6 +217,23 @@ EOD;
                 }
             }
         }
+        // check #3 not attending conflict
+        if ($addSession['participants']) {
+            $addParts = $addSession['participants'];
+            foreach ($addParts as $addBadgeid) {
+                if ($addToScheduleParticipantsAttending[$addBadgeid] != '1') {
+                    if (!$conflictThisAddition) {
+                        // Need header for this session
+                        $message .= "<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
+                        $message .= "<ul>";
+                    }
+                    $conflictThisAddition = true;
+                    $message .= "<li>" . htmlspecialchars($addToScheduleParticipants[$addBadgeid], ENT_NOQUOTES) . " ($addBadgeid) ";
+                    $message .= "is not attending.</li>\n";
+                }
+            }
+        }
+
         if ($conflictThisAddition) {
             $message .= "</ul></div>";
         }
