@@ -304,10 +304,22 @@ form.navbar-search {
 .warning-bg {
   background-color: #fcf8e3;
 }
+.problem-bg {
+  background-color: #fbc8bb;
+}
 .row-container {
   padding: 0;
   width: 100%;
-  margin: 0 0 1.5em 0;
+  margin: 0 0;
+  padding-bottom: 1.5em;
+}
+.row-container.not-attending {
+  background-color: #fbc8bb;
+}
+.not-attending-header-row {
+  background-color: #fbc8bb;
+  padding: 2px 4px;
+  font-weight: bold;
 }
 .za-sessionHistory-moderator {
   text-decoration: underline;

@@ -54,11 +54,11 @@ $queryArray["timestampsetup2"] = "SET @maxin = (SELECT max(inactivatedts) FROM P
 $queryArray["maxtimestamp"] = "SELECT IF(@maxcr IS NULL, @maxin, IF(@maxin IS NULL, @maxcr, IF(@maxcr > @maxin, @maxcr, @maxin))) AS maxtimestamp;";
 $queryArray["sessionInfo"] = <<<EOD
 SELECT
-		sessionid, title, progguiddesc, persppartinfo, notesforpart, notesforprog
-	FROM
-		Sessions
-	WHERE
-		sessionid=$selsessionid;
+        sessionid, title, progguiddesc, persppartinfo, notesforpart, notesforprog
+    FROM
+        Sessions
+    WHERE
+        sessionid=$selsessionid;
 EOD;
 $queryArray["participantInterest"] = <<<EOD
 SELECT
@@ -71,24 +71,26 @@ SELECT
 		PSI.willmoderate,
 		PSI.comments,
 		P.bio,
-		PHR.roleid
-	FROM
-					Participants AS P
-			JOIN
-					(SELECT DISTINCT badgeid, sessionid FROM
-						(SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
-						UNION
-						SELECT badgeid, sessionid FROM ParticipantSessionInterest WHERE sessionid=$selsessionid) AS R2
-						) AS R USING (badgeid)
-		LEFT JOIN	ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
-		LEFT JOIN	ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
-		LEFT JOIN	ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10 /* moderator */
+		PHR.roleid,
+        IF(P.interested = 1, 1, 0) AS attending
+    FROM
+                  Participants AS P
+             JOIN
+                  (SELECT DISTINCT badgeid, sessionid FROM
+                      (SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
+                          UNION
+                       SELECT badgeid, sessionid FROM ParticipantSessionInterest WHERE sessionid=$selsessionid) AS R2
+                      ) AS R USING (badgeid)
+        LEFT JOIN ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
+        LEFT JOIN ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
+        LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10 /* moderator */
 	WHERE
 			POS.sessionid = $selsessionid
 		OR	POS.sessionid IS NULL
 	ORDER BY
+        attending DESC,
 		moderator DESC,
-		IFNULL(POS.badgeid, '~') ASC,
+		IFNULL(POS.badgeid, "~") ASC,
 		rank ASC,
 		P.pubsname ASC;
 EOD;
@@ -108,12 +110,12 @@ SELECT
     WHERE
             P.interested = 1
         AND NOT EXISTS (
-			SELECT *
-				FROM
-					ParticipantSessionInterest
-				WHERE
-						sessionid = $selsessionid
-					AND badgeid = P.badgeid
+            SELECT *
+                FROM
+                    ParticipantSessionInterest
+                WHERE
+                        sessionid = $selsessionid
+                    AND badgeid = P.badgeid
             );
 EOD;
 $otherParticipantsResult = mysqli_query_exit_on_error($otherParticipantsQuery);

@@ -97,13 +97,25 @@
 		</form>
 	</xsl:template>
 	<xsl:template match="doc/query[@queryName='participantInterest']/row">
-		<div class="row-container">
+        <xsl:if test="preceding-sibling::*[1]/@attending='1' and @attending='0'">
+            <div class="not-attending-header-row">Not Attending</div>
+        </xsl:if>
+		<div>
+            <xsl:attribute name="class">
+                <xsl:text>row-container</xsl:text><xsl:if test="@attending='0'"><xsl:text> not-attending</xsl:text></xsl:if>
+            </xsl:attribute>
 			<div>
 				<xsl:choose>
 					<xsl:when test="@moderator='1'"><xsl:attribute name="class">row-fluid success-bg</xsl:attribute></xsl:when>
 					<xsl:otherwise><xsl:attribute name="class">row-fluid</xsl:attribute></xsl:otherwise>
 				</xsl:choose>
-				<div class="span2">
+                <div>
+                    <xsl:attribute name="class">
+                        <xsl:text>span2</xsl:text>
+                        <xsl:if test="@attending='0'">
+                            <xsl:text> problem-bg</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
 					<label class="checkbox">
 						<input type="checkbox" value="1">
 							<xsl:attribute name="name">asgn<xsl:value-of select="@badgeid" /></xsl:attribute>
@@ -157,7 +169,13 @@
 					<xsl:when test="@moderator='1'"><xsl:attribute name="class">row-fluid success-bg</xsl:attribute></xsl:when>
 					<xsl:otherwise><xsl:attribute name="class">row-fluid</xsl:attribute></xsl:otherwise>
 				</xsl:choose>
-				<div class="span2">
+				<div>
+                    <xsl:attribute name="class">
+                        <xsl:text>span2</xsl:text>
+                        <xsl:if test="@attending='0'">
+                            <xsl:text> problem-bg</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
 					<label class="radio">
 						<input type="radio" name="moderator" id="moderator-{position()}" value="{@badgeid}">
 							<xsl:if test="@moderator='1'">
@@ -178,6 +196,7 @@
 			<xsl:if test="@staff_notes">
 				<div>
 					<xsl:choose>
+                        <xsl:when test="@attending='0'"><xsl:attribute name="class">row-fluid problem-bg</xsl:attribute></xsl:when>
 						<xsl:when test="@moderator='1'"><xsl:attribute name="class">row-fluid success-bg</xsl:attribute></xsl:when>
 						<xsl:otherwise><xsl:attribute name="class">row-fluid</xsl:attribute></xsl:otherwise>
 					</xsl:choose>
