@@ -12,6 +12,7 @@
 @color: black;
 @staffColor: @darker_green;
 @participantColor: @light_blue;
+@problem_background: #fbc8bb;
 
 ////////////
 // LAYOUT //
@@ -394,10 +395,25 @@ form.navbar-search {
     background-color: #fcf8e3;
 }
 
+.problem-bg {
+    background-color: @problem_background;
+}
+
 .row-container {
     padding: 0;
     width: 100%;
-    margin: 0 0 1.5em 0;
+    margin: 0 0;
+    padding-bottom: 1.5em;
+
+    &.not-attending {
+        background-color: @problem_background;
+    }
+}
+
+.not-attending-header-row {
+    background-color: @problem_background;
+    padding: 2px 4px;
+    font-weight: bold;
 }
 
 .za-sessionHistory-moderator {
