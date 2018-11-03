@@ -83,7 +83,7 @@ function RenderError($message_error, $ajax = false) {
 }
 
 function RenderErrorAjax($message_error) {
-    echo "<span class=\"alert\">$message_error</span>\n";
+    echo "<div class=\"error-container alert\"><span>$message_error</span></div>\n";
 }
 
 ?>
