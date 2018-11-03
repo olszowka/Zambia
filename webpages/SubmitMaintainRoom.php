@@ -83,7 +83,7 @@ EOD;
     if (!$result = mysqli_query_with_error_handling($query, true, true)) {
         exit(); // should have exited already
     }
-    while ($x = mysqli_fetch_array($result, MYSQLI_ASSOC))
+    while ($x = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         $addToScheduleParticipants[$x['badgeid']] = $x['pubsname'];
         $addToScheduleParticipantsAttending[$x['badgeid']] = $x['attending'];
     }
