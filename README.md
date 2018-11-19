@@ -23,7 +23,7 @@ participants, and rooms.
 ## Integrations
 Other software which can work with Zambia
 * https://github.com/pselkirk/conguide, a tool for producing a printable pocket program in InDesign from Zambia, including a schedule grid
-KonOpas (https://github.com/eemeli/konopas), a free tool for publishing the schedule to mobile devices
+* KonOpas (https://github.com/eemeli/konopas), a free tool for publishing the schedule to mobile devices
 
 ## Notice
 Latest version of HEAD (master) is still "beta" testing migration to PHP 7.
