@@ -1,6 +1,6 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
-    function staff_header($title, $is_report = false) {
+//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+    function staff_header($title, $is_report = false, $reportColumns = false) {
     require_once ("javascript_functions.php");
     global $badgeid, $fullPage, $header_used, $message;
     $header_used = HEADER_STAFF;
@@ -19,25 +19,30 @@
 		<link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css" >
         <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
-    <?php if ($is_report) { ?>
-        <link rel="stylesheet" href="css/dataTables.css" type="text/css" />
-    <?php } ?>
+    <?php if ($is_report) {
+        echo "<link rel=\"stylesheet\" href=\"css/dataTables.css\" type=\"text/css\" />\n";
+        if ($reportColumns) {
+            echo "<meta id=\"reportColumns\" data-report-columns=\"";
+            echo htmlentities(json_encode($reportColumns));
+            echo "\">"; 
+        }
+    } ?>
 		<link rel="shortcut icon" href="images/favicon.ico">
 		<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 		<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
 		<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+        <script type="text/javascript">
+            var thisPage="<?php echo $title; ?>";
+            var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
+            var alwaysShowLargeHeader = false;
+            var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
+        </script>
+        <?php
+        load_jquery();
+        load_javascript($title, $is_report);
+        ?>
 	</head>
 <body <?php if ($fullPage) echo "class =\"fullPage\""; ?>>
-<script type="text/javascript">
-	var thisPage="<?php echo $title; ?>";
-	var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
-	var alwaysShowLargeHeader = false;
-	var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
-</script>
-<?php
-load_jquery();
-load_javascript($title, $is_report);
-?>
 	<div <?php if ($fullPage) echo "id=\"fullPageContainer\""; ?> class="container-fluid">
 	<div id="myhelper"></div><!-- used for drag-and-drop operations -->
 	<?php if ($fullPage) echo "<div id=\"headerContainer\">"; ?>

@@ -2,6 +2,13 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $title = "Generate Report Files";
 require_once('StaffCommonCode.php');
+$reportName = getString("reportName");
+if ($reportName == '') {
+    $message_error = "Required parameter reportName misssing or invalid.";
+    RenderError($message_error);
+    exit();
+}
+$reportFileName = $reportName . "report.php";
 $timeLimitSuccess = set_time_limit(600);
 if (!$timeLimitSuccess) {
     RenderError("Error extending time limit.");
@@ -13,7 +20,8 @@ SELECT
     FROM
         ReportTypes
     WHERE
-        oldmechanism = 0;
+             oldmechanism = 0
+         and filename = '$reportFileName';
 EOD;
 if (!$result = mysqli_query_with_error_handling($query, true)) {
     exit(); // should have exited already
@@ -38,10 +46,11 @@ SELECT
              ReportTypes RT
         JOIN ReportQueries RQ USING (reporttypeid)
     WHERE
-        RT.oldmechanism = 0;
+            RT.oldmechanism = 0
+        and RT.filename = '$reportFileName';
 EOD;
 if (!$result = mysqli_query_with_error_handling($query, true)) {
-    exit(); // should have exited already 
+    exit(); // should have exited already
 };
 while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
     $reportTypes[$row['reporttypeid']]['queries'][$row['queryname']] = $row['query'];
@@ -55,7 +64,8 @@ SELECT
         JOIN CategoryHasReport CHR USING(reporttypeid)
         JOIN ReportCategories RC USING(reportcategoryid)
     WHERE
-        RT.oldmechanism = 0;
+            RT.oldmechanism = 0
+        and RT.filename = '$reportFileName';
 EOD;
 if (!$result = mysqli_query_with_error_handling($query, true)) {
     exit(); // should have exited already

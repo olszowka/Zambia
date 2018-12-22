@@ -18,10 +18,11 @@ if (($resultXML = mysql_query_XML($report['queries'])) === false) {
     RenderError($message_error);
     exit();
 }
-staff_header($report['name']);
+$reportColumns = isset($report['columns']) ? $report['columns'] : false;
+staff_header($report['name'], true, $reportColumns);
 echo "<div class=\"alert alert-info\">" . htmlspecialchars($report['description'], ENT_NOQUOTES) . "</div>\n";
 echo "<p class=\"text-success center\"> Generated: " . date("D M j G:i:s T Y") . "</p>\n";
-echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
+// echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 $xsl = new DomDocument;
 $xsl->loadXML($report['xsl']);
 $xslt = new XsltProcessor();
