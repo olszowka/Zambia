@@ -28,7 +28,7 @@ function mysql_query_XML($query_array) {
 	}
 
 function mysql_query_exit_on_error($query) {
-	global $link, $message_error;
+	global $message_error;
 	$result = mysql_query_with_error_handling($query);
 	if (!$result) {
 		echo "<p class=\"alert alert-error\">Error querying or updating database.<br />$message_error\n</p>";

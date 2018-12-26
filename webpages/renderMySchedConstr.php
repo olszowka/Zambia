@@ -13,7 +13,7 @@ if (!isset($daymap)) {
     <p class="alert alert-success"><?php echo $message; ?></p>
 <?php } ?>
 <div id=constraint>
-    <form class="form-inline" name="constrform" method=POST action="SubmitMySchedConstr.php">
+    <form class="form-inline" name="constrform" method=POST action="SubmitMySchedConstr.php" onsubmit="onSubmitSchedConstr(event);">
 
         <h4 class="alert-info center">Number of Program Items I'm Willing to Participate In</h4>
         <p> Please indicate the maximum number of sessions you are willing to be on.
@@ -131,6 +131,31 @@ if (!isset($daymap)) {
         </table>
         <?php showCustomText("<div>", "note_after_times", "</div>"); ?>
         <hr style="margin-top:5px">
+        <?php
+        if (SHOW_PREVENT_CONFLICT_SESSIONS) {
+            $conflictBlockSessionInfoCount = count($conflictBlockSessionInfo);
+            if ($conflictBlockSessionInfoCount > 0) {
+                echo "<div class=\"row-fluid padded\">\n";
+                echo "    <p>Please indicate which of the following events you should not be scheduled against.</p>\n";
+                echo "</div>\n";
+                $index = 0;
+                echo "<input type=\"hidden\" name=\"conflictBlockCount\" value=\"$conflictBlockSessionInfoCount\" />";
+                foreach ($conflictBlockSessionInfo as $row) {
+                    echo "<div class=\"control-group\">\n";
+                    echo "<label class=\"checkbox\">{$row['title']}";
+                    echo "<input type=\"checkbox\" class=\"checkbox conflict-block-checkbox\" name=\"conflictBlockCheckbox$index\" ";
+                    if ($row['badgeid']) {
+                        echo "checked=\"checked\"";
+                    }
+                    echo " />";
+                    echo "</label>";
+                    echo "<input type=\"hidden\" name=\"conflictBlockSessionId$index\" value=\"{$row['sessionid']}\" />";
+                    echo "</div>";
+                    $index++;
+                }
+            }
+        }
+        ?>
 
         <div class="row-fluid">
             <div class="span6">
@@ -158,13 +183,7 @@ if (!isset($daymap)) {
             echo "  </div>\n";
             echo "</div>\n";
         }
-        if (SHOW_PREVENT_CONFLICT_SESSIONS && count($conflictBlockSessionInfo) > 0) {
-            echo("<div class=\"row-fluid padded\">\n");
-            echo "    <p>Please indicate which of the following events you should not be scheduled against.</p>\n";
-            echo "</div>\n";
-        }
         ?>
-        
         <div class="padded">
             <button class="btn btn-primary" type=submit value="Save">Save</button>
         </div>

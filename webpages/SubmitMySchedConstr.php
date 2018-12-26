@@ -110,6 +110,51 @@ if ($status == false) {
     }
     $message = "Database updated successfully.";
     unset($message_error);
+    if (SHOW_PREVENT_CONFLICT_SESSIONS) {
+        $conflickBlockCount = getInt("conflictBlockCount");
+        $deletionArr = array();
+        $insertionArr = array();
+        if ($conflickBlockCount !== false) {
+            for ($i = 0; $i < $conflickBlockCount; $i++) {
+                $thisCheckbox = getInt("conflictBlockCheckbox$i");
+                if ($thisCheckbox === false || $thisCheckbox === null) {
+                    continue;
+                }
+                $thisSessionid = getInt("conflictBlockSessionId$i");
+                // $thisSessionid shouldn't ever be false, but check anyway
+                if ($thisSessionid === false || $thisSessionid === null) {
+                    error_log("\$thisSessionid value missing.");
+                    continue;
+                }
+                if ($thisCheckbox == "1") {
+                    $insertionArr[] = $thisSessionid;
+                } else {
+                    $deletionArr[] = $thisSessionid;
+                }
+            }
+            if (count($deletionArr) > 0) {
+                $delSessionidList = join(",", $deletionArr);
+                $query = <<<EOD
+DELETE FROM
+        ParticipantOnSession
+    WHERE
+            badgeid = '$badgeid'
+        AND sessionid IN ($delSessionidList);
+EOD;
+                $result = mysql_query_with_error_handling($query);
+
+            }
+            if (count($insertionArr) > 0) {
+                $query = "INSERT INTO ParticipantOnSession (badgeid, sessionid, moderator) VALUES ";
+                foreach ($insertionArr as $sessionid ) {
+                    $query .= "('$badgeid', $sessionid, 0),";
+                }
+                $query = substr($query, 0, -1); // remove extra trailing comma
+                $result = mysql_query_with_error_handling($query);
+            }
+        }
+        $conflictBlockSessionInfo = retrieve_participant_conflict_session_info($badgeid);
+    }
 }
 require('renderMySchedConstr.php');
 exit();

@@ -17,6 +17,9 @@ function load_javascript($title, $isReport = false) {
         case "Session History":
             echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
             break;
+        case "My Availability":
+            echo "<script src=\"javascript/mySchedContr.js\"></script>\n";
+            break;
         default:
             if ($isReport) {
                 echo "<script src=\"jquery/jquery.dataTables.js\"></script>\n";

@@ -43,20 +43,19 @@ function retrieve_timesXML() {
 
 function retrieve_participant_conflict_session_info($badgeid) {
     $query = <<<EOD
-SELECT S.title, POS.badgeid
+SELECT S.title, S.sessionid, POS.badgeid
     FROM
                   Sessions S 
-        LEFT JOIN ParticipantOnSession POS USING (sessionid)
+        LEFT JOIN ParticipantOnSession POS ON S.sessionid = POS.sessionid AND POS.badgeid = '$badgeid'
     WHERE
-            S.pubstatusid = 4 /* Prevent Conflict Only */
-        AND (POS.badgeid = '$badgeid' OR POS.badgeid IS NULL)
+		S.pubstatusid = 4 /* Prevent Conflict Only */
     ORDER BY
-         S.sessionid;
+      	S.sessionid;
 EOD;
-    $conflictBlockSessionInfo = [];
-    $result = mysql_query_with_error_handling($query);
-    while ($row = mysql_fetch_array($result, MYSQLI_ASSOC)) {
-        $conflictBlockSessionInfo.push($row);
+    $conflictBlockSessionInfo = array();
+    $result = mysql_query_exit_on_error($query);
+    while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+        $conflictBlockSessionInfo[] = $row;
     }
     return $conflictBlockSessionInfo;
 }

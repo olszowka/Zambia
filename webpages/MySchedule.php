@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $title = "My Schedule";
 require('PartCommonCode.php'); // initialize db; check login;
 $CON_START_DATIM = CON_START_DATIM; //make it a variable so it will be substituted
@@ -33,7 +33,8 @@ SELECT
        JOIN Tracks T USING (trackid)
        JOIN Types TY USING (typeid)
     WHERE
-            POS.badgeid="$badgeid"
+            POS.badgeid = '$badgeid'
+        AND S.pubstatusid IN (2,3) /* Public, Do Not Print */
     ORDER BY
             SCH.starttime;
 EOD;
