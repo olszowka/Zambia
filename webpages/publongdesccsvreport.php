@@ -1,5 +1,8 @@
 <?php
 // Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Report Name: Pocket Program
+// Report Description: Export CSV file of public schedule for generating pocket program
+// Report Categories: Reports downloadable as CSVs: 90
 require_once('db_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('csv_report_functions.php');

@@ -1,5 +1,8 @@
 <?php
 // Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Report Name: Panel Merge
+// Report Description: Export CSV file of entire schedule (including unpublished) for mailmerge
+// Report Categories: Reports downloadable as CSVs: 70
 require_once('db_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('csv_report_functions.php');

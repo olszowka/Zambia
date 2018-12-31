@@ -1,5 +1,8 @@
 <?php
 // Copyright (c) 2015-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Report Name: Program Packet Merge
+// Report Description: Export CSV file for program packet mail merge
+// Report Categories: Reports downloadable as CSVs: 10
 require_once('db_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('csv_report_functions.php');
@@ -13,37 +16,38 @@ if (!$result = mysqli_query_exit_on_error($query)) {
 mysqli_free_result($result);
 $query = <<<EOD
 SELECT
-            R.roomname,
-            R.function,
-            DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time', 
+        POS.badgeid,
+        P.pubsname,
+        GROUP_CONCAT(
+            DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p')," ",
             CASE
                 WHEN HOUR(S.duration) < 1 THEN CONCAT(DATE_FORMAT(S.duration,'%i'),'min')
                 WHEN MINUTE(S.duration)=0 THEN CONCAT(DATE_FORMAT(S.duration,'%k'),'hr')
                 ELSE CONCAT(DATE_FORMAT(S.duration,'%k'),'hr ',DATE_FORMAT(S.duration,'%i'),'min')
-                END AS 'duration',
-            T.Trackname,
-            S.sessionid,
+                END," ",
+            R.roomname, "-",
             S.title,
-            GROUP_CONCAT(CONCAT(P.pubsname,' (',P.badgeid,')') SEPARATOR '; ') AS 'Participants' 
+            IF(moderator=1,'(M)','')
+            ORDER BY SCH.starttime
+            SEPARATOR "\n") panelinfo
     FROM
-            Sessions S
+            Participants P
+       JOIN ParticipantOnSession POS USING (badgeid)
+       JOIN Sessions S USING (sessionid)
        JOIN Schedule SCH USING (sessionid)
        JOIN Rooms R USING (roomid)
-  LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
-  LEFT JOIN Participants P ON POS.badgeid=P.badgeid
-  LEFT JOIN Tracks T ON T.trackid=S.trackid
     GROUP BY
-            SCH.scheduleid 
+        P.badgeid
     ORDER BY
-            R.roomname, SCH.starttime
+        P.pubsname;
 EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit(); // should have exited already
 }
 echo_if_zero_rows_and_exit($result);
-header('Content-disposition: attachment; filename=allroomsched.csv');
+header('Content-disposition: attachment; filename=progpacketmerge.csv');
 header('Content-type: text/csv');
-echo "Room Name, Room Function, Start Time, Duration, Track, Session ID, Title, Participants\n";
+echo "badgeid,pubs name,panel info\n";
 render_query_result_as_csv($result);
 exit();
 ?>

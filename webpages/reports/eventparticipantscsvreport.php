@@ -1,5 +1,8 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Report Name: Event Participants
+// Report Description: Export CSV file of event (division) schedule with participants
+// Report Categories: Reports downloadable as CSVs: 50
 require_once('db_functions.php');
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 $ConStartDatim=CON_START_DATIM; // make it a variable so it can be substituted
