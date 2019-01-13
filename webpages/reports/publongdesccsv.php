@@ -1,20 +1,15 @@
 <?php
 // Copyright (c) 2009-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-// Report Name: Long Description
-// Report Description: Export CSV file of yet another full public schedule
-// Report Categories: Reports downloadable as CSVs: 90
-require_once('db_functions.php');
-require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
-require_once('csv_report_functions.php');
-global $title;
-$title="Send CSV file of Description Report for Publications";
-$ConStartDatim = CON_START_DATIM; // make it a variable so it can be substituted
-$query = "SET group_concat_max_len=25000";
-if (!$result = mysqli_query_exit_on_error($query)) {
-    exit(); // should have exited already
-}
-mysqli_free_result($result);
-$query = <<<EOD
+$report = [];
+$report['name'] = 'Long Description';
+$report['description'] = 'Export CSV file of yet another full public schedule';
+$report['categories'] = array(
+    'Reports downloadable as CSVs' => 90
+);
+$report['csv_output'] = true;
+$report['group_concat_expand'] = true;
+$report['queries'] = [];
+$report['queries']['master'] =<<<'EOD'
 SELECT
         S.sessionid,
         T.trackname,
@@ -39,13 +34,5 @@ SELECT
     WHERE PS.pubstatusname = 'Public'
     GROUP BY scheduleid
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
-    exit(); // should have exited already
-}
-echo_if_zero_rows_and_exit($result);
-header('Content-disposition: attachment; filename=longdesc.csv');
-header('Content-type: text/csv');
-echo "sessionid,track,type,division,\"publication status\",pubsno,\"publication characteristics\",\"kids category\",title,description\n";
-render_query_result_as_csv($result);
-exit();
-?>
+$report['output_filename'] = 'longdesc.csv';
+$report['column_headings'] = 'sessionid,track,type,division,"publication status",pubsno,"publication characteristics","kids category",title,description';
