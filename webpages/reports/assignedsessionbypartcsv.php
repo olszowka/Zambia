@@ -1,20 +1,15 @@
 <?php
-// Copyright (c) 2015-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
-// Report Name: Assigned Sessions
-// Report Description: Export CSV file of all session assignments by participant
-// Report Categories: Reports downloadable as CSVs: 40
-require_once('db_functions.php');
-require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
-require_once('csv_report_functions.php');
-global $title;
-$title = "Send CSV file of Program Packet Merge";
-$ConStartDatim = CON_START_DATIM; // make it a variable so it can be substituted
-$query = "SET group_concat_max_len=25000";
-if (!$result = mysqli_query_exit_on_error($query)) {
-    exit(); // should have exited already
-}
-mysqli_free_result($result);
-$query = <<<EOD
+// Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+$report = [];
+$report['name'] = 'Assigned Sessions';
+$report['description'] = 'Export CSV file of all session assignments by participant';
+$report['categories'] = array(
+    'Reports downloadable as CSVs' => 40
+);
+$report['csv_output'] = true;
+$report['group_concat_expand'] = false;
+$report['queries'] = [];
+$report['queries']['master'] =<<<'EOD'
 SELECT
            P.badgeid, 
            P.pubsname, 
@@ -27,13 +22,5 @@ SELECT
        JOIN Participants P USING (badgeid)
     ORDER BY CAST(P.badgeid AS UNSIGNED);
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
-    exit(); // should have exited already
-}
-echo_if_zero_rows_and_exit($result);
-header('Content-disposition: attachment; filename=assignsessionbypart.csv');
-header('Content-type: text/csv');
-echo "badgeid,pubs name,moderator,sessionid,title\n";
-render_query_result_as_csv($result);
-exit();
-?>
+$report['output_filename'] = 'assignsessionbypart.csv';
+$report['column_headings'] = 'badgeid,pubs name,moderator,sessionid,title';
