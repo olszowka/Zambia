@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Palm Calendar';
 $report['description'] = 'Export CSV file for Palm device calendars';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 60
+    'Reports downloadable as CSVs' => 60,
+    'Publication Reports' => 40
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;

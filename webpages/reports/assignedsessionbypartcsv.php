@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Assigned Sessions';
 $report['description'] = 'Export CSV file of all session assignments by participant';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 40
+    'Reports downloadable as CSVs' => 40,
+    'Programming Reports' => 39
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = false;

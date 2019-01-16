@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Long Description';
 $report['description'] = 'Export CSV file of yet another full public schedule';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 90
+    'Reports downloadable as CSVs' => 90,
+    'Publication Reports' => 40
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;

@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Pocket Program';
 $report['description'] = 'Export CSV file of public schedule for generating pocket program';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 80
+    'Reports downloadable as CSVs' => 80,
+    'Publication Reports' => 40
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;

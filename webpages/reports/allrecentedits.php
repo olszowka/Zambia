@@ -7,7 +7,7 @@ $report['categories'] = array(
     'Events Reports' => 80,
     'Programming Reports' => 80,
     'GOH Reports' => 80,
-    'Publication Reports' => 80,
+    'Publication Reports' => 80
 );
 $report['queries'] = [];
 $report['queries']['Days'] =<<<'EOD'

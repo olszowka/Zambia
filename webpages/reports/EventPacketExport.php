@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Events Packet Export';
 $report['description'] = 'Export CSV file of Event Organizer Schedule Export for Packets';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 130
+    'Reports downloadable as CSVs' => 130,
+    'Events Reports' => 40
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;

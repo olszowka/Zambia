@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Panel Merge';
 $report['description'] = 'Export CSV file of entire schedule (including unpublished) for mailmerge';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 70
+    'Reports downloadable as CSVs' => 70,
+    'Publication Reports' => 40
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;

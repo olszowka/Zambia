@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Events CSV Export';
 $report['description'] = 'Export CSV file of Event Division sessions';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 140
+    'Reports downloadable as CSVs' => 140,
+    'Events Reports' => 39
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;

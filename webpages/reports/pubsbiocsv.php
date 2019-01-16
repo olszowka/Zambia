@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Biographies';
 $report['description'] = 'Export CSV file of scheduled participants and their biographies';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 100
+    'Reports downloadable as CSVs' => 100,
+    'Publication Reports' => 40
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = false;

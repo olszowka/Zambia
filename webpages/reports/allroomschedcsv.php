@@ -4,7 +4,8 @@ $report = [];
 $report['name'] = 'Participant Schedule by Room';
 $report['description'] = 'Export CSV file of full participant schedule by room, time';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 30
+    'Reports downloadable as CSVs' => 30,
+    'Programming Reports' => 39
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;
