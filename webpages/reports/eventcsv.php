@@ -20,11 +20,11 @@ SELECT
             SEPARATOR "\n"
             ) AS participants
     FROM
-             Schedule SCH
-        JOIN ParticipantOnSession POS USING (sessionid)
-        JOIN Sessions S USING (sessionid)
-        JOIN Rooms R USING (roomid)
-        JOIN Participants P USING (badgeid)
+                  Schedule SCH
+        LEFT JOIN ParticipantOnSession POS USING (sessionid)
+             JOIN Sessions S USING (sessionid)
+             JOIN Rooms R USING (roomid)
+        LEFT JOIN Participants P USING (badgeid)
     WHERE 
         S.divisionid = 3 /* Events */
     GROUP BY
