@@ -81,7 +81,6 @@ foreach ($reportTypes as $report) {
         exit(0);
     }
     fwrite($file, "<?php\n");
-    fwrite($file, "// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.\n");
     fwrite($file, "\$report = [];\n");
     fwrite($file, "\$report['name'] = '{$report['name']}';\n");
     fwrite($file, "\$report['description'] = '{$report['description']}';\n");

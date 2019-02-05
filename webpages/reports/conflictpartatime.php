@@ -83,8 +83,8 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/doc/query[@queryName='participants']/row" >
         <tr>
             <td class="report">
-                <a href="runreport.php?reporttypeid=92#badgeid{@badgeid}">
-	            <img class="icon-info-sign getSessionInfo"></img>
+                <a href="generateReport.php?reportName=schedpartavail.php#badgeid{@badgeid}">
+	                <img class="icon-info-sign getSessionInfo" />
                 </a>
                 <xsl:text> </xsl:text>
                 <xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template>

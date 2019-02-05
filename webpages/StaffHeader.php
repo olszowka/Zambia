@@ -1,8 +1,8 @@
 <?php
-//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
     function staff_header($title, $is_report = false, $reportColumns = false) {
     require_once ("javascript_functions.php");
-    global $badgeid, $fullPage, $header_used, $message;
+    global $fullPage, $header_used;
     $header_used = HEADER_STAFF;
 ?>
 <!DOCTYPE html>
@@ -55,14 +55,7 @@
   					<div class="pageHeaderText span9"> Zambia<span class="wide-medium-only">: The <?php echo CON_NAME; ?> Scheduling Tool</span></div>
   				</h1>
   			</div>
-  <?php if (isset($_SESSION['badgeid'])) {
-  	require_once('db_functions.php');
-    	$queryArray["categories"] = "SELECT reportcategoryid, description FROM ReportCategories ORDER BY display_order;";
-    	if (($resultXML=mysql_query_XML($queryArray))===false) {
-    	    RenderError($message_error);
-            exit();
-      }
-  ?>
+  <?php if (isset($_SESSION['badgeid'])) { ?>
   			<div class="span3" id="welcome">
   				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
           <img id="hideHeader" class="imgButton pull-right" src="images/green-up.png" alt="Shrink header to a thin strip" title="Shrink header to a thin strip"/>
@@ -114,31 +107,16 @@
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
              						<ul class="dropdown-menu">
 			                	<?php
-			                    // Generate the links to all the reports
-			                  	$xmlstr = <<<EOD
-<?xml version="1.0" encoding="UTF-8"?>
-	<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
-		<xsl:output omit-xml-declaration="yes" />
-		<xsl:template match="/">
-			<xsl:apply-templates match="doc/query[@queryName='categories']/row" />
-			<li class="divider"></li>
-			<li>
-				<a href="staffReportsInCategory.php?reportcategoryid=0">All reports</a>
-			</li>
-		</xsl:template>
-		<xsl:template match="/doc/query[@queryName='categories']/row">
-			<li>
-				<a href="staffReportsInCategory.php?reportcategoryid={@reportcategoryid}"><xsl:value-of select="@description" /></a>
-			</li>
-		</xsl:template>
-	</xsl:stylesheet>
-EOD;
-			                  	$xsl = new DomDocument;
-			                  	$xsl->loadXML($xmlstr);
-			                  	$xslt = new XsltProcessor();
-			                  	$xslt->importStylesheet($xsl);
-			                  	$html = $xslt->transformToXML($resultXML);
-			                  	echo $html
+                                $prevErrorLevel = error_reporting();
+                                $tempErrorLevel = $prevErrorLevel && ~ E_WARNING;
+                                error_reporting($tempErrorLevel);
+                                if (!include 'ReportMenuInclude.php') {
+                                    echo "<li><div class='menu-error-entry'>Report menus not built!</div></li>\n";
+                                } else { ?>
+                                    <li class='divider'></li>
+                                    <li><a href='staffReportsInCategory.php'>All Reports</a></li>
+                                <?php }
+                                error_reporting($prevErrorLevel);
 			                	?>
 								</ul>
 							</li>
@@ -163,6 +141,14 @@ EOD;
 									<input type="hidden" value="ANY" name="divisionid">
 								</form>
 							</li>
+                            <?php if (may_I('ConfigureReports')) { ?>
+                                <li class="dropdown">
+                                    <a href="#admin" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="BuildReportMenus.php">Build Report Menus</a></li>
+                                    </ul>
+                                </li>
+                            <?php } ?>
 						</ul>
 						<ul class="nav pull-right">
 							<li class="divider-vertical"></li>
@@ -174,9 +160,8 @@ EOD;
 		</nav>
 <?php
 		if ($fullPage) echo "</div>"; //close headerContainer 
- 		}
-	else
-		{
+ 		} // if badgeid was set
+	else {
 			require_once("loginForm.php");
 			echo "<script type=\"text/javascript\">";
 			echo "   var alwaysShowLargeHeader = true;";

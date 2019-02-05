@@ -1,98 +1,38 @@
 <?php
-// Copyright (c) 2015-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $participant, $message_error, $message2, $congoinfo, $title;
+// Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $message_error, $title;
 $title = "Reports in Category";
-require_once('db_functions.php');
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
-$reportcategoryid = getInt("reportcategoryid");
-if ($reportcategoryid === false) {
-    $message_error = "Required parameter reportcategoryid misssing or invalid.";
+$CON_NAME = CON_NAME;
+$reportcategoryid = getString("reportcategory");
+$prevErrorLevel = error_reporting();
+$tempErrorLevel = $prevErrorLevel && ~ E_WARNING;
+error_reporting($tempErrorLevel);
+$includeFile = 'staffReportsInCategoryInclude.php';
+if (!include $includeFile) {
+    $message_error = "Report menus not built.  File $includeFile not found.";
     RenderError($message_error);
     exit();
 }
-if ($reportcategoryid == 0) {
-    $title = "All Reports";
-    $queryArray["reportTypes"] = <<<EOD
-SELECT
-		RT.reporttypeid, RT.title, RT.description, RT.oldmechanism, RT.ondemand, RT.filename
-	FROM
-		ReportTypes RT
-	ORDER BY
-		RT.display_order;
-EOD;
-} else {
-    // actual $reportcategoryid
-    $query = "SELECT description from ReportCategories where reportcategoryid = $reportcategoryid;";
-    $result = mysqli_query_with_error_handling($query, true);
-    if (mysqli_num_rows($result) != 1) {
-        $message_error = "reportcategoryid $reportcategoryid not found in db.";
-        RenderError($message_error);
-        exit();
-    }
-    $title = mysqli_fetch_array($result, MYSQLI_NUM)[0];
-    mysqli_free_result($result);
-    $queryArray["reportTypes"] = <<<EOD
-SELECT
-		RT.reporttypeid, RT.title, RT.description, RT.oldmechanism, RT.ondemand, RT.filename
-	FROM
-			 ReportTypes RT
-		JOIN CategoryHasReport CHR USING (reporttypeid)
-	WHERE
-		CHR.reportcategoryid = $reportcategoryid
-	ORDER BY
-		RT.display_order;
-EOD;
-}
-if (($resultXML = mysql_query_XML($queryArray)) === false) {
+error_reporting($prevErrorLevel);
+if ($reportcategoryid !== false && !isset($reportCategories[$reportcategoryid])) {
+    $message_error = "Report category $reportcategoryid not found or category has no reports.";
     RenderError($message_error);
     exit();
 }
 staff_header($title);
-//echo($resultXML->saveXML()); //for debugging only
-$xmlstr = <<<EOD
-<?xml version="1.0" encoding="UTF-8"?>
-	<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
-		<xsl:output omit-xml-declaration="yes" />
-		<xsl:template match="/">
-			<xsl:choose>
-				<xsl:when test="doc/query[@queryName='reportTypes']/row">
-					<xsl:apply-templates match="doc/query[@queryName='reportTypes']/row" />
-				</xsl:when>
-				<xsl:otherwise>
-					<div>No reports found for that category.</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:template>
-		<xsl:template match="/doc/query[@queryName='reportTypes']/row">
-			<div>
-				<xsl:choose>
-					<xsl:when test="@oldmechanism='1'">
-						<a href="{@filename}"><xsl:value-of select="@title" /></a>
-						<xsl:if test="@ondemand = '0'">
-							<div style="display: inline-block; border:none"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-							    <span class="icon-time"></span>
-							</div>
-						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<a href="runreport.php?reporttypeid={@reporttypeid}"><xsl:value-of select="@title" /></a>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
-			<div style="margin-left:3em">
-				<xsl:value-of select="@description" />
-			</div>
-		</xsl:template>
-	</xsl:stylesheet>	
-EOD;
-$xsl = new DomDocument;
-$xsl->loadXML($xmlstr);
-$xslt = new XsltProcessor();
-$xslt->importStylesheet($xsl);
-$html = $xslt->transformToXML($resultXML);
-// most browsers do not support empty div, iframe, script and textarea tags
-echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+echo "<dl>\n";
+if ($reportcategoryid === false) {
+    foreach ($reportNames as $reportFileName => $reportName) {
+        echo "<dt><a href='generateReport.php?reportName=$reportFileName'>$reportName</a></dt>\n";
+        echo "<dd>{$reportDescriptions[$reportFileName]}</dd>";
+    }
+} else {
+    foreach ($reportCategories[$reportcategoryid] as $reportFileName) {
+        echo "<dt><a href='generateReport.php?reportName=$reportFileName'>$reportNames[$reportFileName]</a></dt>\n";
+        echo "<dd>{$reportDescriptions[$reportFileName]}</dd>";
+    }
+}
+echo "</dl>\n";
 staff_footer();
 ?>

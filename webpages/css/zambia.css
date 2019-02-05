@@ -295,6 +295,16 @@ form.navbar-search {
   margin-bottom: 6px;
 }
 /* Bootstrap extensions */
+.dropdown-menu > li > .menu-error-entry {
+  background-color: #fbc8bb;
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: bold;
+  line-height: 20px;
+  color: #d05b5e;
+  white-space: nowrap;
+}
 .success-bg {
   background-color: #dff0d8;
 }
