@@ -15,14 +15,14 @@ if (!include $includeFile) {
     exit();
 }
 error_reporting($prevErrorLevel);
-if ($reportcategoryid !== false && !isset($reportCategories[$reportcategoryid])) {
+if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     $message_error = "Report category $reportcategoryid not found or category has no reports.";
     RenderError($message_error);
     exit();
 }
 staff_header($title);
 echo "<dl>\n";
-if ($reportcategoryid === false) {
+if ($reportcategoryid === "") {
     foreach ($reportNames as $reportFileName => $reportName) {
         echo "<dt><a href='generateReport.php?reportName=$reportFileName'>$reportName</a></dt>\n";
         echo "<dd>{$reportDescriptions[$reportFileName]}</dd>";
