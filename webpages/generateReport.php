@@ -50,6 +50,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
     $html = $xslt->transformToXML($resultXML);
     // some browsers do not support empty div, iframe, script and textarea tags
     echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+    // echo "<div pbo=\"{$report['columns']}\"></div>\n";
     staff_footer();
 }
 ?>

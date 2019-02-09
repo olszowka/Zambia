@@ -39,7 +39,7 @@ if (!isset($daymap)) {
                 for ($i = 1; $i <= min(4, CON_NUM_DAYS); $i++) {
                     $D = $daymap["long"][$i];
                     echo "<label class=\"control-label\" for=\"maxprogday$i\">$D maximum:</label>\n";
-                    $N = $partAvail["maxprogday$i"];
+                    $N = isset($partAvail["maxprogday$i"]) ? $partAvail["maxprogday$i"] : '';
                     echo "<input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>\n";
                 }
             }
@@ -48,8 +48,8 @@ if (!isset($daymap)) {
                 for ($i = 5; $i <= CON_NUM_DAYS; $i++) {
                     $D = $daymap["long"][$i];
                     echo "<label class=\"control-label\" for=\"maxprogday$i\">$D maximum:</label>\n";
-                    $N = $partAvail["maxprogday$i"];
-                    echo "    <input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>\n";
+                    $N = isset($partAvail["maxprogday$i"]) ? $partAvail["maxprogday$i"] : '';
+                    echo "    <input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=\"$N\">\n";
                 }
             }
             echo "</div>\n";

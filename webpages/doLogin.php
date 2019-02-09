@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $link, $linki, $title;
 if (!isset($_SESSION['badgeid'])) {
     $logging_in = true;
@@ -52,7 +52,7 @@ if (!isset($_SESSION['badgeid'])) {
     $badgeid = $_SESSION['badgeid'];
 }
 $message2 = "";
-if ($participant_array = retrieveParticipant($badgeid)) {
+if ($participant_array = retrieveFullParticipant($badgeid)) {
     if (may_I('Staff')) {
         require('StaffPage.php');
     } elseif (may_I('Participant')) {

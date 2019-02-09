@@ -21,11 +21,11 @@ SELECT
     WHERE
         P.badgeid = '$badgeid';
 EOD;
-    $results = mysql_query_with_error_handling($query);
+    $results = mysqli_query_with_error_handling($query);
     if (!$results) {
         exit(); // Should have existed already anyway.
     }
-    $resultsArray = mysql_fetch_array($results, MYSQLI_ASSOC);
+    $resultsArray = mysqli_fetch_array($results, MYSQLI_ASSOC);
     if ($resultsArray["interested"] !== '1') {
         ?>
             <div class="alert alert-block">
