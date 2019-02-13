@@ -40,7 +40,7 @@ $message = "Database updated successfully.";
 if ($update_password == true) {
     $_SESSION['password'] = md5($password);
 }
-if ($participant = retrieveFullParticipant($badgeid)) {
+if ($participant_array = retrieveFullParticipant($badgeid)) {
     require('renderWelcome.php');
     exit();
 } else {
