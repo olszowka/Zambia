@@ -17,7 +17,7 @@ function SubmitAssignParticipants() {
     } else {
         $pageTimestamp = DateTime::createFromFormat('Y-m-d G:i:s', $_POST["maxtimestamp"]);
     }
-    $asgnpart = getInt("asgnpart", 0);
+    $asgnpart = isset($_POST["asgnpart"]) ? mysqli_real_escape_string($linki, $_POST["asgnpart"]) : "";
     $numrows = getInt("numrows", 0);
     $moderator = isset($_POST["moderator"]) ? mysqli_real_escape_string($linki, $_POST["moderator"]) : "";
     if (!isset($_POST["asgn$moderator"])) {
@@ -69,7 +69,7 @@ function SubmitAssignParticipants() {
                 $badgeidQueryArray[] = "'$badgeid'";
             }
         }
-        if ($asgnpart != 0) {
+        if ($asgnpart != '') {
             $addParticipantArray[] = $asgnpart;
             $badgeidQueryArray[] = "'$asgnpart'";
         }
@@ -152,7 +152,7 @@ function SubmitAssignParticipants() {
                 }
             }
         }
-        if ($asgnpart != 0) {
+        if ($asgnpart != '') {
             $queryArray[] = "INSERT INTO ParticipantOnSessionHistory (badgeid, sessionid, moderator, createdts, createdbybadgeid) " .
                 "VALUES (\"$asgnpart\", $selsessionid, 0, @mynow, \"$userbadgeid\");";
         }
@@ -167,7 +167,7 @@ function SubmitAssignParticipants() {
             mysqli_query_exit_on_error($query);
         }
         $message = "Participant assignments updated. ";
-        if ($asgnpart != 0) {
+        if ($asgnpart != '') {
             $query = "INSERT INTO ParticipantSessionInterest set badgeid=\"$asgnpart\", sessionid=$selsessionid;";
             $result = mysqli_query_exit_on_error($query);
             $message .= "Participant added to session. ";
