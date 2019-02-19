@@ -7,9 +7,9 @@ require_once('StaffCommonCode.php');
 staff_header($title);
 
 if (isset($_POST["selpart"])) {
-    $partbadgeid=$_POST["selpart"];
-    $sessionid=$_POST["selsess"];
-    if (($partbadgeid==0) || ($sessionid==0)) {
+    $partbadgeid = mysql_real_escape_string($_POST["selpart"], $link);
+    $sessionid = isset($_POST["selsess"]) ? $_POST["selsess"] : 0;
+    if (($partbadgeid == "") || ($sessionid == 0)) {
             echo "<P class=\"alert alert-error\">Database not updated. Select a participant and a session.</P>";
             }
         else {    
@@ -62,7 +62,7 @@ echo "<p>Use this tool to put sessions marked \"invited guests only\" on a parti
 echo "<FORM class=\"form-inline\" name=\"invform\" method=POST action=\"InviteParticipants.php\">";
 echo "<DIV class=\"row-fluid\"><LABEL class=\"control-label\" for=\"selpart\">Select Participant:&nbsp;</LABEL>\n";
 echo "<SELECT name=\"selpart\">\n";
-echo "     <OPTION value=0 selected>Select Participant</OPTION>\n";
+echo "     <OPTION value=\"\" selected>Select Participant</OPTION>\n";
 while (list($lastname,$firstname,$badgename,$badgeid,$pubsname)= mysql_fetch_array($Presult, MYSQL_NUM)) {
     echo "     <OPTION value=\"".$badgeid."\">";
     if ($pubsname!="") {
@@ -78,7 +78,7 @@ while (list($lastname,$firstname,$badgename,$badgeid,$pubsname)= mysql_fetch_arr
 echo "</SELECT>\n";
 echo "<LABEL class=\"control-label\" for=\"selsess\">Select Session:&nbsp;</LABEL>\n";
 echo "<SELECT name=\"selsess\">\n";
-echo "     <OPTION value=0 selected>Select Session</OPTION>\n";
+echo "     <OPTION value=\"0\" selected>Select Session</OPTION>\n";
 while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
     echo "     <OPTION value=\"".$sessionid."\">".htmlspecialchars($trackname)." - ";
     echo htmlspecialchars($sessionid)." - ".htmlspecialchars($title)."</OPTION>\n";
