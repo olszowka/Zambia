@@ -67,11 +67,12 @@ EOD;
         $addToScheduleArray2[$sessionid]['participants'][] = $badgeid;
         $addToScheduleParticipants[$badgeid] = 1;
     }
-    if (count($addToScheduleParticipants) < 1)
+    if (count($addToScheduleParticipants) < 1) {
         return (true); // if none of the sessions added to the schedule
-    // had any participants, then there can be no participant conflicts.
-    $badgeidlist = implode(",", array_keys($addToScheduleParticipants));
-    mysqli_free_result($result);
+        // had any participants, then there can be no participant conflicts.
+    }
+    $addToScheduleParticipantsForQuery = array_map(function($str){global $linki;return "'" . mysqli_real_escape_string($linki, $str) . "'";}, array_keys($addToScheduleParticipants));
+    $badgeidlist = implode(",", $addToScheduleParticipantsForQuery);
     $query = <<<EOD
 SELECT
 		badgeid, pubsname, if (interested = 1, 1, 0) as attending
