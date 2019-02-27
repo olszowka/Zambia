@@ -30,7 +30,9 @@ if (!$timeLimitSuccess) {
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $email = get_email_from_post();
 //Create the Transport
-$transport = Swift_SmtpTransport::newInstance(SMTP_ADDRESS,2525);
+$transport = Swift_SmtpTransport::newInstance(SMTP_ADDRESS,465,'ssl')
+    ->setUsername(EMAIL_RELAY_USERID)
+    ->setPassword(EMAIL_RELAY_PASSWORD);
 //Create the Mailer using your created Transport
 $mailer = Swift_Mailer::newInstance($transport);
 //$swift =& new Swift(new Swift_Connection_SMTP(SMTP_ADDRESS)); // Is machine name of SMTP host defined in db_name.php
