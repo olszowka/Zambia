@@ -53,7 +53,7 @@ EOD;
 			$programRow = array(
 				"id" => $row["id"],
 				"title" => $row["title"],
-				"tags" => array("track:".$row["trackname"],"type:".$row["typename"]),
+				"tags" => array($row["typename"]),
 				"date" => $row["date"],
 				"time" => $row["time"],
 				"loc" => array($row["loc"]),
@@ -64,7 +64,7 @@ EOD;
 			}
 		$query = <<<EOD
 SELECT
-		P.badgeid, P.pubsname, P.bio
+		P.badgeid, IFNULL(P.pubsname, "Not Provided") AS pubsname, IFNULL(P.bio, "Not Provided") AS bio
 	FROM
 		Participants P
 	WHERE
