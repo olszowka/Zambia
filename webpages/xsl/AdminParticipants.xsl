@@ -1,4 +1,5 @@
 <?xml version='1.0'?>
+<!-- Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:template match="/">
         <xsl:choose>
@@ -17,8 +18,8 @@
                 </thead>
                 <tbody>
                   <xsl:for-each select="/doc/query[@queryName='searchParticipants']/row">
-                      <tr class="action" id="actionDIV_{@badgeid}" onclick="chooseParticipant('{@badgeid}', false);">
-                          <td class="action" id="lnameSPAN_{@badgeid}"><xsl:value-of select="@lastname"/>, <xsl:value-of select="@firstname"/></td>
+                      <tr class="action" id="actionDIV_{@badgeid}" onclick="chooseParticipant('{@jsEscapedBadgeid}', false);">
+                          <td class="action" id='lnameSPAN_{@badgeid}'><xsl:value-of select="@lastname"/>, <xsl:value-of select="@firstname"/></td>
                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                           <td class="actionB" id="pnameSPAN_{@badgeid}"><xsl:value-of select="@pubsname"/></td>

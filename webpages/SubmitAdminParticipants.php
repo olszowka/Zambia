@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) 2006-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('db_functions.php');
 require_once('StaffCommonCode.php');
 
@@ -120,6 +121,13 @@ EOD;
         echo $message_error;
         exit();
         }
+    $xpath = new DOMXpath($xml);
+	$searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
+    foreach ($searchParticipantsResultRowElements as $resultRowElement) {
+    	$badgeid = $resultRowElement -> getAttribute("badgeid");
+    	$jsEscapedBadgeid = addslashes($badgeid);
+		$resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
+	}
 	$xsl = new DomDocument;
 	$xsl->load('xsl/AdminParticipants.xsl');
 	$xslt = new XsltProcessor();
