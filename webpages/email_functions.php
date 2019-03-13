@@ -217,14 +217,13 @@ function renderDuration($durMin, $durHrs) {
 
 // status: "1" show events schedule; "2" show full schedule;
 function generateSchedules($status, $recipientinfo) {
-    global $link;
     $ConStartDatim = CON_START_DATIM;
     if ($status === "1") {
         $extraWhereClause = "        AND S.divisionid=3"; // events
     } else {
         $extraWhereClause = "";
     }
-    $badgeidArr = array_map(function($str){return "'" . mysql_real_escape_string($str, $link) . "'";}, array_column($recipientinfo, 'badgeid'));
+    $badgeidArr = array_map(function($str){global $link;return "'" . mysql_real_escape_string($str, $link) . "'";}, array_column($recipientinfo, 'badgeid'));
     $badgeidList = implode(",", $badgeidArr);
     $query = <<<EOD
 SELECT
