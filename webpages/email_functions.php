@@ -241,6 +241,7 @@ $extraWhereClause
         POS.badgeid, 
         SCH.starttime;
 EOD;
+    //echo $query ."<br />\n";
     $result = mysql_query_exit_on_error($query);
     $returnResult = array();
     while ($rowArr = mysql_fetch_assoc($result)) {
@@ -254,6 +255,7 @@ EOD;
         }
         $returnResult[$rowArr["badgeid"]][] = $scheduleRow;
     }
+    //print_r($returnResult);
     return $returnResult;
 }
 

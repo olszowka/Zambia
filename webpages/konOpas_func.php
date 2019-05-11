@@ -58,7 +58,8 @@ EOD;
 				"time" => $row["time"],
 				"loc" => array($row["loc"]),
 				"people" => $sessionHasParticipant[$row["id"]],
-				"desc" => $row["desc"]
+				"desc" => $row["desc"],
+                "mins" => $row["mins"]
 				);
 			$program[] = $programRow;
 			}
