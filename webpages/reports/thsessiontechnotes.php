@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Tech and Hotel notes';
 $report['description'] = 'What notes are in on this panel for tech and hotel? (sorted by room then time)';
@@ -9,13 +9,26 @@ $report['categories'] = array(
     'Hotel Reports' => 1070,
     'Tech Reports' => 1070,
 );
+$report['columns'] = array(
+    array("width" => "11em"),
+    array("width" => "7em", "orderData" => 2),
+    array("visible" => false),
+    array("width" => "6em", "orderData" => 4),
+    array("visible" => false),
+    array("width" => "9em"),
+    array("width" => "5em"),
+    array("width" => "27em"),
+    array()
+);
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'
 SELECT
         SCH.roomid,
 	R.roomname,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') as startTime, 
-        S.duration,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') as startTime,
+        ADDTIME('$ConStartDatim$',SCH.starttime) as startTimeSort,
+        DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
+        S.duration AS durationSort,
         TR.trackname, 
         S.sessionid,
         S.title,
@@ -41,16 +54,20 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Room name</th>
-                        <th class="report">Start time</th>
-                        <th class="report">Duration</th>
-                        <th class="report">Track name</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">Service Notes</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr>
+                            <th class="report">Room name</th>
+                            <th class="report">Start time</th>
+                            <th></th>
+                            <th class="report">Duration</th>
+                            <th></th>
+                            <th class="report">Track name</th>
+                            <th class="report">Session ID</th>
+                            <th class="report">Title</th>
+                            <th class="report">Service Notes</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
                 </table>
             </xsl:when>
@@ -68,7 +85,14 @@ $report['xsl'] =<<<'EOD'
                 </xsl:call-template>
             </td>
             <td class="report"><xsl:value-of select="@startTime"/></td>
-            <td class="report"><xsl:value-of select="@duration"/></td>
+            <td class="report"><xsl:value-of select="@startTimeSort"/></td>
+            <td class="report">
+                <xsl:call-template name="showDuration">
+                    <xsl:with-param name="durationhrs" select = "@durationhrs" />
+                    <xsl:with-param name="durationmin" select = "@durationmin" />
+                </xsl:call-template>
+            </td>
+            <td class="report"><xsl:value-of select="@durationSort"/></td>
             <td class="report"><xsl:value-of select="@trackname"/></td>
             <td class="report"><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
             <td class="report">

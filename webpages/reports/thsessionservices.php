@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Services';
 $report['description'] = 'Which Session needs which Services? (Sorted by room then time; Scheduled sessions only)';
@@ -9,12 +9,24 @@ $report['categories'] = array(
     'Hotel Reports' => 1050,
     'Tech Reports' => 1050,
 );
+$report['columns'] = array(
+    array("width" => "11em"),
+    array("width" => "7em", "orderData" => 2),
+    array("visible" => false),
+    array("width" => "6em", "orderData" => 4),
+    array("visible" => false),
+    array("width" => "8em"),
+    array("width" => "5em"),
+    array("width" => "26em"),
+    array("width" => "13em")
+);
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'
 SELECT DISTINCT
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
+        ADDTIME('$ConStartDatim$',SCH.starttime) AS startTimeSort,
         DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
-        SCH.roomid, R.roomname, T.trackname, S.sessionid, S.title
+        S.duration AS durationSort, SCH.roomid, R.roomname, T.trackname, S.sessionid, S.title
     FROM
              Sessions S
         JOIN Tracks T USING (trackid)
@@ -49,16 +61,20 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Room</th>
-                        <th class="report">Start Time</th>
-                        <th class="report">Duration</th>
-                        <th class="report">Track</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">Services</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr>
+                            <th class="report">Room</th>
+                            <th class="report">Start Time</th>
+                            <th></th>
+                            <th class="report">Duration</th>
+                            <th></th>
+                            <th class="report">Track</th>
+                            <th class="report">Session ID</th>
+                            <th class="report">Title</th>
+                            <th class="report">Services</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='sessions']/row" />
                 </table>
             </xsl:when>
@@ -77,15 +93,15 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="roomname" select = "@roomname" />
                 </xsl:call-template>
             </td>
-            <td class="report" >
-                <xsl:value-of select="@starttime" />
-            </td>
+            <td class="report"><xsl:value-of select="@starttime" /></td>
+            <td class="report"><xsl:value-of select="@startTimeSort" /></td>
             <td class="report" >
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
+            <td class="report"><xsl:value-of select="@durationSort" /></td>
             <td class="report" >
                 <xsl:value-of select="@trackname" />
             </td>
@@ -102,9 +118,7 @@ $report['xsl'] =<<<'EOD'
             </td>
             <td class="report" >
                 <xsl:for-each select="/doc/query[@queryName='services']/row[@sessionid=$sessionid]">
-                    <div>
-                        <xsl:value-of select="@servicename" />
-                    </div>
+                    <div><xsl:value-of select="@servicename" /></div>
                 </xsl:for-each>    
             </td>
         </tr>

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session roomsets';
 $report['description'] = 'What roomsets are we using (Sorted by Room then Time)';
@@ -9,12 +9,26 @@ $report['categories'] = array(
     'Hotel Reports' => 1040,
     'Tech Reports' => 1040,
 );
+$report['columns'] = array(
+    array("width" => "11.5em"),
+    array("width" => "8em", "orderData" => 2),
+    array("visible" => false),
+    array("width" => "6em", "orderData" => 4),
+    array("visible" => false),
+    array("width" => "8em"),
+    array("width" => "5em"),
+    array("width" => "20em"),
+    array("width" => "9em"),
+    array()
+);
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'
 SELECT
         S.title, S.sessionid, SCH.roomid, R.roomname, T.trackname, RS.roomsetname, S.servicenotes,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
-        DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs
+        ADDTIME('$ConStartDatim$',SCH.starttime) AS startTimeSort,
+        DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
+        S.duration AS durationSort
     FROM 
              Schedule SCH
         JOIN Sessions S USING (sessionid)
@@ -33,25 +47,21 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="report">
-                    <col style="width:11.5em" />
-                    <col style="width:8em" />
-                    <col style="width:6em" />
-                    <col style="width:8em" />
-                    <col style="width:6em" />
-                    <col style="width:20em" />
-                    <col style="width:9em" />
-                    <col />
-                    <tr>
-                        <th class="report">Room</th>
-                        <th class="report">StartTime</th>
-                        <th class="report">Duration</th>
-                        <th class="report">Track</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">Room Set</th>
-                        <th class="report">Notes for Tech and Hotel</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr>
+                            <th class="report">Room</th>
+                            <th class="report">StartTime</th>
+                            <th></th>
+                            <th class="report">Duration</th>
+                            <th></th>
+                            <th class="report">Track</th>
+                            <th class="report">Session ID</th>
+                            <th class="report">Title</th>
+                            <th class="report">Room Set</th>
+                            <th class="report">Notes for Tech and Hotel</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
                 </table>
             </xsl:when>
@@ -70,12 +80,14 @@ $report['xsl'] =<<<'EOD'
                 </xsl:call-template>
             </td>
             <td class="report"><xsl:value-of select="@starttime" /></td>
+            <td class="report"><xsl:value-of select="@startTimeSort" /></td>
             <td class="report">
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
+            <td class="report"><xsl:value-of select="@durationSort" /></td>
             <td class="report"><xsl:value-of select="@trackname" /></td>
             <td class="report">
                 <xsl:call-template name="showSessionid">

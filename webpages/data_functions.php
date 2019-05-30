@@ -103,6 +103,21 @@ function getString($name) {
     return stripslashes($string);
 }
 
+// Function getArrayOfStrings("name")
+// gets a parameter from $_GET[] or $_POST[] of name
+// in form of array and strips slashes from each element
+// Safe from referencing nonexisting array index
+function getArrayOfStrings($name) {
+    if (isset($_GET[$name])) {
+        $array = $_GET[$name];
+    } elseif (isset($_POST[$name])) {
+        $array = $_POST[$name];
+    } else {
+        return array();
+    }
+    return array_map(function($str) { return stripslashes($str); }, $array);
+}
+
 // Function stripfancy()
 // returns a string with many non-7-bit ASCII characters
 // removed from input string and replaced with similar
@@ -182,12 +197,9 @@ function get_session_from_post() {
     $session["pocketprogtext"] = stripslashes($_POST["pocketprogtext"]);
     $session["progguiddesc"] = stripslashes($_POST["progguiddesc"]);
     $session["persppartinfo"] = stripslashes($_POST["persppartinfo"]);
-    //error_log("Zambia->get_session_from_post->\$_POST[\"pubchardest\"]: ".print_r($_POST["pubchardest"],TRUE)); // for debugging only
-    $session["pubchardest"] = $_POST["pubchardest"];
-    //error_log("Zambia->get_session_from_post->\$session[\"pubchardest\"]: ".print_r($session["pubchardest"],TRUE)); // for debugging only
-    $session["featdest"] = $_POST["featdest"];
-    //error_log("Zambia->get_session_from_post->\$session[\"featdest\"]: ".print_r($session["featdest"],TRUE)); // for debugging only
-    $session["servdest"] = $_POST["servdest"];
+    $session["pubchardest"] = getArrayOfStrings("pubchardest");
+    $session["featdest"] = getArrayOfStrings("featdest");
+    $session["servdest"] = getArrayOfStrings("servdest");
     $session["duration"] = stripslashes($_POST["duration"]);
     $session["atten"] = $_POST["atten"];
     $session["kids"] = $_POST["kids"];
