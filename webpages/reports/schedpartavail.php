@@ -1,20 +1,26 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant availablity';
 $report['description'] = 'When they said they were available.';
 $report['categories'] = array(
     'Participant Info Reports' => 920,
 );
+$report['columns'] = array(
+    null,
+    array("orderData" => 2),
+    array("visible" => false),
+    array("orderable" => false)
+);
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, P.pubsname
+        P.badgeid, P.pubsname, IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)) AS pubsnameSort
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
     WHERE
-        P.interested=1
+        P.interested = 1
     ORDER BY
          IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),
          CD.firstname;
@@ -38,12 +44,15 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report" style="">Badge ID</th>
-                        <th class="report" style="">Name for Publications</th>
-                        <th class="report" style="">Available Times</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:2.6rem">
+                            <th class="report">Badge ID</th>
+                            <th class="report">Name for Publications</th>
+                            <th></th>
+                            <th class="report">Available Times</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
                 </table>
             </xsl:when>
@@ -63,6 +72,7 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
             </td>
+            <td class="report"><xsl:value-of select="@pubsnameSort" /></td>
             <td class="report">
                 <xsl:choose>
                     <xsl:when test="/doc/query[@queryName='times']/row[@badgeid=$badgeid]">

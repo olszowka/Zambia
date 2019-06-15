@@ -1,15 +1,22 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participants signed up for sessions not coming';
 $report['description'] = 'The list of all participants who have entered interest in a session, but are currently not flagged as intending to attend.';
 $report['categories'] = array(
     'Participant Info Reports' => 120,
 );
+$report['columns'] = array(
+    null,
+    null,
+    null,
+    null,
+    array("orderable" => false)
+);
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-		P.badgeid, IF(IFNULL(P.pubsname, "") = "",CONCAT(CD.firstname, " ", CD.lastname),P.pubsname) AS name
+		CD.badgeid, CD.firstname, CD.lastname, CD.badgename, P.pubsname
 	FROM
 			 Participants P
 		JOIN CongoDump CD USING (badgeid)
@@ -57,12 +64,16 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Badge Id</th>
-                        <th class="report">Name</th>
-                        <th class="report">Signed up for sessions</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr>
+                            <th class="report" style="height:2.6rem">Badge Id</th>
+                            <th class="report">Pubs Name</th>
+                            <th class="report">Badge Name</th>
+                            <th class="report">Last Name, First Name</th>
+                            <th class="report">Signed up for sessions</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='participants']/row" />
                 </table>
             </xsl:when>
@@ -76,7 +87,9 @@ $report['xsl'] =<<<'EOD'
         <xsl:variable name="badgeid" select="@badgeid" />
         <tr>
             <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
-            <td class="report"><xsl:value-of select="@name"/></td>
+            <td class="report"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@badgename"/></td>
+            <td class="report"><xsl:value-of select="@lastname"/><xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text><xsl:value-of select="@firstname"/></td>
             <td class="report">
                 <xsl:apply-templates select="/doc/query[@queryName='sessions']/row[@badgeid = $badgeid]" />
             </td>

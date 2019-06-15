@@ -1,18 +1,25 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant # Panel and Constraints';
 $report['description'] = 'How many panels does each person want to be on and the other constraints they indicated';
 $report['categories'] = array(
     'Participant Info Reports' => 730,
 );
+$report['columns'] = array_pad(
+    array(
+        null,
+        array("orderData" => 2),
+        array("visible" => false)
+    ), CON_NUM_DAYS + 6, array("orderable" => false));
 $report['queries'] = [];
 $report['queries']['days'] =<<<'EOD'
 SELECT DISTINCT day, DAYNAME(ADDDATE('$ConStartDatim$', day - 1)) AS dayName FROM ParticipantAvailabilityDays ORDER BY day;
 EOD;
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-		P.badgeid, P.pubsname, PA.maxprog, PA.preventconflict, PA.otherconstraints
+		P.badgeid, P.pubsname, PA.maxprog, PA.preventconflict, PA.otherconstraints,
+        IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnameSort
 	FROM
 				  Participants P
 			 JOIN CongoDump CD USING (badgeid)
@@ -40,18 +47,21 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row and doc/query[@queryName='dayMaxProg']/row">
-                <table class="report">
-                    <tr>
-                        <th rowspan="2" class="report" style="white-space:nowrap;">Badge ID</th>
-                        <th rowspan="2" class="report">Name for Publications</th>
-                        <th colspan="{1 + count(doc/query[@queryName='days']/row)}" class="report">Maximum Number of Sessions</th>
-                        <th rowspan="2" class="report">Prevent Conflict with these Activities</th>
-                        <th rowspan="2" class="report">Participant's Other Scheduling Constraints</th>
-                    </tr>
-                    <tr>
-                        <xsl:apply-templates select="doc/query[@queryName='days']/row" />
-                        <th class="report">Total</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="report" style="white-space:nowrap;">Badge ID</th>
+                            <th rowspan="2" class="report">Name for Publications</th>
+                            <th rowspan="2"></th>
+                            <th colspan="{1 + count(doc/query[@queryName='days']/row)}" class="report">Maximum Number of Sessions</th>
+                            <th rowspan="2" class="report">Prevent Conflict with these Activities</th>
+                            <th rowspan="2" class="report">Participant's Other Scheduling Constraints</th>
+                        </tr>
+                        <tr>
+                            <xsl:apply-templates select="doc/query[@queryName='days']/row" />
+                            <th class="report">Total</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
                 </table>
             </xsl:when>
@@ -70,6 +80,7 @@ $report['xsl'] =<<<'EOD'
                 </xsl:call-template>
             </td>
             <td class="report" style="white-space:nowrap;"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@pubsnameSort"/></td>
             <xsl:apply-templates select="/doc/query[@queryName='dayMaxProg']/row[@badgeid=$badgeid]"/>
             <td class="report"><xsl:value-of select="@maxprog"/></td>
             <td class="report"><xsl:value-of select="@preventconflict"/></td>

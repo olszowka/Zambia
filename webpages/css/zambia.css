@@ -394,3 +394,6 @@ table.multcol-list td {
 .error-container {
   line-height: 2;
 }
+th.report.sorting_disabled span.sorting {
+  display: none;
+}

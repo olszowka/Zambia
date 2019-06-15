@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Registration data dump';
 $report['description'] = 'Shows all participant information retreived from the registration system';
@@ -7,6 +7,21 @@ $report['categories'] = array(
     'Events Reports' => 500,
     'Zambia Administration Reports' => 500,
     'Participant Info Reports' => 500,
+);
+$report['columns'] = array(
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
@@ -28,25 +43,27 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report" rowspan="2">Badge Name</th>
-                        <th class="report" rowspan="2">Badge Id</th>
-                        <th class="report" rowspan="2">Reg Type</th>
-                        <th class="report" rowspan="2">Last Name</th>
-                        <th class="report" rowspan="2">First Name</th>
-                        <th class="report" rowspan="2">Phone</th>
-                        <th class="report" rowspan="2">Email</th>
-                        <th class="report" colspan="6">Postal Address</th>
-                    </tr>
-                    <tr>
-                        <th class="report">Line 1</th>
-                        <th class="report">Line 2</th>
-                        <th class="report">City</th>
-                        <th class="report">State</th>
-                        <th class="report">Zip (Code)</th>
-                        <th class="report">Country</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr>
+                            <th class="report" rowspan="2" valign="top" style="padding-top:0.7rem">Badge Name</th>
+                            <th class="report" rowspan="2" valign="top" style="padding-top:0.7rem">Badge Id</th>
+                            <th class="report" rowspan="2" valign="top" style="padding-top:0.7rem">Reg Type</th>
+                            <th class="report" rowspan="2" valign="top" style="padding-top:0.7rem">Last Name</th>
+                            <th class="report" rowspan="2" valign="top" style="padding-top:0.7rem">First Name</th>
+                            <th class="report" rowspan="2" valign="top" style="padding-top:0.7rem">Phone</th>
+                            <th class="report" rowspan="2" valign="top" style="padding-top:0.7rem">Email</th>
+                            <th class="report" colspan="6">Postal Address</th>
+                        </tr>
+                        <tr style="height:2.6rem">
+                            <th class="report">Line 1</th>
+                            <th class="report">Line 2</th>
+                            <th class="report">City</th>
+                            <th class="report">State</th>
+                            <th class="report">Zip (Code)</th>
+                            <th class="report">Country</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
                 </table>
             </xsl:when>

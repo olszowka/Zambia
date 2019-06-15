@@ -1,16 +1,25 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant Professional Qualifications ';
 $report['description'] = 'List all program participants who are attending and their professional qualifications: (Lastname, firstname), Pubsname, Badgename, Badgeid, Qualifications';
 $report['categories'] = array(
     'Participant Info Reports' => 800,
 );
+$report['columns'] = array(
+    array("orderData" => 1),
+    array("visible" => false),
+    array("orderData" => 3),
+    array("visible" => false),
+    null,
+    null,
+    array("orderable" => false)
+);
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-		CONCAT(CD.lastname,", ",CD.firstname) AS name, P.pubsname, CD.email,
-		CD.badgeid 
+		CONCAT(CD.firstname, " ", CD.lastname) AS name, CONCAT(CD.lastname, CD.firstname) AS nameSort, P.pubsname, CD.email,
+		CD.badgeid, IF(instr(P.pubsname,CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnameSort
 	FROM
 			CongoDump CD
 	   JOIN Participants P USING (badgeid)
@@ -39,14 +48,18 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Last name, first name</th>
-                        <th class="report">Name for Publications</th>
-                        <th class="report">Email address</th>
-                        <th class="report">Badge Id</th>
-                        <th class="report">Professional Qualifications</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:2.6rem">
+                            <th class="report">Name</th>
+                            <th></th>
+                            <th class="report">Name for Publications</th>
+                            <th></th>
+                            <th class="report">Email address</th>
+                            <th class="report">Badge Id</th>
+                            <th class="report">Professional Qualifications</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
                 </table>
             </xsl:when>
@@ -60,7 +73,9 @@ $report['xsl'] =<<<'EOD'
         <xsl:variable name="badgeid" select="@badgeid"/>
         <tr>
             <td class="report"><xsl:value-of select="@name"/></td>
+            <td class="report"><xsl:value-of select="@nameSort"/></td>
             <td class="report"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@pubsnameSort"/></td>
             <td class="report"><xsl:value-of select="@email"/></td>
             <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
             <td class="report">

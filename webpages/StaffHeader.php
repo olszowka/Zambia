@@ -1,6 +1,6 @@
 <?php
 //	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-    function staff_header($title, $is_report = false, $reportColumns = false) {
+    function staff_header($title, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
     require_once ("javascript_functions.php");
     global $fullPage, $header_used;
     $header_used = HEADER_STAFF;
@@ -25,6 +25,11 @@
             echo "<meta id=\"reportColumns\" data-report-columns=\"";
             echo htmlentities(json_encode($reportColumns));
             echo "\">"; 
+        }
+        if ($reportAdditionalOptions) {
+            echo "<meta id=\"reportAdditionalOptions\" data-report-additional-options=\"";
+            echo htmlentities(json_encode($reportAdditionalOptions));
+            echo "\">";
         }
     } ?>
 		<link rel="shortcut icon" href="images/favicon.ico">

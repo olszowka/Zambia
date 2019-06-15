@@ -1,10 +1,16 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Attending Query (all info)';
 $report['description'] = 'Shows who (of program participants only) has responded and if they are attending.';
 $report['categories'] = array(
     'Participant Info Reports' => 300,
+);
+$report['columns'] = array(
+    null,
+    null,
+    null,
+    null
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
@@ -27,13 +33,15 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Registration Name</th>
-                        <th class="report">Pubs Name</th>
-                        <th class="report">Badge Id</th>
-                        <th class="report"><xsl:text disable-output-escaping="yes">Interested &amp;amp; Attending</xsl:text></th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:2.6rem">
+                            <th class="report">Registration Name</th>
+                            <th class="report">Pubs Name</th>
+                            <th class="report">Badge Id</th>
+                            <th class="report"><xsl:text disable-output-escaping="yes">Interested &amp;amp; Attending</xsl:text></th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='participants']/row"/>
                 </table>
             </xsl:when>

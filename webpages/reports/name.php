@@ -1,11 +1,20 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Name Report';
 $report['description'] = 'Maps badgeid, pubsname, badgename and first and last name together (includes every record in the database regardless of status)';
 $report['categories'] = array(
     'Events Reports' => 670,
     'Participant Info Reports' => 670,
+);
+$report['columns'] = array(
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
@@ -35,16 +44,18 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Badge ID</th>
-                        <th class="report">Name for Publications</th>
-                        <th class="report">Last Name</th>
-                        <th class="report">First Name</th>
-                        <th class="report">Badge Name</th>
-                        <th class="report">Interested</th>
-                        <th class="report">Scheduled</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:2.6rem">
+                            <th class="report">Badge ID</th>
+                            <th class="report">Name for Publications</th>
+                            <th class="report">Last Name</th>
+                            <th class="report">First Name</th>
+                            <th class="report">Badge Name</th>
+                            <th class="report">Interested</th>
+                            <th class="report">Scheduled</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
                 </table>
             </xsl:when>

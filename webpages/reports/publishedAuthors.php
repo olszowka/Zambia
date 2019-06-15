@@ -1,10 +1,16 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Published Authors';
 $report['description'] = 'Participants who indicated they were published authors.';
 $report['categories'] = array(
     'Participant Info Reports' => 105,
+);
+$report['columns'] = array(
+    null,
+    null,
+    null,
+    null
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
@@ -29,13 +35,15 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Badge Id</th>
-                        <th class="report">Pubs Name</th>
-                        <th class="report">Badge Name</th>
-                        <th class="report">Last Name, First Name</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr>
+                            <th class="report" style="height:2.6rem">Badge Id</th>
+                            <th class="report">Pubs Name</th>
+                            <th class="report">Badge Name</th>
+                            <th class="report">Last Name, First Name</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='participants']/row"/>
                 </table>
             </xsl:when>
