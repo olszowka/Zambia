@@ -23,7 +23,8 @@ format and moved manually
 Follow these instructions if you haven't customized any reports
 
 1) Pull from current code from Master.
-1) Apply db script 45_drop_report_tables.sql to remove old report tables.
+1) Apply db script `45_drop_report_tables.sql` to remove old report tables.
+1) Apply db script `46_new_report_permissions.sql` to create new permission-related db entries.
 1) Log into Zambia with user who has "admin" role.
 1) Select Admin -> Build Report Menus and confirm.
 1) In db, update table UserHasPermissionRole to revoke Admin/1 from all users who will not be
@@ -45,7 +46,8 @@ ending with .php
 delete that file from the reports/ directory.
 1) Commit the changes to the reports/ directory.
 1) In Zambia, select Admin -> Build Report Menus and confirm.
-1) Apply db script 45_drop_report_tables.sql to remove old report tables.
+1) Apply db script `45_drop_report_tables.sql` to remove old report tables.
+1) Apply db script `46_new_report_permissions.sql` to create new permission-related db entries.
 1) In db, update table UserHasPermissionRole to revoke Admin/1 from all users who will not be
 editing report code
 1) In db, update table UserHasPermissionRole to add Senior Staff/12 to all users who
