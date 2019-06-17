@@ -1,22 +1,32 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Staff Members';
 $report['description'] = 'List Staff Members and their priviliges';
 $report['categories'] = array(
     'Zambia Administration Reports' => 1010,
 );
+$report['columns'] = array(
+    null,
+    array("orderData" => 2),
+    array("visible" => false),
+    array("orderData" => 4),
+    array("visible" => false),
+    null,
+    array("orderable" => false)
+);
 $report['queries'] = [];
 $report['queries']['staff'] =<<<'EOD'
 SELECT
-        badgeid,
-        if(P.pubsname is null or P.pubsname = '',concat(CD.firstname,' ',CD.lastname),P.pubsname) as name,
+        badgeid, P.pubsname, concat(CD.firstname,' ',CD.lastname) AS name, CONCAT(CD.lastname, CD.firstname) AS nameSort,
+        IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)) AS pubsnameSort,
         if (P.password='4cb9c8a8048fd02294477fcb1a41191a','changme','OK') as password
     FROM
              Participants P
         JOIN CongoDump CD using (badgeid)
+        JOIN UserHasPermissionRole UHPR using (badgeid)
     WHERE
-        P.badgeid in (SELECT badgeid FROM UserHasPermissionRole WHERE permroleid = 2) ##staff
+        UHPR.permroleid = 2 /* staff */
     ORDER BY
         CD.lastname, CD.firstname;
 EOD;
@@ -38,13 +48,18 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='staff']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Badgeid</th>
-                        <th class="report">Name</th>
-                        <th class="report">Password</th>
-                        <th class="report">Permission roles</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                         <tr style="height:2.6rem">
+                            <th class="report">Badgeid</th>
+                            <th class="report">Name</th>
+                            <th></th>
+                            <th class="report">Name for publications</th>
+                            <th></th>
+                            <th class="report">Password</th>
+                            <th class="report">Permission roles</th>
+                        </tr>             
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='staff']/row"/>
                 </table>
             </xsl:when>
@@ -59,6 +74,9 @@ $report['xsl'] =<<<'EOD'
         <tr>
             <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
             <td class="report"><xsl:value-of select="@name"/></td>
+            <td class="report"><xsl:value-of select="@nameSort"/></td>
+            <td class="report"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@pubsnameSort"/></td>
             <td class="report"><xsl:value-of select="@password"/></td>
             <td class="report">
                 <xsl:apply-templates select="/doc/query[@queryName = 'privileges']/row[@badgeid = $badgeid]"/>
