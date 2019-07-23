@@ -188,6 +188,13 @@ div.reportPageContent table td a,
 .report A {
   color: #1c30b0;
 }
+th.report.sorting_disabled span.sorting {
+  display: none;
+}
+td.report.highlight1 {
+  font-weight: bold;
+  background-color: #e17575;
+}
 td.za-report-lastRowCell {
   border-bottom: 2px solid black;
 }
@@ -393,7 +400,4 @@ table.multcol-list td {
 }
 .error-container {
   line-height: 2;
-}
-th.report.sorting_disabled span.sorting {
-  display: none;
 }

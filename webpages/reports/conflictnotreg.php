@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Not Registered';
 $report['description'] = 'This is a report of participants sorted by number of sessions they are on that are actually running, with some registration information. It is useful for cons that comp program participants based on a minimum number of panels. In this case, this report helps make sure people get their comps. Also, participants who have not earned a comp may need some kind of consideration.';
@@ -9,7 +9,9 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     array("width" => "7em"),
-    array("width" => "25em", "orderData" => 2),
+    array("width" => "17em", "orderData" => 2),
+    array("visible" => false),
+    array("width" => "17em", "orderData" => 4),
     array("visible" => false),
     array("width" => "8em"),
     array("width" => "12em")
@@ -17,11 +19,10 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, 
-        P.pubsname, 
-        IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnamesort,
-        IFNULL(CD.regtype, ' ') AS regtype, 
-        SU.assigned
+        P.badgeid, P.pubsname,
+        concat(CD.firstname,' ',CD.lastname) AS name, CONCAT(CD.lastname, CD.firstname) AS nameSort,
+        IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnameSort,
+        IFNULL(CD.regtype, ' ') AS regtype, SU.assigned
     FROM 
                   Participants P 
              JOIN CongoDump CD USING (badgeid)
@@ -56,7 +57,9 @@ $report['xsl'] =<<<'EOD'
                         <tr style="height:3.2em;">
                             <th class="report">Badge ID</th>
                             <th class="report">Pubsname</th>
-                            <th class="report">Pubsnamesort</th>
+                            <th></th>
+                            <th class="report">Name</th>
+                            <th></th>
                             <th class="report">Reg Type</th>
                             <th class="report">Number of Sessions Assigned</th>
                         </tr>
@@ -74,7 +77,9 @@ $report['xsl'] =<<<'EOD'
         <tr>
             <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
             <td class="report"><xsl:value-of select="@pubsname"/></td>
-            <td class="report"><xsl:value-of select="@pubsnamesort"/></td>
+            <td class="report"><xsl:value-of select="@pubsnameSort"/></td>
+            <td class="report"><xsl:value-of select="@name"/></td>
+            <td class="report"><xsl:value-of select="@nameSort"/></td>
             <td class="report"><xsl:value-of select="@regtype"/></td>
             <td class="report"><xsl:value-of select="@assigned"/></td>
         </tr>

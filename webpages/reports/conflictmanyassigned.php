@@ -1,10 +1,17 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Sessions with over 5 people assigned';
 $report['description'] = 'Lists all public sessions which are either on the schedule or have anyone assigned and have 6 or more participants assigned.  Excludes Dropped, Cancelled, and Duplicate Sessions.';
 $report['categories'] = array(
     'Conflict Reports' => 340,
+);
+$report['columns'] = array(
+    null,
+    null,
+    null,
+    null,
+    null
 );
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'
@@ -41,14 +48,16 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Track</th>
-                        <th class="report">Type</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">How Many Assigned</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:2.6rem">
+                            <th class="report">Track</th>
+                            <th class="report">Type</th>
+                            <th class="report">Session ID</th>
+                            <th class="report">Title</th>
+                            <th class="report">How Many Assigned</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='sessions']/row"/>
                 </table>
             </xsl:when>

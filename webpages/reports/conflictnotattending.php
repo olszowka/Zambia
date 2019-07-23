@@ -1,25 +1,34 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - not attending people that are on panels';
 $report['description'] = 'Lists all sessions not dropped, cancelled, or duplicate which have at least one participant assigned who has not confirmed he or she is attending.';
 $report['categories'] = array(
     'Conflict Reports' => 360,
 );
+$report['columns'] = array(
+    null,
+    null,
+    null,
+    array("orderData" => 4),
+    array("visible" => false),
+    array("orderData" => 6),
+    array("visible" => false),
+    null,
+    null
+);
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        T.trackname,
-        S.sessionid,
-        S.title,
-        P.badgeid, 
-        P.pubsname, 
-        P.interested 
+        T.trackname, S.sessionid, S.title, P.badgeid, P.pubsname, P.interested,
+        concat(CD.firstname,' ',CD.lastname) AS name, CONCAT(CD.lastname, CD.firstname) AS nameSort,
+        IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)) AS pubsnameSort
    FROM
              Sessions S
         JOIN Tracks T USING (trackid)
         JOIN ParticipantOnSession POS USING (sessionid)
         JOIN Participants P USING (badgeid)
+        JOIN CongoDump CD USING (badgeid)
     WHERE
             S.statusid NOT IN (4,5,10) ## Duplicate, Cancelled, or Dropped
         AND IFNULL(P.interested,0) != 1
@@ -34,15 +43,20 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Track</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">Pubsname</th>
-                        <th class="report">Badge ID</th>
-                        <th class="report"><xsl:text disable-output-escaping="yes">Interested &amp;amp; Attending</xsl:text></th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:2.6rem">
+                            <th class="report">Track</th>
+                            <th class="report">Session ID</th>
+                            <th class="report">Title</th>
+                            <th class="report">Pubsname</th>
+                            <th></th>
+                            <th class="report">Name</th>
+                            <th></th>
+                            <th class="report">Badge ID</th>
+                            <th class="report"><xsl:text disable-output-escaping="yes">Interested &amp;amp; Attending</xsl:text></th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='participants']/row"/>
                 </table>
             </xsl:when>
@@ -63,6 +77,9 @@ $report['xsl'] =<<<'EOD'
                 </xsl:call-template>
             </td>
             <td class="report"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@pubsnameSort"/></td>
+            <td class="report"><xsl:value-of select="@name"/></td>
+            <td class="report"><xsl:value-of select="@nameSort"/></td>
             <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
             <td class="report">
                 <xsl:choose>
