@@ -826,7 +826,7 @@ function StaffMaintainSchedule() {
 	}
 
 	this.initialize = function initialize() {
-		$("#arisiaLens").ready(staffMaintainSchedule.resizeMe);
+		$("#zambiaLogo").ready(staffMaintainSchedule.resizeMe);
 		$("#staffNav").ready(staffMaintainSchedule.resizeMe);
 		$("#tabs").tabs();
 		//$("#clearAllButton").button();

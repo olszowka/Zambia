@@ -206,10 +206,13 @@ ul#boxes li {
   background-color: #e5e5e5;
   text-align: center;
 }
-.arisiaLens {
+.zambiaLogo {
   padding: 3px;
   display: table-cell;
   float: none;
+}
+.zambiaImage {
+  height: 12rem;
 }
 .pageHeader {
   padding: 0;

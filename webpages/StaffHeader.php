@@ -11,7 +11,7 @@
 		<meta charset="utf-8">
 		<title>Zambia &ndash; <?php echo $title ?></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="Zambia, the Arisia scheduling tool">
+		<meta name="description" content="Zambia, the fan convention scheduling tool">
 		<meta name="author" content="PeterO, DDA, others">
 
 		<link rel="stylesheet" href="jquery/jquery-ui-1.8.16.custom.css" type="text/css">
@@ -56,7 +56,7 @@
 		  <div id="regHeader" class="span12">
   			<div class="span9">
   				<h1 class="pageHeader pull-left">
-  					<img id="arisiaLens" src="images/logo.gif" title="Arisia logo" class="arisiaLens wide-only" />
+  					<img id="zambiaLogo" src="images/Z_illuminated.jpg" alt="Illuminated Z" class="zambiaLogo zambiaImage wide-only" />
   					<div class="pageHeaderText span9"> Zambia<span class="wide-medium-only">: The <?php echo CON_NAME; ?> Scheduling Tool</span></div>
   				</h1>
   			</div>
