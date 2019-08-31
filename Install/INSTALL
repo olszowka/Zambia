@@ -62,9 +62,8 @@ Now you have an empty database that is ready for use with Zambia.  You may inste
 use DemoDbase.dump or SampleDbase.dump.
     EmptyDbase.dump — only tables required for Zambia to run at all or with hard coded
         values are populated.
-    SampleDbase.dump — contains data from EmptyDbase.dump plus the report configuration
-        and some configuration data you will need to edit.  Also contains users “1” and
-        “2” with password “demo”.
+    SampleDbase.dump — contains data from EmptyDbase.dump plus some configuration data
+        you will need to edit.  Also contains users “1” and “2” with password “demo”.
     DemoDbase.dump — contains data from EmptyDbase.dump, SampleDbase.dump, and some
         participant preference and schedule data.
 

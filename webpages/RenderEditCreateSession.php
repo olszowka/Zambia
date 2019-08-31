@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
     // This function will output the page with the form to add or create a session
     // Variables
     //     action: "create" or "edit"
@@ -6,7 +7,7 @@
     //     message1: a string to display before the form
     //     message2: an urgent string to display before the form and after m1
 function RenderEditCreateSession ($action, $session, $message1, $message2) {
-    global $name, $email, $debug;
+    global $name, $email, $debug, $title;
     require_once("StaffHeader.php");
     require_once("StaffFooter.php");
     if ($action=="create") {

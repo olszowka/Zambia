@@ -1,12 +1,12 @@
 <?php
-	// Guts of page (not header and footer) have been updated to the CSS refactor 1 Feb 2011
-	global $participant,$message_error,$message2,$congoinfo;
-	$title="Search Sessions";
-	require_once('db_functions.php');
-	require_once('StaffHeader.php');
-	require_once('StaffFooter.php');
-	require_once('StaffCommonCode.php');
-	staff_header($title);
+// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+    global $participant, $message_error, $message2, $congoinfo, $title;
+    $title = "Search Sessions";
+    require_once('db_functions.php');
+    require_once('StaffHeader.php');
+    require_once('StaffFooter.php');
+    require_once('StaffCommonCode.php');
+    staff_header($title);
 ?>
 
 <div class="row-fluid">

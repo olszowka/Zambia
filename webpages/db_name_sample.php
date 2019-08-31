@@ -27,7 +27,7 @@ define("DURATION_IN_MINUTES","FALSE"); // TRUE: in mmm; False: in hh:mm
         // affects session edit/create page only, not reports
 define("DEFAULT_DURATION","1:15"); // must correspond to DURATION_IN_MINUTES
 define("SMTP_ADDRESS","smtp-out.netbusters.com");
-define("SWIFT_DIRECTORY","/home/zambia_admin/Swift/"); //location of installed swift library
+define("AUTOLOAD","../../vendor/autoload.php"); //location of composer autoload for use by Swift Mailer
 define("PREF_TTL_SESNS_LMT",10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT",5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS",8); // Number of rows of availability records to render

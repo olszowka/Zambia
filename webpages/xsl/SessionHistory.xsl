@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-    $Header$
 	Created by Peter Olszowka on 2016-05-11;
 	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
 -->

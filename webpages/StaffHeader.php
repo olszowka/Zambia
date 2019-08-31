@@ -1,8 +1,9 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
-    function staff_header($title, $is_report = false) {
+//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+    function staff_header($title, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
     require_once ("javascript_functions.php");
-    global $badgeid, $message, $fullPage;
+    global $fullPage, $header_used;
+    $header_used = HEADER_STAFF;
 ?>
 <!DOCTYPE html>
 <html lang="en" <?php if ($fullPage) echo "class =\"fullPage\""; ?> >
@@ -10,7 +11,7 @@
 		<meta charset="utf-8">
 		<title>Zambia &ndash; <?php echo $title ?></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="Zambia, the Arisia scheduling tool">
+		<meta name="description" content="Zambia, the fan convention scheduling tool">
 		<meta name="author" content="PeterO, DDA, others">
 
 		<link rel="stylesheet" href="jquery/jquery-ui-1.8.16.custom.css" type="text/css">
@@ -18,25 +19,35 @@
 		<link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css" >
         <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
-    <?php if ($is_report) { ?>
-        <link rel="stylesheet" href="css/dataTables.css" type="text/css" />
-    <?php } ?>
+    <?php if ($is_report) {
+        echo "<link rel=\"stylesheet\" href=\"css/dataTables.css\" type=\"text/css\" />\n";
+        if ($reportColumns) {
+            echo "<meta id=\"reportColumns\" data-report-columns=\"";
+            echo htmlentities(json_encode($reportColumns));
+            echo "\">"; 
+        }
+        if ($reportAdditionalOptions) {
+            echo "<meta id=\"reportAdditionalOptions\" data-report-additional-options=\"";
+            echo htmlentities(json_encode($reportAdditionalOptions));
+            echo "\">";
+        }
+    } ?>
 		<link rel="shortcut icon" href="images/favicon.ico">
 		<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 		<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
 		<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+        <script type="text/javascript">
+            var thisPage="<?php echo $title; ?>";
+            var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
+            var alwaysShowLargeHeader = false;
+            var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
+        </script>
+        <?php
+        load_jquery();
+        load_javascript($title, $is_report);
+        ?>
 	</head>
 <body <?php if ($fullPage) echo "class =\"fullPage\""; ?>>
-<script type="text/javascript">
-	var thisPage="<?php echo $title; ?>";
-	var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
-	var alwaysShowLargeHeader = false;
-	var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
-</script>
-<?php
-load_jquery();
-load_javascript($title, $is_report);
-?>
 	<div <?php if ($fullPage) echo "id=\"fullPageContainer\""; ?> class="container-fluid">
 	<div id="myhelper"></div><!-- used for drag-and-drop operations -->
 	<?php if ($fullPage) echo "<div id=\"headerContainer\">"; ?>
@@ -45,18 +56,11 @@ load_javascript($title, $is_report);
 		  <div id="regHeader" class="span12">
   			<div class="span9">
   				<h1 class="pageHeader pull-left">
-  					<img id="arisiaLens" src="images/logo.gif" title="Arisia logo" class="arisiaLens wide-only" />
+  					<img id="zambiaLogo" src="images/Z_illuminated.jpg" alt="Illuminated Z" class="zambiaLogo zambiaImage wide-only" />
   					<div class="pageHeaderText span9"> Zambia<span class="wide-medium-only">: The <?php echo CON_NAME; ?> Scheduling Tool</span></div>
   				</h1>
   			</div>
-  <?php if (isset($_SESSION['badgeid'])) {
-  	require_once('db_functions.php');
-    	$queryArray["categories"] = "SELECT reportcategoryid, description FROM ReportCategories ORDER BY display_order;";
-    	if (($resultXML=mysql_query_XML($queryArray))===false) {
-    	    RenderError($title,$message_error);
-            exit();
-      }
-  ?>
+  <?php if (isset($_SESSION['badgeid'])) { ?>
   			<div class="span3" id="welcome">
   				<p>Welcome, <?php echo $_SESSION['badgename']; ?></p>
           <img id="hideHeader" class="imgButton pull-right" src="images/green-up.png" alt="Shrink header to a thin strip" title="Shrink header to a thin strip"/>
@@ -108,31 +112,16 @@ load_javascript($title, $is_report);
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
              						<ul class="dropdown-menu">
 			                	<?php
-			                    // Generate the links to all the reports
-			                  	$xmlstr = <<<EOD
-<?xml version="1.0" encoding="UTF-8"?>
-	<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
-		<xsl:output omit-xml-declaration="yes" />
-		<xsl:template match="/">
-			<xsl:apply-templates match="doc/query[@queryName='categories']/row" />
-			<li class="divider"></li>
-			<li>
-				<a href="staffReportsInCategory.php?reportcategoryid=0">All reports</a>
-			</li>
-		</xsl:template>
-		<xsl:template match="/doc/query[@queryName='categories']/row">
-			<li>
-				<a href="staffReportsInCategory.php?reportcategoryid={@reportcategoryid}"><xsl:value-of select="@description" /></a>
-			</li>
-		</xsl:template>
-	</xsl:stylesheet>
-EOD;
-			                  	$xsl = new DomDocument;
-			                  	$xsl->loadXML($xmlstr);
-			                  	$xslt = new XsltProcessor();
-			                  	$xslt->importStylesheet($xsl);
-			                  	$html = $xslt->transformToXML($resultXML);
-			                  	echo $html
+                                $prevErrorLevel = error_reporting();
+                                $tempErrorLevel = $prevErrorLevel && ~ E_WARNING;
+                                error_reporting($tempErrorLevel);
+                                if (!include 'ReportMenuInclude.php') {
+                                    echo "<li><div class='menu-error-entry'>Report menus not built!</div></li>\n";
+                                } else { ?>
+                                    <li class='divider'></li>
+                                    <li><a href='staffReportsInCategory.php'>All Reports</a></li>
+                                <?php }
+                                error_reporting($prevErrorLevel);
 			                	?>
 								</ul>
 							</li>
@@ -157,6 +146,14 @@ EOD;
 									<input type="hidden" value="ANY" name="divisionid">
 								</form>
 							</li>
+                            <?php if (may_I('ConfigureReports')) { ?>
+                                <li class="dropdown">
+                                    <a href="#admin" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="BuildReportMenus.php">Build Report Menus</a></li>
+                                    </ul>
+                                </li>
+                            <?php } ?>
 						</ul>
 						<ul class="nav pull-right">
 							<li class="divider-vertical"></li>
@@ -168,9 +165,8 @@ EOD;
 		</nav>
 <?php
 		if ($fullPage) echo "</div>"; //close headerContainer 
- 		}
-	else
-		{
+ 		} // if badgeid was set
+	else {
 			require_once("loginForm.php");
 			echo "<script type=\"text/javascript\">";
 			echo "   var alwaysShowLargeHeader = true;";

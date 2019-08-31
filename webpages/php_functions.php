@@ -1,4 +1,5 @@
 <?php
+//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
 function set_session_timeout() {
     // BASESESSIONDIR:  default session directory from db_name.php
     // path for cookies

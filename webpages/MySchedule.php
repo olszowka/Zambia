@@ -1,5 +1,6 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $linki, $title;
 $title = "My Schedule";
 require('PartCommonCode.php'); // initialize db; check login;
 $CON_START_DATIM = CON_START_DATIM; //make it a variable so it will be substituted
@@ -7,8 +8,8 @@ $PROGRAM_EMAIL = PROGRAM_EMAIL; //make it a variable so it will be substituted
 require_once('ParticipantHeader.php');
 // require_once('renderMySessions2.php');
 if (!may_I('my_schedule')) {
-    $message_error = "You do not currently have permission to view this page.<BR>\n";
-    RenderError($title, $message_error);
+    $message_error = "You do not currently have permission to view this page.<br>\n";
+    RenderError($message_error);
     exit();
 }
 // set $badgeid from session
@@ -33,7 +34,7 @@ SELECT
        JOIN Tracks T USING (trackid)
        JOIN Types TY USING (typeid)
     WHERE
-            POS.badgeid="$badgeid"
+            POS.badgeid='$badgeid'
     ORDER BY
             SCH.starttime;
 EOD;
@@ -60,23 +61,21 @@ if (!$resultXML) {
 }
 //echo($resultXML->saveXML());
 //exit();
-$query = "SELECT message FROM CongoDump C LEFT JOIN RegTypes R ON C.regtype=R.regtype ";
-$query .= "WHERE C.badgeid=\"$badgeid\"";
-if (!$result = mysql_query($query, $link)) {
-    $message .= $query . "<BR>Error querying database.<BR>";
-    RenderError($title, $message);
-    exit();
+$query = "SELECT message FROM CongoDump C LEFT JOIN RegTypes R USING (regtype) ";
+$query .= "WHERE C.badgeid='$badgeid'";
+if (!$result = mysqli_query_with_error_handling($query)) {
+    exit(); // Should have exited already
 }
-$row = mysql_fetch_array($result, MYSQL_NUM);
+$row = mysqli_fetch_array($result, MYSQLI_NUM);
+mysqli_free_result($result);
 $regmessage = $row[0];
-$query = "SELECT count(*) FROM ParticipantOnSession POS, Schedule SCH WHERE ";
-$query .= "POS.sessionid=SCH.sessionid and badgeid=\"$badgeid\"";
-if (!$result = mysql_query($query, $link)) {
-    $message .= $query . "<BR>Error querying database.<BR>";
-    RenderError($title, $message);
-    exit();
+$query = "SELECT count(*) FROM ParticipantOnSession POS JOIN Schedule SCH USING (sessionid) ";
+$query .= "WHERE badgeid='$badgeid'";
+if (!$result = mysqli_query_with_error_handling($query)) {
+    exit(); // Should have exited already
 }
-$row = mysql_fetch_array($result, MYSQL_NUM);
+$row = mysqli_fetch_array($result, MYSQLI_NUM);
+mysqli_free_result($result);
 $poscount = $row[0];
 if (!$regmessage) {
     if ($poscount >= 3) {

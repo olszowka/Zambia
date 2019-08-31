@@ -1,31 +1,33 @@
 <?php
-global $participant,$message,$message_error,$message2,$congoinfo;
+// Copyright (c) 2008-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $message, $message_error, $message2, $title;
+// $participant_array is defined by file including this.
 //error_log("Zambia: Reached renderWelcome.php"); 
-$title="Participant View";
+$title = "Participant View";
 require_once('PartCommonCode.php');
 participant_header($title);
-getCongoData($badgeid); 
-if ($message_error!="") { 
+if ($message_error != "") {
     echo "<P class=\"alert alert-error\">$message_error</P>\n";
-    }
-if ($message!="") {
+}
+if ($message != "") {
     echo "<P class=\"alert alert-success\">$message</P>\n";
-    }
-$chint=($participant["interested"]==0);
+}
+$chint = ($participant_array["interested"] == 0);
 if (may_I('postcon')) { ?>
-    <p>Thank you for your participation in <?php echo CON_NAME;?>.  With your help it was a great con.  We look forward to your participation again next year.</p>
+    <p>Thank you for your participation in <?php echo CON_NAME; ?>. With your help it was a great con. We look forward
+        to your participation again next year.</p>
     <p>We will post instructions for participating in brainstorming for next year soon.</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--Arisia Program and Events Committees</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--<?php echo CON_NAME; ?> Program and Events Committees</p>
     <?php
     participant_footer();
     exit();
-    }
-	?>
+}
+?>
     
 <div class="row-fluid">
 	<div class="span12">
-		<h3> Please check back often as more options will become available as we get closer to the convention.</h3>
-		<p> Dear <?php echo $congoinfo["firstname"]; echo " "; echo $congoinfo["lastname"]; ?>,</p>
+		<h3>Please check back often as more options will become available as we get closer to the convention.</h3>
+		<p>Dear <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?>,</p>
 		<p>Welcome to the <?php echo CON_NAME; ?> Programming website.</p>
 		<h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming.</h4>
 		<form class="form-horizontal" name="pwform" method=POST action="SubmitWelcome.php">
@@ -33,7 +35,7 @@ if (may_I('postcon')) { ?>
                 <div id="update_section" class="control-group">
                     <label for="interested" class="control-label">Are you interested?</label>
                     <div class="controls">
-                    <?php $int=$participant['interested']; ?>
+                    <?php $int=$participant_array['interested']; ?>
                     <select id="interested" name="interested" class="span2">
                         <option value=0 <?php if ($int==0) {echo "selected=\"selected\"";} ?> >&nbsp;</option>
                         <option value=1 <?php if ($int==1) {echo "selected=\"selected\"";} ?> >Yes</option>
@@ -42,7 +44,7 @@ if (may_I('postcon')) { ?>
 				</div>
 			  </div>
 			</fieldset>
-            <?php if ($participant['chpw']) { ?>
+            <?php if ($participant_array['chpw']) { ?>
             <h4>Now take a moment and personalize your password.</h4>
             <fieldset>
                 <div class="control-group">

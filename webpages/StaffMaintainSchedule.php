@@ -1,5 +1,6 @@
 <?php
-global $fullPage;
+// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $fullPage, $title;
 $title="Grid Scheduler";
 $fullPage = true; // changes body class to support all content restricted to screen size
 require_once('db_functions.php');

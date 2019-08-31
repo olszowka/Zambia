@@ -1,5 +1,6 @@
 <?php
-	global $participant,$message_error,$message2,$congoinfo;
+// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+	global $participant, $message_error, $message2, $congoinfo, $title;
 	$title="Available Reports";
 	require_once('db_functions.php');
 	require_once('StaffHeader.php');
@@ -7,7 +8,7 @@
 	require_once('StaffCommonCode.php');
 	$queryArray["categories"] = "SELECT reportcategoryid, description FROM ReportCategories ORDER BY display_order;";
 	if (($resultXML=mysql_query_XML($queryArray))===false) {
-	    RenderError($title,$message_error);
+	    RenderError($message_error);
         exit();
         }
 	staff_header($title);

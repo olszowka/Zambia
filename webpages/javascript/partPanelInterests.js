@@ -1,4 +1,3 @@
-// $Header$
 var panelInterests = new PanelInterests;
 
 function PanelInterests() {

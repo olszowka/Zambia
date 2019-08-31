@@ -1,90 +1,88 @@
 <?php
-$title="Invite Participants";
-require_once('db_functions.php');
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
+//	Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $linki, $title;
+$title = "Invite Participants";
 require_once('StaffCommonCode.php');
 staff_header($title);
 
 if (isset($_POST["selpart"])) {
-    $partbadgeid=$_POST["selpart"];
-    $sessionid=$_POST["selsess"];
-    if (($partbadgeid==0) || ($sessionid==0)) {
-            echo "<P class=\"alert alert-error\">Database not updated. Select a participant and a session.</P>";
-            }
-        else {    
-            $query="INSERT INTO ParticipantSessionInterest SET badgeid=\"".$partbadgeid."\", ";
-            $query.="sessionid=".$sessionid;
-            $result=mysql_query($query,$link);
-            if ($result) {
-                    echo "<P class=\"alert alert-success\">Database successfully updated.</P>\n";
-                    }
-                elseif (mysql_errno($link)==1062) {
-                    echo "<P class=\"alert\">Database not updated. That participant was already invited to that session.</P>";
-                    }
-                else {
-                    echo $query."<P class=\"alert alert-error\">Database not updated.</P>";
-                    }
-                
-            }        
+    $partbadgeid = mysqli_real_escape_string($linki, getString("selpart"));
+    $sessionid = getInt("selsess", 0);
+    if (($partbadgeid == '') || ($sessionid == 0)) {
+        echo "<p class=\"alert alert-error\">Database not updated. Select a participant and a session.</p>";
+    } else {
+        $query = "INSERT INTO ParticipantSessionInterest SET badgeid='$partbadgeid', ";
+        $query .= "sessionid=$sessionid;";
+        $result = mysqli_query($linki, $query);
+        if ($result) {
+            echo "<p class=\"alert alert-success\">Database successfully updated.</p>\n";
+        } elseif (mysqli_errno($linki) == 1062) {
+            echo "<p class=\"alert\">Database not updated. That participant was already invited to that session.</p>";
+        } else {
+            echo $query . "<p class=\"alert alert-error\">Database not updated.</p>";
+        }
+
     }
+}
 $query = <<<EOD
 SELECT
-            CD.lastname,
-            CD.firstname,
-            CD.badgename,
-            P.badgeid,
-            P.pubsname
+        CD.lastname,
+        CD.firstname,
+        CD.badgename,
+        P.badgeid,
+        P.pubsname
     FROM
-            Participants P
-       JOIN CongoDump CD USING(badgeid)
+             Participants P
+        JOIN CongoDump CD USING(badgeid)
     WHERE
-            P.interested=1
+        P.interested=1
     ORDER BY
-            IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+        IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
 EOD;
-if (!$Presult=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    RenderError($title,$message);
-    exit();
-    }
-$query="SELECT T.trackname, S.sessionid, S.title FROM Sessions AS S ";
-$query.="JOIN Tracks AS T USING (trackid) ";
-$query.="JOIN SessionStatuses AS SS USING (statusid) ";
-$query.="WHERE SS.may_be_scheduled=1 ";
-$query.="ORDER BY T.trackname, S.sessionid, S.title";
-if (!$Sresult=mysql_query($query,$link)) {
-    $message=$query."<BR>Error querying database. Unable to continue.<BR>";
-    RenderError($title,$message);
-    exit();
-    }
+if (!$Presult = mysqli_query_exit_on_error($query)) {
+    exit(); // Should have exited already
+}
+$query = <<<EOD
+SELECT
+        T.trackname, S.sessionid, S.title
+    FROM
+             Sessions S
+        JOIN Tracks T USING (trackid)
+        JOIN SessionStatuses SS USING (statusid)
+    WHERE
+        SS.may_be_scheduled=1
+    ORDER BY
+        T.trackname, S.sessionid, S.title;
+EOD;
+if (!$Sresult = mysqli_query_exit_on_error($query)) {
+    exit(); // Should have exited already
+}
 echo "<p>Use this tool to put sessions marked \"invited guests only\" on a participant's interest list.\n";
-echo "<FORM class=\"form-inline\" name=\"invform\" method=POST action=\"InviteParticipants.php\">";
-echo "<DIV class=\"row-fluid\"><LABEL class=\"control-label\" for=\"selpart\">Select Participant:&nbsp;</LABEL>\n";
-echo "<SELECT name=\"selpart\">\n";
-echo "     <OPTION value=0 selected>Select Participant</OPTION>\n";
-while (list($lastname,$firstname,$badgename,$badgeid,$pubsname)= mysql_fetch_array($Presult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$badgeid."\">";
-    if ($pubsname!="") {
-	        echo htmlspecialchars($pubsname);
-            }
-	    else {
-		    echo htmlspecialchars($lastname).", ";
-            echo htmlspecialchars($firstname);
-            }
-    echo " (".htmlspecialchars($badgename).") - ";
-    echo htmlspecialchars($badgeid)."</OPTION>\n";
+echo "<form class=\"form-inline\" name=\"invform\" method=\"POST\" action=\"InviteParticipants.php\">";
+echo "<div class=\"row-fluid\"><label class=\"control-label\" for=\"selpart\">Select Participant:&nbsp;</label>\n";
+echo "<select name=\"selpart\">\n";
+echo "     <option value=\"\" selected=\"selected\">Select Participant</option>\n";
+while (list($lastname, $firstname, $badgename, $badgeid, $pubsname) = mysqli_fetch_array($Presult, MYSQLI_NUM)) {
+    echo "     <option value=\"" . $badgeid . "\">";
+    if ($pubsname != "") {
+        echo htmlspecialchars($pubsname);
+    } else {
+        echo htmlspecialchars($lastname) . ", ";
+        echo htmlspecialchars($firstname);
     }
-echo "</SELECT>\n";
-echo "<LABEL class=\"control-label\" for=\"selsess\">Select Session:&nbsp;</LABEL>\n";
-echo "<SELECT name=\"selsess\">\n";
-echo "     <OPTION value=0 selected>Select Session</OPTION>\n";
-while (list($trackname,$sessionid,$title)= mysql_fetch_array($Sresult, MYSQL_NUM)) {
-    echo "     <OPTION value=\"".$sessionid."\">".htmlspecialchars($trackname)." - ";
-    echo htmlspecialchars($sessionid)." - ".htmlspecialchars($title)."</OPTION>\n";
-    }
-echo "</SELECT></DIV>\n";
-echo "<P>&nbsp;";
-echo "<DIV class=\"SubmitButton\"><BUTTON class=\"btn btn-primary\" type=\"submit\" name=\"Invite\" >Invite</BUTTON></DIV>";
-echo "</FORM>";
+    echo " (" . htmlspecialchars($badgename) . ") - ";
+    echo htmlspecialchars($badgeid) . "</option>\n";
+}
+echo "</select>\n";
+echo "<label class=\"control-label\" for=\"selsess\">Select Session:&nbsp;</label>\n";
+echo "<select name=\"selsess\">\n";
+echo "     <option value=\"0\" selected=\"selected\">Select Session</option>\n";
+while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
+    echo "     <option value=\"" . $sessionid . "\">" . htmlspecialchars($trackname) . " - ";
+    echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
+}
+echo "</select></div>\n";
+echo "<p>&nbsp;";
+echo "<div class=\"SubmitButton\"><button class=\"btn btn-primary\" type=\"submit\" name=\"Invite\" >Invite</button></div>";
+echo "</form>";
 staff_footer(); ?>

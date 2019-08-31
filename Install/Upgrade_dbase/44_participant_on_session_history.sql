@@ -31,12 +31,15 @@ CREATE TABLE ParticipantOnSessionHistory (
     createdbybadgeid varchar(15) NOT NULL DEFAULT '',
     inactivatedts timestamp NULL DEFAULT NULL,
     inactivatedbybadgeid varchar(15) NULL,
-    KEY badgeid (badgeid),
-    KEY sessionid (sessionid),
-    CONSTRAINT ParticipantOnSessionHistory_ibfk_1 FOREIGN KEY (badgeid) REFERENCES Participants (badgeid),
-    CONSTRAINT ParticipantOnSessionHistory_ibfk_2 FOREIGN KEY (sessionid) REFERENCES Sessions (sessionid),
-	CONSTRAINT ParticipantOnSessionHistory_ibfk_3 FOREIGN KEY (createdbybadgeid) REFERENCES Participants (badgeid),
-	CONSTRAINT ParticipantOnSessionHistory_ibfk_4 FOREIGN KEY (inactivatedbybadgeid) REFERENCES Participants (badgeid)
+    PRIMARY KEY (`participantonsessionhistoryid`),
+    KEY `badgeid` (`badgeid`),
+    KEY `sessionid` (`sessionid`),
+    KEY `ParticipantOnSessionHistory_ibfk_3` (`createdbybadgeid`),
+    KEY `ParticipantOnSessionHistory_ibfk_4` (`inactivatedbybadgeid`),
+    CONSTRAINT `ParticipantOnSessionHistory_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+    CONSTRAINT `ParticipantOnSessionHistory_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+    CONSTRAINT `ParticipantOnSessionHistory_ibfk_3` FOREIGN KEY (`createdbybadgeid`) REFERENCES `Participants` (`badgeid`),
+    CONSTRAINT `ParticipantOnSessionHistory_ibfk_4` FOREIGN KEY (`inactivatedbybadgeid`) REFERENCES `Participants` (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  
 INSERT INTO ParticipantOnSessionHistory (badgeid, sessionid, moderator, participantonsessionid, createdts, createdbybadgeid)

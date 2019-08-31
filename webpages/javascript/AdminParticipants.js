@@ -1,3 +1,4 @@
+// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 var bioDirty = false;
 var pnameDirty = false;
 var snotesDirty = false;
@@ -48,20 +49,21 @@ function chooseParticipant(badgeid, override) {
 		$('#warnNewBadgeID').html(badgeid);
 		return;
 		}
+	var badgeidJQSel = badgeid.replace(/[']/g,"\\'").replace(/["]/g,'\\"');
 	hideSearchResults();
-	$("#badgeid").val($("#bidSPAN_" + badgeid).html());
-	$("#lname_fname").val($("#lnameSPAN_" + badgeid).html());
-	$("#bname").val($("#bnameSPAN_" + badgeid).html());
-	var pname = $("#pnameSPAN_" + badgeid).html();
+	$("#badgeid").val($("#bidSPAN_" + badgeidJQSel).html());
+	$("#lname_fname").val($("#lnameSPAN_" + badgeidJQSel).html());
+	$("#bname").val($("#bnameSPAN_" + badgeidJQSel).html());
+	var pname = $("#pnameSPAN_" + badgeidJQSel).html();
 	$("#pname").val(pname).prop("defaultValue", pname).prop("readOnly", false);
-	originalInterested = $("#interestedHID_" + badgeid).val();
+	originalInterested = $("#interestedHID_" + badgeidJQSel).val();
 	if (originalInterested=="")
 		originalInterested = 0;
 	$("#interested").val(originalInterested);
 	$("#interested").prop("disabled", false);
-	var bio = $("#bioHID_" + badgeid).val();
+	var bio = $("#bioHID_" + badgeidJQSel).val();
 	$("#bio").val(bio).prop("defaultValue", bio).prop("readOnly", false);
-	var staffnotes = $("#staffnotesHID_" + badgeid).val();
+	var staffnotes = $("#staffnotesHID_" + badgeidJQSel).val();
 	$("#staffnotes").val(staffnotes).prop("defaultValue", staffnotes).prop("readOnly", false);
 	$("#password").val("").prop("readOnly", false);
 	$("#cpassword").val("").prop("readOnly", false);
