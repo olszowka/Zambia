@@ -51,33 +51,10 @@ function mysql_query_XML($query_array) {
 	return $xml;
 }
 
-/**
- * @deprecated
- */
-function log_mysql_error($query, $additional_error_message) {
-    global $link;
-    $result = "";
-    error_log("mysql query error");
-    if (!empty($query)) {
-        error_log($query);
-        $result = $query . "<br>\n";
-    }
-    $query_error = mysql_error($link);
-    if (!empty($query_error)) {
-        error_log($query_error);
-        $result .= $query_error . "<br>\n";
-    }
-    if (!empty($additional_error_message)) {
-        error_log($additional_error_message);
-        $result .= $additional_error_message . "<br>\n";
-    }
-    return $result;
-}
-
 function log_mysqli_error($query, $additional_error_message) {
     global $linki;
     $result = "";
-    error_log("mysql query error");
+    error_log("mysql query error in {$_SERVER["SCRIPT_FILENAME"]}");
     if (!empty($query)) {
         error_log($query);
         $result = $query . "<br>\n";
@@ -94,30 +71,8 @@ function log_mysqli_error($query, $additional_error_message) {
     return $result;
 }
 
-/**
- * @deprecated
- */
-function mysql_query_exit_on_error($query) {
-	return mysql_query_with_error_handling($query, true);
-}
-
 function mysqli_query_exit_on_error($query) {
     return mysqli_query_with_error_handling($query, true);
-}
-
-/**
- * @deprecated
- */
-function mysql_query_with_error_handling($query, $exit_on_error = false, $ajax = false) {
-    global $link, $message_error;
-    $result = mysql_query($query, $link);
-    if (!$result) {
-        $message_error = log_mysql_error($query, "");
-        if ($exit_on_error) {
-            RenderError($message_error, $ajax); // will exit script
-        }
-    }
-    return $result;
 }
 
 function mysqli_query_with_error_handling($query, $exit_on_error = false, $ajax = false) {
@@ -130,13 +85,6 @@ function mysqli_query_with_error_handling($query, $exit_on_error = false, $ajax 
         }
     }
     return $result;
-}
-
-/**
- * @deprecated
- */
-function rollback() {
-    mysql_query_with_error_handling("ROLLBACK;");
 }
 
 function rollback_mysqli($exit_on_error = false, $ajax = false) {
@@ -831,7 +779,7 @@ EOD;
         return false;
     }
     $rows = mysqli_num_rows($result);
-    if ($rows != 1) {
+    if ($rows > 1) {
         $message_error = "Found $rows rows for participant with badgeid:$badgeid.  Expected 1.";
         $message_error = log_mysqli_error($query, $message_error);
         if ($exit_on_error) {
@@ -839,7 +787,12 @@ EOD;
         }
         return false;
     }
-    $participantAvailability = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    if ($rows == 1) {
+        $participantAvailability = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    } else {
+        $participantAvailability = array('badgeid' => $badgeid, 'maxprog' => '', 'preventconflict' => '',
+            'otherconstraints' => '', 'numkidsfasttrack'=>'');
+    }
     mysqli_free_result($result);
 
     if (CON_NUM_DAYS > 1) {

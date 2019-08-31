@@ -188,6 +188,13 @@ div.reportPageContent table td a,
 .report A {
   color: #1c30b0;
 }
+th.report.sorting_disabled span.sorting {
+  display: none;
+}
+td.report.highlight1 {
+  font-weight: bold;
+  background-color: #e17575;
+}
 td.za-report-lastRowCell {
   border-bottom: 2px solid black;
 }
@@ -199,10 +206,13 @@ ul#boxes li {
   background-color: #e5e5e5;
   text-align: center;
 }
-.arisiaLens {
+.zambiaLogo {
   padding: 3px;
   display: table-cell;
   float: none;
+}
+.zambiaImage {
+  height: 12rem;
 }
 .pageHeader {
   padding: 0;
@@ -295,6 +305,16 @@ form.navbar-search {
   margin-bottom: 6px;
 }
 /* Bootstrap extensions */
+.dropdown-menu > li > .menu-error-entry {
+  background-color: #fbc8bb;
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: bold;
+  line-height: 20px;
+  color: #d05b5e;
+  white-space: nowrap;
+}
 .success-bg {
   background-color: #dff0d8;
 }

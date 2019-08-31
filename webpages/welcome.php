@@ -1,9 +1,9 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $participant, $message_error, $message2, $congoinfo, $title;
+// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $message_error, $message2, $congoinfo, $title;
 $title = "Welcome";
 require('PartCommonCode.php');
-if ($participant = retrieveFullParticipant($badgeid)) {
+if ($participant_array = retrieveFullParticipant($badgeid)) {
     require('renderWelcome.php');
     exit();
 }

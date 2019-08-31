@@ -80,7 +80,7 @@
 				<div class="row-fluid">
 					<div class="span3">
 						<select id="partDropdown" name="asgnpart">
-							<option value="0" selected="selected">Assign Participant</option>
+							<option value="" selected="selected">Assign Participant</option>
 							<xsl:apply-templates select="doc/query[@queryName='otherParticipants']/row" >
                                 <xsl:sort select="@sortableNameLc" />
                             </xsl:apply-templates>

@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2006-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('db_functions.php');
 require_once('StaffCommonCode.php');
 
@@ -119,17 +119,24 @@ EOD;
         echo $message_error;
         exit();
     }
-    $xsl = new DomDocument;
-    $xsl->load('xsl/AdminParticipants.xsl');
-    $xslt = new XsltProcessor();
-    $xslt->importStylesheet($xsl);
-    if ($html = $xslt->transformToXML($xml)) {
-        header("Content-Type: text/html");
-        echo $html;
-    } else {
-        trigger_error('XSL transformation failed.', E_USER_ERROR);
-    }
-    exit();
+    $xpath = new DOMXpath($xml);
+	$searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
+    foreach ($searchParticipantsResultRowElements as $resultRowElement) {
+    	$badgeid = $resultRowElement -> getAttribute("badgeid");
+    	$jsEscapedBadgeid = addslashes($badgeid);
+		$resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
+	}
+	$xsl = new DomDocument;
+	$xsl->load('xsl/AdminParticipants.xsl');
+	$xslt = new XsltProcessor();
+	$xslt->importStylesheet($xsl);
+	if ($html = $xslt->transformToXML($xml)) {
+	    header("Content-Type: text/html"); 
+	    echo $html;
+	} else {
+	    trigger_error('XSL transformation failed.', E_USER_ERROR);
+	}
+	exit();
 }
 
 // Start here.  Should be AJAX requests only

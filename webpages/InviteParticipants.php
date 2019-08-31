@@ -1,14 +1,14 @@
 <?php
-//	Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Invite Participants";
 require_once('StaffCommonCode.php');
 staff_header($title);
 
 if (isset($_POST["selpart"])) {
-    $partbadgeid = $_POST["selpart"];
-    $sessionid = $_POST["selsess"];
-    if (($partbadgeid == 0) || ($sessionid == 0)) {
+    $partbadgeid = mysqli_real_escape_string($linki, getString("selpart"));
+    $sessionid = getInt("selsess", 0);
+    if (($partbadgeid == '') || ($sessionid == 0)) {
         echo "<p class=\"alert alert-error\">Database not updated. Select a participant and a session.</p>";
     } else {
         $query = "INSERT INTO ParticipantSessionInterest SET badgeid='$partbadgeid', ";
@@ -61,7 +61,7 @@ echo "<p>Use this tool to put sessions marked \"invited guests only\" on a parti
 echo "<form class=\"form-inline\" name=\"invform\" method=\"POST\" action=\"InviteParticipants.php\">";
 echo "<div class=\"row-fluid\"><label class=\"control-label\" for=\"selpart\">Select Participant:&nbsp;</label>\n";
 echo "<select name=\"selpart\">\n";
-echo "     <option value=0 selected>Select Participant</option>\n";
+echo "     <option value=\"\" selected=\"selected\">Select Participant</option>\n";
 while (list($lastname, $firstname, $badgename, $badgeid, $pubsname) = mysqli_fetch_array($Presult, MYSQLI_NUM)) {
     echo "     <option value=\"" . $badgeid . "\">";
     if ($pubsname != "") {

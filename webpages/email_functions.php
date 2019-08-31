@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2006-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2006-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 // function $email=get_email_from_post()
 // reads post variable to populate email array
 // returns email array or false if an error was encountered.
@@ -228,7 +228,7 @@ function generateSchedules($status, $recipientinfo) {
     } else {
         $extraWhereClause = "";
     }
-    $badgeidArr = array_column($recipientinfo, 'badgeid');
+    $badgeidArr = array_map(function($str){global $linki;return "'" . mysqli_real_escape_string($linki, $str) . "'";}, array_column($recipientinfo, 'badgeid'));
     $badgeidList = implode(",", $badgeidArr);
     $query = <<<EOD
 SELECT
