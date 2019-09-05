@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 The Zambia Group. All rights reserved. See copyright document for more details.
     $action=$_POST["action"]; // "create" or "edit" or "brainstorm"
     if ($action=="brainstorm") {
             require_once ('BrainstormCommonCode.php');
@@ -18,7 +18,7 @@
     $email_status=validate_name_email($name,$email);; /* return true if OK.  Store error messages in
         global $messages */
     get_session_from_post(); // store in global $session array
-    prepare_db();
+    prepare_db_and_more();
     $status=validate_session(); /* return true if OK.  Store error messages in
         global $messages */
     if ($status==false || $email_status==false) {

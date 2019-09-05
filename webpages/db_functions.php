@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function mysql_query_XML($query_array) {
 	global $linki, $message_error;
@@ -112,26 +112,25 @@ function populateCustomTextArray() {
     return true;
 }
 
-// Function prepare_db()
+// Function prepare_db_and_more()
 // Opens database channel
 if (!include ('../db_name.php'))
 	include ('./db_name.php'); // scripts which rely on this file (db_functions.php) may run from a different directory
-function prepare_db() {
-    global $link, $linki;
-    /*
-    $link = mysql_connect(DBHOSTNAME,DBUSERID,DBPASSWORD);
-    if ($link === false)
-		return false;
-	if (!mysql_select_db(DBDB, $link))
-		return false;
-    if (!mysql_set_charset("utf8", $link))
-        return false;
-    */
+function prepare_db_and_more() {
+    global $con_start_php_timestamp, $linki;
     $linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
     if ($linki === false)
         return false;
     date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
-    return mysqli_set_charset($linki, "utf8");
+    if (mysqli_set_charset($linki, "utf8") === false) {
+        return false;
+    };
+    $con_start_php_timestamp = date_create_from_format("Y-m-d H:i:s", CON_START_DATIM);
+    if ($con_start_php_timestamp === false) {
+        RenderError("Con start date (CON_START_DATIM) not configured correctly. Further execution not possible.");
+        return false; // Should have exited anyway
+    }
+    return true;
 }
 
 // The table SessionEditHistory has a timestamp column which is automatically set to the
@@ -502,7 +501,7 @@ function filter_session() {
     $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
     $session2["progguiddesc"] = mysqli_real_escape_string($linki, $session["progguiddesc"]);
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
-    if (DURATION_IN_MINUTES == "TRUE") {
+    if (DURATION_IN_MINUTES === TRUE) {
         $session2["duration"] = conv_min2hrsmin($session["duration"]);
     } else {
         $session2["duration"] = mysqli_real_escape_string($linki, $session["duration"]);
@@ -583,7 +582,7 @@ EOD;
     $session["progguiddesc"] = $sessionarray["progguiddesc"];
     $session["persppartinfo"] = $sessionarray["persppartinfo"];
     $timearray = parse_mysql_time_hours($sessionarray["duration"]);
-    if (DURATION_IN_MINUTES == "TRUE") {
+    if (DURATION_IN_MINUTES === TRUE) {
         $session["duration"] = " " . strval(60 * $timearray["hours"] + $timearray["minutes"]);
     } else {
         $session["duration"] = " " . $timearray["hours"] . ":" . sprintf("%02d", $timearray["minutes"]);
@@ -634,7 +633,7 @@ EOD;
 // Function isLoggedIn()
 // Reads the session variables and checks password in db to see if user is
 // logged in.  Returns true if logged in or false if not.  Assumes db already
-// connected on $link.
+// connected on $linki.
 
 /* The script will check login status.  If user is logged in
    it will pass control to script (???) to implement edit my contact info.

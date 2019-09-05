@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
     global $participant, $message, $message_error, $message2, $congoinfo, $title;
     $title="My Profile";
     require ('PartCommonCode.php'); // initialize db; check login;
@@ -31,15 +31,15 @@ EOD;
 	$optionsNode = $resultXML->createElement("options");
 	$docNode = $resultXML->getElementsByTagName("doc")->item(0);
 	$optionsNode = $docNode->appendChild($optionsNode);
-	$optionsNode->setAttribute("conName",CON_NAME);
-	if (ENABLE_SHARE_EMAIL_QUESTION)
-		$optionsNode->setAttribute("enable_share_email_question",1);
-	if (ENABLE_USE_PHOTO_QUESTION)
-		$optionsNode->setAttribute("enable_use_photo_question",1);
-	if (ENABLE_BESTWAY_QUESTION)
-		$optionsNode->setAttribute("enable_bestway_question",1);
-	$optionsNode->setAttribute("maxBioLen",MAX_BIO_LEN);
-	$optionsNode->setAttribute("enableBioEdit",may_I('EditBio'));
+	$optionsNode->setAttribute("conName", CON_NAME);
+	if (ENABLE_SHARE_EMAIL_QUESTION === TRUE)
+		$optionsNode->setAttribute("enable_share_email_question", 1);
+	if (ENABLE_USE_PHOTO_QUESTION === TRUE)
+		$optionsNode->setAttribute("enable_use_photo_question", 1);
+	if (ENABLE_BESTWAY_QUESTION === TRUE)
+		$optionsNode->setAttribute("enable_bestway_question", 1);
+	$optionsNode->setAttribute("maxBioLen", MAX_BIO_LEN);
+	$optionsNode->setAttribute("enableBioEdit", may_I('EditBio'));
 	$optionsNode->setAttribute("reg_url", REG_URL);
 	participant_header($title);
 	$resultXML = appendCustomTextArrayToXML($resultXML);

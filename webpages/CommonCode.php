@@ -1,19 +1,17 @@
 <?php
-//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('error_functions.php');
 require_once('Constants.php');
 require_once('data_functions.php');
 require_once('db_functions.php');
 require_once('render_functions.php');
 require_once('validation_functions.php');
-// require_once('php_functions.php'); For setting session timeout which doesn't seem to work
-//set_session_timeout();
 if (!isset($title)) {
     $title = "";
 }
 session_start();
-date_default_timezone_set(defined("PHP_DEFAULT_TIMEZONE") ? PHP_DEFAULT_TIMEZONE : "AMERICA/NEW_YORK");
-if (prepare_db() === false) {
+// inclusion of configuration file db_name.php occurs here
+if (prepare_db_and_more() === false) {
     $message_error = "Unable to connect to database.<br>No further execution possible.";
     RenderError($message_error);
     exit();

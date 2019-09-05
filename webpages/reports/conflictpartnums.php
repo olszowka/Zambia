@@ -75,7 +75,7 @@ EOD;
 $headerRow1Days = "";
 $headerRow2Days = "";
 for ($day=1; $day<=CON_NUM_DAYS; $day++) {
-    $headerRow1Days .= "<th colspan=\"2\" class=\"report\">{$daymap["long"][$day]}</th>";
+    $headerRow1Days .= "<th colspan=\"2\" class=\"report\">" . longDayNameFromInt($day) . "</th>";
     $headerRow2Days .= "<th class=\"report\">Avail.</th><th class=\"report\">Sched.</th>";
 }
 $report['xsl'] =<<<EOD
