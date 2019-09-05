@@ -8,10 +8,8 @@ define("DBUSERID", "zambiademo");
 define("DBPASSWORD", "4fandom");
 define("DBDB", "zambiademo");
 define("CON_NAME", "Zambia Demo");
-define("ADMIN_EMAIL", "zambia@somewhere.net");
 define("BRAINSTORM_EMAIL", "brain@somewhere.net");
 define("PROGRAM_EMAIL", "program@somewhere.net");
-define("REG_EMAIL", "registration@somewhere.net");
 define("CON_NUM_DAYS", 5); // code works for 1 - 8
 define("PHP_DEFAULT_TIMEZONE", "AMERICA/NEW_YORK"); // must be valid argument to php date_default_timezone_set()  Should correspond with DB configuration
 define("CON_START_DATIM", "2009-08-06 00:00:00"); // Broadly used.  Must be in mysql format: "YYYY-MM-DD HH:MM:SS" (HH:00-23) HH:MM:SS probably should be 00:00:00
