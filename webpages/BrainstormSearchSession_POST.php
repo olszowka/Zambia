@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $participant, $message_error, $message2, $title;
 $title = "Show Search Session Results";
 require('BrainstormCommonCode.php'); // initialize db; check login;
@@ -15,7 +15,7 @@ SELECT
                 IF(LEFT(DATE_FORMAT(duration,'%i'),1)=0, CONCAT(RIGHT(DATE_FORMAT(duration,'%i'),1),'min'), 
             CONCAT(DATE_FORMAT(duration,'%i'),'min')))) Duration,
         estatten, progguiddesc, persppartinfo, roomname,
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime
+		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime, SS.statusname
     FROM
     	          Sessions S
     	     JOIN Tracks TR USING (trackid)
@@ -23,8 +23,7 @@ SELECT
 		LEFT JOIN Schedule SCH USING (sessionid)
 		LEFT JOIN Rooms R USING (roomid)
     WHERE
-            SS.statusname IN ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled')
-        AND S.invitedguest=0
+            SS.statusname IN ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled');
 EOD;
 if ($trackid != 0) {
     $query .= " and S.trackid=" . $trackid;
@@ -47,7 +46,7 @@ echo "rewritting for clarity and proper english; and hoping to find a time machi
 echo "<p>If you want to help, email us at ";
 echo "<a href=\"mailto:" . PROGRAM_EMAIL . "\">" . PROGRAM_EMAIL . "</a> </p>\n";
 echo "<p>This list is sorted by Track and then Title.</p>";
-RenderPrecis($result, $showlinks);
+RenderPrecis($result, false);
 brainstorm_footer();
 exit();
 ?>

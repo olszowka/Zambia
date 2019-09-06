@@ -1,7 +1,7 @@
 @import "Common.css";
 
 BODY {
-     background-image: url("images/brainstormheadbg.png");
+     background-image: url("../images/brainstormheadbg.png");
      background-repeat: repeat-x;
      }
 

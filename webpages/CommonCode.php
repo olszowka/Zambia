@@ -47,7 +47,7 @@ function maketab($text, $usable, $url) {
     if ($usable) {
         echo '<span class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
         echo '<img class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
-        echo '<a href="$url">';// XXX link needs to be quoted
+        echo "<a href='$url'>";// XXX link needs to be quoted
         echo $text;                     // XXX needs to be quoted
         echo '<img class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
         echo '</span>';
