@@ -11,6 +11,7 @@ If you would like to communicate an idea that you cannot fit into this form, ple
     echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a>.";
     include('google_analytics.php');
 ?>
+</p>
 </body>
 </html>
 <?php  } ?>

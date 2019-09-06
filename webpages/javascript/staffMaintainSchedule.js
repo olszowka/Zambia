@@ -472,7 +472,7 @@ function StaffMaintainSchedule() {
 						unschDup.addClass("sessionBlock");
 						unschDup.css("visibility","hidden");
 						unschDup.find(".getSessionInfo").on("click", staffMaintainSchedule.onClickInfo);
-                        $sessionsToBeScheduled.prepend(unschDup);
+						$sessionsToBeScheduled.prepend(unschDup);
 						elemToAdd = unschDup; // will unhide and make draggable when animation ends
 						sessionMasterArray.push(tarSessSEL.attr("sessionid"));
 						$(pThis).addClass("scheduledSessionBlock");

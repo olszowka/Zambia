@@ -116,7 +116,7 @@
           </xsl:choose>
           <xsl:choose>
             <xsl:when test="/doc/options/@enable_bestway_question">
-              <label for="bestway">Preferred mode of contact</label>
+              <label for="bestway">Preferred mode of contact:</label>
               <div class="verticalRadioButs">
                   <div class="radioNlabel">
                       <span class="radio">
@@ -185,7 +185,7 @@
                       </xsl:if>
                   </input>
               </div>
-    			</div>
+          </div>
           <div class="control-group" id="bioGroup">
             <label for="bio">Your biography (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer including spaces):</label>
             <div>
@@ -208,7 +208,7 @@
             </xsl:if>
           </div>
           <xsl:if test="/doc/query[@queryName='credentials']/row">
-          		<legend>Professions</legend>
+              <legend>Professions</legend>
               <div class="control-group">
                 <label>Please indicate if you are any of the following:</label>
                 <div>

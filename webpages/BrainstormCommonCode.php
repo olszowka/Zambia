@@ -1,6 +1,7 @@
 <?php
 //	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('CommonCode.php');
+    require_once('error_functions.php');
     require_once('BrainstormHeader.php');
     require_once('BrainstormFooter.php');
     global $badgeid;

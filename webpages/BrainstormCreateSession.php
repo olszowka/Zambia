@@ -15,6 +15,7 @@
         exit();
     }
     $session["sessionid"] = $id;
-    BrainstormRenderCreateSession($session, $message_warn, $message_error);
+    $action=$_POST["action"];
+    BrainstormRenderCreateSession($action,$session,$message_warn,$message_error);
     exit();
 ?>

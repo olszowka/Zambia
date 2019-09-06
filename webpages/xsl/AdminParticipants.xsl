@@ -10,7 +10,7 @@
               <table class="table table-condensed table-hover">
                 <thead>
                   <tr>
-                    <th>Last Name</th>
+                    <th>Last, First Name</th>
                     <th>Pubs Name</th>
                     <th>Badge Name</th>
                     <th>Badge Number</th>
