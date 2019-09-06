@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 The Zambia Group. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30) {
@@ -118,23 +118,6 @@ function getArrayOfStrings($name) {
     return array_map(function($str) { return stripslashes($str); }, $array);
 }
 
-// Function stripfancy()
-// returns a string with many non-7-bit ASCII characters
-// removed from input string and replaced with similar
-// 7-bit ones
-//
-// set constants stripfancy_from and stripfancy_to in
-// file db_name.php to configure
-//
-function stripfancy($input) {
-    if (stripfancy_from) {
-        return (strtr($input, stripfancy_from, stripfancy_to));
-    } else {
-        return ($input);
-    }
-}
-
-//
 // Function get_nameemail_from_post($name, $email)
 // Reads the data posted by the browser form and populates
 // the variables from the arguments.  Also stores them in
@@ -265,10 +248,11 @@ function set_brainstorm_session_defaults() {
 // Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
 //
 function parse_mysql_time($time) {
+    $result = array();
     $h = 0 + substr($time, 0, strlen($time) - 6);
     $result['hour'] = fmod($h, 24);
     $result['day'] = intval($h / 24);
-    $result['minute'] = substr($time, strlen($time) - 5, 2);
+    $result['minute'] = intval(substr($time, strlen($time) - 5, 2));
     return ($result);
 }
 
@@ -295,14 +279,18 @@ function parse_mysql_time_hours($time) {
 // result is like "Fri 1:00 PM"
 //
 function time_description($time) {
-    global $daymap;
+    global $con_start_php_timestamp;
     $atime = parse_mysql_time($time);
-    $result = "";
-    $result .= $daymap['short'][$atime["day"] + 1] . " ";
-    $hour = fmod($atime["hour"], 12);
-    $result .= (($hour == 0) ? 12 : $hour) . ":" . $atime["minute"] . " ";
-    $result .= ($atime["hour"] >= 12) ? "PM" : "AM";
-    return ($result);
+    try {
+        $interval = new DateInterval(sprintf("P%dDT%dH%dM", $atime["day"], $atime["hour"], $atime["minute"]));
+    } catch (Exception $e) {
+        return false;
+    }
+    $netdatetime = date_add (clone $con_start_php_timestamp , $interval );
+    if ($netdatetime === false) {
+        return false;
+    }
+    return date_format($netdatetime, "D g:i A");
 }
 
 //
@@ -310,12 +298,42 @@ function time_description($time) {
 // Takes the int $timeUnits which is the number of time units (1/2 hours)
 // from the start of the con and converts to string like "Fri 1:00 PM"
 function timeDescFromUnits($timeUnits) {
-    global $daymap;
-    $result = $daymap['short'][intval($timeUnits / 48 + 1)] . " ";
-    $result .= (fmod(intval(fmod($timeUnits, 48) / 2) + 11, 12) + 1) . ":";
-    $result .= (fmod($timeUnits, 2) == 1) ? "30" : "00";
-    $result .= (fmod($timeUnits, 48) >= 24) ? " PM" : " AM";
-    return $result;
+    global $con_start_php_timestamp;
+    $days = intval($timeUnits / 48);
+    $hours = intval(($timeUnits % 48) / 2);
+    $minutes = 30 * $timeUnits % 2;
+    try {
+        $interval = new DateInterval(sprintf("P%dDT%dH%dM", $days, $hours, $minutes));
+    } catch (Exception $e) {
+        return false;
+    }
+    $netdatetime = date_add (clone $con_start_php_timestamp , $interval );
+    if ($netdatetime === false) {
+        return false;
+    }
+    return date_format($netdatetime, "D g:i A");
+}
+
+//
+// Function longDayNameFromInt($daynum)
+// Take the int $daynum which represents day of the con (starting at 1)
+// and returns the string with the full day of the week, e.g. "Friday", "Saturday"
+// for that day taking into account the configured start of the con CON_START_DATIM
+function longDayNameFromInt($daynum) {
+    global $con_start_php_timestamp;
+    if ($daynum == 1) {
+        return date_format($con_start_php_timestamp, "l");
+    }
+    try {
+        $interval = new DateInterval(sprintf("P%dD", $daynum - 1));
+    } catch (Exception $e) {
+        return false;
+    }
+    $netdatetime = date_add (clone $con_start_php_timestamp , $interval );
+    if ($netdatetime === false) {
+        return false;
+    }
+    return date_format($netdatetime, "l");
 }
 
 //

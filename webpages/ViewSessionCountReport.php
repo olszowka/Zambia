@@ -1,11 +1,11 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 require_once('db_functions.php');
 require_once('RenderSessionCountReport.php');
 require_once('error_functions.php');
 $title = "View Session Report";
-if (prepare_db() === false) {
+if (prepare_db_and_more() === false) {
     $message = "Error connecting to database.";
     RenderError($message);
     exit();

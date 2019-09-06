@@ -1,9 +1,10 @@
 <?php
+//	Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('db_functions.php');
 	function retrieveKonOpasData() {
 		$results = array();
-		if (prepare_db()===false) {
-			$results["message_error"]="Unable to connect to database.<BR>No further execution possible.";
+		if (prepare_db_and_more() === false) {
+			$results["message_error"] = "Unable to connect to database.<br />No further execution possible.";
 			return $results;
 			};
 		$ConStartDatim = CON_START_DATIM;

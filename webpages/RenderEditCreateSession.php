@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
     // This function will output the page with the form to add or create a session
     // Variables
     //     action: "create" or "edit"
@@ -80,7 +80,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
               </LABEL>
           </DIV>
 <?php
-      if (strtoupper(BILINGUAL)=="TRUE") {
+      if (BILINGUAL === TRUE) {
               echo "            <DIV class=\"span12\">\n";
               echo "                 <LABEL for=\"secondtitle\">".SECOND_TITLE_CAPTION.": </LABEL>";
               echo "<INPUT type=text size=\"50\" class=\"span4\" name=\"secondtitle\" value=\"".htmlspecialchars($session["secondtitle"],ENT_COMPAT)."\">\n";
@@ -116,7 +116,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
               <LABEL class="control-label dense" for="progguiddesc">Description:</LABEL>
               <TEXTAREA class="span12 textlabelarea" cols=70 name="progguiddesc"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA>
 <?php
-        if (strtoupper(BILINGUAL)=="TRUE") {
+        if (BILINGUAL === TRUE) {
                 echo "<LABEL class=\"control-label dense\" for=\"pocketprogtext\">";
                 echo SECOND_DESCRIPTION_CAPTION.": </LABEL>\n";
                 echo "<TEXTAREA class=\"textlabelarea\" cols=70 name=\"pocketprogtext\">";
