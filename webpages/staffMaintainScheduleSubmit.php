@@ -6,7 +6,7 @@ require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
 function retrieveRoomsTable() {
-    global $link, $message_error, $unitsPerBlock, $standardRowHeight, $title;
+    global $message_error, $unitsPerBlock, $standardRowHeight, $title;
     $foo = "";
     if (STANDARD_BLOCK_LENGTH == "1:30") {
         $unitsPerBlock = 3;
@@ -106,7 +106,7 @@ EOD;
 }
 
 function getScheduleTimesArray($roomsToDisplayList) {
-    global $message_error, $link, $daymap, $unitsPerBlock, $standardRowHeight;
+    global $message_error, $unitsPerBlock, $standardRowHeight;
     $htmlTimesArray = array();
     $nextStartTimeUnits = 0;
     list($firstDayStartTimeHour, $firstDayStartTimeMin) = sscanf(FIRST_DAY_START_TIME, "%d:%d");
@@ -123,9 +123,10 @@ function getScheduleTimesArray($roomsToDisplayList) {
     $nextStartTimeMin = 0;
     $gap = false;
     for ($day = 1; $day <= CON_NUM_DAYS; $day++) {
-        $dayName = $daymap["long"][$day];
-        if ($day < CON_NUM_DAYS)
-            $nextDayName = $daymap["long"][$day + 1];
+        $dayName = longDayNameFromInt($day);
+        if ($day < CON_NUM_DAYS) {
+            $nextDayName = longDayNameFromInt($day + 1);
+        }
         $thisCutoffUnits = $cutoffUnits + $day * 48; // always next day even on 1st day
         $thisCutoffTimeStr = "MAKETIME(" . floor($thisCutoffUnits / 2) . ",0,0)";
         if ($day == 1) {

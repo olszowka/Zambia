@@ -1,22 +1,23 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title;
 require_once('db_functions.php');
 require_once('BrainstormCommonCode.php');
 $title = "Scheduled Suggestions";
-$ConStartDatim = CON_START_DATIM;
-$showlinks = $_GET["showlinks"];
+$showlinks =  getInt("showlinks");
 $_SESSION['return_to_page'] = "ViewPrecis.php?showlinks=$showlinks";
-if ($showlinks == "1") {
+if ($showlinks == 1) {
     $showlinks = true;
-} elseif ($showlinks = "0") {
+} elseif ($showlinks == 0) {
     $showlinks = false;
 }
-if (prepare_db() === false) {
+// inclusion of configuration file db_name.php occurs here
+if (prepare_db_and_more() === false) {
     $message = "Error connecting to database.";
     RenderError($message);
     exit ();
 }
+$ConStartDatim = CON_START_DATIM;
 $query = <<<EOD
 SELECT
         sessionid, trackname, null typename, title, 

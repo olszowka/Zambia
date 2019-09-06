@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 require_once('db_functions.php');
 require_once('Constants.php');
@@ -10,7 +10,7 @@ $title="Login";
 
 participant_header($title);
 
-if (SHOW_BRAINSTORM_LOGIN_HINT == TRUE) {
+if (SHOW_BRAINSTORM_LOGIN_HINT === TRUE) {
 ?>
 
 	<p id="brainstorm-login-hint"><span style="font-weight:bold">Brainstorm</span> users: if you want to submit ideas for panels, please enter "brainstorm" for your Badge ID

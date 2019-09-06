@@ -1,6 +1,6 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $daymap, $message_error, $link, $title;
+// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $message_error, $title;
 $bigarray = array();
 define("newroomslots", 5); // number of rows at bottom of page for new schedule entries
 $title = "Maintain Room Schedule";
@@ -252,7 +252,7 @@ for ($i = 1; $i <= newroomslots; $i++) {
             echo "selected";
         echo ">Day&nbsp;</option>";
         for ($j=1; $j<=CON_NUM_DAYS; $j++) {
-            $x=$daymap["long"]["$j"];
+            $x = longDayNameFromInt($j);
             echo"         <option value=$j ";
             if (isset($_POST["day$i"]) && $_POST["day$i"]==$j)
                 echo "selected";

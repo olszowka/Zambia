@@ -1,10 +1,7 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 // $timesXML array defined on global scope
 participant_header($title);
-if (!isset($daymap)) {
-    error_log("zambia-render_my_avail: \$daymap is not set.");
-}
 ?>
 
 <?php if (!empty($message_error)) { ?>
@@ -14,7 +11,6 @@ if (!isset($daymap)) {
     <p class="alert alert-success"><?php echo $message; ?></p>
 <?php } ?>
 <div id="constraint">
-<//?php print_r($partAvail);?>
 <form class="form-inline" name="constrform" method=POST action="SubmitMySchedConstr.php">
 
     <h4 class="alert-info center">Number of Program Items I'm Willing to Participate In</h4>
@@ -37,7 +33,7 @@ if (!isset($daymap)) {
                 echo "<div class=\"control-group padded\">\n";
                 echo "<div class=\"controls span12 padded\">\n";
                 for ($i = 1; $i <= min(4, CON_NUM_DAYS); $i++) {
-                    $D = $daymap["long"][$i];
+                    $D = longDayNameFromInt($i);
                     echo "<label class=\"control-label\" for=\"maxprogday$i\">$D maximum:</label>\n";
                     $N = isset($partAvail["maxprogday$i"]) ? $partAvail["maxprogday$i"] : '';
                     echo "<input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N>\n";
@@ -46,7 +42,7 @@ if (!isset($daymap)) {
             // 2nd row on page contains up to 4 more if needed
             if (CON_NUM_DAYS > 4) {
                 for ($i = 5; $i <= CON_NUM_DAYS; $i++) {
-                    $D = $daymap["long"][$i];
+                    $D = longDayNameFromInt($i);
                     echo "<label class=\"control-label\" for=\"maxprogday$i\">$D maximum:</label>\n";
                     $N = isset($partAvail["maxprogday$i"]) ? $partAvail["maxprogday$i"] : '';
                     echo "    <input class=\"span1\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=\"$N\">\n";
@@ -95,7 +91,7 @@ if (!isset($daymap)) {
                 echo "        <option value=0$sel>&nbsp;</option>\n";
                 for ($j = 1; $j <= CON_NUM_DAYS; $j++) {
                     $sel = (isset($partAvail["availstartday_$i"]) && $partAvail["availstartday_$i"] == $j) ? " selected" : "";
-                    $day = $daymap["long"][$j];
+                    $day = longDayNameFromInt($j);
                     echo "        <option value=$j $sel>$day</option>\n";
                 }
                 echo "        </select></td>\n";
@@ -115,7 +111,7 @@ if (!isset($daymap)) {
                 echo "        <option value=0$sel>&nbsp;</option>\n";
                 for ($j = 1; $j <= CON_NUM_DAYS; $j++) {
                     $sel = (isset($partAvail["availendday_$i"]) && $partAvail["availendday_$i"] == $j) ? " selected" : "";
-                    $day = $daymap["long"][$j];
+                    $day = longDayNameFromInt($j);
                     echo "        <option value=$j $sel>$day</option>\n";
                 }
                 echo "        </select></td>\n";
