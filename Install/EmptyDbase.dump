@@ -123,7 +123,13 @@ CREATE TABLE `CustomText` (
 
 LOCK TABLES `CustomText` WRITE;
 /*!40000 ALTER TABLE `CustomText` DISABLE KEYS */;
-INSERT INTO `CustomText` VALUES (1,'My Profile','biography_note',''),(2,'My Availability','note_after_times','');
+INSERT INTO `CustomText` VALUES 
+  (1,'My Profile','biography_note',''),
+  (2,'My Availability','note_after_times',''),
+  (3,'Not Enough Panels','not_enough_panels',''),
+  (4,'Enough Panels','enough_panels',''),
+  (5,'Note to All Panelists 1','all_panelists_1',''),
+  (6,'Note to all Panelists 2','all_panelists_2','');
 /*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
 UNLOCK TABLES;
 
