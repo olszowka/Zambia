@@ -97,6 +97,7 @@ CREATE TABLE `Credentials` (
 
 LOCK TABLES `Credentials` WRITE;
 /*!40000 ALTER TABLE `Credentials` DISABLE KEYS */;
+INSERT INTO `Credentials` VALUES (1,'Professional Artist',1),(2,'Professional Editor',2),(3,'Professional Musician',3),(4,'Published Author',4),(5,'Web Comics Creator',5);
 /*!40000 ALTER TABLE `Credentials` ENABLE KEYS */;
 UNLOCK TABLES;
 
