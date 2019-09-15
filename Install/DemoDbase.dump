@@ -286,7 +286,7 @@ CREATE TABLE `Features` (
 
 LOCK TABLES `Features` WRITE;
 /*!40000 ALTER TABLE `Features` DISABLE KEYS */;
-INSERT INTO `Features` VALUES (1,'Power (110)',6),(2,'Power (special)',7),(3,'Internet',4),(4,'Cable TV',1),(5,'Fridge',3),(6,'Running Water',8),(7,'Window',12),(8,'Sound Isolation',10),(9,'Fixed Table',2),(10,'Mirror',5),(11,'Toilet',11),(12,'Shower/Bath',9);
+INSERT INTO `Features` VALUES (1,'Power (110)',6),(2,'Power (special)',7),(3,'Internet',4),(4,'Cable TV',1),(5,'Fridge',3),(6,'Running Water',8),(7,'Window',12),(8,'Sound Isolation',10),(9,'Boardroom Table',2),(10,'Mirror',5),(11,'Toilet',11),(12,'Shower/Bath',9),(13,'Blackout Curtains',18);
 /*!40000 ALTER TABLE `Features` ENABLE KEYS */;
 UNLOCK TABLES;
 
