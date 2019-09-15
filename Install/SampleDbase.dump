@@ -789,13 +789,13 @@ LOCK TABLES `PermissionRoles` WRITE;
 INSERT INTO `PermissionRoles` VALUES
     (1,'Administrator','Reconfigure reports + ???'),
     (2,'Staff','Can access staff pages'),
-    (3,'Program Participant','Use to be determined'),
+    (3,'Program Participant','Login as Participant'),
     (4,'Brainstorm','Use for Brainstorm pages'),
     (5,'Event Participant','Can\'t even log in.  Just for bulk email.'),
     (6,'Event Organizer','Can\'t even log in.  Just for bulk email.'),
     (7,'Children\'s Services Participant','Can\'t even log in.  Just for bulk email.'),
     (8,'GOH','Can\'t even log in.  Just for reports.'),
-    (9,'LARP','Work\'s on LARP, but is not "Organizer"'),
+    (9,'LARP','Can log in. Work\'s on LARP, but is not "Organizer"'),
     (10,'LARP Organizer','LARP Organizer'),
     (11,'Tabletop','Tabletop game runner or teacher'),
     (12,'Senior Staff','Can send email from Zambia');
