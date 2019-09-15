@@ -900,19 +900,6 @@ INSERT INTO `Phases` VALUES
 UNLOCK TABLES;
 
 --
--- Table structure for table `PubCharacteristics`
---
-
-DROP TABLE IF EXISTS `PubCharacteristics`;
-CREATE TABLE `PubCharacteristics` (
-  `pubcharid` int(11) NOT NULL auto_increment,
-  `pubcharname` varchar(30) character set utf8 collate utf8_general_ci default NULL,
-  `pubchartag` varchar(10) character set utf8 collate utf8_general_ci default NULL,
-  `display_order` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`pubcharid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
 -- Table structure for table `PreviousConTracks`
 --
 
@@ -1040,6 +1027,19 @@ LOCK TABLES `PreviousSessions` WRITE;
 /*!40000 ALTER TABLE `PreviousSessions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `PreviousSessions` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `PubCharacteristics`
+--
+
+DROP TABLE IF EXISTS `PubCharacteristics`;
+CREATE TABLE `PubCharacteristics` (
+  `pubcharid` int(11) NOT NULL auto_increment,
+  `pubcharname` varchar(30) character set utf8 collate utf8_general_ci default NULL,
+  `pubchartag` varchar(10) character set utf8 collate utf8_general_ci default NULL,
+  `display_order` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`pubcharid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `PubCharacteristics`
