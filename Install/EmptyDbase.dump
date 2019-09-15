@@ -1187,6 +1187,7 @@ CREATE TABLE `RoomSets` (
 
 LOCK TABLES `RoomSets` WRITE;
 /*!40000 ALTER TABLE `RoomSets` DISABLE KEYS */;
+INSERT INTO `RoomSets` VALUES (1,'Banquet',5),(2,'Theater',10),(3,'Conference',15),(4,'Reception',20),(5,'Classroom',25),(6,'\"U\" Shape Table',30),(7,'Hollow Square',35),(8,'Panel',2),(9,'Circle of Chairs',13),(10,'Other (describe)',42),(11,'Boardroom Table',14),(99,'I do not know',99);
 /*!40000 ALTER TABLE `RoomSets` ENABLE KEYS */;
 UNLOCK TABLES;
 
