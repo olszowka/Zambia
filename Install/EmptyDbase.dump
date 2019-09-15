@@ -341,6 +341,7 @@ CREATE TABLE `LanguageStatuses` (
 
 LOCK TABLES `LanguageStatuses` WRITE;
 /*!40000 ALTER TABLE `LanguageStatuses` DISABLE KEYS */;
+INSERT INTO `LanguageStatuses` VALUES (1,'English',1);
 /*!40000 ALTER TABLE `LanguageStatuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
