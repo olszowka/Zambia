@@ -1541,7 +1541,7 @@ CREATE TABLE `Tracks` (
 
 LOCK TABLES `Tracks` WRITE;
 /*!40000 ALTER TABLE `Tracks` DISABLE KEYS */;
-INSERT INTO `Tracks` VALUES (1,'Anime',1,0),(2,'Art Prog.',2,1),(4,'Comics',3,1),(5,'ConSuite',4,1),(6,'Costuming',5,1),(7,'Events',6,1),(9,'Fan Interest',7,1),(10,'FastTrack',8,1),(11,'Filk',9,1),(12,'Film',10,0),(13,'Gaming Prog.',11,1),(14,'LARP',12,1),(15,'Media Prog.',14,1),(16,'Literature',13,1),(17,'Video',17,0),(18,'Science',15,1),(19,'Space Exploration',16,1),(20,'Arisia TV',2,0),(21,'Gaming',11,0),(22,'Do Not Print',20,0),(24,'Art Show',2,0),(25,'Reading',16,0);
+INSERT INTO `Tracks` VALUES (1,'Anime',5,1),(2,'Art',10,1),(3,'Costuming',16,1),(4,'Fan Interest',19,1),(5,'Fast Track',25,1),(7,'Gaming',35,1),(8,'GOH',40,1),(9,'Literature',45,1),(10,'Media',50,1),(11,'Music',55,1),(12,'Science',60,1),(13,'Writing',86,1),(14,'Roomturn, etc.',90,0),(15,'Maker',47,1),(19,'Comics',12,1),(23,'Communities',14,1),(24,'Trackless events',87,0),(27,'Theater & con tech',85,0),(28,'Refresh',89,0),(99,'Unknown',99,0),(100,'ConComm',15,1),(101,'Theater',82,0);
 /*!40000 ALTER TABLE `Tracks` ENABLE KEYS */;
 UNLOCK TABLES;
 
