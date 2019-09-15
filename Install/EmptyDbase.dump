@@ -316,6 +316,7 @@ CREATE TABLE `KidsCategories` (
 
 LOCK TABLES `KidsCategories` WRITE;
 /*!40000 ALTER TABLE `KidsCategories` DISABLE KEYS */;
+INSERT INTO `KidsCategories` VALUES (1,'Targeted',1),(2,'Welcome',2),(3,'Only w/ Parent',3),(4,'Not Allowed',4);
 /*!40000 ALTER TABLE `KidsCategories` ENABLE KEYS */;
 UNLOCK TABLES;
 
