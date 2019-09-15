@@ -1612,6 +1612,32 @@ CREATE TABLE `Types` (
 
 LOCK TABLES `Types` WRITE;
 /*!40000 ALTER TABLE `Types` DISABLE KEYS */;
+INSERT INTO `Types` VALUES 
+  (1,'Panel',1,1),
+  (2,'Workshop',2,0),
+  (3,'Room Turn',500,0),
+  (4,'Lecture',6,0),
+  (5,'Meeting',20,0),
+  (6,'Interview',9,0),
+  (7,'Signing',13,0),
+  (8,'Reading',7,0),
+  (9,'Rehearsal',100,0),
+  (10,'TV - Live Event',10,0),
+  (11,'TV - Previous Event',11,0),
+  (12,'Projected Media',8,0),
+  (14,'Open Gaming',18,0),
+  (15,'Scheduled Game',19,0),
+  (16,'TV - Movie/Show',12,0),
+  (17,'I do not know',700,0),
+  (18,'Concert',4,0),
+  (19,'Participatory Event',3,0),
+  (20,'Drama',5,0),
+  (21,'Setup',200,0),
+  (22,'Refresh',499,0),
+  (23,'LARP',30,0),
+  (24,'Discussion Group',8,0),
+  (25,'Board Game',31,0),
+  (26,'Tabletop RPG',32,0);
 /*!40000 ALTER TABLE `Types` ENABLE KEYS */;
 UNLOCK TABLES;
 
