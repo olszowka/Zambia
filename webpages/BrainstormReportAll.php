@@ -1,15 +1,9 @@
 <?php
-//	Copyright (c) 2006-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2006-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 require_once('BrainstormCommonCode.php');
+$ConStartDatim = CON_START_DATIM;
 $title = "All Suggestions";
-$showlinks = $_GET["showlinks"];
-$_SESSION['return_to_page'] = "ViewPrecis.php?showlinks=$showlinks";
-if ($showlinks == "1") {
-    $showlinks = true;
-} elseif ($showlinks = "0") {
-    $showlinks = false;
-}
 $query = <<<EOD
 SELECT
         S.sessionid, T.trackname, NULL typename, S.title, 
@@ -18,16 +12,18 @@ SELECT
                 if(date_format(S.duration,'%i')=00, '', 
                 if(left(date_format(S.duration,'%i'),1)=0, concat(right(date_format(S.duration,'%i'),1),'min'), 
                 concat(date_format(S.duration,'%i'),'min')))) Duration,
-        S.estatten, S.progguiddesc, S.persppartinfo
+        S.estatten, S.progguiddesc, S.persppartinfo, roomname,
+		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime, SS.statusname
     FROM
-             Sessions S
-        JOIN Tracks T USING (trackid)
-        JOIN SessionStatuses SS USING (statusid) 
+                  Sessions S
+             JOIN Tracks T USING (trackid)
+             JOIN SessionStatuses SS USING (statusid)
+		LEFT JOIN Schedule SCH USING (sessionid)
+		LEFT JOIN Rooms R USING (roomid)
     WHERE
             SS.statusname IN ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled')
-        AND S.invitedguest=0
     ORDER BY
-        T.trackname, S.title
+        T.trackname, S.title;
 EOD;
 if (($result = mysqli_query_exit_on_error($query)) === false) {
     exit(); // Should have exited already
@@ -38,7 +34,7 @@ echo "<p> We are in the process of sorting through these suggestions: combining 
 echo "<p> If you want to help, email us at ";
 echo "<a href=\"mailto:" . PROGRAM_EMAIL . "\">" . PROGRAM_EMAIL . "</a> </p>\n";
 echo "This list is sorted by Track and then Title.";
-RenderPrecis($result, $showlinks);
+RenderPrecis($result, false);
 brainstorm_footer();
 exit();
 ?> 

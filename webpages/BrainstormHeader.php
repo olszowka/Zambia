@@ -1,22 +1,24 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 function brainstorm_header($title) {
     global $header_used;
     $header_used = HEADER_BRAINSTORM;
     require_once ("javascript_functions.php");
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/TR/xhtml1/transitional">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Zambia -- <?php echo $title ?></title>
-  <link rel="stylesheet" href="BrainstormSection.css" type="text/css">
-  <meta name="keywords" content="Questionnaire">
-  <?php load_javascript($title); ?>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Zambia -- <?php echo $title ?></title>
+    <link rel="stylesheet" href="css/Common.css" type="text/css">
+    <link rel="stylesheet" href="css/BrainstormSection.css" type="text/css">
+    <meta name="keywords" content="Questionnaire">
+    <?php load_javascript($title); ?>
 </head>
-<body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
-<h1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</h1>
-<hr>
+<body>
+    <div class="brainstorm-header-container">
+        <h1 class="head">Zambia&ndash;The <?php echo CON_NAME; ?> Scheduling Tool</h1>
+    </div>
+    <hr class="brainstorm-header-hr">
 <?php if (isset($_SESSION['badgeid'])) { ?>
   <table class="tabhead">
     <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>

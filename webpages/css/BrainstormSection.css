@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+}
+
+.brainstorm-header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75px;
+    background-image: linear-gradient(0deg, hsl(0, 0%, 97%) 0%, hsl(47, 25%, 95%) 15%, hsl(47, 55%, 85%) 35%,
+        hsl(47, 80%, 60%) 75%, hsl(47, 100%, 41%) 100%);
+}
+
+h1.head {
+    color: #444;
+    margin: 0;
+    padding: 0;
+}
+hr.brainstorm-header-hr {
+    margin: 0 0 -1px 0; 
+}
+
+td.head {
+    background-color: white;
+    text-align: center
+}
+
+td.form1 {
+    text-align: left
+}
+
+.tabblocks {
+    padding-left: 10px;
+}
+
+/* Just overridding the small number of settings needed
+to customize tabs for Participants */
+.usabletab {
+    background: #b08b59;
+}
+
+span.mousedovertab a:visited {
+    color: #b08b59;
+}
+
+span.mousedovertab a:link {
+    color: #b08b59;
+}
