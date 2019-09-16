@@ -27,3 +27,5 @@ Other software which can work with Zambia
 
 ## More Information
 Check out the [wiki](https://github.com/olszowka/Zambia/wiki)
+
+Join the Slack [team](https://join.slack.com/t/zambia-scheduler/shared_invite/enQtNzYxMDA2MDI2OTAwLTA3YWMyNWU3ZWYxZTE2ZjVlNjFhMzIxMThlMzVhNzk2N2I5NWUwZjQxYmUxZDQ4ODdjZjJmNzAyNTFmZDA3ZTE)
