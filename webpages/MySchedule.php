@@ -79,7 +79,7 @@ mysqli_free_result($result);
 $poscount = $row[0];
 if (!$regmessage) {
     if ($poscount >= 3) {
-        $regmessage = "not registered.</span><span>  Programming has requested a comp membership for you";
+        $regmessage = "not registered.</span><span> " . fetchCustomText("enough_panels");
     } else {
         $regmessage = "not registered.</span><span> " . fetchCustomText("not_enough_panels");
     }

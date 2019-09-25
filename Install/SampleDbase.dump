@@ -124,7 +124,13 @@ CREATE TABLE `CustomText` (
 
 LOCK TABLES `CustomText` WRITE;
 /*!40000 ALTER TABLE `CustomText` DISABLE KEYS */;
-INSERT INTO `CustomText` VALUES (1,'My Profile','biography_note','Note: Your biography will appear immediately following your name in the program. If you have previously been a participant, the stored bio for you will be displayed below. Please verify the text for publication.<BR>\n'),(2,'My Availability','note_after_times','Please note: this year the Masquerade is scheduled for Sun, likely 8-11 pm.');
+INSERT INTO `CustomText` VALUES 
+  (1,'My Profile','biography_note','Note: Your biography will appear immediately following your name in the program. If you have previously been a participant, the stored bio for you will be displayed below. Please verify the text for publication.'),
+  (2,'My Availability','note_after_times','Please note: this year the Masquerade is scheduled for Sun, likely 8-11 pm.'),
+  (3,'Not Enough Panels','not_enough_panels','Panelists on 3 or more panels receive complementary memberships from Programming.  If you are interested in increasing your number of panels to take advantage of this, please contact us and we will work with you to see if it is possible.  If you are expecting a comp from helping another division, that will show up here shortly after registration processes it.  Please contact that division or registration with questions.'),
+  (4,'Enough Panels','enough_panels','Programming has requested a comp membership for you.'),
+  (5,'Note to All Panelists 1','all_panelists_1','In order to put together the entire schedule, we had to schedule some panels outside of the times that certain panelists requested.  If this happened to you, we would love to have you on the panel, but understand if you cannot make it.  Please let us know if you cannot.'),
+  (6,'Note to all Panelists 2','all_panelists_2','Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on which you would still like to participate.');
 /*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -149,7 +155,15 @@ CREATE TABLE `Divisions` (
 
 LOCK TABLES `Divisions` WRITE;
 /*!40000 ALTER TABLE `Divisions` DISABLE KEYS */;
-INSERT INTO `Divisions` VALUES (1,'Other',11),(2,'Programming',1),(3,'Events',2),(4,'Exhibits',10),(5,'Hotel',13),(6,'Unspecified',12),(7,'Multimedia',4),(8,'Child Services',6);
+INSERT INTO `Divisions` VALUES 
+  (1,'Other',11),
+  (2,'Programming',1),
+  (3,'Events',2),
+  (4,'Exhibits',10),
+  (5,'Hotel',13),
+  (7,'Multimedia',4),
+  (8,'Youth Services',6),
+  (99,'Unspecified',12);
 /*!40000 ALTER TABLE `Divisions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -775,13 +789,13 @@ LOCK TABLES `PermissionRoles` WRITE;
 INSERT INTO `PermissionRoles` VALUES
     (1,'Administrator','Reconfigure reports + ???'),
     (2,'Staff','Can access staff pages'),
-    (3,'Program Participant','Use to be determined'),
+    (3,'Program Participant','Login as Participant'),
     (4,'Brainstorm','Use for Brainstorm pages'),
     (5,'Event Participant','Can\'t even log in.  Just for bulk email.'),
     (6,'Event Organizer','Can\'t even log in.  Just for bulk email.'),
     (7,'Children\'s Services Participant','Can\'t even log in.  Just for bulk email.'),
     (8,'GOH','Can\'t even log in.  Just for reports.'),
-    (9,'LARP','Work\'s on LARP, but is not "Organizer"'),
+    (9,'LARP','Can log in. Work\'s on LARP, but is not "Organizer"'),
     (10,'LARP Organizer','LARP Organizer'),
     (11,'Tabletop','Tabletop game runner or teacher'),
     (12,'Senior Staff','Can send email from Zambia');
@@ -1611,7 +1625,32 @@ CREATE TABLE `Types` (
 
 LOCK TABLES `Types` WRITE;
 /*!40000 ALTER TABLE `Types` DISABLE KEYS */;
-INSERT INTO `Types` VALUES (1,'Panel',1,1),(2,'Workshop',2,0),(3,'Room Turn',500,0),(4,'Lecture',6,0),(5,'Meeting',20,0),(6,'Interview',9,0),(7,'Signing',13,0),(8,'Reading',7,0),(9,'Rehearsal',100,0),(10,'TV - Live Event',10,0),(11,'TV - Previous Event',11,0),(12,'Projected Media',8,0),(14,'Open Gaming',18,0),(15,'Scheduled Game',19,0),(16,'TV - Movie/Show',12,0),(17,'I do not know',700,0),(18,'Concert',4,0),(19,'Participatory Event',3,0),(20,'Drama',5,0),(21,'Setup',200,0),(22,'Refresh',499,0);
+INSERT INTO `Types` VALUES 
+  (1,'Panel',1,1),
+  (2,'Workshop',2,0),
+  (3,'Room Turn',500,0),
+  (4,'Lecture',6,0),
+  (5,'Meeting',20,0),
+  (6,'Interview',9,0),
+  (7,'Signing',13,0),
+  (8,'Reading',7,0),
+  (9,'Rehearsal',100,0),
+  (10,'TV - Live Event',10,0),
+  (11,'TV - Previous Event',11,0),
+  (12,'Projected Media',8,0),
+  (14,'Open Gaming',18,0),
+  (15,'Scheduled Game',19,0),
+  (16,'TV - Movie/Show',12,0),
+  (17,'I do not know',700,0),
+  (18,'Concert',4,0),
+  (19,'Participatory Event',3,0),
+  (20,'Drama',5,0),
+  (21,'Setup',200,0),
+  (22,'Refresh',499,0),
+  (23,'LARP',30,0),
+  (24,'Discussion Group',8,0),
+  (25,'Board Game',31,0),
+  (26,'Tabletop RPG',32,0);
 /*!40000 ALTER TABLE `Types` ENABLE KEYS */;
 UNLOCK TABLES;
 

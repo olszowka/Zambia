@@ -196,7 +196,7 @@ function validate_session() {
         $messages .= "Please select a type.<br>\n";
         $flag = false;
     }
-    if ($session["divisionid"] == 0 || $session["divisionid"] == 6) { // don't allow "Unspecified"
+    if ($session["divisionid"] == 0 || $session["divisionid"] == 99) { // don't allow "Unspecified"
         $messages .= "Please select a division.<br>\n";
         $flag = false;
     }

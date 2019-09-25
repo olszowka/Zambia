@@ -238,7 +238,7 @@ function set_session_defaults() {
 //
 function set_brainstorm_session_defaults() {
     global $session;
-    $session["roomset"] = 4; // "Unspecified"
+    $session["roomset"] = 99; // "Unspecified"
     if (!may_I('Staff')) {
         $session["status"] = 1; // brainstorm
     }
