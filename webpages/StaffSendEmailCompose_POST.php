@@ -70,7 +70,7 @@ if ($status === "1" || $status === "2") {
         $scheduleInfo = " Start Time      Duration            Room Name          Session ID                      Title\n";
         $scheduleInfo .= implode("\n", $scheduleInfoArray[$recipientinfo[0]['badgeid']]);
     } else {
-        $scheduleInfo = "No schedule items for you were found.";
+        $scheduleInfo = "No scheduled items for you were found.";
     }
     $emailverify['body'] = str_replace($scheduleTag, $scheduleInfo, $emailverify['body']);
 }

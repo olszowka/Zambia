@@ -88,7 +88,7 @@ SELECT
 			POS.sessionid = $selsessionid
 		OR	POS.sessionid IS NULL
 	ORDER BY
-        attending DESC,
+		attending DESC,
 		moderator DESC,
 		IFNULL(POS.badgeid, "~") ASC,
 		rank ASC,
@@ -102,7 +102,9 @@ if (($resultXML = mysql_query_XML($queryArray)) === false) {
 }
 $otherParticipantsQuery = <<<EOD
 SELECT
-        P.pubsname, P.badgeid, CD.lastname
+        P.pubsname,
+        P.badgeid,
+        CD.lastname
     FROM
         Participants P
     JOIN

@@ -6,6 +6,8 @@ function RenderSessionCountReport($result) {
     require_once('StaffCommonCode.php');
     staff_header($title);
     ?>
+<p> Sessions are sorted by the session status. </p><br>
+
     <table class="table table-condensed table-hover">
         <tr>
             <th class="y1">Track</th>

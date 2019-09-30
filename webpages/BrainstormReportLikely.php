@@ -13,13 +13,13 @@ SELECT
                 if(left(date_format(S.duration,'%i'),1)=0, concat(right(date_format(S.duration,'%i'),1),'min'), 
                 concat(date_format(S.duration,'%i'),'min')))) Duration,
         S.estatten, S.progguiddesc, S.persppartinfo, roomname,
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime, SS.statusname
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime, SS.statusname
     FROM
                   Sessions S
              JOIN Tracks T USING (trackid)
              JOIN SessionStatuses SS USING (statusid)
-		LEFT JOIN Schedule SCH USING (sessionid)
-		LEFT JOIN Rooms R USING (roomid)
+        LEFT JOIN Schedule SCH USING (sessionid)
+        LEFT JOIN Rooms R USING (roomid)
     WHERE
             SS.statusname IN ('Vetted', 'Assigned', 'Scheduled')
     ORDER BY

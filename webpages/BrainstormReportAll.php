@@ -15,11 +15,11 @@ SELECT
         S.estatten, S.progguiddesc, S.persppartinfo, roomname,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime, SS.statusname
     FROM
-                  Sessions S
-             JOIN Tracks T USING (trackid)
-             JOIN SessionStatuses SS USING (statusid)
-		LEFT JOIN Schedule SCH USING (sessionid)
-		LEFT JOIN Rooms R USING (roomid)
+             Sessions S
+        JOIN Tracks T USING (trackid)
+        JOIN SessionStatuses SS USING (statusid)
+        LEFT JOIN Schedule SCH USING (sessionid)
+        LEFT JOIN Rooms R USING (roomid)
     WHERE
             SS.statusname IN ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled')
     ORDER BY

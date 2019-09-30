@@ -74,7 +74,7 @@ function RenderError($message_error, $ajax = false) {
     echo "<title>Zambia - $title</title>\n";
     echo "</head>\n";
     echo "<body>\n";
-    echo "<h1>Zambia&ndash;The" . CON_NAME . "Scheduling Tool</h1>\n";
+    echo "<h1>Zambia&ndash;The " . CON_NAME . " Scheduling Tool</h1>\n";
     echo "<hr>\n";
     echo "<p> An error occurred: </p>\n";
     echo "<p>$message_error</p>\n";

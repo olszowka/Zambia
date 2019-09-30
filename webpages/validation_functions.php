@@ -234,7 +234,12 @@ function validate_participant_availability() {
     }
     if (CON_NUM_DAYS > 1) {
         for ($i = 1; $i <= CON_NUM_DAYS; $i++) {
-            if (!($partAvail["maxprogday$i"] >= 0 and $partAvail["maxprogday$i"] <= 10)) {
+            if (!is_numeric($partAvail["maxprogday$i"])) {
+                $messages.="Enter a number in the day maximum fields.<BR>\n";
+                $flag=false;
+                break;
+            }
+            if (!($partAvail["maxprogday$i"] >= 0 and $partAvail["maxprogday$i"] <= PREF_DLY_SESNS_LMT)) {
                 $x = PREF_DLY_SESNS_LMT;
                 $messages .= "For each daily maximum number of sessions, enter a number between 0 and $x.<BR>\n";
                 $flag = false;

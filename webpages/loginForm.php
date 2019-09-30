@@ -14,12 +14,12 @@ if (isset($message)) {
     					<label class="control-label" for="passwd">Password:</label>
   				    <div class="controls">
     						<input type="password" id="passwd" name="passwd" class="input-small" placeholder="Password" title="Enter your password"/>
-              </div>
+					</div>
   				  </div>
   				  <div class="control-group">
   				    <div class="controls">
   					   <input type="submit" value="Login" class="btn btn-primary pull-right" title="Click to log in">
-              </div>
+				    </div>
   				  </div>
   				</fieldset>
   			</form>

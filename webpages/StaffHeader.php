@@ -134,7 +134,7 @@
 							</li>
 							<li class="divider-vertical"></li>
 							<li><a href="StaffPage.php">Overview</a></li>
-								<?php makeMenuItem("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormWelcome.php",may_I('BrainstormSubmit')); ?>
+							<?php makeMenuItem("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormWelcome.php",may_I('BrainstormSubmit')); ?>
 							<li class="divider-vertical"></li>
 							<li>
 								<form method=POST action="ShowSessions.php" class="navbar-search pull-left">
@@ -154,15 +154,15 @@
                                     </ul>
                                 </li>
                             <?php } ?>
-						</ul>
-						<ul class="nav pull-right">
-							<li class="divider-vertical"></li>
-							<li><a id="ParticipantView" href="welcome.php">Participant View</a></li>
-						</ul>
-					</div><!--/.nav-collapse -->
-				</div>
-			</div>
-		</nav>
+                        </ul>
+                        <ul class="nav pull-right">
+                            <li class="divider-vertical"></li>
+                            <li><a id="ParticipantView" href="welcome.php">Participant View</a></li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </nav>
 <?php
 		if ($fullPage) echo "</div>"; //close headerContainer 
  		} // if badgeid was set

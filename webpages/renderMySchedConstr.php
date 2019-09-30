@@ -60,8 +60,8 @@ participant_header($title);
     <p> For each day you will be attending <?php echo CON_NAME; ?>, please
         indicate the times when you will be available as a program panelist.
         Entering a single time for the whole con is fine. Splitting a day into
-        multiple time slots also is fine. Keep in mind we will be using this as
-        guidance when scheduling your sessions.</p>
+        multiple time slots also is fine. Change all items in a row to blank to delete the row. 
+        Keep in mind we will be using this only as guidance when scheduling your sessions.</p>
 
     <table class="table table-condensed">
         <tr> <!-- row one -->

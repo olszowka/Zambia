@@ -53,7 +53,11 @@ This is an category we can mine for ideas in future years.
 </ul>
 <p>For your reference there are several statuses pulled over from previous 
 years.  They are here for your reference and in general should be mined for 
-information.  Feel free to flip an session from a previous year into the 
+information.  Feel free to import a session from a previous year into the 
 workflow for this year if you want to see it happen this year. 
+
+<p>
+Number of con days: <?php echo CON_NUM_DAYS; ?><br />
+Con name: <?php echo CON_NAME; ?><br />
 
 <?php staff_footer(); ?>

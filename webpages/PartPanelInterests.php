@@ -17,7 +17,7 @@
     get_si_session_info_from_db($session_interest_count); // Will render its own errors
     $message="";
     $message_error="";
-	$pageIsDirty = false;
+    $pageIsDirty = false;
     $query = <<<EOD
 SELECT
         P.interested
