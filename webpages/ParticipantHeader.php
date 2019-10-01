@@ -95,7 +95,7 @@ load_javascript($title);
       </div>
     </nav>
 <?php }
-      else {
+    else {
         require_once("loginForm.php");
         echo "<script type=\"text/javascript\">";
         echo "   var alwaysShowLargeHeader = true;";

@@ -133,7 +133,7 @@ function SubmitAssignParticipants() {
             $isasgn = isset($_POST["asgn$badgeid"]);
             $wasasgn = ($_POST["wasasgn$badgeid"] == 1);
             $wasmod = ($wasmodid == $badgeid);
-            //echo "i: $i | isasgn: $isasgn | wasasgn: $wasasgn | ismod: $ismod | wasmod: $wasmod <BR>\n";
+            //echo "i: $i | badgeid: $badgeid | isasgn: $isasgn | wasasgn: $wasasgn | ismod: $ismod | wasmod: $wasmod <BR>\n";
             if ($wasmod and !$ismod) { // W or Z
                 $firstQueryArray[] = "UPDATE ParticipantOnSessionHistory SET inactivatedbybadgeid=\"$userbadgeid\", inactivatedts=@mynow WHERE " .
                     "sessionid=$selsessionid AND badgeid=\"$badgeid\" AND inactivatedts IS NULL;";

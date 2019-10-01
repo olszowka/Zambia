@@ -32,7 +32,7 @@ EOD;
 // ['trackname'] ['title'] ['duration'] ['progguiddesc'] ['persppartinfo']
 //
 function get_si_session_info_from_db($session_interest_count) {
-    global $linnki, $message, $session_interests, $session_interest_index, $title;
+    global $message, $session_interests, $session_interest_index, $title;
     //print_r($session_interest_index);
     if ($session_interest_count == 0) {
         return false;

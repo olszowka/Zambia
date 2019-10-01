@@ -9,6 +9,7 @@ If you would like assistance using this tool or you would like to communicate an
     echo "<a href=\"mailto:".PROGRAM_EMAIL."\">".PROGRAM_EMAIL."</a> ";
     include ('google_analytics.php');
 ?>
+</p>
 </div>
 </body>
 </html>

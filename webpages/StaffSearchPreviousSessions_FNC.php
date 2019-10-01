@@ -156,7 +156,7 @@ function HandleSearchParameters() {
 } // End of HandleSearchParameters()
     
 function PerformPrevSessionSearch () {
-    global $SessionSearchParameters, $message_error,$message,$result,$link;
+    global $SessionSearchParameters, $message_error,$message,$result,$linki;
     $query= <<<EOD
 SELECT
         PS.title, PS.progguiddesc, PS.previousconid, PS.previoussessionid, PS.importedsessionid, TY.typename,
@@ -202,7 +202,7 @@ EOD;
     $query .= " ORDER BY PC.display_order, PS.previoustrackid";
     $result = mysqli_query($linki, $query);
     if (!$result) {
-        $message_error = $query . "Error querying database.";
+        $message_error = $query . " Error querying database.";
         return (false);
     }
     if (mysqli_num_rows($result) == 0) {

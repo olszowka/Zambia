@@ -7,7 +7,7 @@
     //                                  set $badgeid from session
     if (!may_I('BS_sear_sess')) {
         $message_error="You do not currently have permission to view this page.<BR>\n";
-        RenderError($title,$message_error);
+        RenderError($message_error);
         exit();
         }
     brainstorm_header($title);

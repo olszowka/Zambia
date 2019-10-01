@@ -56,7 +56,7 @@ EOD;
 
         <p>On the following page, you can select sessions for participation. You must <strong>SAVE</strong> your changes
             before leaving the page or your selections will not be recorded.
-        <p>Clicking Search without making any selections will display all sessions.
+        <p><strong>Clicking Search without making any selections will display all sessions.</strong>
     </form>
 </div>
 <?php

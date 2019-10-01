@@ -734,8 +734,18 @@ function retrieveFullParticipant($badgeid) {
     }
     $query = <<<EOD
 SELECT
-        badgeid, firstname, lastname, badgename, phone, email, postaddress1,
-		postaddress2, postcity, poststate, postzip, postcountry
+        badgeid,
+        firstname,
+        lastname,
+        badgename,
+        phone,
+        email,
+        postaddress1,
+        postaddress2,
+        postcity,
+        poststate,
+        postzip,
+        postcountry
     FROM
         CongoDump
     WHERE
@@ -768,7 +778,11 @@ function retrieve_participantAvailability_from_db($badgeid, $exit_on_error = fal
     global $message_error;
     $query = <<<EOD
 SELECT
-        badgeid, maxprog, preventconflict, otherconstraints, numkidsfasttrack
+        badgeid,
+        maxprog,
+        preventconflict,
+        otherconstraints,
+        numkidsfasttrack
     FROM
         ParticipantAvailability
     WHERE
@@ -809,8 +823,10 @@ EOD;
     }
     $query = <<<EOD
 SELECT
-        badgeid, availabilitynum, TIME_FORMAT(starttime, '%T') AS starttime, 
-	    TIME_FORMAT(endtime, '%T') AS endtime
+        badgeid,
+        availabilitynum,
+        TIME_FORMAT(starttime, '%T') AS starttime,
+        TIME_FORMAT(endtime, '%T') AS endtime
     FROM
         ParticipantAvailabilityTimes
 	WHERE

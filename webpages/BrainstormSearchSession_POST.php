@@ -23,7 +23,7 @@ SELECT
 		LEFT JOIN Schedule SCH USING (sessionid)
 		LEFT JOIN Rooms R USING (roomid)
     WHERE
-            SS.statusname IN ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled');
+            SS.statusname IN ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled')
 EOD;
 if ($trackid != 0) {
     $query .= " and S.trackid=" . $trackid;

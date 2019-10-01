@@ -1,6 +1,6 @@
 <?php
 // Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message_error, $title;
+global $message_error, $title, $linki;
 $bigarray = array();
 define("newroomslots", 5); // number of rows at bottom of page for new schedule entries
 $title = "Maintain Room Schedule";

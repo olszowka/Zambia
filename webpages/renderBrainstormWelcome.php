@@ -20,17 +20,17 @@
 panels, events, movies, films, presentations, speeches, concerts, etc.  
 <p> As suggestions come in and we read through them, we will rework 
 them, combine similar ideas into a single item, 
-split large ones into pieces that will fit in an hour, etc.    
+split large ones into pieces that will fit in a timeslot, etc.    
 Please expect the suggestions you submit to evolve over time.  
 <p> Also, please note that we always have more suggestions than are 
 physically possible with the space and time we have, so not 
-everything will make it.   We do save good ideas for future conventions. 
+everything will make it.   We do try to save good ideas for future conventions. 
 <ul> 
 <li> <a href="BrainstormSearchSession.php">Search </a> for similar ideas or get inspiration.
-<li> Email <?php echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> ";?> to suggest modifications on existing suggestion.
+<li> Email <?php echo "<a href=\"mailto:".BRAINSTORM_EMAIL."\">".BRAINSTORM_EMAIL."</a> ";?> to suggest modifications on existing suggestions.
 <li> <a href="BrainstormCreateSession.php">Enter a new suggestion. </a>
-<li> See the list of <a href="BrainstormReportAll.php">All</a> suggestions (we've seen some and not see others).
-<li> See the list of <a href="BrainstormReportUnseen.php"> New </a> suggestions that have been entered recently (may not be fit for young eyes, we haven't see these yet). 
+<li> See the list of <a href="BrainstormReportAll.php">All</a> suggestions (we've seen some and not seen others).
+<li> See the list of <a href="BrainstormReportUnseen.php"> New </a> suggestions that have been entered recently (may not be fit for young eyes, we haven't seen these yet). 
 <li> See the list of <a href="BrainstormReportReviewed.php">Reviewed </a>suggestions we are currently working through.
 <li> See the list of <a href="BrainstormReportLikely.php">Likely to Occur</a> suggestions we are or will allow participants to sign up for. 
 <li> See the list of <a href="BrainstormReportScheduled.php">Scheduled</a> suggestions.  These are very likely to happen at con.

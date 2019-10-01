@@ -100,7 +100,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "                <input type=hidden name=\"rolename0\" value=\"" . $rolearray[0]["rolename"] . "\">\n";
     echo "                <input type=hidden name=\"diddorole0\" value=\"";
     echo ((isset($rolearray[0]["badgeid"])) ? 1 : 0) . "\">\n";
-    echo "<p>Description for \"Other\":</p>\n";
+    echo "<p>Description for \"Other\" Roles:</p>\n";
     echo "<textarea class=\"span12\" name=\"otherroles\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
@@ -108,11 +108,12 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo ">" . htmlspecialchars($otherroles, ENT_COMPAT) . "</textarea>\n";
     echo "</div>\n";
     echo "<div class=\"submit\">\n";
-    echo "    <div id=\"submit\">";
+    echo "    <div id=\"submit\">\n";
     if (may_I('my_gen_int_write')) {
-        echo "<button class=\"btn btn-primary\" type=\"submit\" name=\"submit\" >Save</button>";
+        echo "<button class=\"btn btn-primary\" type=\"submit\" name=\"submit\" >Save</button>\n";
     }
     echo "</div>\n";
     echo "    </div>\n";
+    echo "<br /><br />\n";
     echo "</form>\n";
 } ?>

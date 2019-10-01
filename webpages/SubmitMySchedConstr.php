@@ -39,7 +39,7 @@ if ($status == false) {
         exit();
     }
     for ($i = 1; $i <= AVAILABILITY_ROWS; $i++) {
-        if (isset($partAvail["availstarttime_$i"])) {
+        if (isset($partAvail["availstarttime_$i"]) && $partAvail["availstarttime_$i"] > 0) {
             if (CON_NUM_DAYS == 1) {
                 // for 1 day con didn't collect or validate day info; just set day=1
                 $partAvail["availstartday_$i"] = 1;

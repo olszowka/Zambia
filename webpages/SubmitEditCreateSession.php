@@ -85,7 +85,7 @@
        exit();
     $session["sessionid"]=$id;
     if ($action=='brainstorm') {
-			set_brainstorm_session_defaults();
+            set_brainstorm_session_defaults();
             BrainstormRenderCreateSession($session,$message_warn,$message_error);
             }
         else {
