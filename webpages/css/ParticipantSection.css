@@ -1,5 +1,5 @@
 @import "css/Common.css";
-@import "PartSectSiteSpecific.css";
+@import "css/PartSectSiteSpecific.css";
 
 BODY {
      background-image: url("images/partheadbg.png");
