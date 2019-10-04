@@ -72,7 +72,7 @@ load_javascript($title);
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<? echo $_SERVER['PATH_INFO'] ?>"><? echo $title ?></a>
+          <a class="brand" href="welcome.php"><? echo $title ?></a>
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="my_contact.php">Profile</a></li>

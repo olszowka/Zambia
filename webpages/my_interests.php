@@ -53,6 +53,7 @@ $rolearray = array();
 while ($rolearray[$i] = mysqli_fetch_assoc($result)) {
     $i++;
 }
+$rolearray['count'] = $i--;
 mysqli_free_result($result);
 $error = false;
 $message = "";

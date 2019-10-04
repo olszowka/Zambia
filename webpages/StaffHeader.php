@@ -83,7 +83,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="brand" href="/<?php echo $_SERVER['REQUEST_URI']."\">$title"; ?></a>
+					<a class="brand" href="StaffPage.php"><? echo $title ?></a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							<li class="dropdown">
