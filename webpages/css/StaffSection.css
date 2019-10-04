@@ -1,5 +1,5 @@
 @import "css/Common.css";
-@import "StaffSectSiteSpecific.css";
+@import "css/StaffSectSiteSpecific.css";
 
 BODY {
      background-image: url("images/staffheadbg.png");
