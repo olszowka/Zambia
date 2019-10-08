@@ -28,9 +28,6 @@
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
   </head>
 <body>
 <script type="text/javascript">
@@ -72,7 +69,7 @@ load_javascript($title);
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="welcome.php"><? echo $title ?></a>
+          <div class="brand"><?php echo $title; ?></div>
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="my_contact.php">Profile</a></li>
