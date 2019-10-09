@@ -3,7 +3,7 @@
 function renderMyInterests($title, $error, $message, $rolearray) {
     global $link, $yespanels, $nopanels, $yespeople, $nopeople;
     global $otherroles, $newrow;
-    $rolerows = count($rolearray);
+    $rolerows = $rolearray['count'];
     participant_header($title);
     if ($error) {
         echo "<p class=\"alert alert-error\">Database not updated.<br>" . $message . "</p>";
@@ -55,7 +55,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "<p>Roles I'm willing to take on:</p>\n";
     echo "<div class=\"row-fluid\">\n";
     echo "    <div class=\"control-group span12\">\n";
-    for ($i = 1; $i < $rolerows - 1; $i += 2) {
+    for ($i = 1; $i < $rolerows; $i++) {
         echo "                <label class=\"checkbox inline long\" for=\"willdorole" . $i . "\">" . $rolearray[$i]["rolename"] . "\n";
         echo "                <input type=checkbox name=\"willdorole" . $i . "\" id=\"willdorole" . $i . "\"";
         if (isset($rolearray[$i]["badgeid"])) {
@@ -69,22 +69,6 @@ function renderMyInterests($title, $error, $message, $rolearray) {
         echo ((isset($rolearray[$i]["badgeid"])) ? 1 : 0) . "\">\n";
         echo "                <input type=hidden name=\"roleid" . $i . "\" value=\"" . $rolearray[$i]["roleid"] . "\">\n";
         echo "                <input type=hidden name=\"rolename" . $i . "\" value=\"" . $rolearray[$i]["rolename"] . "\">\n";
-        if ($i+1 >= $rolerows-1) {
-            break;
-        }
-        echo "                <label class=\"checkbox inline long\" for=\"willdorole" . ($i + 1) . "\">" . $rolearray[$i + 1]["rolename"] . "\n";
-        echo "                <input class=\"checkbox\" type=checkbox name=\"willdorole" . ($i + 1) . "\" ";
-        if (isset($rolearray[$i + 1]["badgeid"])) {
-            echo "checked";
-        }
-        if (!may_I('my_gen_int_write')) {
-            echo " disabled";
-        }
-        echo "></label>\n";
-        echo "                <input type=hidden name=\"diddorole" . ($i + 1) . "\" value=\"";
-        echo ((isset($rolearray[$i + 1]["badgeid"])) ? 1 : 0) . "\">\n";
-        echo "                <input type=hidden name=\"roleid" . ($i + 1) . "\" value=\"" . $rolearray[$i + 1]["roleid"] . "\">\n";
-        echo "                <input type=hidden name=\"rolename" . ($i + 1) . "\" value=\"" . $rolearray[$i + 1]["rolename"] . "\">\n";
     }
 
     echo "                <label class=\"checkbox inline long\" for=\"willdorole0\">" . $rolearray[0]["rolename"] . "  (Please describe below)";
