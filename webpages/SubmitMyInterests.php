@@ -17,7 +17,7 @@ $yespeople = stripslashes($_POST["yespeople"]);
 $nopeople = stripslashes($_POST["nopeople"]);
 $otherroles = stripslashes($_POST["otherroles"]);
 $rolearray = array();
-for ($i = 0; $i < $rolerows-1; $i++) {
+for ($i = 0; $i < $rolerows; $i++) {
     $rolearray[$i] = array();
     if (isset($_POST["willdorole" . $i])) {
         $rolearray[$i]["badgeid"] = $badgeid;
@@ -26,6 +26,7 @@ for ($i = 0; $i < $rolerows-1; $i++) {
     $rolearray[$i]["rolename"] = $_POST["rolename" . $i];
     $rolearray[$i]["diddorole"] = $_POST["diddorole" . $i];
 }
+$rolearray['count'] = $rolerows;
 if ($newrow) {
     $query = "INSERT INTO ParticipantInterests SET badgeid='$badgeid',";
     $query .= "yespanels=\"" . mysqli_real_escape_string($linki, $yespanels);
@@ -52,7 +53,7 @@ if ($newrow) {
         exit();
     }
 }
-for ($i = 0; $i < $rolerows-1; $i++) {
+for ($i = 0; $i < $rolerows; $i++) {
     if (isset($rolearray[$i]["badgeid"]) && ($rolearray[$i]["diddorole"] == 0)) {
         $query = "INSERT INTO ParticipantHasRole SET badgeid=\"" . $badgeid . "\", roleid=" . $rolearray[$i]["roleid"] . "";
         if (!mysqli_query($linki, $query)) {
