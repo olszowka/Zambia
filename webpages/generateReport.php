@@ -48,6 +48,11 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
     $xsl->loadXML($report['xsl']);
     $xslt = new XsltProcessor();
     $xslt->importStylesheet($xsl);
+    if (isset($report['params'])) {
+        foreach ($report['params'] as $paramName => $paramValue) {
+            $xslt->setParameter('', $paramName, $paramValue);
+        }
+    }
     $html = $xslt->transformToXML($resultXML);
     // some browsers do not support empty div, iframe, script and textarea tags
     echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
