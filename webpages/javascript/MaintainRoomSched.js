@@ -1,37 +1,59 @@
-var maintainRoomSched = new MaintainRoomSched;
+//	Created by Peter Olszowka on 2015-08-30;
+//	Copyright (c) 2015-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
 
-function MaintainRoomSched() {
-	var selroomArray = [];
-	
-	this.initialize = function initialize() {
-		//called when JQuery says My Profile page has loaded
-		//debugger;
-		$("#showUnschedRmsCHK").click(maintainRoomSched.unschedRoomsClick);
-		$("#selroom option[value!=0]").each( function() {
-			selroomArray.push({
-				value:$(this).val(),
-				text:$(this).text(),
-				is_scheduled:$(this).attr("is_scheduled")
+var MaintainRoomSched = function() {
+	this.roomArr = [];
+
+	this.onChangeShowUnscheduledRooms = function () {
+		var that = this;
+		if (this.$showUnscheduledRoomsCheckbox.checked) {
+			this.$roomsSelect.querySelectorAll("option:not([value='0'])")
+				.forEach(function (elem) {
+					elem.remove();
+				});
+			this.roomArr.forEach(function (room) {
+				var option = document.createElement('option');
+				option.setAttribute('value', room.value);
+				option.innerText = room.text;
+				option.dataset.isScheduled = room.isScheduled;
+				that.$roomsSelect.appendChild(option);
+			});
+		} else {
+			this.$roomsSelect.querySelectorAll("option[data-is-scheduled='0']")
+				.forEach(function (elem) {
+					elem.remove();
+				});
+		}
+	};
+
+	this.initialize = function () {
+		//called when My Profile page has loaded
+		var that = this;
+		this.$showUnscheduledRoomsCheckbox = document.getElementById('showUnschedRmsCHK');
+		this.$roomsSelect = document.getElementById('selroom');
+		this.$showUnscheduledRoomsCheckbox.addEventListener('change', this.onChangeShowUnscheduledRooms.bind(this));
+		this.$roomsSelect.querySelectorAll("option:not([value='0'])").forEach(function (option) {
+			that.roomArr.push({
+				value: option.getAttribute('value'),
+				text: option.innerText,
+				isScheduled: option.dataset.isScheduled
+			});
+		});
+		this.onChangeShowUnscheduledRooms();
+		var $addToScheduleTable = document.getElementById('add-to-room-schedule-table');
+		if ($addToScheduleTable) {
+			$addToScheduleTable.querySelectorAll('.room-select-td > select').forEach(function(elem) {
+				new Choices(elem, {
+					searchResultLimit: 9999,
+					searchPlaceholderValue: "Type here to search list."
 				});
 			});
-		if (!$("#showUnschedRmsCHK").is(":checked"))
-			$("#selroom option[is_scheduled='0']").remove();
-	}
+		}
+	};
+};
 
-	this.unschedRoomsClick = function unschedRoomsClick() {
-		//debugger;
-		if ($("#showUnschedRmsCHK").is(":checked")) {
-				var i,j;
-				$("#selroom option[value!=0]").remove();
-				var s = $("#selroom").get(0);
-				for (i in selroomArray) {
-					j = s.options.length;
-					s.options[j]= new Option(selroomArray[i].text, selroomArray[i].value);
-					$(s.options[j]).attr("is_scheduled",selroomArray[i].is_scheduled);
-					}
-				}
-			else
-				$("#selroom option[is_scheduled='0']").remove();
-	}
+var maintainRoomSched = new MaintainRoomSched();
 
-}
+/* This file should be included only on relevant page.  See main.js and javascript_functions.php */
+document.addEventListener('DOMContentLoaded', maintainRoomSched.initialize.bind(maintainRoomSched));
+

@@ -1,11 +1,17 @@
+/**
+ * Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+ */
+/* Colors and other variables */
+/**
+ * LAYOUT
+ */
+/*
+ * Page header stuff
+ */
 header img,
 header h1 {
   float: left;
   padding-left: 1em;
-}
-body {
-  background-image: url('../images/light_honeycomb.png');
-  background-repeat: repeat;
 }
 header label {
   color: black;
@@ -15,9 +21,6 @@ header label {
 }
 header .imgButton {
   cursor: pointer;
-}
-a {
-  color: #04C;
 }
 #loginBox,
 #welcome {
@@ -38,10 +41,61 @@ a {
   height: 20px;
   padding-left: 0.5em;
 }
+.navbar {
+  margin-bottom: 0.2em;
+}
+.staff {
+  background-color: #a7d2a5;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+  color: black;
+}
+.participant {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #e8e8e8 24%, #c3c1db 57%, #928dc4 77%, #1000a3 100%);
+  color: black;
+}
+#login {
+  float: right;
+}
+.zambiaLogo {
+  padding: 3px;
+  display: table-cell;
+  float: none;
+}
+.zambiaImage {
+  height: 12rem;
+}
+.pageHeader {
+  padding: 0;
+  width: 100%;
+  display: table;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.pageHeader .pageHeaderText {
+  width: 88%;
+  margin-left: 0;
+  display: table-cell;
+  vertical-align: middle;
+  float: none;
+  padding-left: 1.5rem;
+}
+form.navbar-search {
+  margin-top: 9px !important;
+}
+/* <end> Page header stuff */
+/**
+ * STYLES
+ */
+body {
+  background-image: url('../images/light_honeycomb.png');
+  background-repeat: repeat;
+}
+a {
+  color: #04C;
+}
 #buttonBox {
   margin: 0.4em;
-  xposition: relative;
-  xtop: -3em;
 }
 .borderBox {
   border: black thin solid;
@@ -53,24 +107,11 @@ input[type="text"],
 input[type="password"] {
   height: 28px;
 }
-.navbar {
-  margin-bottom: 0.2em;
-}
-.staff {
-  background-color: #a7d2a5;
-  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
-  color: black;
-}
 #staffView {
   color: #00aa00;
 }
 #staffView:hover {
   color: #22ee22;
-}
-.participant {
-  background-color: #dedcff;
-  background-image: linear-gradient(0deg, #e8e8e8 0%, #e8e8e8 24%, #c3c1db 57%, #928dc4 77%, #1000a3 100%);
-  color: black;
 }
 #ParticipantView {
   color: #6666ff;
@@ -79,16 +120,16 @@ input[type="password"] {
   color: #aaaaff;
 }
 .checkbox.inline {
-  padding-top: 0px;
+  padding-top: 0;
   margin-bottom: 5px;
 }
 .checkbox.inline.long {
-  padding-top: 0px;
+  padding-top: 0;
   margin-bottom: 5px;
   width: 14em;
 }
 .checkbox.adjust {
-  padding-top: 0px;
+  padding-top: 0;
   margin-bottom: 8px;
 }
 .padded {
@@ -98,7 +139,7 @@ input[type="password"] {
   padding-top: 1.0em;
 }
 #searchPartsINPUT {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 .nowidth {
   width: auto !important;
@@ -108,15 +149,8 @@ input[type="password"] {
 .note {
   font-size: 0.85em;
 }
-#login {
-  float: right;
-}
-label {
-  xxtext-align: right;
-  xxmargin-bottom: 0;
-}
 .compact {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 .congo_table {
   margin-top: 1em;
@@ -206,40 +240,18 @@ ul#boxes li {
   background-color: #e5e5e5;
   text-align: center;
 }
-.zambiaLogo {
-  padding: 3px;
-  display: table-cell;
-  float: none;
-}
-.zambiaImage {
-  height: 12rem;
-}
-.pageHeader {
-  padding: 0;
-  width: 100%;
-  display: table;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.pageHeader div.pageHeaderText {
-  width: 88%;
-  margin-left: 0;
-  display: table-cell;
-  vertical-align: middle;
-  float: none;
-}
 .compressed {
   width: auto;
 }
 .table .myspan1 {
   width: 71px;
 }
+/**
+ * RESPONSIVE
+ */
 @media (max-width: 780px) {
   .wide-only {
     display: none;
-  }
-  label {
-    xxtext-align: left;
   }
 }
 @media (max-width: 480px) {
@@ -282,21 +294,53 @@ input[type="color"],
 input.search-query {
   padding: 0 4px 0 8px !important;
 }
-form.navbar-search {
-  margin-top: 9px !important;
-}
 @media (min-width: 480px) {
   label[for="use_photo"] {
     width: auto !important;
     text-align: left !important;
   }
 }
-/* Staff Assign Participants */
-#selsesformtop {
-  margin-top: 1em;
-}
-#selsesform .row-fluid > div[class*='span'] {
+.grid-form .row-fluid > div[class*='span'] {
   padding: 0.1em 0.5em;
+}
+/* Invite Participants */
+#invite-participants-intro {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+label[for='participant-select'] {
+  margin-right: 0.5rem;
+}
+label[for='participant-select'] + .choices {
+  width: 25rem;
+}
+label[for='session-select'] {
+  margin-right: 0.5rem;
+}
+label[for='session-select'] + .choices {
+  width: 31rem;
+}
+/* <end> Invite Participants */
+/**
+ * Session History & Staff Assign Participants
+ */
+#session-history-form label,
+#selsesform label {
+  margin-right: 1.5rem;
+}
+#session-history-form label + .choices,
+#selsesform label + .choices {
+  width: 31rem;
+}
+#session-history-form .choices,
+#selsesform .choices {
+  margin-right: 1.5rem;
+}
+#assign-participant-row > .choices {
+  width: 31rem;
+}
+#assign-participant-row button {
+  margin-right: 1.5rem;
 }
 #NPS_TXTA {
   width: 50%;
@@ -304,6 +348,23 @@ form.navbar-search {
 .stAsPa-sesInfRow {
   margin-bottom: 6px;
 }
+/* <end> Session History & Staff Assign Participants */
+/**
+ * Maintain Room Schedule
+ */
+#maintain-room-sched-room-form label[for='selroom'] {
+  margin-right: 1.5rem;
+}
+#maintain-room-sched-room-form #selroom {
+  margin-right: 1.5rem;
+}
+.room-select-td > .choices {
+  width: 31rem;
+}
+#add-to-room-schedule-table td {
+  vertical-align: bottom;
+}
+/* <end> Maintain Room Schedule */
 /* Bootstrap extensions */
 .dropdown-menu > li > .menu-error-entry {
   background-color: #fbc8bb;
@@ -335,26 +396,6 @@ form.navbar-search {
 }
 .row-container.not-attending {
   background-color: #fbc8bb;
-}
-.not-attending-header-row {
-  background-color: #fbc8bb;
-  padding: 2px 4px;
-  font-weight: bold;
-}
-.za-sessionHistory-moderator {
-  text-decoration: underline;
-  font-style: italic;
-}
-.za-sessionHistory-editBanner {
-  background-color: #b5b5b5;
-  border: 1px solid #7b7b7b;
-  border-radius: 3px;
-  padding: 3px 4px;
-  color: white;
-  margin-bottom: 3px;
-}
-.za-sessionHistory-editBanner [class*='span'] {
-  min-height: 0;
 }
 .grid-table-cell {
   padding: 5px;
@@ -401,13 +442,73 @@ form.navbar-search {
 table.multcol-list td {
   padding-right: 1em;
 }
+/* <end> Bootstrap extensions */
+.not-attending-header-row {
+  background-color: #fbc8bb;
+  padding: 2px 4px;
+  font-weight: bold;
+}
+.za-sessionHistory-moderator {
+  text-decoration: underline;
+  font-style: italic;
+}
+.za-sessionHistory-editBanner {
+  background-color: #b5b5b5;
+  border: 1px solid #7b7b7b;
+  border-radius: 3px;
+  padding: 3px 4px;
+  color: white;
+  margin-bottom: 3px;
+}
+.za-sessionHistory-editBanner [class*='span'] {
+  min-height: 0;
+}
 .error-container {
   line-height: 2;
-}
-.vert-sep {
-  margin-top: 1rem;
 }
 .roles-list-container {
   column-count: 3;
   max-width: 70rem;
+}
+/**
+ * General spacing bits
+ */
+.page-top-spacer {
+  margin-top: 1.5rem;
+}
+.vert-sep {
+  margin-top: 1rem;
+}
+/* <end> General spacing bits */
+/**
+ * choices widget overrides
+ */
+.zambia-form,
+.zambia-form * {
+  box-sizing: border-box;
+}
+.zambia-form .choices {
+  display: inline-block;
+  margin-right: 1.25rem;
+  vertical-align: middle;
+  margin-bottom: initial;
+}
+.zambia-form .choices:focus-within {
+  outline: 1px dotted #212121;
+  outline: 4px auto -webkit-focus-ring-color;
+}
+.zambia-form .choices__inner {
+  min-height: initial;
+  padding: 0.5rem 1.6rem 0.25rem 0.5rem;
+}
+.zambia-form .choices__list--dropdown {
+  word-break: initial;
+}
+.zambia-form .choices__list--single {
+  padding: 0.25rem 0 0.25rem 0.25rem;
+}
+.zambia-form .choices__list--single > .choices__item--selectable {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

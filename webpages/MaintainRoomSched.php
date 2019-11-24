@@ -45,7 +45,7 @@ if ($conflict != true) {
     $xslt->importStylesheet($xsl);
     $html = $xslt->transformToXML($resultXML);
     ?>
-<form class="form-inline" name="selroomform" method="POST" action="MaintainRoomSched.php">
+<form id="maintain-room-sched-room-form" class="form-inline page-top-spacer" name="selroomform" method="POST" action="MaintainRoomSched.php">
 	<div>
         <label for="selroom">Select Room:</label>
 <?php echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i")); ?>
@@ -55,9 +55,10 @@ if ($conflict != true) {
         echo "<A HREF=\"" . $_SESSION['return_to_page'] . "\">Return to report</A>";
     }
 ?>
-	<div class="">
-  	<input type="checkbox" class="checkbox adjust" id="showUnschedRmsCHK" name="showUnschedRmsCHK" value="1" <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
-  	<label class="checkbox inline" for="showUnschedRmsCHK">Include unscheduled rooms</label>
+	<div class="vert-sep">
+        <input type="checkbox" class="checkbox adjust" id="showUnschedRmsCHK" name="showUnschedRmsCHK" value="1"
+            <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
+        <label class="checkbox inline" for="showUnschedRmsCHK">Include unscheduled rooms</label>
 	</div>
 	<div class="padded text-info">For any session where you are rescheduling, please read the Notes for Programming Committee.</div>
 	</form>
@@ -77,7 +78,7 @@ if ($topsectiononly) {
     exit();
 }
 ?>
-<form name="rmschdform" method="POST" action="MaintainRoomSched.php">
+<form class="zambia-form" name="rmschdform" method="POST" action="MaintainRoomSched.php">
 <input type="hidden" name="showUnschedRmsCHK" value="1" <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
 <?php
 if ($conflict==true) {
@@ -214,7 +215,7 @@ for ($i = 1; $i <= $numrows; $i++) {
 }
 echo "   </table>\n";
 echo "<h4 class=\"label\">Add To Room Schedule</H4>\n";
-echo "<table class=\"table table-condensed compressed\">\n";
+echo "<table id=\"add-to-room-schedule-table\" class=\"table table-condensed compressed\">\n";
 $query = <<<EOD
 SELECT
         S.sessionid, T.trackname, S.title
@@ -302,7 +303,7 @@ for ($i = 1; $i <= newroomslots; $i++) {
     echo "</select>\n";
     echo "          </td>";
     // ****Session****
-    echo "      <td><Select class=\"span8\" name=\"sess$i\"><option value=\"unset\" ";
+    echo "      <td class=\"room-select-td\"><Select class=\"span8\" name=\"sess$i\"><option value=\"unset\" ";
 	if ((!isset($_POST["sess$i"])) or $_POST["sess$i"]=="unset")
 	    echo "selected";
     echo ">Select Session</option>\n";

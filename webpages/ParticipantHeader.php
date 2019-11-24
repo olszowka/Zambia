@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
     function participant_header($title) {
     require_once ("javascript_functions.php");
     global $badgeid, $header_used, $message;
@@ -35,8 +35,9 @@
     var alwaysShowLargeHeader = false;
 </script>
 <?php
-load_jquery();
-load_javascript($title);
+/* "external" means 3rd party library */
+load_external_javascript();
+load_internal_javascript($title);
 ?>
     <div class="container-fluid">
     <!-- Header -->

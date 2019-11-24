@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Peter Olszowka on 2015-10-16;
-	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+	Copyright (c) 2011-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -13,7 +13,7 @@
 			<xsl:text> - </xsl:text>
 			<xsl:value-of select="doc/query[@queryName='sessionInfo']/row/@title" />
 		</h2>
-		<form id="selsesform" name="selsesform" class="form-inline" method="post" action="StaffAssignParticipants.php">
+		<form id="assign-participants-form" class="form-inline grid-form zambia-form" method="post" action="StaffAssignParticipants.php">
 			<xsl:if test="doc/query[@queryName='sessionInfo']/row/@progguiddesc">
 				<div class="row-fluid stAsPa-sesInfRow">
 					<div class="span12">
@@ -77,21 +77,16 @@
 				<label for="partDropdown">Assign participant not indicated as interested or invited.</label>
 			</div>
 			<div class="row-container">
-				<div class="row-fluid">
-					<div class="span3">
-						<select id="partDropdown" name="asgnpart">
-							<option value="" selected="selected">Assign Participant</option>
-							<xsl:apply-templates select="doc/query[@queryName='otherParticipants']/row" >
-                                <xsl:sort select="@sortableNameLc" />
-                            </xsl:apply-templates>
-						</select>
-					</div>
-					<div class="span1">
-						<button type="submit" name="update" class="btn btn-primary">Add</button>
-					</div>
-					<div class="span2">
-						<button type="button" id="BioBtn" class="btn btn-info" data-loading-text="Fetching Bio...">Show Bio</button>
-					</div>
+				<div id="assign-participant-row" class="row-fluid">
+					<span id="popover-target"></span>
+					<select id="partDropdown" name="asgnpart">
+						<option value="" selected="selected">Assign Participant</option>
+						<xsl:apply-templates select="doc/query[@queryName='otherParticipants']/row" >
+							<xsl:sort select="@sortableNameLc" />
+						</xsl:apply-templates>
+					</select>
+					<button type="submit" name="update" class="btn btn-primary">Add</button>
+					<button type="button" id="BioBtn" class="btn btn-info" data-loading-text="Fetching Bio...">Show Bio</button>
 				</div>
 			</div>
 		</form>

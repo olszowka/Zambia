@@ -1,3 +1,7 @@
+/**
+ * Created by Peter Olszowka on 2015-08-30;
+ * Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+ */
 html.fullPage, body.fullPage {
 	width:100%;
 	height:100%;
@@ -135,7 +139,7 @@ div.sessionBlockTitle {
 	background-repeat: no-repeat;
 	width: 15px;
 	height: 15px;
-	background-image: url(images/ui-icons_808080_256x240.png);
+	background-image: url(../external/jqueryui1.8.16/images/ui-icons_808080_256x240.png);
 	}
 
 .schedulerGridContainer {
@@ -361,7 +365,7 @@ span.newformnotetight {
 
 .onepage-titlebar {
 	border: 1px solid #106a22;
-	background: #ece8da url(../jquery/images/ui-bg_gloss-wave_100_ece8da_500x100.png) 50% 50% repeat-x;
+	background: #ece8da url(../external/jqueryui1.8.16/images/ui-bg_gloss-wave_100_ece8da_500x100.png) 50% 50% repeat-x;
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px; 
 	border-bottom-left-radius: 6px; 
