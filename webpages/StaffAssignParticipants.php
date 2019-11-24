@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Assign Participants";
 require_once('StaffCommonCode.php');
@@ -29,9 +29,12 @@ SELECT
         T.trackname, S.sessionid, S.title;
 EOD;
 $Sresult = mysqli_query_exit_on_error($query);
-echo "<form id=\"selsesformtop\" name=\"selsesform\" class=\"form-inline\" method=\"get\" action=\"StaffAssignParticipants.php\">\n";
-echo "<div><label for=\"selsess\">Select Session:</label>\n";
-echo "<select id=\"sessionDropdown\" class=\"span6\" name=\"selsess\">\n";
+?>
+<form id='selsesform' name='selsesform' class='form-inline zambia-form page-top-spacer' method='get' action='StaffAssignParticipants.php'>
+    <div>
+        <label for='sessionDropdown'>Select Session:</label>
+        <select id='sessionDropdown' name='selsess'>
+<?php
 echo "     <option value=0" . (($selsessionid == 0) ? "selected" : "") . ">Select Session</option>\n";
 while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
     echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "");
@@ -39,8 +42,10 @@ while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQL
     echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
 }
 mysqli_free_result($Sresult);
-echo "</select>\n";
-echo "<button id=\"sessionBtn\" type=\"submit\" name=\"submit\" class=\"btn btn-primary\">Select Session</button>\n";
+?>
+        </select>
+        <button id='sessionBtn' type='submit' name='submit' class='btn btn-primary'>Select Session</button>
+<?php
 if (isset($_SESSION['return_to_page'])) {
     echo "<a href=\"" . $_SESSION['return_to_page'] . "\">Return to report</a>";
 }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Peter Olszowka on 2016-05-11;
-	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
 	<xsl:variable name="selsessionid" select="/doc/parameters/@selsessionid" />
 	<xsl:template match="/">
-		<form id="selsesformtop" name="selsesform" class="form-inline" method="get" action="SessionHistory.php">
+		<form id="session-history-form" name="selsesform" class="form-inline zambia-form page-top-spacer" method="get" action="SessionHistory.php">
 			<div>
-				<label for="selsess">Select Session:</label>
+				<label for="sessionDropdown">Select Session:</label>
 				<xsl:text> </xsl:text>
 				<select id="sessionDropdown" class="span6" name="selsess">
 					<option value="0">
@@ -23,7 +23,6 @@
 						<xsl:sort select="@sessionid" data-type="number" />
 					</xsl:apply-templates>
 				</select>
-				<xsl:text> </xsl:text>
 				<button id="sessionBtn" type="submit" name="submit" class="btn btn-primary">
 					<xsl:if test="$selsessionid = '0'">
 						<xsl:attribute name="disabled">disabled</xsl:attribute>

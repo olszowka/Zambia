@@ -1,5 +1,8 @@
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-// Colors and other variables
+/**
+ * Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+ */
+
+/* Colors and other variables */
 @blue: #00c;
 @green: #0c0;
 @light_blue: @blue + #666;
@@ -14,46 +17,35 @@
 @participantColor: @light_blue;
 @problem_background: #fbc8bb;
 
-////////////
-// LAYOUT //
-////////////
+/**
+ * LAYOUT
+ */
 
-// header
+/*
+ * Page header stuff
+ */
 header {
     img, h1 {
         float: left;
         padding-left: 1em;
     }
-}
 
-////////////
-// STYLES //
-////////////
-
-body {
-    background-image: url('../images/light_honeycomb.png');
-    background-repeat: repeat;
-}
-
-header {
     label {
         color: @color;
         display: block;
         text-align: right;
         font-size: 1.1em;
     }
+
     .imgButton {
         cursor: pointer;
     }
 }
 
-a {
-    color: #04C;
-}
-#loginBox,
-#welcome {
+#loginBox, #welcome {
     float: right;
     margin: 1em 1em 0 0;
+
     p {
         color: @contrast;
         text-align: right;
@@ -71,10 +63,74 @@ a {
     padding-left: 0.5em;
 }
 
+.navbar {
+    margin-bottom: 0.2em;
+}
+
+.staff {
+    background-color: #a7d2a5;
+    background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(240,240,240,1) 24%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
+    color: black;
+}
+
+.participant {
+    background-color: #dedcff;
+    background-image: linear-gradient(0deg, rgba(232,232,232,1) 0%, rgba(232,232,232,1) 24%, rgba(195,193,219,1) 57%, rgba(146,141,196,1) 77%, rgba(16,0,163,1) 100%);
+    color: black;
+}
+
+#login {
+    float: right;
+}
+
+.zambiaLogo {
+    padding: 3px;
+    display: table-cell;
+    float: none;
+}
+
+.zambiaImage {
+    height: 12rem;
+}
+
+.pageHeader {
+    padding: 0;
+    width: 100%;
+    display: table;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    .pageHeaderText {
+        width: 88%;
+        margin-left: 0;
+        display: table-cell;
+        vertical-align: middle;
+        float: none;
+        padding-left: 1.5rem
+    }
+}
+
+form.navbar-search {
+    margin-top: 9px !important;
+}
+
+/* <end> Page header stuff */
+
+/**
+ * STYLES
+ */
+
+body {
+    background-image: url('../images/light_honeycomb.png');
+    background-repeat: repeat;
+}
+
+a {
+    color: #04C;
+}
+
 #buttonBox {
     margin: 0.4em;
-    xposition: relative;
-    xtop: -3em;
 }
 
 .borderBox {
@@ -89,51 +145,36 @@ input[type="password"] {
     height: 28px;
 }
 
-.navbar {
-    margin-bottom: 0.2em;
-}
-
-.staff {
-    background-color: #a7d2a5;
-    background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(240,240,240,1) 24%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
-    color: black;
-}
-
 #staffView {
     color: @staffColor;
-}
-
-#staffView:hover {
-    color: (@staffColor + #444);
-}
-
-.participant {
-    background-color: #dedcff;
-    background-image: linear-gradient(0deg, rgba(232,232,232,1) 0%, rgba(232,232,232,1) 24%, rgba(195,193,219,1) 57%, rgba(146,141,196,1) 77%, rgba(16,0,163,1) 100%);
-    color: black;
+    
+    &:hover {
+        color: (@staffColor + #444);
+    }
 }
 
 #ParticipantView {
     color: @participantColor;
-}
 
-#ParticipantView:hover {
-    color: (@participantColor + #444);
+    &:hover {
+        color: (@participantColor + #444);
+    }
 }
 
 @adjustment: 5px;
+
 .checkbox.inline {
-    padding-top: 0px;
+    padding-top: 0;
     margin-bottom: @adjustment;
 }
 .checkbox.inline.long {
-    padding-top: 0px;
+    padding-top: 0;
     margin-bottom: @adjustment;
     width: 14em;
 }
 
 .checkbox.adjust {
-    padding-top: 0px;
+    padding-top: 0;
     margin-bottom: @adjustment + 3;
 }
 
@@ -146,7 +187,7 @@ input[type="password"] {
 }
 
 #searchPartsINPUT {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .nowidth {
@@ -159,17 +200,8 @@ input[type="password"] {
     font-size: 0.85em;
 }
 
-#login {
-    float: right;
-}
-
-label {
-    xxtext-align: right;
-    xxmargin-bottom: 0;
-}
-
 .compact {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .congo_table {
@@ -260,6 +292,7 @@ td.report.highlight1 {
     font-weight: bold;
     background-color: #e17575;
 }
+
 td.za-report-lastRowCell {
     border-bottom: 2px solid black;
 }
@@ -273,32 +306,6 @@ ul#boxes li {
     text-align: center;
 }
 
-.zambiaLogo {
-    padding: 3px;
-    display: table-cell;
-    float: none;
-}
-
-.zambiaImage {
-    height: 12rem;
-}
-
-.pageHeader {
-    padding: 0;
-    width: 100%;
-    display: table;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.pageHeader div.pageHeaderText {
-    width: 88%;
-    margin-left: 0;
-    display: table-cell;
-    vertical-align: middle;
-    float: none;
-}
-
 .compressed {
     width: auto;
 }
@@ -307,16 +314,12 @@ ul#boxes li {
     width: 71px;
 }
 
-/////////////////
-// RESPONSIVE  //
-/////////////////
+/**
+ * RESPONSIVE
+ */
 @media (max-width: 780px) {
     .wide-only {
         display: none;
-    }
-
-    label {
-        xxtext-align: left;
     }
 }
 
@@ -366,10 +369,6 @@ input.search-query {
     padding: 0 4px 0 8px !important;
 }
 
-form.navbar-search {
-    margin-top: 9px !important;
-}
-
 @media (min-width: 480px) {
     label[for="use_photo"] {
         width: auto !important;
@@ -377,14 +376,58 @@ form.navbar-search {
     }
 }
 
-/* Staff Assign Participants */
-#selsesformtop {
-    margin-top: 1em;
-}
-
-#selsesform .row-fluid > div[class*='span'] {
+.grid-form .row-fluid > div[class*='span'] {
     padding: 0.1em 0.5em
 }
+
+/* Invite Participants */
+#invite-participants-intro {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+label[for='participant-select'] {
+    margin-right:0.5rem;
+
+    & + .choices {
+        width: 25rem;
+    }
+}
+
+label[for='session-select'] {
+    margin-right:0.5rem;
+
+    & + .choices {
+        width: 31rem;
+    }
+}
+/* <end> Invite Participants */
+
+/**
+ * Session History & Staff Assign Participants
+ */
+#session-history-form, #selsesform {
+    label {
+        margin-right: 1.5rem;
+
+        & + .choices {
+            width: 31rem;
+        }
+    }
+    .choices {
+        margin-right: 1.5rem;
+    }
+}
+
+#assign-participant-row {
+    & > .choices {
+        width: 31rem;
+    }
+    
+    button {
+        margin-right:1.5rem;
+    }
+} 
 
 #NPS_TXTA {
     width: 50%;
@@ -393,6 +436,30 @@ form.navbar-search {
 .stAsPa-sesInfRow {
     margin-bottom: 6px;
 }
+/* <end> Session History & Staff Assign Participants */
+
+/**
+ * Maintain Room Schedule
+ */
+#maintain-room-sched-room-form {
+    label[for='selroom'] {
+        margin-right: 1.5rem;
+    }
+
+    #selroom {
+        margin-right: 1.5rem;
+    }
+}
+
+.room-select-td > .choices {
+    width: 31rem;
+}
+
+#add-to-room-schedule-table td {
+    vertical-align:bottom;
+}
+
+/* <end> Maintain Room Schedule */
 
 /* Bootstrap extensions */
 .dropdown-menu > li > .menu-error-entry {
@@ -431,29 +498,6 @@ form.navbar-search {
 
     &.not-attending {
         background-color: @problem_background;
-    }
-}
-
-.not-attending-header-row {
-    background-color: @problem_background;
-    padding: 2px 4px;
-    font-weight: bold;
-}
-
-.za-sessionHistory-moderator {
-    text-decoration: underline;
-    font-style: italic;
-}
-
-.za-sessionHistory-editBanner {
-    background-color: #b5b5b5;
-    border: 1px solid #7b7b7b;
-    border-radius: 3px;
-    padding: 3px 4px;
-    color: white;
-    margin-bottom: 3px;
-    [class*='span'] {
-        min-height: 0;
     }
 }
 
@@ -520,16 +564,89 @@ form.navbar-search {
 table.multcol-list td {
     padding-right: 1em;
 }
+/* <end> Bootstrap extensions */
+
+.not-attending-header-row {
+    background-color: @problem_background;
+    padding: 2px 4px;
+    font-weight: bold;
+}
+
+.za-sessionHistory-moderator {
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.za-sessionHistory-editBanner {
+    background-color: #b5b5b5;
+    border: 1px solid #7b7b7b;
+    border-radius: 3px;
+    padding: 3px 4px;
+    color: white;
+    margin-bottom: 3px;
+    [class*='span'] {
+        min-height: 0;
+    }
+}
 
 .error-container {
     line-height: 2;
+}
+
+.roles-list-container {
+    column-count: 3;
+    max-width: 70rem;
+}
+
+/**
+ * General spacing bits
+ */
+.page-top-spacer {
+    margin-top: 1.5rem;
 }
 
 .vert-sep {
     margin-top: 1rem;
 }
 
-.roles-list-container {
-    column-count: 3;
-    max-width: 70rem;
+/* <end> General spacing bits */
+
+/**
+ * choices widget overrides
+ */
+.zambia-form {
+    &, * {
+        box-sizing: border-box;
+    }
+
+    .choices {
+        display: inline-block;
+        margin-right: 1.25rem;
+        vertical-align: middle;
+        margin-bottom: initial;
+        
+        &:focus-within {
+            outline: 1px dotted #212121;
+            outline: 4px auto -webkit-focus-ring-color;
+        }
+    }
+
+    .choices__inner {
+        min-height:initial;
+        padding: 0.5rem 1.6rem 0.25rem 0.5rem;
+    }
+
+    .choices__list--dropdown {
+        word-break: initial;
+    }
+
+    .choices__list--single {
+        padding: 0.25rem 0 0.25rem 0.25rem;
+
+        & > .choices__item--selectable {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
 }

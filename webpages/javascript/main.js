@@ -1,4 +1,4 @@
-//	Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $(document).ready(function() {
 	//this function is run whenever any page finishes loading if JQuery has been loaded
 	//debugger;
@@ -6,12 +6,6 @@ $(document).ready(function() {
 	switch (thisPage) {
 		case "Administer Participants":
 			initializeAdminParticipants();
-			break;
-		case "Assign Participants":
-			initAssignParticipants();
-			break;
-		case "Maintain Room Schedule":
-			maintainRoomSched.initialize();
 			break;
 		case "My Profile":
 			myProfile.initialize();
@@ -25,11 +19,17 @@ $(document).ready(function() {
 		case "Panel Interests":
 			panelInterests.initialize();
 			break;
-		case "Session History":
-			sessionHistory.initializePage();
-			break;
 		default:
-			window.status="Ready."
+			window.status="Ready.";
+		/**
+		 * These js files initialize themselves and therefore should be included only on the relevant pages.
+		 * See javascript_functions.php
+		 *
+		 * Session History -- SessionHistory.js
+		 * Invite Participants -- InviteParticipants.js
+		 * (Staff) Assign Participants -- StaffAssignParticipants.js
+         * Maintain Room Schedule -- MaintainRoomSched.js
+		 */
 	}
 	if (getValue('zambiaHeader') == 'small' && !alwaysShowLargeHeader) {
 		$('#altHeader').show();
@@ -63,20 +63,23 @@ function supports_html5_storage() {
 }
 
 function setValue(key, val) {
-	if (supports_html5_storage())
+	if (supports_html5_storage()) {
 		localStorage[key] = val;
+	}
 }
 
 function getValue(key) {
-	if (supports_html5_storage())
+	if (supports_html5_storage()) {
 		return localStorage[key];
-	else
+	} else {
 		return null;
+	}
 }
 
 function clearValue(key) {
-	if (supports_html5_storage())
+	if (supports_html5_storage()) {
 		localStorage[key] = null;
+	}
 }
 
 var lib = new Lib;
@@ -86,8 +89,8 @@ function Lib() {
 		var thecheckbox = $(this).find(":checkbox");
 		thecheckbox.prop("checked",!thecheckbox.prop("checked"));
 		thecheckbox.triggerHandler("click");
-		};
+	};
 	this.onePageResize = function onePageResize() {
 		$("#mainContentContainer").css("top", $("#top").outerHeight(true) + $("#staffNav").outerHeight(true) + 1);
-		};
+	};
 }

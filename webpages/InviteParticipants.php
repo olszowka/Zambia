@@ -57,13 +57,16 @@ EOD;
 if (!$Sresult = mysqli_query_exit_on_error($query)) {
     exit(); // Should have exited already
 }
-echo "<p>Use this tool to put sessions marked \"invited guests only\" on a participant's interest list.\n";
-echo "<form class=\"form-inline\" name=\"invform\" method=\"POST\" action=\"InviteParticipants.php\">";
-echo "<div class=\"row-fluid\"><label class=\"control-label\" for=\"selpart\">Select Participant:&nbsp;</label>\n";
-echo "<select name=\"selpart\">\n";
-echo "     <option value=\"\" selected=\"selected\">Select Participant</option>\n";
+?>
+<p id="invite-participants-intro">Use this tool to put sessions marked "invited guests only" on a participant's interest list.</p>
+<form class="form-inline zambia-form" name="invform" method="POST" action="InviteParticipants.php">
+    <div class="row-fluid">
+        <label class="control-label" for="participant-select">Select Participant:&nbsp;</label>
+        <select id="participant-select" name="selpart">
+            <option value="" selected="selected">Select Participant</option>
+<?php
 while (list($lastname, $firstname, $badgename, $badgeid, $pubsname) = mysqli_fetch_array($Presult, MYSQLI_NUM)) {
-    echo "     <option value=\"" . $badgeid . "\">";
+    echo "            <option value=\"" . $badgeid . "\">";
     if ($pubsname != "") {
         echo htmlspecialchars($pubsname);
     } else {
@@ -73,16 +76,24 @@ while (list($lastname, $firstname, $badgename, $badgeid, $pubsname) = mysqli_fet
     echo " (" . htmlspecialchars($badgename) . ") - ";
     echo htmlspecialchars($badgeid) . "</option>\n";
 }
-echo "</select>\n";
-echo "<label class=\"control-label\" for=\"selsess\">Select Session:&nbsp;</label>\n";
-echo "<select name=\"selsess\">\n";
-echo "     <option value=\"0\" selected=\"selected\">Select Session</option>\n";
+?>
+        </select>
+        <label class="control-label" for="session-select">Select Session:&nbsp;</label>
+        <select id="session-select" name="selsess">
+            <option value="0" selected="selected">Select Session</option>
+<?php
 while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
-    echo "     <option value=\"" . $sessionid . "\">" . htmlspecialchars($trackname) . " - ";
+    echo "            <option value=\"" . $sessionid . "\">" . htmlspecialchars($trackname) . " - ";
     echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
 }
-echo "</select></div>\n";
-echo "<p>&nbsp;";
-echo "<div class=\"SubmitButton\"><button class=\"btn btn-primary\" type=\"submit\" name=\"Invite\" >Invite</button></div>";
-echo "</form>";
-staff_footer(); ?>
+?>
+        </select>
+    </div>
+    <p>&nbsp;</p>
+    <div class="SubmitButton">
+        <button class="btn btn-primary" type="submit" name="Invite" >Invite</button>
+    </div>
+</form>
+<?php
+staff_footer();
+?>
