@@ -35,24 +35,17 @@ if (!populateCustomTextArray()) {
 // 'text' contains the text that should appear in the tab.
 // 'usable' indicates whether the tab is usable.
 //
-// if the tab is usable, its background and foreground color will
-// be determined by the 'usabletab' class.  when the mouse is over the tab
-// the background and foreground colors of the tab will be determined
-// by the 'mousedovertab' class.
-//
-// if the tab is not usable, the tab will use class 'unusabletab'
-
 // used by old (non-bootstrap menuing system)currently just brainstorm pages
 function maketab($text, $usable, $url) {
     if ($usable) {
-        echo '<span class="usabletab" onmouseover="mouseovertab(this)" onmouseout="mouseouttab(this)">';
+        echo '<span class="menutab enabled">';
         echo '<img class="tabborder" SRC="images/leftCorner.gif" alt="&nbsp;">';
         echo "<a href='$url'>";// XXX link needs to be quoted
         echo $text;                     // XXX needs to be quoted
         echo '<img class="tabborder" SRC="images/rightCorner.gif" alt="&nbsp;">';
         echo '</span>';
     } else {
-        echo '<span class="unusabletab">';
+        echo '<span class="menutab disabled">';
         echo '<img class="tabborder" src="images/leftCorner.gif" alt="&nbsp;">';
         echo $text;                     // XXX needs to be quoted
         echo '<img class="tabborder" src="images/rightCorner.gif" alt="&nbsp;">';

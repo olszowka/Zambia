@@ -32,17 +32,3 @@ td.form1 {
 .tabblocks {
     padding-left: 10px;
 }
-
-/* Just overridding the small number of settings needed
-to customize tabs for Participants */
-.usabletab {
-    background: #b08b59;
-}
-
-span.mousedovertab a:visited {
-    color: #b08b59;
-}
-
-span.mousedovertab a:link {
-    color: #b08b59;
-}

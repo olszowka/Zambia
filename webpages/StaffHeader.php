@@ -19,7 +19,6 @@
 		<link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
         <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
-        <!--<link rel="stylesheet" href="external/choices9.0.0/base.min.css" type="text/css" >-->
         <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
     <?php if ($is_report) {
         echo "<link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
