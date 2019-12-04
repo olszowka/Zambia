@@ -15,16 +15,9 @@
     <meta name="author" content="PeterO, DDA, others">
 
     <!-- Le styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+      <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap.css" type="text/css" >
+      <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
     <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
-<!--   <link rel="stylesheet" href="css/ParticipantSection.css" type="text/css" /> -->
-
-    <!-- Scripts -->
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico">

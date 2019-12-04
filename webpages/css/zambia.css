@@ -512,3 +512,91 @@ table.multcol-list td {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* Start of settings needed make the tabs work */
+.menutab {
+  background-image: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  height: 18px;
+}
+.menutab.enabled {
+  background-color: #b08b59;
+  color: white;
+}
+.menutab.enabled:hover {
+  background: white;
+}
+.menutab.enabled:hover a {
+  color: #b08b59;
+  text-decoration: none;
+}
+.menutab.enabled a {
+  color: white;
+  text-decoration: none;
+}
+.menutab.disabled {
+  background: #606060;
+  color: white;
+}
+/* definitions for the table at the top of the pages */
+table.tabhead {
+  margin: 0;
+  width: 100%;
+  border: 0;
+  padding: 0;
+}
+tr.tabrow {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+td.tabblocks {
+  padding-top: 3px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  background: #808080;
+  color: white;
+}
+td.head {
+  background: #808080;
+}
+/*
+ * these are used to override the browser's default decoration on
+ * links
+ */
+/*
+span.usabletab span.unusabletab span.mousedovertab {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    vertical-align: bottom;
+}
+
+span.usabletab a:link {
+    color: white;
+    text-decoration: none;
+}
+
+span.usabletab a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+span.mousedovertab a:link {
+    color: #002985;
+    text-decoration: none;
+}
+
+span.mousedovertab a:visited {
+    color: #002985;
+    text-decoration: none;
+}
+*/
+/*
+ * attributes of the images used to draw the borders of the tabs
+ */
+img.tabborder {
+  vertical-align: top;
+  height: 14px;
+  width: 10px;
+}
+/* End of settings needed make the tabs work */
