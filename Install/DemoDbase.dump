@@ -1184,6 +1184,7 @@ CREATE TABLE `Rooms` (
   `closetime2` time default NULL,
   `opentime3` time default NULL,
   `closetime3` time default NULL,
+  `is_scheduled` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY  (`roomid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1193,7 +1194,48 @@ CREATE TABLE `Rooms` (
 
 LOCK TABLES `Rooms` WRITE;
 /*!40000 ALTER TABLE `Rooms` DISABLE KEYS */;
-INSERT INTO `Rooms` VALUES (2,'Alcott',NULL,'8 ft 5in','23 x 34','654','Open Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'Back Bay',NULL,'8 ft 7in','15 x 32','484','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,'Beacon Hill',NULL,'8 ft 7in','23 x 43','850','Open Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'Board Room',NULL,'8 ft 3in','20 x 23','396','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'Brandeis',NULL,'8 ft 6in','13 x 35','446','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,'Cabot',NULL,'8 ft 6in','19 x 29','515','Scheduled Gaming / LARP Control','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,'Cambridge',NULL,'8 ft 6in','23 x 44','892','LARP','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,'Charles River',NULL,'8 ft 6in','19 x 29','515','Game Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,'Constitution',NULL,'8 ft 5in','15 x 33','446','Main Program (free form seeting)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,'Copley',NULL,'8 ft 6in','12 x 16','232','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,'Emerson',NULL,'8 ft 3in','19 x 26','398','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,'Franklin',NULL,'8 ft 6in','18 x 48','727','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(14,'Gloucester',NULL,'8 ft 6in','19 x 33','471','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(15,'Holmes',NULL,'8 ft 6in','15 x 25','334','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(16,'Lexington',NULL,'7 ft 3in','15 x 30','461','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(17,'Longfellow',NULL,'8 ft 6in','14 x 22','284','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(18,'St. James',NULL,'8 ft 6in','15 x 48','767','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(19,'Garden Suite',NULL,'0','0','0','Con Suite','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,'Statler',NULL,'8 ft 5in','13 x 21','292','Sign Shop','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,'Stuart',NULL,'8 ft 7in','13 x 40','731','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(22,'Thoreau',NULL,'8 ft 7in','16 x 33','557','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(23,'Tremont',NULL,'8 ft 6in','18 x 23','392','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(24,'White Hill',NULL,'8 ft 6in','15 x 68','1,203','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(25,'Whittier',NULL,'8 ft 6in','22 x 65','1,215','Main Program (w/ A/V)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(26,'Winthrop',NULL,'8 ft 4in','23 x 26','498','Main Program (w/ A/V)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,'Imperial Ballroom',NULL,'30 ft 4in','116 x 73','8,516','Main Tent','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(28,'Plaza Ballroom',NULL,'21 ft 5in','64 x 73','4,699','Dealers','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(29,'Georgian',NULL,'13 ft 10in','82 x 49','4,021','Art Show','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(30,'Arlington',NULL,'10 ft 7in','42 x 33','1,402','Art Show','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(31,'Berkeley',NULL,'10 ft 7in','22 x 33','748','Anime','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(32,'Clarendon',NULL,'10 ft 7in','22 x 33','732','Video','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(33,'Dartmouth/Exeter',NULL,'11 ft 11in','44 x 15','639','Ops/Security','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(34,'Fairfield',NULL,'12 ft 0in','23 x 15','326','Gopher Hole','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(35,'Hancock',NULL,'11 ft 9in','41 x 14','588','Main Program (w/ A/V)','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(36,'Stanbro',NULL,'8 ft 11in','56 x 50','2,904','Small Tent / Masquerade green room','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(37,'Terrace',NULL,'10 ft 5 in','65 x 82','5,330','Films','basement',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(38,'TV 55',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(39,'TV 56',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `Rooms`
+        (`roomid`, `roomname`, `display_order`, `height`, `dimensions`, `area`, `function`, `floor`, `notes`, `opentime1`,
+        `closetime1`, `opentime2`, `closetime2`, `opentime3`, `closetime3`, `is_scheduled`)
+    VALUES
+           (2,'Alcott',NULL,'8 ft 5in','23 x 34','654','Open Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (3,'Back Bay',NULL,'8 ft 7in','15 x 32','484','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (4,'Beacon Hill',NULL,'8 ft 7in','23 x 43','850','Open Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (5,'Board Room',NULL,'8 ft 3in','20 x 23','396','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (6,'Brandeis',NULL,'8 ft 6in','13 x 35','446','Scheduled Gaming','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (7,'Cabot',NULL,'8 ft 6in','19 x 29','515','Scheduled Gaming / LARP Control','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (8,'Cambridge',NULL,'8 ft 6in','23 x 44','892','LARP','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (9,'Charles River',NULL,'8 ft 6in','19 x 29','515','Game Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (10,'Constitution',NULL,'8 ft 5in','15 x 33','446','Main Program (free form seeting)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (11,'Copley',NULL,'8 ft 6in','12 x 16','232','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (12,'Emerson',NULL,'8 ft 3in','19 x 26','398','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (13,'Franklin',NULL,'8 ft 6in','18 x 48','727','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (14,'Gloucester',NULL,'8 ft 6in','19 x 33','471','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (15,'Holmes',NULL,'8 ft 6in','15 x 25','334','Fast Track','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (16,'Lexington',NULL,'7 ft 3in','15 x 30','461','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (17,'Longfellow',NULL,'8 ft 6in','14 x 22','284','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (18,'St. James',NULL,'8 ft 6in','15 x 48','767','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (19,'Garden Suite',NULL,'0','0','0','Con Suite','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (20,'Statler',NULL,'8 ft 5in','13 x 21','292','Sign Shop','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (21,'Stuart',NULL,'8 ft 7in','13 x 40','731','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (22,'Thoreau',NULL,'8 ft 7in','16 x 33','557','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (23,'Tremont',NULL,'8 ft 6in','18 x 23','392','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (24,'White Hill',NULL,'8 ft 6in','15 x 68','1,203','Main Program','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (25,'Whittier',NULL,'8 ft 6in','22 x 65','1,215','Main Program (w/ A/V)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (26,'Winthrop',NULL,'8 ft 4in','23 x 26','498','Main Program (w/ A/V)','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (27,'Imperial Ballroom',NULL,'30 ft 4in','116 x 73','8,516','Main Tent','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (28,'Plaza Ballroom',NULL,'21 ft 5in','64 x 73','4,699','Dealers','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (29,'Georgian',NULL,'13 ft 10in','82 x 49','4,021','Art Show','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (30,'Arlington',NULL,'10 ft 7in','42 x 33','1,402','Art Show','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (31,'Berkeley',NULL,'10 ft 7in','22 x 33','748','Anime','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (32,'Clarendon',NULL,'10 ft 7in','22 x 33','732','Video','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (33,'Dartmouth/Exeter',NULL,'11 ft 11in','44 x 15','639','Ops/Security','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (34,'Fairfield',NULL,'12 ft 0in','23 x 15','326','Gopher Hole','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0),
+           (35,'Hancock',NULL,'11 ft 9in','41 x 14','588','Main Program (w/ A/V)','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (36,'Stanbro',NULL,'8 ft 11in','56 x 50','2,904','Small Tent / Masquerade green room','mezzanine',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (37,'Terrace',NULL,'10 ft 5 in','65 x 82','5,330','Films','basement',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (38,'TV 55',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
+           (39,'TV 56',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1);
 /*!40000 ALTER TABLE `Rooms` ENABLE KEYS */;
 UNLOCK TABLES;
 
