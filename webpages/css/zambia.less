@@ -436,6 +436,10 @@ label[for='session-select'] {
 .stAsPa-sesInfRow {
     margin-bottom: 6px;
 }
+
+select#tags {
+    height: 6.8rem;
+}
 /* <end> Session History & Staff Assign Participants */
 
 /**
@@ -458,8 +462,15 @@ label[for='session-select'] {
 #add-to-room-schedule-table td {
     vertical-align:bottom;
 }
-
 /* <end> Maintain Room Schedule */
+
+/**
+ * Edit / Create Session
+ */
+select#tagdest {
+    height: 10rem;
+}
+/* <end> Edit / Create Session */
 
 /* Bootstrap extensions */
 .dropdown-menu > li > .menu-error-entry {
@@ -563,6 +574,27 @@ label[for='session-select'] {
 
 table.multcol-list td {
     padding-right: 1em;
+}
+
+.control-group-horizontal {
+    select {
+        margin-right: 1.5rem;
+    }
+
+    .controls {
+        label {
+            display:inline-block;
+            margin-right: 1.5rem;
+    
+            span {
+                vertical-align:middle;
+            }
+        }
+
+        input[type='radio'] {
+            margin-top:-2px;
+        }
+    }
 }
 /* <end> Bootstrap extensions */
 

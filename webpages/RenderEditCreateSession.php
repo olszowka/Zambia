@@ -81,14 +81,14 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
           </DIV>
 <?php
       if (BILINGUAL === TRUE) {
-              echo "            <DIV class=\"span12\">\n";
-              echo "                 <LABEL for=\"secondtitle\">".SECOND_TITLE_CAPTION.": </LABEL>";
+              echo "            <div class=\"span12\">\n";
+              echo "                 <label for=\"secondtitle\">".SECOND_TITLE_CAPTION.": </label>";
               echo "<INPUT type=text size=\"50\" class=\"span4\" name=\"secondtitle\" value=\"".htmlspecialchars($session["secondtitle"],ENT_COMPAT)."\">\n";
-              echo "                 <LABEL for=\"languagestatusid\">Session Language: </LABEL>";
-              echo "<SELECT class=\"span2\" name=\"languagestatusid\">";
+              echo "                 <label for=\"languagestatusid\">Session Language: </label>";
+              echo "<select class=\"span2\" name=\"languagestatusid\">";
               populate_select_from_table("LanguageStatuses", $session["languagestatusid"], "SELECT", FALSE);
-              echo "</SELECT>\n";
-              echo "            </DIV>\n";
+              echo "</select>\n";
+              echo "            </div>\n";
               }
           else {
               echo "            <INPUT type=\"hidden\" name=\"secondtitle\" value=\"";
@@ -101,26 +101,26 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
           <INPUT type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT)."\">";?>
           <DIV class="row-fluid clearfix">
             <div class="control-group">
-              <label class="control-label"  for="atten">Est. Atten.:</LABEL>
-              <INPUT type="number" class="span2" size="3" name="atten" value="<?php echo htmlspecialchars($session["atten"],ENT_COMPAT)."\">"; ?>
-              <label class="control-label"  for="duration">Duration:</LABEL>
-              <INPUT type="text" class="span1" size="5" name="duration" value="<?php echo htmlspecialchars($session["duration"],ENT_COMPAT)."\">"; ?>
-              <label class="control-label"  for="roomset">Room Set: </LABEL>
-              <SELECT name="roomset" class="span2"><?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?></SELECT>
-              <label class="control-label"  for="status">Status:</LABEL>
-              <SELECT name="status" class="span2"><?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?></SELECT>
+              <label class="control-label"  for="atten">Est. Atten.:</label>
+              <input type="number" class="span2" size="3" name="atten" value="<?php echo htmlspecialchars($session["atten"],ENT_COMPAT)."\">"; ?>
+              <label class="control-label"  for="duration">Duration:</label>
+              <input type="text" class="span1" size="5" name="duration" value="<?php echo htmlspecialchars($session["duration"],ENT_COMPAT)."\">"; ?>
+              <label class="control-label"  for="roomset">Room Set: </label>
+              <select name="roomset" class="span2"><?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?></select>
+              <label class="control-label"  for="status">Status:</label>
+              <select name="status" class="span2"><?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?></select>
             </div>
-          </DIV>
-          <DIV class="row-fluid">
+          </div>
+          <div class="row-fluid">
             <div class="span6">
-              <LABEL class="control-label dense" for="progguiddesc">Description:</LABEL>
-              <TEXTAREA class="span12 textlabelarea" cols=70 name="progguiddesc"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></TEXTAREA>
+              <label class="control-label dense" for="progguiddesc">Description:</label>
+              <textarea class="span12 textlabelarea" cols=70 name="progguiddesc"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
 <?php
         if (BILINGUAL === TRUE) {
-                echo "<LABEL class=\"control-label dense\" for=\"pocketprogtext\">";
+                echo "<label class=\"control-label dense\" for=\"pocketprogtext\">";
                 echo SECOND_DESCRIPTION_CAPTION.": </LABEL>\n";
-                echo "<TEXTAREA class=\"textlabelarea\" cols=70 name=\"pocketprogtext\">";
-                echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES)."</TEXTAREA>\n";
+                echo "<textarea class=\"textlabelarea\" cols=70 name=\"pocketprogtext\">";
+                echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES)."</textarea>\n";
                 }
             else {
                 echo "                <!-- The pocketprogtext field is no longer used on the form, but the code expects it.-->\n";
@@ -130,66 +130,66 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 ?>
             </div>
             <div class="span6">
-              <LABEL class="dense" for="persppartinfo">Prospective Participant Info:</LABEL>
-              <TEXTAREA class="span12 textlabelarea" cols=70 name="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></TEXTAREA>
+              <label class="dense" for="persppartinfo">Prospective Participant Info:</label>
+              <textarea class="span12 textlabelarea" cols=70 name="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></textarea>
             </div>
           </div>
-        </DIV>
-        <DIV class="row-fluid">
-          <DIV class="span5"> <!-- Features Box; -->
-            <LABEL>Required Room Features:</LABEL>
-            <DIV class="borderBox">
+        </div>
+        <div class="row-fluid">
+          <div class="span5"> <!-- Features Box; -->
+            <label>Required Room Features:</label>
+            <div class="borderBox">
               <div class="clearfix">
-                <LABEL for="featsrc" class="pull-left">Possible Features:</LABEL>
-                <LABEL for="featdest[]" class="pull-right">Selected Features:</LABEL>
+                <label for="featsrc" class="pull-left">Possible Features:</label>
+                <label for="featdest[]" class="pull-right">Selected Features:</label>
               </div>
               <div class="clearfix">
-                <SELECT class="span5" style="float: left;" id="featsrc" name="featsrc" size=6 multiple>
+                <select class="span5" style="float: left;" id="featsrc" name="featsrc" size=6 multiple>
                       <?php populate_multisource_from_table("Features", $session["featdest"]); ?>
-                </SELECT>
+                </select>
                 <div class="span2">
-                  <BUTTON class="btn" onclick="fadditems(document.sessform.featsrc,document.sessform.featdest)"
-                      name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
-                  <BUTTON class="btn" onclick="fdropitems(document.sessform.featsrc,document.sessform.featdest)"
-                      name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
+                  <button class="btn" onclick="fadditems(document.sessform.featsrc,document.sessform.featdest)"
+                      name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</button>
+                  <button class="btn" onclick="fdropitems(document.sessform.featsrc,document.sessform.featdest)"
+                      name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</button>
                 </div>
-                <SELECT class="span5" style="float: left;" id="featdest" name="featdest[]" size=6 multiple >
+                <select class="span5" style="float: left;" id="featdest" name="featdest[]" size=6 multiple >
                   <?php populate_multidest_from_table("Features", $session["featdest"]); ?>
-                </SELECT>
+                </select>
               </div>
             </div>
-          </DIV> <!-- Features -->
-          <DIV class="span5" style="float: left;"> <!-- Services Box; -->
-            <LABEL>Required Room Services:</LABEL>
-            <DIV class="borderBox">
+          </div> <!-- Features -->
+          <div class="span5" style="float: left;"> <!-- Services Box; -->
+            <label>Required Room Services:</label>
+            <div class="borderBox">
               <div class="clearfix">
-                <LABEL for="servsrc" class="pull-left">Possible Services:</LABEL>
-                <LABEL for="servdest[]" class="pull-right">Selected Services:</LABEL>
+                <label for="servsrc" class="pull-left">Possible Services:</label>
+                <label for="servdest[]" class="pull-right">Selected Services:</label>
               </div>
               <div class="clearfix">
-                <SELECT class="span5" style="float: left;" id="servsrc" name="servsrc" size=6 multiple>
+                <select class="span5" style="float: left;" id="servsrc" name="servsrc" size=6 multiple>
                   <?php populate_multisource_from_table("Services", $session["servdest"]); ?>
-                </SELECT>
+                </select>
                 <div class="span2">
-                  <BUTTON class="btn" onclick="fadditems(document.sessform.servsrc,document.sessform.servdest)"
-                      name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</BUTTON>
-                  <BUTTON  class="btn"onclick="fdropitems(document.sessform.servsrc,document.sessform.servdest)"
-                      name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</BUTTON>
+                  <button class="btn" onclick="fadditems(document.sessform.servsrc,document.sessform.servdest)"
+                      name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</button>
+                  <button  class="btn"onclick="fdropitems(document.sessform.servsrc,document.sessform.servdest)"
+                      name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</button>
                 </div>
-                <SELECT class="span5" style="float: left;" id="servdest" name="servdest[]" size=6 multiple >
+                <select class="span5" style="float: left;" id="servdest" name="servdest[]" size=6 multiple >
                     <?php populate_multidest_from_table("Services", $session["servdest"]); ?>
-                </SELECT>
+                </select>
               </div>
             </div>
-          </DIV> <!-- Services -->
-          <DIV class="span2" style="float: left;"> 
-            <LABEL class="control-label" for="pubchardest">Characteristics:
-              <SELECT class="span12" id="pubchardest" name="pubchardest[]" multiple><?php populate_multiselect_from_table("PubCharacteristics",
-                  $session["pubchardest"]); ?>
-              </SELECT>
-            </LABEL>
-          </DIV>
-        </DIV>
+          </div> <!-- Services -->
+          <div class="span2" style="float: left;"> 
+            <label class="control-label" for="tagdest">Tags:
+              <select class="span12" id="tagdest" name="tagdest[]" multiple><?php populate_multiselect_from_table("tags",
+                  $session["tagdest"]); ?>
+              </select>
+            </label>
+          </div>
+        </div>
         <HR class="nospace">
         <div class="row-fluid form-vertical">
           <div class="span4">

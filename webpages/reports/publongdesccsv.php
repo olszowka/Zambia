@@ -18,7 +18,7 @@ SELECT
         DV.divisionname,
         PS.pubstatusname,
         S.pubsno,
-        group_concat(PC.pubcharname SEPARATOR ' ') pubcharacteristics,
+        group_concat(TG.tagname SEPARATOR ' ') tags,
         K.kidscatname,
         S.title,
         S.progguiddesc AS 'Description'
@@ -30,10 +30,10 @@ SELECT
              JOIN Divisions DV USING(divisionid)
              JOIN PubStatuses PS USING(pubstatusid)
              JOIN KidsCategories K USING(kidscatid)
-        LEFT JOIN SessionHasPubChar SHPC USING(sessionid)
-        LEFT JOIN PubCharacteristics PC USING(pubcharid)
+        LEFT JOIN SessionHasTag SHT USING(sessionid)
+        LEFT JOIN Tags TG USING(tagid)
     WHERE PS.pubstatusname = 'Public'
     GROUP BY scheduleid
 EOD;
 $report['output_filename'] = 'longdesc.csv';
-$report['column_headings'] = 'sessionid,track,type,division,"publication status",pubsno,"publication characteristics","kids category",title,description';
+$report['column_headings'] = 'sessionid,track,type,division,"publication status",pubsno,tags,"kids category",title,description';

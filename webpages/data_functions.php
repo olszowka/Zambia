@@ -88,6 +88,32 @@ function getInt($name, $default = false) {
     }
 }
 
+// Function getArrayOfInts("name", default)
+// gets a parameter from $_GET[] or $_POST[] of name
+// and confirms it is an integer.
+// Safe from referencing nonexisting array index
+function getArrayOfInts($name, $default = false) {
+    if (isset($_GET[$name])) {
+        $intArr = $_GET[$name];
+    } elseif (isset($_POST[$name])) {
+        $intArr = $_POST[$name];
+    } else {
+        return $default;
+    }
+    $retVal = array();
+    forEach ($intArr as $int) {
+        if (!empty($t = filter_var($int, FILTER_SANITIZE_NUMBER_INT))) {
+            $retVal[] = $t;
+        }
+    }
+    if (count($retVal) == 0) {
+        return $default;
+    } else {
+        return($retVal);
+    }
+}
+
+
 // Function getString("name")
 // gets a parameter from $_GET[] or $_POST[] of name
 // and strips slashes
@@ -180,7 +206,7 @@ function get_session_from_post() {
     $session["pocketprogtext"] = stripslashes($_POST["pocketprogtext"]);
     $session["progguiddesc"] = stripslashes($_POST["progguiddesc"]);
     $session["persppartinfo"] = stripslashes($_POST["persppartinfo"]);
-    $session["pubchardest"] = getArrayOfStrings("pubchardest");
+    $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
     $session["servdest"] = getArrayOfStrings("servdest");
     $session["duration"] = stripslashes($_POST["duration"]);
@@ -217,7 +243,7 @@ function set_session_defaults() {
     $session["progguiddesc"] = "";
     $session["featdest"] = "";
     $session["servdest"] = "";
-    $session["pubchardest"] = "";
+    $session["tagdest"] = "";
     $session["duration"] = DEFAULT_DURATION; //should be specified corresponding to DURATION_IN_MINUTES preference
     $session["atten"] = "";
     $session["kids"] = 2; // "Kids Welcome"

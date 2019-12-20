@@ -1029,29 +1029,6 @@ LOCK TABLES `PreviousSessions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `PubCharacteristics`
---
-
-DROP TABLE IF EXISTS `PubCharacteristics`;
-CREATE TABLE `PubCharacteristics` (
-  `pubcharid` int(11) NOT NULL auto_increment,
-  `pubcharname` varchar(30) character set utf8 collate utf8_general_ci default NULL,
-  `pubchartag` varchar(10) character set utf8 collate utf8_general_ci default NULL,
-  `display_order` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`pubcharid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `PubCharacteristics`
---
-
-LOCK TABLES `PubCharacteristics` WRITE;
-/*!40000 ALTER TABLE `PubCharacteristics` DISABLE KEYS */;
-INSERT INTO `PubCharacteristics` VALUES (1,'35mm','35mm',1),(2,'16mm','16mm',2),(3,'dubbed','dubbed',3),(4,'anime','anime',4);
-/*!40000 ALTER TABLE `PubCharacteristics` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `PubStatuses`
 --
 
@@ -1373,26 +1350,26 @@ LOCK TABLES `SessionHasFeature` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `SessionHasPubChar`
+-- Table structure for table `SessionHasTag`
 --
 
-DROP TABLE IF EXISTS `SessionHasPubChar`;
-CREATE TABLE `SessionHasPubChar` (
-  `sessionid` int(11) NOT NULL default '0',
-  `pubcharid` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`sessionid`,`pubcharid`),
-  KEY `Fkey2` (`pubcharid`),
-  CONSTRAINT `Fkey1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
-  CONSTRAINT `Fkey2` FOREIGN KEY (`pubcharid`) REFERENCES `PubCharacteristics` (`pubcharid`)
+DROP TABLE IF EXISTS `SessionHasTag`;
+CREATE TABLE `SessionHasTag` (
+    `sessionid` int(11) NOT NULL default '0',
+    `tagid` int(11) NOT NULL default '0',
+    PRIMARY KEY  (`sessionid`,`tagid`),
+    KEY `Fkey2` (`tagid`),
+    CONSTRAINT `Fkey1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+    CONSTRAINT `Fkey2` FOREIGN KEY (`tagid`) REFERENCES `Tags` (`tagid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `SessionHasPubChar`
+-- Dumping data for table `SessionHasTag`
 --
 
-LOCK TABLES `SessionHasPubChar` WRITE;
-/*!40000 ALTER TABLE `SessionHasPubChar` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SessionHasPubChar` ENABLE KEYS */;
+LOCK TABLES `SessionHasTag` WRITE;
+/*!40000 ALTER TABLE `SessionHasTag` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SessionHasTag` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1506,6 +1483,34 @@ VALUES
 	(4,5,1,1,2,1,'','Coffee, Tea and Squee',NULL,'','Brewed Beverages and Fandom go hand in hand - Sample offerings from Dean\'s Beans and CooksShopHere and learn about the latest trends in coffee, tea and more. This panel will include sampling of beverages - Children with responsible adult present only.','We\'ve got representatives from Dean\'s Beans and Cooks Shop Here (a NoHo tea shop) but are interested in other panelists who can provide similar non-alcoholic beverage samples. Please contact Jess Hartley at piconpanels@gmail.com if you think you can provide such.','01:00:00',0,3,0,12,'','',6,'',0,0,'2006-10-04 22:38:14'),
 	(5,11,2,1,2,1,'','Midnight Filk','',NULL,'Open Mic Filk Session ','We\'d like facilitators to keep things moving for this open mic, collaborative session.','01:00:00',0,2,0,9,'','',6,'',0,0,'2006-10-04 22:38:14');
 /*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Tags`
+--
+
+DROP TABLE IF EXISTS `Tags`;
+CREATE TABLE `Tags` (
+    `tagid` int(11) NOT NULL auto_increment,
+    `tagname` varchar(30) character set utf8 collate utf8_general_ci default NULL,
+    `display_order` int(11) NOT NULL default '0',
+    PRIMARY KEY  (`tagid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Tags`
+--
+
+LOCK TABLES `Tags` WRITE;
+/*!40000 ALTER TABLE `Tags` DISABLE KEYS */;
+INSERT INTO `Tags`
+        (tagid, tagname, display_order)
+    VALUES
+        (1, '35mm', 1),
+        (2, '16mm', 2),
+        (3, 'dubbed', 3),
+        (4, 'anime', 4);
+/*!40000 ALTER TABLE `Tags` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

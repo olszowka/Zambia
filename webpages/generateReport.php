@@ -43,7 +43,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
     $reportDescription = htmlspecialchars(str_replace('$CON_NAME', CON_NAME, $report['description']), ENT_NOQUOTES);
     echo "<div class=\"alert alert-info\">$reportDescription</div>\n";
     echo "<p class=\"text-success center\"> Generated: " . date("D M j G:i:s T Y") . "</p>\n";
-    // echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
+    //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
     $xsl = new DomDocument;
     $xsl->loadXML($report['xsl']);
     $xslt = new XsltProcessor();
