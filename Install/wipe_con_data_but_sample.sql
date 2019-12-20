@@ -24,7 +24,7 @@ TRUNCATE TABLE `Schedule`;
 TRUNCATE TABLE SessionHasFeature;
 TRUNCATE TABLE SessionHasService;
 TRUNCATE TABLE SessionEditHistory;
-TRUNCATE TABLE SessionHasPubChar;
+TRUNCATE TABLE SessionHasTag;
 TRUNCATE TABLE Sessions;
 TRUNCATE TABLE Participants;
 SET FOREIGN_KEY_CHECKS = 1;

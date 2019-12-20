@@ -81,7 +81,7 @@ $truncateList = array(
     'SessionHasFeature',
     'SessionHasService',
     'SessionEditHistory',
-    'SessionHasPubChar',
+    'SessionHasTag',
     'Sessions',
 );
 
