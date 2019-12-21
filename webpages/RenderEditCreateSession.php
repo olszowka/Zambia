@@ -195,7 +195,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             <div class="span2" style="float: left;"> 
                 <label class="control-label" for="tagdest">Tags:
                     <select class="span12" id="tagdest" name="tagdest[]" multiple>
-                        <?php populate_multiselect_from_table("tags", $session["tagdest"]); ?>
+                        <?php populate_multiselect_from_table("Tags", $session["tagdest"]); ?>
                     </select>
                 </label>
             </div>
