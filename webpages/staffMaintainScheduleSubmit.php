@@ -654,41 +654,47 @@ function editSchedule() {
 
 function retrieveSessions() {
     global $linki, $message_error;
-    $currSessionIdArray = isset($_POST["currSessionIdArray"]) ? $_POST["currSessionIdArray"] : array();
-    $trackId = intval($_POST["trackId"]);
-    $typeId = intval($_POST["typeId"]);
-    $divisionId = intval($_POST["divisionId"]);
-    $sessionId = intval($_POST["sessionId"]);
-    $title = mysqli_real_escape_string($linki, stripslashes($_POST["title"]));
+    $currSessionIdArray = getArrayOfInts("currSessionIdArray", array());
+    $trackId = getInt("trackId");
+    $tagIds = getArrayOfInts("tagIds", array());
+    $typeId = getInt("typeId");
+    $divisionId = getInt("divisionId");
+    $sessionId = getInt("sessionId");
+    $title = mysqli_real_escape_string($linki, getString("title"));
     $query["sessions"] = <<<EOD
-SELECT S.sessionid, S.title, S.progguiddesc, TR.trackname, TY.typename, D.divisionname,
-	FLOOR((HOUR(S.duration) * 60 + MINUTE(S.duration) + 29) / 30) AS durationUnits,
-	S.duration
-	FROM Sessions S JOIN Tracks TR USING (trackid) JOIN Types TY USING (typeid)
-		JOIN Divisions D USING (divisionid)
-	WHERE S.statusid IN (2,3,7) AND S.sessionid NOT IN (SELECT sessionid FROM Schedule)
+SELECT
+        S.sessionid, S.title, S.progguiddesc, TR.trackname, TY.typename, D.divisionname,
+        FLOOR((HOUR(S.duration) * 60 + MINUTE(S.duration) + 29) / 30) AS durationUnits,
+        S.duration
+    FROM
+             Sessions S
+        JOIN Tracks TR USING (trackid)
+        JOIN Types TY USING (typeid)
+        JOIN Divisions D USING (divisionid)
+    WHERE
+            S.statusid IN (2,3,7)
+        AND NOT EXISTS (
+            SELECT * FROM Schedule SCH WHERE S.sessionid = SCH.sessionid
+        )
 EOD;
-    if ($trackId != 0) {
+    if ($trackId !== false) {
         $query["sessions"] .= " AND S.trackid = $trackId";
     }
-    if ($typeId != 0) {
+    if ($typeId !== false) {
         $query["sessions"] .= " AND S.typeid = $typeId";
     }
-    if ($divisionId != 0) {
+    if ($divisionId !== false) {
         $query["sessions"] .= " AND S.divisionid = $divisionId";
     }
-    if ($sessionId != 0) {
+    if ($sessionId !== false) {
         $query["sessions"] .= " AND S.sessionid = $sessionId";
     }
-    if ($title != "") {
+    if ($title !== "") {
         $query["sessions"] .= " AND S.title LIKE '%$title%'";
     }
     $currSessionIdList = "";
-    if ($currSessionIdArray)
-        foreach ($currSessionIdArray as $id)
-            $currSessionIdList .= intval($id) . ",";
-    if ($currSessionIdList) {
-        $currSessionIdList = substr($currSessionIdList, 0, -1); //drop extra trailing comma
+    if (count($currSessionIdArray) > 0) {
+        $currSessionIdList = implode(",", $currSessionIdArray);
         $query["sessions"] .= " AND S.sessionid NOT IN ($currSessionIdList)";
     }
     $resultXML = mysql_query_XML($query);

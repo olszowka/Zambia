@@ -9,7 +9,7 @@ $sessionid = getInt("sessionid", "");
 $divisionid = getInt("divisionid", "");
 $searchTitle = getString("searchtitle");
 $encTitle = urlencode($searchTitle);
-$tags = getArrayOfInts("tags", false);
+$tags = getArrayOfInts("tags", array());
 $_SESSION['return_to_page'] = "ShowSessions.php?status=$statusid&track=$trackid&type=$typeid&sessionid=$sessionid";
 $_SESSION['return_to_page'] .= "&divisionid=$divisionid&searchtitle=$encTitle";
 $sessionSearchArray = array();
@@ -20,6 +20,6 @@ $sessionSearchArray['sessionid'] = strval($sessionid);
 $sessionSearchArray['divisionid'] = strval($divisionid);
 $sessionSearchArray['searchtitle'] = $searchTitle;
 $sessionSearchArray['tagmatch'] = getString("tagmatch");
-$sessionSearchArray['tagidArray'] = $tags ? $tags : array();
+$sessionSearchArray['tagidArray'] = $tags;
 RenderSearchSessionResults($sessionSearchArray);
 ?>

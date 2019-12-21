@@ -465,6 +465,10 @@ table.multcol-list td {
 .control-group-horizontal .controls input[type='radio'] {
   margin-top: -2px;
 }
+.control-group-horizontal.control-group-sm .controls label {
+  margin-right: 0.75rem;
+  font-size: 0.8rem;
+}
 /* <end> Bootstrap extensions */
 .not-attending-header-row {
   background-color: #fbc8bb;
@@ -623,3 +627,72 @@ img.tabborder {
   width: 10px;
 }
 /* End of settings needed make the tabs work */
+.border0000 {
+  border: none;
+}
+.border0010 {
+  border-top: none;
+  border-right: none;
+  border-bottom: solid black 1px;
+  border-left: none;
+}
+.border0020 {
+  border-top: none;
+  border-right: none;
+  border-bottom: solid black 2px;
+  border-left: none;
+}
+.border1111 {
+  border-top: solid black 1px;
+  border-right: solid black 1px;
+  border-bottom: solid black 1px;
+  border-left: solid black 1px;
+}
+.border1121 {
+  border-top: solid black 1px;
+  border-right: solid black 1px;
+  border-bottom: solid black 2px;
+  border-left: solid black 1px;
+}
+.border1211 {
+  border-top: solid black 1px;
+  border-right: solid black 2px;
+  border-bottom: solid black 1px;
+  border-left: solid black 1px;
+}
+.border1221 {
+  border-top: solid black 1px;
+  border-right: solid black 2px;
+  border-bottom: solid black 2px;
+  border-left: solid black 1px;
+}
+.border2111 {
+  border-top: solid black 2px;
+  border-right: solid black 1px;
+  border-bottom: solid black 1px;
+  border-left: solid black 1px;
+}
+.border2122 {
+  border-top: solid black 2px;
+  border-right: solid black 1px;
+  border-bottom: solid black 2px;
+  border-left: solid black 2px;
+}
+.border2211 {
+  border-top: solid black 2px;
+  border-right: solid black 2px;
+  border-bottom: solid black 1px;
+  border-left: solid black 1px;
+}
+.border2221 {
+  border-top: solid black 2px;
+  border-right: solid black 2px;
+  border-bottom: solid black 2px;
+  border-left: solid black 1px;
+}
+.border2222 {
+  border-top: solid black 2px;
+  border-right: solid black 2px;
+  border-bottom: solid black 2px;
+  border-left: solid black 2px;
+}
