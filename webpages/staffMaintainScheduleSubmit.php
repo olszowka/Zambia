@@ -530,16 +530,34 @@ SELECT
 		S.sessionid, S.title, S.progguiddesc, S.notesforprog, TR.trackname, TY.typename, D.divisionname,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') as starttime,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',ADDTIME(SCH.starttime, S.duration)),'%a %l:%i %p') as endtime,
-		TIME_FORMAT(S.duration, '%H:%i') AS duration, SCH.roomid, R.roomname
-	FROM Sessions S JOIN Tracks TR USING (trackid) JOIN Types TY USING (typeid)
-		JOIN Divisions D USING (divisionid) LEFT JOIN Schedule SCH USING (sessionid)
-		LEFT JOIN Rooms R USING (roomid)
-	WHERE S.sessionid = $sessionid;
+		TIME_FORMAT(S.duration, '%H:%i') AS duration, SCH.roomid, R.roomname,
+        (SELECT
+                GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+            FROM
+                     SessionHasTag SHT
+                JOIN Tags TA USING (tagid)
+            WHERE
+                SHT.sessionid = $sessionid
+        ) AS taglist
+	FROM
+                  Sessions S
+             JOIN Tracks TR USING (trackid)
+             JOIN Types TY USING (typeid)
+             JOIN Divisions D USING (divisionid)
+        LEFT JOIN Schedule SCH USING (sessionid)
+        LEFT JOIN Rooms R USING (roomid)
+	WHERE
+        S.sessionid = $sessionid;
 EOD;
     $query["participants"] = <<<EOD
-SELECT POS.moderator, CD.badgename, P.badgeid, COALESCE(P.pubsname, CONCAT(CD.firstname, ' ', CD.lastname)) AS participantname
-	FROM ParticipantOnSession POS JOIN Participants P USING (badgeid) JOIN CongoDump CD USING (badgeid)
-	WHERE POS.sessionid = $sessionid;
+SELECT
+        POS.moderator, CD.badgename, P.badgeid, COALESCE(P.pubsname, CONCAT(CD.firstname, ' ', CD.lastname)) AS participantname
+    FROM
+             ParticipantOnSession POS
+        JOIN Participants P USING (badgeid)
+        JOIN CongoDump CD USING (badgeid)
+    WHERE
+        POS.sessionid = $sessionid;
 EOD;
     $resultXML = mysql_query_XML($query);
     if (!$resultXML) {
@@ -559,7 +577,6 @@ EOD;
         trigger_error('XSL transformation failed.', E_USER_ERROR);
     }
     exit();
-
 }
 
 function editSchedule() {
@@ -661,6 +678,7 @@ function retrieveSessions() {
     $divisionId = getInt("divisionId");
     $sessionId = getInt("sessionId");
     $title = mysqli_real_escape_string($linki, getString("title"));
+    $tagmatch = getString("tagmatch");
     $query["sessions"] = <<<EOD
 SELECT
         S.sessionid, S.title, S.progguiddesc, TR.trackname, TY.typename, D.divisionname,
@@ -692,10 +710,19 @@ EOD;
     if ($title !== "") {
         $query["sessions"] .= " AND S.title LIKE '%$title%'";
     }
-    $currSessionIdList = "";
     if (count($currSessionIdArray) > 0) {
         $currSessionIdList = implode(",", $currSessionIdArray);
         $query["sessions"] .= " AND S.sessionid NOT IN ($currSessionIdList)";
+    }
+    if (count($tagIds) > 0) {
+        if ($tagmatch === 'all') {
+            foreach ($tagIds as $tag) {
+                $query["sessions"] .= " AND EXISTS (SELECT * FROM SessionHasTag WHERE sessionid = S.sessionid AND tagid = $tag)";
+            }
+        } else {
+            $tagidList = implode(',', $tagIds);
+            $query["sessions"] .= " AND EXISTS (SELECT * FROM SessionHasTag WHERE sessionid = S.sessionid AND tagid IN ($tagidList))";
+        }
     }
     $resultXML = mysql_query_XML($query);
     if (!$resultXML) {

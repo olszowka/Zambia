@@ -1,3 +1,4 @@
+// Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 var staffMaintainSchedule = new StaffMaintainSchedule;
 
 function StaffMaintainSchedule() {
@@ -1059,7 +1060,7 @@ function StaffMaintainSchedule() {
 			tagIds : $("#tagSEL").val()
 			};
 		if (postdata.tagIds !== null) {
-			postdata.tagmatch = $("#tagmatch").val()
+			postdata.tagmatch = $("input[name='tagmatch']:checked").val();
 		}
 		var pw = $("#password").val();
 		if (pw) {
