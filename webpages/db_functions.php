@@ -642,9 +642,6 @@ EOD;
 /* check login script, included in db_connect.php. */
 
 function isLoggedIn() {
-    global $message_error, $message2;
-    $message2 = "";
-    $message_error = "";
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['password'])) {
         return false;
     }

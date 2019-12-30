@@ -2,7 +2,6 @@
 //	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $link, $linki, $title;
 if (!isset($_SESSION['badgeid'])) {
-    $logging_in = true;
     require_once('CommonCode.php');
     $title = "Submit Password";
     $badgeid = mysqli_real_escape_string($linki, getString('badgeid'));

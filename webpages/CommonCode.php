@@ -6,6 +6,7 @@ require_once('data_functions.php');
 require_once('db_functions.php');
 require_once('render_functions.php');
 require_once('validation_functions.php');
+require_once('PageHeader.php');
 if (!isset($title)) {
     $title = "";
 }
@@ -14,15 +15,6 @@ session_start();
 if (prepare_db_and_more() === false) {
     $message_error = "Unable to connect to database.<br>No further execution possible.";
     RenderError($message_error);
-    exit();
-};
-if (isLoggedIn() === false and !isset($logging_in)) {
-    $message = "Session expired. Please log in again.";
-    if (isset($_GET["ajax_request_action"]) || isset($_POST["ajax_request_action"])) {
-        RenderErrorAjax("Session expired. Please <a href=\"index.php\">log in</a> again.");
-        exit();
-    }
-    require('login.php');
     exit();
 };
 if (!populateCustomTextArray()) {

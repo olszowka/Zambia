@@ -2,9 +2,6 @@
 // Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title="Session History";
-require_once('db_functions.php');
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
 
 staff_header($title);

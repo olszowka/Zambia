@@ -2,7 +2,6 @@
 // Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 function retrieve_select_from_db($trackidlist, $statusidlist, $typeidlist, $sessionid, $divisionid, $searchtitle) {
     global $linki;
-    require_once('db_functions.php');
     $ConStartDatim = CON_START_DATIM; // make it a variable so it can be substituted
     $query = <<<EOB
 SELECT

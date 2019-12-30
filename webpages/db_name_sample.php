@@ -41,4 +41,5 @@ define("SECOND_DESCRIPTION_CAPTION", "Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
 define("REG_URL", "https://reg.arisia.org"); // URL for logging into user self service portion of registration system -- appears on My Profile page
+define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
 ?>

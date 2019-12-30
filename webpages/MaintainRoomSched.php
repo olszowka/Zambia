@@ -4,10 +4,6 @@ global $message_error, $title, $linki;
 $bigarray = array();
 define("newroomslots", 5); // number of rows at bottom of page for new schedule entries
 $title = "Maintain Room Schedule";
-require_once('db_functions.php');
-require_once('data_functions.php');
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 

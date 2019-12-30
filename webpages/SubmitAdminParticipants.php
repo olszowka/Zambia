@@ -1,6 +1,5 @@
 <?php
 // Copyright (c) 2006-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-require_once('db_functions.php');
 require_once('StaffCommonCode.php');
 
 // gets data for a participant to be displayed.  Returns as XML

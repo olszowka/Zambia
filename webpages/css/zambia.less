@@ -16,6 +16,7 @@
 @staffColor: @darker_green;
 @participantColor: @light_blue;
 @problem_background: #fbc8bb;
+@dark_gray: #404040;
 
 /**
  * LAYOUT
@@ -25,9 +26,10 @@
  * Page header stuff
  */
 header {
-    img, h1 {
-        float: left;
+    h1 {
+        flex-grow: 1;
         padding-left: 1em;
+        text-align: center;
     }
 
     label {
@@ -37,9 +39,36 @@ header {
         font-size: 1.1em;
     }
 
-    .imgButton {
+    .img-button {
         cursor: pointer;
+        margin-left: 1rem;
     }
+}
+
+.header-wrapper {
+    margin-left:-20px;
+    margin-right:-20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.participant-header {
+    background-color: #dedcff;
+    background-image: linear-gradient(0deg, rgba(232,232,232,1) 0%, rgba(232,232,232,1) 24%, rgba(195,193,219,1) 57%, rgba(146,141,196,1) 77%, rgba(16,0,163,1) 100%);
+}
+
+.header-contents {
+    flex-grow: 1;
+    display: flex;
+}
+
+#header-logo {
+    width: 6rem;
+    align-self:flex-start;
 }
 
 #loginBox, #welcome {
@@ -49,13 +78,52 @@ header {
     p {
         color: @contrast;
         text-align: right;
+        letter-spacing: 0.04rem;
+    }
+
+    &.extended {
+        margin-top: 3rem;
     }
 }
 
-#altHeader p {
-    color: @contrast;
-    text-align: right;
-    padding-right: 0.5em;
+.alt-header-contents {
+    display: flex;
+}
+
+.alt-header-spacer {
+    width: 15rem;
+}
+
+.alt-header-title {
+    flex-grow: 1;
+    text-align: center;
+    align-self: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    letter-spacing: 0.04rem;
+    font-family: serif;
+}
+
+.alt-header-controls {
+    p {
+        display: inline-block;
+        color: @dark_gray;
+        padding-right: 0.5em;
+    }
+    
+    img {
+        margin-right: 0.4rem;
+        margin-left: 0.4rem;
+    }
+}
+
+body {
+    background-image: url('../images/light_honeycomb.png');
+    background-repeat: repeat;
+}
+
+a {
+    color: #04c;
 }
 
 #showHeader {
@@ -143,6 +211,18 @@ a {
 input[type="text"],
 input[type="password"] {
     height: 28px;
+}
+
+.navbar {
+    margin-bottom: 0.2rem;
+    margin-left: -20px;
+    margin-right:  -20px;
+}
+
+.staff-header {
+    background-color: #a7d2a5;
+    background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(240,240,240,1) 24%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
+    color: black;
 }
 
 #staffView {
@@ -262,7 +342,7 @@ div.reportPageContent table, table.report {
     border-collapse: collapse;
     margin: 10px;
     border: 1px solid black;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     font-size: 12px;
 }
 
@@ -362,7 +442,7 @@ input[type="search"],
 input[type="tel"],
 input[type="color"],
 .uneditable-input {
-    padding: 0 1px !important;
+    padding: 0 0.5rem !important;
 }
 
 input.search-query {
@@ -462,6 +542,10 @@ label[for='session-select'] {
 /* <end> Maintain Room Schedule */
 
 /* Bootstrap extensions */
+.form-horizontal .control-group:last-child {
+    margin-bottom: 0;
+}
+
 .dropdown-menu > li > .menu-error-entry {
     background-color: @problem_background;
     display: block;
@@ -471,7 +555,6 @@ label[for='session-select'] {
     line-height: 20px;
     color: #d05b5e;
     white-space: nowrap;
-
 }
 
 .success-bg {
@@ -593,6 +676,46 @@ table.multcol-list td {
     line-height: 2;
 }
 
+.hidden {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.vert-sep {
+    margin-bottom: 1rem;
+}
+
+.collapsible-wrapper {
+    display: flex;
+    overflow: hidden;
+}
+
+.collapsible-wrapper:after {
+    content: '';
+    height: 50px;
+    transition: height 0.3s linear, max-height 0s 0.3s linear;
+    max-height: 0;
+}
+
+.collapsible {
+    transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
+    margin-bottom: 0;
+    max-height: 500px;
+}
+
+.collapsible-wrapper.collapsed > .collapsible {
+    margin-bottom: -500px;
+    transition: margin-bottom 0.3s cubic-bezier(1, 0, 1, 1),
+    visibility 0s 0.3s, max-height 0s 0.3s;
+    visibility: hidden;
+    max-height: 0;
+}
+
+.collapsible-wrapper.collapsed:after {
+    height: 0;
+    transition: height 0.3s linear;
+    max-height: 50px;
+}
 .roles-list-container {
     column-count: 3;
     max-width: 70rem;

@@ -3,7 +3,8 @@
 function renderMyInterests($title, $error, $message, $rolearray) {
     global $link, $yespanels, $nopanels, $yespeople, $nopeople;
     global $otherroles, $newrow;
-    $rolerows = $rolearray['count'];
+    $rolerows = count($rolearray);
+    error_log("reached renderMyInterest.php: 7");
     participant_header($title);
     if ($error) {
         echo "<p class=\"alert alert-error\">Database not updated.<br>" . $message . "</p>";

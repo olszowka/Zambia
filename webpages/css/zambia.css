@@ -10,8 +10,9 @@
  */
 header img,
 header h1 {
-  float: left;
+  flex-grow: 1;
   padding-left: 1em;
+  text-align: center;
 }
 header label {
   color: black;
@@ -19,23 +20,75 @@ header label {
   text-align: right;
   font-size: 1.1em;
 }
-header .imgButton {
+header .img-button {
   cursor: pointer;
+  margin-left: 1rem;
 }
-#loginBox,
+.header-wrapper {
+  margin-left: -20px;
+  margin-right: -20px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.participant-header {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #e8e8e8 24%, #c3c1db 57%, #928dc4 77%, #1000a3 100%);
+}
+.header-contents {
+  flex-grow: 1;
+  display: flex;
+}
+#header-logo {
+  width: 6rem;
+  align-self: flex-start;
+}
+#login-box,
 #welcome {
-  float: right;
-  margin: 1em 1em 0 0;
+  margin: 1rem 1rem 0 0;
 }
-#loginBox p,
+#login-box p,
 #welcome p {
   color: white;
   text-align: right;
+  letter-spacing: 0.04rem;
 }
-#altHeader p {
-  color: white;
-  text-align: right;
+#login-box.extended,
+#welcome.extended {
+  margin-top: 3rem;
+}
+.alt-header-contents {
+  display: flex;
+}
+.alt-header-spacer {
+  width: 15rem;
+}
+.alt-header-title {
+  flex-grow: 1;
+  text-align: center;
+  align-self: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 0.04rem;
+  font-family: serif;
+}
+.alt-header-controls p {
+  display: inline-block;
+  color: #404040;
   padding-right: 0.5em;
+}
+.alt-header-controls img {
+  margin-right: 0.4rem;
+  margin-left: 0.4rem;
+}
+body {
+  background-image: url('../images/light_honeycomb.png');
+  background-repeat: repeat;
+}
+a {
+  color: #04c;
 }
 #showHeader {
   height: 20px;
@@ -106,6 +159,16 @@ a {
 input[type="text"],
 input[type="password"] {
   height: 28px;
+}
+.navbar {
+  margin-bottom: 0.2rem;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+.staff-header {
+  background-color: #a7d2a5;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+  color: black;
 }
 #staffView {
   color: #00aa00;
@@ -201,7 +264,7 @@ table.report {
   border-collapse: collapse;
   margin: 10px;
   border: 1px solid black;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   font-size: 12px;
 }
 div.reportPageContent table th,
@@ -289,7 +352,7 @@ input[type="search"],
 input[type="tel"],
 input[type="color"],
 .uneditable-input {
-  padding: 0 1px !important;
+  padding: 0 0.5rem !important;
 }
 input.search-query {
   padding: 0 4px 0 8px !important;
@@ -366,6 +429,9 @@ label[for='session-select'] + .choices {
 }
 /* <end> Maintain Room Schedule */
 /* Bootstrap extensions */
+.form-horizontal .control-group:last-child {
+  margin-bottom: 0;
+}
 .dropdown-menu > li > .menu-error-entry {
   background-color: #fbc8bb;
   display: block;
@@ -600,3 +666,36 @@ img.tabborder {
   width: 10px;
 }
 /* End of settings needed make the tabs work */
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+.vert-sep {
+  margin-bottom: 1rem;
+}
+.collapsible-wrapper {
+  display: flex;
+  overflow: hidden;
+}
+.collapsible-wrapper:after {
+  content: '';
+  height: 50px;
+  transition: height 0.3s linear, max-height 0s 0.3s linear;
+  max-height: 0;
+}
+.collapsible {
+  transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
+  margin-bottom: 0;
+  max-height: 500px;
+}
+.collapsible-wrapper.collapsed > .collapsible {
+  margin-bottom: -500px;
+  transition: margin-bottom 0.3s cubic-bezier(1, 0, 1, 1), visibility 0s 0.3s, max-height 0s 0.3s;
+  visibility: hidden;
+  max-height: 0;
+}
+.collapsible-wrapper.collapsed:after {
+  height: 0;
+  transition: height 0.3s linear;
+  max-height: 50px;
+}

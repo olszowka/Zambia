@@ -1,7 +1,7 @@
 <?php
     function participant_footer() {
 ?>
-<div xxclass="container-fluid">
+<div>
 <hr/>
 <p/> 
 <p>If you need help or to tell us something that doesn't fit here, please email
@@ -10,7 +10,8 @@
    echo "<a href=\"mailto:$x\">$x</a>.\n"; 
    include('google_analytics.php');
 ?></p>
-</div>
+</div><!-- end footer div -->
+</div><!-- end whole page div -->
 </body>
 </html>
 
