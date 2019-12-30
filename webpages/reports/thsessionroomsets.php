@@ -2,7 +2,7 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session roomsets';
-$report['description'] = 'What roomsets are we using (Sorted by Room then Time)';
+$report['description'] = 'What roomsets are we using (Scheduled sessions only)';
 $report['categories'] = array(
     'Events Reports' => 1040,
     'Programming Reports' => 1040,
