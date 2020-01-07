@@ -1,3 +1,4 @@
+//	Copyright (c) 2015-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 var staffMaintainSchedule = new StaffMaintainSchedule;
 
 function StaffMaintainSchedule() {
@@ -826,7 +827,6 @@ function StaffMaintainSchedule() {
 	}
 
 	this.initialize = function initialize() {
-		$("#zambiaLogo").ready(staffMaintainSchedule.resizeMe);
 		$("#staffNav").ready(staffMaintainSchedule.resizeMe);
 		$("#tabs").tabs();
 		//$("#clearAllButton").button();

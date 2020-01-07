@@ -1,4 +1,4 @@
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 document.addEventListener( "DOMContentLoaded", function () {
     //this function is run whenever any page finishes loading if JQuery has been loaded
     //debugger;
@@ -46,9 +46,9 @@ document.addEventListener( "DOMContentLoaded", function () {
 				$altHeaderContainer.classList.remove("hidden");
 			},800);
 		}
-		var $hideHeader = document.getElementById("hide-header");
-		if ($hideHeader) {
-			$hideHeader.addEventListener("click", function (event) {
+		var $hideHeaderButton = document.getElementById("hide-header-but");
+		if ($hideHeaderButton) {
+			$hideHeaderButton.addEventListener("click", function (event) {
 				$regHeaderContainer.classList.add("collapsed");
 				$altHeaderContainer.classList.remove("collapsed");
 				setValue('zambiaHeader', 'small');
@@ -58,9 +58,9 @@ document.addEventListener( "DOMContentLoaded", function () {
 				}
 			});
 		}
-		var $showHeader = document.getElementById("show-header");
-		if ($showHeader) {
-			$showHeader.addEventListener("click", function (event) {
+		var $showHeaderButton = document.getElementById("show-header-but");
+		if ($showHeaderButton) {
+            $showHeaderButton.addEventListener("click", function (event) {
 				$regHeaderContainer.classList.remove("collapsed");
 				$altHeaderContainer.classList.add("collapsed");
 				setValue('zambiaHeader', 'large');

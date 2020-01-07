@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding="UTF-8"?>
-<!-- Copyright (c) 2019 Peter Olszowka. All rights reserved. See copyright document for more details.-->
+<!-- Copyright (c) 2019-2020 Peter Olszowka. All rights reserved. See copyright document for more details.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:param name="header_version" select="'Participant'"/><!-- "Staff" or "Participant" -->
     <xsl:param name="logged_in" select="false()" /><!-- TRUE/FALSE -->
@@ -21,7 +21,7 @@
                         </xsl:when>
                     </xsl:choose>
                     <div class="header-contents">
-                        <img src="images/Z_illuminated.jpg" id="header-logo" alt="Zambia &quot;Z&quot; logo" />
+                        <img src="images/Z_illuminated.jpg" alt="Zambia &quot;Z&quot; logo" class="wide-only" />
                         <h1 class="wide-medium-only">
                             <xsl:text>Zambia</xsl:text>
                             <span class="wide-only">
@@ -38,8 +38,17 @@
                                     <xsl:text>Welcome, </xsl:text>
                                     <xsl:value-of select="$badgename" />
                                 </p>
-                                <img id="hide-header" class="img-button pull-right" src="images/blue-up.png"
-                                     alt="Shrink header to a thin strip" title="Shrink header to a thin strip" />
+                                <img id="hide-header-but" class="img-button pull-right" aria-role="button"
+                                     alt="Shrink header to a thin strip" title="Shrink header to a thin strip" >
+                                    <xsl:choose>
+                                        <xsl:when test="$header_version='Participant'">
+                                            <xsl:attribute name="src">images/blue-up.png</xsl:attribute>
+                                        </xsl:when>
+                                        <xsl:when test="$header_version='Staff'">
+                                            <xsl:attribute name="src">images/green-up.png</xsl:attribute>
+                                        </xsl:when>
+                                    </xsl:choose>
+                                </img>
                                 <a href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
                             </div>
                         </xsl:when>
@@ -95,17 +104,34 @@
                 <div id="alt-header-container" class="collapsible-wrapper hidden">
                     <div id="alt-header" class="row-fluid collapsible">
                         <div class="alt-header-contents">
-                            <div class="alt-header-spacer wide-only">
+                            <div class="alt-header-spacer extra-wide-only">
                                 <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                             </div>
-                            <div class="alt-header-title">Zambia</div>
+                            <div class="alt-header-title">
+                                <xsl:text>Zambia</xsl:text>
+                                <span class="wide-only">
+                                    <xsl:text>: The </xsl:text>
+                                    <xsl:value-of select="$CON_NAME" />
+                                    <xsl:text> Scheduling Tool</xsl:text>
+                                </span>
+                            </div>
                             <div class="alt-header-controls">
                                 <p>
                                     <xsl:text>Welcome, </xsl:text>
                                     <xsl:value-of select="$badgename" />
                                 </p>
                                 <a class="btn btn-primary btn-mini" href="logout.php" title="Click to log out">Log out</a>
-                                <img src="images/green-down.png" id="show-header" alt="Expand header to normal size" title="Expand header to normal size" />
+                                <img id="show-header-but" alt="Expand header to normal size" title="Expand header to normal size"
+                                    aria-role="button">
+                                    <xsl:choose>
+                                        <xsl:when test="$header_version='Participant'">
+                                            <xsl:attribute name="src">images/blue-down.png</xsl:attribute>
+                                        </xsl:when>
+                                        <xsl:when test="$header_version='Staff'">
+                                            <xsl:attribute name="src">images/green-down.png</xsl:attribute>
+                                        </xsl:when>
+                                    </xsl:choose>
+                                </img>
                             </div>
                         </div>
                     </div>
