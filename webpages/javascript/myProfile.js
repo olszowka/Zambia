@@ -1,3 +1,4 @@
+//	Copyright (c) 2015-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 var myProfile = new MyProfile;
 
 function MyProfile() {
@@ -19,14 +20,14 @@ function MyProfile() {
 				cpw = $("#cpassword").val();
 				if (pw && pw!=cpw) {
 						$("#badPassword").show();
-						$("#passGroup").addClass("error");
+						$("#passGroup .control-group").addClass("error");
 						$("#submitBTN").attr("disabled","disabled");
 						pwOK = false;
 						return;
 						}
 					else {
 						$("#badPassword").hide();
-						$("#passGroup").removeClass("error");
+						$("#passGroup .control-group").removeClass("error");
 						$("#submitBTN").removeAttr("disabled");
 						pwOK = true;
 						}

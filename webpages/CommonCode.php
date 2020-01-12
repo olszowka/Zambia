@@ -1,12 +1,13 @@
 <?php
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('error_functions.php');
 require_once('Constants.php');
 require_once('data_functions.php');
 require_once('db_functions.php');
 require_once('render_functions.php');
 require_once('validation_functions.php');
-require_once('PageHeader.php');
+require_once('HtmlHeader.php');
+require_once('CommonHeader.php');
 if (!isset($title)) {
     $title = "";
 }

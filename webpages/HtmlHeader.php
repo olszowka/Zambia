@@ -1,6 +1,6 @@
 <?php
 //	Copyright (c) 2019-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-function page_header($title, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function html_header($title, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;
     require_once ("javascript_functions.php");
 ?>

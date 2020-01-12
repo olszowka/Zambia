@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2008-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2008-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message, $message_error, $message2, $title;
 // $participant_array is defined by file including this.
 //error_log("Zambia: Reached renderWelcome.php"); 
@@ -29,7 +29,7 @@ if (may_I('postcon')) { ?>
 		<h3>Please check back often as more options will become available as we get closer to the convention.</h3>
 		<p>Dear <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?>,</p>
 		<p>Welcome to the <?php echo CON_NAME; ?> Programming website.</p>
-		<h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming. You will only be scheduled if you say YES.</h4>
+		<h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming. You will be scheduled only if you say YES.</h4>
 		<form class="form-horizontal" name="pwform" method=POST action="SubmitWelcome.php">
 			<fieldset>
                 <div id="update_section" class="control-group">

@@ -493,6 +493,37 @@ label[for='session-select'] + .choices {
 table.multcol-list td {
   padding-right: 1em;
 }
+.form-section-header {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: #404040;
+}
+.form-section-header:not(:first-child) {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1.5px solid #e5e5e5;
+}
+.hidden-input-container + .form-section-header {
+  margin-top: initial;
+  padding-top: initial;
+  border-top: initial;
+}
+.radioNlabel {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.radioNlabel .radio input {
+  display: inline;
+  padding-left: 0;
+  float: initial;
+  margin-left: initial;
+  margin-top: initial;
+  height: 16px;
+}
+.radioNlabel .radioLabel label {
+  display: inline;
+  padding-left: 0.25rem;
+}
 /* <end> Bootstrap extensions */
 .not-attending-header-row {
   background-color: #fbc8bb;

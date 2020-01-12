@@ -16,7 +16,8 @@
 @staffColor: @darker_green;
 @participantColor: @light_blue;
 @problem_background: #fbc8bb;
-@dark_gray: #404040;
+@dark-gray: #404040;
+@separator-color: #e5e5e5;
 
 /**
  * LAYOUT
@@ -115,7 +116,7 @@ header {
 .alt-header-controls {
     p {
         display: inline-block;
-        color: @dark_gray;
+        color: @dark-gray;
         padding-right: 0.5em;
     }
     
@@ -628,6 +629,44 @@ label[for='session-select'] {
 table.multcol-list td {
     padding-right: 1em;
 }
+
+.form-section-header {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: @dark-gray;
+    
+    &:not(:first-child) {
+        margin-top:1.5rem;
+        padding-top:1.5rem;
+        border-top: 1.5px solid @separator-color;
+    }
+
+    .hidden-input-container + & {
+        margin-top:initial;
+        padding-top:initial;
+        border-top:initial;
+    }
+}
+
+.radioNlabel {
+    padding-top:0.25rem;
+    padding-bottom:0.25rem;
+
+    .radio input {
+        display:inline;
+        padding-left:0;
+        float:initial;
+        margin-left:initial;
+        margin-top:initial;
+        height: 16px;
+    }
+
+    .radioLabel label {
+        display:inline;
+        padding-left:0.25rem;
+    }
+}
+
 /* <end> Bootstrap extensions */
 
 .not-attending-header-row {

@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function participant_header($title, $noUserRequired = false, $loginPageStatus = 'Normal') {
     // $noUserRequired is true if user not required to be logged in to access this page
     // $loginPageStatus is "Login", "Logout", "Normal", "No_Permission"
@@ -7,35 +7,16 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
     //      logout page should be "Logout"
     //      logged in user who reached page for which he does not have permission is "No_Permission"
     //      all other pages should be "Normal"
-    error_log("reached ParticipantHeader.php: 9.  Value of \$loginPageStatus is $loginPageStatus.");
     global $header_used;
     $header_used = HEADER_PARTICIPANT;
-    page_header($title);
+    html_header($title);
 ?>
 <body>
     <div class="container-fluid">
 <?php
-    $is_logged_in = isLoggedIn();
-    if ($is_logged_in && $loginPageStatus = 'Normal' && !may_I("Participant") && !may_I("Staff")) {
-        $loginPageStatus = 'No_Permission';
-    }
-    $xml = new DomDocument("1.0", "UTF-8");
-    $emptyDoc = $xml -> createElement("doc");
-    $xml -> appendChild($emptyDoc);
-    $xsl = new DomDocument;
-    $xsl->load('xsl/GlobalHeader.xsl');
-    $xslt = new XsltProcessor();
-    $xslt->importStylesheet($xsl);
-    $xslt->setParameter('', 'header_version', 'Participant');
-    $xslt->setParameter('', 'logged_in', $is_logged_in);
-    $xslt->setParameter('', 'login_page_status', $loginPageStatus);
-    $xslt->setParameter('', 'no_user_required', $noUserRequired);
-    $xslt->setParameter('', 'CON_NAME', CON_NAME);
-    $xslt->setParameter('', 'badgename', isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '');
-    $xslt->setParameter('', 'USER_ID_PROMPT', USER_ID_PROMPT);
-    $html = $xslt->transformToXML($xml);
-    echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
-    if ($is_logged_in && (may_I("Participant") || may_I("Staff"))) {
+    $isLoggedIn = isLoggedIn();
+    commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus);
+    if ($isLoggedIn && (may_I("Participant") || may_I("Staff"))) {
 ?>
         <nav id="participantNav" class="navbar navbar-inverse">
             <div class="navbar-inner">

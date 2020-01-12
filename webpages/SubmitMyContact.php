@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $message_error, $title;
 $title = "My Profile";
 require('PartCommonCode.php'); // initialize db; check login;
@@ -106,12 +106,12 @@ if ($valuesClause2) {
 if ($credentialClause3) {
     mysqli_query_with_error_handling($query3 . $credentialClause3 . ")", true, true);
 }
-echo("<span class=\"alert alert-success\">");
+echo("<p class=\"alert alert-success\">");
 if ($password) {
     echo "Password updated. ";
     $_SESSION['password'] = $password;
 }
-echo("Database updated successfully. </span>\n");
+echo("Database updated successfully. </p>\n");
 if ($pubsname)
     $_SESSION['badgename'] = $pubsname;
 exit();
