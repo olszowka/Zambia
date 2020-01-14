@@ -13,6 +13,7 @@ function html_header($title, $is_report = false, $reportColumns = false, $report
     <link rel="stylesheet" href="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.css" type="text/css">
     <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap.css" type="text/css" >
     <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
+    <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
     <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
 <?php if ($is_report) {
@@ -36,8 +37,8 @@ function html_header($title, $is_report = false, $reportColumns = false, $report
     </script>
 <?php
     /* "external" means 3rd party library */
-    load_external_javascript();
-    load_internal_javascript($title);
+    load_external_javascript($is_report);
+    load_internal_javascript($title, $is_report);
 ?>
 </head>
 <?php } ?>
