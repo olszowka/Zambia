@@ -1,6 +1,6 @@
 /**
  * Created by Peter Olszowka on 2015-08-30;
- * Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2015-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 html.fullPage, body.fullPage {
 	width:100%;
@@ -25,16 +25,12 @@ html.fullPage, body.fullPage {
 	line-height:normal;
 	}
 
-.compoundTR {
-	/*height:16.5px*/	
-	}
-
 .compoundTD {
 	vertical-align: top
 	}
 
 #tabs-warnings .conflictList {
-	font-family: verdana, arial;
+	font-family: verdana, arial, sans-serif;
 	font-size: 11px;
 	}
 
@@ -46,7 +42,7 @@ html.fullPage, body.fullPage {
 	}
 
 .warnConfMsg {
-	font-family: verdana, arial;
+	font-family: verdana, arial, sans-serif;
 	font-size: 11px;
 	margin-bottom: 0.75em;
 	}
@@ -83,12 +79,12 @@ table.scheduleGridCompTAB, table.scheduleGridCompTAB td {
 
 .scheduleGridComplexDIV {
 	background-color: #ffd0d0;
-	font-family: verdana, arial;
+	font-family: verdana, arial, sans-serif;
 	font-size: 11px;
 	}
 
 .infolabel {
-	font-family: verdana, arial;
+	font-family: verdana, arial, sans-serif;
 	font-size: 11px;
 	color: #00b0d0;
 	font-style: italic;
@@ -99,7 +95,7 @@ span.infolabel {
 	}
 
 .infofield, .inforow {
-	font-family: verdana, arial;
+	font-family: verdana, arial, sans-serif;
 	font-size: 11px;
 	color: black;
 	}
@@ -190,17 +186,17 @@ td.schedulerGridSlot {
 
 .sessionBlock {
 	width: 250px;
-	margin: 2px 0px 2px 0px;
+	margin: 2px 0;
 	border: 1px solid black;
 	background-color: white;
-	font-family: verdana, arial;
+	font-family: verdana, arial, sans-serif;
 	font-size: 11px;
 	}
 
 .scheduledSessionBlock {
 	width: 250px;
 	background-color: white;
-	font-family: verdana, arial;
+	font-family: verdana, arial, sans-serif;
 	font-size: 11px;
 	}
 
@@ -309,7 +305,7 @@ div.secondaryFullWidthContainer {
 }
 
 .schedulerGrid {
-	font-family:Arial;
+	font-family:Arial, sans-serif;
 	color:black;
 	line-height:normal;
 }
@@ -319,7 +315,6 @@ div.secondaryFullWidthContainer {
 }
 
 i.getSessionInfo {
-	/*margin-top:-2px;*/
 	vertical-align: top;
 	margin-right:1px;
 }
@@ -378,7 +373,7 @@ span.newformnotetight {
 .onepage-title {
 	margin-left: auto;
 	margin-right: auto;
-	font-family: Arial;
+	font-family: Arial, sans-serif;
 	font-size: 14px;
 	font-weight: bold;
 	color: #106a22;
@@ -387,4 +382,18 @@ span.newformnotetight {
 
 #sessionsToBeScheduled {
 	line-height:normal;
+}
+
+.flex-row-container {
+	display:flex;
+	flex-direction: column;
+}
+
+.flex-row-fixed {
+	flex:0 0 auto;
+}
+
+.flex-row-remainder {
+	flex:1 1 auto;
+	overflow-y:auto;
 }

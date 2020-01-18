@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $fullPage, $title;
 $title="Grid Scheduler";
 $fullPage = true; // changes body class to support all content restricted to screen size
@@ -80,20 +80,18 @@ staff_header($title);
 				</div>
 			</div>
 		</div>
-		<div style="position: absolute; left:0; right:0; bottom:0; top: 40%; width:auto; height: auto;margin: 2px">
-			<div style="position: absolute; left:0; right:0; top:0; width:auto;">
-				<div style="position: absolute; left:0; right:0; width: auto; top:0;" class="onepage-titlebar">
-					<span class="onepage-title">Sessions to be scheduled</span>
-				</div>
-				<div style="position: absolute; left:0; right:0; width: auto; top:19px; padding: 3px; text-align:center;">
-					<span style="padding:0;"><button id="clearAllButton" class="btn">Clear All</button></span>
-					<span style="padding:0;"><button id="swapModeCheck" class="btn" mychecked="false">Swap Mode</button></span>
-					<img id="fileCabinetIMG" style="display:inline; vertical-align:middle" height="65" width="49" src="images/FileCabinetClosed.png" onmouseover="staffMaintainSchedule.fileCabinetSwap(true);"
-						onmouseout="staffMaintainSchedule.fileCabinetSwap(false);" />
-				</div>
-			</div>
-			<div id = "sessionsToBeSchedContainer" style="position: absolute; left:0; right:0; bottom:0; top: 90px; height: auto; width:auto; border: 3px solid white">
-				<div id="sessionsToBeScheduled" style="height: 100%; overflow-y:auto; overflow-x: hidden;">&nbsp;</div>
+		<div style="position: absolute; left:0; right:0; bottom:0; top: 40%; width:auto; height: auto;margin: 2px" class="flex-row-container">
+            <div class="flex-row-fixed onepage-titlebar">
+                <span class="onepage-title">Sessions to be scheduled</span>
+            </div>
+            <div style="padding: 3px; text-align:center;" class="flex-row-fixed">
+                <span style="padding:0;"><button id="clearAllButton" class="btn">Clear All</button></span>
+                <span style="padding:0;"><button id="swapModeCheck" class="btn" mychecked="false">Swap Mode</button></span>
+                <img id="fileCabinetIMG" style="display:inline; vertical-align:middle;" height="65" width="49" src="images/FileCabinetClosed.png" onmouseover="staffMaintainSchedule.fileCabinetSwap(true);"
+                    onmouseout="staffMaintainSchedule.fileCabinetSwap(false);" alt="drop here to archive" />
+            </div>
+			<div id = "sessionsToBeScheduledContainer" style="border: 3px solid white;" class="flex-row-remainder">
+				<!--<div id="sessionsToBeScheduled" style="height: 100%; overflow-y:auto; overflow-x: hidden;">&nbsp;</div>-->
 			</div>
 		</div>
 	</div>
