@@ -316,8 +316,8 @@ function ProcessImportSessions() {
                 return (false);
             }
             $query4 = "INSERT INTO SessionEditHistory\n";
-            $query4 .= "    (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)\n";
-            $query4 .= "    Values($sessionid, \"$badgeid\", \"$name\", \"$email\", NULL, 6, 6, NULL)\n";
+            $query4 .= "    (sessionid, badgeid, name, email_address, sessioneditcode, statusid, editdescription)\n";
+            $query4 .= "    Values($sessionid, \"$badgeid\", \"$name\", \"$email\", 6, 6, NULL)\n";
             $result = mysqli_query($linki, $query4);
             if (!$result) {
                 $message_error = $query4 . "Error querying database.";
