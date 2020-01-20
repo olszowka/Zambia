@@ -308,11 +308,11 @@ function SubmitMaintainRoom($ignore_conflicts)
         echo "<p class=\"alert\">$rows session" . ($rows > 1 ? "s" : "") . " removed from schedule.\n</p>";
         $query = <<<EOD
 INSERT INTO SessionEditHistory
-        (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
+        (sessionid, badgeid, name, email_address, sessioneditcode, statusid, editdescription)
         VALUES
 EOD;
         foreach ($deleteSessionIds as $delsessionid) {
-            $query .= "($delsessionid,\"$badgeid\",\"$name\",\"$email\",null,5,$vs,null),";
+            $query .= "($delsessionid,\"$badgeid\",\"$name\",\"$email\",5,$vs,null),";
         }
         $query = substr($query, 0, -1); // remove trailing comma
         if (!mysqli_query($linki, $query)) {
@@ -347,10 +347,10 @@ EOD;
 // Record history of new entries to schedule 
         $query = <<<EOD
 INSERT INTO SessionEditHistory
-        (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
+        (sessionid, badgeid, name, email_address, sessioneditcode, statusid, editdescription)
         VALUES
 EOD;
-        $query .= "($sessionid,\"$badgeid\",\"$name\",\"$email\",null,4,$vs,\"" . time_description($time) . " in $selroomid\")";
+        $query .= "($sessionid,\"$badgeid\",\"$name\",\"$email\",4,$vs,\"" . time_description($time) . " in $selroomid\")";
         if (!mysqli_query($linki, $query)) {
             $message = $query . "<br />Error updating database.<br />";
             echo "<p class=\"alert alert-error\">" . $message . "\n";
