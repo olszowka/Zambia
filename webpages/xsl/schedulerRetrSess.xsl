@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output encoding="UTF-8" indent="yes" method="xml" />
 <xsl:template match="/doc/query[@queryName='sessions']/row">
-    <div id="sessionBlockDIV_{@sessionid}" class="sessionBlock" sessionid="{@sessionid}" durationUnits="{@durationUnits}" duration="{@duration}">
+    <div id="sessionBlockDIV_{@sessionid}" class="sessionBlock" data-sessionid="{@sessionid}" durationUnits="{@durationUnits}" duration="{@duration}">
         <div class="sessionBlockTitleRow">
             <i class="icon-info-sign getSessionInfoP"></i>	
             <!--<div class="ui-icon ui-icon-info getSessionInfoP"></div>-->

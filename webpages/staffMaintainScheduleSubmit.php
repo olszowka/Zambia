@@ -353,7 +353,7 @@ function doABlock($roomId) {
         $blockHTML .= ">";
         $blockHTML .= "<div class=\"schedulerGridContainer\" style=\"height:" . ($thisSlotLength * $standardRowHeight - 2) . "px;\">";
         $blockHTML .= "<div id=\"sessionBlockDIV_{$thisRoomSchedArray[$key]["sessionid"]}\" class=\"scheduledSessionBlock\" ";
-        $blockHTML .= "sessionid=\"{$thisRoomSchedArray[$key]["sessionid"]}\" scheduleid=\"{$thisRoomSchedArray[$key]["scheduleid"]}\" ";
+        $blockHTML .= "data-sessionid=\"{$thisRoomSchedArray[$key]["sessionid"]}\" data-scheduleid=\"{$thisRoomSchedArray[$key]["scheduleid"]}\" ";
         $blockHTML .= "roomid=\"$roomId\" startTimeUnits=\"$thisSlotBeginUnits\" endTimeUnits=\"$thisSlotEndUnits\" ";
         $blockHTML .= "startTime=\"{$thisRoomSchedArray[$key]["starttime"]}\" endTime=\"{$thisRoomSchedArray[$key]["endtime"]}\" ";
         $blockHTML .= "duration=\"{$thisRoomSchedArray[$key]["duration"]}\" >";
@@ -456,8 +456,8 @@ function doACompSlot(&$ScheduledUpTo, $thisSlot, &$thisKey, $i, $roomId) {
             $blockHTML .= " class=\"compoundTD\" style=\"height:" . ($thisCBlockLength * ($standardRowHeight + 2)) . "px\" >";
             $blockHTML .= "<div class=\"scheduleGridCompoundSessContainer\" style=\"height:" . ($thisCBlockLength * ($standardRowHeight + 2) - 2) . "px\" >";
             $blockHTML .= "<div id=\"sessionBlockDIV_{$thisRoomSchedArray[$thisKey]["sessionid"]}\" class=\"scheduledSessionBlock\" ";
-            $blockHTML .= "sessionid=\"{$thisRoomSchedArray[$thisKey]["sessionid"]}\" ";
-            $blockHTML .= "scheduleid=\"{$thisRoomSchedArray[$thisKey]["scheduleid"]}\" ";
+            $blockHTML .= "data-sessionid=\"{$thisRoomSchedArray[$thisKey]["sessionid"]}\" ";
+            $blockHTML .= "data-scheduleid=\"{$thisRoomSchedArray[$thisKey]["scheduleid"]}\" ";
             $blockHTML .= "roomid=\"$roomId\" startTimeUnits=\"{$thisRoomSchedArray[$thisKey]["startTimeUnits"]}\" ";
             $blockHTML .= "endTimeUnits=\"{$thisRoomSchedArray[$thisKey]["endTimeUnits"]}\" ";
             $blockHTML .= "startTime=\"{$thisRoomSchedArray[$thisKey]["starttime"]}\" ";

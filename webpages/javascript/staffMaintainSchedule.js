@@ -34,7 +34,7 @@ function StaffMaintainSchedule() {
 	};
 	
 	this.clearAllClick = function clearAllClick() {
-		$("#sessionsToBeScheduledContainer").html("&nbsp;");
+		$("#sessions-to-be-scheduled-container").html("&nbsp;");
 		sessionMasterArray = [];
 		$("#noSessionsFoundMSG").hide();
 	};
@@ -58,7 +58,7 @@ function StaffMaintainSchedule() {
 				returnTable: true,
 				editsArray: new Array({
 					action: "reschedule",
-					sessionid: newSessionDiv.attr("sessionid"),
+					sessionid: newSessionDiv.data("sessionid"),
 					roomid: dropTarget.attr("roomid"),
 					oldroomid: newSessionDiv.attr("roomid"),
 					starttimeunits: dropTarget.attr("starttimeunits"),
@@ -66,16 +66,16 @@ function StaffMaintainSchedule() {
 					oldendtime: newSessionDiv.attr("endtime"),
 					duration: newSessionDiv.attr("duration"),
 					title: newSessionDiv.find(".sessionBlockTitle").text(),
-					scheduleid: newSessionDiv.attr("scheduleid")
+					scheduleid: newSessionDiv.data("scheduleid")
 				})
 			});
 		} else {
-			staffMaintainSchedule.removeFromSessionArray(newSessionDiv.attr("sessionid"));
+			staffMaintainSchedule.removeFromSessionArray(newSessionDiv.data("sessionid"));
 			staffMaintainSchedule.editScheduleAjax({
 				returnTable: true,
 				editsArray: new Array({
 					action: "insert",
-					sessionid: newSessionDiv.attr("sessionid"),
+					sessionid: newSessionDiv.data("sessionid"),
 					roomid: dropTarget.attr("roomid"),
 					starttimeunits: dropTarget.attr("starttimeunits"),
 					duration: newSessionDiv.attr("duration"),
@@ -97,7 +97,7 @@ function StaffMaintainSchedule() {
 					returnTable: true,
 					editsArray: new Array({
 						action: "reschedule",
-						sessionid: newSessionDiv.attr("sessionid"),
+						sessionid: newSessionDiv.data("sessionid"),
 						roomid: dropTarget.attr("roomid"),
 						oldroomid: newSessionDiv.attr("roomid"),
 						starttimeunits: dropTarget.attr("starttimeunits"),
@@ -105,17 +105,17 @@ function StaffMaintainSchedule() {
 						oldendtime: newSessionDiv.attr("endtime"),
 						duration: newSessionDiv.attr("duration"),
 						title: newSessionDiv.find(".sessionBlockTitle").text(),
-						scheduleid: newSessionDiv.attr("scheduleid")
+						scheduleid: newSessionDiv.data("scheduleid")
 					})
 				});
 			} else {
 				// wasn't already in schedule -- do insert
-				staffMaintainSchedule.removeFromSessionArray(newSessionDiv.attr("sessionid"));
+				staffMaintainSchedule.removeFromSessionArray(newSessionDiv.data("sessionid"));
 				staffMaintainSchedule.editScheduleAjax({
 					returnTable: true,
 					editsArray: new Array({
 						action: "insert",
-						sessionid: newSessionDiv.attr("sessionid"),
+						sessionid: newSessionDiv.data("sessionid"),
 						roomid: dropTarget.attr("roomid"),
 						starttimeunits: dropTarget.attr("starttimeunits"),
 						duration: newSessionDiv.attr("duration"),
@@ -202,7 +202,7 @@ function StaffMaintainSchedule() {
 					returnTable: false,
 					editsArray: new Array({
 						action: "reschedule",
-						sessionid: newSessionDiv.attr("sessionid"),
+						sessionid: newSessionDiv.data("sessionid"),
 						roomid: newSessionDiv.attr("roomid"),
 						oldroomid: oldRoomId,
 						starttimeunits: newSessionDiv.attr("starttimeunits"),
@@ -210,19 +210,19 @@ function StaffMaintainSchedule() {
 						oldendtime: oldEndTime,
 						duration: newSessionDiv.attr("duration"),
 						title: newSessionDiv.find(".sessionBlockTitle").text(),
-						scheduleid: newSessionDiv.attr("scheduleid")
+						scheduleid: newSessionDiv.data("scheduleid")
 					})
 				});
 			} else {
 				// wasn't already in schedule -- do insert and remove from unscheduled list
-				staffMaintainSchedule.removeFromSessionArray(newSessionDiv.attr("sessionid"));
+				staffMaintainSchedule.removeFromSessionArray(newSessionDiv.data("sessionid"));
 				newSessionDiv.addClass("scheduledSessionBlock");
 				newSessionDiv.removeClass("sessionBlock");
 				staffMaintainSchedule.editScheduleAjax({
 					returnTable: false,
 					editsArray: new Array({
 						action: "insert",
-						sessionid: newSessionDiv.attr("sessionid"),
+						sessionid: newSessionDiv.data("sessionid"),
 						roomid: dropTarget.attr("roomid"),
 						starttimeunits: dropTarget.attr("starttimeunits"),
 						duration: newSessionDiv.attr("duration"),
@@ -246,8 +246,8 @@ function StaffMaintainSchedule() {
 			var editsArray = [];
 			editsArray[0] = {
 				action: "delete",
-				sessionid: $(pThis).attr("sessionid"),
-				scheduleid: $(pThis).attr("scheduleid"),
+				sessionid: $(pThis).data("sessionid"),
+				scheduleid: $(pThis).data("scheduleid"),
 				roomid: $(pThis).attr("roomid"),
 				starttimeunits: starttimeunits,
 				endtimeunits: endtimeunits,
@@ -299,7 +299,7 @@ function StaffMaintainSchedule() {
 		var tarSessSEL = dropTarget.find(".scheduledSessionBlock");
 		var tarSessDurUnits = parseInt(tarSessSEL.attr("endTimeUnits"), 10) - parseInt(tarSessSEL.attr("startTimeUnits"), 10);
 		var editsArray = [];
-		if ($(pThis).attr("scheduleid")) {
+		if ($(pThis).data("scheduleid")) {
 			//dropped item was previously scheduled		
 			if ($("#swapModeCheck").attr("mychecked") === "true") {
 				//swap mode (prev sched); 1 of 4; not done
@@ -307,7 +307,7 @@ function StaffMaintainSchedule() {
 				var targetDurationUnits = parseInt(dropTarget.attr("endtimeunits"), 10) - parseInt(dropTarget.attr("starttimeunits"), 10);
 				editsArray.push({
 					action: "reschedule",
-					sessionid: $(pThis).attr("sessionid"),
+					sessionid: $(pThis).data("sessionid"),
 					roomid: tarSessSEL.attr("roomid"),
 					oldroomid: $(pThis).attr("roomid"),
 					starttimeunits: tarSessSEL.attr("starttimeunits"),
@@ -315,11 +315,11 @@ function StaffMaintainSchedule() {
 					oldendtime: $(pThis).attr("endtime"),
 					duration: $(pThis).attr("duration"),
 					title: $(pThis).find(".sessionBlockTitle").text(),
-					scheduleid: $(pThis).attr("scheduleid")
+					scheduleid: $(pThis).data("scheduleid")
 				});
 				editsArray.push({
 					action: "reschedule",
-					sessionid: tarSessSEL.attr("sessionid"),
+					sessionid: tarSessSEL.data("sessionid"),
 					roomid: $(pThis).attr("roomid"),
 					oldroomid: tarSessSEL.attr("roomid"),
 					starttimeunits: $(pThis).attr("starttimeunits"),
@@ -327,7 +327,7 @@ function StaffMaintainSchedule() {
 					oldendtime: tarSessSEL.attr("endtime"),
 					duration: tarSessSEL.attr("duration"),
 					title: tarSessSEL.find(".sessionBlockTitle").text(),
-					scheduleid: tarSessSEL.attr("scheduleid")
+					scheduleid: tarSessSEL.data("scheduleid")
 				});
 				// use clones to swap items in the DOM
 				// then still have all old data available
@@ -406,7 +406,7 @@ function StaffMaintainSchedule() {
 					returnTable: true,
 					editsArray: new Array({
 						action: "reschedule",
-						sessionid: $(pThis).attr("sessionid"),
+						sessionid: $(pThis).data("sessionid"),
 						roomid: tarSessSEL.attr("roomid"),
 						oldroomid: $(pThis).attr("roomid"),
 						starttimeunits: tarSessSEL.attr("starttimeunits"),
@@ -414,7 +414,7 @@ function StaffMaintainSchedule() {
 						oldendtime: $(pThis).attr("endtime"),
 						duration: $(pThis).attr("duration"),
 						title: $(pThis).find(".sessionBlockTitle").text(),
-						scheduleid: $(pThis).attr("scheduleid")
+						scheduleid: $(pThis).data("scheduleid")
 					})
 				});
 			}
@@ -424,8 +424,8 @@ function StaffMaintainSchedule() {
 				//swap mode (not prev sched); 3 of 4; done
 				editsArray[0] = {
 					action: "delete",
-					sessionid: tarSessSEL.attr("sessionid"),
-					scheduleid: tarSessSEL.attr("scheduleid"),
+					sessionid: tarSessSEL.data("sessionid"),
+					scheduleid: tarSessSEL.data("scheduleid"),
 					roomid: tarSessSEL.attr("roomid"),
 					starttimeunits: tarSessSEL.attr("starttimeunits"),
 					endtimeunits: tarSessSEL.attr("endtimeunits"),
@@ -435,7 +435,7 @@ function StaffMaintainSchedule() {
 				};
 				editsArray[1] = {
 					action: "insert",
-					sessionid: $(pThis).attr("sessionid"),
+					sessionid: $(pThis).data("sessionid"),
 					roomid: tarSessSEL.attr("roomid"),
 					starttimeunits: tarSessSEL.attr("starttimeunits"),
 					duration: $(pThis).attr("duration"),
@@ -448,7 +448,7 @@ function StaffMaintainSchedule() {
 				helper.addClass("animHelper");
 				helper.css("top", tarSessSEL.offset().top);
 				helper.css("left", tarSessSEL.offset().left);
-				var $sessionsToBeScheduled = $("#sessionsToBeScheduledContainer");
+				var $sessionsToBeScheduled = $("#sessions-to-be-scheduled-container");
 				dest = $sessionsToBeScheduled.offset();
 				destTop = parseInt(dest.top, 10) + 2;
 				destLeft = parseInt(dest.left, 10) + 1;
@@ -456,7 +456,7 @@ function StaffMaintainSchedule() {
 
 				var unschDup = tarSessSEL.clone();
 				unschDup.attr("durationunits", parseInt(unschDup.attr("endtimeunits"), 10) - parseInt(unschDup.attr("starttimeunits"), 10));
-				unschDup.attr("scheduleid", "");
+				unschDup.data("scheduleid", "");
 				unschDup.attr("roomid", "");
 				unschDup.attr("starttimeunits", "");
 				unschDup.attr("starttime", "");
@@ -468,7 +468,7 @@ function StaffMaintainSchedule() {
 				unschDup.find(".getSessionInfo").on("click", staffMaintainSchedule.onClickInfo);
 				$sessionsToBeScheduled.prepend(unschDup);
 				elemToAdd = unschDup; // will unhide and make draggable when animation ends
-				sessionMasterArray.push(tarSessSEL.attr("sessionid"));
+				sessionMasterArray.push(tarSessSEL.data("sessionid"));
 				$(pThis).addClass("scheduledSessionBlock");
 				$(pThis).removeClass("sessionBlock");
 				// add the dropped session to the target and make it visible
@@ -502,7 +502,7 @@ function StaffMaintainSchedule() {
 						});
 						elemToAdd = "";
 					});
-				staffMaintainSchedule.removeFromSessionArray($(pThis).attr("sessionid"));
+				staffMaintainSchedule.removeFromSessionArray($(pThis).data("sessionid"));
 				if ($(pThis).attr("durationUnits") === tarSessDurUnits) {
 					//don't reload table; do all page manipulation here
 					$(pThis).draggable({
@@ -530,13 +530,13 @@ function StaffMaintainSchedule() {
 				//not swap mode (not prev sched); 4 of 4; done
 				editsArray[0] = {
 					action: "insert",
-					sessionid: $(pThis).attr("sessionid"),
+					sessionid: $(pThis).data("sessionid"),
 					roomid: tarSessSEL.attr("roomid"),
 					starttimeunits: tarSessSEL.attr("starttimeunits"),
 					duration: $(pThis).attr("duration"),
 					title: $(pThis).find(".sessionBlockTitle").text()
 				};
-				staffMaintainSchedule.removeFromSessionArray($(pThis).attr("sessionid"));
+				staffMaintainSchedule.removeFromSessionArray($(pThis).data("sessionid"));
 				$(pThis).remove();
 				// rebuild schedule grid because dropping on a scheduled session just created a compound section
 				staffMaintainSchedule.editScheduleAjax({
@@ -558,8 +558,8 @@ function StaffMaintainSchedule() {
 		var editsArray = [];
 		editsArray[0] = {
 			action: "delete",
-			sessionid: $(pThis).attr("sessionid"),
-			scheduleid: $(pThis).attr("scheduleid"),
+			sessionid: $(pThis).data("sessionid"),
+			scheduleid: $(pThis).data("scheduleid"),
 			roomid: $(pThis).attr("roomid"),
 			starttimeunits: starttimeunits,
 			endtimeunits: endtimeunits,
@@ -591,10 +591,10 @@ function StaffMaintainSchedule() {
 			//	tolerance: 'intersect'
 			//	});
 		}
-		$("#sessionsToBeScheduledContainer").prepend($(pThis));
+		$("#sessions-to-be-scheduled-container").prepend($(pThis));
 		$(pThis).removeClass("scheduledSessionBlock");
 		$(pThis).addClass("sessionBlock");
-		$(pThis).attr("scheduleid", "");
+		$(pThis).data("scheduleid", "");
 		$(pThis).attr("durationunits", endtimeunits - starttimeunits);
 		$(pThis).attr("duration", staffMaintainSchedule.durationFromSTAET($(pThis).attr("starttime"), $(pThis).attr("endtime")));
 		$(pThis).attr("starttimeunits", "");
@@ -612,7 +612,7 @@ function StaffMaintainSchedule() {
 			stop: staffMaintainSchedule.dropSession,
 			scroll: false
 		});
-		sessionMasterArray.push($(pThis).attr("sessionid"));
+		sessionMasterArray.push($(pThis).data("sessionid"));
 		staffMaintainSchedule.editScheduleAjax({
 			returnTable: returnTable,
 			editsArray: editsArray
@@ -624,7 +624,7 @@ function StaffMaintainSchedule() {
 		if (dropped) {
 			if (dropTarget.attr("id") === "fileCabinetIMG") {
 				staffMaintainSchedule.dropOnFileCab(event, ui, this);
-			} else if (dropTarget.attr("id") === "sessionsToBeScheduledContainer") {
+			} else if (dropTarget.attr("id") === "sessions-to-be-scheduled-container") {
 				staffMaintainSchedule.dropOnUnschedSessions(event, ui, this);
 			} else if (dropTarget.hasClass("scheduleGridCompoundEmptyDIV")) {
 				staffMaintainSchedule.dropOnCompoundEmptySlot(event, ui, this)
@@ -669,89 +669,88 @@ function StaffMaintainSchedule() {
 	this.editScheduleAjax = function editScheduleAjax(paramObj) {
 		var returnTable = paramObj.returnTable;
 		var editsArray = paramObj.editsArray;
-		var roomname;
-		var thisEdit;
-		var startTime;
 		var endTime;
-		var startTimeStr;
 		var endTimeStr;
+		var oldendTime;
 		var oldroomname;
 		var oldstartTime;
-		var oldendTime;
+		var postdata;
+		var roomname;
+		var startTime;
+		var startTimeStr;
+		var thisEdit;
 		confirmationMsg = "";
 		for (thisEdit in editsArray) {
 			roomname = $("#roomnameSPN_" + editsArray[thisEdit].roomid).text();
-			confirmationMsg += 	"<div class=\"warnConfMsg\">";
-			confirmationMsg += 		"Session ";
-			confirmationMsg += 		"<span class=\"warnConfMsgTitle\">" + editsArray[thisEdit].title + "</span> ";
-			confirmationMsg += 		"<span class=\"warnConfMsgSessionid\">(" + editsArray[thisEdit].sessionid + ")</span> ";
-			if (editsArray[thisEdit].action == "insert") {
-					startTime = staffMaintainSchedule.startTimeFromUnits(editsArray[thisEdit].starttimeunits);
-					endTime = staffMaintainSchedule.endTimeFromSTnD(startTime,editsArray[thisEdit].duration);
-					confirmationMsg += 		"added to room " + roomname + " from ";
-					}
-				else if (editsArray[thisEdit].action == "delete") {
-					startTime = staffMaintainSchedule.timeFromTimeAttr(editsArray[thisEdit].starttime);
-					endTime = staffMaintainSchedule.timeFromTimeAttr(editsArray[thisEdit].endtime);
-					confirmationMsg += 		"removed from room " + roomname + " from ";
-					}
-				else if (editsArray[thisEdit].action == "reschedule") {
-					oldroomname = $("#roomnameSPN_" + editsArray[thisEdit].oldroomid).text();
-					oldstartTime = staffMaintainSchedule.timeStrFromTime(staffMaintainSchedule.timeFromTimeAttr(editsArray[thisEdit].oldstarttime));
-					oldendTime = staffMaintainSchedule.timeStrFromTime(staffMaintainSchedule.timeFromTimeAttr(editsArray[thisEdit].oldendtime));
-					startTime = staffMaintainSchedule.startTimeFromUnits(editsArray[thisEdit].starttimeunits);
-					endTime = staffMaintainSchedule.endTimeFromSTnD(startTime,editsArray[thisEdit].duration);
-					confirmationMsg += 		"changed from room " + oldroomname + " from " + oldstartTime + "-";
-					confirmationMsg +=      oldendTime + " to room " + roomname + " from ";
-					}
-			startTimeStr = staffMaintainSchedule.timeStrFromTime(startTime);		
-			endTimeStr = staffMaintainSchedule.timeStrFromTime(endTime);		
-			confirmationMsg += 		startTimeStr + "-" + endTimeStr;
-			confirmationMsg += "</div>";
+			confirmationMsg += "<div class=\"warnConfMsg\">";
+			confirmationMsg += "Session ";
+			confirmationMsg += "<span class=\"warnConfMsgTitle\">" + editsArray[thisEdit].title + "</span> ";
+			confirmationMsg += "<span class=\"warnConfMsgSessionid\">(" + editsArray[thisEdit].sessionid + ")</span> ";
+			if (editsArray[thisEdit].action === "insert") {
+				startTime = staffMaintainSchedule.startTimeFromUnits(editsArray[thisEdit].starttimeunits);
+				endTime = staffMaintainSchedule.endTimeFromSTnD(startTime, editsArray[thisEdit].duration);
+				confirmationMsg += "added to room " + roomname + " from ";
+			} else if (editsArray[thisEdit].action === "delete") {
+				startTime = staffMaintainSchedule.timeFromTimeAttr(editsArray[thisEdit].starttime);
+				endTime = staffMaintainSchedule.timeFromTimeAttr(editsArray[thisEdit].endtime);
+				confirmationMsg += "removed from room " + roomname + " from ";
+			} else if (editsArray[thisEdit].action === "reschedule") {
+				oldroomname = $("#roomnameSPN_" + editsArray[thisEdit].oldroomid).text();
+				oldstartTime = staffMaintainSchedule.timeStrFromTime(staffMaintainSchedule.timeFromTimeAttr(editsArray[thisEdit].oldstarttime));
+				oldendTime = staffMaintainSchedule.timeStrFromTime(staffMaintainSchedule.timeFromTimeAttr(editsArray[thisEdit].oldendtime));
+				startTime = staffMaintainSchedule.startTimeFromUnits(editsArray[thisEdit].starttimeunits);
+				endTime = staffMaintainSchedule.endTimeFromSTnD(startTime, editsArray[thisEdit].duration);
+				confirmationMsg += "changed from room " + oldroomname + " from " + oldstartTime + "-";
+				confirmationMsg += oldendTime + " to room " + roomname + " from ";
 			}
+			startTimeStr = staffMaintainSchedule.timeStrFromTime(startTime);
+			endTimeStr = staffMaintainSchedule.timeStrFromTime(endTime);
+			confirmationMsg += startTimeStr + "-" + endTimeStr;
+			confirmationMsg += "</div>";
+		}
 		if (returnTable) {
-				schedScrollTop = $("#scheduleGridContainer").scrollTop();
-				var roomsToDisplayArray = [];
-				$("[id^='roomidCHK']:checked").each(function() {
-					roomsToDisplayArray.push($(this).attr("id").substring(10,999));
-					});
-				var postdata = {
-					ajax_request_action: "editSchedule",
-					returnTable: true,
-					editsArray: editsArray,
-					roomsToDisplayArray: roomsToDisplayArray
-					};
-				$.ajax({
-					url: "staffMaintainScheduleSubmit.php",
-					dataType: "html",
-					data: postdata,
-					//error: staffMaintainSchedule.retrieveSessionsError,
-					success: staffMaintainSchedule.retrieveRoomsTableCallback,
-					type: "POST"
-					});
-				}
-			else {
-				var postdata = {
-					ajax_request_action: "editSchedule",
-					returnTable: false,
-					editsArray: editsArray
-					};
-				$.ajax({
-					url: "staffMaintainScheduleSubmit.php",
-					dataType: "html",
-					data: postdata,
-					//error: staffMaintainSchedule.retrieveSessionsError,
-					success: staffMaintainSchedule.editScheduleCallback,
-					type: "POST"
-					});
-				}
+			schedScrollTop = $("#scheduleGridContainer").scrollTop();
+			var roomsToDisplayArray = [];
+			$("[id^='roomidCHK']:checked").each(function () {
+				roomsToDisplayArray.push($(this).attr("id").substring(10, 999));
+			});
+			postdata = {
+				ajax_request_action: "editSchedule",
+				returnTable: true,
+				editsArray: editsArray,
+				roomsToDisplayArray: roomsToDisplayArray
+			};
+			$.ajax({
+				url: "staffMaintainScheduleSubmit.php",
+				dataType: "html",
+				data: postdata,
+				//error: staffMaintainSchedule.retrieveSessionsError,
+				success: staffMaintainSchedule.retrieveRoomsTableCallback,
+				type: "POST"
+			});
+		} else {
+			postdata = {
+				ajax_request_action: "editSchedule",
+				returnTable: false,
+				editsArray: editsArray
+			};
+			$.ajax({
+				url: "staffMaintainScheduleSubmit.php",
+				dataType: "html",
+				data: postdata,
+				//error: staffMaintainSchedule.retrieveSessionsError,
+				success: staffMaintainSchedule.editScheduleCallback,
+				type: "POST"
+			});
+		}
 	};
 
 	this.editScheduleCallback = function editScheduleCallback(responseData,returnString,jqXHR) {
-		$("#tabs-warnings").html(confirmationMsg + responseData);
-		$("#tabs-warnings").find(".conflictEditConfirmation").remove();
-		$("#tabs-warnings").find("div.insertedScheduleId").each(function() {
-			$("#sessionBlockDIV_" + $(this).attr("sessionId")).attr("scheduleId",$(this).attr("scheduleId"));
+		var $tabsWarnings = $("#tabs-warnings");
+		$tabsWarnings.html(confirmationMsg + responseData);
+		$tabsWarnings.find(".conflictEditConfirmation").remove();
+		$tabsWarnings.find("div.insertedScheduleId").each(function() {
+			$("#sessionBlockDIV_" + $(this).data("sessionId")).data("scheduleid",$(this).data("scheduleid"));
 			$(this).remove();
 			});
 		$("#tabs-warnings-link").click();
@@ -777,7 +776,7 @@ function StaffMaintainSchedule() {
 	this.onClickInfo = function onClickInfo() {
 		var postdata = {
 			ajax_request_action : "retrieveSessionInfo",
-			sessionid: $(this).parent().parent().attr("sessionid")
+			sessionid: $(this).parent().parent().data("sessionid")
 			};
 		$.ajax({
 			url: "staffMaintainScheduleSubmit.php",
@@ -790,15 +789,15 @@ function StaffMaintainSchedule() {
 	};
 	
 	this.onClickSwapMode = function onClickSwapMode() {
-		if ($("#swapModeCheck").attr("mychecked") == "true") {
-				$("#swapModeCheck").attr("mychecked","false");
-				$("#swapModeCheck").removeClass("btn-inverse");
-				}
-			else {
-				$("#swapModeCheck").attr("mychecked","true");
-				$("#swapModeCheck").addClass("btn-inverse");
-				}
-		$("#swapModeCheck").blur();
+		var $swapModeCheck = $("#swapModeCheck");
+		if ($swapModeCheck.attr("mychecked") === "true") {
+			$swapModeCheck.attr("mychecked", "false");
+			$swapModeCheck.removeClass("btn-inverse");
+		} else {
+			$swapModeCheck.attr("mychecked", "true");
+			$swapModeCheck.addClass("btn-inverse");
+		}
+		$swapModeCheck.blur();
 	};
 
 	this.temp = function temp() {
@@ -807,9 +806,9 @@ function StaffMaintainSchedule() {
 	
 	this.fileCabinetSwap = function fileCabinetSwap(open) {
 		if (typeof (open) == 'object')
-			if (open.type=='dropover')
+			if (open.type === 'dropover')
 					open = true;
-				else if (open.type=='dropout')
+				else if (open.type === 'dropout')
 					open = false;
 				else
 					return;
@@ -845,7 +844,7 @@ function StaffMaintainSchedule() {
 			out: staffMaintainSchedule.fileCabinetSwap,
 			tolerance: 'intersect'
 			});
-		$("#sessionsToBeScheduledContainer").droppable({
+		$("#sessions-to-be-scheduled-container").droppable({
 			accept: ".scheduledSessionBlock",	
 			drop: function (event, ui) {
 				$(this).css("border-color","white");
@@ -868,17 +867,19 @@ function StaffMaintainSchedule() {
 
 	this.removeFromSessionArray = function removeFromSessionArray(sessionid) {
 		var foo = sessionMasterArray.indexOf(sessionid);
-		if (foo != -1)
-			sessionMasterArray.splice(foo,1);
-	}
+		if (foo !== -1) {
+			sessionMasterArray.splice(foo, 1);
+		}
+	};
 
 	this.retrieveRoomsTableCallback = function retrieveRoomsTableCallback(responseData,returnString,jqXHR) {
 		insertedSessionDiv = "";
-		$("#scheduleGridContainer").html(responseData);
-		$("#scheduleGridContainer").find(".getSessionInfoP").on("click",function() {
+		var $scheduleGridContainer = $("#scheduleGridContainer");
+		$scheduleGridContainer.html(responseData);
+		$scheduleGridContainer.find(".getSessionInfoP").on("click",function() {
 			var postdata = {
 				ajax_request_action : "retrieveSessionInfo",
-				sessionid: $(this).parent().parent().attr("sessionid")
+				sessionid: $(this).parent().parent().data("sessionid")
 				};
 			$.ajax({
 				url: "staffMaintainScheduleSubmit.php",
@@ -889,9 +890,9 @@ function StaffMaintainSchedule() {
 				type: "POST"
 				});
 			});
-		$("#scheduleGridContainer").find(".getSessionInfoP").addClass("getSessionInfo");
-		$("#scheduleGridContainer").find(".getSessionInfoP").removeClass("getSessionInfoP");
-		$("#scheduleGridContainer").find(".scheduleGridEmptyDIV").droppable({
+		$scheduleGridContainer.find(".getSessionInfoP").addClass("getSessionInfo");
+		$scheduleGridContainer.find(".getSessionInfoP").removeClass("getSessionInfoP");
+		$scheduleGridContainer.find(".scheduleGridEmptyDIV").droppable({
 			drop: function (event, ui) {
 				dropped=true;
 				dropTarget = $(this);
@@ -904,7 +905,7 @@ function StaffMaintainSchedule() {
 				},
 			tolerance: 'intersect'
 			});
-		$("#scheduleGridContainer").find(".scheduleGridCompoundEmptyDIV").droppable({
+		$scheduleGridContainer.find(".scheduleGridCompoundEmptyDIV").droppable({
 			drop: function (event, ui) {
 				dropped=true;
 				dropTarget = $(this);
@@ -923,7 +924,7 @@ function StaffMaintainSchedule() {
 				},
 			tolerance: 'intersect'
 			});
-		$("#scheduleGridContainer").find(".scheduledSessionBlock").parent(".schedulerGridContainer").droppable({
+		$scheduleGridContainer.find(".scheduledSessionBlock").parent(".schedulerGridContainer").droppable({
 			drop: function (event, ui) {
 				dropped=true;
 				dropTarget = $(this);
@@ -948,7 +949,7 @@ function StaffMaintainSchedule() {
 			tolerance: 'intersect'
 			});
 		/// editing this chunk
-		$("#scheduleGridContainer").find(".scheduledSessionBlock").draggable({
+		$scheduleGridContainer.find(".scheduledSessionBlock").draggable({
 			addClasses: false,
 			revert: 'invalid',
 			containment: "#mainContentContainer",
@@ -960,26 +961,29 @@ function StaffMaintainSchedule() {
 			});
 		/// editing this chunk
 		var foo;
-		if (confirmationMsg)
+		if (confirmationMsg) {
 			foo = confirmationMsg;
-		var scratch = $("#scheduleGridContainer").find("#warningsDivContent");
+		}
+		var scratch = $scheduleGridContainer.find("#warningsDivContent");
 		if (scratch.length > 0) {
 			foo += 	scratch.html();
 			scratch.remove();
 			}
 		if (foo) {
-			$("#tabs-warnings").html(foo);
-			$("#tabs-warnings").find(".conflictEditConfirmation").remove();
+			var $tabsWarnings = $("#tabs-warnings");
+			$tabsWarnings.html(foo);
+			$tabsWarnings.find(".conflictEditConfirmation").remove();
 			$("#tabs-warnings-link").click();
 			}
 		confirmationMsg = "";
-		if (schedScrollTop != "")
-			$("#scheduleGridContainer").scrollTop(schedScrollTop);
-	}
+		if (schedScrollTop !== "") {
+			$scheduleGridContainer.scrollTop(schedScrollTop);
+		}
+	};
 
 	this.retrieveRoomsTableError = function retrieveRoomsTableError(event,jqXHR, ajaxSettings, thrownError) {
 		$("#testForNow1").html(thrownError);
-	}
+	};
 	
 	this.resetSessionSearchClick = function resetSessionSearchClick() {
 		//debugger;
@@ -989,17 +993,18 @@ function StaffMaintainSchedule() {
 		$("#sessionIdINP").val("");
 		$("#titleINP").val("");
 		$("#noSessionsFoundMSG").hide();
-	}
+	};
 
 	this.resizeMe = function resizeMe() {
 		lib.onePageResize();
-		$("#tabsContent").css("top", $("#tabsBar").outerHeight(true) + 1);
-	}
+		//$("#tabs-content").css("top", $("#tabs-bar").outerHeight(true) + 1);
+	};
 
 	this.retrieveSessionsCallback = function retrieveSessionsCallback(responseData, returnString, jqXHR) {
-		var $sessionsToBeScheduled = $("#sessionsToBeScheduledContainer");
-		if (responseData == "noNewSessionsFound") {
-			$("#noSessionsFoundMSG").show();
+		var $sessionsToBeScheduled = $("#sessions-to-be-scheduled-container");
+		var $noSessionsFoundMSG = $("#noSessionsFoundMSG");
+		if (responseData === "noNewSessionsFound") {
+			$noSessionsFoundMSG.show();
 			return true;
 		}
 		if ($sessionsToBeScheduled.find("[id^='sessionBlockDIV_']").length > 0) {
@@ -1007,6 +1012,7 @@ function StaffMaintainSchedule() {
 		} else {
 			$sessionsToBeScheduled.html(responseData);
 		}
+		var $getSessionInfoP = $(".getSessionInfoP");
 		$sessionsToBeScheduled.find("[id^='sessionBlockDIV_']").not(".draggable").draggable({
 			addClasses: false,
 			revert: 'invalid',
@@ -1021,18 +1027,18 @@ function StaffMaintainSchedule() {
 		$sessionsToBeScheduled.find("[id^='sessionBlockDIV_']").each(function () {
 			sessionMasterArray.push($(this).attr("id").substring(16, 999));
 		});
-		$("#noSessionsFoundMSG").hide();
+		$noSessionsFoundMSG.hide();
 		// make all the ? (info) icons on the session blocks work
-		$(".getSessionInfoP").on("click", staffMaintainSchedule.onClickInfo);
-		$(".getSessionInfoP").addClass("getSessionInfo");
-		$(".getSessionInfoP").removeClass("getSessionInfoP");
+		$getSessionInfoP.on("click", staffMaintainSchedule.onClickInfo);
+		$getSessionInfoP.addClass("getSessionInfo");
+		$getSessionInfoP.removeClass("getSessionInfoP");
 		return true;
 	};
 
 	this.retrieveSessionInfoCallback = function retrieveSessionInfoCallback(responseData,returnString,jqXHR) {
 		$("#tabs-info").html(responseData);
 		$("#tabs-info-link").click();
-	}
+	};
 
 	this.retrieveSessionsClick = function retrieveSessionsClick() {
 		var i;
@@ -1048,8 +1054,10 @@ function StaffMaintainSchedule() {
 			sessionId : $("#sessionIdINP").val(),
 			title : $("#titleINP").val()	
 			};
-		if (x = $("#password").val())
+		x = $("#password").val();
+		if (x) {
 			postdata.password = x;
+		}
 		// url: "http://www.hashemian.com/tools/form-post-tester.php",
 		$.ajax({
 			url: "staffMaintainScheduleSubmit.php",
@@ -1059,17 +1067,16 @@ function StaffMaintainSchedule() {
 			success: staffMaintainSchedule.retrieveSessionsCallback,
 			type: "POST"
 			});
-	}
+	};
 
 	this.retrieveSessionsError = function retrieveSessionsError(event,jqXHR, ajaxSettings, thrownError) {
 		$("#testForNow1").html(thrownError);
-	}
+	};
 	
 	this.roomCheckClick = function roomCheckClick(e) {
 		e.stopPropagation();
 		staffMaintainSchedule.changeRoomDisplay();
-		return;
-	}
+	};
 
 	this.timeFromTimeAttr = function timeFromTimeAttr(thisTime) {
 		var myTime = new Date(conStartDateTime);
@@ -1077,22 +1084,22 @@ function StaffMaintainSchedule() {
 		myTime.setHours(myTime.getHours() + parseInt(thisTimeArr[0],10));
 		myTime.setMinutes(myTime.getMinutes() + parseInt(thisTimeArr[1],10));
 		return myTime;
-	}
+	};
 
 	this.timeAttrFromUnits = function timeAttrFromUnits(timeUnits) {
-		return Math.floor(timeUnits/2) + ((timeUnits % 2 == 1) ? ":30:00" : ":00:00");
-	}
+		return Math.floor(timeUnits/2) + ((timeUnits % 2 === 1) ? ":30:00" : ":00:00");
+	};
 
 	this.startTimeFromUnits = function startTimeFromUnits(startTimeUnits) {
 		var startTime = new Date(conStartDateTime);
 		startTime.setHours(startTime.getHours() + Math.floor(startTimeUnits/2));
 		startTime.setMinutes(startTime.getMinutes() + (startTimeUnits % 2) * 30);
 		return startTime;
-	}
+	};
 	
 	this.timeStrFromTime = function timeStrFromTime(thisTime) {
 		var minStr = ((thisTime.getMinutes() < 10) ? "0" : "") + thisTime.getMinutes();
 		return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][thisTime.getDay()] + " " + ((thisTime.getHours()+11) % 12 + 1) +
 			":" + minStr + ((thisTime.getHours() >= 12) ? " PM" : " AM");
-	}
+	};
 }

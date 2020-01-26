@@ -5,6 +5,9 @@
 /**
  * LAYOUT
  */
+* {
+  box-sizing: border-box;
+}
 /*
  * Page header stuff
  */
@@ -598,10 +601,6 @@ table.multcol-list td {
 /**
  * choices widget overrides
  */
-.zambia-form,
-.zambia-form * {
-  box-sizing: border-box;
-}
 .zambia-form .choices {
   display: inline-block;
   margin-right: 1.25rem;
