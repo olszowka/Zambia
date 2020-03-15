@@ -5,7 +5,7 @@ $title = "Run Report";
 require_once('StaffCommonCode.php');
 $reportName = getString("reportName");
 if ($reportName == '') {
-    $message_error = "Required parameter reportName misssing or invalid.";
+    $message_error = "Required parameter reportName missing or invalid.";
     RenderError($message_error);
     exit();
 }
