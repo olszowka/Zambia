@@ -24,7 +24,7 @@ function SubmitAssignParticipants() {
         $moderator = "";
     }
     $wasmodid = isset($_POST["wasmodid"]) ? mysqli_real_escape_string($linki, $_POST["wasmodid"]) : "";
-    $selsessionid = getInt("selsess", "");
+    $selsessionid = getInt("selsess", 0);
     $query = "SET @maxcr = (SELECT max(createdts) FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid);";
     mysqli_query_exit_on_error($query);
     $query = "SET @maxin = (SELECT max(inactivatedts) FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid);";

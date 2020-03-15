@@ -191,7 +191,7 @@ EOD;
         $query .= " PS.previousstatusid={$SessionSearchParameters['status']} AND";
     }
     if ($SessionSearchParameters['title'] != '') {
-        $query .= " PS.title LIKE \"%" . mysql_real_escape_string($SessionSearchParameters['title']) . "%\" AND";
+        $query .= " PS.title LIKE \"%" . mysqli_real_escape_string($linki, $SessionSearchParameters['title']) . "%\" AND";
     }
     if (!$SessionSearchParameters['showimported']) {
         $query .= " PS.importedsessionid IS NULL AND";
@@ -269,7 +269,7 @@ function ProcessImportSessions() {
             $query2 .= "            PS.languagestatusid, NULL pubsno, PS.title, PS.secondtitle, PS.pocketprogtext, \n";
             $query2 .= "            PS.progguiddesc, PS.persppartinfo, PS.duration, PS.estatten, PS.kidscatid, \n";
             $query2 .= "            PS.signupreq, 99 roomsetid, NULL notesforpart, NULL servicenotes, 6 statusid, \n";
-            $query2 .= "            PS.notesforprog, NULL warnings, PS.invitedguest, NULL ts \n";
+            $query2 .= "            PS.notesforprog, NULL warnings, PS.invitedguest, CURRENT_TIMESTAMP ts \n";
             $query2 .= "        FROM\n";
             $query2 .= "            PreviousSessions PS LEFT JOIN\n";
             $query2 .= "            TrackCompatibility TC USING (previousconid, previoustrackid)\n";
@@ -317,10 +317,10 @@ function ProcessImportSessions() {
             }
             $query4 = "INSERT INTO SessionEditHistory\n";
             $query4 .= "    (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)\n";
-            $query4 .= "    Values($sessionid, \"$badgeid\", \"$name\", \"$email\", NULL, 6, 6, NULL)\n";
+            $query4 .= "    Values($sessionid, \"$badgeid\", \"$name\", \"$email\", CURRENT_TIMESTAMP, 6, 6, NULL)\n";
             $result = mysqli_query($linki, $query4);
             if (!$result) {
-                $message_error = $query4 . "Error querying database.";
+                $message_error = $query4 . "Error querying database. " . mysqli_error($linki);
                 rollback_mysqli();
                 return (false);
             }
