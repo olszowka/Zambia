@@ -100,7 +100,8 @@ SELECT
 		P.pubsname ASC;
 EOD;
 if (($resultXML = mysql_query_XML($queryArray)) === false) {
-    $message = $query . "<br>Error querying database. Unable to continue.<br>";
+    //$message = $query . "<br>Error querying database. Unable to continue.<br>";
+    $message = $message_error . "<br>Error querying database. Unable to continue.<br>";
     echo "<p class\"alert alert-error\">" . $message . "</p>\n";
     staff_footer();
     exit();
