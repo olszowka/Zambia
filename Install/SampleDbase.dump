@@ -1576,12 +1576,9 @@ CREATE TABLE `Tags` (
 LOCK TABLES `Tags` WRITE;
 /*!40000 ALTER TABLE `Tags` DISABLE KEYS */;
 INSERT INTO `Tags`
-        (tagid, tagname, display_order)
-    VALUES
-        (1, '35mm', 1),
-        (2, '16mm', 2),
-        (3, 'dubbed', 3),
-        (4, 'anime', 4);
+(tagid, tagname, display_order)
+VALUES
+(1, 'Featured', 1);
 /*!40000 ALTER TABLE `Tags` ENABLE KEYS */;
 UNLOCK TABLES;
 

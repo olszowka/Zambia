@@ -23,7 +23,7 @@ SELECT
                        FROM
                            SessionHasTag
                        WHERE
-                               tagid = 5 /* Featured */
+                               tagid = 1 /* Featured */
                            AND sessionid = S.sessionid
                  )
     ORDER BY
