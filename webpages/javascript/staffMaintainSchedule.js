@@ -351,7 +351,7 @@ function StaffMaintainSchedule() {
 				helper.addClass("animHelper");
 				helper.css("top", origTop);
 				helper.css("left", origLeft);
-				$("#fullPageContainer").prepend(helper);
+				$("body").prepend(helper);
 				helper.animate({
 						top: destTop,
 						left: destLeft
@@ -452,7 +452,7 @@ function StaffMaintainSchedule() {
 				dest = $sessionsToBeScheduled.offset();
 				destTop = parseInt(dest.top, 10) + 2;
 				destLeft = parseInt(dest.left, 10) + 1;
-				$("#fullPageContainer").prepend(helper);
+				$("body").prepend(helper);
 
 				var unschDup = tarSessSEL.clone();
 				unschDup.attr("durationunits", parseInt(unschDup.attr("endtimeunits"), 10) - parseInt(unschDup.attr("starttimeunits"), 10));
@@ -819,7 +819,6 @@ function StaffMaintainSchedule() {
 	};
 
 	this.initialize = function initialize() {
-		$("#staffNav").ready(staffMaintainSchedule.resizeMe);
 		$("#tabs").tabs();
 		//$("#clearAllButton").button();
 		$("#clearAllButton").click(staffMaintainSchedule.clearAllClick);
@@ -831,8 +830,6 @@ function StaffMaintainSchedule() {
 		$("#swapModeCheck").click(staffMaintainSchedule.onClickSwapMode);
 		$("[id^='roomidCHK']").click(staffMaintainSchedule.roomCheckClick);
 		$("#tabs-rooms").find(".checkboxContainer").click(lib.toggleCheckbox);
-		$(window).resize(staffMaintainSchedule.resizeMe);
-		$(window).resize();
 		$("#fileCabinetIMG").droppable({
 			greedy: true,
 			drop: function (event, ui) {
@@ -844,12 +841,12 @@ function StaffMaintainSchedule() {
 			out: staffMaintainSchedule.fileCabinetSwap,
 			tolerance: 'intersect'
 			});
-		$("#sessions-to-be-scheduled-container").droppable({
+		$("#sessions-to-be-scheduled-wrapper").droppable({
 			accept: ".scheduledSessionBlock",	
 			drop: function (event, ui) {
 				$(this).css("border-color","white");
 				dropped=true;
-				dropTarget = $(this);
+				dropTarget = $("#sessions-to-be-scheduled-container");
 				},
 			over: function () {
 				$(this).css("border-color","green");
@@ -860,9 +857,6 @@ function StaffMaintainSchedule() {
 			tolerance: 'intersect'
 			});
 		$("#tabs-rooms-link").click();
-		// ugly hack because nav bar doesn't seem to be its final size when the first resizeMe runs.
-		window.setTimeout(staffMaintainSchedule.resizeMe,250);
-		window.setTimeout(staffMaintainSchedule.resizeMe,750);
 	};
 
 	this.removeFromSessionArray = function removeFromSessionArray(sessionid) {
@@ -993,11 +987,6 @@ function StaffMaintainSchedule() {
 		$("#sessionIdINP").val("");
 		$("#titleINP").val("");
 		$("#noSessionsFoundMSG").hide();
-	};
-
-	this.resizeMe = function resizeMe() {
-		lib.onePageResize();
-		//$("#tabs-content").css("top", $("#tabs-bar").outerHeight(true) + 1);
 	};
 
 	this.retrieveSessionsCallback = function retrieveSessionsCallback(responseData, returnString, jqXHR) {

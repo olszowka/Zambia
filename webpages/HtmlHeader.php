@@ -5,7 +5,7 @@ function html_header($title, $is_report = false, $reportColumns = false, $report
     require_once ("javascript_functions.php");
 ?>
 <!DOCTYPE html>
-<html lang="en" <?php if ($fullPage) echo "class =\"fullPage\""; ?> >
+<html lang="en" <?php if ($fullPage) echo "class =\"full-page\""; ?> >
 <head>
     <meta charset="utf-8">
     <title>Zambia &ndash; <?php echo $title ?></title>

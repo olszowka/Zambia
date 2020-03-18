@@ -35,22 +35,25 @@ header .img-button {
   justify-content: space-between;
   width: 100%;
 }
-.participant-header {
+.header.participant-header {
   background-color: #dedcff;
-  background-image: linear-gradient(0deg, #e8e8e8 0%, #e8e8e8 24%, #c3c1db 57%, #928dc4 77%, #1000a3 100%);
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
 }
-.staff-header {
+.header.staff-header {
   background-color: #a7d2a5;
   background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
   color: black;
 }
 .header-contents {
-  height: 12rem;
+  height: 12.5rem;
   flex-grow: 1;
   display: flex;
 }
 .header-contents img {
   height: 100%;
+}
+#login-form {
+  padding-right: 1.5rem;
 }
 #loginBox,
 #welcome {
@@ -69,8 +72,14 @@ header .img-button {
 }
 .alt-header-contents {
   display: flex;
+}
+.alt-header-contents.staff-header {
   background-color: #dedcff;
-  background-image: linear-gradient(0deg, #edebff 0%, #e3e0ff 20%, #7a6bff 100%);
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+}
+.alt-header-contents.participant-header {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
 }
 .alt-header-spacer {
   width: 15rem;
@@ -86,8 +95,10 @@ header .img-button {
 }
 .alt-header-controls p {
   display: inline-block;
-  color: #404040;
   padding-right: 0.5em;
+}
+.participant-header .alt-header-controls p {
+  color: #e5e5e5;
 }
 .alt-header-controls img {
   margin-right: 0.4rem;
@@ -98,6 +109,11 @@ header .img-button {
 }
 #login {
   float: right;
+}
+.login-alert-container {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 1rem;
 }
 .pageHeader {
   padding: 0;
@@ -118,7 +134,7 @@ form.navbar-search {
   margin-top: 9px !important;
 }
 /* <end> Page header stuff */
-body {
+body:not(.full-page) {
   background-image: url('../images/light_honeycomb.png');
   background-repeat: repeat;
 }
@@ -128,13 +144,6 @@ a {
 /**
  * STYLES
  */
-body {
-  background-image: url('../images/light_honeycomb.png');
-  background-repeat: repeat;
-}
-a {
-  color: #04C;
-}
 #buttonBox {
   margin: 0.4em;
 }

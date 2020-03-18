@@ -52,10 +52,6 @@ document.addEventListener( "DOMContentLoaded", function () {
 				$regHeaderContainer.classList.add("collapsed");
 				$altHeaderContainer.classList.remove("collapsed");
 				setValue('zambiaHeader', 'small');
-				if (staffMaintainSchedule) {
-                    window.setTimeout(staffMaintainSchedule.resizeMe,400);
-                    window.setTimeout(staffMaintainSchedule.resizeMe,800);
-				}
 			});
 		}
 		var $showHeaderButton = document.getElementById("show-header-but");
@@ -64,10 +60,6 @@ document.addEventListener( "DOMContentLoaded", function () {
 				$regHeaderContainer.classList.remove("collapsed");
 				$altHeaderContainer.classList.add("collapsed");
 				setValue('zambiaHeader', 'large');
-				if (staffMaintainSchedule) {
-                    window.setTimeout(staffMaintainSchedule.resizeMe,400);
-                    window.setTimeout(staffMaintainSchedule.resizeMe,800);
-                }
 			});
 		}
 	}
@@ -108,8 +100,5 @@ function Lib() {
 		var thecheckbox = $(this).find(":checkbox");
 		thecheckbox.prop("checked",!thecheckbox.prop("checked"));
 		thecheckbox.triggerHandler("click");
-	};
-	this.onePageResize = function onePageResize() {
-		$("#mainContentContainer").css("top", $("#top").outerHeight(true) + $("#staffNav").outerHeight(true) + 1);
 	};
 }

@@ -5,17 +5,14 @@ $title="Grid Scheduler";
 $fullPage = true; // changes body class to support all content restricted to screen size
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');
-//require_once('StaffHeaderOnePage.php');
-//require_once('StaffFooterOnePage.php');
 require_once('StaffCommonCode.php');
 require_once('StaffMaintainSchedule_FNC.php');
 
 staff_header($title);
 //staffHeaderOnePage($title);
 ?>
-	<!-- start off contained in #fullPageContainer div which is full width and full height -->
-<div id="mainContentContainer" class="secondaryFullWidthContainer">
-	<div class="flex-row-container" style="position: absolute; top:0; bottom: 0; left:0; height: auto; width: 280px; margin: 2px 1px 2px 2px; border: 1px solid black"><!-- ### LEFT COLUMN ###-->
+<div id="mainContentContainer" class="flex-column-container">
+	<div class="flex-row-container flex-column-fixed" style="width: 280px; margin: 2px 1px 2px 2px; border: 1px solid black"><!-- ### LEFT COLUMN ###-->
 		<div id="tabs" class="flex-row-fixed flex-row-container" style="border-bottom:1px solid black;height:40%;">
 			<div id="tabs-bar" class="flex-row-fixed">
 				<ul>
@@ -66,9 +63,7 @@ staff_header($title);
                     </div>
                     <div style="text-align: center">
                         <button id="retrieveSessionsBUT" type="button" class="btn btn-primary" >Retrieve</button>
-                        <!--<div id="retrieveSessionsBUT">Retrieve</div>-->
                         <button id="resetSessionsSearchBUT" type="button" class="btn" >Reset Search</button>
-                        <!--<div id="resetSessionsSearchBUT">Reset Search</div>-->
                     </div>
                     <div id="noSessionsFoundMSG" style="text-align: center; font-weight:bold; color:red; display:none; margin-top:3px">
                         No new sessions matched.
@@ -90,16 +85,15 @@ staff_header($title);
                 <img id="fileCabinetIMG" style="display:inline; vertical-align:middle;" height="65" width="49" src="images/FileCabinetClosed.png" onmouseover="staffMaintainSchedule.fileCabinetSwap(true);"
                     onmouseout="staffMaintainSchedule.fileCabinetSwap(false);" alt="drop here to archive" />
             </div>
-            <div id="sessions-to-be-scheduled-wrapper" class="flex-row-remainder">
-                <div id = "sessions-to-be-scheduled-container" style="border: 3px solid white;" ></div>
+            <div id="sessions-to-be-scheduled-wrapper" class="flex-row-remainder ui-droppable">
+                <div id = "sessions-to-be-scheduled-container"></div>
 			</div>
 		</div>
 	</div>
-	<div style="position: absolute; top:0; bottom: 0; left:282px; right: 0; height: auto; width: auto; margin: 2px 2px 2px 1px; border: 1px solid black">
-		<div id="scheduleGridContainer" class = "fullBlockContainer" style="margin: 2px; overflow:auto">&nbsp;</div>
+	<div id="scheduleGridContainer" class="flex-column-remainder" style="margin: 2px 2px 2px 1px; border: 1px solid black">
+		<!--<div class = "fullBlockContainer" style="margin: 2px; overflow:auto">&nbsp;</div>-->
 	</div>
 </div>
-</div><!-- closes #fullPageContainer -->
 </body>
 </html>
 

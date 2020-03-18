@@ -2,9 +2,35 @@
  * Created by Peter Olszowka on 2015-08-30;
  * Copyright (c) 2015-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
-html.fullPage, body.fullPage {
-    width: 100%;
-    height: 100%;
+html.full-page, body.full-page {
+    width:100%;
+    height:100%;
+}
+
+body.full-page {
+    display:flex;
+    flex-direction: column;
+}
+
+body.full-page #headerContainer {
+    flex:0 0 auto;
+}
+
+body.full-page #staffNav {
+    flex:0 0 auto;
+    margin-left:0;
+    margin-right:0;
+}
+
+body.full-page #mainContentContainer {
+    flex:1 1 auto;
+    overflow:hidden;
+    padding:2px;
+}
+
+#headerContainer {
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .animHelper {
@@ -208,64 +234,6 @@ td.schedulerGridSlot {
     font-size: 11px;
 }
 
-#fullPageContainer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: auto;
-    width: auto;
-    margin: 0;
-    padding: 0
-}
-
-#headerContainer {
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-div.fullBlockContainer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: auto;
-    width: auto;
-    margin: 0;
-    padding: 0
-}
-
-div.topBand {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    width: auto;
-    margin: 0;
-    padding: 0;
-}
-
-div.secondaryFullWidthContainer {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: auto;
-    height: auto;
-    margin: 0;
-    background-color: #ffffff;
-    font-size: 13px;
-    color: black;
-    line-height: normal;
-}
-
-#mainContentContainer {
-    top: 147px;
-    padding: 2px;
-}
-
 .sessionBlockId {
     color: blue;
     display: inline-block;
@@ -385,6 +353,10 @@ span.newformnotetight {
     padding: 0.3rem;
 }
 
+#sessions-to-be-scheduled-wrapper {
+    border:3px solid white;
+}
+
 #sessions-to-be-scheduled-container {
 	min-height:20rem;
 }
@@ -415,4 +387,17 @@ span.newformnotetight {
 .overflow-y-container {
     height: 100%;
     overflow-y: auto;
+}
+
+.flex-column-container {
+    display: flex;
+}
+
+.flex-column-fixed {
+    flex: 0 0 auto;
+}
+
+.flex-column-remainder {
+    flex: 1 1 auto;
+    overflow-x: auto;
 }

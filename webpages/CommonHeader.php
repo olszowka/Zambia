@@ -1,7 +1,8 @@
 <?php
 //	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus) {
-    if ($isLoggedIn && $loginPageStatus = 'Normal' && !may_I("Participant") && !may_I("Staff")) {
+function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "") {
+    global $header_rendered;
+    if ($isLoggedIn && $loginPageStatus == 'Normal' && !may_I("Participant") && !may_I("Staff")) {
         $loginPageStatus = 'No_Permission';
     }
     $xml = new DomDocument("1.0", "UTF-8");
@@ -18,7 +19,8 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $xslt->setParameter('', 'CON_NAME', CON_NAME);
     $xslt->setParameter('', 'badgename', isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '');
     $xslt->setParameter('', 'USER_ID_PROMPT', USER_ID_PROMPT);
+    $xslt->setParameter('', 'header_error_message', $headerErrorMessage);
     $html = $xslt->transformToXML($xml);
     echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+    $header_rendered = true;
 }
-

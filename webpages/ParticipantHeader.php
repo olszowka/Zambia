@@ -1,5 +1,8 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $header_section;
+$header_section = HEADER_PARTICIPANT;
+
 function participant_header($title, $noUserRequired = false, $loginPageStatus = 'Normal') {
     // $noUserRequired is true if user not required to be logged in to access this page
     // $loginPageStatus is "Login", "Logout", "Normal", "No_Permission"
@@ -7,15 +10,15 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
     //      logout page should be "Logout"
     //      logged in user who reached page for which he does not have permission is "No_Permission"
     //      all other pages should be "Normal"
-    global $header_used;
-    $header_used = HEADER_PARTICIPANT;
+    global $headerErrorMessage;
     html_header($title);
+    
 ?>
 <body>
     <div class="container-fluid">
 <?php
     $isLoggedIn = isLoggedIn();
-    commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus);
+    commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage);
     if ($isLoggedIn && (may_I("Participant") || may_I("Staff"))) {
 ?>
         <nav id="participantNav" class="navbar navbar-inverse">

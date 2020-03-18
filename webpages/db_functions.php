@@ -117,16 +117,20 @@ function populateCustomTextArray() {
 if (!include ('../db_name.php'))
 	include ('./db_name.php'); // scripts which rely on this file (db_functions.php) may run from a different directory
 function prepare_db_and_more() {
-    global $con_start_php_timestamp, $linki;
+    global $con_start_php_timestamp, $linki, $fatalError;
     $linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
-    if ($linki === false)
+    if (!$linki) {
+        $fatalError = true;
         return false;
+    }
     date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
     if (mysqli_set_charset($linki, "utf8") === false) {
+        $fatalError = true;
         return false;
     };
     $con_start_php_timestamp = date_create_from_format("Y-m-d H:i:s", CON_START_DATIM);
     if ($con_start_php_timestamp === false) {
+        $fatalError = true;
         RenderError("Con start date (CON_START_DATIM) not configured correctly. Further execution not possible.");
         return false; // Should have exited anyway
     }

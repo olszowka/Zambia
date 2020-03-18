@@ -8,6 +8,7 @@
     <xsl:param name="CON_NAME" select="''" />
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
+    <xsl:param name="header_error_message" select="''" />
     <xsl:template match="/">
         <header class="header-wrapper">
             <div id="reg-header-container" class="collapsible-wrapper">
@@ -32,7 +33,7 @@
                         </h1>
                     </div>
                     <xsl:choose>
-                        <xsl:when test="$logged_in">
+                        <xsl:when test="$logged_in and not($login_page_status = 'Login')">
                             <div id="welcome">
                                 <p>
                                     <xsl:text>Welcome, </xsl:text>
@@ -58,13 +59,24 @@
                                     <fieldset id="login-box">
                                         <xsl:choose>
                                             <xsl:when test="$login_page_status='Normal'">
-                                                <b class="alert alert-error pull-right">Session expired. Please log in again.</b>
+                                                <div class="login-alert-container">
+                                                    <span class="alert alert-error">Session expired. Please log in again.</span>
+                                                </div>
                                             </xsl:when>
                                             <xsl:when test="$login_page_status='Logout'">
-                                                <b class="alert alert-success pull-right">You have logged out successfully.</b>
+                                                <div class="login-alert-container">
+                                                    <span class="alert alert-success">You have logged out successfully.</span>
+                                                </div>
                                             </xsl:when>
                                             <xsl:when test="$login_page_status='No_Permission'">
-                                                <b class="alert alert-error pull-right">You do not have permission to access this page.</b>
+                                                <div class="login-alert-container">
+                                                    <span class="alert alert-error">You do not have permission to access this page.</span>
+                                                </div>
+                                            </xsl:when>
+                                            <xsl:when test="$header_error_message != ''">
+                                                <div class="login-alert-container">
+                                                    <span class="alert alert-error"><xsl:value-of select="$header_error_message" /></span>
+                                                </div>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:attribute name="class">extended</xsl:attribute>
@@ -100,10 +112,18 @@
                     </xsl:choose>
                 </div><!-- End of reg-header -->
             </div><!-- End of reg-header-container -->
-            <xsl:if test="$logged_in">
+            <xsl:if test="$logged_in and not($login_page_status = 'Login')">
                 <div id="alt-header-container" class="collapsible-wrapper hidden">
                     <div id="alt-header" class="row-fluid collapsible">
-                        <div class="alt-header-contents">
+                        <div>
+                            <xsl:choose>
+                                <xsl:when test="$header_version='Participant'">
+                                    <xsl:attribute name="class">alt-header-contents participant-header</xsl:attribute>
+                                </xsl:when>
+                                <xsl:when test="$header_version='Staff'">
+                                    <xsl:attribute name="class">alt-header-contents staff-header</xsl:attribute>
+                                </xsl:when>
+                            </xsl:choose>
                             <div class="alt-header-spacer extra-wide-only">
                                 <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                             </div>

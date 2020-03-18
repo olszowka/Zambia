@@ -1,20 +1,21 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $header_section;
+$header_section = HEADER_PARTICIPANT;
+
 function staff_header($title, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
-    global $fullPage, $header_used;
-    $header_used = HEADER_STAFF;
+    global $fullPage;
     html_header($title, $is_report, $reportColumns, $reportAdditionalOptions);
     $isLoggedIn = isLoggedIn();
     if ($fullPage) {
 ?>
-<body class="fullPage">
-    <div id="fullPageContainer" class="container-fluid">
-        <div id="myhelper"></div><!-- used for drag-and-drop operations -->
-        <div id="headerContainer">
+<body class="full-page">
+    <div id="myhelper"></div><!-- used for drag-and-drop operations -->
+    <div id="headerContainer">
 <?php
-        commonHeader('Staff', $isLoggedIn, false, 'Normal');
+    commonHeader('Staff', $isLoggedIn, false, 'Normal');
 ?>
-        </div>
+    </div>
 <?php
     } else {
 ?>

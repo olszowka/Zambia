@@ -13,7 +13,7 @@ if (!isset($title)) {
 }
 session_start();
 // inclusion of configuration file db_name.php occurs here
-if (prepare_db_and_more() === false) {
+if (!prepare_db_and_more()) {
     $message_error = "Unable to connect to database.<br>No further execution possible.";
     RenderError($message_error);
     exit();
