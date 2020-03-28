@@ -1,10 +1,7 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
     global $participant, $message_error, $message2, $congoinfo, $title;
     $title = "Staff Overview";
-    require_once('db_functions.php');
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
     require_once('StaffCommonCode.php');
     staff_header($title);
 ?>

@@ -1,8 +1,7 @@
 <?php
-// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function retrieveSessions($sessionSearchArray) {
     global $linki;
-    require_once('db_functions.php');
     $ConStartDatim = CON_START_DATIM; // make it a variable so it can be substituted
     $query = <<<EOB
 SELECT

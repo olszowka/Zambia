@@ -1,18 +1,14 @@
 <?php
-// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $fullPage, $title;
 $title="Grid Scheduler";
 $fullPage = true; // changes body class to support all content restricted to screen size
-require_once('db_functions.php');
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');
-//require_once('StaffHeaderOnePage.php');
-//require_once('StaffFooterOnePage.php');
 require_once('StaffCommonCode.php');
 require_once('StaffMaintainSchedule_FNC.php');
 
 staff_header($title);
-//staffHeaderOnePage($title);
 ?>
 	<!-- start off contained in #fullPageContainer div which is full width and full height -->
 <div id="mainContentContainer" class="secondaryFullWidthContainer">
