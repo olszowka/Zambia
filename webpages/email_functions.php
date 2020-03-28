@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2006-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2006-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 // function $email=get_email_from_post()
 // reads post variable to populate email array
 // returns email array or false if an error was encountered.
@@ -37,7 +37,7 @@ function validate_email($email) {
 // form when first entering page.
 function set_email_defaults() {
     $email['sendto'] = 1; // default to all participants
-    $email['sendfrom'] = 1; // default to Arisia Programming
+    $email['sendfrom'] = 1; // default to Programming
     $email['sendcc'] = 1; // default to None
     $email['subject'] = "";
     $email['body'] = "";
@@ -232,7 +232,7 @@ function generateSchedules($status, $recipientinfo) {
     $badgeidList = implode(",", $badgeidArr);
     $query = <<<EOD
 SELECT
-        POS.badgeid, RM.roomname, S.title, DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime),'%a %l:%i %p') as starttime,
+        POS.badgeid, RM.roomname, S.title, DATE_FORMAT(ADDTIME('$ConStartDatim$', SCH.starttime),'%a %l:%i %p') as starttime,
         DATE_FORMAT(S.duration, '%i') as durationmin, DATE_FORMAT(S.duration, '%k') as durationhrs, SCH.sessionid
     FROM
              Schedule SCH

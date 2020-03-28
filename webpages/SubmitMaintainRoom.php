@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray) {
     //
     // $addToScheduleArray is an array of $sessionid => $startmin
@@ -312,7 +312,7 @@ INSERT INTO SessionEditHistory
         VALUES
 EOD;
         foreach ($deleteSessionIds as $delsessionid) {
-            $query .= "($delsessionid,\"$badgeid\",\"$name\",\"$email\",null,5,$vs,null),";
+            $query .= "($delsessionid, \"$badgeid\", \"$name\", \"$email\", CURRENT_TIMESTAMP, 5, $vs, NULL),";
         }
         $query = substr($query, 0, -1); // remove trailing comma
         if (!mysqli_query($linki, $query)) {
@@ -350,7 +350,7 @@ INSERT INTO SessionEditHistory
         (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
         VALUES
 EOD;
-        $query .= "($sessionid,\"$badgeid\",\"$name\",\"$email\",null,4,$vs,\"" . time_description($time) . " in $selroomid\")";
+        $query .= "($sessionid, \"$badgeid\", \"$name\", \"$email\", CURRENT_TIMESTAMP, 4, $vs, \"" . time_description($time) . " in $selroomid\")";
         if (!mysqli_query($linki, $query)) {
             $message = $query . "<br />Error updating database.<br />";
             echo "<p class=\"alert alert-error\">" . $message . "\n";

@@ -1,11 +1,11 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title;
 $title = "Run Report";
 require_once('StaffCommonCode.php');
 $reportName = getString("reportName");
 if ($reportName == '') {
-    $message_error = "Required parameter reportName misssing or invalid.";
+    $message_error = "Required parameter reportName missing or invalid.";
     RenderError($message_error);
     exit();
 }
