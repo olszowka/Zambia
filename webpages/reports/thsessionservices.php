@@ -2,7 +2,7 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Services';
-$report['description'] = 'Which Session needs which Services? (Sorted by room then time; Scheduled sessions only)';
+$report['description'] = 'Which Session needs which Services? (Scheduled sessions only)';
 $report['categories'] = array(
     'Events Reports' => 1050,
     'Programming Reports' => 1050,

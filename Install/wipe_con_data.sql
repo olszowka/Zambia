@@ -17,7 +17,7 @@ truncate table Schedule;
 truncate table SessionHasFeature;
 truncate table SessionHasService;
 truncate table SessionEditHistory;
-truncate table SessionHasPubChar;
+truncate table SessionHasTag;
 truncate table Sessions;
 truncate table Participants;
 truncate table PreviousParticipants;

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $fullPage, $title;
 $title="Grid Scheduler";
 $fullPage = true; // changes body class to support all content restricted to screen size
@@ -34,19 +34,45 @@ staff_header($title);
 					<div style="height: 28px">
 						<div style="display:inline-block; width:75px"><label for="track">Track:</label></div>
 						<span class="newformselectspan">
-							<select id="trackSEL" name="track" class="newformselect"><?php populate_select_from_table("Tracks",0,"ANY",true); ?></select>
+							<select id="trackSEL" name="track" class="newformselect">
+                                <?php populate_select_from_table("Tracks",0,"ANY",true); ?>
+                            </select>
 						</span>
 					</div>
+                    <div>
+                        <div style="display:inline-block; width:75px"><label for="track">Tags:</label></div>
+                        <span class="newformselectspan">
+                            <select id="tagSEL" name="tags[]" class="newformselect" multiple="multiple">
+                                <?php populate_multiselect_from_table("Tags",""); ?>
+                            </select>
+						</span>
+                    </div>
+                    <div class="control-group-horizontal control-group-sm">
+                        <div class="controls" style="margin-left: 4rem;">
+                            <label>
+                                <input type="radio" id="tagmatch1" name="tagmatch" value="any">
+                                <span>Match Any</span>
+                            </label>
+                            <label>
+                                <input type="radio" id="tagmatch2" name="tagmatch" value="all">
+                                <span>Match All</span>
+                            </label>
+                        </div>
+                    </div>
 					<div style="height: 28px">
 						<div style="display:inline-block; width:75px"><label for="type">Type:</label></div>
 						<span class="newformselectspan">
-							<select id="typeSEL" name="type" class="newformselect"><?php populate_select_from_table("Types",0,"ANY",true); ?></select>
+							<select id="typeSEL" name="type" class="newformselect">
+                                <?php populate_select_from_table("Types",0,"ANY",true); ?>
+                            </select>
 						</span>
 					</div>
 					<div style="height: 28px">
 						<div style="display:inline-block; width:75px"><label for="division">Division:</label></div>
 						<span class="newformselectspan">
-							<select id="divisionSEL" name="division" class="newformselect"><?php populate_select_from_table("Divisions",0,"ANY",true); ?></select>
+							<select id="divisionSEL" name="division" class="newformselect">
+                                <?php populate_select_from_table("Divisions",0,"ANY",true); ?>
+                            </select>
 						</span>
 					</div>
 					<div style="height: 28px">
@@ -67,9 +93,7 @@ staff_header($title);
 					</div>
 					<div style="text-align: center">
 						<button id="retrieveSessionsBUT" type="button" class="btn btn-primary" >Retrieve</button>
-						<!--<div id="retrieveSessionsBUT">Retrieve</div>-->
 						<button id="resetSessionsSearchBUT" type="button" class="btn" >Reset Search</button>
-						<!--<div id="resetSessionsSearchBUT">Reset Search</div>-->
 					</div>
 					<div id="noSessionsFoundMSG" style="text-align: center; font-weight:bold; color:red; display:none; margin-top:3px">
 						No new sessions matched.

@@ -42,5 +42,7 @@ These updates are already applied to EmptyDbase.dump, SampleDbase.dump and DemoD
 (43_configure_rooms.sql was never deployed)
 44_particpant_on_session_history.sql
 45_drop_report_tables.sql
+46_new_report_permissions.sql
+47_tags.sql
 
 Any further updates need to be applied.

@@ -1043,31 +1043,6 @@ LOCK TABLES `PreviousSessions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `PubCharacteristics`
---
-
-DROP TABLE IF EXISTS `PubCharacteristics`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `PubCharacteristics` (
-  `pubcharid` int(11) NOT NULL AUTO_INCREMENT,
-  `pubcharname` varchar(30) DEFAULT NULL,
-  `pubchartag` varchar(10) DEFAULT NULL,
-  `display_order` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`pubcharid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PubCharacteristics`
---
-
-LOCK TABLES `PubCharacteristics` WRITE;
-/*!40000 ALTER TABLE `PubCharacteristics` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PubCharacteristics` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `PubStatuses`
 --
 
@@ -1369,30 +1344,18 @@ LOCK TABLES `SessionHasFeature` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `SessionHasPubChar`
+-- Table structure for table `SessionHasTag`
 --
 
-DROP TABLE IF EXISTS `SessionHasPubChar`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `SessionHasPubChar` (
-  `sessionid` int(11) NOT NULL DEFAULT '0',
-  `pubcharid` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sessionid`,`pubcharid`),
-  KEY `Fkey2` (`pubcharid`),
-  CONSTRAINT `Fkey1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
-  CONSTRAINT `Fkey2` FOREIGN KEY (`pubcharid`) REFERENCES `PubCharacteristics` (`pubcharid`)
+DROP TABLE IF EXISTS `SessionHasTag`;
+CREATE TABLE `SessionHasTag` (
+    `sessionid` int(11) NOT NULL default '0',
+    `tagid` int(11) NOT NULL default '0',
+    PRIMARY KEY  (`sessionid`,`tagid`),
+    KEY `Fkey2` (`tagid`),
+    CONSTRAINT `Fkey1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
+    CONSTRAINT `Fkey2` FOREIGN KEY (`tagid`) REFERENCES `Tags` (`tagid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SessionHasPubChar`
---
-
-LOCK TABLES `SessionHasPubChar` WRITE;
-/*!40000 ALTER TABLE `SessionHasPubChar` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SessionHasPubChar` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `SessionHasService`
@@ -1500,13 +1463,16 @@ CREATE TABLE `Sessions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Sessions`
+-- Table structure for table `Tags`
 --
 
-LOCK TABLES `Sessions` WRITE;
-/*!40000 ALTER TABLE `Sessions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `Tags`;
+CREATE TABLE `Tags` (
+    `tagid` int(11) NOT NULL auto_increment,
+    `tagname` varchar(30) character set utf8 collate utf8_general_ci default NULL,
+    `display_order` int(11) NOT NULL default '0',
+    PRIMARY KEY  (`tagid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `Times`
