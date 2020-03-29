@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 require_once('StaffCommonCode.php');
 require_once('RenderSessionCountReport.php');

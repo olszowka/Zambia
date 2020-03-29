@@ -8,12 +8,8 @@ function StaffMaintainSchedule() {
 	var confirmationMsg = "";
 	var schedScrollTop = "";
 	var elemToAdd = "";
-	var helperElem = "";
 	var dragParent = "";
 
-	this.anyChange = function anyChange(element) {
-	};
-	
 	this.changeRoomDisplay = function changeRoomDisplay() {
 		var roomsToDisplayArray = [];
 		$("[id^='roomidCHK']:checked").each(function () {
@@ -47,7 +43,7 @@ function StaffMaintainSchedule() {
 		$(this).css("visibility", "hidden");
 		ui.helper.css("opacity","0.75");
 	};
-	
+
 	this.dropOnCompoundEmptySlot = function dropOnCompoundEmptySlot(pEvent, pUi, pThis) {
 		// always redraw table if dropping in compound area
 		var newSessionDiv = $(pThis).clone();
@@ -646,23 +642,22 @@ function StaffMaintainSchedule() {
 		dragParent = "";
 	};
 
-	this.durationFromSTAET = function durationFromSTAET(startTime,endTime) {
+	this.durationFromSTAET = function durationFromSTAET(startTime, endTime) {
 		// compute duration string in hh:mm from startTime and endTime strings in hhh:mm:ss
 		var startTimeArr = startTime.split(":");
-		var startTimeHours = parseInt(startTimeArr[0],10);
-		var startTimeMins = parseInt(startTimeArr[1],10);
+		var startTimeHours = parseInt(startTimeArr[0], 10);
+		var startTimeMins = parseInt(startTimeArr[1], 10);
 		var endTimeArr = endTime.split(":");
-		var endTimeHours = parseInt(endTimeArr[0],10);
-		var endTimeMins = parseInt(endTimeArr[1],10);
+		var endTimeHours = parseInt(endTimeArr[0], 10);
+		var endTimeMins = parseInt(endTimeArr[1], 10);
 		var durHours, durMins;
 		if (startTimeMins > endTimeMins) {
-				durMins = 60 + endTimeMins - startTimeMins;
-				durHours = endTimeHours - startTimeHours - 1;
-				}
-			else {
-				durMins = endTimeMins - startTimeMins;
-				durHours = endTimeHours - startTimeHours;
-				}
+			durMins = 60 + endTimeMins - startTimeMins;
+			durHours = endTimeHours - startTimeHours - 1;
+		} else {
+			durMins = endTimeMins - startTimeMins;
+			durHours = endTimeHours - startTimeHours;
+		}
 		return durHours + ":" + ((durMins < 10) ? "0" : "") + durMins;
 	};
 
@@ -757,7 +752,7 @@ function StaffMaintainSchedule() {
 		confirmationMsg = "";
 	};
 	
-	this.endTimeAttrFromSTUnD = function endTimeAttrFromSTUnD(startTimeUnits,duration) {
+	this.endTimeAttrFromSTUnD = function endTimeAttrFromSTUnD(startTimeUnits, duration) {
 		var durArr = duration.split(":");
 		var minutes = (parseInt(startTimeUnits,10) % 2) * 30 + parseInt(durArr[1],10);
 		var hours = Math.floor(parseInt(startTimeUnits,10) / 2) + Math.floor(minutes / 60) + parseInt(durArr[0],10);
@@ -836,7 +831,7 @@ function StaffMaintainSchedule() {
 				dropped = true;
 				dropTarget = $(this);
 				staffMaintainSchedule.fileCabinetSwap(false);
-				},
+			},
 			over: staffMaintainSchedule.fileCabinetSwap,
 			out: staffMaintainSchedule.fileCabinetSwap,
 			tolerance: 'intersect'
@@ -849,13 +844,13 @@ function StaffMaintainSchedule() {
 				dropTarget = $("#sessions-to-be-scheduled-container");
 				},
 			over: function () {
-				$(this).css("border-color","green");
-				},
+				$(this).css("border-color", "green");
+			},
 			out: function () {
-				$(this).css("border-color","white");
-				},
+				$(this).css("border-color", "white");
+			},
 			tolerance: 'intersect'
-			});
+		});
 		$("#tabs-rooms-link").click();
 	};
 
@@ -866,7 +861,7 @@ function StaffMaintainSchedule() {
 		}
 	};
 
-	this.retrieveRoomsTableCallback = function retrieveRoomsTableCallback(responseData,returnString,jqXHR) {
+	this.retrieveRoomsTableCallback = function retrieveRoomsTableCallback(responseData, returnString, jqXHR) {
 		insertedSessionDiv = "";
 		var $scheduleGridContainer = $("#scheduleGridContainer");
 		$scheduleGridContainer.html(responseData);
@@ -888,60 +883,60 @@ function StaffMaintainSchedule() {
 		$scheduleGridContainer.find(".getSessionInfoP").removeClass("getSessionInfoP");
 		$scheduleGridContainer.find(".scheduleGridEmptyDIV").droppable({
 			drop: function (event, ui) {
-				dropped=true;
+				dropped = true;
 				dropTarget = $(this);
-				},
+			},
 			over: function () {
-				$(this).css("border-color","green");
-				},
+				$(this).css("border-color", "green");
+			},
 			out: function () {
-				$(this).css("border-color","white");
-				},
+				$(this).css("border-color", "white");
+			},
 			tolerance: 'intersect'
 			});
 		$scheduleGridContainer.find(".scheduleGridCompoundEmptyDIV").droppable({
 			drop: function (event, ui) {
-				dropped=true;
+				dropped = true;
 				dropTarget = $(this);
-				},
+			},
 			over: function () {
-				$(this).css("height",$(this).height()-4);
-				$(this).css("width",$(this).width()-4);
-				$(this).css("border-color","green");
-				$(this).css("border-width","3px");
-				},
+				$(this).css("height", $(this).height() - 4);
+				$(this).css("width", $(this).width() - 4);
+				$(this).css("border-color", "green");
+				$(this).css("border-width", "3px");
+			},
 			out: function () {
-				$(this).css("height",$(this).height()+4);
-				$(this).css("width",$(this).width()+4);
-				$(this).css("border-color","grey");
-				$(this).css("border-width","1px");
-				},
+				$(this).css("height", $(this).height() + 4);
+				$(this).css("width", $(this).width() + 4);
+				$(this).css("border-color", "grey");
+				$(this).css("border-width", "1px");
+			},
 			tolerance: 'intersect'
 			});
 		$scheduleGridContainer.find(".scheduledSessionBlock").parent(".schedulerGridContainer").droppable({
 			drop: function (event, ui) {
-				dropped=true;
+				dropped = true;
 				dropTarget = $(this);
-				},
-			over: function() {
+			},
+			over: function () {
 				var helperSel = $("#myhelper");
 				var targetTDSel = $(this).parent();
-				helperSel.css("height",targetTDSel.height() - 4);
-				helperSel.css("width",targetTDSel.width() - 4);
+				helperSel.css("height", targetTDSel.height() - 4);
+				helperSel.css("width", targetTDSel.width() - 4);
 				/*helperSel.offset({
 					top: parseInt($(this).offset().top,10) - 3,
 					left: parseInt($(this).offset().left,10) - 3
 					});*/
-				helperSel.css("top",parseInt(targetTDSel.offset().top,10) + 1);
-				helperSel.css("left",parseInt(targetTDSel.offset().left,10) + 1);
+				helperSel.css("top", parseInt(targetTDSel.offset().top, 10) + 1);
+				helperSel.css("left", parseInt(targetTDSel.offset().left, 10) + 1);
 				helperSel.show();
 				//helperSel.text($(this).offset().top + ":" + $(this).offset().left);
-				},
-			out: function() {
+			},
+			out: function () {
 				$("#myhelper").hide();
-				},
+			},
 			tolerance: 'intersect'
-			});
+		});
 		/// editing this chunk
 		$scheduleGridContainer.find(".scheduledSessionBlock").draggable({
 			addClasses: false,
@@ -952,7 +947,7 @@ function StaffMaintainSchedule() {
 			start: staffMaintainSchedule.dragStart,
 			stop: staffMaintainSchedule.dropSession,
 			scroll: true
-			});
+		});
 		/// editing this chunk
 		var foo;
 		if (confirmationMsg) {
@@ -960,22 +955,22 @@ function StaffMaintainSchedule() {
 		}
 		var scratch = $scheduleGridContainer.find("#warningsDivContent");
 		if (scratch.length > 0) {
-			foo += 	scratch.html();
+			foo += scratch.html();
 			scratch.remove();
-			}
+		}
 		if (foo) {
 			var $tabsWarnings = $("#tabs-warnings");
 			$tabsWarnings.html(foo);
 			$tabsWarnings.find(".conflictEditConfirmation").remove();
 			$("#tabs-warnings-link").click();
-			}
+		}
 		confirmationMsg = "";
 		if (schedScrollTop !== "") {
 			$scheduleGridContainer.scrollTop(schedScrollTop);
 		}
 	};
 
-	this.retrieveRoomsTableError = function retrieveRoomsTableError(event,jqXHR, ajaxSettings, thrownError) {
+	this.retrieveRoomsTableError = function retrieveRoomsTableError(event, jqXHR, ajaxSettings, thrownError) {
 		$("#testForNow1").html(thrownError);
 	};
 	
@@ -1024,7 +1019,7 @@ function StaffMaintainSchedule() {
 		return true;
 	};
 
-	this.retrieveSessionInfoCallback = function retrieveSessionInfoCallback(responseData,returnString,jqXHR) {
+	this.retrieveSessionInfoCallback = function retrieveSessionInfoCallback(responseData, returnString, jqXHR) {
 		$("#tabs-info").html(responseData);
 		$("#tabs-info-link").click();
 	};
@@ -1041,7 +1036,8 @@ function StaffMaintainSchedule() {
 			typeId: $("#typeSEL").val(),
 			divisionId: $("#divisionSEL").val(),
 			sessionId : $("#sessionIdINP").val(),
-			title : $("#titleINP").val()	
+			title : $("#titleINP").val(),
+			tagIds : $("#tagSEL").val()
 			};
 		x = $("#password").val();
 		if (x) {

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title, $linki;
 $bigarray = array();
 define("newroomslots", 5); // number of rows at bottom of page for new schedule entries
@@ -109,7 +109,7 @@ if ($row["opentime3"] != "") {
 }
 echo "</div>\n";
 echo "<h4 class=\"label\">Characteristics</H4>\n";
-echo "   <table class=\"table table-condensed compressed\">\n";
+echo "   <table class=\"table-condensed compressed\">\n";
 echo "      <tr>\n";
 echo "         <th class=\"lrpad border1111\">Function</th>\n";
 echo "         <th class=\"lrpad border1111\">Floor</th>\n";
@@ -143,34 +143,38 @@ EOD;
 if (!$result=mysqli_query_exit_on_error($query)) {
     exit(); //should have exited already
 }
-$i = 1;
-while ($bigarray[$i] = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-    $i++;
+$roomSetArray = array();
+while ($foo = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+    $roomSetArray[] = $foo;
 }
 mysqli_free_result($result);
-$numrows = $i;
-echo "   <table class=\"table table-condensed compressed\">\n";
+echo "   <table class=\"table-condensed compressed\">\n";
 echo "      <tr>\n";
 echo "         <th class=\"lrpad border1111\">Room Set</th>\n";
 echo "         <th class=\"lrpad border1111\">Capacity</th>\n";
 echo "         </tr>\n";
-for ($i = 1; $i <= $numrows; $i++) {
+foreach ($roomSetArray as $roomset) {
     echo "   <tr>\n";
-    echo "      <td class=\"vatop lrpad border1111\">" . $bigarray[$i]["roomsetname"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border1111\">" . $bigarray[$i]["capacity"] . "</td>\n";
+    echo "      <td class=\"vatop lrpad border1111\">" . $roomset["roomsetname"] . "</td>\n";
+    echo "      <td class=\"vatop lrpad border1111\">" . $roomset["capacity"] . "</td>\n";
     echo "      </tr>\n";
 }
 echo "      </table>\n";
 $query = <<<EOD
 SELECT
-        SCH.scheduleid, SCH.starttime, S.duration, SCH.sessionid, T.trackname, S.title, RS.roomsetname 
+        SCH.scheduleid, SCH.starttime, S.duration, SCH.sessionid, T.trackname, S.title, RS.roomsetname,
+        GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
     FROM
-             Schedule SCH
-        JOIN Sessions S USING (sessionid)
-        JOIN Tracks T USING (trackid)
-        JOIN RoomSets RS USING (roomsetid)
+                   Schedule SCH
+              JOIN Sessions S USING (sessionid)
+              JOIN Tracks T USING (trackid)
+              JOIN RoomSets RS USING (roomsetid)
+        LEFT JOIN SessionHasTag SHT USING (sessionid)
+        LEFT JOIN Tags TA USING (tagid)
     WHERE
         SCH.roomid = $selroomid
+    GROUP BY
+        SCH.scheduleid
     ORDER BY
         SCH.starttime;
 EOD;
@@ -192,6 +196,7 @@ echo "      <th>Delete</th>\n";
 echo "      <th>Start Time</th>\n";
 echo "      <th>Duration</th>\n";
 echo "      <th>Track</th>\n";
+echo "      <th>Tags</th>\n";
 echo "      <th>Session ID</th>\n";
 echo "      <th>Title</th>\n";
 echo "      <th>Room Set</th>\n";
@@ -204,6 +209,7 @@ for ($i = 1; $i <= $numrows; $i++) {
     echo "      <td class=\"vatop lrpad border0010\">" . time_description($bigarray[$i]["starttime"]) . "</td>\n";
     echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["duration"] . "</td>\n";
     echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["trackname"] . "</td>\n";
+    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["taglist"] . "</td>\n";
     echo "      <td class=\"vatop lrpad border0010\"> <a href=EditSession.php?id=" . $bigarray[$i]["sessionid"] . ">" . $bigarray[$i]["sessionid"] . "</td>\n";
     echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["title"] . "</td>\n";
     echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["roomsetname"] . "</td>\n";

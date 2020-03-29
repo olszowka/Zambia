@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.-->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
-    <!--<xsl:include href="xsl/reportInclude.xsl" />-->
     <xsl:template match="/">
         <xsl:apply-templates select="/doc/query[@queryName='sessions']/row" />
     </xsl:template>
@@ -17,6 +17,10 @@
         <div>
             <span class="infolabel">Track:</span>
             <span class="infofield"><xsl:value-of select="@trackname" /></span>
+        </div>
+        <div>
+            <span class="infolabel">Tags:</span>
+            <span class="infofield"><xsl:value-of select="@taglist" /></span>
         </div>
         <div>
             <span class="infolabel">Type:</span>

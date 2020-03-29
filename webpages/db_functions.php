@@ -320,7 +320,7 @@ function populate_multidest_from_table($table_name, $skipset) {
 
 // Function update_session()
 // Takes data from global $session array and updates
-// the tables Sessions, SessionHasFeature, SessionHasService and SessionHasPubChar.
+// the tables Sessions, SessionHasFeature, SessionHasService and SessionHasTag.
 //
 function update_session() {
     $sessionf = filter_session(); // reads global $session array and returns sanitized copy
@@ -383,14 +383,14 @@ EOD;
             return false;
         }
     }
-    $query = "DELETE FROM SessionHasPubChar WHERE sessionid = $id;";
+    $query = "DELETE FROM SessionHasTag WHERE sessionid = $id;";
     if (!mysqli_query_with_error_handling($query)) {
         return false;
     }
-    if (!empty($sessionf["pubchars"])) {
-        $query = "INSERT INTO SessionHasPubChar (sessionid, pubcharid) VALUES ";
-        foreach ($sessionf["pubchars"] as $pubchar) {
-            $query .= "($id, $pubchar),";
+    if (!empty($sessionf["tags"])) {
+        $query = "INSERT INTO SessionHasTag (sessionid, tagid) VALUES ";
+        foreach ($sessionf["tags"] as $tag) {
+            $query .= "($id, $tag),";
         }
         $query = substr($query, 0, -1) . ";"; // drop trailing comma
         if (!mysqli_query_with_error_handling($query)) {
@@ -475,10 +475,10 @@ EOD;
             return false;
         }
     }
-    if (!empty($sessionf["pubchars"])) {
-        $query = "INSERT INTO SessionHasPubChar (sessionid, pubcharid) VALUES ";
-        foreach ($sessionf["pubchars"] as $pubchar) {
-            $query .= "($id, $pubchar),";
+    if (!empty($sessionf["tags"])) {
+        $query = "INSERT INTO SessionHasTag (sessionid, tagid) VALUES ";
+        foreach ($sessionf["tags"] as $tag) {
+            $query .= "($id, $tag),";
         }
         $query = substr($query, 0, -1) . ";"; // drop trailing comma
         if (!mysqli_query_with_error_handling($query)) {
@@ -534,10 +534,10 @@ function filter_session() {
             $session2["services"][] = filter_var($service, FILTER_SANITIZE_NUMBER_INT);
         }
     }
-    if (!empty($session["pubchardest"])) {
-        $session2["pubchars"] = array();
-        foreach ($session["pubchardest"] as $pubchar) {
-            $session2["pubchars"][] = filter_var($pubchar, FILTER_SANITIZE_NUMBER_INT);
+    if (!empty($session["tagdest"])) {
+        $session2["tags"] = array();
+        foreach ($session["tagdest"] as $tag) {
+            $session2["tags"][] = filter_var($tag, FILTER_SANITIZE_NUMBER_INT);
         }
     }
 
@@ -545,7 +545,7 @@ function filter_session() {
 }
 
 // Function retrieve_session_from_db()
-// Reads Sessions, SessionHasFeature, SessionHasService and SessionHasPubChar tables
+// Reads Sessions, SessionHasFeature, SessionHasService and SessionHasTag tables
 // from db and returns array $session or FALSE.
 // If necessary, populates global $message_error
 //
@@ -621,14 +621,14 @@ EOD;
         $session["servdest"][] = $row[0];
     }
     mysqli_free_result($result);
-    $query = "SELECT pubcharid FROM SessionHasPubChar WHERE sessionid = $sessionid;";
+    $query = "SELECT tagid FROM SessionHasTag WHERE sessionid = $sessionid;";
     if (!$result = mysqli_query_with_error_handling($query)) {
         $message_error = "Error retrieving record from database. <br />\n$message_error";
         return false;
     }
-    $session["pubchardest"] = array();
+    $session["tagdest"] = array();
     while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
-        $session["pubchardest"][] = $row[0];
+        $session["tagdest"][] = $row[0];
     }
     mysqli_free_result($result);
     return $session;

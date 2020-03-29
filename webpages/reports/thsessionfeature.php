@@ -2,7 +2,7 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Features';
-$report['description'] = 'Which Session needs which Features? (Sorted by track)';
+$report['description'] = 'Which Session needs which Features? (Scheduled sessions only)';
 $report['categories'] = array(
     'Events Reports' => 1030,
     'Programming Reports' => 1030,
@@ -33,15 +33,17 @@ SELECT DISTINCT
              JOIN Tracks T USING (trackid)
         LEFT JOIN SessionHasFeature USING (sessionid)
         LEFT JOIN Features F USING (featureid)
-        LEFT JOIN Schedule SCH USING (sessionid)
-        LEFT JOIN Rooms R USING (roomid)
+             JOIN Schedule SCH USING (sessionid)
+             JOIN Rooms R USING (roomid)
     WHERE
-            F.featurename IS NOT NULL
-        AND (S.statusid IN (2, 3, 7) ## Vetted, Scheduled, Assigned
-            OR SCH.scheduleid IS NOT NULL)
+            S.statusid IN (2, 3, 7) ## Vetted, Scheduled, Assigned
+        AND EXISTS ( SELECT * FROM
+                            SessionHasFeature SHF
+                        WHERE
+                            SHF.sessionid = S.sessionid
+                       )                       
     ORDER BY
-           T.trackname,
-           S.sessionid;
+        SCH.starttime;
 EOD;
 $report['queries']['features'] =<<<'EOD'
 SELECT

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Featured Session Report';
 $report['description'] = 'Lists all featured sessions in the schedule sorted by time.';
@@ -21,9 +21,9 @@ SELECT
     WHERE EXISTS ( SELECT
                            sessionid
                        FROM
-                           SessionHasPubChar
+                           SessionHasTag
                        WHERE
-                               pubcharid = 5 /* Featured */
+                               tagid = 1 /* Featured */
                            AND sessionid = S.sessionid
                  )
     ORDER BY

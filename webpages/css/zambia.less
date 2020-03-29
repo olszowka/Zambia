@@ -514,6 +514,10 @@ label[for='session-select'] {
 .stAsPa-sesInfRow {
     margin-bottom: 6px;
 }
+
+select#tags {
+    height: 6.8rem;
+}
 /* <end> Session History & Staff Assign Participants */
 
 /**
@@ -536,8 +540,15 @@ label[for='session-select'] {
 #add-to-room-schedule-table td {
     vertical-align:bottom;
 }
-
 /* <end> Maintain Room Schedule */
+
+/**
+ * Edit / Create Session
+ */
+select#tagdest {
+    height: 10rem;
+}
+/* <end> Edit / Create Session */
 
 /* Bootstrap extensions */
 .form-horizontal .control-group:last-child {
@@ -683,6 +694,43 @@ table.multcol-list td {
     }
 }
 
+
+.control-group-horizontal {
+    select {
+        margin-right: 1.5rem;
+    }
+
+    .controls {
+        label {
+            display:inline-block;
+            margin-right: 1.5rem;
+    
+            span {
+                vertical-align:middle;
+            }
+        }
+
+        input[type='radio'] {
+            margin-top:-2px;
+        }
+    }
+    
+    &.control-group-sm {
+        .controls label {
+            margin-right: 0.75rem;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+.form-more-whitespace {
+    .control-group {
+        margin-bottom: 1rem;
+    }
+    label:not(:first-child) {
+        padding-left: 0.5rem;
+    }
+} 
 /* <end> Bootstrap extensions */
 
 .not-attending-header-row {
@@ -901,3 +949,72 @@ img.tabborder {
     width: 10px;
 }
 /* End of settings needed make the tabs work */
+.border0000 {
+    border:none
+}
+.border0010 {
+    border-top: none;
+    border-right: none;
+    border-bottom: solid black 1px;
+    border-left: none
+}
+.border0020 {
+    border-top: none;
+    border-right: none;
+    border-bottom: solid black 2px;
+    border-left: none
+}
+.border1111 {
+    border-top: solid black 1px;
+    border-right: solid black 1px;
+    border-bottom: solid black 1px;
+    border-left: solid black 1px
+}
+.border1121 {
+    border-top: solid black 1px;
+    border-right: solid black 1px;
+    border-bottom: solid black 2px;
+    border-left: solid black 1px
+}
+.border1211 {
+    border-top: solid black 1px;
+    border-right: solid black 2px;
+    border-bottom: solid black 1px;
+    border-left: solid black 1px
+}
+.border1221 {
+    border-top: solid black 1px;
+    border-right: solid black 2px;
+    border-bottom: solid black 2px;
+    border-left: solid black 1px
+}
+.border2111 {
+    border-top: solid black 2px;
+    border-right: solid black 1px;
+    border-bottom: solid black 1px;
+    border-left: solid black 1px
+}
+.border2122 {
+    border-top: solid black 2px;
+    border-right: solid black 1px;
+    border-bottom: solid black 2px;
+    border-left: solid black 2px
+}
+.border2211 {
+    border-top: solid black 2px;
+    border-right: solid black 2px;
+    border-bottom: solid black 1px;
+    border-left: solid black 1px
+}
+.border2221 {
+    border-top: solid black 2px;
+    border-right: solid black 2px;
+    border-bottom: solid black 2px;
+    border-left: solid black 1px
+}
+.border2222 {
+    border-top: solid black 2px;
+    border-right: solid black 2px;
+    border-bottom: solid black 2px;
+    border-left: solid black 2px
+}

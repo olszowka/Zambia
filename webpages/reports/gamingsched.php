@@ -1,10 +1,22 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Gaming Schedule';
-$report['description'] = 'All Gaming and Gaming Panels. All these reports include both.';
+$report['description'] = 'Full schedule of everything in track gaming (with participants).';
 $report['categories'] = array(
     'Gaming Reports' => 550,
+);
+$report['columns'] = array(
+    array("width" => "11em"),
+    array("orderData" => 2, "width" => "8em"),
+    array("visible" => false),
+    array("orderData" => 4, "width" => "7em"),
+    array("visible" => false),
+    array("width" => "5em"),
+    array("width" => "10em"),
+    array("width" => "6em"),
+    array("width" => "25em"),
+    array()
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
@@ -24,15 +36,20 @@ EOD;
 $report['queries']['schedule'] =<<<'EOD'
 SELECT
         R.roomname, DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
-        DATE_FORMAT(S.duration,'%i') as durationmin, DATE_FORMAT(S.duration,'%k') as durationhrs,
-        TY.typename, S.sessionid, S.title, SCH.roomid
+        SCH.starttime as starttimeraw, DATE_FORMAT(S.duration,'%i') as durationmin, DATE_FORMAT(S.duration,'%k') as durationhrs,
+        S.duration, TY.typename, S.sessionid, S.title, SCH.roomid,
+        GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
     FROM
-             Schedule SCH
-        JOIN Sessions S USING (sessionid)
-        JOIN Rooms R USING (roomid)
-        JOIN Types TY USING (typeid)
+                  Schedule SCH
+             JOIN Sessions S USING (sessionid)
+             JOIN Rooms R USING (roomid)
+             JOIN Types TY USING (typeid)
+        LEFT JOIN SessionHasTag SHT USING (sessionid)
+        LEFT JOIN Tags TA USING (tagid)
     WHERE
         S.trackid = 7 /* Gaming */
+    GROUP BY
+         SCH.scheduleid
     ORDER BY
         R.roomname, SCH.starttime;
 EOD;
@@ -43,25 +60,26 @@ $report['xsl'] =<<<'EOD'
     <xsl:include href="xsl/reportInclude.xsl" />
     <xsl:template match="/">
         <xsl:choose>
-            <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="report">
-                    <col style="width:11em;" />
-                    <col style="width:8em;" />
-                    <col style="width:7em;" />
-                    <col style="width:5em;" />
-                    <col style="width:6em;" />
-                    <col style="width:25em;" />
-                    <col />
-                    <tr>
-                        <th class="report">Room name</th>
-                        <th class="report">Start time</th>
-                        <th class="report">Duration</th>
-                        <th class="report">Type</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">Participants</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='schedule']/row"/>
+            <xsl:when test="doc/query[@queryName='schedule']/row">
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:2.6rem">
+                            <th class="report">Room name</th>
+                            <th class="report">Start time</th>
+                            <th></th>
+                            <th class="report">Duration</th>
+                            <th></th>
+                            <th class="report">Type</th>
+                            <th class="report">Tags</th>
+                            <th class="report">Session ID</th>
+                            <th class="report">Title</th>
+                            <th class="report">Participants</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='schedule']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -80,13 +98,16 @@ $report['xsl'] =<<<'EOD'
                 </xsl:call-template>
             </td>
             <td class="report"><xsl:value-of select="@starttime" /></td>
+            <td><xsl:value-of select="@starttimeraw" /></td>
             <td class="report">
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
+            <td><xsl:value-of select="@duration" /></td>
             <td class="report"><xsl:value-of select="@typename" /></td>
+            <td class="report"><xsl:value-of select="@taglist" /></td>
             <td class="report"><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
             <td class="report">
                 <xsl:call-template name="showSessionTitle">

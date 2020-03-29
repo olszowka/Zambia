@@ -9,7 +9,6 @@ require_once('StaffCommonCode.php');
 require_once('StaffMaintainSchedule_FNC.php');
 
 staff_header($title);
-//staffHeaderOnePage($title);
 ?>
 <div id="mainContentContainer" class="flex-column-container">
 	<div class="flex-row-container flex-column-fixed" style="width: 280px; margin: 2px 1px 2px 2px; border: 1px solid black"><!-- ### LEFT COLUMN ###-->
