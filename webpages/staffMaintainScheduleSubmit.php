@@ -1,7 +1,5 @@
 <?php
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-require_once('db_functions.php');
-require_once('data_functions.php');
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
