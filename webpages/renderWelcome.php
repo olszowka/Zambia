@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2008-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2008-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message, $message_error, $message2, $title;
 // $participant_array is defined by file including this.
 //error_log("Zambia: Reached renderWelcome.php"); 
@@ -29,7 +29,7 @@ if (may_I('postcon')) { ?>
 		<h3>Please check back often as more options will become available as we get closer to the convention.</h3>
 		<p>Dear <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?>,</p>
 		<p>Welcome to the <?php echo CON_NAME; ?> Programming website.</p>
-		<h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming. You will only be scheduled if you say YES.</h4>
+		<h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming. You will be scheduled only if you say YES.</h4>
 		<form class="form-horizontal" name="pwform" method=POST action="SubmitWelcome.php">
 			<fieldset>
                 <div id="update_section" class="control-group">
@@ -68,73 +68,70 @@ if (may_I('postcon')) { ?>
 <div class="row-fluid">
 	<div class="span12">
 		<p> Use the "Profile" menu to:</p>
-			<ul>
-				<li> Check your contact information. </li>
-				<li> Indicate whether you will be participating in <?php echo CON_NAME; ?>.</li>
-				<li> Opt out of sharing your email address with other program participants.</li>
-				<li> Edit your name as you want to appear in our publications.</li>
-				<li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
-			</ul>
+        <ul>
+            <li> Check your contact information. </li>
+            <li> Indicate whether you will be participating in <?php echo CON_NAME; ?>.</li>
+            <li> Opt out of sharing your email address with other program participants.</li>
+            <li> Edit your name as you want to appear in our publications.</li>
+            <li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
+        </ul>
 		<?php if (may_I('my_panel_interests')) { ?>
-			<p> Use the "Session Interests" menu to:</p>
-				<ul>
-					<li> See what selections you have made for sessions.</li>
-					<li> Alter or give more information about your selections.</li>
-					<li> Rank the preference of your selections.</li>
-				</ul>
-            <?php } else { ?>
-            <p> The "Session Interests" menu is currently unavailable. Check back later.</p>
-            <?php } ?>
-            <?php if (may_I('my_gen_int_write')) { ?>
-            <p> Use the "General Interests" menu to:</p>
-                <ul>
-                    <li> Describe the kinds of sessions you are interested in.</li>
-                    <li> Suggest the people you would like to work with.</li>
-                </ul>
-        <?php } else { ?>
-          <p> Use the "General Interests" menu to:</p>
+        <p> Use the "Session Interests" menu to:</p>
             <ul>
-              <li> See what you previously entered as your interests.</li>
-              <li> This is currently read-only as con is approaching.  If you need to make a change here, please email us:  <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
+                <li> See what selections you have made for sessions.</li>
+                <li> Alter or give more information about your selections.</li>
+                <li> Rank the preference of your selections.</li>
             </ul>
+        <?php } else { ?>
+        <p> The "Session Interests" menu is currently unavailable. Check back later.</p>
         <?php } ?>
-        
-        <?php if (may_I('my_schedule')) { ?>
-          <p> Use the "My Schedule" menu to:</p>
-            <ul>
-              <li> See what you have been scheduled to do at con.</li>
-              <li> If there are issues, conflict or questions please email us at 
-        <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
-            </ul>
+        <?php if (may_I('my_gen_int_write')) { ?>
+        <p> Use the "General Interests" menu to:</p>
+        <ul>
+            <li> Describe the kinds of sessions you are interested in.</li>
+            <li> Suggest the people you would like to work with.</li>
+        </ul>
         <?php } else { ?>
-          <p> The "My Schedule" menu is currently unavailable.  Check back later.</p>
+        <p> Use the "General Interests" menu to:</p>
+        <ul>
+            <li> See what you previously entered as your interests.</li>
+            <li> This is currently read-only as con is approaching.  If you need to make a change here, please email us:  <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
+        </ul>
+        <?php } ?>
+
+        <?php if (may_I('my_schedule')) { ?>
+        <p> Use the "My Schedule" menu to:</p>
+        <ul>
+            <li> See what you have been scheduled to do at con.</li>
+            <li> If there are issues, conflict or questions please email us at 
+                <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
+        </ul>
+        <?php } else { ?>
+        <p> The "My Schedule" menu is currently unavailable.  Check back later.</p>
         <?php } ?>
         
         <?php if (may_I('search_panels')) { ?>
-          <p> Use the "Search Sessions" menu to:</p>
-            <ul>
-              <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
-              <li> Indicate sessions you would like to participate on. </li>
-            </ul>
+        <p> Use the "Search Sessions" menu to:</p>
+        <ul>
+            <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
+            <li> Indicate sessions you would like to participate on. </li>
+        </ul>
         <?php } else { ?>
-          <p> The "Search Sessions" menu is currently unavailable.  Check back later.</p>
+        <p> The "Search Sessions" menu is currently unavailable.  Check back later.</p>
         <?php } ?>
         
         <?php if (may_I('BrainstormSubmit')) { ?>
-          <p> Use the "Suggest a Session" menu to:</p>  
-            <ul>
-              <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
-              <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner. 
-            </ul>
+        <p> Use the "Suggest a Session" menu to:</p>  
+        <ul>
+            <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
+            <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner. 
+        </ul>
         <?php } else { ?>
-          <p> The "Suggest a Session" menu is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></p>
+        <p> The "Suggest a Session" menu is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></p>
         <?php } ?>
-        
-        </ol>
-        
+
         <p>Thank you for your time, and we look forward to seeing you at <?php echo CON_NAME; ?>.</p> 
         <p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </p>
-        </div>
-      </div>
     </div>
-    <?php participant_footer(); ?>
+</div>
+<?php participant_footer(); ?>

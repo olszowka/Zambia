@@ -360,13 +360,6 @@ SPAN.regmsg {
      text-align: center;
 }
 
-#congo_section {
-     display: table;
-     padding: .5em;
-     margin: 1em;
-     margin-left: 7em;
-}
-
 .congo_data {
      display: table-row;
 }

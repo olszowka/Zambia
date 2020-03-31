@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2019 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 The Zambia Group. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30) {
@@ -396,8 +396,11 @@ function fix_slashes($arg) {
 // returns TRUE if user has this permission in the current phase(s)
 //
 function may_I($permatomtag) {
-    if ($_SESSION['permission_set'] == "") {
-        return (false);
+    if (!isset($_SESSION['permission_set'])) {
+        return false;
+    }
+    if (!is_array($_SESSION['permission_set'])) {
+        return false;
     }
     return (in_array($permatomtag, $_SESSION['permission_set']));
 }
