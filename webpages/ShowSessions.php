@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once ('StaffCommonCode.php');
 require_once ('RenderSearchSessionResults.php');
 $trackid = getInt("track", "");
@@ -18,7 +18,7 @@ $sessionSearchArray['typeidList'] = strval($typeid);
 $sessionSearchArray['statusidList'] = strval($statusid);
 $sessionSearchArray['sessionid'] = strval($sessionid);
 $sessionSearchArray['divisionid'] = strval($divisionid);
-$sessionSearchArray['searchtitle'] = $searchTitle;
+$sessionSearchArray['searchTitle'] = $searchTitle;
 $sessionSearchArray['tagmatch'] = getString("tagmatch");
 $sessionSearchArray['tagidArray'] = $tags;
 RenderSearchSessionResults($sessionSearchArray);
