@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2015-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 var staffMaintainSchedule = new StaffMaintainSchedule;
 
 function StaffMaintainSchedule() {
@@ -822,8 +822,6 @@ function StaffMaintainSchedule() {
 	};
 
 	this.initialize = function initialize() {
-		$("#zambiaLogo").ready(staffMaintainSchedule.resizeMe);
-		$("#staffNav").ready(staffMaintainSchedule.resizeMe);
 		$("#tabs").tabs();
 		//$("#clearAllButton").button();
 		$("#clearAllButton").click(staffMaintainSchedule.clearAllClick);
@@ -835,8 +833,6 @@ function StaffMaintainSchedule() {
 		$("#swapModeCheck").click(staffMaintainSchedule.onClickSwapMode);
 		$("[id^='roomidCHK']").click(staffMaintainSchedule.roomCheckClick);
 		$("#tabs-rooms").find(".checkboxContainer").click(lib.toggleCheckbox);
-		$(window).resize(staffMaintainSchedule.resizeMe);
-		$(window).resize();
 		$("#fileCabinetIMG").droppable({
 			greedy: true,
 			drop: function (event, ui) {
@@ -847,14 +843,14 @@ function StaffMaintainSchedule() {
 			over: staffMaintainSchedule.fileCabinetSwap,
 			out: staffMaintainSchedule.fileCabinetSwap,
 			tolerance: 'intersect'
-		});
-		$("#sessionsToBeSchedContainer").droppable({
-			accept: ".scheduledSessionBlock",
+			});
+		$("#sessions-to-be-scheduled-wrapper").droppable({
+			accept: ".scheduledSessionBlock",	
 			drop: function (event, ui) {
-				$(this).css("border-color", "white");
-				dropped = true;
-				dropTarget = $(this);
-			},
+				$(this).css("border-color","white");
+				dropped=true;
+				dropTarget = $("#sessions-to-be-scheduled-container");
+				},
 			over: function () {
 				$(this).css("border-color", "green");
 			},
@@ -864,9 +860,6 @@ function StaffMaintainSchedule() {
 			tolerance: 'intersect'
 		});
 		$("#tabs-rooms-link").click();
-		// ugly hack because nav bar doesn't seem to be its final size when the first resizeMe runs.
-		window.setTimeout(staffMaintainSchedule.resizeMe, 250);
-		window.setTimeout(staffMaintainSchedule.resizeMe, 750);
 	};
 
 	this.removeFromSessionArray = function removeFromSessionArray(sessionid) {
