@@ -1,6 +1,5 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-// Test comment in admin phases
 global $title;
 $title = "Administer Participants";
 require_once('StaffHeader.php');
