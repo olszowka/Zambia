@@ -30,7 +30,7 @@ function StaffMaintainSchedule() {
 	};
 	
 	this.clearAllClick = function clearAllClick() {
-		$("#sessionsToBeScheduled").html("&nbsp;");
+		$("#sessions-to-be-scheduled-container").html("&nbsp;");
 		sessionMasterArray = [];
 		$("#noSessionsFoundMSG").hide();
 	};
@@ -347,7 +347,7 @@ function StaffMaintainSchedule() {
 				helper.addClass("animHelper");
 				helper.css("top", origTop);
 				helper.css("left", origLeft);
-				$("#fullPageContainer").prepend(helper);
+				$("body").prepend(helper);
 				helper.animate({
 						top: destTop,
 						left: destLeft
@@ -444,11 +444,11 @@ function StaffMaintainSchedule() {
 				helper.addClass("animHelper");
 				helper.css("top", tarSessSEL.offset().top);
 				helper.css("left", tarSessSEL.offset().left);
-				var $sessionsToBeScheduled = $("#sessionsToBeScheduled");
+				var $sessionsToBeScheduled = $("#sessions-to-be-scheduled-container");
 				dest = $sessionsToBeScheduled.offset();
 				destTop = parseInt(dest.top, 10) + 2;
 				destLeft = parseInt(dest.left, 10) + 1;
-				$("#fullPageContainer").prepend(helper);
+				$("body").prepend(helper);
 
 				var unschDup = tarSessSEL.clone();
 				unschDup.attr("durationunits", parseInt(unschDup.attr("endtimeunits"), 10) - parseInt(unschDup.attr("starttimeunits"), 10));
@@ -587,7 +587,7 @@ function StaffMaintainSchedule() {
 			//	tolerance: 'intersect'
 			//	});
 		}
-		$("#sessionsToBeScheduled").prepend($(pThis));
+		$("#sessions-to-be-scheduled-container").prepend($(pThis));
 		$(pThis).removeClass("scheduledSessionBlock");
 		$(pThis).addClass("sessionBlock");
 		$(pThis).attr("scheduleid", "");
@@ -617,23 +617,18 @@ function StaffMaintainSchedule() {
 
 	this.dropSession = function dropSession(event, ui) {
 		confirmationMsg = "";
-		if (dropped === true) {
+		if (dropped) {
 			if (dropTarget.attr("id") === "fileCabinetIMG") {
 				staffMaintainSchedule.dropOnFileCab(event, ui, this);
-			}
-			else if (dropTarget.attr("id") === "sessionsToBeSchedContainer") {
+			} else if (dropTarget.attr("id") === "sessions-to-be-scheduled-container") {
 				staffMaintainSchedule.dropOnUnschedSessions(event, ui, this);
-			}
-			else if (dropTarget.hasClass("scheduleGridCompoundEmptyDIV")) {
-				staffMaintainSchedule.dropOnCompoundEmptySlot(event, ui, this);
-			}
-			else if (dropTarget.hasClass("scheduleGridEmptyDIV")) {
+			} else if (dropTarget.hasClass("scheduleGridCompoundEmptyDIV")) {
+				staffMaintainSchedule.dropOnCompoundEmptySlot(event, ui, this)
+			} else if (dropTarget.hasClass("scheduleGridEmptyDIV")) {
 				staffMaintainSchedule.dropOnEmptySlot(event, ui, this);
-			}
-			else if (dropTarget.hasClass("schedulerGridContainer")) {
+			} else if (dropTarget.hasClass("schedulerGridContainer")) {
 				staffMaintainSchedule.dropOnScheduledSlot(event, ui, this);
-			}
-			else {
+			} else {
 				$(this).css("visibility", "visible");
 			}
 		} else {
@@ -992,23 +987,19 @@ function StaffMaintainSchedule() {
 		$("#noSessionsFoundMSG").hide();
 	};
 
-	this.resizeMe = function resizeMe() {
-		lib.onePageResize();
-		$("#tabsContent").css("top", $("#tabsBar").outerHeight(true) + 1);
-	};
-
 	this.retrieveSessionsCallback = function retrieveSessionsCallback(responseData, returnString, jqXHR) {
+		var $sessionsToBeScheduled = $("#sessions-to-be-scheduled-container");
 		var $noSessionsFoundMSG = $("#noSessionsFoundMSG");
 		if (responseData === "noNewSessionsFound") {
 			$noSessionsFoundMSG.show();
 			return true;
 		}
-		var $sessionsToBeScheduled = $("#sessionsToBeScheduled");
 		if ($sessionsToBeScheduled.find("[id^='sessionBlockDIV_']").length > 0) {
 			$sessionsToBeScheduled.html(responseData + $sessionsToBeScheduled.html());
 		} else {
 			$sessionsToBeScheduled.html(responseData);
 		}
+		var $getSessionInfoP = $(".getSessionInfoP");
 		$sessionsToBeScheduled.find("[id^='sessionBlockDIV_']").not(".draggable").draggable({
 			addClasses: false,
 			revert: 'invalid',
@@ -1025,7 +1016,6 @@ function StaffMaintainSchedule() {
 		});
 		$noSessionsFoundMSG.hide();
 		// make all the ? (info) icons on the session blocks work
-		var $getSessionInfoP = $(".getSessionInfoP");
 		$getSessionInfoP.on("click", staffMaintainSchedule.onClickInfo);
 		$getSessionInfoP.addClass("getSessionInfo");
 		$getSessionInfoP.removeClass("getSessionInfoP");
@@ -1102,5 +1092,5 @@ function StaffMaintainSchedule() {
 		var minStr = ((thisTime.getMinutes() < 10) ? "0" : "") + thisTime.getMinutes();
 		return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][thisTime.getDay()] + " " + ((thisTime.getHours()+11) % 12 + 1) +
 			":" + minStr + ((thisTime.getHours() >= 12) ? " PM" : " AM");
-	}
+	};
 }
