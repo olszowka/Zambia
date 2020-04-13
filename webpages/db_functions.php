@@ -852,8 +852,9 @@ EOD;
 // Stores them in global variable $permission_set
 //
 function set_permission_set($badgeid) {
-// First do simple permissions
+    global $message_error;
     $_SESSION['permission_set'] = array();
+// First do simple permissions
     $query = <<<EOD
 SELECT DISTINCT
         permatomtag
@@ -869,15 +870,9 @@ EOD;
     if (!$result = mysqli_query_with_error_handling($query, true)) {
         return false;
     }
-    $rows = mysqli_num_rows($result);
-    if ($rows == 0) {
-        mysqli_free_result($result);
-        return true;
-    };
-    for ($i = 0; $i < $rows; $i++) {
-        $onerow = mysqli_fetch_array($result, MYSQLI_NUM);
-        $_SESSION['permission_set'][] = $onerow[0];
-    };
+    while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
+        $_SESSION['permission_set'][] = $row[0];
+    }
     mysqli_free_result($result);
 // Second, do <<specific>> permissions
 //    $_SESSION['permission_set_specific'] = array();

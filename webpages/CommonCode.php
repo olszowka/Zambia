@@ -8,6 +8,7 @@ require_once('render_functions.php');
 require_once('validation_functions.php');
 require_once('HtmlHeader.php');
 require_once('CommonHeader.php');
+require_once('RenderXSLT.php');
 if (!isset($title)) {
     $title = "";
 }

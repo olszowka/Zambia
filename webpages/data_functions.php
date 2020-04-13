@@ -405,4 +405,22 @@ function may_I($permatomtag) {
     return (in_array($permatomtag, $_SESSION['permission_set']));
 }
 
+// Function GeneratePermissionSetXML()
+// returns an XMLDoc as if from a query with the permission set from the Session.
+//
+function GeneratePermissionSetXML() {
+    $permissionSetXML = new DomDocument("1.0", "UTF-8");
+    $doc = $permissionSetXML -> createElement("doc");
+    $doc = $permissionSetXML -> appendChild($doc);
+    $queryNode = $permissionSetXML -> createElement("query");
+    $queryNode = $doc -> appendChild($queryNode);
+    $queryNode->setAttribute("queryname", "permission_set");
+    foreach($_SESSION['permission_set'] as $permAtomTag) {
+        $rowNode = $permissionSetXML->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        $rowNode->setAttribute("permatomtag", $permAtomTag);
+    }
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
+    return $permissionSetXML;
+}
 ?>

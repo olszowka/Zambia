@@ -100,11 +100,13 @@
                                                 <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
                                             </div>
                                         </div>
+                                        <xsl:comment><!--Restore when creating new password page-->
                                         <div class="control-group">
                                             <div class="controls">
                                                 <a href="forgotPassword.php">New user or forgot your password</a>
                                             </div>
                                         </div>
+                                        </xsl:comment>
                                     </fieldset>
                                 </form>
                             </div>
