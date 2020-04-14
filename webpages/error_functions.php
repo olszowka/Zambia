@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function StaffRenderErrorPage($title, $message) {
     global $debug;
@@ -30,14 +30,14 @@ function BrainstormRenderErrorPage($title, $message) {
 }
 
 function RenderError($message_error, $ajax = false) {
-    global $header_used, $title;
+    global $header_rendered, $header_section, $title;
     if ($ajax) {
         RenderErrorAjax($message_error);
         exit(0);
     }
-    if (!empty($header_used)) {
+    if (isset($header_rendered) && $header_rendered) {
         echo "<p class=\"alert alert-error\">$message_error</p>\n";
-        switch ($header_used) {
+        switch ($header_section) {
             case HEADER_BRAINSTORM:
                 brainstorm_footer();
                 break;
@@ -50,19 +50,21 @@ function RenderError($message_error, $ajax = false) {
         }
         exit(0);
     }
-    if (empty($title)) {
+    if (!isset($title)) {
         $title = "";
     }
-    if (isset($_SESSION['role']) && $_SESSION['role'] === "Brainstorm") {
-        BrainstormRenderErrorPage($title, $message_error);
-        exit(0);
-    }
-    if (isset($_SESSION['role']) && $_SESSION['role'] === "Participant") {
-        PartRenderErrorPage($title, $message_error);
-        exit(0);
-    }
-    if (isset($_SESSION['role']) && $_SESSION['role'] === "Staff") {
-        StaffRenderErrorPage($title, $message_error);
+    if (isset($header_section)) {
+        switch ($header_section) {
+            case HEADER_BRAINSTORM:
+                BrainstormRenderErrorPage($title, $message_error);
+                break;
+            case HEADER_PARTICIPANT:
+                PartRenderErrorPage($title, $message_error);
+                break;
+            case HEADER_STAFF:
+                StaffRenderErrorPage($title, $message_error);
+                break;
+        }
         exit(0);
     }
     // else

@@ -1,14 +1,13 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
-$logging_in = true;
 require_once('CommonCode.php');
 require_once('ParticipantHeader.php');
 require_once('ParticipantFooter.php');
 
 $title="Login";
 
-participant_header($title);
+participant_header($title, false, 'Login');
 
 if (SHOW_BRAINSTORM_LOGIN_HINT === TRUE) {
 ?>

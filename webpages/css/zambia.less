@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 
 /* Colors and other variables */
@@ -10,24 +10,32 @@
 @light_green: @green + #333;
 @dark_green: @green - #333;
 @darker_green: @green - #222;
-@font: Verdana;
+@font-family: Verdana, helvetica, san-serif;
 @contrast: white;
 @color: black;
 @staffColor: @darker_green;
 @participantColor: @light_blue;
 @problem_background: #fbc8bb;
+@dark-gray: #404040;
+@light-gray: #e5e5e5;
+@separator-color: @light-gray;
 
 /**
  * LAYOUT
  */
 
+* {
+    box-sizing: border-box;
+}
+
 /*
  * Page header stuff
  */
 header {
-    img, h1 {
-        float: left;
+    h1 {
+        flex-grow: 1;
         padding-left: 1em;
+        text-align: center;
     }
 
     label {
@@ -42,6 +50,41 @@ header {
     }
 }
 
+.header-wrapper {
+    margin-left:-20px;
+    margin-right:-20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    &.participant-header {
+        background-color: #dedcff;
+        background-image: linear-gradient(0deg, #e8e8e8 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
+    }
+
+    &.staff-header {
+        background-color: #a7d2a5;
+        background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(240,240,240,1) 24%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
+        color: black;
+    }
+}
+
+.header-contents {
+    height: 12.5rem;
+    flex-grow: 1;
+    display: flex;
+    
+    img {
+        height: 100%;
+    }
+}
+
+#login-form {
+    padding-right: 1.5rem;
+}
 #loginBox, #welcome {
     float: right;
     margin: 1em 1em 0 0;
@@ -49,48 +92,70 @@ header {
     p {
         color: @contrast;
         text-align: right;
+        letter-spacing: 0.04rem;
+    }
+
+    &.extended {
+        margin-top: 3rem;
     }
 }
 
-#altHeader p {
-    color: @contrast;
-    text-align: right;
-    padding-right: 0.5em;
+.alt-header-contents {
+    display: flex;
+
+    &.staff-header {
+        background-color: #dedcff;
+        background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
+    }
+
+    &.participant-header {
+        background-color: #dedcff;
+        background-image: linear-gradient(0deg, #e8e8e8 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
+    }
 }
 
-#showHeader {
-    height: 20px;
-    padding-left: 0.5em;
+.alt-header-spacer {
+    width: 15rem;
+}
+
+.alt-header-title {
+    flex-grow: 1;
+    text-align: center;
+    align-self: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 0.04rem;
+    font-family: @font-family;
+}
+
+.alt-header-controls {
+    p {
+        display: inline-block;
+        padding-right: 0.5em;
+        
+        .participant-header & {
+            color: @light-gray;
+        }
+    }
+    
+    img {
+        margin-right: 0.4rem;
+        margin-left: 0.4rem;
+    }
 }
 
 .navbar {
     margin-bottom: 0.2em;
 }
 
-.staff {
-    background-color: #a7d2a5;
-    background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(240,240,240,1) 24%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
-    color: black;
-}
-
-.participant {
-    background-color: #dedcff;
-    background-image: linear-gradient(0deg, rgba(232,232,232,1) 0%, rgba(232,232,232,1) 24%, rgba(195,193,219,1) 57%, rgba(146,141,196,1) 77%, rgba(16,0,163,1) 100%);
-    color: black;
-}
-
 #login {
     float: right;
 }
 
-.zambiaLogo {
-    padding: 3px;
-    display: table-cell;
-    float: none;
-}
-
-.zambiaImage {
-    height: 12rem;
+.login-alert-container {
+    text-align: center;
+    font-weight: bold;
+    margin-top:1rem;
 }
 
 .pageHeader {
@@ -116,18 +181,18 @@ form.navbar-search {
 
 /* <end> Page header stuff */
 
-/**
- * STYLES
- */
-
-body {
+body:not(.full-page) {
     background-image: url('../images/light_honeycomb.png');
     background-repeat: repeat;
 }
 
 a {
-    color: #04C;
+    color: #04c;
 }
+
+/**
+ * STYLES
+ */
 
 #buttonBox {
     margin: 0.4em;
@@ -143,6 +208,12 @@ a {
 input[type="text"],
 input[type="password"] {
     height: 28px;
+}
+
+.navbar {
+    margin-bottom: 0.2rem;
+    margin-left: -20px;
+    margin-right:  -20px;
 }
 
 #staffView {
@@ -227,7 +298,7 @@ input[type="password"] {
 }
 
 h1 {
-    font-family: @font;
+    font-family: @font-family;
     font-size: 2em;
     padding: 1em;
     color: @color;
@@ -238,7 +309,7 @@ h1 {
 }
 
 h2 {
-    font-family: @font;
+    font-family: @font-family;
     font-size: 1.5em;
     padding: 0;
     color: #666;
@@ -298,7 +369,7 @@ td.za-report-lastRowCell {
 }
 
 ul#boxes li {
-    font-family: @font;
+    font-family: @font-family;
     font-size: 1.33em;
     padding: 2.5em 0;
     color: #999;
@@ -317,6 +388,12 @@ ul#boxes li {
 /**
  * RESPONSIVE
  */
+@media (max-width: 1100px) {
+    .extra-wide-only {
+        display: none;
+    }
+}
+
 @media (max-width: 780px) {
     .wide-only {
         display: none;
@@ -611,7 +688,11 @@ table.multcol-list td {
     label:not(:first-child) {
         padding-left: 0.5rem;
     }
-} 
+}
+
+.navbar-inverse .inactive.brand:hover {
+    color: #777777;
+}
 /* <end> Bootstrap extensions */
 
 .not-attending-header-row {
@@ -641,6 +722,46 @@ table.multcol-list td {
     line-height: 2;
 }
 
+.hidden {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.vert-sep {
+    margin-bottom: 1rem;
+}
+
+.collapsible-wrapper {
+    display: flex;
+    overflow: hidden;
+}
+
+.collapsible-wrapper:after {
+    content: '';
+    height: 50px;
+    transition: height 0.3s linear, max-height 0s 0.3s linear;
+    max-height: 0;
+}
+
+.collapsible {
+    transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
+    margin-bottom: 0;
+    max-height: 500px;
+}
+
+.collapsible-wrapper.collapsed > .collapsible {
+    margin-bottom: -500px;
+    transition: margin-bottom 0.3s cubic-bezier(1, 0, 1, 1),
+    visibility 0s 0.3s, max-height 0s 0.3s;
+    visibility: hidden;
+    max-height: 0;
+}
+
+.collapsible-wrapper.collapsed:after {
+    height: 0;
+    transition: height 0.3s linear;
+    max-height: 50px;
+}
 .roles-list-container {
     column-count: 3;
     max-width: 70rem;
