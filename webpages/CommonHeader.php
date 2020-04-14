@@ -5,22 +5,15 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     if ($isLoggedIn && $loginPageStatus == 'Normal' && !may_I("Participant") && !may_I("Staff")) {
         $loginPageStatus = 'No_Permission';
     }
-    $xml = new DomDocument("1.0", "UTF-8");
-    $emptyDoc = $xml->createElement("doc");
-    $xml->appendChild($emptyDoc);
-    $xsl = new DomDocument;
-    $xsl->load('xsl/GlobalHeader.xsl');
-    $xslt = new XsltProcessor();
-    $xslt->importStylesheet($xsl);
-    $xslt->setParameter('', 'header_version', $headerVersion);
-    $xslt->setParameter('', 'logged_in', $isLoggedIn);
-    $xslt->setParameter('', 'login_page_status', $loginPageStatus);
-    $xslt->setParameter('', 'no_user_required', $noUserRequired);
-    $xslt->setParameter('', 'CON_NAME', CON_NAME);
-    $xslt->setParameter('', 'badgename', isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '');
-    $xslt->setParameter('', 'USER_ID_PROMPT', USER_ID_PROMPT);
-    $xslt->setParameter('', 'header_error_message', $headerErrorMessage);
-    $html = $xslt->transformToXML($xml);
-    echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+    $paramArray = array();
+    $paramArray["header_version"] = $headerVersion;
+    $paramArray["logged_in"] = $isLoggedIn;
+    $paramArray["login_page_status"] = $loginPageStatus;
+    $paramArray["CON_NAME"] = CON_NAME;
+    $paramArray["badgename"] = isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '';
+    $paramArray["USER_ID_PROMPT"] = USER_ID_PROMPT;
+    $paramArray["header_error_message"] = $headerErrorMessage;
+    $paramArray["no_user_required"] = $noUserRequired;
+    RenderXSLT('GlobalHeader.xsl', $paramArray);
     $header_rendered = true;
 }
