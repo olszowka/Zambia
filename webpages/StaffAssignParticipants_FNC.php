@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function SubmitAssignParticipants() {
     // NOTES
@@ -113,13 +113,7 @@ function SubmitAssignParticipants() {
             $removeParticipantNode = $participantChangeNode->appendChild($removeParticipantNode);
             $removeParticipantNode->setAttribute("badgeid", $removeParticipant);
         }
-        echo($resultXML->saveXML()); //for debugging only
-        $xsl = new DomDocument;
-        $xsl->load('xsl/StaffAssignParticipantsBadTimestamp.xsl');
-        $xslt = new XsltProcessor();
-        $xslt->importStylesheet($xsl);
-        $html = $xslt->transformToXML($resultXML);
-        echo mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i");
+        RenderXSLT('StaffAssignParticipantsBadTimestamp.xsl', array(), $resultXML);
     } // close of timestamps don't match
     else { // timestamps match -- update db
         // use XSL position for row#.  That starts at 1.

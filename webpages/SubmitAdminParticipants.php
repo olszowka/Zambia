@@ -125,16 +125,8 @@ EOD;
     	$jsEscapedBadgeid = addslashes($badgeid);
 		$resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
 	}
-	$xsl = new DomDocument;
-	$xsl->load('xsl/AdminParticipants.xsl');
-	$xslt = new XsltProcessor();
-	$xslt->importStylesheet($xsl);
-	if ($html = $xslt->transformToXML($xml)) {
-	    header("Content-Type: text/html"); 
-	    echo $html;
-	} else {
-	    trigger_error('XSL transformation failed.', E_USER_ERROR);
-	}
+    header("Content-Type: text/html");
+    RenderXSLT('AdminParticipants.xsl', array(), $xml);
 	exit();
 }
 

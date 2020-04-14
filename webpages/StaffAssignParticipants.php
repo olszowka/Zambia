@@ -162,11 +162,6 @@ if (may_I('EditSesNtsAsgnPartPg')) {
     $parametersNode->setAttribute("editSessionNotes", "true");
 }
 //echo($resultXML->saveXML()); //for debugging only
-$xsl = new DomDocument;
-$xsl->load('xsl/StaffAssignParticipants.xsl');
-$xslt = new XsltProcessor();
-$xslt->importStylesheet($xsl);
-$html = $xslt->transformToXML($resultXML);
-echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+RenderXSLT('StaffAssignParticipants.xsl', array(), $resultXML);
 staff_footer();
 ?>

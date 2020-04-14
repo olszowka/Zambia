@@ -562,18 +562,8 @@ EOD;
         RenderErrorAjax($message_error);
         exit();
     }
-    //echo($resultXML->saveXML());
-    //exit();
-    $xsl = new DomDocument;
-    $xsl->load('xsl/schedulerRetrSessInfo.xsl');
-    $xslt = new XsltProcessor();
-    $xslt->importStylesheet($xsl);
-    if ($html = $xslt->transformToXML($resultXML)) {
-        header("Content-Type: text/html");
-        echo $html;
-    } else {
-        trigger_error('XSL transformation failed.', E_USER_ERROR);
-    }
+    header("Content-Type: text/html");
+    RenderXSLT('schedulerRetrSessInfo.xsl', array(), $resultXML);
     exit();
 }
 
@@ -737,16 +727,8 @@ EOD;
         echo "noNewSessionsFound";
         exit();
     }
-    $xsl = new DomDocument;
-    $xsl->load('xsl/schedulerRetrSess.xsl');
-    $xslt = new XsltProcessor();
-    $xslt->importStylesheet($xsl);
-    if ($html = $xslt->transformToXML($resultXML)) {
-        header("Content-Type: text/html");
-        echo $html;
-    } else {
-        trigger_error('XSL transformation failed.', E_USER_ERROR);
-    }
+    header("Content-Type: text/html");
+    RenderXSLT('schedulerRetrSess.xsl', array(), $resultXML);
     exit();
 }
 

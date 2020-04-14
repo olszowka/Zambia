@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $congoinfo, $linki, $message2, $message_error, $participant, $title;
 $title = "Search Results";
 require('PartCommonCode.php'); // initialize db; check login; retrieve $badgeid
@@ -67,13 +67,6 @@ EOD;
     $variablesNode->setAttribute("may_I", may_I('my_panel_interests') ? "1" : "0");
     $variablesNode->setAttribute("conName", CON_NAME);
     participant_header($title);
-	//echo($resultXML->saveXML()); //for debugging only
-	$xsl = new DomDocument;
-	$xsl->load('xsl/SearchMySessions1.xsl');
-	$xslt = new XsltProcessor();
-	$xslt->importStylesheet($xsl);
-	$html = $xslt->transformToXML($resultXML);
-	echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
-	// some browsers do not support empty div, iframe, script and textarea tags
+    RenderXSLT('SearchMySessions1.xsl', array(), $resultXML);
 	participant_footer();
 ?>

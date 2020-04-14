@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title;
 $title = "Run Report";
 require_once('StaffCommonCode.php');
@@ -55,7 +55,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
     }
     $html = $xslt->transformToXML($resultXML);
     // some browsers do not support empty div, iframe, script and textarea tags
-    echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+    echo(mb_ereg_replace("<(div|span|b|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
     // echo "<div pbo=\"{$report['columns']}\"></div>\n";
     staff_footer();
 }
