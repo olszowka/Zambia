@@ -34,17 +34,11 @@ if ($conflict != true) {
         RenderErrorAjax($message_error); //header has already been sent, so can just send error message and stop.
         exit();
     }
-    //echo($resultXML->saveXML()); //for debugging only
-    $xsl = new DomDocument;
-    $xsl->load('xsl/MaintainRoomSched_roomSelect.xsl');
-    $xslt = new XsltProcessor();
-    $xslt->importStylesheet($xsl);
-    $html = $xslt->transformToXML($resultXML);
     ?>
 <form id="maintain-room-sched-room-form" class="form-inline page-top-spacer" name="selroomform" method="POST" action="MaintainRoomSched.php">
 	<div>
         <label for="selroom">Select Room:</label>
-<?php echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i")); ?>
+<?php RenderXSLT('MaintainRoomSched_roomSelect.xsl', array(), $resultXML); ?>
         <button type="submit" name="submit" class="btn btn-primary">Fetch Room</button></div>
 <?php
     if (isset($_SESSION['return_to_page'])) {

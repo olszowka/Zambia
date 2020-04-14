@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "My Schedule";
 require('PartCommonCode.php'); // initialize db; check login;
@@ -91,14 +91,6 @@ showCustomText("<p>","all_panelists_1","</p>");
 showCustomText("<p>","all_panelists_2","</p>");
 echo "<p>Your registration status is <span class=\"hilit\">$regmessage.</span>\n";
 echo "<p>Thank you -- <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>\n";
-$xsl = new DomDocument;
-$xsl->load('xsl/my_schedule.xsl');
-$xslt = new XsltProcessor();
-$xslt->importStylesheet($xsl);
-if ($html = $xslt->transformToXML($resultXML)) {
-    echo $html;
-} else {
-    trigger_error('XSL transformation failed.', E_USER_ERROR);
-}
+RenderXSLT('my_schedule.xsl', array(), $resultXML);
 participant_footer();
 ?>

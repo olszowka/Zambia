@@ -101,12 +101,6 @@ $parametersNode = $resultXML->createElement("parameters");
 $docNode = $resultXML->getElementsByTagName("doc")->item(0);
 $parametersNode = $docNode->appendChild($parametersNode);
 $parametersNode->setAttribute("selsessionid", $selsessionid);
-// echo(mb_ereg_replace("<(row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
-$xsl = new DomDocument;
-$xsl->load('xsl/SessionHistory.xsl');
-$xslt = new XsltProcessor();
-$xslt->importStylesheet($xsl);
-$html = $xslt->transformToXML($resultXML);
-echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+RenderXSLT('SessionHistory.xsl', array(), $resultXML);
 staff_footer();
 ?>
