@@ -1,12 +1,15 @@
 <?php
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-function load_external_javascript() {
-    ?>
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+function load_external_javascript($isReport = false) {
+?>
     <script src="external/jquery1.7.2/jquery-1.7.2.min.js"></script>
     <script src="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.min.js"></script>
     <script src="external/bootstrap2.3.2/bootstrap.js" type="text/javascript"></script>
     <script src="external/choices9.0.0/choices.min.js"></script>
-    <?php
+<?php
+    if ($isReport) {
+        echo "<script src=\"external/dataTables1.10.16/jquery.dataTables.js\"></script>\n";
+    }
 }
 
 function load_internal_javascript($title, $isReport = false) {
@@ -39,7 +42,6 @@ function load_internal_javascript($title, $isReport = false) {
             break;
         default:
             if ($isReport) {
-                echo "<script src=\"external/dataTables1.10.16/jquery.dataTables.js\"></script>\n";
                 echo "<script src=\"javascript/Reports.js\"></script>\n";
             }
     }

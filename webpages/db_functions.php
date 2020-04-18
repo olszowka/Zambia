@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function mysql_query_XML($query_array) {
 	global $linki, $message_error;
@@ -117,16 +117,20 @@ function populateCustomTextArray() {
 if (!include ('../db_name.php'))
 	include ('./db_name.php'); // scripts which rely on this file (db_functions.php) may run from a different directory
 function prepare_db_and_more() {
-    global $con_start_php_timestamp, $linki;
+    global $con_start_php_timestamp, $linki, $fatalError;
     $linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
-    if ($linki === false)
+    if (!$linki) {
+        $fatalError = true;
         return false;
+    }
     date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
     if (mysqli_set_charset($linki, "utf8") === false) {
+        $fatalError = true;
         return false;
     };
     $con_start_php_timestamp = date_create_from_format("Y-m-d H:i:s", CON_START_DATIM);
     if ($con_start_php_timestamp === false) {
+        $fatalError = true;
         RenderError("Con start date (CON_START_DATIM) not configured correctly. Further execution not possible.");
         return false; // Should have exited anyway
     }
@@ -642,9 +646,6 @@ EOD;
 /* check login script, included in db_connect.php. */
 
 function isLoggedIn() {
-    global $message_error, $message2;
-    $message2 = "";
-    $message_error = "";
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['password'])) {
         return false;
     }
@@ -851,8 +852,9 @@ EOD;
 // Stores them in global variable $permission_set
 //
 function set_permission_set($badgeid) {
-// First do simple permissions
+    global $message_error;
     $_SESSION['permission_set'] = array();
+// First do simple permissions
     $query = <<<EOD
 SELECT DISTINCT
         permatomtag
@@ -868,15 +870,9 @@ EOD;
     if (!$result = mysqli_query_with_error_handling($query, true)) {
         return false;
     }
-    $rows = mysqli_num_rows($result);
-    if ($rows == 0) {
-        mysqli_free_result($result);
-        return true;
-    };
-    for ($i = 0; $i < $rows; $i++) {
-        $onerow = mysqli_fetch_array($result, MYSQLI_NUM);
-        $_SESSION['permission_set'][] = $onerow[0];
-    };
+    while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
+        $_SESSION['permission_set'][] = $row[0];
+    }
     mysqli_free_result($result);
 // Second, do <<specific>> permissions
 //    $_SESSION['permission_set_specific'] = array();

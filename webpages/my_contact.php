@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
     global $participant, $message, $message_error, $message2, $congoinfo, $title;
     $title="My Profile";
     require ('PartCommonCode.php'); // initialize db; check login;
@@ -43,13 +43,6 @@ EOD;
 	$optionsNode->setAttribute("reg_url", REG_URL);
 	participant_header($title);
 	$resultXML = appendCustomTextArrayToXML($resultXML);
-	//echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
-	$xsl = new DomDocument;
-	$xsl->load('xsl/my_profile.xsl');
-	$xslt = new XsltProcessor();
-	$xslt->importStylesheet($xsl);
-	$html = $xslt->transformToXML($resultXML);
-	echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
-	// some browsers does not support empty div, iframe, script and textarea tags
+	RenderXSLT('my_profile.xsl', array(), $resultXML);
 	participant_footer();
 ?>

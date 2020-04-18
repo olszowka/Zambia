@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2019 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 The Zambia Group. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30) {
@@ -396,10 +396,31 @@ function fix_slashes($arg) {
 // returns TRUE if user has this permission in the current phase(s)
 //
 function may_I($permatomtag) {
-    if ($_SESSION['permission_set'] == "") {
-        return (false);
+    if (!isset($_SESSION['permission_set'])) {
+        return false;
+    }
+    if (!is_array($_SESSION['permission_set'])) {
+        return false;
     }
     return (in_array($permatomtag, $_SESSION['permission_set']));
 }
 
+// Function GeneratePermissionSetXML()
+// returns an XMLDoc as if from a query with the permission set from the Session.
+//
+function GeneratePermissionSetXML() {
+    $permissionSetXML = new DomDocument("1.0", "UTF-8");
+    $doc = $permissionSetXML -> createElement("doc");
+    $doc = $permissionSetXML -> appendChild($doc);
+    $queryNode = $permissionSetXML -> createElement("query");
+    $queryNode = $doc -> appendChild($queryNode);
+    $queryNode->setAttribute("queryname", "permission_set");
+    foreach($_SESSION['permission_set'] as $permAtomTag) {
+        $rowNode = $permissionSetXML->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        $rowNode->setAttribute("permatomtag", $permAtomTag);
+    }
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
+    return $permissionSetXML;
+}
 ?>

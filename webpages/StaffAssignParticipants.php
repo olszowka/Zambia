@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Assign Participants";
 require_once('StaffCommonCode.php');
@@ -100,9 +100,11 @@ SELECT
 		P.pubsname ASC;
 EOD;
 if (($resultXML = mysql_query_XML($queryArray)) === false) {
-    //$message = $query . "<br>Error querying database. Unable to continue.<br>";
-    $message = $message_error . "<br>Error querying database. Unable to continue.<br>";
-    echo "<p class\"alert alert-error\">" . $message . "</p>\n";
+    if (!isset($message_error)) {
+        $message_error = "";
+    }
+    $message_error .= "<br>Error querying database. Unable to continue.<br>";
+    echo "<p class\"alert alert-error\">" . $message_error . "</p>\n";
     staff_footer();
     exit();
 }
@@ -160,11 +162,6 @@ if (may_I('EditSesNtsAsgnPartPg')) {
     $parametersNode->setAttribute("editSessionNotes", "true");
 }
 //echo($resultXML->saveXML()); //for debugging only
-$xsl = new DomDocument;
-$xsl->load('xsl/StaffAssignParticipants.xsl');
-$xslt = new XsltProcessor();
-$xslt->importStylesheet($xsl);
-$html = $xslt->transformToXML($resultXML);
-echo(mb_ereg_replace("<(div|iframe|script|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+RenderXSLT('StaffAssignParticipants.xsl', array(), $resultXML);
 staff_footer();
 ?>

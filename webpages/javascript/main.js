@@ -1,8 +1,8 @@
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-$(document).ready(function() {
-	//this function is run whenever any page finishes loading if JQuery has been loaded
-	//debugger;
-	//client variable thisPage set to server variable $title in files ParticipantHeader.php and StaffHeader.php
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+document.addEventListener( "DOMContentLoaded", function () {
+    //this function is run whenever any page finishes loading if JQuery has been loaded
+    //debugger;
+    //client variable thisPage set to server variable $title in files ParticipantHeader.php and StaffHeader.php
 	switch (thisPage) {
 		case "Administer Participants":
 			initializeAdminParticipants();
@@ -31,27 +31,38 @@ $(document).ready(function() {
          * Maintain Room Schedule -- MaintainRoomSched.js
 		 */
 	}
-	if (getValue('zambiaHeader') == 'small' && !alwaysShowLargeHeader) {
-		$('#altHeader').show();
-		$('#regHeader').hide();
-	} else {
-		$('#altHeader').hide();
-		$('#regHeader').show();
+	var $altHeaderContainer = document.getElementById("alt-header-container");
+	var $regHeaderContainer = document.getElementById("reg-header-container");
+	if ($altHeaderContainer && $regHeaderContainer) {
+		if (getValue('zambiaHeader') === 'small') {
+			$altHeaderContainer.classList.remove("hidden");
+			$regHeaderContainer.classList.add("collapsed", "hidden");
+			window.setTimeout(function () {
+				$regHeaderContainer.classList.remove("hidden");
+			},800);
+		} else {
+			$altHeaderContainer.classList.add("collapsed");
+			window.setTimeout(function () {
+				$altHeaderContainer.classList.remove("hidden");
+			},800);
+		}
+		var $hideHeaderButton = document.getElementById("hide-header-but");
+		if ($hideHeaderButton) {
+			$hideHeaderButton.addEventListener("click", function (event) {
+				$regHeaderContainer.classList.add("collapsed");
+				$altHeaderContainer.classList.remove("collapsed");
+				setValue('zambiaHeader', 'small');
+			});
+		}
+		var $showHeaderButton = document.getElementById("show-header-but");
+		if ($showHeaderButton) {
+            $showHeaderButton.addEventListener("click", function (event) {
+				$regHeaderContainer.classList.remove("collapsed");
+				$altHeaderContainer.classList.add("collapsed");
+				setValue('zambiaHeader', 'large');
+			});
+		}
 	}
-	$('#hideHeader').click(function() {
-		$('#regHeader').slideUp();
-		$('#altHeader').show();
-		setValue('zambiaHeader', 'small');
-		window.setTimeout(staffMaintainSchedule.resizeMe,300);
-		window.setTimeout(staffMaintainSchedule.resizeMe,600);
-	});
-	$('#showHeader').click(function() {
-		$('#altHeader').hide();
-		$('#regHeader').slideDown();
-		setValue('zambiaHeader', 'large');
-		window.setTimeout(staffMaintainSchedule.resizeMe,300);
-		window.setTimeout(staffMaintainSchedule.resizeMe,600);
-	});
 });
 
 function supports_html5_storage() {
@@ -89,8 +100,5 @@ function Lib() {
 		var thecheckbox = $(this).find(":checkbox");
 		thecheckbox.prop("checked",!thecheckbox.prop("checked"));
 		thecheckbox.triggerHandler("click");
-	};
-	this.onePageResize = function onePageResize() {
-		$("#mainContentContainer").css("top", $("#top").outerHeight(true) + $("#staffNav").outerHeight(true) + 1);
 	};
 }

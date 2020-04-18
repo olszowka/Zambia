@@ -1,8 +1,8 @@
 <?php
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function brainstorm_header($title) {
-    global $header_used;
-    $header_used = HEADER_BRAINSTORM;
+    global $header_section;
+    $header_section = HEADER_BRAINSTORM;
     require_once ("javascript_functions.php");
 ?>
 <!DOCTYPE html>
