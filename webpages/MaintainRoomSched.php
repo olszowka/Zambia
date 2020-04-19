@@ -36,10 +36,11 @@ if ($conflict != true) {
     }
     ?>
 <form id="maintain-room-sched-room-form" class="form-inline page-top-spacer" name="selroomform" method="POST" action="MaintainRoomSched.php">
-	<div>
+	<div class="vert-sep">
         <label for="selroom">Select Room:</label>
 <?php RenderXSLT('MaintainRoomSched_roomSelect.xsl', array(), $resultXML); ?>
-        <button type="submit" name="submit" class="btn btn-primary">Fetch Room</button></div>
+        <button type="submit" name="submit" class="btn btn-primary">Fetch Room</button>
+    </div>
 <?php
     if (isset($_SESSION['return_to_page'])) {
         echo "<A HREF=\"" . $_SESSION['return_to_page'] . "\">Return to report</A>";

@@ -83,11 +83,11 @@
                                             </xsl:otherwise>
                                         </xsl:choose>
                                         <div class="control-group">
-                                            <label class="control-label vert-sep" for="badgeid">
+                                            <label class="control-label vert-sep vert-sep-above" for="badgeid">
                                                 <xsl:value-of select="$USER_ID_PROMPT"/>
                                                 <xsl:text>:</xsl:text>
                                             </label>
-                                            <div class="controls vert-sep">
+                                            <div class="controls vert-sep vert-sep-above">
                                                 <input type="text" name="badgeid" id="badgeid" class="pbox" placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
                                             </div>
                                             <label class="control-label" for="passwd">Password:</label>

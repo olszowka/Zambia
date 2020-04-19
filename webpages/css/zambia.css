@@ -565,9 +565,6 @@ table.multcol-list td {
   display: none !important;
   visibility: hidden !important;
 }
-.vert-sep {
-  margin-bottom: 1rem;
-}
 .collapsible-wrapper {
   display: flex;
   overflow: hidden;
@@ -605,6 +602,9 @@ table.multcol-list td {
   margin-top: 1.5rem;
 }
 .vert-sep {
+  margin-bottom: 1rem;
+}
+.vert-sep-above {
   margin-top: 1rem;
 }
 /* <end> General spacing bits */
