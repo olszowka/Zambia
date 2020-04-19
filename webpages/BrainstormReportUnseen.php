@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2007-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2007-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 require_once('db_functions.php');
 require_once('BrainstormCommonCode.php');
@@ -9,12 +9,13 @@ $title = "New (Unseen) Suggestions";
 $query = <<<EOD
 SELECT
         S.sessionid, TR.trackname, NULL typename, S.title, 
-        concat( if(left(S.duration,2)=00, '', 
-                if(left(S.duration,1)=0, concat(right(left(S.duration,2),1),'hr '), concat(left(S.duration,2),'hr '))),
-                if(date_format(S.duration,'%i')=00, '', 
-                if(left(date_format(S.duration,'%i'),1)=0, concat(right(date_format(S.duration,'%i'),1),'min'), 
-                concat(date_format(S.duration,'%i'),'min')))) as Duration,
-        S.estatten, S.progguiddesc, S.persppartinfo, null as roomname, null as starttime, SS.statusname
+        CONCAT( IF(LEFT(S.duration,2)=00, '', 
+                IF(LEFT(S.duration,1)=0, CONCAT(RIGHT(LEFT(S.duration,2),1),'hr '), CONCAT(LEFT(S.duration,2),'hr '))),
+                IF(DATE_FORMAT(S.duration,'%i')=00, '', 
+                IF(LEFT(DATE_FORMAT(S.duration,'%i'),1)=0, CONCAT(RIGHT(DATE_FORMAT(S.duration,'%i'),1),'min'), 
+                CONCAT(DATE_FORMAT(S.duration,'%i'),'min')))) Duration,
+        S.estatten, S.progguiddesc, S.persppartinfo, NULL starttime, NULL roomname, SS.statusname,
+        NULL taglist
     FROM
              Sessions S
         JOIN Tracks TR USING (trackid)

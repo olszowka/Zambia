@@ -3,8 +3,6 @@
 global $fullPage, $title;
 $title="Grid Scheduler";
 $fullPage = true; // changes body class to support all content restricted to screen size
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
 require_once('StaffMaintainSchedule_FNC.php');
 
