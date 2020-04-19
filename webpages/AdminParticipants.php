@@ -77,16 +77,16 @@ if ($fbadgeid)
     <div class="row-fluid" style="margin-top: 1em">
       <div class="span4">
       	<div class="password2">Change Participant's Password:</div>
-      	<div class="value"><INPUT type="password" size="10" id="password" readonly="readonly" onchange="anyChange();" onkeyup="anyChange();"></div>
+      	<div class="value">
+            <input type="password" size="10" id="password" readonly="readonly" onchange="anyChange();" onkeyup="anyChange();" />
+        </div>
         <span id="passwordsDontMatch" style="color: red;">Passwords don't match.</span>
       </div>
       <div class="span4">
       	<div class="password2">Confirm New Password:</div>
-      	<div class="value"><INPUT type="password" size="10" id="cpassword" readonly="readonly" onchange="anyChange();" onkeyup="anyChange();"></div>
-      </div>
-      <div class="span4">
-      	<div class="newformlabel"><span class="clearfix">Participant roles:</span></div>
-      	<div class="newforminput"><div id="partRoles" class="divbox" style="height: 3em; width: 25em; overflow: auto"></div></div>
+      	<div class="value">
+            <input type="password" size="10" id="cpassword" readonly="readonly" onchange="anyChange();" onkeyup="anyChange();" />
+        </div>
       </div>
     </div>
     <div class="row-fluid">

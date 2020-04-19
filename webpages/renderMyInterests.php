@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function renderMyInterests($title, $error, $message, $rolearray) {
     global $link, $yespanels, $nopanels, $yespeople, $nopeople;
     global $otherroles, $newrow;
@@ -16,7 +16,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "<form class=\"form-horizontal\" name=\"addform\" method=POST action=\"SubmitMyInterests.php\">\n";
     echo "<input type=\"hidden\" name=\"newrow\" value=\"" . ($newrow ? 1 : 0) . "\">\n";
     echo "<input type=\"hidden\" name=\"rolerows\" value=\"" . $rolerows . "\">\n";
-    echo "<div class=\"row-fluid vert-sep\">\n";
+    echo "<div class=\"row-fluid vert-sep vert-sep-above\">\n";
     echo "  <div class=\"span6\">\n";
     echo "    <label for=\"yespanels\"><p>Workshops or presentations I'd like to run: </p></label>\n";
     echo "    <textarea class=\"span12\" name=\"yespanels\" rows=5 cols=72";
@@ -35,7 +35,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo ">" . htmlspecialchars($nopanels, ENT_COMPAT) . "</textarea>\n";
     echo "    </div>\n";
     echo "</div>\n";
-    echo "<div class=\"row-fluid vert-sep\">\n";
+    echo "<div class=\"row-fluid vert-sep vert-sep-above\">\n";
     echo "  <div class=\"span6\">\n";
     echo "    <label for=\"yespeople\"><p>People with whom I'd like to be on a session: (Leave blank for none)</p></label>\n";
     echo "    <textarea class=\"span12\" name=\"yespeople\" rows=5 cols=72";
@@ -53,7 +53,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo ">" . htmlspecialchars($nopeople, ENT_COMPAT) . "</textarea>\n";
     echo "  </div>\n";
     echo "</div>\n";
-    echo "<p class=\"vert-sep\">Roles I'm willing to take on:</p>\n";
+    echo "<p class=\"vert-sep vert-sep-above\">Roles I'm willing to take on:</p>\n";
     echo "<div class=\"row-fluid\">\n";
     echo "    <div class=\"control-group span12\">\n";
     echo "        <div class=\"roles-list-container\">";
@@ -88,7 +88,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "                <input type=hidden name=\"diddorole0\" value=\"";
     echo ((isset($rolearray[0]["badgeid"])) ? 1 : 0) . "\">\n";
     echo "</div>"; // close roles-list-container div
-    echo "<p class=\"vert-sep\">Description for \"Other\" Roles:</p>\n";
+    echo "<p class=\"vert-sep vert-sep-above\">Description for \"Other\" Roles:</p>\n";
     echo "<textarea class=\"span12\" name=\"otherroles\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
