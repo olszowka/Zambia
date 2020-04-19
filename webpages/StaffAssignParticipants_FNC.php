@@ -151,9 +151,8 @@ function SubmitAssignParticipants() {
                 "VALUES (\"$asgnpart\", $selsessionid, 0, @mynow, \"$userbadgeid\");";
         }
 
-
         $queryArray[] = "COMMIT;";
-        $queryArray[] = "SET AUTOCOMMIT = 0;";
+        $queryArray[] = "SET AUTOCOMMIT = 1;";
         foreach ($firstQueryArray as $query) {
             mysqli_query_exit_on_error($query);
         }
@@ -166,9 +165,10 @@ function SubmitAssignParticipants() {
             $result = mysqli_query_exit_on_error($query);
             $message .= "Participant added to session. ";
         }
-        if (isset($_POST["NPStext"])) {
-            $NPStext = mysqli_real_escape_string($linki, $_POST["NPStext"]);
-            $query = "UPDATE Sessions SET notesforprog = \"$NPStext\" WHERE sessionid = $selsessionid;";
+        $NPSText = getString("NPStext");
+        if (!empty($NPSText)) {
+            $NPSText = mysqli_real_escape_string($linki, $NPSText);
+            $query = "UPDATE Sessions SET notesforprog = \"$NPSText\" WHERE sessionid = $selsessionid;";
             $result = mysqli_query_exit_on_error($query);
             $query = <<<EOD
 INSERT INTO SessionEditHistory

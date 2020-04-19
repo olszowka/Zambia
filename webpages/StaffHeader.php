@@ -1,7 +1,7 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section;
-$header_section = HEADER_PARTICIPANT;
+$header_section = HEADER_STAFF;
 
 function staff_header($title, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;

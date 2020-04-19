@@ -2,8 +2,6 @@
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Administer Participants";
-require_once('StaffHeader.php');
-require_once('StaffFooter.php');
 require_once('StaffCommonCode.php');
 $fbadgeid = getInt("badgeid");
 //error_log("Reached AdminParticpants.");
