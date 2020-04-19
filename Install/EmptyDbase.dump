@@ -874,43 +874,40 @@ INSERT INTO `Permissions` VALUES
     (47,8,5,11,NULL),
     (48,12,7,11,NULL),
     (49,15,8,11,NULL),
-    (50,14,NULL,12,NULL);
+    (50,14,NULL,12,NULL),
+    (51,9,6,2,NULL),
+    (52,9,6,3,NULL);
 /*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `Phases`
---
-
-DROP TABLE IF EXISTS `Phases`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Phases` (
-  `phaseid` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `phases`;
+CREATE TABLE `phases` (
+  `phaseid` int NOT NULL AUTO_INCREMENT,
   `phasename` varchar(100) DEFAULT NULL,
   `current` tinyint(1) DEFAULT '0',
   `notes` text,
+  `implemented` tinyint(1) DEFAULT '0',
+  `display_order` int DEFAULT NULL,
   PRIMARY KEY (`phaseid`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Configuration info.';
 
 --
--- Dumping data for table `Phases`
+-- Dumping data for table `phases`
 --
 
-LOCK TABLES `Phases` WRITE;
-/*!40000 ALTER TABLE `Phases` DISABLE KEYS */;
-INSERT INTO `Phases` VALUES
-  (1,'Invitation',1,'Welcome, My Profile, My Suggestions and My General Interests'),
-  (2,'Edit Bio',1,'Parts. have write access to their biography'),
-  (3,'Availability',1,'Add on My Availability'),
-  (4,'Panel Sign Up',1,'Add on Search Panels and My Panel Interests'),
-  (5,'Show Schedule',1,'Add on My Schedule'),
-  (6,'Suggestions',1,'Allow write access to My Suggestions and My General Interests.'),
-  (7,'Brainstorm',0,'Special brainstorm pages are accessible.'),
-  (8,'Post Con',0,'Participants see only the post con message and can\'t do anything.'),
-  (9,'Events Show Schedule',1,'Event organizers may view schedule.');
-/*!40000 ALTER TABLE `Phases` ENABLE KEYS */;
+LOCK TABLES `phases` WRITE;
+/*!40000 ALTER TABLE `phases` DISABLE KEYS */;
+INSERT INTO `phases` VALUES
+  (1,'Invitation',1,'Welcome, My Profile, My Suggestions and My General Interests',1,100),
+  (2,'Edit Bio',1,'Parts. have write access to their biography',1,200),
+  (3,'Availability',1,'Add on My Availability',1,300),
+  (4,'Panel Sign Up',1,'Add on Search Panels and My Panel Interests',1,400),
+  (5,'Show Schedule',1,'Add on My Schedule',1,500),
+  (6,'Suggestions',1,'Allow write access to My Suggestions and My General Interests.',1,600),
+  (7,'Brainstorm',0,'Special brainstorm pages are accessible.',1,700),
+  (8,'Post Con',0,'Participants see only the post con message and can\'t do anything.',1,800),
+  (9,'Events Show Schedule',1,'Event organizers may view schedule.',0,450);
+/*!40000 ALTER TABLE `phases` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
