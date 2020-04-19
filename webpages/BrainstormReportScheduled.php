@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title;
 require_once('BrainstormCommonCode.php');
 $title = "Scheduled Suggestions";
@@ -12,14 +12,19 @@ SELECT
                 if(date_format(S.duration,'%i')=00, '', 
                 if(left(date_format(S.duration,'%i'),1)=0, concat(right(date_format(S.duration,'%i'),1),'min'), 
                 concat(date_format(S.duration,'%i'),'min')))) Duration,
-        S.estatten, S.progguiddesc, S.persppartinfo, roomname,
-        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime, SS.statusname
+        S.estatten, S.progguiddesc, S.persppartinfo, 
+		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+		R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
     FROM
                   Sessions S
              JOIN Tracks T USING (trackid)
              JOIN SessionStatuses SS USING (statusid)
              JOIN Schedule SCH USING (sessionid)
              JOIN Rooms R USING (roomid)
+		LEFT JOIN SessionHasTag SHT USING (sessionid)
+		LEFT JOIN Tags TA USING (tagid)
+    GROUP BY
+        S.sessionid
     ORDER BY
         T.trackname, S.title;
 EOD;

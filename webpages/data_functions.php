@@ -101,6 +101,9 @@ function getArrayOfInts($name, $default = false) {
         return $default;
     }
     $retVal = array();
+    if ($intArr === "null") {
+        return $retVal;
+    }
     forEach ($intArr as $int) {
         if (!empty($t = filter_var($int, FILTER_SANITIZE_NUMBER_INT))) {
             $retVal[] = $t;
@@ -109,7 +112,7 @@ function getArrayOfInts($name, $default = false) {
     if (count($retVal) == 0) {
         return $default;
     } else {
-        return($retVal);
+        return $retVal;
     }
 }
 
@@ -190,35 +193,31 @@ function get_participant_availability_from_post() {
 //
 function get_session_from_post() {
     global $session;
-    $session["sessionid"] = $_POST["sessionid"];
-    $session["track"] = $_POST["track"];
-    $session["type"] = $_POST["type"];
-    $session["divisionid"] = $_POST["divisionid"];
-    $session["pubstatusid"] = $_POST["pubstatusid"];
-    $session["languagestatusid"] = $_POST["languagestatusid"];
-    $session["pubno"] = stripslashes($_POST["pubno"]);
-    if (isset($_POST["title"])) {
-        $session["title"] = stripslashes($_POST["title"]);
-    } else {
-        $session["title"] = "";
-    }
-    $session["secondtitle"] = stripslashes($_POST["secondtitle"]);
-    $session["pocketprogtext"] = stripslashes($_POST["pocketprogtext"]);
-    $session["progguiddesc"] = stripslashes($_POST["progguiddesc"]);
-    $session["persppartinfo"] = stripslashes($_POST["persppartinfo"]);
+    $session["sessionid"] = getInt('sessionid');
+    $session["track"] = getInt('track');
+    $session["type"] = getInt('type');
+    $session["divisionid"] = getInt('divisionid');
+    $session["pubstatusid"] = getInt('pubstatusid');
+    $session["languagestatusid"] = getInt('languagestatusid');
+    $session["pubno"] = getString('pubno');
+    $session["title"] = getString('title');
+    $session["secondtitle"] = getString('secondtitle');
+    $session["pocketprogtext"] = getString('pocketprogtext');
+    $session["progguiddesc"] = getString('progguiddesc');
+    $session["persppartinfo"] = getString('persppartinfo');
     $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
     $session["servdest"] = getArrayOfStrings("servdest");
-    $session["duration"] = stripslashes($_POST["duration"]);
-    $session["atten"] = $_POST["atten"];
-    $session["kids"] = $_POST["kids"];
+    $session["duration"] = getString('duration');
+    $session["atten"] = getString('atten');
+    $session["kids"] = getInt('kids');
     $session["invguest"] = isset($_POST["invguest"]);
     $session["signup"] = isset($_POST["signup"]);
-    $session["roomset"] = $_POST["roomset"];
-    $session["notesforpart"] = stripslashes($_POST["notesforpart"]);
-    $session["servnotes"] = stripslashes($_POST["servnotes"]);
-    $session["status"] = $_POST["status"];
-    $session["notesforprog"] = stripslashes($_POST["notesforprog"]);
+    $session["roomset"] = getInt('roomset');
+    $session["notesforpart"] = getString('notesforpart');
+    $session["servnotes"] = getString('servnotes');
+    $session["status"] = getInt('status');
+    $session["notesforprog"] = getString('notesforprog');
 }
 
 // Function set_session_defaults() 
