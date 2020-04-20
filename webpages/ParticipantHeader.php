@@ -19,7 +19,8 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
 <?php
     $isLoggedIn = isLoggedIn();
     commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage);
-    if ($isLoggedIn && (may_I("Participant") || may_I("Staff"))) {
+    if ($isLoggedIn && $loginPageStatus != 'Login' && 
+        (may_I("Participant") || may_I("Staff"))) {
 ?>
         <nav id="participantNav" class="navbar navbar-inverse">
             <div class="navbar-inner">

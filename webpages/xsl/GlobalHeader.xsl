@@ -9,6 +9,7 @@
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
     <xsl:param name="header_error_message" select="''" />
+    <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:template match="/">
         <header class="header-wrapper">
             <div id="reg-header-container" class="collapsible-wrapper">
@@ -100,13 +101,13 @@
                                                 <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
                                             </div>
                                         </div>
-                                        <xsl:comment><!--Restore when creating new password page-->
-                                        <div class="control-group">
-                                            <div class="controls">
-                                                <a href="forgotPassword.php">New user or forgot your password</a>
+                                        <xsl:if test="$RESET_PASSWORD_SELF">
+                                            <div class="control-group">
+                                                <div class="controls">
+                                                    <a href="ForgotPassword.php">New user or forgot your password</a>
+                                                </div>
                                             </div>
-                                        </div>
-                                        </xsl:comment>
+                                        </xsl:if>
                                     </fieldset>
                                 </form>
                             </div>

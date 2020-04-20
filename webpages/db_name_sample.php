@@ -45,4 +45,8 @@ define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
 define("REG_URL", "https://reg.arisia.org"); // URL for logging into user self service portion of registration system -- appears on My Profile page
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
+define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email integration
+define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
+define("PASSWORD_RESET_LINK_TIMEOUT", "PT01H"); // How long until password reset link expires See https://www.php.net/manual/en/dateinterval.construct.php for format.
+define("PASSWORD_RESET_FROM_EMAIL", "admin@somewhere.net"); // From address to be used for password reset emails
 ?>
