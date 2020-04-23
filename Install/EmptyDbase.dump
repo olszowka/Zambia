@@ -1,10 +1,4 @@
--- Copyright (c) 2011-2019 by Peter Olszowka. All rights reserved. See copyright document for more details.
---
--- MySQL dump 10.13  Distrib 5.1.49, for debian-linux-gnu (x86_64)
---
--- Host: mysql.zambia.dreamhosters.com    Database: arisia13_prod
--- ------------------------------------------------------
--- Server version	5.1.53-log
+-- Copyright (c) 2011-2020 by Peter Olszowka. All rights reserved. See copyright document for more details.
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -754,7 +748,8 @@ INSERT INTO `PermissionAtoms` VALUES
     (14,'SendEmail',NULL,'StaffManageParticipants','Access to Send email set of pages'),
     (15,'postcon',NULL,'renderWelcome','Forces participant welcome page to display only post con message.'),
     (16,'EditSesNtsAsgnPartPg',NULL,'StaffAssignParticipants','Edit «Notes for Program Staff» on «Assign Participants» page.'),
-    (17,'ConfigureReports',NULL,'ConfigureReports','Enable menu option');
+    (17,'ConfigureReports',NULL,'ConfigureReports','Enable menu option'),
+    (18,'ResetUserPassword',NULL,'AdminParticipants','No one needs this permission once password overhaul is implemented and system has email integration.');
 /*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
 UNLOCK TABLES;
 

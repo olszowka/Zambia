@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
     // This function will output the page with the form to add or create a session
     // Variables
     //     action: "create" or "edit"
@@ -132,7 +132,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 ?>
         <div class="row-fluid">
             <div class="span6">
-                <label class="control-label vert-sep" for="pocketprogtext"><?php echo SECOND_DESCRIPTION_CAPTION;?>: </label>
+                <label class="control-label vert-sep vert-sep-above" for="pocketprogtext"><?php echo SECOND_DESCRIPTION_CAPTION;?>: </label>
                 <textarea class="span12 textlabelarea"
                     rows="4" cols="70" name="pocketprogtext"><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></textarea>
             </div>
@@ -145,7 +145,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 <?php
     }
 ?>
-        <div class="row-fluid vert-sep">
+        <div class="row-fluid vert-sep vert-sep-above">
             <div class="span5"> <!-- Features Box; -->
                 <label>Required Room Features:</label>
                 <div class="borderBox">
