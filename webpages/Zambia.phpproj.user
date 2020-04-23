@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <RuntimePath>C:\Program Files\PHP\v7.2\php.exe</RuntimePath>
-    <SpecificPageValue>index.php</SpecificPageValue>
-  </PropertyGroup>
-</Project>
