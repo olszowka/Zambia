@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details. Test change for key
 function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "") {
     global $header_rendered;
     if ($isLoggedIn && $loginPageStatus == 'Normal' && !may_I("Participant") && !may_I("Staff")) {
