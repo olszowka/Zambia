@@ -1,6 +1,5 @@
 <?php
 // This is an example file.  Please copy to db_name.php and edit as needed.
-// Created by Peter Olszowka
 // Copyright (c) 2008-2020 Peter Olszowka. All rights reserved.
 // See copyright document for more details.
 define("DBHOSTNAME", "localhost");

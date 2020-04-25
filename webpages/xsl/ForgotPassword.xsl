@@ -12,7 +12,7 @@
         </xsl:if>
         <div class="row-fluid vert-sep-above">
             <form method="POST" action="ForgotPasswordSubmit.php" class="well form-horizontal">
-                <div class="vert-sep">Provider your badgeid and email address and a link to initialize or reset your password will be emailed to you.</div>
+                <div class="vert-sep">Provider your badgeid and email address.  Then a link to initialize or reset your password will be emailed to you.</div>
                 <div class="control-group">
                     <label for="badgeid" class="control-label">
                         <xsl:value-of select="$USER_ID_PROMPT" />
@@ -30,7 +30,7 @@
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" id="submit-button" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
             </form>
