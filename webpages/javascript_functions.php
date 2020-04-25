@@ -31,14 +31,20 @@ function load_internal_javascript($title, $isReport = false) {
         case "Assign Participants":
             echo "<script src=\"javascript/StaffAssignParticipants.js\"></script>\n";
             break;
+        case "Forgot Password":
+            echo "<script src=\"javascript/ForgotPassword.js\"></script>\n";
+            break;
         case "Invite Participants":
             echo "<script src=\"javascript/InviteParticipants.js\"></script>\n";
             break;
-        case "Session History":
-            echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
-            break;
         case "Maintain Room Schedule":
             echo "<script src=\"javascript/MaintainRoomSched.js\"></script>\n";
+            break;
+        case "Reset Password":
+            echo "<script src=\"javascript/ForgotPasswordResetForm.js\"></script>\n";
+            break;
+        case "Session History":
+            echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
             break;
         default:
             if ($isReport) {

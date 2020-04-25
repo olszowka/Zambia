@@ -602,6 +602,24 @@ DELIMITER ;;
 DELIMITER ;
 
 --
+-- Table structure for table ParticipantPasswordResetRequests
+--
+
+DROP TABLE IF EXISTS ParticipantPasswordResetRequests;
+
+CREATE TABLE ParticipantPasswordResetRequests (
+    badgeid varchar(15) NOT NULL DEFAULT '',
+    creationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expirationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    selector char(16) NOT NULL DEFAULT '',
+    token char(64) NOT NULL DEFAULT '',
+    cancelled tinyint(4) NOT NULL DEFAULT '0',
+    PRIMARY KEY (badgeid, creationdatetime),
+    UNIQUE KEY PPRR_selector (selector),
+    CONSTRAINT ParticipantPasswordResetRequests_ibfk_1 FOREIGN KEY (badgeid) REFERENCES Participants (badgeid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `ParticipantSessionInterest`
 --
 

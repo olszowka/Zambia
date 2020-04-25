@@ -1,6 +1,5 @@
 <?php
 // This is an example file.  Please copy to db_name.php and edit as needed.
-// Created by Peter Olszowka
 // Copyright (c) 2008-2020 Peter Olszowka. All rights reserved.
 // See copyright document for more details.
 define("DBHOSTNAME", "localhost");
@@ -24,8 +23,12 @@ define("STANDARD_BLOCK_LENGTH", "1:30"); // "1:00" and "1:30" are only values su
 define("DURATION_IN_MINUTES", FALSE); // TRUE: in mmm; FALSE: in hh:mm
         // affects session edit/create page only, not reports
 define("DEFAULT_DURATION", "1:15"); // must correspond to DURATION_IN_MINUTES
-define("SMTP_ADDRESS", "smtp-out.netbusters.com");
-define("AUTOLOAD", "../../vendor/autoload.php"); //location of composer autoload for use by Swift Mailer
+define("SWIFT_DIRECTORY", "../../swiftmailer-5.4.8/lib/"); //location of installed swift library
+define("SMTP_ADDRESS", "smtp-out.netbusters.com"); // See documentation for your mail relay service.
+define("SMTP_PORT", "587"); // Likely options are "587", "2525", "25", or "465".  See documentation for your mail relay service.
+define("SMTP_PROTOCOL", "TLS"); // Options are "", "SSL", or "TLS".  Blank/Default is no encryption. See documentation for your mail relay service.
+define("SMTP_USER", "foo"); // Use "" to skip authentication. See documentation for your mail relay service.
+define("SMTP_PASSWORD", "bar"); // Use "" to skip authentication. See documentation for your mail relay service.
 define("PREF_TTL_SESNS_LMT", 10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT", 5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS", 8); // Number of rows of availability records to render

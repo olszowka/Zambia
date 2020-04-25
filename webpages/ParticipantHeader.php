@@ -5,7 +5,7 @@ $header_section = HEADER_PARTICIPANT;
 
 function participant_header($title, $noUserRequired = false, $loginPageStatus = 'Normal') {
     // $noUserRequired is true if user not required to be logged in to access this page
-    // $loginPageStatus is "Login", "Logout", "Normal", "No_Permission"
+    // $loginPageStatus is "Login", "Logout", "Normal", "No_Permission", "Password_Reset"
     //      login page should be "Login"
     //      logout page should be "Logout"
     //      logged in user who reached page for which he does not have permission is "No_Permission"
