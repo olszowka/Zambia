@@ -23,7 +23,6 @@ define("STANDARD_BLOCK_LENGTH", "1:30"); // "1:00" and "1:30" are only values su
 define("DURATION_IN_MINUTES", FALSE); // TRUE: in mmm; FALSE: in hh:mm
         // affects session edit/create page only, not reports
 define("DEFAULT_DURATION", "1:15"); // must correspond to DURATION_IN_MINUTES
-define("SWIFT_DIRECTORY", "../../swiftmailer-5.4.8/lib/"); //location of installed swift library
 define("SMTP_ADDRESS", "smtp-out.netbusters.com"); // See documentation for your mail relay service.
 define("SMTP_PORT", "587"); // Likely options are "587", "2525", "25", or "465".  See documentation for your mail relay service.
 define("SMTP_PROTOCOL", "TLS"); // Options are "", "SSL", or "TLS".  Blank/Default is no encryption. See documentation for your mail relay service.
@@ -45,8 +44,13 @@ define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
 define("REG_URL", "https://reg.arisia.org"); // URL for logging into user self service portion of registration system -- appears on My Profile page
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
-define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email integration
+define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and reCAPTCHA integration.
 define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
 define("PASSWORD_RESET_LINK_TIMEOUT", "PT01H"); // How long until password reset link expires See https://www.php.net/manual/en/dateinterval.construct.php for format.
+define("PASSWORD_RESET_LINK_TIMEOUT_DISPLAY", "1 hour"); // Text description of PASSWORD_RESET_LINK_TIMEOUT
+// Self service reset of password via email link requires use of reCAPTCHA to prevent bad actors from using page to send email
+define("RECAPTCHA_SITE_KEY", ""); // Register the domain you use for Zambia with Google reCAPTCHA to acquire site key ...
+define("RECAPTCHA_SERVER_KEY", ""); // ... and server key
 define("PASSWORD_RESET_FROM_EMAIL", "admin@somewhere.net"); // From address to be used for password reset emails
+define("ENCRYPT_KEY", "jowigQuT9ruM287LEG9M4GuCfRcjpPr9ABA5ZhSj5QFYUv5VV3HLLVSuinBjrcCg"); // used for encrypting hidden inputs; I suggest finding a random password generator and putting in a 64 character alphanumeric only password
 ?>

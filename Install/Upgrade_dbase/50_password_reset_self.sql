@@ -5,6 +5,8 @@
 
 CREATE TABLE ParticipantPasswordResetRequests (
     badgeid varchar(15) NOT NULL DEFAULT '',
+    email varchar(255) NOT NULL DEFAULT '',
+    ipaddress varchar(225) NOT NULL DEFAULT '',
     creationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expirationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     selector char(16) NOT NULL DEFAULT '',

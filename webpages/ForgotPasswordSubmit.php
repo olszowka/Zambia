@@ -4,13 +4,43 @@
 global $linki, $title;
 $title = "Send Reset Password Link";
 require ('PartCommonCode.php');
-require_once(SWIFT_DIRECTORY."swift_required.php");
-participant_header($title, true, 'Login');
+require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
+require_once('external/guzzlehttp-guzzle-6.5.3/vendor/autoload.php');
 if (RESET_PASSWORD_SELF !== true) {
+    http_response_code(403); // forbidden
+    participant_header($title, true, 'Login');
     echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
     participant_footer();
     exit;
 }
+$recaptchaResponse = getString('g-recaptcha-response');
+if (empty($recaptchaResponse)) {
+    participant_header($title, true, 'Login');
+    echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
+    participant_footer();
+    exit;
+}
+$userIP = $_SERVER['REMOTE_ADDR'];
+use GuzzleHttp\Client;
+$client = new Client([
+    'base_uri' => 'https://www.google.com',
+    'timeout'  => 7.5,
+]);
+$guzzleRepsonse = $client->request('PUT', '/recaptcha/api/siteverify', [
+    'form_params' => [
+        'secret' => RECAPTCHA_SERVER_KEY,
+        'response' => $recaptchaResponse,
+        'remoteip' => $userIP
+    ]
+]);
+$recaptchaConf = json_decode($guzzleRepsonse->getBody()->getContents(), true);
+if (!$recaptchaConf["success"]) {
+    participant_header($title, true, 'Login');
+    echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
+    participant_footer();
+    exit;
+}
+participant_header($title, true, 'Login');
 $badgeid = getString('badgeid');
 $email = getString('emailAddress');
 if (empty($badgeid) || empty($email)) {
@@ -21,6 +51,7 @@ if (empty($badgeid) || empty($email)) {
     participant_footer();
     exit;
 }
+
 $conName = CON_NAME;
 $subjectLine = "Zambia Password Reset for $conName";
 $fromAddress = PASSWORD_RESET_FROM_EMAIL;
@@ -40,7 +71,17 @@ EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
+$ipaddressSQL = mysqli_real_escape_string($linki, $userIP);
 if (mysqli_num_rows($result) !== 1) {
+    // record a non-valid request to help track issues
+    $query = <<<EOD
+INSERT INTO ParticipantPasswordResetRequests
+    (badgeid, email, ipaddress, cancelled)
+    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', 2);
+EOD;
+    if (!$result = mysqli_query_exit_on_error($query)) {
+        exit;
+    }
     // don't tell user anything went wrong -- just give regular response.
     RenderXSLT('ForgotPasswordResponse.xsl', $responseParams);
     participant_footer();
@@ -72,8 +113,8 @@ if (!$result = mysqli_query_exit_on_error($query)) {
 }
 $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
-    (badgeid, expirationdatetime, selector, token)
-    VALUES ('$badgeid', '$expirationSQL', '$selector', '$tokenSQL');
+    (badgeid, email, ipaddress, expirationdatetime, selector, token)
+    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', '$expirationSQL', '$selector', '$tokenSQL');
 EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
@@ -115,6 +156,7 @@ if (!empty($badgename)) {
         $username = "unknown";
     }
 }
+$link_lifetime = PASSWORD_RESET_LINK_TIMEOUT_DISPLAY;
 $emailBody = <<<EOD
 <p>
     Hello $username,
@@ -128,6 +170,10 @@ $emailBody = <<<EOD
 </p>
 <p>
     $urlLink
+</p>
+<p>
+    The link is good for $link_lifetime from when you originally requested it and can be used to change
+    your password only once.  If it has expired just request another link.
 </p>
 <p>
     Thanks!

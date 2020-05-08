@@ -5,12 +5,13 @@
     <xsl:param name="subject_line" select="''" />
     <xsl:param name="from_address" select="''" />
     <xsl:template match="/">
-        <p class="alert alert-success vert-sep-above">
+        <p class="alert alert-success vert-sep-above">Email sent</p>
+        <p class="vert-sep-above">
             <xsl:text>Look for an email with subject "</xsl:text>
             <xsl:value-of select="$subject_line" />
             <xsl:text>" sent from </xsl:text>
             <xsl:value-of select="$from_address" />
-            <xsl:text> for a link to reset your password.</xsl:text>
+            <xsl:text> for a link to reset your password. If you don't see it in a few minutes, remember to check your junk or spam folder.</xsl:text>
         </p>
     </xsl:template>
 </xsl:stylesheet>

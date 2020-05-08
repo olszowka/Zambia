@@ -5,7 +5,7 @@
 //   2) After verify -- 'back' can change parameters -- 'send' fire off email sending code
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('email_functions.php');
-require_once(SWIFT_DIRECTORY."swift_required.php");
+require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
 global $title, $message, $link;
 if (isset($_POST['sendto'])) { // page has been visited before
 // restore previous values to form

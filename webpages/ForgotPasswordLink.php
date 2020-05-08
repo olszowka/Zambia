@@ -4,14 +4,16 @@
 global $linki, $title;
 $title = "Reset Password";
 require ('PartCommonCode.php');
-participant_header($title, true, 'Login');
 $selector = getString('selector');
 $validator = getString('validator');
 if (RESET_PASSWORD_SELF !== true) {
+    http_response_code(403); // forbidden
+    participant_header($title, true, 'Login');
     echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
     participant_footer();
     exit;
 }
+participant_header($title, true, 'Login');
 if (empty($selector) || empty($validator)) {
     echo "<p class='alert alert-error vert-sep-above'>Reset password link was missing required parameters.</p>";
     participant_footer();
@@ -20,9 +22,11 @@ if (empty($selector) || empty($validator)) {
 $selectorSQL = mysqli_real_escape_string($linki, $selector);
 $query = <<<EOD
 SELECT
-        badgeid, token
+        PPRR.badgeid, PPRR.token, P.pubsname, CD.badgename, CD.firstname, CD.lastname
     FROM
-        ParticipantPasswordResetRequests
+             ParticipantPasswordResetRequests PPRR
+        JOIN Participants P USING (badgeid)
+        JOIN CongoDump CD USING (badgeid)
     WHERE
             selector = '$selectorSQL'
         AND cancelled = 0
@@ -37,7 +41,7 @@ if (mysqli_num_rows($result) !== 1) {
     participant_footer();
     exit;
 }
-list($badgeid, $token) = mysqli_fetch_array($result);
+list($badgeid, $token, $pubsname, $badgename, $firstname, $lastname) = mysqli_fetch_array($result);
 mysqli_free_result($result);
 $calc = hash('sha256', hex2bin($validator));
 if (!hash_equals($token, $calc)) {
@@ -46,9 +50,28 @@ if (!hash_equals($token, $calc)) {
     participant_footer();
     exit;
 }
-$params = array(
+$controlParams = array(
     "selector" => $selector,
     "validator" => $validator,
+    "badgeid" => $badgeid
+);
+$controlArray = generateControlString($controlParams);
+if (!empty($badgename)) {
+    $username = $badgename;
+} elseif (!empty($pubsname)) {
+    $username = $pubsname;
+} else {
+    $comboname = "$firstname $lastname";
+    if (!empty($comboname)) {
+        $username = $comboname;
+    } else {
+        $username = "";
+    }
+}
+$params = array(
+    "control" => $controlArray['control'],
+    "controliv" => $controlArray['controliv'],
+    "user_name" => $username,
     "badgeid" => $badgeid
 );
 RenderXSLT('ForgotPasswordResetForm.xsl', $params);
