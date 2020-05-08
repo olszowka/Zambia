@@ -23,7 +23,19 @@ var ForgotPassword = function() {
             return;
         }
         this.$emailAddressInput = $emailAddressInput;
+        
+        var $recaptchaScript = document.getElementById('recaptcha-script');
+        if (!$recaptchaScript) {
+            return;
+        }
 
+        var $recaptchaErrorMessage = document.getElementById('recaptcha-error-message');
+        if (!$recaptchaErrorMessage) {
+            return;
+        }
+
+        
+        
         //initialize state and event handlers
         $submitButton.disabled = true;
         var that = this;
@@ -33,10 +45,17 @@ var ForgotPassword = function() {
         $emailAddressInput.addEventListener('input', function() {
             that.onInputEither();
         });
+        $recaptchaScript.addEventListener('error', function() {
+            $recaptchaErrorMessage.classList.remove('hidden');
+        })
     };
 
     this.onInputEither = function onInputEither() {
-        this.$submitButton.disabled = (this.$badgeInput.value === '' || this.$emailAddressInput.value === '');
+        this.$submitButton.disabled = (
+               this.$badgeInput.value === ''
+            || this.$emailAddressInput.value === ''
+            || !isRecaptchaChecked
+        );
     };
 
 };
@@ -45,3 +64,10 @@ var forgotPassword = new ForgotPassword();
 
 /* This file should be included only on relevant page.  See main.js and javascript_functions.php */
 document.addEventListener('DOMContentLoaded', forgotPassword.initialize.bind(forgotPassword));
+
+var isRecaptchaChecked = false;
+
+function recaptchaCheckedCallback() {
+    isRecaptchaChecked = true;
+    forgotPassword.onInputEither();
+}

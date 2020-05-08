@@ -2,8 +2,9 @@
 <!-- Created by Peter Olszowka on 2020-04-21;
      Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details. -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:param name="selector" select="''" />
-    <xsl:param name="validator" select="''" />
+    <xsl:param name="control" select="''" />
+    <xsl:param name="controliv" select="''" />
+    <xsl:param name="user_name" select="''" />
     <xsl:param name="badgeid" select="''" />
     <xsl:param name="error_message" select="''" />
     <xsl:template match="/">
@@ -12,11 +13,10 @@
                 <p class="alert alert-error"><xsl:value-of select="$error_message" /></p>
             </xsl:if>
             <form method="POST" action="ForgotPasswordResetSubmit.php" class="well form-horizontal">
-                <input type="hidden" id="selector" name="selector" value="{$selector}" />
-                <input type="hidden" id="validator" name="validator" value="{$validator}" />
-                <input type="hidden" id="badgeid" name="badgeid" value="{$badgeid}" />
+                <input type="hidden" id="control" name="control" value="{$control}" />
+                <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
                 <div id="password-instructions" class="vert-sep">
-                    <span>Provide your new password.</span>
+                    <span>Enter new password for <xsl:value-of select="$user_name" />, badgeid: <xsl:value-of select="$badgeid" /></span>
                     <span id="passwords-dont-match" class="text-error hidden">Passwords do not match.</span>
                     <span id="passwords-too-short" class="text-error hidden">Passwords must be 6 characters or longer.</span>
                 </div>
@@ -36,6 +36,11 @@
                 <div class="control-group">
                     <div class="controls">
                         <button type="submit" id="submit-button" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <span>After changing your password, you will be taken to the login page.</span>
                     </div>
                 </div>
             </form>
