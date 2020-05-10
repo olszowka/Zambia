@@ -4,6 +4,7 @@
 global $linki, $title;
 $title = "Send Reset Password Link";
 require ('PartCommonCode.php');
+require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('external/guzzlehttp-guzzle-6.5.3/vendor/autoload.php');
 if (RESET_PASSWORD_SELF !== true) {
@@ -120,21 +121,7 @@ if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
 
-//Create the Transport
-if (empty(SMTP_PROTOCOL)) {
-    $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT));
-} else {
-    $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT, SMTP_PROTOCOL));
-}
-if (!empty(SMTP_USER)) {
-    $transport->setUsername(SMTP_USER);
-}
-if (!empty(SMTP_PASSWORD)) {
-    $transport->setPassword(SMTP_PASSWORD);
-}
-
-//Create the Mailer using your created Transport
-$mailer = new Swift_Mailer($transport);
+$mailer = get_swift_mailer();
 
 //Create the message and set subject
 $message = (new Swift_Message($subjectLine));
