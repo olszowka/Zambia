@@ -1,11 +1,11 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 // This page has two completely different entry points from a user flow standpoint:
 //   1) Beginning of send email flow -- start to specify parameters
 //   2) After verify -- 'back' can change parameters -- 'send' fire off email sending code
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('email_functions.php');
-require_once(AUTOLOAD);
+require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
 global $title, $message, $link;
 if (isset($_POST['sendto'])) { // page has been visited before
 // restore previous values to form
@@ -28,11 +28,8 @@ if (!$timeLimitSuccess) {
 }
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $email = get_email_from_post();
-//Create the Transport
-$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 2525));
 
-//Create the Mailer using your created Transport
-$mailer = new Swift_Mailer($transport);
+$mailer = get_swift_mailer();
 
 $query = "SELECT emailtoquery FROM EmailTo where emailtoid=".$email['sendto'];
 $result = mysqli_query_exit_on_error($query);
