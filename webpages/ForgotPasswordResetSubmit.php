@@ -25,10 +25,10 @@ if (!$controlParams || empty($controlParams['selector']) || empty($controlParams
 $selectorSQL = mysqli_real_escape_string($linki, $controlParams['selector']);
 $query = <<<EOD
 SELECT
-        PPRR.badgeid, PPRR.token, P.pubsname, CD.badgename, CD.firstname, CD.lastname
+        PPRR.badgeidentered, PPRR.token, P.pubsname, CD.badgename, CD.firstname, CD.lastname
     FROM
              ParticipantPasswordResetRequests PPRR
-        JOIN Participants P USING (badgeid)
+        JOIN Participants P ON PPRR.badgeidentered = P.badgeid
         JOIN CongoDump CD USING (badgeid)
     WHERE
             selector = '$selectorSQL'
@@ -87,7 +87,7 @@ $badgeidSQL = mysqli_real_escape_string($linki, $badgeid);
 $query = <<<EOD
 UPDATE ParticipantPasswordResetRequests
     SET cancelled = 1
-    WHERE badgeid = '$badgeidSQL';
+    WHERE badgeidentered = '$badgeidSQL';
 EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;

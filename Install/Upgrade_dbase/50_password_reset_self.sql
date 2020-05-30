@@ -4,7 +4,7 @@
 ## 	Copyright (c) 2020
 
 CREATE TABLE ParticipantPasswordResetRequests (
-    badgeid varchar(15) NOT NULL DEFAULT '',
+    badgeidentered varchar(15) NOT NULL DEFAULT '' COMMENT 'Not necessary a valid badgeid, so no Foreign Key',
     email varchar(255) NOT NULL DEFAULT '',
     ipaddress varchar(225) NOT NULL DEFAULT '',
     creationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -12,9 +12,8 @@ CREATE TABLE ParticipantPasswordResetRequests (
     selector char(16) NOT NULL DEFAULT '',
     token char(64) NOT NULL DEFAULT '',
     cancelled tinyint(4) NOT NULL DEFAULT '0',
-    PRIMARY KEY (badgeid, creationdatetime),
-    UNIQUE KEY PPRR_selector (selector),
-    CONSTRAINT ParticipantPasswordResetRequests_ibfk_1 FOREIGN KEY (badgeid) REFERENCES Participants (badgeid)
+    PRIMARY KEY (badgeidentered, creationdatetime),
+    UNIQUE KEY PPRR_selector (selector)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO PatchLog (patchname) VALUES ('50_password_reset_self.sql');

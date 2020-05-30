@@ -77,7 +77,7 @@ if (mysqli_num_rows($result) !== 1) {
     // record a non-valid request to help track issues
     $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
-    (badgeid, email, ipaddress, cancelled)
+    (badgeidentered, email, ipaddress, cancelled)
     VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', 2);
 EOD;
     if (!$result = mysqli_query_exit_on_error($query)) {
@@ -107,14 +107,14 @@ $tokenSQL = hash('sha256', $token);
 $query = <<<EOD
 UPDATE ParticipantPasswordResetRequests
     SET cancelled = 1
-    WHERE badgeid = '$badgeid';
+    WHERE badgeidentered = '$badgeid';
 EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
 $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
-    (badgeid, email, ipaddress, expirationdatetime, selector, token)
+    (badgeidentered, email, ipaddress, expirationdatetime, selector, token)
     VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', '$expirationSQL', '$selector', '$tokenSQL');
 EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {

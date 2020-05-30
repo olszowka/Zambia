@@ -22,10 +22,10 @@ if (empty($selector) || empty($validator)) {
 $selectorSQL = mysqli_real_escape_string($linki, $selector);
 $query = <<<EOD
 SELECT
-        PPRR.badgeid, PPRR.token, P.pubsname, CD.badgename, CD.firstname, CD.lastname
+        PPRR.badgeidentered, PPRR.token, P.pubsname, CD.badgename, CD.firstname, CD.lastname
     FROM
              ParticipantPasswordResetRequests PPRR
-        JOIN Participants P USING (badgeid)
+        JOIN Participants P ON PPRR.badgeidentered = P.badgeid
         JOIN CongoDump CD USING (badgeid)
     WHERE
             selector = '$selectorSQL'
