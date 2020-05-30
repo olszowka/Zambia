@@ -1,6 +1,6 @@
 # Zambia
-Convention scheduling tool originally developed for Arisia. Currently being generalized to handle other
-conferences/conventions. Zambia tracks sessions (events, panels, and anything that needs to be scheduled),
+Convention scheduling tool originally developed for Arisia. Now used by several other conventions.
+Zambia tracks sessions (events, panels, and anything that needs to be scheduled),
 participants, and rooms.
 
 ## Features
@@ -29,6 +29,7 @@ These libraries are included in the repo and should just work if you leave as is
   * JQueryUI 1.8.16
 * Server Side  
   * Swift mailer 5.4.8
+  * Guzzle 6.5.3
 
 ## Integrations
 Other software which can work with Zambia
