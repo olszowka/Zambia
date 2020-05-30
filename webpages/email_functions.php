@@ -262,4 +262,24 @@ EOD;
     return $returnResult;
 }
 
+// Function get_swift_mailer()
+// Reads various parameters from configuration and returns a configured mailer object
+// ready to send email
+function get_swift_mailer() {
+    //Create the Transport
+    if (empty(SMTP_PROTOCOL)) {
+        $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT));
+    } else {
+        $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT, SMTP_PROTOCOL));
+    }
+    if (!empty(SMTP_USER)) {
+        $transport->setUsername(SMTP_USER);
+    }
+    if (!empty(SMTP_PASSWORD)) {
+        $transport->setPassword(SMTP_PASSWORD);
+    }
+
+//Create the Mailer using the created Transport
+    return new Swift_Mailer($transport);
+}
 ?>
