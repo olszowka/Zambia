@@ -422,4 +422,24 @@ function GeneratePermissionSetXML() {
     // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
     return $permissionSetXML;
 }
+
+// Function generateControlString()
+// $paramArray is an associative array of info to be hidden in a form
+// returns an associate array of:
+// "control" => encrypted representation of $paramArray
+// "controliv" => initialization vector
+// the set of which can be reconstructed by interpretControlString()
+function generateControlString($paramArray) {
+    $ivlen = openssl_cipher_iv_length('aes-128-cbc');
+    $controliv = openssl_random_pseudo_bytes($ivlen);
+    $control = openssl_encrypt(json_encode($paramArray), 'aes-128-cbc', ENCRYPT_KEY, 0, $controliv);
+    return array("controliv" => bin2hex($controliv), "control" => $control);
+}
+
+// Function interpretControlString()
+// $paramArray is an associated array of "control" and "controliv" returned from generateControlString() and passed through a form.
+// returns the original associative array sent to generateControlString()
+function interpretControlString($paramArray) {
+    return json_decode(openssl_decrypt($paramArray['control'], 'aes-128-cbc', ENCRYPT_KEY, 0, hex2bin($paramArray['controliv'])), true);
+}
 ?>
