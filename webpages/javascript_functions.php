@@ -7,10 +7,10 @@ function load_external_javascript($isDataTables = false, $isRecaptcha = false) {
     <script src="external/bootstrap2.3.2/bootstrap.js" type="text/javascript"></script>
     <script src="external/choices9.0.0/choices.min.js"></script>
 <?php if ($isDataTables) { ?>
-    <script src=\"external/dataTables1.10.16/jquery.dataTables.js\"></script>
+    <script src="external/dataTables1.10.16/jquery.dataTables.js"></script>
 <?php }
     if ($isRecaptcha) { ?>
-    <script id="recaptcha-script" src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script async defer id="recaptcha-script" src="https://www.google.com/recaptcha/api.js"></script>
 <?php }
 }
 
