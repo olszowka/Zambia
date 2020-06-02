@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Staff Members';
 $report['description'] = 'List Staff Members and their priviliges';
@@ -15,12 +15,19 @@ $report['columns'] = array(
     null,
     array("orderable" => false)
 );
+if (empty(DEFAULT_USER_PASSWORD)) {
+    $defaultPassword = '';
+    $defaultPasswordHash = '';
+} else {
+    $defaultPassword = DEFAULT_USER_PASSWORD;
+    $defaultPasswordHash = md5(DEFAULT_USER_PASSWORD);
+}
 $report['queries'] = [];
-$report['queries']['staff'] =<<<'EOD'
+$report['queries']['staff'] =<<<EOD
 SELECT
         badgeid, P.pubsname, concat(CD.firstname,' ',CD.lastname) AS name, CONCAT(CD.lastname, CD.firstname) AS nameSort,
         IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)) AS pubsnameSort,
-        if (P.password='4cb9c8a8048fd02294477fcb1a41191a','changme','OK') as password
+        if (P.password='$defaultPasswordHash','$defaultPassword','OK') as password
     FROM
              Participants P
         JOIN CongoDump CD using (badgeid)
