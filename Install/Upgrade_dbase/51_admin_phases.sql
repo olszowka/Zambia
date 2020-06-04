@@ -12,4 +12,6 @@ values('AdminPhases', 'AdminPhases', 'Change phase of Zambia use, allowing which
 ## Add both Administrator and AdminPhases to the Administrator role
 ##
 insert into permissions(permatomid, phaseid, permroleid,badgeid)
-values(2,NULL, 1, NULL), (19,NULL,1, NULL);
+
+
+INSERT INTO PatchLog (patchname) VALUES ('51_admin_phases.sql');

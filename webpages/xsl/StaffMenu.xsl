@@ -6,6 +6,21 @@
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:param name="title" select="''" /><!-- Page title -->
     <xsl:param name="reportMenuList" select="''" /><!-- Set of <li> elements; contents of ReportMenuInclude.php -->
+    <xsl:param name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
+    <xsl:param name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+    <xsl:variable name="AdminMenu">
+      <xsl:choose>
+        <xsl:when test="$ConfigureReports">
+           <xsl:text>1</xsl:text>
+        </xsl:when>
+        <xsl:when test="$AdminPhases">
+          <xsl:text>1</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>0</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:template match="/">
         <nav id="staffNav" class="navbar navbar-inverse">
             <div class="navbar-inner">
@@ -76,11 +91,18 @@
                                     <input type="hidden" value="ANY" name="divisionid" />
                                 </form>
                             </li>
-                            <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']">
+                            <xsl:if test="$AdminMenu = 1">
                                 <li class="dropdown">
                                     <a href="#admin" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret" /></a>
                                     <ul class="dropdown-menu">
+                                      <xsl:if test="$AdminPhases">
+                                        <li>
+                                          <a href="AdminPhases.php">Administer Phases</a>
+                                        </li>
+                                      </xsl:if>
+                                      <xsl:if test="$ConfigureReports">
                                         <li><a href="BuildReportMenus.php">Build Report Menus</a></li>
+                                      </xsl:if>
                                     </ul>
                                 </li>
                             </xsl:if>
