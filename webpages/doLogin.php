@@ -19,7 +19,7 @@ if (!isset($_SESSION['badgeid'])) {
     $dbobject = mysqli_fetch_object($result);
     mysqli_free_result($result);
     $dbpassword = $dbobject->password;
-    if (md5($password) !== $dbpassword) {
+    if (password_verify($password, $dbobject->password)) {
         $headerErrorMessage = "Incorrect $userIdPrompt or password.";
         require('login.php');
         exit(0);
@@ -46,7 +46,7 @@ if (!isset($_SESSION['badgeid'])) {
         $_SESSION['badgename'] = $pubsname;
     }
     $_SESSION['badgeid'] = $badgeid;
-    $_SESSION['password'] = $dbpassword;
+    $_SESSION['hashedPassword'] = $dbpassword;
     set_permission_set($badgeid);
 } else {
     $badgeid = $_SESSION['badgeid'];

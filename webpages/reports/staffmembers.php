@@ -20,7 +20,7 @@ if (empty(DEFAULT_USER_PASSWORD)) {
     $defaultPasswordHash = '';
 } else {
     $defaultPassword = DEFAULT_USER_PASSWORD;
-    $defaultPasswordHash = md5(DEFAULT_USER_PASSWORD);
+    $defaultPasswordHash = password_hash(DEFAULT_USER_PASSWORD, PASSWORD_DEFAULT);
 }
 $report['queries'] = [];
 $report['queries']['staff'] =<<<EOD

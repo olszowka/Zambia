@@ -92,7 +92,7 @@ EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
-$passwordHash = md5($password);
+$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 $query = <<<EOD
 UPDATE Participants
     SET password = '$passwordHash'
