@@ -6,7 +6,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
-    <form name="phaseform" class="form-inline form-more-whitespace" method="POST" action="SubmitAdminPhases.php">
+    <form name="phaseform" class="form-inline form-more-whitespace" method="POST" action="AdminPhases.php">
       <table id="phase_table" class="table table-condensed table-striped">
         <thead>
           <tr>

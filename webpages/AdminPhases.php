@@ -4,6 +4,7 @@ global $participant, $message_error, $message2, $congoinfo, $title;
 $title = "Administer Phases";
 require_once('StaffCommonCode.php');
 staff_header($title);
+if (isLoggedIn() && $loginPageStatus != 'Login' && may_I("AdminPhases")) {
 ?>
 <h2>Current Zambia Phase Status</h2>
 <?php
@@ -25,5 +26,6 @@ EOD;
 
 	echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
 	RenderXSLT('AdminPhases.xsl', $paramArray, $resultXML);
-	staff_footer();
+}
+staff_footer();
 ?>

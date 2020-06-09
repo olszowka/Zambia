@@ -2,12 +2,11 @@
 function setColor(item, element, match) {
     var options = element.options;
     var sel = options.item(element.selectedIndex).defaultSelected;
-    var me = document.getElementById(match)
-    var defBG = window.getComputedStyle(me, null).getPropertyValue("background-color").toString();
+    
     if (sel == false) {
-        $(item).css('background', '#FF7F7F');
+        $(item).addClass("tdChangedHighlight");
     } else {
-        $(item).css('background', defBG);
+        $(item).removeClass("tdChangedHighlight");
     }
 }
 
@@ -38,9 +37,7 @@ function ChangePhase(num, element) {
                 } else {
                     sel.selectedIndex = FindDefaultOption(sel.options)
                 }
-                var bg = row.cells[3];
-                var defBG = window.getComputedStyle(bg, null).getPropertyValue("background-color").toString();
-                col0.style.backgroundColor = defBG;
+                col0.classList.remove("tdChangedHighlight");
             }
         }
     }
@@ -50,9 +47,6 @@ function ResetCol1() {
     var table = document.getElementById("phase_table");
 
     for (var i = 0, row; row = table.rows[i]; i++) {
-        var col = row.cells[0];
-        var bg = row.cells[3];
-        var defBG = window.getComputedStyle(bg, null).getPropertyValue("background-color").toString();
-        col.style.backgroundColor = defBG;
+        row.cells[0].classList.remove("tdChangedHighlight");
     }
 }

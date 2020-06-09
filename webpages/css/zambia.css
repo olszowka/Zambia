@@ -810,3 +810,8 @@ img.tabborder {
 #password-instructions span {
   padding-right: 1rem;
 }
+
+/* Table Changed Row Highlight Color */
+table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
+    background-color: #FF7F7F;
+}
