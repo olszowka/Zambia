@@ -50,6 +50,9 @@ function load_internal_javascript($title, $isDataTables = false) {
         case "Session History":
             echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
             break;
+        case "Administer Phases":
+            echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
+            break;
         default:
             if ($isDataTables) {
                 echo "<script src=\"javascript/Reports.js\"></script>\n";
