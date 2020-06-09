@@ -4,9 +4,12 @@
 	Copyright (c) 2011-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:param name="UpdateMessage" select="''"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
+    <h2>Current Zambia Phase Status</h2>
     <form name="phaseform" class="form-inline form-more-whitespace" method="POST" action="AdminPhases.php">
+      <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
       <table id="phase_table" class="table table-condensed table-striped">
         <thead>
           <tr>
@@ -30,6 +33,10 @@
                 <select style="width: 100%">
                   <xsl:attribute name="id">
                     <xsl:text>phase_id_</xsl:text>
+                    <xsl:value-of select="@phaseid"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="name">
+                    <xsl:text>select_phase_</xsl:text>
                     <xsl:value-of select="@phaseid"/>
                   </xsl:attribute>
                   <xsl:attribute name="onchange">
@@ -66,6 +73,13 @@
         </tbody>
       </table>
       <div id="buttonBox" class="clearfix">
+      <xsl:choose>
+      <xsl:when test="$UpdateMessage != ''">
+        <div class="alert alert-success">
+            <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
+        </div>
+      </xsl:when>
+      </xsl:choose>
         <div class="pull-right">
           <button class="btn" type="reset" value="reset" onclick="ResetCol1();">Reset</button>
           <button class="btn btn-primary" type="submit" value="save" onclick="mysubmit()">Save</button>
