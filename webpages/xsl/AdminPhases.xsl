@@ -7,10 +7,17 @@
   <xsl:param name="UpdateMessage" select="''"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
+    <xsl:choose>
+      <xsl:when test="$UpdateMessage != ''">
+        <div class="alert alert-success">
+          <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
+        </div>
+      </xsl:when>
+    </xsl:choose>
     <h2>Current Zambia Phase Status</h2>
     <form name="phaseform" class="form-inline form-more-whitespace" method="POST" action="AdminPhases.php">
       <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
-      <table id="phase_table" class="table table-condensed table-striped">
+      <table id="phase_table" class="table table-condensed za-table-striped">
         <thead>
           <tr>
             <th class="y1">ID</th>
@@ -73,13 +80,6 @@
         </tbody>
       </table>
       <div id="buttonBox" class="clearfix">
-      <xsl:choose>
-      <xsl:when test="$UpdateMessage != ''">
-        <div class="alert alert-success">
-            <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
-        </div>
-      </xsl:when>
-      </xsl:choose>
         <div class="pull-right">
           <button class="btn" type="reset" value="reset" onclick="ResetCol1();">Reset</button>
           <button class="btn btn-primary" type="submit" value="save" onclick="mysubmit()">Save</button>

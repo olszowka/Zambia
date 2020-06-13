@@ -1,6 +1,45 @@
 <?php
 // Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 
+/*
+ * mysql_query_with_prepare_multi:
+ *  as a single transaction, prepare and update statement, execute one or more data value sets, and return the number of rows affected
+ *  query = valid mysql udpate statement with ? for parameter binding
+ *  type_string = datatypes of the specific ? values in the update statement
+ *  param_repeat_arr = array of objects to update
+ *      contains one row per execute
+ *          each row contains one element per ? in the update statement, datatype based on type_string value
+ */
+function mysql_query_with_prepare_multi($query, $type_string, $param_repeat_arr) {
+    global $linki;
+
+	$rows = 0;
+	$message_error = "";
+    mysqli_autocommit($linki, FALSE); //turn on transactions
+    try {
+        $stmt = mysqli_prepare($linki, $query);
+        foreach ($param_repeat_arr as $param_arr) {
+            mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
+            mysqli_stmt_execute($stmt);
+			$rows = $rows + mysqli_affected_rows($linki);
+        }
+        mysqli_stmt_close($stmt);
+        mysqli_commit($linki);
+    }
+    catch (Exception $e) {
+        mysqli_rollback($linki); //remove all queries from queue if error (undo)
+        $message_error = log_mysqli_error($query, "");
+        RenderError($message_error);
+    }
+    mysqli_autocommit($linki, TRUE); //turn off transactions + commit queued queries
+
+	if ($message_error != "") {
+        return NULL;
+    }
+
+	return $rows;
+}
+
 function mysql_query_XML($query_array) {
 	global $linki, $message_error;
 	$xml = new DomDocument("1.0", "UTF-8");
@@ -138,7 +177,7 @@ function prepare_db_and_more() {
 }
 
 // The table SessionEditHistory has a timestamp column which is automatically set to the
-// current timestamp by MySQL. 
+// current timestamp by MySQL.
 function record_session_history($sessionid, $badgeid, $name, $email, $editcode, $statusid) {
 	global $linki;
 	$name = mysqli_real_escape_string($linki, $name);

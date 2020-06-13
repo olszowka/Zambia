@@ -8,42 +8,36 @@ $rows = 0;
 staff_header($title);
 if (isLoggedIn() && may_I("AdminPhases")) {
 	if (isset($_POST["PostCheck"])) {
-		try {
-            $prefix = "select_phase_";
-			$upd_query = <<<EOD
+        $prefix = "select_phase_";
+		$query = <<<EOD
 UPDATE Phases
-SET current = ?
-WHERE phaseid = ? AND current <> ?;
+	SET current = ?
+	WHERE phaseid = ? AND current <> ?;
 EOD;
 
-            $key = "";
-            $value = "";
-            $phaseid = "";
+        $key = "";
+        $value = "";
+        $phaseid = "";
+		$param_repeat_arr = array();
 
-            mysqli_autocommit($linki, FALSE); //turn on transactions
-            $stmt = mysqli_prepare($linki, $upd_query);
-            mysqli_stmt_bind_param($stmt, "iii", $value, $phaseid, $value);
-
-		    foreach ($_POST as $key => $value) {
-			    if (substr($key, 0, strlen($prefix)) == "select_phase_") {
-				    $phaseid = substr($key, strlen($prefix));
-                    mysqli_stmt_execute($stmt);
-					$rows = $rows + mysqli_affected_rows($linki);
-                }
+		foreach ($_POST as $key => $value) {
+			if (substr($key, 0, strlen($prefix)) == "select_phase_") {
+				$param_arr = array();
+				$phaseid = substr($key, strlen($prefix));
+				$param_arr[] = $value;
+				$param_arr[] = $phaseid;
+				$param_arr[] = $value;
+				$param_repeat_arr[] = $param_arr;
             }
 
-			mysqli_stmt_close($stmt);
-			mysqli_commit($linki);
-        }
-        catch(Exception $e) {
-			mysqli_rollback($linki); //remove all queries from queue if error (undo)
-			RenderError($e->getMessage());
-			/*throw $e;*/
+		}
+
+		$rows = mysql_query_with_prepare_multi($query, "iii", $param_repeat_arr);
+		if (is_null($rows)) {
+			return;
         }
 
-        mysqli_autocommit($linki, TRUE); //turn off transactions + commit queued queries
-
-		if ($rows > 0) {
+       	if ($rows > 0) {
 			if ($rows == 1) {
 				$message = "1 Phase updated";
 			} else {

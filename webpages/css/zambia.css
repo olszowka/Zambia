@@ -815,3 +815,8 @@ img.tabborder {
 table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
     background-color: #FF7F7F;
 }
+
+.za-table-striped tbody > tr:nth-child(odd) > td,
+.za-table-striped tbody > tr:nth-child(odd) > th {
+    background-color: #c9c9c9;
+}
