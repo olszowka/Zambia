@@ -53,8 +53,4 @@ define("RECAPTCHA_SITE_KEY", ""); // Register the domain you use for Zambia with
 define("RECAPTCHA_SERVER_KEY", ""); // ... and server key
 define("PASSWORD_RESET_FROM_EMAIL", "admin@somewhere.net"); // From address to be used for password reset emails
 define("ENCRYPT_KEY", "jowigQuT9ruM287LEG9M4GuCfRcjpPr9ABA5ZhSj5QFYUv5VV3HLLVSuinBjrcCg"); // used for encrypting hidden inputs; I suggest finding a random password generator and putting in a 64 character alphanumeric only password
-define("DEFAULT_USER_PASSWORD", "changeme"); // Note, Zambia will never directly set a user's password to this default nor will it
-// create users with a default password, but some external integrations to create users do so.  In that case, Zambia can
-// identify users with this default password and prompt them to change it as well as report to staff. If your installation
-// does not use a default password, leave this empty ''.
 ?>
