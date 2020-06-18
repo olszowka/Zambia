@@ -14,7 +14,6 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $paramArray["USER_ID_PROMPT"] = USER_ID_PROMPT;
     $paramArray["header_error_message"] = $headerErrorMessage;
     $paramArray["no_user_required"] = $noUserRequired;
-    $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
     RenderXSLT('GlobalHeader.xsl', $paramArray);
     $header_rendered = true;
 }

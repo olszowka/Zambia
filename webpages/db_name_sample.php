@@ -1,5 +1,6 @@
 <?php
 // This is an example file.  Please copy to db_name.php and edit as needed.
+// Created by Peter Olszowka
 // Copyright (c) 2008-2020 Peter Olszowka. All rights reserved.
 // See copyright document for more details.
 define("DBHOSTNAME", "localhost");
@@ -44,17 +45,4 @@ define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
 define("REG_URL", "https://reg.arisia.org"); // URL for logging into user self service portion of registration system -- appears on My Profile page
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
-define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and reCAPTCHA integration.
-define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
-define("PASSWORD_RESET_LINK_TIMEOUT", "PT01H"); // How long until password reset link expires See https://www.php.net/manual/en/dateinterval.construct.php for format.
-define("PASSWORD_RESET_LINK_TIMEOUT_DISPLAY", "1 hour"); // Text description of PASSWORD_RESET_LINK_TIMEOUT
-// Self service reset of password via email link requires use of reCAPTCHA to prevent bad actors from using page to send email
-define("RECAPTCHA_SITE_KEY", ""); // Register the domain you use for Zambia with Google reCAPTCHA to acquire site key ...
-define("RECAPTCHA_SERVER_KEY", ""); // ... and server key
-define("PASSWORD_RESET_FROM_EMAIL", "admin@somewhere.net"); // From address to be used for password reset emails
-define("ENCRYPT_KEY", "jowigQuT9ruM287LEG9M4GuCfRcjpPr9ABA5ZhSj5QFYUv5VV3HLLVSuinBjrcCg"); // used for encrypting hidden inputs; I suggest finding a random password generator and putting in a 64 character alphanumeric only password
-define("DEFAULT_USER_PASSWORD", "changeme"); // Note, Zambia will never directly set a user's password to this default nor will it
-// create users with a default password, but some external integrations to create users do so.  In that case, Zambia can
-// identify users with this default password and prompt them to change it as well as report to staff. If your installation
-// does not use a default password, leave this empty ''.
 ?>

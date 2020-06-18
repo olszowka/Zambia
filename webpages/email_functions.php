@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2006-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2006-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 // function $email=get_email_from_post()
 // reads post variable to populate email array
 // returns email array or false if an error was encountered.

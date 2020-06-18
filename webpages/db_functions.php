@@ -763,11 +763,7 @@ EOD;
     if (!$participant_array = retrieveParticipant($badgeid)) {
         return false;
     };
-    if (empty(DEFAULT_USER_PASSWORD)) {
-        $participant_array["chpw"] = false;
-    } else {
-        $participant_array["chpw"] = hash_equals($participant_array["password"], md5(DEFAULT_USER_PASSWORD));
-    }
+    $participant_array["chpw"] = ($participant_array["password"] == "4cb9c8a8048fd02294477fcb1a41191a");
     $participant_array["password"] = "";
     $participant_array = array_merge($participant_array, mysqli_fetch_array($result, MYSQLI_ASSOC));
     mysqli_free_result($result);

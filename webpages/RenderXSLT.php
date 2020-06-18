@@ -23,5 +23,5 @@ function RenderXSLT($xslFilename, $paramArray = [], $xmlDoc = false) {
         }
     }
     $html = $xslt->transformToXML($xmlDoc);
-    echo(mb_ereg_replace("<(div|span|b|textarea|script)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+    echo(mb_ereg_replace("<(div|span|b|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
 }
