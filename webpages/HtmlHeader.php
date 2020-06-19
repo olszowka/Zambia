@@ -17,7 +17,7 @@ function html_header($title, $isDataTables = false, $reportColumns = false, $rep
     <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
 <?php if ($isDataTables) {
-    echo "<link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
+    echo "    <link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
     if ($reportColumns) {
         echo "<meta id=\"reportColumns\" data-report-columns=\"";
         echo htmlentities(json_encode($reportColumns));
