@@ -3,12 +3,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:param name="header_version" select="'Participant'"/><!-- "Staff" or "Participant" -->
     <xsl:param name="logged_in" select="false()" /><!-- TRUE/FALSE -->
-    <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "No_Permission" -->
+    <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "No_Permission", "Password_Reset" -->
     <xsl:param name="no_user_required" select="false()" /><!-- TRUE/FALSE -->
     <xsl:param name="CON_NAME" select="''" />
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
     <xsl:param name="header_error_message" select="''" />
+    <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:template match="/">
         <header class="header-wrapper">
             <div id="reg-header-container" class="collapsible-wrapper">
@@ -68,6 +69,11 @@
                                                     <span class="alert alert-success">You have logged out successfully.</span>
                                                 </div>
                                             </xsl:when>
+                                            <xsl:when test="$login_page_status='Password_Reset'">
+                                                <div class="login-alert-container">
+                                                    <span class="alert alert-success">You have changed your password successfully.</span>
+                                                </div>
+                                            </xsl:when>
                                             <xsl:when test="$login_page_status='No_Permission'">
                                                 <div class="login-alert-container">
                                                     <span class="alert alert-error">You do not have permission to access this page.</span>
@@ -100,13 +106,13 @@
                                                 <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
                                             </div>
                                         </div>
-                                        <xsl:comment><!--Restore when creating new password page-->
-                                        <div class="control-group">
-                                            <div class="controls">
-                                                <a href="forgotPassword.php">New user or forgot your password</a>
+                                        <xsl:if test="$RESET_PASSWORD_SELF">
+                                            <div class="control-group">
+                                                <div class="controls">
+                                                    <a href="ForgotPassword.php">New user or forgot your password</a>
+                                                </div>
                                             </div>
-                                        </div>
-                                        </xsl:comment>
+                                        </xsl:if>
                                     </fieldset>
                                 </form>
                             </div>

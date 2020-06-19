@@ -1,18 +1,20 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-function load_external_javascript($isReport = false) {
+function load_external_javascript($isDataTables = false, $isRecaptcha = false) {
 ?>
     <script src="external/jquery1.7.2/jquery-1.7.2.min.js"></script>
     <script src="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.min.js"></script>
     <script src="external/bootstrap2.3.2/bootstrap.js" type="text/javascript"></script>
     <script src="external/choices9.0.0/choices.min.js"></script>
-<?php
-    if ($isReport) {
-        echo "<script src=\"external/dataTables1.10.16/jquery.dataTables.js\"></script>\n";
-    }
+<?php if ($isDataTables) { ?>
+    <script src="external/dataTables1.10.16/jquery.dataTables.js"></script>
+<?php }
+    if ($isRecaptcha) { ?>
+    <script id="recaptcha-script" src="https://www.google.com/recaptcha/api.js" async defer></script>
+<?php }
 }
 
-function load_internal_javascript($title, $isReport = false) {
+function load_internal_javascript($title, $isDataTables = false) {
     ?>
     <script src="javascript/main.js"></script>
     <?php
@@ -20,10 +22,12 @@ function load_internal_javascript($title, $isReport = false) {
      * These js files initialize themselves and therefore should be included only on the relevant pages.
      * See main.js
      *
-     * Session History -- SessionHistory.js
-     * Invite Participants -- InviteParticipants.js
      * (Staff) Assign Participants -- StaffAssignParticipants.js
+     * Forgot Password -- ForgotPassword.js
+     * Invite Participants -- InviteParticipants.js
      * Maintain Room Schedule -- MaintainRoomSched.js
+     * Reset Password -- ForgotPasswordResetForm.js
+     * Session History -- SessionHistory.js
      *
      * Other js files may be included in this switch statement, but aren't required
      */
@@ -31,17 +35,23 @@ function load_internal_javascript($title, $isReport = false) {
         case "Assign Participants":
             echo "<script src=\"javascript/StaffAssignParticipants.js\"></script>\n";
             break;
+        case "Forgot Password":
+            echo "<script src=\"javascript/ForgotPassword.js\"></script>\n";
+            break;
         case "Invite Participants":
             echo "<script src=\"javascript/InviteParticipants.js\"></script>\n";
-            break;
-        case "Session History":
-            echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
             break;
         case "Maintain Room Schedule":
             echo "<script src=\"javascript/MaintainRoomSched.js\"></script>\n";
             break;
+        case "Reset Password":
+            echo "<script src=\"javascript/ForgotPasswordResetForm.js\"></script>\n";
+            break;
+        case "Session History":
+            echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
+            break;
         default:
-            if ($isReport) {
+            if ($isDataTables) {
                 echo "<script src=\"javascript/Reports.js\"></script>\n";
             }
     }

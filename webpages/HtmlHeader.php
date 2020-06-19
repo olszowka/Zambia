@@ -1,6 +1,6 @@
 <?php
 //	Copyright (c) 2019-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-function html_header($title, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function html_header($title, $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;
     require_once ("javascript_functions.php");
 ?>
@@ -16,8 +16,8 @@ function html_header($title, $is_report = false, $reportColumns = false, $report
     <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
     <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
-<?php if ($is_report) {
-    echo "<link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
+<?php if ($isDataTables) {
+    echo "    <link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
     if ($reportColumns) {
         echo "<meta id=\"reportColumns\" data-report-columns=\"";
         echo htmlentities(json_encode($reportColumns));
@@ -36,9 +36,10 @@ function html_header($title, $is_report = false, $reportColumns = false, $report
         var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
     </script>
 <?php
+    $isRecaptcha = $title == 'Forgot Password';
     /* "external" means 3rd party library */
-    load_external_javascript($is_report);
-    load_internal_javascript($title, $is_report);
+    load_external_javascript($isDataTables, $isRecaptcha);
+    load_internal_javascript($title, $isDataTables);
 ?>
 </head>
 <?php } ?>
