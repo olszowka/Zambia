@@ -27,19 +27,24 @@ function staff_header($title, $is_report = false, $reportColumns = false, $repor
 ?>
 <?php
     /* Render Staff Menu */
-    $paramArray = array();
-    $paramArray["title"] = $title;
-    try {
-        $reportMenuIncludeFilHand = fopen ( 'ReportMenuInclude.php' ,  'r');
-        if ($reportMenuIncludeFilHand === false) {
+    if ($isLoggedIn) {
+        $paramArray = array();
+        $paramArray["title"] = $title;
+        try {
+            $reportMenuIncludeFilHand = fopen ( 'ReportMenuInclude.php' ,  'r');
+            if ($reportMenuIncludeFilHand === false) {
+                $paramArray["reportMenuList"] = '';
+            } else {
+                $paramArray["reportMenuList"] = fread($reportMenuIncludeFilHand, 10000);
+            }
+        } catch(Exception $e) {
             $paramArray["reportMenuList"] = '';
-        } else {
-            $paramArray["reportMenuList"] = fread($reportMenuIncludeFilHand, 10000);
         }
-    } catch(Exception $e) {
-        $paramArray["reportMenuList"] = '';
+        $xmlDoc = GeneratePermissionSetXML();
+        // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xmlDoc->saveXML(), "i"));
+        RenderXSLT('StaffMenu.xsl', $paramArray, $xmlDoc);
+    } else {
+        staff_footer();
+        exit();
     }
-    $xmlDoc = GeneratePermissionSetXML();
-    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xmlDoc->saveXML(), "i"));
-    RenderXSLT('StaffMenu.xsl', $paramArray, $xmlDoc);
 }

@@ -15,7 +15,7 @@ $control = getString('control');
 $controliv = getString('controliv');
 $password = getString('password');
 $cpassword = getString('cpassword');
-$controlParams = interpretControlString(array('controliv' => $controliv, 'control' => $control));
+$controlParams = interpretControlString($control, $controliv);
 if (!$controlParams || empty($controlParams['selector']) || empty($controlParams['validator']) || empty($controlParams['badgeid'])) {
     participant_header($title, true, 'Login');
     echo "<p class='alert alert-error vert-sep-above'>Reset password form was missing required parameters.</p>";
