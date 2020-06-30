@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 /* Colors and other variables */
@@ -190,7 +190,7 @@ input[type="password"] {
   margin-top: 0.5em;
 }
 #resultsDiv {
-  padding-top: 1.0em;
+  padding-top: 1em;
 }
 #searchPartsINPUT {
   margin-bottom: 0;
@@ -810,13 +810,11 @@ img.tabborder {
 #password-instructions span {
   padding-right: 1rem;
 }
-
 /* Table Changed Row Highlight Color */
 table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
-    background-color: #FF7F7F;
+  background-color: #ff7f7f;
 }
-
 .za-table-striped tbody > tr:nth-child(odd) > td,
 .za-table-striped tbody > tr:nth-child(odd) > th {
-    background-color: #c9c9c9;
+  background-color: #c9c9c9;
 }

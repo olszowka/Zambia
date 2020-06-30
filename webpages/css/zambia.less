@@ -19,6 +19,8 @@
 @dark-gray: #404040;
 @light-gray: #e5e5e5;
 @separator-color: @light-gray;
+@changed-cell-color: #ff7f7f;
+@gray-just-off-bg: #c9c9c9;
 
 /**
  * LAYOUT
@@ -998,4 +1000,15 @@ img.tabborder {
 
 #password-instructions span {
     padding-right: 1rem;
+}
+
+/* Table Changed Row Highlight Color */
+table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
+    background-color: @changed-cell-color;
+}
+
+.za-table-striped tbody > tr:nth-child(odd) {
+    & > td, & > th {
+        background-color: @gray-just-off-bg;
+    }
 }
