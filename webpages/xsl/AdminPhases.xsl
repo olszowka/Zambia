@@ -5,6 +5,8 @@
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="UpdateMessage" select="''"/>
+  <xsl:param name="control" select="''"/>
+  <xsl:param name="controliv" select="''"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
     <xsl:choose>
@@ -17,6 +19,8 @@
     <h2>Current Zambia Phase Status</h2>
     <form name="phaseform" class="form-inline form-more-whitespace" method="POST" action="AdminPhases.php">
       <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
+      <input type="hidden" id="control" name="control" value="{$control}" />
+      <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
       <table id="phase_table" class="table table-condensed za-table-striped">
         <thead>
           <tr>
