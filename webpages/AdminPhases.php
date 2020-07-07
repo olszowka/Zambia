@@ -1,6 +1,6 @@
 <?php
 // Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message_error, $title, $linki;
+global $message_error, $title, $linki, $session;
 $title = "Administer Phases";
 require_once('StaffCommonCode.php');
 $message = "";
@@ -10,8 +10,8 @@ if (isLoggedIn() && may_I("AdminPhases")) {
 	if (isset($_POST["PostCheck"])) {
 		$priorValues = interpretControlString($_POST["control"], $_POST["controliv"]);
 
-		if ($priorValues["getTimestamp"] + SubmitAgeLimit < time()) {
-            $message = "Request too old, no Phases updated ";
+		if ($priorValues["getSessionID"] !=  session_id()) {
+            $message = "Session expired, no Phases updated";
         } else {
 
 			$prefix = "select_phase_";
@@ -83,7 +83,7 @@ EOD;
         $PriorArray[$row["phaseid"]] = $row["current"];
     }
 	mysqli_free_result($result);
-	$PriorArray["getTimestamp"] = time();
+	$PriorArray["getSessionID"] = session_id();
 
 	$ControlStrArray = generateControlString($PriorArray);
 	$paramArray["control"] = $ControlStrArray["control"];
