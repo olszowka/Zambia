@@ -19,7 +19,7 @@ if (!isset($_SESSION['badgeid'])) {
     $dbobject = mysqli_fetch_object($result);
     mysqli_free_result($result);
     $dbpassword = $dbobject->password;
-    if (password_verify($password, $dbobject->password)) {
+    if (password_verify($password, $dbpassword)) {
         $headerErrorMessage = "Incorrect $userIdPrompt or password.";
         require('login.php');
         exit(0);
