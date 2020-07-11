@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Created by Peter Olszowka on 2015-10-16;
-	Copyright (c) 2011-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
+	Created by Peter Olszowka on 2020-06-01;
+	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="UpdateMessage" select="''"/>
