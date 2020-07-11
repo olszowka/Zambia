@@ -1,6 +1,76 @@
 <?php
 // Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 
+/*
+ * mysql_cmd_with_prepare_multi:
+ *  as a single transaction, prepare an insert/update/delete statement, execute one or more data value sets, and return the number of rows affected
+ *  query = valid mysql insert, udpate or delete statement with ? for parameter binding
+ *  type_string = datatypes of the specific ? values in the update statement
+ *  param_repeat_arr = array of objects to update
+ *      contains one row per execute
+ *          each row contains one element per ? in the update statement, datatype based on type_string value
+ */
+function mysql_cmd_with_prepare_multi($query, $type_string, $param_repeat_arr) {
+    global $linki;
+
+	$rows = 0;
+	$message_error = "";
+    mysqli_autocommit($linki, FALSE); //turn on transactions
+    try {
+        $stmt = mysqli_prepare($linki, $query);
+        foreach ($param_repeat_arr as $param_arr) {
+            mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
+            mysqli_stmt_execute($stmt);
+			$rows = $rows + mysqli_affected_rows($linki);
+        }
+        mysqli_stmt_close($stmt);
+        mysqli_commit($linki);
+    }
+    catch (Exception $e) {
+        mysqli_rollback($linki); //remove all queries from queue if error (undo)
+        $message_error = log_mysqli_error($query, "");
+        RenderError($message_error);
+    }
+    mysqli_autocommit($linki, TRUE); //turn off transactions + commit queued queries
+
+	if ($message_error != "") {
+        return NULL;
+    }
+
+	return $rows;
+}
+
+/*
+ * mysql_cmd_with_prepare:
+ *  prepare an insert/update/delete statement, execute one data value set, and return the number of rows affected
+ *  query = valid mysql insert/udpate/delete statement with ? for parameter binding
+ *  type_string = datatypes of the specific ? values in the update statement
+ *  param_arr = array of elements per ? in the update statement, datatype based on type_string value
+ */
+function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
+    global $linki;
+
+	$rows = 0;
+	$message_error = "";
+    try {
+        $stmt = mysqli_prepare($linki, $query);
+        mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
+        mysqli_stmt_execute($stmt);
+		$rows = $rows + mysqli_affected_rows($linki);
+        mysqli_stmt_close($stmt);
+    }
+    catch (Exception $e) {
+        $message_error = log_mysqli_error($query, "");
+        RenderError($message_error);
+    }
+
+	if ($message_error != "") {
+        return NULL;
+    }
+
+	return $rows;
+}
+
 function mysql_query_XML($query_array) {
 	global $linki, $message_error;
 	$xml = new DomDocument("1.0", "UTF-8");
@@ -51,6 +121,27 @@ function mysql_query_XML($query_array) {
 	return $xml;
 }
 
+function mysql_result_to_XML($queryName, $result) {
+	$xml = new DomDocument("1.0", "UTF-8");
+	$doc = $xml -> createElement("doc");
+	$doc = $xml -> appendChild($doc);
+
+    $queryNode = $xml -> createElement("query");
+    $queryNode = $doc -> appendChild($queryNode);
+    $queryNode->setAttribute("queryName", $queryName);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $rowNode = $xml->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        foreach ($row as $fieldname => $fieldvalue) {
+            if ($fieldvalue !== "" && $fieldvalue !== null) {
+                $rowNode->setAttribute($fieldname, $fieldvalue);
+            }
+        }
+    }
+
+	return $xml;
+}
+
 function log_mysqli_error($query, $additional_error_message) {
     global $linki;
     $result = "";
@@ -78,6 +169,37 @@ function mysqli_query_exit_on_error($query) {
 function mysqli_query_with_error_handling($query, $exit_on_error = false, $ajax = false) {
     global $linki, $message_error;
     $result = mysqli_query($linki, $query);
+
+    if (!$result) {
+        $message_error = log_mysqli_error($query, "");
+        if ($exit_on_error) {
+            RenderError($message_error, $ajax); // will exit script
+        }
+    }
+    return $result;
+}
+
+function mysqli_query_with_prepare_and_exit_on_error($query, $type_string, $param_arr) {
+    return mysqli_query_with_prepare_and_error_handling($query, $type_string, $param_arr, true);
+}
+
+function mysqli_query_with_prepare_and_error_handling($query, $type_string, $param_arr, $exit_on_error = false, $ajax = false) {
+    global $linki, $message_error;
+
+     try {
+         $stmt = mysqli_prepare($linki, $query);
+         mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
+         $result = mysqli_stmt_execute($stmt);
+         mysqli_stmt_close($stmt);
+     }
+     catch (Exception $e) {
+         $message_error = log_mysqli_error($query, "");
+         if ($exit_on_error) {
+             RenderError($message_error, $ajax);
+         }
+     }
+
+
     if (!$result) {
         $message_error = log_mysqli_error($query, "");
         if ($exit_on_error) {
@@ -138,7 +260,7 @@ function prepare_db_and_more() {
 }
 
 // The table SessionEditHistory has a timestamp column which is automatically set to the
-// current timestamp by MySQL. 
+// current timestamp by MySQL.
 function record_session_history($sessionid, $badgeid, $name, $email, $editcode, $statusid) {
 	global $linki;
 	$name = mysqli_real_escape_string($linki, $name);

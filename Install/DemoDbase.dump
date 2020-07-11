@@ -763,7 +763,8 @@ INSERT INTO `PermissionAtoms` VALUES
     (15,'postcon',NULL,'renderWelcome','Forces participant welcome page to display only post con message.'),
     (16,'EditSesNtsAsgnPartPg',NULL,'StaffAssignParticipants','Edit «Notes for Program Staff» on «Assign Participants» page.'),
     (17,'ConfigureReports',NULL,'ConfigureReports','Enable menu option'),
-    (18,'ResetUserPassword',NULL,'AdminParticipants','No one needs this permission once password overhaul is implemented and system has email integration.');
+    (18,'ResetUserPassword',NULL,'AdminParticipants','No one needs this permission once password overhaul is implemented and system has email integration.'),
+    (19,'AdminPhases',NULL,'AdminPhases','Change phase of Zambia use, allowing which sections are current.');
 /*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -879,7 +880,10 @@ INSERT INTO `Permissions` VALUES
     (49,15,8,11,NULL),
     (50,14,NULL,12,NULL),
     (51,9,6,2,NULL),
-    (52,9,6,3,NULL);
+    (52,9,6,3,NULL),
+    (53,18,NULL,12,NULL),
+    (56,2,NULL,1,NULL),
+    (57,19,NULL,1,NULL);
 /*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -46,7 +46,7 @@ data to another session.
 year.  Maybe it is too close to another idea, maybe it was dependent on 
 a particular person attenting, maybe there were scheduling complications. 
 You should probably still say why it was cancelled. 
-This is an category we can mine for ideas in future years. 
+This is a category we can mine for ideas in future years. 
 </ul>
 <p>For your reference there are several statuses pulled over from previous 
 years.  They are here for your reference and in general should be mined for 

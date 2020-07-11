@@ -6,4 +6,6 @@ define("StaffInviteSession", 1001);
 define("HEADER_BRAINSTORM", 2001);
 define("HEADER_PARTICIPANT", 2002);
 define("HEADER_STAFF", 2003);
+// is a submit too old to process, in seconds
+define("SubmitAgeLimit", 3600)
 ?>
