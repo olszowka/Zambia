@@ -93,7 +93,8 @@ EOD;
 		$paramArray["UpdateMessage"] = $message;
     }
 
-	echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
+	// following line for debugging only
+	// echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
 	RenderXSLT('AdminPhases.xsl', $paramArray, $resultXML);
 }
 staff_footer();
