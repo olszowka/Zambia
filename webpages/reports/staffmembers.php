@@ -15,19 +15,38 @@ $report['columns'] = array(
     null,
     array("orderable" => false)
 );
-if (empty(DEFAULT_USER_PASSWORD)) {
-    $defaultPassword = '';
-    $defaultPasswordHash = '';
-} else {
-    $defaultPassword = DEFAULT_USER_PASSWORD;
-    $defaultPasswordHash = md5(DEFAULT_USER_PASSWORD);
-}
 $report['queries'] = [];
+if (empty(DEFAULT_USER_PASSWORD)) {
+    $report['queries']['bad_password'] = "SELECT badgeid FROM Participants WHERE 1 = 2;";
+} else {
+    $defaultUserPassword = DEFAULT_USER_PASSWORD;
+    // Have to run a query here to find all the default passwords;
+    $badPasswordArr = array();
+    $prequery =<<<EOD
+SELECT
+        P.badgeid, P.password
+    FROM
+             Participants P
+        JOIN UserHasPermissionRole UHPR using (badgeid)
+    WHERE
+        UHPR.permroleid = 2 /* staff */;
+EOD;
+    if (!$result = mysqli_query_exit_on_error($prequery)) {
+        exit(0); //should have exited already
+    }
+    while ($resultObj = mysqli_fetch_object($result)) {
+        if (password_verify(DEFAULT_USER_PASSWORD, $resultObj->password)) {
+            $badPasswordArr[] = "'{$resultObj->badgeid}'";
+        }
+    }
+    $badPasswordList = implode(',', $badPasswordArr);
+    $report['queries']['bad_password'] = "SELECT badgeid FROM Participants WHERE badgeid IN ($badPasswordList);";
+}
+
 $report['queries']['staff'] =<<<EOD
 SELECT
         badgeid, P.pubsname, concat(CD.firstname,' ',CD.lastname) AS name, CONCAT(CD.lastname, CD.firstname) AS nameSort,
-        IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)) AS pubsnameSort,
-        if (P.password='$defaultPasswordHash','$defaultPassword','OK') as password
+        IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)) AS pubsnameSort
     FROM
              Participants P
         JOIN CongoDump CD using (badgeid)
@@ -47,7 +66,7 @@ SELECT
     WHERE
 		UHPR.badgeid in (SELECT badgeid FROM UserHasPermissionRole WHERE permroleid = 2);
 EOD;
-$report['xsl'] =<<<'EOD'
+$report['xsl'] =<<<EOD
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -84,9 +103,18 @@ $report['xsl'] =<<<'EOD'
             <td class="report"><xsl:value-of select="@nameSort"/></td>
             <td class="report"><xsl:value-of select="@pubsname"/></td>
             <td class="report"><xsl:value-of select="@pubsnameSort"/></td>
-            <td class="report"><xsl:value-of select="@password"/></td>
             <td class="report">
-                <xsl:apply-templates select="/doc/query[@queryName = 'privileges']/row[@badgeid = $badgeid]"/>
+                <xsl:choose>
+                    <xsl:when test="/doc/query[@queryName='bad_password']/row[@badgeid=\$badgeid]">
+                        <xsl:text>$defaultUserPassword</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>OK</xsl:text>
+                    </xsl:otherwise>                    
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:apply-templates select="/doc/query[@queryName = 'privileges']/row[@badgeid = \$badgeid]"/>
             </td>
         </tr>
     </xsl:template>

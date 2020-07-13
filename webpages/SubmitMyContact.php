@@ -1,10 +1,9 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $message_error, $title;
 $title = "My Profile";
 require('PartCommonCode.php'); // initialize db; check login;
 //                                  set $badgeid from session
-$password = false;
 $pubsname = false;
 //$foo = print_r($_POST,true);
 //echo(preg_replace("/\n/","<BR>",$foo));
@@ -49,9 +48,10 @@ if (isset($_POST['bestway'])) {
         exit();
     }
 }
-if (isset($_POST['password'])) {
-    $password = md5(stripslashes($_POST['password']));
-    $updateClause .= "password=\"$password\", ";
+$password = getString('password');
+if (!empty($password)) {
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $updateClause .= "password=\"$hashedPassword\", ";
 }
 if (isset($_POST['pubsname']))
     if ($may_edit_bio) {
@@ -107,9 +107,9 @@ if ($credentialClause3) {
     mysqli_query_with_error_handling($query3 . $credentialClause3 . ")", true, true);
 }
 echo("<span class=\"alert alert-success\">");
-if ($password) {
+if (!empty($password)) {
     echo "Password updated. ";
-    $_SESSION['password'] = $password;
+    $_SESSION['hashedPassword'] = $hashedPassword;
 }
 echo("Database updated successfully. </span>\n");
 if ($pubsname)

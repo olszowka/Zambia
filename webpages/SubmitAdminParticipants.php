@@ -43,7 +43,7 @@ function update_participant() {
     $interested = getInt("interested", "");
     $query = "UPDATE Participants SET ";
     if ($password) {
-        $query .= "password=\"" . md5($password) . "\", ";
+        $query .= "password=\"" . password_hash($password, PASSWORD_DEFAULT) . "\", ";
     }
     if ($biodirty) {
         $query .= "bio=\"" . mysqli_real_escape_string($linki, $bio) . "\", ";

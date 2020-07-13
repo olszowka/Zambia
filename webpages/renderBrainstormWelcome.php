@@ -16,7 +16,7 @@
     if (empty(DEFAULT_USER_PASSWORD)) {
         $chpw = false;
     } else {
-        $chpw = hash_equals($participant["password"], md5(DEFAULT_USER_PASSWORD));
+        $chpw = password_verify(DEFAULT_USER_PASSWORD, $participant["password"]);
     }
     $chint=($participant["interested"]==0);
     if (may_I('BrainstormSubmit')) { ?>

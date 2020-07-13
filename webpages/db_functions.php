@@ -189,7 +189,14 @@ function mysqli_query_with_prepare_and_error_handling($query, $type_string, $par
      try {
          $stmt = mysqli_prepare($linki, $query);
          mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-         $result = mysqli_stmt_execute($stmt);
+         if (!mysqli_stmt_execute($stmt)) {
+             $message_error = log_mysqli_error($query, "");
+             if ($exit_on_error) {
+                 RenderError($message_error, $ajax);
+             }
+            return false;
+         };
+         $result = mysqli_stmt_get_result($stmt);
          mysqli_stmt_close($stmt);
      }
      catch (Exception $e) {
@@ -197,15 +204,8 @@ function mysqli_query_with_prepare_and_error_handling($query, $type_string, $par
          if ($exit_on_error) {
              RenderError($message_error, $ajax);
          }
+         return false;
      }
-
-
-    if (!$result) {
-        $message_error = log_mysqli_error($query, "");
-        if ($exit_on_error) {
-            RenderError($message_error, $ajax); // will exit script
-        }
-    }
     return $result;
 }
 
@@ -768,22 +768,21 @@ EOD;
 /* check login script, included in db_connect.php. */
 
 function isLoggedIn() {
-    if (!isset($_SESSION['badgeid']) || !isset($_SESSION['password'])) {
+    if (!isset($_SESSION['badgeid']) || !isset($_SESSION['hashedPassword'])) {
         return false;
     }
 
-    // remember, $_SESSION['password'] will be encrypted. $_SESSION['badgeid'] should already be escaped
     $query = "SELECT password FROM Participants WHERE badgeid = '{$_SESSION['badgeid']}';";
     if (!$result = mysqli_query_with_error_handling($query)) {
         unset($_SESSION['badgeid']);
-        unset($_SESSION['password']);
+        unset($_SESSION['hashedPassword']);
         // kill incorrect session variables.
         return ""; //falsy
     }
 
     if (mysqli_num_rows($result) != 1) {
         unset($_SESSION['badgeid']);
-        unset($_SESSION['password']);
+        unset($_SESSION['hashedPassword']);
         // kill incorrect session variables.
         $message_error = "Incorrect number of rows returned when fetching password from db. $message_error";
         return ""; //falsy
@@ -793,22 +792,11 @@ function isLoggedIn() {
     mysqli_free_result($result);
 
     $db_pass = $row[0];
-
-    // now we have encrypted pass from DB in
-    //$db_pass['password'], stripslashes() just incase:
-
-    $db_pass = stripslashes($db_pass);
-    $_SESSION['password'] = stripslashes($_SESSION['password']);
-
-    //echo $db_pass."<BR>";
-    //echo $_SESSION['password']."<BR>";
-
-    //compare:
-
-    if ($_SESSION['password'] != $db_pass) {
+    
+    if (!hash_equals($_SESSION['hashedPassword'], $db_pass)) {
     // kill incorrect session variables.
         unset($_SESSION['badgeid']);
-        unset($_SESSION['password']);
+        unset($_SESSION['hashedPassword']);
         $message2 = "Incorrect userid or password.";
         return false;
     } else {
@@ -888,7 +876,7 @@ EOD;
     if (empty(DEFAULT_USER_PASSWORD)) {
         $participant_array["chpw"] = false;
     } else {
-        $participant_array["chpw"] = hash_equals($participant_array["password"], md5(DEFAULT_USER_PASSWORD));
+        $participant_array["chpw"] = password_verify(DEFAULT_USER_PASSWORD, $participant_array["password"]);
     }
     $participant_array["password"] = "";
     $participant_array = array_merge($participant_array, mysqli_fetch_array($result, MYSQLI_ASSOC));
