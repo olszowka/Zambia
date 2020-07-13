@@ -673,7 +673,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `Participants`;
 CREATE TABLE `Participants` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
-  `password` varchar(32) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `bestway` varchar(12) DEFAULT NULL,
   `interested` tinyint(1) DEFAULT NULL,
   `bio` text,

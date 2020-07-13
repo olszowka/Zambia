@@ -5,10 +5,11 @@ if (!isset($_SESSION['badgeid'])) {
     require_once('CommonCode.php');
     $userIdPrompt = USER_ID_PROMPT;
     $title = "Submit Password";
-    $badgeid = mysqli_real_escape_string($linki, getString('badgeid'));
+    $badgeid = getString('badgeid');
     $password = getString('passwd');
-    $query = "Select password from Participants where badgeid='$badgeid';";
-    if (!$result = mysqli_query_exit_on_error($query)) {
+    $query = "SELECT password FROM Participants WHERE badgeid = ?;";
+    $query_param_arr = array($badgeid);
+    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
         exit(); // Should have exited already
     }
     if (mysqli_num_rows($result) != 1) {
@@ -19,13 +20,13 @@ if (!isset($_SESSION['badgeid'])) {
     $dbobject = mysqli_fetch_object($result);
     mysqli_free_result($result);
     $dbpassword = $dbobject->password;
-    if (password_verify($password, $dbpassword)) {
+    if (!password_verify($password, $dbpassword)) {
         $headerErrorMessage = "Incorrect $userIdPrompt or password.";
         require('login.php');
         exit(0);
     }
-    $query = "Select badgename from CongoDump where badgeid='$badgeid';";
-    if (!$result = mysqli_query_exit_on_error($query)) {
+    $query = "SELECT badgename FROM CongoDump WHERE badgeid = ?;";
+    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
         exit(); // Should have exited already
     }
     if (mysqli_num_rows($result) == 1) {
@@ -35,8 +36,8 @@ if (!isset($_SESSION['badgeid'])) {
     }
     mysqli_free_result($result);
     $pubsname = "";
-    $query = "Select pubsname from Participants where badgeid='$badgeid';";
-    if (!$result = mysqli_query_exit_on_error($query)) {
+    $query = "SELECT pubsname FROM Participants WHERE badgeid = ?;";
+    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
         exit(); // Should have exited already
     }
     $dbobject = mysqli_fetch_object($result);

@@ -189,7 +189,14 @@ function mysqli_query_with_prepare_and_error_handling($query, $type_string, $par
      try {
          $stmt = mysqli_prepare($linki, $query);
          mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-         $result = mysqli_stmt_execute($stmt);
+         if (!mysqli_stmt_execute($stmt)) {
+             $message_error = log_mysqli_error($query, "");
+             if ($exit_on_error) {
+                 RenderError($message_error, $ajax);
+             }
+            return false;
+         };
+         $result = mysqli_stmt_get_result($stmt);
          mysqli_stmt_close($stmt);
      }
      catch (Exception $e) {
@@ -197,15 +204,8 @@ function mysqli_query_with_prepare_and_error_handling($query, $type_string, $par
          if ($exit_on_error) {
              RenderError($message_error, $ajax);
          }
+         return false;
      }
-
-
-    if (!$result) {
-        $message_error = log_mysqli_error($query, "");
-        if ($exit_on_error) {
-            RenderError($message_error, $ajax); // will exit script
-        }
-    }
     return $result;
 }
 
