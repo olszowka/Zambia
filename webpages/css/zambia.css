@@ -1,7 +1,6 @@
-﻿/**
+/**
  * Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
-/* Colors and other variables */
 /**
  * LAYOUT
  */
@@ -11,100 +10,12 @@
 /*
  * Page header stuff
  */
-header h1 {
-  flex-grow: 1;
-  padding-left: 1em;
-  text-align: center;
-}
-header label {
-  color: black;
-  display: block;
-  text-align: right;
-  font-size: 1.1em;
-}
-header .imgButton {
-  cursor: pointer;
-}
 .header-wrapper {
   margin-left: -20px;
   margin-right: -20px;
 }
-.header {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-.header.participant-header {
-  background-color: #dedcff;
-  background-image: linear-gradient(0deg, #e8e8e8 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
-}
-.header.staff-header {
-  background-color: #a7d2a5;
-  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
-  color: black;
-}
-.header-contents {
-  height: 12.5rem;
-  flex-grow: 1;
-  display: flex;
-}
-.header-contents img {
-  height: 100%;
-}
 #login-form {
   padding-right: 1.5rem;
-}
-#loginBox,
-#welcome {
-  float: right;
-  margin: 1em 1em 0 0;
-}
-#loginBox p,
-#welcome p {
-  color: white;
-  text-align: right;
-  letter-spacing: 0.04rem;
-}
-#loginBox.extended,
-#welcome.extended {
-  margin-top: 3rem;
-}
-.alt-header-contents {
-  display: flex;
-}
-.alt-header-contents.staff-header {
-  background-color: #dedcff;
-  background-image: linear-gradient(0deg, #f0f0f0 0%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
-}
-.alt-header-contents.participant-header {
-  background-color: #dedcff;
-  background-image: linear-gradient(0deg, #e8e8e8 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
-}
-.alt-header-spacer {
-  width: 15rem;
-}
-.alt-header-title {
-  flex-grow: 1;
-  text-align: center;
-  align-self: center;
-  font-weight: bold;
-  font-size: 1.5rem;
-  letter-spacing: 0.04rem;
-  font-family: Verdana, helvetica, san-serif;
-}
-.alt-header-controls p {
-  display: inline-block;
-  padding-right: 0.5em;
-}
-.participant-header .alt-header-controls p {
-  color: #e5e5e5;
-}
-.alt-header-controls img {
-  margin-right: 0.4rem;
-  margin-left: 0.4rem;
-}
-.navbar {
-  margin-bottom: 0.2em;
 }
 #login {
   float: right;
@@ -129,14 +40,17 @@ header .imgButton {
   float: none;
   padding-left: 1.5rem;
 }
+/* <end> Page header stuff */
+/* navbar stuff */
+.navbar {
+  margin-bottom: 0.2em;
+  margin-left: -20px;
+  margin-right: -20px;
+}
 form.navbar-search {
   margin-top: 9px !important;
 }
-/* <end> Page header stuff */
-body:not(.full-page) {
-  background-image: url('../images/light_honeycomb.png');
-  background-repeat: repeat;
-}
+/* End of navbar stuff */
 a {
   color: #04c;
 }
@@ -156,22 +70,11 @@ input[type="text"],
 input[type="password"] {
   height: 28px;
 }
-.navbar {
-  margin-bottom: 0.2rem;
-  margin-left: -20px;
-  margin-right: -20px;
-}
 #staffView {
   color: #00aa00;
 }
 #staffView:hover {
   color: #22ee22;
-}
-#ParticipantView {
-  color: #6666ff;
-}
-#ParticipantView:hover {
-  color: #aaaaff;
 }
 .checkbox.inline {
   padding-top: 0;
@@ -190,7 +93,7 @@ input[type="password"] {
   margin-top: 0.5em;
 }
 #resultsDiv {
-  padding-top: 1em;
+  padding-top: 1.0em;
 }
 #searchPartsINPUT {
   margin-bottom: 0;
@@ -225,7 +128,8 @@ input[type="password"] {
 }
 h1 {
   font-family: Verdana, helvetica, san-serif;
-  font-size: 2em;
+  font-size: 2rem;
+  font-weight: 700;
   padding: 1em;
   color: black;
 }
@@ -316,9 +220,6 @@ ul#boxes li {
 @media (max-width: 480px) {
   .wide-medium-only {
     display: none;
-  }
-  #loginBox {
-    margin: 0 1em 0 0;
   }
   h2,
   .label {
@@ -567,32 +468,6 @@ table.multcol-list td {
 .hidden {
   display: none !important;
   visibility: hidden !important;
-}
-.collapsible-wrapper {
-  display: flex;
-  overflow: hidden;
-}
-.collapsible-wrapper:after {
-  content: '';
-  height: 50px;
-  transition: height 0.3s linear, max-height 0s 0.3s linear;
-  max-height: 0;
-}
-.collapsible {
-  transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
-  margin-bottom: 0;
-  max-height: 500px;
-}
-.collapsible-wrapper.collapsed > .collapsible {
-  margin-bottom: -500px;
-  transition: margin-bottom 0.3s cubic-bezier(1, 0, 1, 1), visibility 0s 0.3s, max-height 0s 0.3s;
-  visibility: hidden;
-  max-height: 0;
-}
-.collapsible-wrapper.collapsed:after {
-  height: 0;
-  transition: height 0.3s linear;
-  max-height: 50px;
 }
 .roles-list-container {
   column-count: 3;

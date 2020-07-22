@@ -35,15 +35,15 @@ document.addEventListener( "DOMContentLoaded", function () {
 	var $regHeaderContainer = document.getElementById("reg-header-container");
 	if ($altHeaderContainer && $regHeaderContainer) {
 		if (getValue('zambiaHeader') === 'small') {
-			$altHeaderContainer.classList.remove("hidden");
-			$regHeaderContainer.classList.add("collapsed", "hidden");
+			$altHeaderContainer.classList.remove("hidden", "d-none");
+			$regHeaderContainer.classList.add("collapsed", "hidden", "d-none");
 			window.setTimeout(function () {
-				$regHeaderContainer.classList.remove("hidden");
+				$regHeaderContainer.classList.remove("hidden", "d-none");
 			},800);
 		} else {
 			$altHeaderContainer.classList.add("collapsed");
 			window.setTimeout(function () {
-				$altHeaderContainer.classList.remove("hidden");
+				$altHeaderContainer.classList.remove("hidden", "d-none");
 			},800);
 		}
 		var $hideHeaderButton = document.getElementById("hide-header-but");

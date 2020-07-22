@@ -3,7 +3,7 @@
 global $header_section;
 $header_section = HEADER_PARTICIPANT;
 
-function participant_header($title, $noUserRequired = false, $loginPageStatus = 'Normal') {
+function participant_header($title, $noUserRequired = false, $loginPageStatus = 'Normal', $bootstrap4 = false) {
     // $noUserRequired is true if user not required to be logged in to access this page
     // $loginPageStatus is "Login", "Logout", "Normal", "No_Permission", "Password_Reset"
     //      login page should be "Login"
@@ -11,14 +11,17 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
     //      logged in user who reached page for which he does not have permission is "No_Permission"
     //      all other pages should be "Normal"
     global $headerErrorMessage;
-    html_header($title);
+    html_header($title, $bootstrap4);
     
-?>
+if ($bootstrap4) { ?>
+<body class="bs4">
+<?php } else { ?>
 <body>
+<?php } ?>
     <div class="container-fluid">
 <?php
     $isLoggedIn = isLoggedIn();
-    commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage);
+    commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage, $bootstrap4);
     if ($isLoggedIn && $loginPageStatus != 'Login' && 
         (may_I("Participant") || may_I("Staff"))) {
 ?>

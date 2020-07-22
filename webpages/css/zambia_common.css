@@ -1,0 +1,134 @@
+/**
+ * File created by Peter Olszowka July 17, 2020
+ * Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+ */
+/* Header Stuff */
+header h1 {
+  flex-grow: 1;
+  text-align: center;
+  font-family: Verdana, helvetica, san-serif;
+  font-size: 2rem;
+  padding: 1em;
+  color: black;
+  font-weight: 700;
+  margin: 10px 0;
+}
+header label {
+  color: black;
+  display: block;
+  text-align: right;
+  font-size: 1.1em;
+}
+header .imgButton {
+  cursor: pointer;
+}
+header p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.collapsible-wrapper {
+  display: flex;
+  overflow: hidden;
+}
+.collapsible-wrapper:after {
+  content: '';
+  height: 50px;
+  transition: height 0.3s linear, max-height 0s 0.3s linear;
+  max-height: 0;
+}
+.collapsible-wrapper.collapsed > .collapsible {
+  margin-bottom: -500px;
+  transition: margin-bottom 0.3s cubic-bezier(1, 0, 1, 1), visibility 0s 0.3s, max-height 0s 0.3s;
+  visibility: hidden;
+  max-height: 0;
+}
+.collapsible-wrapper.collapsed:after {
+  height: 0;
+  transition: height 0.3s linear;
+  max-height: 50px;
+}
+.collapsible {
+  transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
+  margin-bottom: 0;
+  max-height: 500px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.header.participant-header {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
+}
+.header.staff-header {
+  background-color: #a7d2a5;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+  color: black;
+}
+.header-contents {
+  height: 12.5rem;
+  flex-grow: 1;
+  display: flex;
+}
+.header-contents img {
+  height: 100%;
+}
+#welcome {
+  float: right;
+  margin: 1em 1em 0 0;
+}
+#welcome p {
+  color: white;
+  text-align: right;
+  letter-spacing: 0.04rem;
+}
+#welcome.extended {
+  margin-top: 3rem;
+}
+.alt-header-contents {
+  display: flex;
+}
+.alt-header-contents.staff-header {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+}
+.alt-header-contents.participant-header {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
+}
+.alt-header-spacer {
+  width: 15rem;
+}
+.alt-header-title {
+  flex-grow: 1;
+  text-align: center;
+  align-self: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  letter-spacing: 0.04rem;
+  font-family: Verdana, helvetica, san-serif;
+}
+.alt-header-controls p {
+  display: inline-block;
+  padding-right: 0.5em;
+}
+.participant-header .alt-header-controls p {
+  color: #e5e5e5;
+}
+.alt-header-controls img {
+  margin-right: 0.4rem;
+  margin-left: 0.4rem;
+}
+/* End Header Stuff */
+body:not(.full-page) {
+  background-image: url('../images/light_honeycomb.png');
+  background-repeat: repeat;
+}
+#ParticipantView {
+  color: #4da3ff;
+  letter-spacing: 0.03rem;
+}
+#ParticipantView:hover {
+  color: #75d6ff;
+}
