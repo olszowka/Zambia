@@ -40,6 +40,9 @@ if (($resultXML = mysql_query_XML($queryArray)) === false) {
 $paramArray = array();
 $paramArray["showLinks"] = ($showlinks === 1);
 $paramArray["now"] = date('d-M-Y h:i A');
+$paramArray["trackIsPrimary"] = TRACK_TAG_USAGE === "TRACK_ONLY" || TRACK_TAG_USAGE === "TRACK_OVER_TAG";
+$paramArray["showTrack"] = TRACK_TAG_USAGE !== "TAG_ONLY";
+$paramArray["showTags"] = TRACK_TAG_USAGE !== "TRACK_ONLY";
 // echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 RenderXSLT('StaffListSessions.xsl', $paramArray, $resultXML);
 staff_footer();

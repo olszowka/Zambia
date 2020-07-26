@@ -28,4 +28,62 @@
 }
 /* end of bootstrap overrides */
 /* Bootstrap extensions */
+.col-0p5,
+.col-0p75,
+.col-1p25,
+.col-1p5,
+.col-1p75 {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.col-0p5 {
+  flex: 0 0 4.166667%;
+  max-width: 4.166667%;
+}
+.col-0p75 {
+  flex: 0 0 6.25%;
+  max-width: 6.25%;
+}
+.col-1p25 {
+  flex: 0 0 10.416667%;
+  max-width: 10.416667%;
+}
+.col-1p5 {
+  flex: 0 0 12.5%;
+  max-width: 12.5%;
+}
+.col-1p75 {
+  flex: 0 0 14.583333%;
+  max-width: 14.583333%;
+}
 /* End of Bootstrap extensions */
+/* Tabular display of session/schedule data */
+.schedule-card {
+  font-size: 0.9rem;
+}
+.schedule-card .row {
+  align-items: center;
+  min-height: 2.8rem;
+}
+/* End of tabular display of session/schedule data */
+.expander-wrapper {
+  display: flex;
+  align-items: center;
+}
+.expander-wrapper a {
+  padding-left: 0.75rem;
+}
+.expander-wrapper a:hover {
+  text-decoration: none;
+  background-color: #75d6ff;
+}
+.expander {
+  font-size: 1.75rem;
+  transform: translate(-0.5rem, -0.5rem) rotate(0deg);
+  transition: 0.3s transform ease-in-out;
+}
+.collapsed .expander {
+  transform: translate(0, 0.1rem) rotate(90deg);
+}
