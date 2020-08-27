@@ -16,7 +16,7 @@ UPDATE Phases SET display_order = 450 WHERE phaseid = 9;
 
 ## Add missing permission atom my_suggestions_write(9) for Phase 6(Suggestions) to the
 ## permissions table
-INSERT INTO permissions (permatomid, phaseid, permroleid, badgeid)
+INSERT INTO Permissions (permatomid, phaseid, permroleid, badgeid)
 VALUES (9, 6, 2, NULL), (9, 6, 3, NULL);
 
 INSERT INTO PatchLog (patchname) VALUES ('49_phases.sql');

@@ -6,7 +6,7 @@
 
 ## Add new atom for the AdminPhases page to change Zambia Phases
 ##
-insert into Permissionatoms(permatomtag, page, notes)
+insert into PermissionAtoms(permatomtag, page, notes)
 values('AdminPhases', 'AdminPhases', 'Change phase of Zambia use, allowing which sections are current');
 
 ## Add both Administrator and AdminPhases to the Administrator role
