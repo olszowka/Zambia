@@ -90,21 +90,38 @@ http://zambia.dreamhosters.com/~petero/zambiademo
 
 or whatever your URL is... 
 
-6 - Ah, an account for in zambia so you can log in.  That would be useful.  
-Currently we are set up to take a feed from our registration system 
-(namely Congo).  There is a script to run on the Congo server to 
-extract the needed information so it can be loaded.   This script is 
-named export_program_participants_congo.sql
-It generates sql that can be in turn loaded into zambia. 
+6 - Ah, an account for in zambia so you can log in.  That would be useful.
 
-However, that can be completely avoided by using add_zambia_user in the 
-scripts directory.   It comes with a sample way to add 2 accounts. 
+Zambia is intended to take a feed from the registration system to create and configure users.  However, the
+code for handling that is specific to each registration system and not in the master branch. 
 
-If you use a different system for registration, a way to export your 
-users out of it and add them into Zambia in an automated way should be 
-feasible. 
+There is a script add_zambia_users.php in scripts directory to add users.
 
-7 - Backups are a good thing 
+Usage:
+
+php -f add_zambia_users.php input_file.csv
+
+The input_file should have field names in first row.  See add_user_sample_input.csv.  If there is are one or more
+columns in CongoDump you don't care about, you may skip them entirely including skipping them from the header row. The
+other fields are all required.
+
+7 - Mail relay configuration
+
+If you want to have Zambia send email for password resets for mailmerges to various groups of users, you
+need to arrange for a mail relay serving and configure Zambia to connect to it.  Consult the documentation for your
+mail relay service and configure the following constants in db_name.php:
+
+    SMTP_ADDRESS
+    SMTP_PORT
+    SMTP_PROTOCOL
+    SMTP_USER
+    SMTP_PASSWORD
+    
+You may leave SMTP_USER and/or SMTP_PASSWORD blank to skip authentication if that is appropriate for your mail relay.
+Likely options for SMTP_PORT are "587", "2525", "25", or "465".
+Options for SMTP_PROTOCOL are "", "SSL", or "TLS".  Blank/Default is no encryption.
+
+8 - Backups are a good thing 
 
 If you are changing php and html files, you'll need to talk to us about 
 access to svn check your changes into svn.   
@@ -112,7 +129,7 @@ access to svn check your changes into svn.
 If you care about dbase content, see backup_mysql and clean_backups in the 
 scripts directory.  You'll want to run them or something similar.   
 
-8 - Reaching us
+9 - Reaching us
 
 I can be reached at zambia-support@arisia.org 
 
