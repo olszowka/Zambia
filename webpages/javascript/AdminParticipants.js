@@ -172,6 +172,7 @@ function loadNewParticipant() {
 function showSearchResults() {
 	resultsHidden = false;
 	$("#searchResultsDIV").show("fast");
+	$("#searchResultsDIV").css("overflow-y", "auto");
 	$("#toggleSearchResultsBUTN").prop("disabled", false);
 	$("#toggleText").html("Hide");
 }
