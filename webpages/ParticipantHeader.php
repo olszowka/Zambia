@@ -39,7 +39,8 @@ if ($bootstrap4) { ?>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="<? echo $_SERVER['PATH_INFO'] ?>"><? echo $title ?></a>
+                    <a class="brand" href="<?php if (isset($_SERVER['PATH_INFO'])) echo $_SERVER['PATH_INFO'] ?>"><?php echo $title ?></a>
+                    <?php if ($loginPageStatus <> 'Consent') { ?>
                     <div class="nav-collapse">
                         <ul class="nav">
                             <li><a href="welcome.php">Overview</a></li>
@@ -57,6 +58,7 @@ if ($bootstrap4) { ?>
                                 echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="StaffView" href="StaffPage.php">Staff View</a></li></ul>';
                             }?>
                     </div>
+                    <?php } ?>
                 </div>
             </div>
         </nav>

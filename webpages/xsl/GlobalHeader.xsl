@@ -3,7 +3,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:param name="header_version" select="'Participant'"/><!-- "Staff" or "Participant" -->
     <xsl:param name="logged_in" select="false()" /><!-- TRUE/FALSE -->
-    <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "No_Permission", "Password_Reset" -->
+    <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "Consent", "No_Permission", "Password_Reset" -->
     <xsl:param name="no_user_required" select="false()" /><!-- TRUE/FALSE -->
     <xsl:param name="CON_NAME" select="''" />
     <xsl:param name="badgename" select="''" />

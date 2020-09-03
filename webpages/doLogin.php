@@ -7,7 +7,7 @@ if (!isset($_SESSION['badgeid'])) {
     $title = "Submit Password";
     $badgeid = getString('badgeid');
     $password = getString('passwd');
-    $query = "SELECT password FROM Participants WHERE badgeid = ?;";
+    $query = "SELECT password, data_retention FROM Participants WHERE badgeid = ?;";
     $query_param_arr = array($badgeid);
     if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
         exit(); // Should have exited already
@@ -20,6 +20,7 @@ if (!isset($_SESSION['badgeid'])) {
     $dbobject = mysqli_fetch_object($result);
     mysqli_free_result($result);
     $dbpassword = $dbobject->password;
+    $data_consent = $dbobject->data_retention;
     if (!password_verify($password, $dbpassword)) {
         $headerErrorMessage = "Incorrect $userIdPrompt or password.";
         require('login.php');
@@ -51,16 +52,42 @@ if (!isset($_SESSION['badgeid'])) {
     set_permission_set($badgeid);
 } else {
     $badgeid = $_SESSION['badgeid'];
+    $query = "SELECT data_retention FROM Participants WHERE badgeid = ?;";
+    $query_param_arr = array($badgeid);
+    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
+        exit(); // Should have exited already
+    }
+    if (mysqli_num_rows($result) != 1) {
+        $headerErrorMessage = "Incorrect $userIdPrompt or password.";
+        require('logout.php');
+        exit(0);
+    }
+    $dbobject = mysqli_fetch_object($result);
+    mysqli_free_result($result);
+    $data_consent = $dbobject->data_retention;
 }
 $message2 = "";
 if (may_I('Staff')) {
-    require('StaffPage.php');
+     if (!$participant_array = retrieveFullParticipant($badgeid)) {
+        $message_error = $message2 . "<br />Error retrieving data from DB.  No further execution possible.";
+        RenderError($message_error);
+    } else {
+        if ($data_consent == 0) {
+            require('dataConsent.php');
+        } else {
+            require('StaffPage.php');
+        }
+    }
 } elseif (may_I('Participant')) {
     if (!$participant_array = retrieveFullParticipant($badgeid)) {
         $message_error = $message2 . "<br />Error retrieving data from DB.  No further execution possible.";
         RenderError($message_error);
     } else {
-        require('renderWelcome.php');
+        if ($data_consent == 0) {
+            require('dataConsent.php');
+        } else {
+            require('renderWelcome.php');
+        }
     }
 } elseif (may_I('public_login')) {
     require('renderBrainstormWelcome.php');
