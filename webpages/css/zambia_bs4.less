@@ -22,7 +22,7 @@
     margin-right: -15px;
 
     *::placeholder {
-        color:@gray-just-off-bg;
+        color: @light-gray;
     }
 }
 
@@ -37,7 +37,7 @@
 /* end of bootstrap overrides */
 
 /* Bootstrap extensions */
-.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75 {
+.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25 {
     position: relative;
     width: 100%;
     padding-right: 15px;
@@ -63,7 +63,56 @@
     flex: 0 0 14.583333%;
     max-width: 14.583333%;
 }
+.col-2p75 {
+    flex: 0 0 22.916667%;
+    max-width: 22.916667%;
+}
+
+.col-3p25 {
+    flex: 0 0 27.083333%;
+    max-width: 27.083333%;
+}
+
 /* End of Bootstrap extensions */
+
+/* General Form Defaults */
+
+.tag-chk-legend {
+    float: left;
+    width: 2.5rem;
+    width: fit-content;
+    font-size: initial;
+    margin-right:0.25rem;
+}
+.tag-chk-container {
+    display:inline-block;
+    background-color:@white;
+    border:1px solid @darkest-gray;
+    border-radius:2px;
+    padding:0.5rem 0.5rem 0.5rem 0;
+    height:8rem;
+    min-width:8rem;
+    overflow-y:auto;
+}
+.tag-chk-label {
+    display:block;
+    line-height:1.05;
+}
+.tag-chk {
+    margin-left:0.5rem;
+    margin-right:0.5rem;
+    /* width:2rem; */
+    /* vertical-align:-1px; */
+}
+.tag-match-radio {
+    width: 1.5rem;
+}
+.tag-match-label {
+    padding-right: 1.5rem;
+}
+
+/* End of General Form Defaults */
+
 /* Tabular display of session/schedule data */
 .schedule-card {
     font-size: 0.9rem;

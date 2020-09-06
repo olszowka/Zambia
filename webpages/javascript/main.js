@@ -13,8 +13,8 @@ document.addEventListener( "DOMContentLoaded", function () {
 		case "Grid Scheduler":
 			staffMaintainSchedule.initialize();
 			break;
-		case "Search Results":
-			searchMySessions1.initialize();
+		case "Session Search Results":
+			partSearchSessionsSubmit.initialize();
 			break;
 		case "Panel Interests":
 			panelInterests.initialize();

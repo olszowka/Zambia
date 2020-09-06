@@ -22,8 +22,13 @@ if ($bootstrap4) { ?>
 <?php
     $isLoggedIn = isLoggedIn();
     commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage, $bootstrap4);
+    // below: authenticated and authorized to see a menu
     if ($isLoggedIn && $loginPageStatus != 'Login' && 
         (may_I("Participant") || may_I("Staff"))) {
+        if ($bootstrap4) {
+            $paramArray = array();
+            RenderXSLT('ParticipantMenu_BS4.xsl', $paramArray, GeneratePermissionSetXML());
+        } else {
 ?>
         <nav id="participantNav" class="navbar navbar-inverse">
             <div class="navbar-inner">
@@ -36,26 +41,26 @@ if ($bootstrap4) { ?>
                     <a class="brand" href="<? echo $_SERVER['PATH_INFO'] ?>"><? echo $title ?></a>
                     <div class="nav-collapse">
                         <ul class="nav">
-                            <li><a href="my_contact.php">Profile</a></li>
-                            <?php makeMenuItem("Availability",may_I('my_availability'),"my_sched_constr.php",false); ?>
-                            <?php makeMenuItem("Session Interests",may_I('my_panel_interests'),"PartPanelInterests.php",false); ?>
-                            <!-- XXX this should have a may_I -->
-                            <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
-                            <?php makeMenuItem("My Schedule",may_I('my_schedule'),"MySchedule.php",false); ?>
-                            <?php makeMenuItem("Search Sessions",may_I('search_panels'),"my_sessions1.php",may_I('search_panels')); ?>
-                            <?php makeMenuItem("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormWelcome.php",may_I('BrainstormSubmit')); ?>
-                            <li class="divider-vertical"></li>
                             <li><a href="welcome.php">Overview</a></li>
+                            <li><a href="my_contact.php">Profile</a></li>
+                            <?php makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false); ?>
+                            <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
+                            <?php makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false); ?>
+                            <?php makeMenuItem("Session Interests", may_I('my_panel_interests'),"PartPanelInterests.php",false); ?>
+                            <?php makeMenuItem("My Schedule", may_I('my_schedule'),"MySchedule.php",false); ?>
+                            <li class="divider-vertical"></li>
+                            <?php makeMenuItem("Suggest a Session", may_I('BrainstormSubmit'),"BrainstormWelcome.php", false); ?>
                             <li class="divider-vertical"></li>
                         </ul>
                             <?php if (may_I('Staff')) {
-                                echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="staffView" href="StaffPage.php">Staff View</a></li></ul>';
+                                echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="StaffView" href="StaffPage.php">Staff View</a></li></ul>';
                             }?>
                     </div>
                 </div>
             </div>
         </nav>
-<?php } else {
+<?php       }
+    } else { // not authenticated and authorized to see a menu
         if (!$noUserRequired) {
             participant_footer();
             exit();

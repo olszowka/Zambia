@@ -52,7 +52,7 @@ form.navbar-search {
 }
 /* End of navbar stuff */
 a {
-  color: #04c;
+  color: #0040c0;
 }
 /**
  * STYLES
@@ -61,20 +61,10 @@ a {
   margin: 0.4em;
 }
 .borderBox {
-  border: black thin solid;
+  border: #000000 thin solid;
   padding: 5px;
   margin: 0;
-  color: black;
-}
-input[type="text"],
-input[type="password"] {
-  height: 28px;
-}
-#staffView {
-  color: #00aa00;
-}
-#staffView:hover {
-  color: #22ee22;
+  color: #000000;
 }
 .checkbox.inline {
   padding-top: 0;
@@ -131,18 +121,18 @@ h1 {
   font-size: 2rem;
   font-weight: 700;
   padding: 1em;
-  color: black;
+  color: #000000;
 }
 h1 a {
-  color: white;
+  color: #ffffff;
   text-decoration: none;
 }
 h2 {
   font-family: Verdana, helvetica, san-serif;
   font-size: 1.5em;
   padding: 0;
-  color: #666;
-  background-color: #ccc;
+  color: #606060;
+  background-color: #c9c9c9;
   text-align: center;
 }
 .center {
@@ -158,20 +148,20 @@ div.reportPageContent table,
 table.report {
   border-collapse: collapse;
   margin: 10px;
-  border: 1px solid black;
+  border: 1px solid #000000;
   font-family: Arial;
   font-size: 12px;
 }
 div.reportPageContent table th,
 th.report {
-  border: 1px solid black;
+  border: 1px solid #000000;
   background-color: #c0e4ff;
   padding-right: 0.2em;
   padding-left: 0.2em;
 }
 div.reportPageContent table td,
 td.report {
-  border: 1px solid black;
+  border: 1px solid #000000;
   vertical-align: top;
   padding-left: 0.2em;
   padding-right: 0.2em;
@@ -188,13 +178,13 @@ td.report.highlight1 {
   background-color: #e17575;
 }
 td.za-report-lastRowCell {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid #000000;
 }
 ul#boxes li {
   font-family: Verdana, helvetica, san-serif;
   font-size: 1.33em;
   padding: 2.5em 0;
-  color: #999;
+  color: #909090;
   background-color: #e5e5e5;
   text-align: center;
 }
@@ -369,11 +359,11 @@ select#tagdest {
 }
 .grid-table-cell {
   padding: 5px;
-  border-left: 1px solid black;
-  border-top: 1px solid black;
+  border-left: 1px solid #000000;
+  border-top: 1px solid #000000;
 }
 .grid-table-cell:last-child {
-  border-right: 1px solid black;
+  border-right: 1px solid #000000;
 }
 .grid-table-cell.span3 {
   margin-left: 0;
@@ -393,7 +383,7 @@ select#tagdest {
   margin-bottom: 10px;
 }
 .grid-table-row:last-child .grid-table-cell {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #000000;
 }
 .grid-table-row:last-child .grid-table-cell:first-child {
   border-bottom-left-radius: 4px;
@@ -405,7 +395,7 @@ select#tagdest {
   border-color: #3a87ad;
   background-color: #d9edf7;
 }
-.well.well-info {
+.well.well-success {
   background-color: #dff0d8;
   border-color: #468847;
 }
@@ -436,7 +426,7 @@ table.multcol-list td {
   padding-left: 0.5rem;
 }
 .navbar-inverse .inactive.brand:hover {
-  color: #777777;
+  color: #808080;
 }
 .clearboth {
   clear: both;
@@ -453,7 +443,7 @@ table.multcol-list td {
 }
 .za-sessionHistory-editBanner {
   background-color: #b5b5b5;
-  border: 1px solid #7b7b7b;
+  border: 1px solid #808080;
   border-radius: 3px;
   padding: 3px 4px;
   color: white;
@@ -527,17 +517,17 @@ table.multcol-list td {
 }
 .menutab.enabled {
   background-color: #b08b59;
-  color: white;
+  color: #ffffff;
 }
 .menutab.enabled:hover {
-  background: white;
+  background: #ffffff;
 }
 .menutab.enabled:hover a {
   color: #b08b59;
   text-decoration: none;
 }
 .menutab.enabled a {
-  color: white;
+  color: #ffffff;
   text-decoration: none;
 }
 .menutab.disabled {
@@ -561,42 +551,11 @@ td.tabblocks {
   padding-bottom: 0;
   margin-bottom: 0;
   background: #808080;
-  color: white;
+  color: #ffffff;
 }
 td.head {
   background: #808080;
 }
-/*
- * these are used to override the browser's default decoration on
- * links
- */
-/*
-span.usabletab span.unusabletab span.mousedovertab {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    vertical-align: bottom;
-}
-
-span.usabletab a:link {
-    color: white;
-    text-decoration: none;
-}
-
-span.usabletab a:visited {
-    color: white;
-    text-decoration: none;
-}
-
-span.mousedovertab a:link {
-    color: #002985;
-    text-decoration: none;
-}
-
-span.mousedovertab a:visited {
-    color: #002985;
-    text-decoration: none;
-}
-*/
 /*
  * attributes of the images used to draw the borders of the tabs
  */
@@ -612,68 +571,68 @@ img.tabborder {
 .border0010 {
   border-top: none;
   border-right: none;
-  border-bottom: solid black 1px;
+  border-bottom: solid #000000 1px;
   border-left: none;
 }
 .border0020 {
   border-top: none;
   border-right: none;
-  border-bottom: solid black 2px;
+  border-bottom: solid #000000 2px;
   border-left: none;
 }
 .border1111 {
-  border-top: solid black 1px;
-  border-right: solid black 1px;
-  border-bottom: solid black 1px;
-  border-left: solid black 1px;
+  border-top: solid #000000 1px;
+  border-right: solid #000000 1px;
+  border-bottom: solid #000000 1px;
+  border-left: solid #000000 1px;
 }
 .border1121 {
-  border-top: solid black 1px;
-  border-right: solid black 1px;
-  border-bottom: solid black 2px;
-  border-left: solid black 1px;
+  border-top: solid #000000 1px;
+  border-right: solid #000000 1px;
+  border-bottom: solid #000000 2px;
+  border-left: solid #000000 1px;
 }
 .border1211 {
-  border-top: solid black 1px;
-  border-right: solid black 2px;
-  border-bottom: solid black 1px;
-  border-left: solid black 1px;
+  border-top: solid #000000 1px;
+  border-right: solid #000000 2px;
+  border-bottom: solid #000000 1px;
+  border-left: solid #000000 1px;
 }
 .border1221 {
-  border-top: solid black 1px;
-  border-right: solid black 2px;
-  border-bottom: solid black 2px;
-  border-left: solid black 1px;
+  border-top: solid #000000 1px;
+  border-right: solid #000000 2px;
+  border-bottom: solid #000000 2px;
+  border-left: solid #000000 1px;
 }
 .border2111 {
-  border-top: solid black 2px;
-  border-right: solid black 1px;
-  border-bottom: solid black 1px;
-  border-left: solid black 1px;
+  border-top: solid #000000 2px;
+  border-right: solid #000000 1px;
+  border-bottom: solid #000000 1px;
+  border-left: solid #000000 1px;
 }
 .border2122 {
-  border-top: solid black 2px;
-  border-right: solid black 1px;
-  border-bottom: solid black 2px;
-  border-left: solid black 2px;
+  border-top: solid #000000 2px;
+  border-right: solid #000000 1px;
+  border-bottom: solid #000000 2px;
+  border-left: solid #000000 2px;
 }
 .border2211 {
-  border-top: solid black 2px;
-  border-right: solid black 2px;
-  border-bottom: solid black 1px;
-  border-left: solid black 1px;
+  border-top: solid #000000 2px;
+  border-right: solid #000000 2px;
+  border-bottom: solid #000000 1px;
+  border-left: solid #000000 1px;
 }
 .border2221 {
-  border-top: solid black 2px;
-  border-right: solid black 2px;
-  border-bottom: solid black 2px;
-  border-left: solid black 1px;
+  border-top: solid #000000 2px;
+  border-right: solid #000000 2px;
+  border-bottom: solid #000000 2px;
+  border-left: solid #000000 1px;
 }
 .border2222 {
-  border-top: solid black 2px;
-  border-right: solid black 2px;
-  border-bottom: solid black 2px;
-  border-left: solid black 2px;
+  border-top: solid #000000 2px;
+  border-right: solid #000000 2px;
+  border-bottom: solid #000000 2px;
+  border-left: solid #000000 2px;
 }
 /* ForgotPasswordResetForm.xsl */
 #revealPassword {

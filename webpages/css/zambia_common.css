@@ -9,12 +9,12 @@ header h1 {
   font-family: Verdana, helvetica, san-serif;
   font-size: 2rem;
   padding: 1em;
-  color: black;
+  color: #000000;
   font-weight: 700;
   margin: 10px 0;
 }
 header label {
-  color: black;
+  color: #000000;
   display: block;
   text-align: right;
   font-size: 1.1em;
@@ -59,7 +59,7 @@ header p {
 }
 .header.participant-header {
   background-color: #dedcff;
-  background-image: linear-gradient(0deg, #e8e8e8 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
+  background-image: linear-gradient(0deg, #e5e5e5 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
 }
 .header.staff-header {
   background-color: #a7d2a5;
@@ -79,7 +79,7 @@ header p {
   margin: 1em 1em 0 0;
 }
 #welcome p {
-  color: white;
+  color: #ffffff;
   text-align: right;
   letter-spacing: 0.04rem;
 }
@@ -89,13 +89,13 @@ header p {
 .alt-header-contents {
   display: flex;
 }
-.alt-header-contents.staff-header {
-  background-color: #dedcff;
-  background-image: linear-gradient(0deg, #f0f0f0 0%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
-}
 .alt-header-contents.participant-header {
   background-color: #dedcff;
-  background-image: linear-gradient(0deg, #e8e8e8 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
+  background-image: linear-gradient(0deg, #e5e5e5 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
+}
+.alt-header-contents.staff-header {
+  background-color: #a7d2a5;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
 }
 .alt-header-spacer {
   width: 15rem;
@@ -132,3 +132,19 @@ body:not(.full-page) {
 #ParticipantView:hover {
   color: #75d6ff;
 }
+#StaffView {
+  color: #00aa00;
+}
+#StaffView:hover {
+  color: #22ee22;
+}
+/* General Form Defaults */
+input[type="text"],
+input[type="password"],
+input:not([type]),
+select {
+  height: 1.8rem;
+  border: 1px solid #606060;
+  border-radius: 2px;
+}
+/* End of General Form Defaults */

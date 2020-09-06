@@ -12,13 +12,13 @@ header {
         font-family: @font-family;
         font-size: 2rem;
         padding: 1em;
-        color: @color;
+        color: @black;
         font-weight: 700;
         margin: 10px 0;
     }
 
     label {
-        color: @color;
+        color: @black;
         display: block;
         text-align: right;
         font-size: 1.1em;
@@ -74,14 +74,14 @@ header {
     width: 100%;
 
     &.participant-header {
-        background-color: #dedcff;
-        background-image: linear-gradient(0deg, #e8e8e8 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
+        background-color: @participantHeaderNoGradientColor;
+        background-image: linear-gradient(0deg, @participantHeaderFullGradientColor4 0%, @participantHeaderFullGradientColor3 57%, @participantHeaderFullGradientColor2 87.3%, @participantHeaderFullGradientColor1 100%);
     }
 
     &.staff-header {
-        background-color: #a7d2a5;
-        background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(240,240,240,1) 24%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
-        color: black;
+        background-color: @staffHeaderNoGradientColor;
+        background-image: linear-gradient(0deg, @staffHeaderGradientColor4 0%, @staffHeaderGradientColor4 24%, @staffHeaderGradientColor3 54%, @staffHeaderGradientColor2 74%, @staffHeaderGradientColor1 100%);
+    color: black;
     }
 }
 
@@ -100,7 +100,7 @@ header {
     margin: 1em 1em 0 0;
 
     p {
-        color: @contrast;
+        color: @white;
         text-align: right;
         letter-spacing: 0.04rem;
     }
@@ -113,14 +113,14 @@ header {
 .alt-header-contents {
     display: flex;
 
-    &.staff-header {
-        background-color: #dedcff;
-        background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
+    &.participant-header {
+        background-color: @participantHeaderNoGradientColor;
+        background-image: linear-gradient(0deg, @participantHeaderShrunkGradientColor4 0%, @participantHeaderShrunkGradientColor3 30.2%, @participantHeaderShrunkGradientColor2 71.8%, @participantHeaderShrunkGradientColor1 100%);
     }
 
-    &.participant-header {
-        background-color: #dedcff;
-        background-image: linear-gradient(0deg, #e8e8e8 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
+    &.staff-header {
+        background-color: @staffHeaderNoGradientColor;
+        background-image: linear-gradient(0deg, @staffHeaderGradientColor4 0%, @staffHeaderGradientColor3 54%, @staffHeaderGradientColor2 74%, @staffHeaderGradientColor1 100%);
     }
 }
 
@@ -144,7 +144,7 @@ header {
         padding-right: 0.5em;
 
         .participant-header & {
-            color: @light-gray;
+            color: @lightest-gray;
         }
     }
 
@@ -169,3 +169,21 @@ body:not(.full-page) {
         color: @participantMenuHoverColor;
     }
 }
+
+#StaffView {
+    color: @staffMenuColor;
+
+    &:hover {
+        color: @staffMenuHoverColor;
+    }
+}
+
+/* General Form Defaults */
+
+input[type="text"], input[type="password"], input:not([type]), select {
+    height: 1.8rem;
+    border:1px solid @darkest-gray;
+    border-radius:2px;
+}
+
+/* End of General Form Defaults */

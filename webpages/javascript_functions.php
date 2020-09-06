@@ -58,6 +58,9 @@ function load_internal_javascript($title, $isDataTables = false) {
         case "Administer Phases":
             echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
             break;
+        case "Session Search Results":
+            echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
+            break;
         default:
             if ($isDataTables) {
                 echo "<script src=\"javascript/Reports.js\"></script>\n";
@@ -67,7 +70,6 @@ function load_internal_javascript($title, $isDataTables = false) {
 <script src="javascript/AdminParticipants.js"></script>
 <script src="javascript/editCreateSession.js"></script>
 <script src="javascript/myProfile.js"></script>
-<script src="javascript/SearchMySessions1.js"></script>
 <script src="javascript/staffMaintainSchedule.js"></script>
 <script src="javascript/partPanelInterests.js"></script>
 <?php
