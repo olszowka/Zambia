@@ -20,14 +20,14 @@ SELECT
 		SS.statusname,
         GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
 	FROM 
-				Sessions S
-		   JOIN Tracks TR USING (trackid)
-		   JOIN Types TY USING (typeid)
-		   JOIN SessionStatuses SS USING (statusid)
-	  LEFT JOIN Schedule SCH USING (sessionid)
-	  LEFT JOIN Rooms R USING (roomid)
-	  LEFT JOIN SessionHasTag SHT USING (sessionid)
-      LEFT JOIN Tags TA USING (tagid)
+                  Sessions S
+             JOIN Tracks TR USING (trackid)
+             JOIN Types TY USING (typeid)
+             JOIN SessionStatuses SS USING (statusid)
+        LEFT JOIN Schedule SCH USING (sessionid)
+        LEFT JOIN Rooms R USING (roomid)
+        LEFT JOIN SessionHasTag SHT USING (sessionid)
+        LEFT JOIN Tags TA USING (tagid)
 	WHERE 
 		1 = 1
 EOB;

@@ -126,6 +126,7 @@ EOD;
 		$resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
 	}
     header("Content-Type: text/html");
+    //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xml->saveXML(), "i")); //for debugging only
     RenderXSLT('AdminParticipants.xsl', array(), $xml);
 	exit();
 }

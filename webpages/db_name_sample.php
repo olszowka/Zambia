@@ -57,4 +57,9 @@ define("DEFAULT_USER_PASSWORD", "changeme"); // Note, Zambia will never directly
 // create users with a default password, but some external integrations to create users do so.  In that case, Zambia can
 // identify users with this default password and prompt them to change it as well as report to staff. If your installation
 // does not use a default password, leave this empty ''.
+define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag fields are used -- one of 4 following values:
+// "TAG_ONLY" : Track field is not used and will be hidden where possible.
+// "TAG_OVER_TRACK" : Both fields are used, but primary sorting and filtering is by Tag.
+// "TRACK_OVER_TAG" : Both fields are used, but primary sorting and filtering is by Track.
+// "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
 ?>

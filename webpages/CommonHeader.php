@@ -1,6 +1,6 @@
 <?php
 //	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "") {
+function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "", $bootstrap4 = false) {
     global $header_rendered;
     if ($isLoggedIn && $loginPageStatus == 'Normal' && !may_I("Participant") && !may_I("Staff")) {
         $loginPageStatus = 'No_Permission';
@@ -15,6 +15,10 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $paramArray["header_error_message"] = $headerErrorMessage;
     $paramArray["no_user_required"] = $noUserRequired;
     $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
-    RenderXSLT('GlobalHeader.xsl', $paramArray);
+    if ($bootstrap4) {
+        RenderXSLT('GlobalHeader_BS4.xsl', $paramArray);
+    } else {
+        RenderXSLT('GlobalHeader.xsl', $paramArray);
+    }
     $header_rendered = true;
 }

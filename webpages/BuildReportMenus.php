@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2019-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Build Report Menus";
 require_once('StaffCommonCode.php');
@@ -61,12 +61,14 @@ foreach ($allReports as $reportName => $reportData) {
 }
 ksort($reportCategories, SORT_NATURAL);
 $reportMenuFilHand = fopen('ReportMenuInclude.php', 'wb');
+$reportMenuBS4FilHand = fopen('ReportMenuBS4Include.php', 'wb');
 $staffReportsICIFilHand = fopen('staffReportsInCategoryInclude.php', 'wb');
 fwrite($staffReportsICIFilHand, "<?php\n");
 fwrite($staffReportsICIFilHand, "\$reportCategories = array();\n");
 foreach ($reportCategories as $reportCategory => $reportCategoryArray) {
     $encodedReportCategory = htmlentities(urlencode($reportCategory));
     fwrite($reportMenuFilHand, "<li><a href='staffReportsInCategory.php?reportcategory=$encodedReportCategory'>$reportCategory</a></li>\n");
+    fwrite($reportMenuBS4FilHand, "<a class='dropdown-item' href='staffReportsInCategory.php?reportcategory=$encodedReportCategory'>$reportCategory</a>\n");
     fwrite($staffReportsICIFilHand, "\$reportCategories['$reportCategory'] = array(");
     asort($reportCategoryArray, SORT_NUMERIC);
     $notFirst = false;
@@ -89,6 +91,7 @@ foreach($allReports as $reportName => $reportArray) {
     fwrite($staffReportsICIFilHand, "\$reportDescriptions['$reportName'] = \"{$description}\";\n");
 }
 fclose($reportMenuFilHand);
+fclose($reportMenuBS4FilHand);
 fclose($staffReportsICIFilHand);
 $reportCount = count($allReports);
 staff_header($title);
