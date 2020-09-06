@@ -3,26 +3,34 @@
 global $header_section;
 $header_section = HEADER_STAFF;
 
-function staff_header($title, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function staff_header($title, $bootstrap4 = false, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;
-    html_header($title, $is_report, $reportColumns, $reportAdditionalOptions);
+    html_header($title, $bootstrap4, $is_report, $reportColumns, $reportAdditionalOptions);
     $isLoggedIn = isLoggedIn();
+    $bodyClass = "";
+    if ($fullPage && $bootstrap4) {
+        $bodyClass = 'class="full-page bs4"';
+    } else if ($fullPage) {
+        $bodyClass = 'class="full-page"';
+    } else if ($bootstrap4) {
+        $bodyClass = 'class="bs4"';
+    }
     if ($fullPage) {
 ?>
-<body class="full-page">
+<body <?php echo $bodyClass; ?>>
     <div id="myhelper"></div><!-- used for drag-and-drop operations -->
     <div id="headerContainer">
 <?php
-    commonHeader('Staff', $isLoggedIn, false, 'Normal');
+    commonHeader('Staff', $isLoggedIn, false, 'Normal', "", $bootstrap4);
 ?>
     </div>
 <?php
     } else { /* not full page */
 ?>
-<body>
+<body <?php echo $bodyClass; ?>>
     <div class="container-fluid">
 <?php
-        commonHeader('Staff', $isLoggedIn, false, 'Normal');
+        commonHeader('Staff', $isLoggedIn, false, 'Normal', "", $bootstrap4);
     }
 ?>
 <?php
@@ -31,7 +39,8 @@ function staff_header($title, $is_report = false, $reportColumns = false, $repor
         $paramArray = array();
         $paramArray["title"] = $title;
         try {
-            $reportMenuIncludeFilHand = fopen ( 'ReportMenuInclude.php' ,  'r');
+            $reportMenuIncludeFilName = $bootstrap4 ? 'ReportMenuBS4Include.php' : 'ReportMenuInclude.php';
+            $reportMenuIncludeFilHand = fopen ($reportMenuIncludeFilName,  'r');
             if ($reportMenuIncludeFilHand === false) {
                 $paramArray["reportMenuList"] = '';
             } else {
@@ -42,7 +51,8 @@ function staff_header($title, $is_report = false, $reportColumns = false, $repor
         }
         $xmlDoc = GeneratePermissionSetXML();
         // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xmlDoc->saveXML(), "i"));
-        RenderXSLT('StaffMenu.xsl', $paramArray, $xmlDoc);
+        $filename = $bootstrap4 ? 'StaffMenu_BS4.xsl' : 'StaffMenu.xsl';
+        RenderXSLT($filename, $paramArray, $xmlDoc);
     } else {
         staff_footer();
         exit();

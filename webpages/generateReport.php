@@ -39,7 +39,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
     $_SESSION['return_to_page'] = "generateReport.php?reportName=$reportName";
     $reportColumns = isset($report['columns']) ? $report['columns'] : false;
     $reportAdditionalOptions = isset($report['additionalOptions']) ? $report['additionalOptions'] : false;
-    staff_header($report['name'], true, $reportColumns, $reportAdditionalOptions);
+    staff_header($report['name'], false, true, $reportColumns, $reportAdditionalOptions);
     $reportDescription = htmlspecialchars(str_replace('$CON_NAME', CON_NAME, $report['description']), ENT_NOQUOTES);
     echo "<div class=\"alert alert-info\">$reportDescription</div>\n";
     echo "<p class=\"text-success center\"> Generated: " . date("D M j G:i:s T Y") . "</p>\n";
