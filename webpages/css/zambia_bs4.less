@@ -1,0 +1,147 @@
+/**
+ * File created by Peter Olszowka July 17, 2020
+ * Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+ */
+@import (reference) "zambia_include.less";
+
+/* Page Header Stuff */
+.header-wrapper {
+    margin-left:-15px;
+    margin-right:-15px;
+}
+
+#alt-header {
+    width: 100%;
+}
+/* End of Page Header Stuff */
+
+/* navbar stuff */
+.navbar {
+    /* margin-bottom: 0.2em; */
+    margin-left: -15px;
+    margin-right: -15px;
+
+    *::placeholder {
+        color: @light-gray;
+    }
+}
+
+/* End of navbar stuff */
+
+/* bootstrap overrides */
+.dropdown-item {
+    &:focus, &:hover {
+        background-color:#e7ebee;
+    }
+}
+/* end of bootstrap overrides */
+
+/* Bootstrap extensions */
+.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.col-0p5 {
+    flex: 0 0 4.166667%;
+    max-width: 4.166667%;
+}
+.col-0p75 {
+    flex: 0 0 6.25%;
+    max-width: 6.25%;
+}
+.col-1p25 {
+    flex: 0 0 10.416667%;
+    max-width: 10.416667%;
+}
+.col-1p5 {
+    flex: 0 0 12.5%;
+    max-width: 12.5%;
+}
+.col-1p75 {
+    flex: 0 0 14.583333%;
+    max-width: 14.583333%;
+}
+.col-2p75 {
+    flex: 0 0 22.916667%;
+    max-width: 22.916667%;
+}
+
+.col-3p25 {
+    flex: 0 0 27.083333%;
+    max-width: 27.083333%;
+}
+
+/* End of Bootstrap extensions */
+
+/* General Form Defaults */
+
+.tag-chk-legend {
+    float: left;
+    width: 2.5rem;
+    width: fit-content;
+    font-size: initial;
+    margin-right:0.25rem;
+}
+.tag-chk-container {
+    display:inline-block;
+    background-color:@white;
+    border:1px solid @darkest-gray;
+    border-radius:2px;
+    padding:0.5rem 0.5rem 0.5rem 0;
+    height:8rem;
+    min-width:8rem;
+    overflow-y:scroll;
+    width:fit-content;
+}
+.tag-chk-label {
+    display:block;
+    line-height:1.05;
+    width:fit-content;
+}
+.tag-chk {
+    margin-left:0.5rem;
+    margin-right:0.5rem;
+}
+.tag-match-radio {
+    width: 1.5rem;
+}
+.tag-match-label {
+    padding-right: 1.5rem;
+}
+
+/* End of General Form Defaults */
+
+/* Tabular display of session/schedule data */
+.schedule-card {
+    font-size: 0.9rem;
+
+    .row {
+        align-items: center;
+        min-height: 2.8rem;
+    }
+}
+/* End of tabular display of session/schedule data */
+.expander-wrapper {
+    display: flex;
+    align-items: center;
+
+    a {
+        padding-left: 0.75rem;
+
+        &:hover {
+            text-decoration: none;
+            background-color: @participantMenuHoverColor;
+        }
+    }
+}
+.expander {
+    font-size: 1.75rem;
+    transform: translate(-0.5rem, -0.5rem) rotate(0deg);
+    transition: 0.3s transform ease-in-out;
+
+    .collapsed & {
+        transform: translate(0, 0.1rem) rotate(90deg);
+    }
+}

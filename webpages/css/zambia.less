@@ -1,26 +1,7 @@
 /**
  * Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
-
-/* Colors and other variables */
-@blue: #00c;
-@green: #0c0;
-@light_blue: @blue + #666;
-@dark_blue: @blue - #333;
-@light_green: @green + #333;
-@dark_green: @green - #333;
-@darker_green: @green - #222;
-@font-family: Verdana, helvetica, san-serif;
-@contrast: white;
-@color: black;
-@staffColor: @darker_green;
-@participantColor: @light_blue;
-@problem_background: #fbc8bb;
-@dark-gray: #404040;
-@light-gray: #e5e5e5;
-@separator-color: @light-gray;
-@changed-cell-color: #ff7f7f;
-@gray-just-off-bg: #c9c9c9;
+@import (reference) "zambia_include.less";
 
 /**
  * LAYOUT
@@ -33,121 +14,13 @@
 /*
  * Page header stuff
  */
-header {
-    h1 {
-        flex-grow: 1;
-        padding-left: 1em;
-        text-align: center;
-    }
-
-    label {
-        color: @color;
-        display: block;
-        text-align: right;
-        font-size: 1.1em;
-    }
-
-    .imgButton {
-        cursor: pointer;
-    }
-}
-
 .header-wrapper {
     margin-left:-20px;
     margin-right:-20px;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-
-    &.participant-header {
-        background-color: #dedcff;
-        background-image: linear-gradient(0deg, #e8e8e8 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
-    }
-
-    &.staff-header {
-        background-color: #a7d2a5;
-        background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(240,240,240,1) 24%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
-        color: black;
-    }
-}
-
-.header-contents {
-    height: 12.5rem;
-    flex-grow: 1;
-    display: flex;
-    
-    img {
-        height: 100%;
-    }
-}
-
 #login-form {
     padding-right: 1.5rem;
-}
-#loginBox, #welcome {
-    float: right;
-    margin: 1em 1em 0 0;
-
-    p {
-        color: @contrast;
-        text-align: right;
-        letter-spacing: 0.04rem;
-    }
-
-    &.extended {
-        margin-top: 3rem;
-    }
-}
-
-.alt-header-contents {
-    display: flex;
-
-    &.staff-header {
-        background-color: #dedcff;
-        background-image: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(184,207,189,1) 54%, rgba(115,186,131,1) 74%, rgba(13,128,38,1) 100%);
-    }
-
-    &.participant-header {
-        background-color: #dedcff;
-        background-image: linear-gradient(0deg, #e8e8e8 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
-    }
-}
-
-.alt-header-spacer {
-    width: 15rem;
-}
-
-.alt-header-title {
-    flex-grow: 1;
-    text-align: center;
-    align-self: center;
-    font-weight: bold;
-    font-size: 1.5rem;
-    letter-spacing: 0.04rem;
-    font-family: @font-family;
-}
-
-.alt-header-controls {
-    p {
-        display: inline-block;
-        padding-right: 0.5em;
-        
-        .participant-header & {
-            color: @light-gray;
-        }
-    }
-    
-    img {
-        margin-right: 0.4rem;
-        margin-left: 0.4rem;
-    }
-}
-
-.navbar {
-    margin-bottom: 0.2em;
 }
 
 #login {
@@ -176,20 +49,23 @@ header {
         padding-left: 1.5rem
     }
 }
+/* <end> Page header stuff */
+
+/* navbar stuff */
+.navbar {
+    margin-bottom: 0.2em;
+    margin-left: -20px;
+    margin-right:  -20px;
+}
 
 form.navbar-search {
     margin-top: 9px !important;
 }
 
-/* <end> Page header stuff */
-
-body:not(.full-page) {
-    background-image: url('../images/light_honeycomb.png');
-    background-repeat: repeat;
-}
+/* End of navbar stuff */
 
 a {
-    color: #04c;
+    color: @linkColor;
 }
 
 /**
@@ -201,37 +77,10 @@ a {
 }
 
 .borderBox {
-    border: black thin solid;
+    border: @black thin solid;
     padding: 5px;
     margin: 0;
-    color: @color;
-}
-
-input[type="text"],
-input[type="password"] {
-    height: 28px;
-}
-
-.navbar {
-    margin-bottom: 0.2rem;
-    margin-left: -20px;
-    margin-right:  -20px;
-}
-
-#staffView {
-    color: @staffColor;
-    
-    &:hover {
-        color: (@staffColor + #444);
-    }
-}
-
-#ParticipantView {
-    color: @participantColor;
-
-    &:hover {
-        color: (@participantColor + #444);
-    }
+    color: @black;
 }
 
 @adjustment: 5px;
@@ -301,11 +150,12 @@ input[type="password"] {
 
 h1 {
     font-family: @font-family;
-    font-size: 2em;
+    font-size: 2rem;
+    font-weight: 700;
     padding: 1em;
-    color: @color;
+    color: @black;
     a {
-        color: @contrast;
+        color: @white;
         text-decoration: none;
     }
 }
@@ -314,8 +164,8 @@ h2 {
     font-family: @font-family;
     font-size: 1.5em;
     padding: 0;
-    color: #666;
-    background-color: #ccc;
+    color: @darkest-gray;
+    background-color: @light-gray;
     text-align: center;
 }
 
@@ -334,27 +184,27 @@ input.search-query {
 div.reportPageContent table, table.report {
     border-collapse: collapse;
     margin: 10px;
-    border: 1px solid black;
+    border: 1px solid @black;
     font-family: Arial;
     font-size: 12px;
 }
 
 div.reportPageContent table th, th.report {
-    border: 1px solid black;
-    background-color: #c0e4ff;
+    border: 1px solid @black;
+    background-color: @reportBackgroundColor;
     padding-right: 0.2em;
     padding-left: 0.2em;
 }
 
 div.reportPageContent table td, td.report {
-    border: 1px solid black;
+    border: 1px solid @black;
     vertical-align: top;
     padding-left: 0.2em;
     padding-right: 0.2em;
 }
 
 div.reportPageContent table td a, .report A {
-    color: #1c30b0;
+    color: @reportLinkColor;
 }
 
 th.report.sorting_disabled span.sorting {
@@ -363,19 +213,19 @@ th.report.sorting_disabled span.sorting {
 
 td.report.highlight1 {
     font-weight: bold;
-    background-color: #e17575;
+    background-color: @reportHighlightBackgroundColor;
 }
 
 td.za-report-lastRowCell {
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid @black;
 }
 
 ul#boxes li {
     font-family: @font-family;
     font-size: 1.33em;
     padding: 2.5em 0;
-    color: #999;
-    background-color: #e5e5e5;
+    color: @dark-gray;
+    background-color: @lightest-gray;
     text-align: center;
 }
 
@@ -405,10 +255,6 @@ ul#boxes li {
 @media (max-width: 480px) {
     .wide-medium-only {
         display: none;
-    }
-
-    #loginBox {
-        margin: 0 1em 0 0;
     }
 
     h2, .label {
@@ -553,31 +399,31 @@ select#tagdest {
 
 /* Bootstrap extensions */
 .dropdown-menu > li > .menu-error-entry {
-    background-color: @problem_background;
+    background-color: @problemBackgroundColor;
     display: block;
     padding: 3px 20px;
     clear: both;
     font-weight: bold;
     line-height: 20px;
-    color: #d05b5e;
+    color: @problemColor;
     white-space: nowrap;
 
 }
 
 .success-bg {
-    background-color: #dff0d8;
+    background-color: @successBackgroundColor;
 }
 
 .info-bg {
-    background-color: #d9edf7;
+    background-color: @infoBackgroundColor;
 }
 
 .warning-bg {
-    background-color: #fcf8e3;
+    background-color: @warningBackgroundColor;
 }
 
 .problem-bg {
-    background-color: @problem_background;
+    background-color: @problemBackgroundColor;
 }
 
 .row-container {
@@ -587,17 +433,17 @@ select#tagdest {
     padding-bottom: 1.5em;
 
     &.not-attending {
-        background-color: @problem_background;
+        background-color: @problemBackgroundColor;
     }
 }
 
 .grid-table-cell {
     padding: 5px;
-    border-left:1px solid black;
-    border-top:1px solid black;
+    border-left:1px solid @black;
+    border-top:1px solid @black;
 
     &:last-child {
-        border-right:1px solid black;
+        border-right:1px solid @black;
     }
 
     &.span3 {
@@ -628,7 +474,7 @@ select#tagdest {
         margin-bottom: 10px;
 
         .grid-table-cell {
-            border-bottom:1px solid black;
+            border-bottom:1px solid @black;
 
             &:first-child {
                 border-bottom-left-radius:4px;
@@ -641,14 +487,14 @@ select#tagdest {
     }
 
     &.info .grid-table-cell {
-        border-color:#3a87ad;
-        background-color: #d9edf7;
+        border-color: @bs2-info-border-color;
+        background-color: @bs2-info-bg-color;
     }
 }
 
-.well.well-info {
-    background-color: #dff0d8;
-    border-color: #468847;
+.well.well-success {
+    background-color: @bs2-success-bg-color;
+    border-color: @bs2-success-border-color;
 }
 
 table.multcol-list td {
@@ -693,7 +539,7 @@ table.multcol-list td {
 }
 
 .navbar-inverse .inactive.brand:hover {
-    color: #777777;
+    color: @darker-gray;
 }
 
 .clearboth {
@@ -702,7 +548,7 @@ table.multcol-list td {
 /* <end> Bootstrap extensions */
 
 .not-attending-header-row {
-    background-color: @problem_background;
+    background-color: @problemBackgroundColor;
     padding: 2px 4px;
     font-weight: bold;
 }
@@ -713,8 +559,8 @@ table.multcol-list td {
 }
 
 .za-sessionHistory-editBanner {
-    background-color: #b5b5b5;
-    border: 1px solid #7b7b7b;
+    background-color: @gray;
+    border: 1px solid @darker-gray;
     border-radius: 3px;
     padding: 3px 4px;
     color: white;
@@ -733,37 +579,6 @@ table.multcol-list td {
     visibility: hidden !important;
 }
 
-.collapsible-wrapper {
-    display: flex;
-    overflow: hidden;
-}
-
-.collapsible-wrapper:after {
-    content: '';
-    height: 50px;
-    transition: height 0.3s linear, max-height 0s 0.3s linear;
-    max-height: 0;
-}
-
-.collapsible {
-    transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
-    margin-bottom: 0;
-    max-height: 500px;
-}
-
-.collapsible-wrapper.collapsed > .collapsible {
-    margin-bottom: -500px;
-    transition: margin-bottom 0.3s cubic-bezier(1, 0, 1, 1),
-    visibility 0s 0.3s, max-height 0s 0.3s;
-    visibility: hidden;
-    max-height: 0;
-}
-
-.collapsible-wrapper.collapsed:after {
-    height: 0;
-    transition: height 0.3s linear;
-    max-height: 50px;
-}
 .roles-list-container {
     column-count: 3;
     max-width: 70rem;
@@ -801,7 +616,7 @@ table.multcol-list td {
         margin-bottom: initial;
         
         &:focus-within {
-            outline: 1px dotted #212121;
+            outline: 1px dotted @near-black;
             outline: 4px auto -webkit-focus-ring-color;
         }
     }
@@ -834,26 +649,26 @@ table.multcol-list td {
     height: 18px;
 
     &.enabled {
-        background-color: #b08b59;
-        color: white;
+        background-color: @brown;
+        color: @white;
 
         &:hover {
-            background: white;
+            background: @white;
 
             a {
-                color: #b08b59;
+                color: @brown;
                 text-decoration: none;
             }
         }
 
         a {
-            color: white;
+            color: @white;
             text-decoration: none;
         }
     }
 
     &.disabled {
-        background: #606060;
+        background: @darkest-gray;
         color: white;
     }
 }
@@ -874,43 +689,12 @@ td.tabblocks {
     padding-top: 3px;
     padding-bottom: 0;
     margin-bottom: 0;
-    background: #808080;
-    color: white;
+    background: @darker-gray;
+    color: @white;
 }
 td.head {
-    background: #808080;
+    background: @darker-gray;
 }
-/*
- * these are used to override the browser's default decoration on
- * links
- */
-/*
-span.usabletab span.unusabletab span.mousedovertab {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    vertical-align: bottom;
-}
-
-span.usabletab a:link {
-    color: white;
-    text-decoration: none;
-}
-
-span.usabletab a:visited {
-    color: white;
-    text-decoration: none;
-}
-
-span.mousedovertab a:link {
-    color: #002985;
-    text-decoration: none;
-}
-
-span.mousedovertab a:visited {
-    color: #002985;
-    text-decoration: none;
-}
-*/
 /*
  * attributes of the images used to draw the borders of the tabs
  */
@@ -926,68 +710,68 @@ img.tabborder {
 .border0010 {
     border-top: none;
     border-right: none;
-    border-bottom: solid black 1px;
+    border-bottom: solid @black 1px;
     border-left: none
 }
 .border0020 {
     border-top: none;
     border-right: none;
-    border-bottom: solid black 2px;
+    border-bottom: solid @black 2px;
     border-left: none
 }
 .border1111 {
-    border-top: solid black 1px;
-    border-right: solid black 1px;
-    border-bottom: solid black 1px;
-    border-left: solid black 1px
+    border-top: solid @black 1px;
+    border-right: solid @black 1px;
+    border-bottom: solid @black 1px;
+    border-left: solid @black 1px
 }
 .border1121 {
-    border-top: solid black 1px;
-    border-right: solid black 1px;
-    border-bottom: solid black 2px;
-    border-left: solid black 1px
+    border-top: solid @black 1px;
+    border-right: solid @black 1px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 1px
 }
 .border1211 {
-    border-top: solid black 1px;
-    border-right: solid black 2px;
-    border-bottom: solid black 1px;
-    border-left: solid black 1px
+    border-top: solid @black 1px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 1px;
+    border-left: solid @black 1px
 }
 .border1221 {
-    border-top: solid black 1px;
-    border-right: solid black 2px;
-    border-bottom: solid black 2px;
-    border-left: solid black 1px
+    border-top: solid @black 1px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 1px
 }
 .border2111 {
-    border-top: solid black 2px;
-    border-right: solid black 1px;
-    border-bottom: solid black 1px;
-    border-left: solid black 1px
+    border-top: solid @black 2px;
+    border-right: solid @black 1px;
+    border-bottom: solid @black 1px;
+    border-left: solid @black 1px
 }
 .border2122 {
-    border-top: solid black 2px;
-    border-right: solid black 1px;
-    border-bottom: solid black 2px;
-    border-left: solid black 2px
+    border-top: solid @black 2px;
+    border-right: solid @black 1px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 2px
 }
 .border2211 {
-    border-top: solid black 2px;
-    border-right: solid black 2px;
-    border-bottom: solid black 1px;
-    border-left: solid black 1px
+    border-top: solid @black 2px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 1px;
+    border-left: solid @black 1px
 }
 .border2221 {
-    border-top: solid black 2px;
-    border-right: solid black 2px;
-    border-bottom: solid black 2px;
-    border-left: solid black 1px
+    border-top: solid @black 2px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 1px
 }
 .border2222 {
-    border-top: solid black 2px;
-    border-right: solid black 2px;
-    border-bottom: solid black 2px;
-    border-left: solid black 2px
+    border-top: solid @black 2px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 2px
 }
 
 /* ForgotPasswordResetForm.xsl */
@@ -1013,6 +797,6 @@ table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
 
 .za-table-striped tbody > tr:nth-child(odd) {
     & > td, & > th {
-        background-color: @gray-just-off-bg;
+        background-color: @light-gray;
     }
 }

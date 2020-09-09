@@ -4,7 +4,7 @@
     Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:param name="title" select="''"/>
+  <xsl:param name="title" select="''" />
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
