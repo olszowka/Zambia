@@ -13,8 +13,8 @@ document.addEventListener( "DOMContentLoaded", function () {
 		case "Grid Scheduler":
 			staffMaintainSchedule.initialize();
 			break;
-		case "Session Search Results":
-			partSearchSessionsSubmit.initialize();
+		case "Search Results":
+			searchMySessions1.initialize();
 			break;
 		case "Panel Interests":
 			panelInterests.initialize();
@@ -35,15 +35,15 @@ document.addEventListener( "DOMContentLoaded", function () {
 	var $regHeaderContainer = document.getElementById("reg-header-container");
 	if ($altHeaderContainer && $regHeaderContainer) {
 		if (getValue('zambiaHeader') === 'small') {
-			$altHeaderContainer.classList.remove("hidden", "d-none");
-			$regHeaderContainer.classList.add("collapsed", "hidden", "d-none");
+			$altHeaderContainer.classList.remove("hidden");
+			$regHeaderContainer.classList.add("collapsed", "hidden");
 			window.setTimeout(function () {
-				$regHeaderContainer.classList.remove("hidden", "d-none");
+				$regHeaderContainer.classList.remove("hidden");
 			},800);
 		} else {
 			$altHeaderContainer.classList.add("collapsed");
 			window.setTimeout(function () {
-				$altHeaderContainer.classList.remove("hidden", "d-none");
+				$altHeaderContainer.classList.remove("hidden");
 			},800);
 		}
 		var $hideHeaderButton = document.getElementById("hide-header-but");
