@@ -32,8 +32,6 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
 <?php
         commonHeader('Staff', $isLoggedIn, false, 'Normal', "", $bootstrap4);
     }
-?>
-<?php
     /* Render Staff Menu */
     if ($isLoggedIn) {
         $paramArray = array();
@@ -58,3 +56,4 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
         exit();
     }
 }
+?>
