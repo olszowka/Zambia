@@ -1,6 +1,6 @@
 <?php
 //	Copyright (c) 2019-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-function html_header($title, $bootstrap4 = false, $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function html_header($title, $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;
     require_once ("javascript_functions.php");
 ?>
@@ -10,20 +10,11 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
     <meta charset="utf-8">
     <title>Zambia &ndash; <?php echo $title ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php if ($bootstrap4) { ?>
-    <link rel="stylesheet" href="external/bootstrap4.5.0/bootstrap.min.css" type="text/css" >
-<?php } else { ?>
     <link rel="stylesheet" href="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.css" type="text/css">
     <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap.css" type="text/css" >
     <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
-<?php } ?>
     <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
-    <link rel="stylesheet" href="css/zambia_common.css" type="text/css" media="screen" />
-<?php if ($bootstrap4) { ?>
-    <link rel="stylesheet" href="css/zambia_bs4.css" type="text/css" media="screen" />
-<?php } else { ?>
     <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
-<?php } ?>
     <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
 <?php if ($isDataTables) {
     echo "    <link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
@@ -47,7 +38,7 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
 <?php
     $isRecaptcha = $title == 'Forgot Password';
     /* "external" means 3rd party library */
-    load_external_javascript($isDataTables, $isRecaptcha, $bootstrap4);
+    load_external_javascript($isDataTables, $isRecaptcha);
     load_internal_javascript($title, $isDataTables);
 ?>
 </head>

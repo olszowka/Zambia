@@ -3,7 +3,7 @@
 function RenderViewSessions($result) {
     global $title;
     $title = "View All Sessions";
-    staff_header($title, false, true);
+    staff_header($title, true);
     ?>
     <table id="reportTable" class="table-condensed table-hover">
         <thead>

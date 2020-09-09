@@ -1,6 +1,7 @@
-/**
+﻿/**
  * Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
+/* Colors and other variables */
 /**
  * LAYOUT
  */
@@ -10,12 +11,100 @@
 /*
  * Page header stuff
  */
+header h1 {
+  flex-grow: 1;
+  padding-left: 1em;
+  text-align: center;
+}
+header label {
+  color: black;
+  display: block;
+  text-align: right;
+  font-size: 1.1em;
+}
+header .imgButton {
+  cursor: pointer;
+}
 .header-wrapper {
   margin-left: -20px;
   margin-right: -20px;
 }
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.header.participant-header {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
+}
+.header.staff-header {
+  background-color: #a7d2a5;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+  color: black;
+}
+.header-contents {
+  height: 12.5rem;
+  flex-grow: 1;
+  display: flex;
+}
+.header-contents img {
+  height: 100%;
+}
 #login-form {
   padding-right: 1.5rem;
+}
+#loginBox,
+#welcome {
+  float: right;
+  margin: 1em 1em 0 0;
+}
+#loginBox p,
+#welcome p {
+  color: white;
+  text-align: right;
+  letter-spacing: 0.04rem;
+}
+#loginBox.extended,
+#welcome.extended {
+  margin-top: 3rem;
+}
+.alt-header-contents {
+  display: flex;
+}
+.alt-header-contents.staff-header {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #f0f0f0 0%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+}
+.alt-header-contents.participant-header {
+  background-color: #dedcff;
+  background-image: linear-gradient(0deg, #e8e8e8 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
+}
+.alt-header-spacer {
+  width: 15rem;
+}
+.alt-header-title {
+  flex-grow: 1;
+  text-align: center;
+  align-self: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  letter-spacing: 0.04rem;
+  font-family: Verdana, helvetica, san-serif;
+}
+.alt-header-controls p {
+  display: inline-block;
+  padding-right: 0.5em;
+}
+.participant-header .alt-header-controls p {
+  color: #e5e5e5;
+}
+.alt-header-controls img {
+  margin-right: 0.4rem;
+  margin-left: 0.4rem;
+}
+.navbar {
+  margin-bottom: 0.2em;
 }
 #login {
   float: right;
@@ -40,19 +129,16 @@
   float: none;
   padding-left: 1.5rem;
 }
-/* <end> Page header stuff */
-/* navbar stuff */
-.navbar {
-  margin-bottom: 0.2em;
-  margin-left: -20px;
-  margin-right: -20px;
-}
 form.navbar-search {
   margin-top: 9px !important;
 }
-/* End of navbar stuff */
+/* <end> Page header stuff */
+body:not(.full-page) {
+  background-image: url('../images/light_honeycomb.png');
+  background-repeat: repeat;
+}
 a {
-  color: #0040c0;
+  color: #04c;
 }
 /**
  * STYLES
@@ -61,10 +147,31 @@ a {
   margin: 0.4em;
 }
 .borderBox {
-  border: #000000 thin solid;
+  border: black thin solid;
   padding: 5px;
   margin: 0;
-  color: #000000;
+  color: black;
+}
+input[type="text"],
+input[type="password"] {
+  height: 28px;
+}
+.navbar {
+  margin-bottom: 0.2rem;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+#staffView {
+  color: #00aa00;
+}
+#staffView:hover {
+  color: #22ee22;
+}
+#ParticipantView {
+  color: #6666ff;
+}
+#ParticipantView:hover {
+  color: #aaaaff;
 }
 .checkbox.inline {
   padding-top: 0;
@@ -83,7 +190,7 @@ a {
   margin-top: 0.5em;
 }
 #resultsDiv {
-  padding-top: 1.0em;
+  padding-top: 1em;
 }
 #searchPartsINPUT {
   margin-bottom: 0;
@@ -118,21 +225,20 @@ a {
 }
 h1 {
   font-family: Verdana, helvetica, san-serif;
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2em;
   padding: 1em;
-  color: #000000;
+  color: black;
 }
 h1 a {
-  color: #ffffff;
+  color: white;
   text-decoration: none;
 }
 h2 {
   font-family: Verdana, helvetica, san-serif;
   font-size: 1.5em;
   padding: 0;
-  color: #606060;
-  background-color: #c9c9c9;
+  color: #666;
+  background-color: #ccc;
   text-align: center;
 }
 .center {
@@ -148,20 +254,20 @@ div.reportPageContent table,
 table.report {
   border-collapse: collapse;
   margin: 10px;
-  border: 1px solid #000000;
+  border: 1px solid black;
   font-family: Arial;
   font-size: 12px;
 }
 div.reportPageContent table th,
 th.report {
-  border: 1px solid #000000;
+  border: 1px solid black;
   background-color: #c0e4ff;
   padding-right: 0.2em;
   padding-left: 0.2em;
 }
 div.reportPageContent table td,
 td.report {
-  border: 1px solid #000000;
+  border: 1px solid black;
   vertical-align: top;
   padding-left: 0.2em;
   padding-right: 0.2em;
@@ -178,13 +284,13 @@ td.report.highlight1 {
   background-color: #e17575;
 }
 td.za-report-lastRowCell {
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid black;
 }
 ul#boxes li {
   font-family: Verdana, helvetica, san-serif;
   font-size: 1.33em;
   padding: 2.5em 0;
-  color: #909090;
+  color: #999;
   background-color: #e5e5e5;
   text-align: center;
 }
@@ -210,6 +316,9 @@ ul#boxes li {
 @media (max-width: 480px) {
   .wide-medium-only {
     display: none;
+  }
+  #loginBox {
+    margin: 0 1em 0 0;
   }
   h2,
   .label {
@@ -359,11 +468,11 @@ select#tagdest {
 }
 .grid-table-cell {
   padding: 5px;
-  border-left: 1px solid #000000;
-  border-top: 1px solid #000000;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
 }
 .grid-table-cell:last-child {
-  border-right: 1px solid #000000;
+  border-right: 1px solid black;
 }
 .grid-table-cell.span3 {
   margin-left: 0;
@@ -383,7 +492,7 @@ select#tagdest {
   margin-bottom: 10px;
 }
 .grid-table-row:last-child .grid-table-cell {
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid black;
 }
 .grid-table-row:last-child .grid-table-cell:first-child {
   border-bottom-left-radius: 4px;
@@ -395,7 +504,7 @@ select#tagdest {
   border-color: #3a87ad;
   background-color: #d9edf7;
 }
-.well.well-success {
+.well.well-info {
   background-color: #dff0d8;
   border-color: #468847;
 }
@@ -426,7 +535,7 @@ table.multcol-list td {
   padding-left: 0.5rem;
 }
 .navbar-inverse .inactive.brand:hover {
-  color: #808080;
+  color: #777777;
 }
 .clearboth {
   clear: both;
@@ -443,7 +552,7 @@ table.multcol-list td {
 }
 .za-sessionHistory-editBanner {
   background-color: #b5b5b5;
-  border: 1px solid #808080;
+  border: 1px solid #7b7b7b;
   border-radius: 3px;
   padding: 3px 4px;
   color: white;
@@ -458,6 +567,32 @@ table.multcol-list td {
 .hidden {
   display: none !important;
   visibility: hidden !important;
+}
+.collapsible-wrapper {
+  display: flex;
+  overflow: hidden;
+}
+.collapsible-wrapper:after {
+  content: '';
+  height: 50px;
+  transition: height 0.3s linear, max-height 0s 0.3s linear;
+  max-height: 0;
+}
+.collapsible {
+  transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
+  margin-bottom: 0;
+  max-height: 500px;
+}
+.collapsible-wrapper.collapsed > .collapsible {
+  margin-bottom: -500px;
+  transition: margin-bottom 0.3s cubic-bezier(1, 0, 1, 1), visibility 0s 0.3s, max-height 0s 0.3s;
+  visibility: hidden;
+  max-height: 0;
+}
+.collapsible-wrapper.collapsed:after {
+  height: 0;
+  transition: height 0.3s linear;
+  max-height: 50px;
 }
 .roles-list-container {
   column-count: 3;
@@ -517,17 +652,17 @@ table.multcol-list td {
 }
 .menutab.enabled {
   background-color: #b08b59;
-  color: #ffffff;
+  color: white;
 }
 .menutab.enabled:hover {
-  background: #ffffff;
+  background: white;
 }
 .menutab.enabled:hover a {
   color: #b08b59;
   text-decoration: none;
 }
 .menutab.enabled a {
-  color: #ffffff;
+  color: white;
   text-decoration: none;
 }
 .menutab.disabled {
@@ -551,11 +686,42 @@ td.tabblocks {
   padding-bottom: 0;
   margin-bottom: 0;
   background: #808080;
-  color: #ffffff;
+  color: white;
 }
 td.head {
   background: #808080;
 }
+/*
+ * these are used to override the browser's default decoration on
+ * links
+ */
+/*
+span.usabletab span.unusabletab span.mousedovertab {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    vertical-align: bottom;
+}
+
+span.usabletab a:link {
+    color: white;
+    text-decoration: none;
+}
+
+span.usabletab a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+span.mousedovertab a:link {
+    color: #002985;
+    text-decoration: none;
+}
+
+span.mousedovertab a:visited {
+    color: #002985;
+    text-decoration: none;
+}
+*/
 /*
  * attributes of the images used to draw the borders of the tabs
  */
@@ -571,68 +737,68 @@ img.tabborder {
 .border0010 {
   border-top: none;
   border-right: none;
-  border-bottom: solid #000000 1px;
+  border-bottom: solid black 1px;
   border-left: none;
 }
 .border0020 {
   border-top: none;
   border-right: none;
-  border-bottom: solid #000000 2px;
+  border-bottom: solid black 2px;
   border-left: none;
 }
 .border1111 {
-  border-top: solid #000000 1px;
-  border-right: solid #000000 1px;
-  border-bottom: solid #000000 1px;
-  border-left: solid #000000 1px;
+  border-top: solid black 1px;
+  border-right: solid black 1px;
+  border-bottom: solid black 1px;
+  border-left: solid black 1px;
 }
 .border1121 {
-  border-top: solid #000000 1px;
-  border-right: solid #000000 1px;
-  border-bottom: solid #000000 2px;
-  border-left: solid #000000 1px;
+  border-top: solid black 1px;
+  border-right: solid black 1px;
+  border-bottom: solid black 2px;
+  border-left: solid black 1px;
 }
 .border1211 {
-  border-top: solid #000000 1px;
-  border-right: solid #000000 2px;
-  border-bottom: solid #000000 1px;
-  border-left: solid #000000 1px;
+  border-top: solid black 1px;
+  border-right: solid black 2px;
+  border-bottom: solid black 1px;
+  border-left: solid black 1px;
 }
 .border1221 {
-  border-top: solid #000000 1px;
-  border-right: solid #000000 2px;
-  border-bottom: solid #000000 2px;
-  border-left: solid #000000 1px;
+  border-top: solid black 1px;
+  border-right: solid black 2px;
+  border-bottom: solid black 2px;
+  border-left: solid black 1px;
 }
 .border2111 {
-  border-top: solid #000000 2px;
-  border-right: solid #000000 1px;
-  border-bottom: solid #000000 1px;
-  border-left: solid #000000 1px;
+  border-top: solid black 2px;
+  border-right: solid black 1px;
+  border-bottom: solid black 1px;
+  border-left: solid black 1px;
 }
 .border2122 {
-  border-top: solid #000000 2px;
-  border-right: solid #000000 1px;
-  border-bottom: solid #000000 2px;
-  border-left: solid #000000 2px;
+  border-top: solid black 2px;
+  border-right: solid black 1px;
+  border-bottom: solid black 2px;
+  border-left: solid black 2px;
 }
 .border2211 {
-  border-top: solid #000000 2px;
-  border-right: solid #000000 2px;
-  border-bottom: solid #000000 1px;
-  border-left: solid #000000 1px;
+  border-top: solid black 2px;
+  border-right: solid black 2px;
+  border-bottom: solid black 1px;
+  border-left: solid black 1px;
 }
 .border2221 {
-  border-top: solid #000000 2px;
-  border-right: solid #000000 2px;
-  border-bottom: solid #000000 2px;
-  border-left: solid #000000 1px;
+  border-top: solid black 2px;
+  border-right: solid black 2px;
+  border-bottom: solid black 2px;
+  border-left: solid black 1px;
 }
 .border2222 {
-  border-top: solid #000000 2px;
-  border-right: solid #000000 2px;
-  border-bottom: solid #000000 2px;
-  border-left: solid #000000 2px;
+  border-top: solid black 2px;
+  border-right: solid black 2px;
+  border-bottom: solid black 2px;
+  border-left: solid black 2px;
 }
 /* ForgotPasswordResetForm.xsl */
 #revealPassword {

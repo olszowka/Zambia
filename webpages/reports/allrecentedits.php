@@ -196,7 +196,7 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='Days']/row">
         <xsl:variable name="days" select="@days" />
-        <div class="well well-success well-small">
+        <div class="well well-info well-small">
             <h3 class="text-center">
                 <xsl:text>Changes from </xsl:text>
                 <xsl:choose>
