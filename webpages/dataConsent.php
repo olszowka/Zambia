@@ -11,9 +11,9 @@ if (!populateCustomTextArray()) {
     exit();
 }
 require_once('PartCommonCode.php');
-participant_header($title, false, 'Consent');
+participant_header($title, false, 'Consent', true);
 if ($message_error != "") {
-    echo "<P class=\"alert alert-error\">$message_error</P>\n";
+    echo "<P class=\"alert alert-danger\">$message_error</P>\n";
 }
 if ($message != "") {
     echo "<P class=\"alert alert-success\">$message</P>\n";
@@ -21,24 +21,28 @@ if ($message != "") {
 $consent_message = fetchCustomText("consent");
 ?>
     
-<div class="row-fluid">
-	<div class="span12">
+<div class="container-fluid">
+	<div class="text-left">
 		<h3>Consent for collection and usage of your data entered into Zambia for <?php echo CON_NAME ?></h3>
 		<p><?php echo $consent_message ?></p>
 		
-		<form class="form-horizontal" name="consentform" method=POST action="SubmitConsent.php">
-			<fieldset>
-                <div id="update_section" class="control-group">
-                    <label for="consent" class="control-label">I, <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?> grant consent for data collection of my personal data:</label>
-                    <div class="controls">
-                    <select id="consent" name="consent" class="span2">
+		<form class="form-inline" name="consentform" method=POST action="SubmitConsent.php">
+                <div id="update_section" class="form-group">
+                    <label for="consent">I, <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?> grant consent for data collection of my personal data:&nbsp;</label>
+                </div>
+                <div class="form-group">
+                    <select id="consent" name="consent">
                         <option value=0 selected="selected">No</option>
                         <option value=1>Yes</option>
                     </select>
 				</div>
-			  </div>
-			</fieldset>
-            <button class="btn btn-primary" type="submit" name="submit" >Update</button>
+                <div class="form-group">
+                    &nbsp;&nbsp;
+                </div>
+                <div class="from-group">
+                    <button class="btn btn-primary" type="submit" name="submit" >Update</button>
+                </div>
+            </div>
 		</form>
 	</div>
 </div>
