@@ -72,7 +72,7 @@ if (may_I('Staff')) {
         $message_error = $message2 . "<br />Error retrieving data from DB.  No further execution possible.";
         RenderError($message_error);
     } else {
-        if ($data_consent == 0) {
+        if ($data_consent == 0 && REQUIRE_CONSENT == true) {
             require('dataConsent.php');
         } else {
             require('StaffPage.php');
@@ -83,7 +83,7 @@ if (may_I('Staff')) {
         $message_error = $message2 . "<br />Error retrieving data from DB.  No further execution possible.";
         RenderError($message_error);
     } else {
-        if ($data_consent == 0) {
+        if ($data_consent == 0 && REQUIRE_CONSENT == true) {
             require('dataConsent.php');
         } else {
             require('renderWelcome.php');

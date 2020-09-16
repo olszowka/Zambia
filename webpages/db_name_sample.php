@@ -62,4 +62,5 @@ define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag field
 // "TAG_OVER_TRACK" : Both fields are used, but primary sorting and filtering is by Tag.
 // "TRACK_OVER_TAG" : Both fields are used, but primary sorting and filtering is by Track.
 // "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
+define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all users
 ?>
