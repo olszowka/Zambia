@@ -11,7 +11,7 @@ participants, and rooms.
 * Includes interface to KonOpas (https://github.com/eemeli/konopas), a free tool for publishing the schedule to mobile devices
 
 ## Requirements
-* PHP 7.X (Tested on 7.0 & 7.2) (Should be able to run on PHP 5.6 if tweaked to use older version of Swift)
+* PHP 7.X (Tested on 7.0, 7.2 & 7.4)
   * XSLT library
   * Multibyte library
 * Apache (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
@@ -22,11 +22,12 @@ participants, and rooms.
 ## Built In Dependencies
 These libraries are included in the repo and should just work if you leave as is
 * Client Side
-  * Bootstrap 2.3.2
+  * Bootstrap 2.3.2 and Bootstrap 4.5.0 (transitioning page by page)
   * Choices 9.0.0
   * DataTables 1.10.16
-  * JQuery 1.7.2
+  * JQuery 1.7.2 and JQuery 3.5.1 (transitioning page by page)
   * JQueryUI 1.8.16
+  * tinyMCE 5.4.2
 * Server Side  
   * Swift mailer 5.4.8
   * Guzzle 6.5.3
