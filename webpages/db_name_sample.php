@@ -11,6 +11,7 @@ define("BRAINSTORM_EMAIL", "brain@somewhere.net");
 define("PROGRAM_EMAIL", "program@somewhere.net");
 define("CON_NUM_DAYS", 5); // code works for 1 - 8
 define("PHP_DEFAULT_TIMEZONE", "AMERICA/NEW_YORK"); // must be valid argument to php date_default_timezone_set()  Should correspond with DB configuration
+define("DB_DEFAULT_TIMEZONE", "US/Eastern"); // must be valid argument to set time_zone,  Should correspond with PHP configuration
 define("CON_START_DATIM", "2009-08-06 00:00:00"); // Broadly used.  Must be in mysql format: "YYYY-MM-DD HH:MM:SS" (HH:00-23) HH:MM:SS probably should be 00:00:00
 define("DAY_CUTOFF_HOUR", 8); // times before this hour (of 0-23) are considered previous day
 		// used for Participant Availability only
