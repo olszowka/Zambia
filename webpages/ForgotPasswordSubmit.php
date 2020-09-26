@@ -73,12 +73,13 @@ if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
 $ipaddressSQL = mysqli_real_escape_string($linki, $userIP);
+$selector = bin2hex(random_bytes(8));
 if (mysqli_num_rows($result) !== 1) {
     // record a non-valid request to help track issues
     $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
-    (badgeidentered, email, ipaddress, cancelled)
-    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', 2);
+    (badgeidentered, email, ipaddress, cancelled, selector)
+    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', 2, '$selector');
 EOD;
     if (!$result = mysqli_query_exit_on_error($query)) {
         exit;
@@ -91,7 +92,6 @@ EOD;
 list($pubsname, $badgename, $firstname, $lastname) = mysqli_fetch_array($result);
 mysqli_free_result($result);
 // Create tokens
-$selector = bin2hex(random_bytes(8));
 $token = random_bytes(32);
 
 $url = sprintf('%sForgotPasswordLink.php?%s', ROOT_URL, http_build_query([
