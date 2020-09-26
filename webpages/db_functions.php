@@ -256,6 +256,12 @@ function prepare_db_and_more() {
         RenderError("Con start date (CON_START_DATIM) not configured correctly. Further execution not possible.");
         return false; // Should have exited anyway
     }
+    if (DB_DEFAULT_TIMEZONE != "") {
+        $query = "SET time_zone = '" . DB_DEFAULT_TIMEZONE . "';";
+        mysqli_query_exit_on_error($query);
+    }
+
+
     return true;
 }
 
@@ -792,7 +798,7 @@ function isLoggedIn() {
     mysqli_free_result($result);
 
     $db_pass = $row[0];
-    
+
     if (!hash_equals($_SESSION['hashedPassword'], $db_pass)) {
     // kill incorrect session variables.
         unset($_SESSION['badgeid']);
