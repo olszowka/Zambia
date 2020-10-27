@@ -173,8 +173,8 @@ function validate_session() {
         return ($flag);
     }
     $i = strlen($session["title"]);
-    if ($i < 10 || $i > 48) {
-        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>48</b> characters.<br>\n";
+    if ($i < 10 || $i > 99) {
+        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>99</b> characters.<br>\n";
         $flag = false;
     }
     $i = strlen($session["progguiddesc"]);

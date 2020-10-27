@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Assigned Moderator by Session';
 $report['description'] = 'Shows who has been assigned to moderate each session (sorted by track then sessionid).';
 $report['categories'] = array(
-    'Events Reports' => 145,
+//  'Events Reports' => 145,
     'Programming Reports' => 145,
 );
 $report['queries'] = [];

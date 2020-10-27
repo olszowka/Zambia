@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Name Report';
 $report['description'] = 'Maps badgeid, pubsname, badgename and first and last name together (includes every record in the database regardless of status)';
 $report['categories'] = array(
-    'Events Reports' => 670,
+//  'Events Reports' => 670,
     'Participant Info Reports' => 670,
 );
 $report['columns'] = array(

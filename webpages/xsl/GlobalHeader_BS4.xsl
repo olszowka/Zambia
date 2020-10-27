@@ -24,7 +24,7 @@
                         </xsl:when>
                     </xsl:choose>
                     <div class="header-contents">
-                        <img src="images/Z_illuminated.jpg" alt="Zambia &quot;Z&quot; logo" class="d-none d-lg-block" />
+                        <img src="images/Philcon.png" alt="Zambia &quot;Z&quot; logo" class="d-none d-lg-block" />
                         <h1 class="d-none d-md-block">
                             <xsl:text>Zambia</xsl:text>
                             <span class="d-none d-lg-inline">

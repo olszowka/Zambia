@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Session Edit History Report ';
 $report['description'] = 'Show the most recent edit activity for each session (sorted by time).';
 $report['categories'] = array(
-    'Events Reports' => 90,
+//  'Events Reports' => 90,
     'Programming Reports' => 90,
 );
 $report['queries'] = [];

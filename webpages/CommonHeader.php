@@ -2,7 +2,7 @@
 //	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "", $bootstrap4 = false) {
     global $header_rendered;
-    if ($isLoggedIn && $loginPageStatus == 'Normal' && !may_I("Participant") && !may_I("Staff")) {
+    if ($isLoggedIn && ($loginPageStatus == 'Normal' || $loginPageStatus == 'Consent') && !may_I("Participant") && !may_I("Staff")) {
         $loginPageStatus = 'No_Permission';
     }
     $paramArray = array();

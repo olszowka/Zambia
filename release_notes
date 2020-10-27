@@ -1,0 +1,2 @@
+Set max title length from 48 to 99 in validation_functions.php
+set session default roomset to 8 (panel) in data_functions.php

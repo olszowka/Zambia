@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Session Edit History Report - All';
 $report['description'] = 'For each session, show the entire edit history.';
 $report['categories'] = array(
-    'Events Reports' => 85,
+//  'Events Reports' => 85,
     'Programming Reports' => 85,
 );
 $report['queries'] = [];

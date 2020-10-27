@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Assigned Session by Session (counts)';
 $report['description'] = 'How many people are assinged to each session? (Sorted by track then sessionid; Shows scheduled and unscheduled sessions which have anyone assigned)';
 $report['categories'] = array(
-    'Events Reports' => 155,
+//  'Events Reports' => 155,
     'Programming Reports' => 155,
 );
 $report['queries'] = [];

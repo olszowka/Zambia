@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Full Room Schedule by track then room then time';
 $report['description'] = 'Lists all Sessions Scheduled in all Rooms.';
 $report['categories'] = array(
-    'Events Reports' => 40,
+//  'Events Reports' => 40,
     'Programming Reports' => 40,
     'GOH Reports' => 40,
 );

@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Registration data dump';
 $report['description'] = 'Shows all participant information retreived from the registration system';
 $report['categories'] = array(
-    'Events Reports' => 500,
+//  'Events Reports' => 500,
     'Zambia Administration Reports' => 500,
     'Participant Info Reports' => 500,
 );

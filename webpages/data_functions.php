@@ -247,7 +247,7 @@ function set_session_defaults() {
     $session["atten"] = "";
     $session["kids"] = 2; // "Kids Welcome"
     $session["signup"] = false; // leave checkbox blank initially
-    $session["roomset"] = 0; // prompt with "SELECT"
+    $session["roomset"] = 8; // panel by default
     $session["notesforpart"] = "";
     $session["servnotes"] = "";
     $session["status"] = 6; // default to "Edit Me"
