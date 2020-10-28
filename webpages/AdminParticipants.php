@@ -44,22 +44,63 @@ if ($fbadgeid)
                 <input class="span12 disabled" id="badgeid" type="text" readonly="readonly" size="8" />
             </div>
         </div>
+        <?php if (USE_REG_SYSTEM === TRUE) {?>
         <div class="span3">
             <div class="newformlabel">
                 <label for="lname_fname" class="newformlabel">Last name, first name:</label>
             </div>
             <div class="newforminput">
-                <input class="span12 disabled" id="lname_fname" type="text" readonly="readonly" size="35" />
+                <input class="span12 disabled" id="lname_fname" type="text" readonly="readonly" size="30" />
             </div>
         </div>
+        <?php } else { ?>
+        <div class="span3">
+            <div class="newformlabel">
+                <label for="lastname" class="newformlabel">Last name:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="lastname" type="text" size="40" onchange="textChange('lastname');" onkeyup="textChange('lastname');" />
+            </div>
+        </div>
+        <div class="span3">
+            <div class="newformlabel">
+                <label for="firstname" class="newformlabel">First name:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="firstname" type="text" size="35" onchange="textChange('firstname');" onkeyup="textChange('firstname');"/>
+            </div>
+        </div>
+        <?php }; ?>
         <div class="span3">
             <div class="newformlabel">
                 <label for="bname" class="newformlabel">Badge name:</label>
             </div>
             <div class="newforminput">
-                <input class="span12 disabled" id="bname" type="text" readonly="readonly" size="12" />
+                <input class="span12 <?php if (USE_REG_SYSTEM === TRUE) { ?>disabled <?php }; ?>" id="bname" type="text" <?php if (USE_REG_SYSTEM === TRUE) { ?>readonly="readonly" <?php } else { ?> onchange="textChange('bname');" onkeyup="textChange('bname');" <?php }; ?> size="50" />
             </div>
         </div>
+        <?php if (USE_REG_SYSTEM === FALSE) { ?> 
+    </div>
+    <div class="row-fluid vert-sep-above">
+        <div class="span1">
+        </div>
+        <div class="span3">
+            <div class="newformlabel">
+                <label for="phone" class="newformlabel">Phone number:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="phone" type="text" size="100" onchange="textChange('phone');" onkeyup="textChange('phone');" />
+            </div>
+        </div>
+        <div class="span3">
+            <div class="newformlabel">
+                <label for="email" class="newformlabel">Email address:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="email" type="text" size="100" onchange="textChange('email');" onkeyup="textChange('email');"/>
+            </div>
+        </div>
+        <?php }; ?>
         <div class="span3">
             <div class="newformlabel">
                 <label for="pname" class="newformlabel">Name for publications:</label>
@@ -69,6 +110,64 @@ if ($fbadgeid)
             </div>
         </div>
     </div>
+    <?php if (USE_REG_SYSTEM === FALSE) { ?>
+    <div class="row-fluid vert-sep-above">
+        <div class="span1">
+        </div>
+        <div class="span3">
+            <div class="newformlabel">
+                <label for="postaddress1" class="newformlabel">Postal Address:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="postaddress1" type="text" size="100" onchange="textChange('postaddress1');" onkeyup="textChange('postaddress1');"/>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="newformlabel">
+                <label for="postaddress2" class="newformlabel">Postal Address Line 2:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="postaddress2" type="text" size="100" onchange="textChange('postaddress2');" onkeyup="textChange('postaddress2');" />
+            </div>
+        </div>
+        <div class="span2">
+            <div class="newformlabel">
+                <label for="postcity" class="newformlabel">City:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="postcity" type="text" size="50" onchange="textChange('postcity');" onkeyup="textChange('postcity');" />
+            </div>
+        </div>
+        <div class="span1">
+            <div class="newformlabel">
+                <label for="postzip" class="newformlabel">Zip Code:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="postzip" type="text" size="50" onchange="textChange('postzip');" onkeyup="textChange('postzip');" />
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid vert-sep-above">
+        <div class="span1">
+        </div>
+        <div class="span3">
+            <div class="newformlabel">
+                <label for="postcountry" class="newformlabel">Country:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12" id="postcountry" type="text" size="25" onchange="textChange('postcountry');" onkeyup="textChange('postcountry');"/>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="newformlabel">
+                <label for="regtype" class="newformlabel">Registration Type:</label>
+            </div>
+            <div class="newforminput">
+                <input class="span12 disabled" id="regtype" type="text" size="100" readonly="readonly" />
+            </div>
+        </div>
+    </div>
+    <?php }; ?>
     <div class="row-fluid vert-sep-above">
         <div class="span8 offset2 borderBox">
             <div class="control-group">
@@ -107,7 +206,7 @@ if ($fbadgeid)
             </div>
         </div>
     </div>
-<?php } ?>
+<?php }; ?>
     <div class="row-fluid vert-sep-above">
         <div class="span6">
             <div class="newformlabel">

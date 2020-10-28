@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Created by Peter Olszowka on 2011-07-24; Updated 2015-08-29
-	Copyright (c) 2011-2016 Peter Olszowka. All rights reserved.
+	Created by Peter Olszowka on 2011-07-24; Updated 2020-10-28 Syd Weinsteiin
+	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved.
 	See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

@@ -134,6 +134,13 @@ if (!$updateClause && !$valuesClause2 && !$credentialClause3 && !$congoUpdateCla
     exit();
 }
 if ($congoUpdateClause) {
+    mysqli_query_with_error_handling("INSERT INTO CongoDumpHistory (
+        badgeid,firstname,lastname,badgename,phone,email,postaddress1,postaddress2,
+        postcity,poststate,postzip,postcountry,regtype,loginid
+    )
+    SELECT badgeid,firstname,lastname,badgename,phone,email,postaddress1,postaddress2,
+        postcity,poststate,postzip,postcountry,regtype, \"" . $badgeid . "\" FROM CongoDump " . $query_end, true, true);
+
     mysqli_query_with_error_handling(($query4 . mb_substr($congoUpdateClause, 0, -2) . $query_end), true, true);
 }
 if ($updateClause) {

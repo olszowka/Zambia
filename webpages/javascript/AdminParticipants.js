@@ -2,6 +2,17 @@
 var bioDirty = false;
 var pnameDirty = false;
 var snotesDirty = false;
+var lastnameDirty = false;
+var firstnameDirty = false;
+var badgenameDirty = false;
+var phoneDirty = false;
+var emailDirty = false;
+var post1Dirty = false;
+var post2Dirty = false;
+var postcityDirty = false;
+var poststateDirty = false;
+var postzipDirty = false;
+var postcountryDirty = false;
 var originalInterested = 0;
 var fbadgeid;
 var resultsHidden = true;
@@ -10,8 +21,11 @@ function anyChange() {
 	var x = $("#password").val();
 	var y = $("#cpassword").val();
 	if (!x && !y && ($("#interested").val() != originalInterested || 
-			bioDirty || pnameDirty || snotesDirty) ||
-		(x && x == y) ) {
+		bioDirty || pnameDirty || snotesDirty || lastnameDirty || firstnameDirty ||
+		phoneDirty || emailDirty || post1Dirty || post2Dirty ||
+		postcityDirty || poststateDirty || postzipDirty || postcountryDirty ||
+		badgenameDirty) ||
+		(x && x == y) ) { 
 			$("#updateBUTN").prop("disabled", false);
 			}
 		else {
@@ -27,7 +41,10 @@ function anyChange() {
 function checkIfDirty(mode) {
 	//called when user clicks "Search for participants" on the page
 	//debugger;
-	if (!mode && (bioDirty || pnameDirty || snotesDirty || 
+	if (!mode && (bioDirty || pnameDirty || snotesDirty || lastnameDirty || firstnameDirty ||
+		phoneDirty || emailDirty || post1Dirty || post2Dirty ||
+		postcityDirty || poststateDirty || postzipDirty || postcountryDirty ||
+		badgenameDirty ||
 		$("#interested").val() != originalInterested ||
 		($("#password").val()) && 
 			$("#cpassword").val())) {
@@ -52,6 +69,28 @@ function chooseParticipant(badgeid, override) {
 	var badgeidJQSel = badgeid.replace(/[']/g,"\\'").replace(/["]/g,'\\"');
 	hideSearchResults();
 	$("#badgeid").val($("#bidSPAN_" + badgeidJQSel).html());
+	var lastname = $("#lastnameHID_" + badgeidJQSel).val();
+	$("#lastname").val(lastname).prop("defaultValue", lastname).prop("readOnly", false);
+	var firstname = $("#firstnameHID_" + badgeidJQSel).val();
+	$("#firstname").val(firstname).prop("defaultValue", firstname).prop("readOnly", false);
+	var phone = $("#phoneHID_" + badgeidJQSel).val();
+	$("#phone").val(phone).prop("defaultValue", phone).prop("readOnly", false);
+	var email = $("#emailHID_" + badgeidJQSel).val();
+	$("#email").val(email).prop("defaultValue", email).prop("readOnly", false);
+	var postaddress1 = $("#postaddress1HID_" + badgeidJQSel).val();
+	$("#postaddress1").val(postaddress1).prop("defaultValue", postaddress1).prop("readOnly", false);
+	var postaddress2 = $("#postaddress2HID_" + badgeidJQSel).val();
+	$("#postaddress2").val(postaddress2).prop("defaultValue", postaddress2).prop("readOnly", false);
+	var postcity = $("#postcityHID_" + badgeidJQSel).val();
+	$("#postcity").val(postcity).prop("defaultValue", postcity).prop("readOnly", false);
+	var poststate = $("#poststateHID_" + badgeidJQSel).val();
+	$("#poststate").val(poststate).prop("defaultValue", poststate).prop("readOnly", false);
+	var postzip = $("#postzipHID_" + badgeidJQSel).val();
+	$("#postzip").val(postzip).prop("defaultValue", postzip).prop("readOnly", false);
+	var postcountry = $("#postcountryHID_" + badgeidJQSel).val();
+	$("#postcountry").val(postcountry).prop("defaultValue", postcountry).prop("readOnly", false);
+	var regtype = $("#regtypeHID_" + badgeidJQSel).val();
+	$("#regtype").val(regtype).prop("readOnly", true);
 	$("#lname_fname").val($("#lnameSPAN_" + badgeidJQSel).html());
 	$("#bname").val($("#bnameSPAN_" + badgeidJQSel).html());
 	var pname = $("#pnameSPAN_" + badgeidJQSel).html();
@@ -70,6 +109,17 @@ function chooseParticipant(badgeid, override) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
+	lastnameDirty = false;
+	firstnameDirty = false;
+	badgenameDirty = false;
+	phoneDirty = false;
+	emailDirty = false;
+	post1Dirty = false;
+	post2Dirty = false;
+	postcityDirty = false;
+	poststateDirty = false;
+	postzipDirty = false;
+	postcountryDirty = false;
 	$('#resultsDiv').show();
 	$("#updateBUTN").prop("disabled", true);
 	$("#resultBoxDIV").html("").hide();
@@ -113,7 +163,17 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
 	//debugger;
 	var node=data.firstChild.firstChild.firstChild;
 	$("#badgeid").val(node.getAttribute("badgeid"));
-	$("#lname_fname").val(node.getAttribute("lastname")+", "+node.getAttribute("firstname"));
+	$("#lname_fname").val(node.getAttribute("lastname") + ", " + node.getAttribute("firstname"));
+	$("#lastname").val(node.getAttribute("lastname")).prop("defaultValue", node.getAttribute("lastname")).prop("readOnly", false);
+	$("#firstname").val(node.getAttribute("firstname")).prop("defaultValue", node.getAttribute("firstname")).prop("readOnly", false);
+	$("#phone").val(node.getAttribute("phone")).prop("defaultValue", node.getAttribute("phone")).prop("readOnly", false);
+	$("#email").val(node.getAttribute("email")).prop("defaultValue", node.getAttribute("email")).prop("readOnly", false);
+	$("#postaddress1").val(node.getAttribute("postaddress1")).prop("defaultValue", node.getAttribute("postaddress1")).prop("readOnly", false);
+	$("#postaddress2").val(node.getAttribute("postaddress2")).prop("defaultValue", node.getAttribute("postaddress2")).prop("readOnly", false);
+	$("#postcity").val(node.getAttribute("postcity")).prop("defaultValue", node.getAttribute("postcity")).prop("readOnly", false);
+	$("#poststate").val(node.getAttribute("poststate")).prop("defaultValue", node.getAttribute("poststate")).prop("readOnly", false);
+	$("#postzip").val(node.getAttribute("postzip")).prop("defaultValue", node.getAttribute("postzip")).prop("readOnly", false);
+	$("#postcountry").val(node.getAttribute("postcountry")).prop("defaultValue", node.getAttribute("postcountry")).prop("readOnly", false);
 	$("#bname").val(node.getAttribute("badgename"));
 	$("#pname").val(node.getAttribute("pubsname")).prop("defaultValue", node.getAttribute("pubsname")).prop("readOnly", false);
 	originalInterested = node.getAttribute("interested");
@@ -130,6 +190,17 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
+	lastnameDirty = false;
+	firstnameDirty = false;
+	badgenameDirty = false;
+	phoneDirty = false;
+	emailDirty = false;
+	post1Dirty = false;
+	post2Dirty = false;
+	postcityDirty = false;
+	poststateDirty = false;
+	postzipDirty = false;
+	postcountryDirty = false;
 	$('#resultsDiv').show();
 	$('#resultBoxDIV').show();
 	$("#updateBUTN").prop("disabled", true);	
@@ -182,6 +253,17 @@ function showUpdateResults(data, textStatus, jqXHR) {
 	bioDirty = false;
 	pnameDirty = false;
 	snotesDirty = false;
+	lastnameDirty = false;
+	firstnameDirty = false;
+	badgenameDirty = false;
+	phoneDirty = false;
+	emailDirty = false;
+	post1Dirty = false;
+	post2Dirty = false;
+	postcityDirty = false;
+	poststateDirty = false;
+	postzipDirty = false;
+	postcountryDirty = false;
 	$("#password").val("");
 	$("#cpassword").val("");
 	$('#updateBUTN').button('reset');
@@ -201,6 +283,39 @@ function textChange(which) {
 			break;
 		case 'pname':
 			pnameDirty = ($("#pname").val() != $("#pname").prop("defaultValue"));
+			break;
+		case 'lastname':
+			lastnameDirty = ($("#lastname").val() != $("#lastname").prop("defaultValue"));
+			break;
+		case 'firstname':
+			firstnameDirty = ($("#firstname").val() != $("#lastname").prop("defaultValue"));
+			break;
+		case 'bname':
+			badgenameDirty = ($("#bname").val() != $("#bname").prop("defaultValue"));
+			break;
+		case 'phone':
+			phoneDirty = ($("#phone").val() != $("#phone").prop("defaultValue"));
+			break;
+		case 'email':
+			emailDirty = ($("#email").val() != $("#email").prop("defaultValue"));
+			break;
+		case 'postaddress1':
+			post1Dirty = ($("#postaddress1").val() != $("#postaddress1").prop("defaultValue"));
+			break;
+		case 'postaddress2':
+			post2Dirty = ($("#postaddress2").val() != $("#postaddress2").prop("defaultValue"));
+			break;
+		case 'postcity':
+			postcityDirty = ($("#postcity").val() != $("#postcity").prop("defaultValue"));
+			break;
+		case 'poststate':
+			poststateDirty = ($("#poststate").val() != $("#poststate").prop("defaultValue"));
+			break;
+		case 'postzip':
+			postzipDirty = ($("#postzip").val() != $("#postzip").prop("defaultValue"));
+			break;
+		case 'poststate':
+			postcountryDirty = ($("#postcountry").val() != $("#postcountry").prop("defaultValue"));
 			break;
 		}
 	anyChange();
@@ -229,6 +344,28 @@ function updateBUTN() {
 		postdata.staffnotes = $("#staffnotes").val();
 	if ($("#interested").val() != originalInterested)
 		postdata.interested = $("#interested").val();
+	if (lastnameDirty)
+		postdata.lastname = $("#lastname").val();
+	if (firstnameDirty)
+		postdata.firstname = $("#firstname").val();
+	if (badgenameDirty)
+		postdata.bname = $("#bname").val();
+	if (phoneDirty)
+		postdata.phone = $("#phone").val();
+	if (emailDirty)
+		postdata.email = $("#email").val();
+	if (post1Dirty)
+		postdata.postaddress1 = $("#postaddress1").val();
+	if (post2Dirty)
+		postdata.postaddress2 = $("#postaddress2").val();
+	if (postcityDirty)
+		postdata.postcity = $("#postcity").val();
+	if (poststateDirty)
+		postdata.poststate = $("#poststate").val();
+	if (postzipDirty)
+		postdata.postzip = $("#postzip").val();
+	if (postcountryDirty)
+		postdata.postcountry = $("#postcountry").val();
 	$.ajax({
 		url: "SubmitAdminParticipants.php",
 		dataType: "html",
