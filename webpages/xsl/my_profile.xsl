@@ -15,6 +15,7 @@
     <xsl:variable name="bestway"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bestway"/></xsl:variable>
     <xsl:variable name="bioNote"><xsl:value-of select="/doc/customText/@biography_note"/></xsl:variable>
     <xsl:variable name="regURL"><xsl:value-of select="/doc/options/@reg_url"/></xsl:variable>
+    <xsl:variable name="enable_reg_edit"><xsl:value-of select="/doc/options/@enable_reg_edit"/></xsl:variable>
     <script type="text/javascript">var maxBioLen = <xsl:value-of select="/doc/options/@maxBioLen"/>;</script>
     <div class="alert-block" id="resultBoxDIV">
       <span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.
@@ -232,73 +233,232 @@
                 </div>
               </div>
           </xsl:if>
-            <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN" data-loading-text="Updating..." onclick="myProfile.updateBUTN();">Update</button>
+          <xsl:if test="$enable_reg_edit='1'">
             <div id="congo_section">
-        		  <fieldset>
-          			<legend>Data from Registration System</legend>
-          			<div class="row-fluid">
-            			<div class="pull-left span5">
+              <fieldset>
+                <legend>Contact Information</legend>
+                <div class="row-fluid">
+                  <div class="pull-left span5">
                     <div class="congo_table">
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Badge ID</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgeid"/></span>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Badge ID</span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgeid"/>
+                        </span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">First Name</span>
+                        <div class="controls">
+                          <input type="text" size="30" name="firstname" value="{/doc/query[@queryName='participant_info']/row/@firstname}"
+                              id="firstname" onchange="myProfile.anyChange('firstname')" onkeyup="myProfile.anyChange('firstname')"
+                              class="userFormINPTXT">
+                          </input>
                         </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">First Name</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@firstname"/></span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Last Name</span>
+                        <div class="controls">
+                          <input type="text" size="40" name="lastname" value="{/doc/query[@queryName='participant_info']/row/@lastname}"
+                              id="lastname" onchange="myProfile.anyChange('lastname')" onkeyup="myProfile.anyChange('lastname')"
+                              class="userFormINPTXT">
+                          </input>
                         </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Last Name</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@lastname"/></span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Badge Name</span>
+                        <div class="controls">
+                          <input type="text" size="50" name="badgename" value="{/doc/query[@queryName='participant_info']/row/@badgename}"
+                              id="badgename" onchange="myProfile.anyChange('badgename')" onkeyup="myProfile.anyChange('badgename')"
+                              class="userFormINPTXT">
+                          </input>
                         </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Badge Name</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgename"/></span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Phone Info</span>
+                        <div class="controls">
+                          <input type="text" size="100" name="phone" value="{/doc/query[@queryName='participant_info']/row/@phone}"
+                              id="phone" onchange="myProfile.anyChange('phone')" onkeyup="myProfile.anyChange('phone')"
+                              class="userFormINPTXT">
+                          </input>
                         </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Phone Info</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@phone"/></span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Email Address</span>
+                        <div class="controls">
+                          <input type="text" size="100" name="email" value="{/doc/query[@queryName='participant_info']/row/@email}"
+                              id="email" onchange="myProfile.anyChange('email')" onkeyup="myProfile.anyChange('email')"
+                              class="userFormINPTXT">
+                          </input>
                         </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Email Address</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@email"/></span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Postal Address</span>
+                        <div class="controls">
+                          <input type="text" size="100" name="postaddress1" value="{/doc/query[@queryName='participant_info']/row/@postaddress1}"
+                              id="postaddress1" onchange="myProfile.anyChange('postaddress1')" onkeyup="myProfile.anyChange('postaddress1')"
+                              class="userFormINPTXT">
+                          </input>
                         </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Postal Address</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postaddress1"/></span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4"> </span>
+                        <div class="controls">
+                          <input type="text" size="100" name="postaddress2" value="{/doc/query[@queryName='participant_info']/row/@postaddress2}"
+                              id="postaddress2" onchange="myProfile.anyChange('postaddress2')" onkeyup="myProfile.anyChange('postaddress2')"
+                              class="userFormINPTXT">
+                          </input>
                         </div>
-                        <xsl:if test="/doc/query[@queryName='participant_info']/row/@postaddress2">
-                            <div class="congo_data row-fluid">
-                                <span class="label span4"><xsl:text disable-output-escaping="yes">Postal Address</xsl:text></span>
-                                <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postaddress2"/></span>
-                            </div>
-                        </xsl:if>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4"><xsl:text disable-output-escaping="yes">Postal City</xsl:text></span>
-                            <span class="value span7">
-								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcity"/>,
-								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@poststate"/>
-								<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postzip"/>
-							</span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">
+                          <xsl:text disable-output-escaping="yes">Postal City</xsl:text>
+                        </span>
+                        <div class="controls">
+                          <input type="text" size="50" name="postcity" value="{/doc/query[@queryName='participant_info']/row/@postcity}"
+                              id="postcity" onchange="myProfile.anyChange('postcity')" onkeyup="myProfile.anyChange('postcity')"
+                              class="userFormINPTXT">
+                          </input>
                         </div>
-                        <xsl:if test="/doc/query[@queryName='participant_info']/row/@postcountry">
-                            <div class="congo_data row-fluid">
-                                <span class="label span4"><xsl:text disable-output-escaping="yes">Postal Country</xsl:text></span>
-                                <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcountry"/></span>
-                            </div>
-                        </xsl:if>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">
+                          <xsl:text disable-output-escaping="yes">Postal State</xsl:text>
+                        </span>
+                        <div class="controls">
+                          <input type="text" size="25" name="poststate" value="{/doc/query[@queryName='participant_info']/row/@poststate}"
+                              id="poststate" onchange="myProfile.anyChange('poststate')" onkeyup="myProfile.anyChange('poststate')"
+                              class="userFormINPTXT">
+                          </input>
+                        </div>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">
+                          <xsl:text disable-output-escaping="yes">Postal Zip</xsl:text>
+                        </span>
+                        <div class="controls">
+                          <input type="text" size="10" name="postzip" value="{/doc/query[@queryName='participant_info']/row/@postzip}"
+                              id="postzip" onchange="myProfile.anyChange('postzip')" onkeyup="myProfile.anyChange('postzip')"
+                              class="userFormINPTXT">
+                          </input>
+                        </div>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">
+                          <xsl:text disable-output-escaping="yes">Postal Country</xsl:text>
+                        </span>
+                        <div class="controls">
+                          <input type="text" size="10" name="postcountry" value="{/doc/query[@queryName='participant_info']/row/@postcountry}"
+                              id="postcountry" onchange="myProfile.anyChange('postcountry')" onkeyup="myProfile.anyChange('postcountry')"
+                              class="userFormINPTXT">
+                          </input>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="pull-left span7">
-                    <p class="congo_table">Please confirm your contact information.  If it is not correct, please log into <xsl:value-of select="$conName"/>'s
-                        <a href="{$regURL}" target="_blank">on-line registration system</a> and correct it there.
-                        Please note that the password there is <span style="font-weight: bold">not the same</span> as the one you use
-                        in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>
+                    <p class="congo_table">
+                      Please confirm your contact information.  Please provide missing information or correct what has changed.
+                    </p>
                   </div>
                 </div>
-        		  </fieldset>
+              </fieldset>
             </div>
+          </xsl:if>
+            <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN" data-loading-text="Updating..." onclick="myProfile.updateBUTN();">Update</button>
+          <xsl:if test="$enable_reg_edit!='1'">
+            <div id="congo_section">
+              <fieldset>
+                <legend>Data from Registration System</legend>
+                <div class="row-fluid">
+                  <div class="pull-left span5">
+                    <div class="congo_table">
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Badge ID</span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgeid"/>
+                        </span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">First Name</span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@firstname"/>
+                        </span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Last Name</span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@lastname"/>
+                        </span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Badge Name</span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgename"/>
+                        </span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Phone Info</span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@phone"/>
+                        </span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Email Address</span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@email"/>
+                        </span>
+                      </div>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">Postal Address</span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postaddress1"/>
+                        </span>
+                      </div>
+                      <xsl:if test="/doc/query[@queryName='participant_info']/row/@postaddress2">
+                        <div class="congo_data row-fluid">
+                          <span class="label span4">
+                            <xsl:text disable-output-escaping="yes">Postal Address</xsl:text>
+                          </span>
+                          <span class="value span7">
+                            <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postaddress2"/>
+                          </span>
+                        </div>
+                      </xsl:if>
+                      <div class="congo_data row-fluid">
+                        <span class="label span4">
+                          <xsl:text disable-output-escaping="yes">Postal City</xsl:text>
+                        </span>
+                        <span class="value span7">
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcity"/>,
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@poststate"/>
+                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postzip"/>
+                        </span>
+                      </div>
+                      <xsl:if test="/doc/query[@queryName='participant_info']/row/@postcountry">
+                        <div class="congo_data row-fluid">
+                          <span class="label span4">
+                            <xsl:text disable-output-escaping="yes">Postal Country</xsl:text>
+                          </span>
+                          <span class="value span7">
+                            <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcountry"/>
+                          </span>
+                        </div>
+                      </xsl:if>
+                    </div>
+                  </div>
+                  <div class="pull-left span7">
+                    <p class="congo_table">
+                      Please confirm your contact information.  If it is not correct, please log into <xsl:value-of select="$conName"/>'s
+                      <a href="{$regURL}" target="_blank">on-line registration system</a> and correct it there.
+                      Please note that the password there is <span style="font-weight: bold">not the same</span> as the one you use
+                      in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.
+                    </p>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </xsl:if>
         </form>
       </div>
     </div>

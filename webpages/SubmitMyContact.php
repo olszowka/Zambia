@@ -92,10 +92,49 @@ foreach ($_POST as $name => $value) {
             break;
     }
 }
-if (!$updateClause && !$valuesClause2 && !$credentialClause3) {
+$query4 = "UPDATE CongoDump SET ";
+$congoUpdateClause = "";
+if (isset($_POST['firstname'])) {
+    $congoUpdateClause .= "firstname=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['firstname'])) . "\", ";
+}
+if (isset($_POST['lastname'])) {
+    $congoUpdateClause .= "lastname=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['lastname'])) . "\", ";
+}
+if (isset($_POST['badgename'])) {
+    $congoUpdateClause .= "badgename=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['badgename'])) . "\", ";
+}
+if (isset($_POST['phone'])) {
+    $congoUpdateClause .= "phone=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['phone'])) . "\", ";
+}
+if (isset($_POST['email'])) {
+    $congoUpdateClause .= "email=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['email'])) . "\", ";
+}
+if (isset($_POST['postaddress1'])) {
+    $congoUpdateClause .= "postaddress1=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['postaddress1'])) . "\", ";
+}
+if (isset($_POST['postaddress2'])) {
+    $congoUpdateClause .= "postaddress2=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['postaddress2'])) . "\", ";
+}
+if (isset($_POST['postcity'])) {
+    $congoUpdateClause .= "postcity=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['postcity'])) . "\", ";
+}
+if (isset($_POST['poststate'])) {
+    $congoUpdateClause .= "poststate=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['poststate'])) . "\", ";
+}
+if (isset($_POST['postzip'])) {
+    $congoUpdateClause .= "postzip=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['postzip'])) . "\", ";
+}
+if (isset($_POST['postcountry'])) {
+    $congoUpdateClause .= "postcountry=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['postcountry'])) . "\", ";
+}
+
+if (!$updateClause && !$valuesClause2 && !$credentialClause3 && !$congoUpdateClause) {
     $message_error = "No data found to change.  Database not updated.";
     RenderErrorAjax($message_error);
     exit();
+}
+if ($congoUpdateClause) {
+    mysqli_query_with_error_handling(($query4 . mb_substr($congoUpdateClause, 0, -2) . $query_end), true, true);
 }
 if ($updateClause) {
     mysqli_query_with_error_handling(($query . mb_substr($updateClause, 0, -2) . $query_end), true, true);
@@ -110,6 +149,9 @@ echo("<span class=\"alert alert-success\">");
 if (!empty($password)) {
     echo "Password updated. ";
     $_SESSION['hashedPassword'] = $hashedPassword;
+}
+if (USE_REG_SYSTEM === FALSE) {
+
 }
 echo("Database updated successfully. </span>\n");
 if ($pubsname)

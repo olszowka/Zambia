@@ -88,6 +88,28 @@ function MyProfile() {
 					postdata.bestway = "Phone";
 		if (dirtyInputArr["pubsname"])
 			postdata.pubsname = $("#pubsname").val();
+		if (dirtyInputArr["firstname"])
+			postdata.firstname = $("#firstname").val();
+		if (dirtyInputArr["lastname"])
+			postdata.lastname = $("#lastname").val();
+		if (dirtyInputArr["badgename"])
+			postdata.badgename = $("#badgename").val();
+		if (dirtyInputArr["phone"])
+			postdata.phone = $("#phone").val();
+		if (dirtyInputArr["email"])
+			postdata.email = $("#email").val();
+		if (dirtyInputArr["postaddress1"])
+			postdata.postaddress1 = $("#postaddress1").val();
+		if (dirtyInputArr["postaddress2"])
+			postdata.postaddress2 = $("#postaddress2").val();
+		if (dirtyInputArr["postcity"])
+			postdata.postcity = $("#postcity").val();
+		if (dirtyInputArr["poststate"])
+			postdata.poststate = $("#poststate").val();
+		if (dirtyInputArr["postzip"])
+			postdata.postzip = $("#postzip").val();
+		if (dirtyInputArr["postcountry"])
+			postdata.postcountry = $("#postcountry").val();
 		$('[id^="credentialCHK"]').each( function() {
 			var id = $(this).attr("id");
 			if (dirtyInputArr[id])
