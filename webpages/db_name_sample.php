@@ -64,4 +64,7 @@ define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag field
 // "TRACK_OVER_TAG" : Both fields are used, but primary sorting and filtering is by Track.
 // "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
 define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all users
+define("USE_REG_SYSTEM", FALSE);
+// True -> Users loaded from reg system into CongoDump, users cannot edit
+// False -> Script loads to CongoDump, users can edi
 ?>
