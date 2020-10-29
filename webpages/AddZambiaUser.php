@@ -88,7 +88,8 @@ EOD;
 						$message .= "<br>Set Override to Yes to add this user anyway";
 						$paramArray["override"] = "0";
 					}
-                } else {
+                }
+                if ($message == "") {
 					$passwordhash = password_hash(trim($_POST['firstname']), PASSWORD_DEFAULT);
 					$badgeid = $_POST["badgeid"];
 
