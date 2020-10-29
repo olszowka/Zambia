@@ -28,8 +28,8 @@ EOD;
 			$param_repeat_arr = array();
 
 			foreach ($_POST as $key => $value) {
-				if (substr($key, 0, strlen($prefix)) == "select_phase_") {
-					$phaseid = substr($key, strlen($prefix));
+				if (mb_substr($key, 0, strlen($prefix)) == "select_phase_") {
+					$phaseid = mb_substr($key, strlen($prefix));
 
 					if ($priorValues[$phaseid] != $value) {
 						$param_arr = array();

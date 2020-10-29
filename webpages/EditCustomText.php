@@ -25,7 +25,7 @@ if (isLoggedIn() && may_I("Administrator")) {
 			if ($selected != '') {
 
 				$textcontents = $_POST["textcontents"];
-				if (substr($textcontents, 0, 3) == '<p>') {
+				if (mb_substr($textcontents, 0, 3) == '<p>') {
 					$textcontents = mb_ereg_replace('/^<p>/i', '', $textcontents);
 					$textcontents = mb_ereg_replace('/<\/p>\s*$/i', '', $textcontents);
 				}

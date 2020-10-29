@@ -214,7 +214,7 @@ EOD;
 	if ($last_badgeid == "")
         $last_badgeid = REG_PART_PREFIX . "1000";
 
-	$id = substr($last_badgeid, strlen(REG_PART_PREFIX));
+	$id = mb_substr($last_badgeid, strlen(REG_PART_PREFIX));
 	$new_badgeid = REG_PART_PREFIX . strval($id + 1);
 
     $query=<<<EOD
