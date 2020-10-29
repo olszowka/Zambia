@@ -5,6 +5,7 @@ $title = "Administer Phases";
 require_once('StaffCommonCode.php');
 $message = "";
 $rows = 0;
+$resultXML = "";
 staff_header($title);
 if (isLoggedIn() && may_I("AdminPhases")) {
 	if (isset($_POST["PostCheck"])) {

@@ -67,4 +67,7 @@ define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all use
 define("USE_REG_SYSTEM", FALSE);
 // True -> Users loaded from reg system into CongoDump, users cannot edit
 // False -> Script loads to CongoDump, users can edi
+// staff default regtype, only needed for USE_REG_SYSTEM = FALSE
+define("REG_STAFF_DEFAULT", "StaffComp");
+define("REG_PART_DEFAULT", "ParticipantComp");
 ?>

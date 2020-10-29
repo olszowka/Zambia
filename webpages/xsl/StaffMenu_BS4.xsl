@@ -7,6 +7,7 @@
   <xsl:param name="title" select="''" />
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
+  <xsl:param name="adduser" select="''"/>
   <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
@@ -109,6 +110,9 @@
                 </xsl:if>
                 <xsl:if test="$Administrator">
                   <a class="dropdown-item" href="EditCustomText.php">Edit Custom Text</a>
+                </xsl:if>
+                <xsl:if test="$adduser">
+                  <a class="dropdown-item" href="AddZambiaUser.php">Add Zambia User</a>
                 </xsl:if>
               </div>
             </div>
