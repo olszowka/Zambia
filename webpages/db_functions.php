@@ -71,6 +71,35 @@ function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
 	return $rows;
 }
 
+function mysql_prepare_query_XML($query_array, $parmtype_array, $param_array) {
+	global $linki, $message_error;
+	$xml = new DomDocument("1.0", "UTF-8");
+	$doc = $xml -> createElement("doc");
+	$doc = $xml -> appendChild($doc);
+    foreach ($query_array as $name=>$query) {
+        $query = trim($query);
+        $parama = $param_array[$name];
+        $params = $parmtype_array[$name];
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, $params, $parama);
+        $queryNode = $xml -> createElement("query");
+        $queryNode = $doc -> appendChild($queryNode);
+        $queryNode->setAttribute("queryName", $name);
+        if ($result !== false) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $rowNode = $xml->createElement("row");
+                $rowNode = $queryNode->appendChild($rowNode);
+                foreach ($row as $fieldname => $fieldvalue) {
+                    if ($fieldvalue !== "" && $fieldvalue !== null) {
+                        $rowNode->setAttribute($fieldname, $fieldvalue);
+                    }
+                }
+            }
+        }
+        mysqli_free_result($result);
+    }
+	return $xml;
+}
+
 function mysql_query_XML($query_array) {
 	global $linki, $message_error;
 	$xml = new DomDocument("1.0", "UTF-8");

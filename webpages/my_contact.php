@@ -4,7 +4,7 @@
     $title="My Profile";
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
-    $queryArray["participant_info"]=<<<EOD
+    $queryArray["participant_info"] = <<<EOD
 SELECT
 		CD.badgeid, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email,
 			CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
@@ -14,17 +14,23 @@ SELECT
 			CongoDump CD
 	   JOIN Participants P USING (badgeid)
     WHERE
-        CD.badgeid="$badgeid";
+        CD.badgeid=?;
 EOD;
-	$queryArray["credentials"]=<<<EOD
+	$param_array["participant_info"] = array($badgeid);
+	$type_array["participant_info"] = "s";
+
+	$queryArray["credentials"] = <<<EOD
 SELECT
 		CR.credentialid, CR.credentialname, CR.display_order, PHC.badgeid
 	FROM
 			Credentials CR
 	   LEFT JOIN ParticipantHasCredential PHC ON CR.credentialid = PHC.credentialid
-			AND PHC.badgeid="$badgeid";
+			AND PHC.badgeid=?;
 EOD;
-	if (($resultXML=mysql_query_XML($queryArray))===false) {
+	$param_array["credentials"] = array($badgeid);
+	$type_array["credentials"] = "s";
+
+	if (($resultXML=mysql_prepare_query_XML($queryArray, $type_array, $param_array))===false) {
 	    RenderError($message_error);
         exit();
         }

@@ -5,11 +5,11 @@ require_once('StaffCommonCode.php');
 // gets data for a participant to be displayed.  Returns as XML
 function fetch_participant() {
     global $message_error;
-    $fbadgeid = getInt("badgeid");
+    $fbadgeid = getString("badgeid");
     if (!$fbadgeid) {
         exit();
     }
-    $query["fetchParticipants"] = <<<EOD
+    $query = <<<EOD
 SELECT
         P.badgeid, P.pubsname, P.interested, P.bio, P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
         CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry, CD.regtype
@@ -17,11 +17,13 @@ SELECT
 			 Participants P
 		JOIN CongoDump CD ON P.badgeid = CD.badgeid
     WHERE
-        P.badgeid = "$fbadgeid"
+        P.badgeid = ?
     ORDER BY
         CD.lastname, CD.firstname
 EOD;
-    $resultXML = mysql_query_XML($query);
+    $param_arr = array($fbadgeid);
+    $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
+    $resultXML = mysql_result_to_XML("fetchParticipants", $result);
     if (!$resultXML) {
         RenderErrorAjax($message_error);
         exit();
@@ -33,7 +35,7 @@ EOD;
 
 function update_participant() {
     global $linki, $message_error;
-    $partid = mysqli_real_escape_string($linki, getString("badgeid"));
+    $partid = getString("badgeid");
     $password = getString("password");
     $biodirty = isset($_POST["bio"]);
     $bio = getString("bio");
@@ -66,28 +68,48 @@ function update_participant() {
     $postcountry = getString("postcountry");
 
 
-    $query_end = " WHERE badgeid = '$partid';";
+    $query_end = " WHERE badgeid = ?;";
 
     if ($password || $biodirty || $pubsnamedirty || $staffnotesdirty || $interested)  {
          $query = "UPDATE Participants SET ";
+         $update_arr = array();
+         $updateStr = "s";
         if ($password) {
-            $query .= "password=\"" . password_hash($password, PASSWORD_DEFAULT) . "\", ";
+            $query .= "password=?, ";
+            array_push($update_arr, password_hash($password, PASSWORD_DEFAULT));
+            $updateStr .= "s";
         }
         if ($biodirty) {
-            $query .= "bio=\"" . mysqli_real_escape_string($linki, $bio) . "\", ";
+            $query .= "bio=?, ";
+            array_push($update_arr, $bio);
+            $updateStr .= "s";
         }
         if ($pubsnamedirty) {
-            $query .= "pubsname=\"" . mysqli_real_escape_string($linki, $pubsname) . "\", ";
+            $query .= "pubsname=?, ";
+            array_push($update_arr, $pubsname);
+            $updateStr .= "s";
         }
         if ($staffnotesdirty) {
-            $query .= "staff_notes=\"" . mysqli_real_escape_string($linki, $staffnotes) . "\", ";
+            $query .= "staff_notes=?, ";
+            array_push($update_arr, $staffnotes);
+            $updateStr .= "s";
         }
         if ($interested) {
-            $query .= "interested=" . mysqli_real_escape_string($linki, $interested) . ", ";
+            $query .= "interested=?, ";
+            array_push($update_arr, $interested);
+            $updateStr .= "s";
         }
         $query = mb_substr($query, 0, -2); //drop two characters at end: ", "
         $query .= $query_end;
-        if (!mysqli_query_with_error_handling($query)) {
+        array_push($update_arr, $partid);
+        $rows = mysql_cmd_with_prepare($query, $updateStr, $update_arr);
+        if (is_null($rows)) {
+            $message_error .= "Failed updating participation record, seek assistance.";
+            RenderErrorAjax($message_error);
+            return;
+        } else if ($rows < 0) {
+            $message_error .= "Failed updating participation record, seek assistance.";
+            RenderErrorAjax($message_error);
             return;
         }
     }
@@ -99,44 +121,78 @@ function update_participant() {
             postcity,poststate,postzip,postcountry,regtype,loginid
         )
         SELECT badgeid,firstname,lastname,badgename,phone,email,postaddress1,postaddress2,
-            postcity,poststate,postzip,postcountry,regtype, \"" . $_SESSION['badgeid'] . "\" FROM CongoDump " . $query_end, true, true);
+            postcity,poststate,postzip,postcountry,regtype, \"" . $_SESSION['badgeid'] . "\" FROM CongoDump WHERE badgeid = \"" .
+            mysqli_real_escape_string($linki, $partid) . "\";", true, true);
         $query = "UPDATE CongoDump SET ";
+        $update_arr = array();
+        $updateStr = "s";
         if ($lastnameDirty) {
-	        $query .= "lastname=\"" . mysqli_real_escape_string($linki, $lastname) . "\", ";
+	        $query .= "lastname=?, ";
+            array_push($update_arr, $lastname);
+            $updateStr .= "s";
         }
         if ($firstnameDirty) {
-	        $query .= "firstname=\"" . mysqli_real_escape_string($linki, $firstname) . "\", ";
+	        $query .= "firstname=?, ";
+            array_push($update_arr, $firstname);
+            $updateStr .= "s";
         }
         if ($bnameDirty) {
-	        $query .= "badgename=\"" . mysqli_real_escape_string($linki, $bname) . "\", ";
+	        $query .= "badgename=?, ";
+            array_push($update_arr, $bname);
+            $updateStr .= "s";
         }
         if ($phoneDirty) {
-	        $query .= "phone=\"" . mysqli_real_escape_string($linki, $phone) . "\", ";
+	        $query .= "phone=?, ";
+            array_push($update_arr, $phone);
+            $updateStr .= "s";
         }
         if ($emailDirty) {
-	        $query .= "email=\"" . mysqli_real_escape_string($linki, $email) . "\", ";
+	        $query .= "email=?, ";
+            array_push($update_arr, $email);
+            $updateStr .= "s";
         }
         if ($post1Dirty) {
-	        $query .= "postaddress1=\"" . mysqli_real_escape_string($linki, $postaddress1) . "\", ";
+	        $query .= "postaddress1=?, ";
+            array_push($update_arr, $postaddress1);
+            $updateStr .= "s";
         }
         if ($post2Dirty) {
-	        $query .= "postaddress2=\"" . mysqli_real_escape_string($linki, $postaddress2) . "\", ";
+	        $query .= "postaddress2=?, ";
+            array_push($update_arr, $postaddress2);
+            $updateStr .= "s";
         }
         if ($postcityDirty) {
-	        $query .= "postcity=\"" . mysqli_real_escape_string($linki, $postcity) . "\", ";
+	        $query .= "postcity=?, ";
+            array_push($update_arr, $postcity);
+            $updateStr .= "s";
         }
         if ($poststateDirty) {
-	        $query .= "poststate=\"" . mysqli_real_escape_string($linki, $poststate) . "\", ";
+	        $query .= "poststate=?, ";
+            array_push($update_arr, $poststate);
+            $updateStr .= "s";
         }
         if ($postzipDirty) {
-	        $query .= "postzip=\"" . mysqli_real_escape_string($linki, $postzip) . "\", ";
+	        $query .= "postzip=?, ";
+            array_push($update_arr, $postzip);
+            $updateStr .= "s";
         }
         if ($postcountryDirty) {
-	        $query .= "postcountry=\"" . mysqli_real_escape_string($linki, $postcountry) . "\", ";
+	        $query .= "postcountry=?, ";
+            array_push($update_arr, $postcountry);
+            $updateStr .= "s";
         }
+
         $query = mb_substr($query, 0, -2); //drop two characters at end: ", "
         $query .= $query_end;
-        if (!mysqli_query_with_error_handling($query)) {
+        array_push($update_arr, $partid);
+        $rows = mysql_cmd_with_prepare($query, $updateStr, $update_arr);
+        if (is_null($rows)) {
+            $message_error .= "Failed updating registration record, seek assistance.";
+            RenderErrorAjax($message_error);
+            return;
+        } else if ($rows < 0) {
+            $message_error .= "Failed updating registration record, seek assistance.";
+            RenderErrorAjax($message_error);
             return;
         }
     }
@@ -144,25 +200,35 @@ function update_participant() {
     if ($interested == 2) {
         $query = <<<EOD
 UPDATE ParticipantOnSessionHistory
-    SET inactivatedts = NOW(), inactivatedbybadgeid = "{$_SESSION['badgeid']}"
+    SET inactivatedts = NOW(), inactivatedbybadgeid = ?
 	WHERE
-	        badgeid = "$partid"
+	        badgeid = ?
 		AND inactivatedts IS NULL;
 EOD;
-        if (!mysqli_query_with_error_handling($query)) {
+        $update_arr = array($_SESSION['badgeid'],$partid);
+        $updateStr = "ss";
+        $rows = mysql_cmd_with_prepare($query, $updateStr, $update_arr);
+        if (is_null($rows)) {
+            $message_error .= "Failed updating participant sessions record, seek assistance.";
+            RenderErrorAjax($message_error);
+            return;
+        } else if ($rows < 0) {
+            $message_error .= "Failed updating participant sessions record, seek assistance.";
+            RenderErrorAjax($message_error);
             return;
         }
-        $message .= "<p class=\"alert alert-info\">Participant removed from " . mysqli_affected_rows($linki) . " session(s).</p>";
+        $message .= "<p class=\"alert alert-info\">Participant removed from " . $rows . " session(s).</p>";
     }
     echo $message;
 }
 
 function perform_search() {
     global $linki, $message_error;
-    $searchString = mysqli_real_escape_string($linki, (getString("searchString")));
+    $searchString = getString("searchString");
     if ($searchString == "")
         exit();
     if (is_numeric($searchString)) {
+        $searchString =  mysqli_real_escape_string($linki, $searchString);
         $query["searchParticipants"] = <<<EOD
 			SELECT
 			        P.badgeid, P.pubsname, P.interested, P.bio, P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
@@ -176,9 +242,10 @@ function perform_search() {
 			    ORDER BY
 			        CD.lastname, CD.firstname
 EOD;
+        $xml = mysql_query_XML($query);
     } else {
         $searchString = '%' . $searchString . '%';
-        $query["searchParticipants"] = <<<EOD
+        $query = <<<EOD
 			SELECT
 			        P.badgeid, P.pubsname, P.interested, P.bio, P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
                     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
@@ -187,15 +254,17 @@ EOD;
 						 Participants P
 					JOIN CongoDump CD ON P.badgeid = CD.badgeid
 			    WHERE
-			           P.pubsname LIKE "$searchString"
-					OR CD.lastname LIKE "$searchString"
-					OR CD.firstname LIKE "$searchString"
-					OR CD.badgename LIKE "$searchString"
+			           P.pubsname LIKE ?
+					OR CD.lastname LIKE ?
+					OR CD.firstname LIKE ?
+					OR CD.badgename LIKE ?
 			    ORDER BY
 			        CD.lastname, CD.firstname
 EOD;
+        $param_arr = array($searchString,$searchString,$searchString,$searchString);
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
+        $xml = mysql_result_to_XML("searchParticipants", $result);
     }
-    $xml = mysql_query_XML($query);
     if (!$xml) {
         echo $message_error;
         exit();
