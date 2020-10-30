@@ -1,6 +1,7 @@
 <?php
 // Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
     global $participant, $message, $message_error, $message2, $congoinfo, $title;
+	$bootstrap4 = true;
     $title="My Profile";
     require ('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
@@ -49,7 +50,7 @@ EOD;
 	$optionsNode->setAttribute("maxBioLen", MAX_BIO_LEN);
 	$optionsNode->setAttribute("enableBioEdit", may_I('EditBio'));
 	$optionsNode->setAttribute("reg_url", REG_URL);
-	participant_header($title);
+	participant_header($title, false, 'Normal', $bootstrap4);
 	$resultXML = appendCustomTextArrayToXML($resultXML);
 	RenderXSLT('my_profile.xsl', array(), $resultXML);
 	participant_footer();

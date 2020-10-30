@@ -4,10 +4,12 @@
     Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
-  <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+  <xsl:param name="title" select="''" />
   <xsl:template match="/">
     <nav id="participantNav" class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand py-1" href="#">
+        <xsl:value-of select="$title"/>
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
         aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon" />
