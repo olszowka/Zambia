@@ -27,6 +27,7 @@ if ($bootstrap4) { ?>
         (may_I("Participant") || may_I("Staff"))) {
         if ($bootstrap4) {
             $paramArray = array();
+            $paramArray["title"] = $title;
             RenderXSLT('ParticipantMenu_BS4.xsl', $paramArray, GeneratePermissionSetXML());
         } else {
 ?>
