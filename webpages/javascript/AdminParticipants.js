@@ -16,6 +16,8 @@ var postcountryDirty = false;
 var originalInterested = 0;
 var fbadgeid;
 var resultsHidden = true;
+var max_bio_len = 500;
+var mce_running = false;
 
 function anyChange() {
 	var x = $("#password").val();
@@ -65,7 +67,11 @@ function chooseParticipant(badgeid, override) {
 		$('#warnName').html($("#pname").val());
 		$('#warnNewBadgeID').html(badgeid);
 		return;
-		}
+	}
+	if (mce_running) {
+		tinymce.remove();
+		mce_running = false;
+	}
 	var badgeidJQSel = badgeid.replace(/[']/g,"\\'").replace(/["]/g,'\\"');
 	hideSearchResults();
 	$("#badgeid").val($("#bidSPAN_" + badgeidJQSel).html());
@@ -124,6 +130,45 @@ function chooseParticipant(badgeid, override) {
 	$("#updateBUTN").prop("disabled", true);
 	$("#resultBoxDIV").html("").hide();
 	$("#passwordsDontMatch").hide();
+	max_bio_len = document.getElementById("bio").maxLength;
+	tinymce.init({
+		selector: 'textarea#bio',
+		plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
+		browser_spellcheck: true,
+		contextmenu: false,
+		height: 400,
+		min_height: 200,
+		menubar: false,
+		toolbar: [
+			'undo redo | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+			'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | link'
+		],
+		toolbar_mode: 'wrap',
+		content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+		placeholder: 'Type custom content here...',
+		setup: function (ed) {
+			ed.on('change', function (e) {
+				bioDirty = true;
+				anyChange();
+			});
+		}
+	});
+	mce_running = true;
+}
+
+function CountCharacters() {
+	var body = tinymce.get("bio").getBody();
+	var content = tinymce.trim(body.innerText || body.textContent);
+	return content.length;
+}
+function ValidateCharacterLength() {
+	var max = 20;
+	var count = CountCharacters();
+	if (count > max_bio_len) {
+		alert("Bio too long at " + count + "; " + max_bio_len + " characters allowed.")
+		return false;
+	}
+	return true;
 }
 
 function doSearchPartsBUTN() {
@@ -330,8 +375,10 @@ function toggleSearchResultsBUTN() {
 	$("#toggleText").html((resultsHidden ? "Show" : "Hide"));
 }
 
-function updateBUTN() {
+function updateBUTTON() {
 	//debugger;
+	if (!ValidateCharacterLength())
+		return;
 	$('#updateBUTN').button('loading');
 	var postdata = {
 		ajax_request_action : "update_participant",
@@ -339,8 +386,10 @@ function updateBUTN() {
 		};
 	if (x = $("#password").val())
 		postdata.password = x;
-	if (bioDirty)
+	if (bioDirty) {
+		tinymce.triggerSave();
 		postdata.bio = $("#bio").val();
+	}
 	if (pnameDirty)
 		postdata.pname = $("#pname").val();
 	if (snotesDirty)

@@ -64,13 +64,16 @@ function load_internal_javascript($title, $isDataTables = false) {
         case "Session Search Results":
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;
+        case "Administer Participants":
+            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
+            break;
         default:
             if ($isDataTables) {
                 echo "<script src=\"javascript/Reports.js\"></script>\n";
             }
     }
 ?>
-<script src="javascript/AdminParticipants.js"></script>
 <script src="javascript/editCreateSession.js"></script>
 <script src="javascript/myProfile.js"></script>
 <script src="javascript/staffMaintainSchedule.js"></script>
