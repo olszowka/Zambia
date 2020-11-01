@@ -52,7 +52,7 @@
                                         </xsl:when>
                                     </xsl:choose>
                                 </img>
-                                <a href="logout.php" class="btn btn-primary float-right" title="Click to log out">Log out</a>
+                                <a href="logout.php" class="btn btn-primary float-right mr-2" title="Click to log out">Log out</a>
                             </div>
                         </xsl:when>
                         <xsl:when test="not($no_user_required)">
