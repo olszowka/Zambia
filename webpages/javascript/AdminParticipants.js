@@ -212,6 +212,7 @@ function hideSearchResults() {
 	resultsHidden = true;
 	$("#searchResultsDIV").hide("fast");
 	$("#toggleSearchResultsBUTN").prop("disabled", false);
+	$("#toggleSearchResultsBUTN").prop("hidden", false);
 	$("#toggleText").html("Show");
 }
 
@@ -224,6 +225,7 @@ function initializeAdminParticipants() {
 	$("#unsavedWarningDIV").modal({backdrop: 'static', keyboard: true, show: false});
 	$("#toggleSearchResultsBUTN").click(toggleSearchResultsBUTN);
 	$("#toggleSearchResultsBUTN").prop("disabled", true);
+	$("#toggleSearchResultsBUTN").prop("hidden", true);
 	resultsHidden = true;
 	$("#searchPartsBUTN").click(doSearchPartsBUTN);
 	$("#cancelOpenSearchBUTN").button();
@@ -245,6 +247,7 @@ function showSearchResults() {
 	$("#searchResultsDIV").show("fast");
 	$("#searchResultsDIV").css("overflow-y", "auto");
 	$("#toggleSearchResultsBUTN").prop("disabled", false);
+	$("#toggleSearchResultsBUTN").prop("hidden", false);
 	$("#toggleText").html("Hide");
 }
 

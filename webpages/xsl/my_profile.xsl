@@ -188,11 +188,11 @@
           <div class="row" id="passGroup">
             <div class="col-auto">
               <label for="password">New Password:&#160;</label>
-              <input type="password" size="40" name="password" id="password" onchange="myProfile.anyChange('password')" onkeyup="myProfile.anyChange('password')"/>
+              <input type="password" size="40" maxlength="40" name="password" id="password" onchange="myProfile.anyChange('password')" onkeyup="myProfile.anyChange('password')"/>
             </div>
             <div class="col-auto">
               <label for="cpassword">Confirm Password:&#160;</label>
-              <input type="password" size="40" name="cpassword" id="cpassword"  onchange="myProfile.anyChange('cpassword')" onkeyup="myProfile.anyChange('cpassword')"/>
+              <input type="password" size="40" maxlength="40" name="cpassword" id="cpassword"  onchange="myProfile.anyChange('cpassword')" onkeyup="myProfile.anyChange('cpassword')"/>
               <span id="badPassword" class="help-inline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Passwords don't match!</span>
             </div>
           </div>
@@ -210,7 +210,7 @@
             <label for="pubsname">Your name as you wish to have it published:</label>
           </div>
           <div class="col-auto">
-              <input type="text" size="20" name="pubsname" value="{/doc/query[@queryName='participant_info']/row/@pubsname}"
+              <input type="text" size="20" maxlength="50" name="pubsname" value="{/doc/query[@queryName='participant_info']/row/@pubsname}"
                   id="pubsname" onchange="myProfile.anyChange('pubsname')" onkeyup="myProfile.anyChange('pubsname')"
                   class="userFormINPTXT">
                   <xsl:if test="$enableBioEdit!='1'">
@@ -309,7 +309,7 @@
                   <span class="text-white">First Name</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="30" name="firstname" value="{/doc/query[@queryName='participant_info']/row/@firstname}"
+                  <input type="text" size="30" maxlength="30" name="firstname" value="{/doc/query[@queryName='participant_info']/row/@firstname}"
                             id="firstname" onchange="myProfile.anyChange('firstname')" onkeyup="myProfile.anyChange('firstname')"
                             class="userFormINPTXT">
                   </input>
@@ -320,7 +320,7 @@
                   <span class="text-white">Last Name</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="40" name="lastname" value="{/doc/query[@queryName='participant_info']/row/@lastname}"
+                  <input type="text" size="40" maxlength="40" name="lastname" value="{/doc/query[@queryName='participant_info']/row/@lastname}"
                             id="lastname" onchange="myProfile.anyChange('lastname')" onkeyup="myProfile.anyChange('lastname')"
                             class="userFormINPTXT">
                   </input>
@@ -331,7 +331,7 @@
                   <span class="text-white">Badge Name</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="50" name="badgename" value="{/doc/query[@queryName='participant_info']/row/@badgename}"
+                  <input type="text" size="50" maxlength="50" name="badgename" value="{/doc/query[@queryName='participant_info']/row/@badgename}"
                             id="badgename" onchange="myProfile.anyChange('badgename')" onkeyup="myProfile.anyChange('badgename')"
                             class="userFormINPTXT">
                   </input>
@@ -342,7 +342,7 @@
                   <span class="text-white">Phone Info</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="100" name="phone" value="{/doc/query[@queryName='participant_info']/row/@phone}"
+                  <input type="text" size="80" maxlength="100" name="phone" value="{/doc/query[@queryName='participant_info']/row/@phone}"
                             id="phone" onchange="myProfile.anyChange('phone')" onkeyup="myProfile.anyChange('phone')"
                             class="userFormINPTXT">
                   </input>
@@ -353,7 +353,7 @@
                   <span class="text-white">Email Address</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="100" name="email" value="{/doc/query[@queryName='participant_info']/row/@email}"
+                  <input type="text" size="80" maxlength="100" name="email" value="{/doc/query[@queryName='participant_info']/row/@email}"
                             id="email" onchange="myProfile.anyChange('email')" onkeyup="myProfile.anyChange('email')"
                             class="userFormINPTXT">
                   </input>
@@ -364,7 +364,7 @@
                   <span class="text-white">Postal Address</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="100" name="postaddress1" value="{/doc/query[@queryName='participant_info']/row/@postaddress1}"
+                  <input type="text" size="80" maxlength="100" name="postaddress1" value="{/doc/query[@queryName='participant_info']/row/@postaddress1}"
                             id="postaddress1" onchange="myProfile.anyChange('postaddress1')" onkeyup="myProfile.anyChange('postaddress1')"
                             class="userFormINPTXT">
                   </input>
@@ -375,7 +375,7 @@
                   <span class="text-white">&#160;</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="100" name="postaddress2" value="{/doc/query[@queryName='participant_info']/row/@postaddress2}"
+                  <input type="text" size="80" maxlength="100" name="postaddress2" value="{/doc/query[@queryName='participant_info']/row/@postaddress2}"
                             id="postaddress2" onchange="myProfile.anyChange('postaddress2')" onkeyup="myProfile.anyChange('postaddress2')"
                             class="userFormINPTXT">
                   </input>
@@ -386,7 +386,7 @@
                   <span class="text-white">Postal City</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="50" name="postcity" value="{/doc/query[@queryName='participant_info']/row/@postcity}"
+                  <input type="text" size="50" maxlength="50" name="postcity" value="{/doc/query[@queryName='participant_info']/row/@postcity}"
                            id="postcity" onchange="myProfile.anyChange('postcity')" onkeyup="myProfile.anyChange('postcity')"
                            class="userFormINPTXT">
                   </input>
@@ -397,7 +397,7 @@
                   <span class="text-white">Postal State</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="25" name="poststate" value="{/doc/query[@queryName='participant_info']/row/@poststate}"
+                  <input type="text" size="25" maxlength="25" name="poststate" value="{/doc/query[@queryName='participant_info']/row/@poststate}"
                             id="poststate" onchange="myProfile.anyChange('poststate')" onkeyup="myProfile.anyChange('poststate')"
                             class="userFormINPTXT">
                   </input>
@@ -408,7 +408,7 @@
                   <span class="text-white">Postal Code</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="10" name="postzip" value="{/doc/query[@queryName='participant_info']/row/@postzip}"
+                  <input type="text" size="10" maxlength="10" name="postzip" value="{/doc/query[@queryName='participant_info']/row/@postzip}"
                             id="postzip" onchange="myProfile.anyChange('postzip')" onkeyup="myProfile.anyChange('postzip')"
                             class="userFormINPTXT">
                   </input>
@@ -419,7 +419,8 @@
                   <span class="text-white">Postal Country</span>
                 </div>
                 <div class="col-auto">
-                  <input type="text" size="10" name="postcountry" value="{/doc/query[@queryName='participant_info']/row/@postcountry}"
+                  <input type="text" size="10" maxlength="10" name="postcountry" 
+                             value="{/doc/query[@queryName='participant_info']/row/@postcountry}"
                              id="postcountry" onchange="myProfile.anyChange('postcountry')" onkeyup="myProfile.anyChange('postcountry')"
                              class="userFormINPTXT">
                   </input>

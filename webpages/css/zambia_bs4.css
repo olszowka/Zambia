@@ -1,4 +1,4 @@
-/**
+﻿/**
  * File created by Peter Olszowka July 17, 2020
  * Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
@@ -68,6 +68,15 @@
   flex: 0 0 27.083333%;
   max-width: 27.083333%;
 }
+input[readonly],
+textarea[readonly] {
+  background-color: lightGray;
+  color: #222222;
+}
+textarea.readonly {
+  background-color: lightgray;
+  color: #222222;
+}
 /* End of Bootstrap extensions */
 /* General Form Defaults */
 .tag-chk-legend {
@@ -96,8 +105,6 @@
 .tag-chk {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
-  /* width:2rem; */
-  /* vertical-align:-1px; */
 }
 .tag-match-radio {
   width: 1.5rem;
