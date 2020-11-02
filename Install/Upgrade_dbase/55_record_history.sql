@@ -1,4 +1,4 @@
-## This script adds the data retention consent field to the participants table
+## This script adds the history tables for congo and emails
 ##
 ##	Created by Syd Weinstein on September 3, 2020
 ## 	Copyright (c) 2020 by Peter Olszowka. All rights reserved. See copyright document for more details.

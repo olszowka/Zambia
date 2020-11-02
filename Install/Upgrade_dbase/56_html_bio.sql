@@ -1,0 +1,9 @@
+## This script adds the history tables for congo and emails
+##
+##	Created by Syd Weinstein on September 3, 2020
+## 	Copyright (c) 2020 by Peter Olszowka. All rights reserved. See copyright document for more details.
+##
+ALTER TABLE Participants
+ADD COLUMN htmlbio TEXT AFTER bio;
+
+INSERT INTO PatchLog (patchname) VALUES ('56_html_bio.sql');

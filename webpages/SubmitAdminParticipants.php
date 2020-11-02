@@ -11,8 +11,9 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio, P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-        CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry, CD.regtype
+        P.badgeid, P.pubsname, P.interested, CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS bio,
+        P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
+        CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry, CD.regtype
     FROM
 			 Participants P
 		JOIN CongoDump CD ON P.badgeid = CD.badgeid
@@ -80,8 +81,11 @@ function update_participant() {
             $updateStr .= "s";
         }
         if ($biodirty) {
-            $query .= "bio=?, ";
+            $query .= "htmlbio=?, ";
             array_push($update_arr, $bio);
+            $updateStr .= "s";
+            $query .= "bio=?, ";
+            array_push($update_arr, strip_tags($bio));
             $updateStr .= "s";
         }
         if ($pubsnamedirty) {
@@ -231,7 +235,8 @@ function perform_search() {
         $searchString =  mysqli_real_escape_string($linki, $searchString);
         $query["searchParticipants"] = <<<EOD
 			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio, P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+			        P.badgeid, P.pubsname, P.interested, CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS bio,
+                    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
                     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
                     CD.postcountry, CD.regtype
 			    FROM
@@ -247,7 +252,8 @@ EOD;
         $searchString = '%' . $searchString . '%';
         $query = <<<EOD
 			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio, P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+			        P.badgeid, P.pubsname, P.interested, CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS bio,
+                    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
                     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
                     CD.postcountry, CD.regtype
 			    FROM

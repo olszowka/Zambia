@@ -140,8 +140,8 @@ function chooseParticipant(badgeid, override) {
 		min_height: 200,
 		menubar: false,
 		toolbar: [
-			'undo redo | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-			'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | link'
+			'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
+			'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
 		],
 		toolbar_mode: 'wrap',
 		content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -151,6 +151,9 @@ function chooseParticipant(badgeid, override) {
 				bioDirty = true;
 				anyChange();
 			});
+		},
+		init_instance_callback: function (editor) {
+			$(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
 		}
 	});
 	mce_running = true;
