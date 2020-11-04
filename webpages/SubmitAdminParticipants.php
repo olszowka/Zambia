@@ -11,7 +11,9 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS bio,
+        P.badgeid, P.pubsname, P.interested,
+        CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS htmlbio,
+        CASE WHEN ISNULL(P.bio) THEN P.htmlbio ELSE P.bio END AS bio,
         P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
         CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry, CD.regtype
     FROM
@@ -38,8 +40,9 @@ function update_participant() {
     global $linki, $message_error;
     $partid = getString("badgeid");
     $password = getString("password");
-    $biodirty = isset($_POST["bio"]);
-    $bio = getString("bio");
+    $biodirty = isset($_POST["htmlbio"]);
+    // $bio = getString("bio");
+    $htmlbio = getString("htmlbio");
     $pubsnamedirty = isset($_POST["pname"]);
     $pubsname = getString("pname");
     $staffnotesdirty = isset($_POST["staffnotes"]);
@@ -82,10 +85,10 @@ function update_participant() {
         }
         if ($biodirty) {
             $query .= "htmlbio=?, ";
-            array_push($update_arr, $bio);
+            array_push($update_arr, $htmlbio);
             $updateStr .= "s";
             $query .= "bio=?, ";
-            array_push($update_arr, strip_tags($bio));
+            array_push($update_arr, strip_tags($htmlbio));
             $updateStr .= "s";
         }
         if ($pubsnamedirty) {
@@ -235,7 +238,9 @@ function perform_search() {
         $searchString =  mysqli_real_escape_string($linki, $searchString);
         $query["searchParticipants"] = <<<EOD
 			SELECT
-			        P.badgeid, P.pubsname, P.interested, CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS bio,
+			        P.badgeid, P.pubsname, P.interested,
+                    CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS htmlbio,
+                    CASE WHEN ISNULL(P.bio) THEN P.htmlbio ELSE P.bio END AS bio,
                     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
                     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
                     CD.postcountry, CD.regtype
@@ -252,7 +257,9 @@ EOD;
         $searchString = '%' . $searchString . '%';
         $query = <<<EOD
 			SELECT
-			        P.badgeid, P.pubsname, P.interested, CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS bio,
+			        P.badgeid, P.pubsname, P.interested,
+                    CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS htmlbio,
+                    CASE WHEN ISNULL(P.bio) THEN P.htmlbio ELSE P.bio END AS bio,
                     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
                     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
                     CD.postcountry, CD.regtype

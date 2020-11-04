@@ -34,6 +34,9 @@
                           <input type="hidden" id="bioHID_{@badgeid}">
                               <xsl:attribute name="value"><xsl:value-of select="@bio"/></xsl:attribute>
                           </input>
+                          <input type="hidden" id="htmlbioHID_{@badgeid}">
+                              <xsl:attribute name="value"><xsl:value-of select="@htmlbio"/></xsl:attribute>
+                          </input>
                           <input type="hidden" id="staffnotesHID_{@badgeid}">
                               <xsl:attribute name="value"><xsl:value-of select="@staff_notes"/></xsl:attribute>
                           </input>

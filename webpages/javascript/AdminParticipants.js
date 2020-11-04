@@ -106,8 +106,10 @@ function chooseParticipant(badgeid, override) {
 		originalInterested = 0;
 	$("#interested").val(originalInterested);
 	$("#interested").prop("disabled", false);
+	var htmlbio = $("#htmlbioHID_" + badgeidJQSel).val();
+	$("#htmlbio").val(htmlbio).prop("defaultValue", htmlbio).prop("readOnly", false);
 	var bio = $("#bioHID_" + badgeidJQSel).val();
-	$("#bio").val(bio).prop("defaultValue", bio).prop("readOnly", false);
+	$("#bio").val(bio).prop("defaultValue", bio);
 	var staffnotes = $("#staffnotesHID_" + badgeidJQSel).val();
 	$("#staffnotes").val(staffnotes).prop("defaultValue", staffnotes).prop("readOnly", false);
 	$("#password").val("").prop("readOnly", false);
@@ -130,9 +132,9 @@ function chooseParticipant(badgeid, override) {
 	$("#updateBUTN").prop("disabled", true);
 	$("#resultBoxDIV").html("").hide();
 	$("#passwordsDontMatch").hide();
-	max_bio_len = document.getElementById("bio").maxLength;
+	max_bio_len = document.getElementById("htmlbio").maxLength;
 	tinymce.init({
-		selector: 'textarea#bio',
+		selector: 'textarea#htmlbio',
 		plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
 		browser_spellcheck: true,
 		contextmenu: false,
@@ -160,7 +162,7 @@ function chooseParticipant(badgeid, override) {
 }
 
 function CountCharacters() {
-	var body = tinymce.get("bio").getBody();
+	var body = tinymce.get("htmlbio").getBody();
 	var content = tinymce.trim(body.innerText || body.textContent);
 	return content.length;
 }
@@ -229,7 +231,8 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
 		originalInterested = 0;
 	$("#interested").val(originalInterested);
 	$("#interested").prop("disabled", false);
-	$("#bio").val(node.getAttribute("bio")).prop("defaultValue", node.getAttribute("bio")).prop("readOnly", false);
+	$("#htmlbio").val(node.getAttribute("htmlbio")).prop("defaultValue", node.getAttribute("htmlbio")).prop("readOnly", false);
+	$("#bio").val(node.getAttribute("bio")).prop("defaultValue", node.getAttribute("bio"));
 	$("#staffnotes").val(node.getAttribute("staff_notes")).prop("defaultValue", node.getAttribute("staff_notes")).prop("readOnly", false);
 	$("#password").prop("readOnly", false);
 	$("#password").val("");
@@ -318,16 +321,54 @@ function showUpdateResults(data, textStatus, jqXHR) {
 	$("#password").val("");
 	$("#cpassword").val("");
 	$('#updateBUTN').button('reset');
+	$("#updateBUTN").prop("disabled", true);
 	originalInterested = $("#interested").val();
-	setTimeout(function() {$("#updateBUTN").button().attr("disabled","disabled");}, 0);
+	// update the selection list
+	var node = data.firstChild.firstChild.firstChild;
+	var retbadgeid = node.getAttribute("badgeid");
+	var badgeidJQSel = retbadgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
+
+	$("#lnameSPAN_" + badgeidJQSel).html(node.getAttribute("lastname") + ", " + node.getAttribute("firstname"));
+	$("#lastnameHID_" + badgeidJQSel).val(node.getAttribute("lastname"));
+	$("#firstnameHID_" + badgeidJQSel).val(node.getAttribute("firstname"));
+	$("#phoneHID_" + badgeidJQSel).val(node.getAttribute("phone"));
+	$("#emailHID_" + badgeidJQSel).val(node.getAttribute("email"));
+	$("#postaddress1HID_" + badgeidJQSel).val(node.getAttribute("postaddress1"));
+	$("#postaddress2HID_" + badgeidJQSel).val(node.getAttribute("postaddress2"));
+	$("#postcityHID_" + badgeidJQSel).val(node.getAttribute("postcity"));
+	$("#poststateHID_" + badgeidJQSel).val(node.getAttribute("poststate"));
+	$("#postzipHID_" + badgeidJQSel).val(node.getAttribute("postzip"));
+	$("#postcountryHID_" + badgeidJQSel).val(node.getAttribute("postcountry"));
+	$("#pnameSPAN_" + badgeidJQSel).html(node.getAttribute("pubsname"));
+	$("#bnameSPAN_" + badgeidJQSel).html(node.getAttribute("badgename"));
+	$("#interestedHID_" + badgeidJQSel).originalInterested = node.getAttribute("interested");
+	$("#htmlbioHID_" + badgeidJQSel).val(node.getAttribute("htmlbio"));
+	$("#bioHID_" + badgeidJQSel).val(node.getAttribute("bio"));
+	$("#staffnotesHID_" + badgeidJQSel).val(node.getAttribute("staff_notes"));
+	$("#bio").val(node.getAttribute("bio"));
+}
+
+function getUpdateResults(data, textStatus, jqXHR) {
 	$("#resultBoxDIV").html(data);
 	$('#resultBoxDIV').show();
-}
+	setTimeout(function () { $("#updateBUTN").button().attr("disabled", "disabled"); }, 0);
+	$("#updateBUTN").prop("disabled", true);
+	$.ajax({
+		url: "SubmitAdminParticipants.php",
+		dataType: "xml",
+		data: ({
+			badgeid: $("#badgeid").val(),
+			ajax_request_action: "fetch_participant"
+		}),
+		success: showUpdateResults,
+		type: "GET"
+	});
+	}
 
 function textChange(which) {
 	switch(which) {
-		case 'bio':
-			bioDirty = ($("#bio").val() != $("#bio").prop("defaultValue"));
+		case 'htmlbio':
+			bioDirty = ($("#htmlbio").val() != $("#htmlbio").prop("defaultValue"));
 			break;
 		case 'snotes':
 			snotesDirty = ($("#staffnotes").val() != $("#staffnotes").prop("defaultValue"));
@@ -391,7 +432,7 @@ function updateBUTTON() {
 		postdata.password = x;
 	if (bioDirty) {
 		tinymce.triggerSave();
-		postdata.bio = $("#bio").val();
+		postdata.htmlbio = $("#htmlbio").val();
 	}
 	if (pnameDirty)
 		postdata.pname = $("#pname").val();
@@ -425,7 +466,7 @@ function updateBUTTON() {
 		url: "SubmitAdminParticipants.php",
 		dataType: "html",
 		data: postdata,
-		success: showUpdateResults,
+		success: getUpdateResults,
 		type: "POST"
 		});
 }

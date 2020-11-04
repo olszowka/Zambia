@@ -224,10 +224,10 @@ if ($fbadgeid)
     <div class="row">
         <div class="col-sm-6">
             <div class="newformlabel">
-                <label for="bio" class="newformlabel">Participant biography:</label>
+                <label for="htmlbio" class="newformlabel">Participant biography:</label>
             </div>
             <div class="newforminput">
-                <textarea id="bio" rows="4" cols="80" readonly="readonly" maxlength="<?php echo MAX_BIO_LEN?>" onchange="textChange('bio');" onkeyup="textChange('bio');"></textarea>
+                <textarea id="htmlbio" rows="4" cols="80" readonly="readonly" maxlength="<?php echo MAX_BIO_LEN?>" onchange="textChange('htmlbio');" onkeyup="textChange('htmlbio');"></textarea>
             </div>
         </div>
         <div class="col-sm-6">
@@ -235,8 +235,14 @@ if ($fbadgeid)
                 <label for="staffnotes" class="newformlabel">Staff notes re. participant:</label>
             </div>
             <div class="newforminput">
-                <textarea id="staffnotes" rows="4" cols="80" readonly="readonly"
+                <textarea id="staffnotes" rows="6" cols="80" readonly="readonly"
                     onchange="textChange('snotes');" onkeyup="textChange('snotes');"></textarea>
+            </div>
+            <div class="newformlabel">
+                <label for="bio" class="newformlabel">Text Bio (updates only after Update is pressed):</label>
+            </div>
+            <div class="newforminput">
+                <textarea id="bio" rows="8" cols="80" readonly="readonly"></textarea>
             </div>
         </div>
     </div>
