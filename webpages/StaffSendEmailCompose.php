@@ -18,14 +18,19 @@ if (empty($_POST['navigate']) || $_POST['navigate']!='send') {
     render_send_email($email,$message_warning);
     exit(0);
 }
+
+$bootstrap4 = true;
+$title = "Staff Send Email";
+staff_header($title, $bootstrap4);
 // put code to send email here.
 // render_send_email_engine($email,$message_warning);
-$title = "Staff Send Email";
+
 $timeLimitSuccess = set_time_limit(600);
 if (!$timeLimitSuccess) {
 	RenderError("Error extending time limit.");
 	exit(0);
 }
+
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $email = get_email_from_post();
 
@@ -115,7 +120,12 @@ for ($i=0; $i<$recipient_count; $i++) {
     if ($ok == TRUE) {
         echo "Sent<br>";
     }
+    $sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailcc, emailsubject, status) VALUES(?, ?, ?, ?, ?);";
+    $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $ok);
+    $types = "ssssi";
+    $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
 }
 //$log =& Swift_LogContainer::getLog();
 //echo $log->dump(true);
+staff_footer();
 ?>
