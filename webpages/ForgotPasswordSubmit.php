@@ -186,6 +186,11 @@ if ($ok) {
     }
 }
 
+$sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailsubject, status) VALUES(?, ?, ?, ?);";
+$param_arr = array($email , $fromAddress, $subjectLine, $ok);
+$types = "sssi";
+$rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+
 // regular response is name as error response above
 RenderXSLT('ForgotPasswordResponse.xsl', $responseParams);
 participant_footer();
