@@ -31,17 +31,17 @@ function MyProfile() {
 						pwOK = true;
 						}
 				}
-		if (element == "bioTXTA") {
-			if ($("#bioTXTA").val().length > maxBioLen) {
+		if (element == "htmlbioTXTA") {
+			if ($("#htmlbioTXTA").val().length > maxBioLen) {
 					$("#badBio").show();
-				  $("#bioGroup").addClass("error");
+				    $("#bioGroup").addClass("error");
 					$("#submitBTN").attr("disabled","disabled");
 					bioOK = false;
 				}
 				else {
 					$("#badBio").hide();
-				  $("#bioGroup").removeClass("error");
-				  $("#submitBTN").removeAttr("disabled");
+					$("#bioGroup").removeClass("error");
+					$("#submitBTN").removeAttr("disabled");
 					bioOK = true;
 				}
 			}
@@ -56,10 +56,35 @@ function MyProfile() {
 		//debugger;
 		$("#password").val("");
 		this.anyChange("password");
-		this.anyChange("bioTXTA");
+		this.anyChange("htmlbioTXTA");
 		dirtyInputArr = [];
 		$("#submitBTN").button().attr("disabled","disabled");
 		//window.status="Reached initializeMyProfile.";
+		tinymce.init({
+			selector: 'textarea#htmlbioTXTA',
+			plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
+			browser_spellcheck: true,
+			contextmenu: false,
+			height: 400,
+			min_height: 200,
+			menubar: false,
+			toolbar: [
+				'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
+				'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
+			],
+			toolbar_mode: 'wrap',
+			content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+			placeholder: 'Type custom content here...',
+			setup: function (ed) {
+				ed.on('change', function (e) {
+					bioDirty = true;
+					myProfile.anyChange("htmlbioTXTA");
+				});
+			},
+			init_instance_callback: function (editor) {
+				$(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
+			}
+		});
 	}
 
 	this.updateBUTN = function updateBUTN() {
@@ -70,8 +95,9 @@ function MyProfile() {
 			};
 		if (pw)
 			postdata.password = pw;
-		if (dirtyInputArr["bioTXTA"]) {
-			postdata.bioText = $("#bioTXTA").val();
+		if (dirtyInputArr["htmlbioTXTA"]) {
+			tinymce.triggerSave();
+			postdata.htmlbio = $("#htmlbioTXTA").val();
 			}
 		if (dirtyInputArr["interested"])
 			postdata.interested = $("#interested").val();
@@ -119,12 +145,12 @@ function MyProfile() {
 			url: "SubmitMyContact.php",
 			dataType: "html",
 			data: postdata,
-			success: myProfile.showUpdateResults,
+			success: myProfile.getUpdateResults,
 			type: "POST"
 			});			
 	}
 
-	this.showUpdateResults = function showUpdateResults(data, textStatus, jqXHR) {
+	this.getUpdateResults = function getUpdateResults(data, textStatus, jqXHR) {
 		//ajax success callback function
 		$("#resultBoxDIV").html(data).css("visibility", "visible");
 		$("#password").val("");
@@ -135,6 +161,20 @@ function MyProfile() {
 		setTimeout(function() {$("#submitBTN").button().attr("disabled","disabled");}, 0);
 		//$("#submitBTN").html("Update").removeClass("disabled");
 		document.getElementById("resultBoxDIV").scrollIntoView(false);
+		$.ajax({
+			url: "SubmitMyContact.php",
+			dataType: "xml",
+			data: ({
+				ajax_request_action: "fetch_bio"
+			}),
+			success: myProfile.showUpdateResults,
+			type: "GET"
+		});			
 	}
 
+	this.showUpdateResults = function showUpdateResults(data, textStatus, jqXHR) {
+		//ajax success callback function
+		var node = data.firstChild.firstChild.firstChild;
+		$("#bioTXTA").val(node.getAttribute("bio"));
+	}
 }

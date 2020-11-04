@@ -222,14 +222,14 @@
         <div id="bioGroup">
           <div class="row">
             <div class="col-sm-12">
-              <label for="bio">
-                Your biography (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer including spaces):
+              <label for="htmlbio">
+                HTML Version (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer including spaces):
               </label>
             </div>
           </div>
           <div class="row">
             <div class="col-sm-12">
-              <textarea rows="5" cols="72" name="bio" id="bioTXTA" onchange="myProfile.anyChange('bioTXTA')"
+              <textarea rows="5" cols="72" name="htmlbio" id="htmlbioTXTA" onchange="myProfile.anyChange('bioTXTA')"
                   onkeyup="myProfile.anyChange('bioTXTA')">
                 <xsl:choose>
                   <xsl:when test="$enableBioEdit!='1'">
@@ -240,10 +240,16 @@
                     <xsl:attribute name="class">col-sm-12 userFormTXT</xsl:attribute>
                   </xsl:otherwise>
                 </xsl:choose>
-                <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
+                <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@htmlbio"/>
               </textarea>
               <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
               <span id="badBio" class="help-inline">Biography is too long!</span>
+              <label for="bio">Plain Text Version (Automatically derived from HTML version on pressing UPDATE):</label>
+              <textarea rows="5" cols="72" name="bio" id="bioTXTA">
+                <xsl:attribute name="readonly">readonly</xsl:attribute>
+                <xsl:attribute name="class">col-sm-12 userFormTXT readonly</xsl:attribute>
+                <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
+              </textarea>
             </div>
           </div>
           <xsl:if test="$bioNote">

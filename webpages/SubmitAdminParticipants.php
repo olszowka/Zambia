@@ -84,12 +84,10 @@ function update_participant() {
             $updateStr .= "s";
         }
         if ($biodirty) {
-            $query .= "htmlbio=?, ";
+            $query .= "htmlbio=?, bio=?, ";
             array_push($update_arr, $htmlbio);
-            $updateStr .= "s";
-            $query .= "bio=?, ";
             array_push($update_arr, strip_tags($htmlbio));
-            $updateStr .= "s";
+            $updateStr .= "ss";
         }
         if ($pubsnamedirty) {
             $query .= "pubsname=?, ";
