@@ -6,4 +6,7 @@
 ALTER TABLE Participants
 ADD COLUMN htmlbio TEXT AFTER bio;
 
+ALTER TABLE Sessions
+ADD meetinglink VARCHAR(512) AFTER persppartinfo;
+
 INSERT INTO PatchLog (patchname) VALUES ('56_html_bio.sql');

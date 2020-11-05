@@ -166,7 +166,7 @@ function get_nameemail_from_post(&$name, &$email) {
 // the $partavail global variable with it.
 //
 // Notes on variables:
-// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are indexes into Times table, 0 for unset; 
+// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are indexes into Times table, 0 for unset;
 //
 function get_participant_availability_from_post() {
     $partAvail = array();
@@ -218,9 +218,10 @@ function get_session_from_post() {
     $session["servnotes"] = getString('servnotes');
     $session["status"] = getInt('status');
     $session["notesforprog"] = getString('notesforprog');
+    $session["mlink"] = getString('mlink');
 }
 
-// Function set_session_defaults() 
+// Function set_session_defaults()
 // Populates the $session global variable with default data
 // for use when creating a new session.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -254,8 +255,8 @@ function set_session_defaults() {
     $session["notesforprog"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
 }
-	
-// Function set_brainstorm_session_defaults	
+
+// Function set_brainstorm_session_defaults
 // Populates the $session global variable with default data
 // for use when creating a new session in brainstorm.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -363,7 +364,7 @@ function longDayNameFromInt($daynum) {
 
 //
 // Function fix_slashes($arg)
-// Takes the string $arg and removes multiple slashes, 
+// Takes the string $arg and removes multiple slashes,
 // slash-quote and slash-double quote.
 function fix_slashes($arg) {
     while (($pos = strpos($arg, "\\\\")) !== false) {

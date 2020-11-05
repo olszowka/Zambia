@@ -34,7 +34,11 @@ EOD;
 		$query = <<<EOD
 SELECT
 		S.sessionid AS id, S.title, TR.trackname, TY.typename, R.roomname AS loc,
-		DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins, S.progguiddesc AS `desc`, 
+		DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins,
+		CASE
+			WHEN ISNULL(S.meetinglink) OR S.meetinglink = "" THEN S.progguiddesc
+			ELSE CONCAT(S.progguiddesc, '<p><a href="', S.meetinglink, '" target="_blank"><span style="color:blue;">Register for ', S.title, '</a></span></p>')
+		END AS `desc`,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time
 	FROM
@@ -62,10 +66,10 @@ EOD;
 				"desc" => $row["desc"]
 				);
 			$program[] = $programRow;
-			}
+        }
 		$query = <<<EOD
 SELECT
-		P.badgeid, P.pubsname, P.bio
+		P.badgeid, P.pubsname, CASE WHEN ISNULL(P.htmlbio) THEN P.bio ELSE P.htmlbio END AS bio
 	FROM
 		Participants P
 	WHERE

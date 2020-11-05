@@ -505,7 +505,8 @@ UPDATE Sessions SET
         notesforpart="{$sessionf["notesforpart"]}",
         servicenotes="{$sessionf["servnotes"]}",
         statusid="{$sessionf["status"]}",
-        notesforprog="{$sessionf["notesforprog"]}"
+        notesforprog="{$sessionf["notesforprog"]}",
+        meetinglink="{$sessionf["mlink"]}"
     WHERE
         sessionid = $id;
 EOD;
@@ -596,6 +597,7 @@ INSERT INTO Sessions SET
         secondtitle="{$sessionf["secondtitle"]}",
         pocketprogtext="{$sessionf["pocketprogtext"]}",
         progguiddesc="{$sessionf["progguiddesc"]}",
+        meetinglink="{$sessionf["mlink"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
         estatten={$sessionf["estatten"]},
@@ -661,6 +663,7 @@ function filter_session() {
     $session2["secondtitle"] = mysqli_real_escape_string($linki, $session["secondtitle"]);
     $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
     $session2["progguiddesc"] = mysqli_real_escape_string($linki, $session["progguiddesc"]);
+    $session2["mlink"] = mysqli_real_escape_string($linki, $session["mlink"]);
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
     if (DURATION_IN_MINUTES === TRUE) {
         $session2["duration"] = conv_min2hrsmin($session["duration"]);
@@ -714,7 +717,7 @@ SELECT
         sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
         title, secondtitle, pocketprogtext, progguiddesc, persppartinfo, duration,
         estatten, kidscatid, signupreq, roomsetid, notesforpart, servicenotes,
-        statusid, notesforprog, warnings, invitedguest, ts
+        statusid, notesforprog, warnings, invitedguest, ts, meetinglink
     FROM
         Sessions
     WHERE
@@ -757,6 +760,7 @@ EOD;
     $session["status"] = $sessionarray["statusid"];
     $session["notesforprog"] = $sessionarray["notesforprog"];
     $session["invguest"] = $sessionarray["invitedguest"];
+    $session["mlink"] = $sessionarray["meetinglink"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";
     if (!$result = mysqli_query_with_error_handling($query)) {
