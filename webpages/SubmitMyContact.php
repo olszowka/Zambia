@@ -69,7 +69,7 @@ function update_participant($badgeid) {
         if ($may_edit_bio) {
             $updateClause .= "htmlbio=?, bio=?, ";
             array_push($update_arr, $_POST['htmlbio']);
-            array_push($update_arr, strip_tags($_POST['htmlbio']));
+            array_push($update_arr, html_to_text($_POST['htmlbio']));
             $updateStr .= "ss";
         } else {
             $message_error = "You may not update your biography at this time.  Database not updated.";

@@ -21,6 +21,13 @@ document.addEventListener( "DOMContentLoaded", function () {
 			break;
 		case "Edit Custom Text":
 			editCustomText.initialize();
+			break;
+		case "Edit Session":
+			initializeSessionEdit();
+			break;
+		case "Create New Session":
+			initializeSessionEdit();
+			break
 		default:
 			window.status="Ready.";
 		/**

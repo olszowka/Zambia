@@ -494,6 +494,7 @@ UPDATE Sessions SET
         title="{$sessionf["title"]}",
         secondtitle="{$sessionf["secondtitle"]}",
         pocketprogtext="{$sessionf["pocketprogtext"]}",
+        progguidhtml="{$sessionf["progguidhtml"]}",
         progguiddesc="{$sessionf["progguiddesc"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
@@ -597,6 +598,7 @@ INSERT INTO Sessions SET
         secondtitle="{$sessionf["secondtitle"]}",
         pocketprogtext="{$sessionf["pocketprogtext"]}",
         progguiddesc="{$sessionf["progguiddesc"]}",
+        progguidhtml="{$sessionf["progguidhtml"]}",
         meetinglink="{$sessionf["mlink"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
@@ -663,6 +665,7 @@ function filter_session() {
     $session2["secondtitle"] = mysqli_real_escape_string($linki, $session["secondtitle"]);
     $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
     $session2["progguiddesc"] = mysqli_real_escape_string($linki, $session["progguiddesc"]);
+    $session2["progguidhtml"] = mysqli_real_escape_string($linki, $session["progguidhtml"]);
     $session2["mlink"] = mysqli_real_escape_string($linki, $session["mlink"]);
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
     if (DURATION_IN_MINUTES === TRUE) {
@@ -715,9 +718,11 @@ function retrieve_session_from_db($sessionid) {
     $query = <<<EOD
 SELECT
         sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
-        title, secondtitle, pocketprogtext, progguiddesc, persppartinfo, duration,
-        estatten, kidscatid, signupreq, roomsetid, notesforpart, servicenotes,
-        statusid, notesforprog, warnings, invitedguest, ts, meetinglink
+        title, secondtitle, pocketprogtext,
+        CASE WHEN ISNULL(progguiddesc) THEN progguidhtml ELSE progguiddesc END AS progguiddesc,
+        CASE WHEN ISNULL(progguidhtml) THEN progguiddesc ELSE progguidhtml END AS progguidhtml,
+        persppartinfo, duration, estatten, kidscatid, signupreq, roomsetid, notesforpart,
+        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink
     FROM
         Sessions
     WHERE
@@ -744,6 +749,7 @@ EOD;
     $session["secondtitle"] = $sessionarray["secondtitle"];
     $session["pocketprogtext"] = $sessionarray["pocketprogtext"];
     $session["progguiddesc"] = $sessionarray["progguiddesc"];
+    $session["progguidhtml"] = $sessionarray["progguidhtml"];
     $session["persppartinfo"] = $sessionarray["persppartinfo"];
     $timearray = parse_mysql_time_hours($sessionarray["duration"]);
     if (DURATION_IN_MINUTES === TRUE) {

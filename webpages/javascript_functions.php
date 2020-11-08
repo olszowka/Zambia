@@ -72,13 +72,18 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/myProfile.js\"></script>";
             break;
+        case "Edit Session":
+            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
+        case "Create New Session":
+            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
         default:
             if ($isDataTables) {
                 echo "<script src=\"javascript/Reports.js\"></script>\n";
             }
     }
 ?>
-<script src="javascript/editCreateSession.js"></script>
 <script src="javascript/staffMaintainSchedule.js"></script>
 <script src="javascript/partPanelInterests.js"></script>
 <?php

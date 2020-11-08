@@ -86,7 +86,7 @@ function update_participant() {
         if ($biodirty) {
             $query .= "htmlbio=?, bio=?, ";
             array_push($update_arr, $htmlbio);
-            array_push($update_arr, strip_tags($htmlbio));
+            array_push($update_arr, html_to_text($htmlbio));
             $updateStr .= "ss";
         }
         if ($pubsnamedirty) {

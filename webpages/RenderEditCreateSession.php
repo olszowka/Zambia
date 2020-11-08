@@ -118,33 +118,38 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <div class="row-fluid">
             <div class="span6">
                 <label class="control-label" for="progguiddesc">Description:</label>
-                <textarea class="span12 textlabelarea"
-                    rows="4" cols="70" name="progguiddesc"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
+                <textarea class="span12 textlabelarea" rows="4" cols="70" name="progguidhtml" 
+                          id="progguidhtml"><?php echo $session["progguidhtml"]?></textarea>
             </div>
             <div class="span6">
-                <label class="dense" for="persppartinfo">Prospective Participant Info:</label>
-                <textarea class="span12 textlabelarea"
-                          rows="4" cols="70" name="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></textarea>
-            </div>
-        </div>
-<?php
+                <label class="control-label" for="progguiddesc">Plain Text Description (updates on Save):</label>
+                <textarea class="span12 textlabelarea" rows="4" cols="70" name="progguiddesc" id="progguiddesc"
+                          readonly="readonly"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?>
+                </textarea>
+                <?php
     if (BILINGUAL === TRUE) {
-?>
-        <div class="row-fluid">
-            <div class="span6">
-                <label class="control-label vert-sep vert-sep-above" for="pocketprogtext"><?php echo SECOND_DESCRIPTION_CAPTION;?>: </label>
+                ?>
+                <label class="control-label vert-sep vert-sep-above" for="pocketprogtext">
+                    <?php echo SECOND_DESCRIPTION_CAPTION;?>:
+                </label>
                 <textarea class="span12 textlabelarea"
-                    rows="4" cols="70" name="pocketprogtext"><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></textarea>
+                    rows="4" cols="70" name="pocketprogtext">
+                    <?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?>
+                </textarea>
+                <?php
+    } else {
+        // The pocketprogtext field is no longer used on the form, but the code expects it.
+                ?>
+                <input type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT);?>" />
+                <?php
+    }
+                ?>
+                <label class="control-label vert-sep vert-sep-above" for="persppartinfo">Prospective Participant Info:</label>
+                <textarea class="span12 textlabelarea" rows="4" cols="70" name="persppartinfo"
+                    id="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?>
+                </textarea>
             </div>
         </div>
-<?php
-    } else {
-                // The pocketprogtext field is no longer used on the form, but the code expects it.
-?>
-        <input type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT);?>" />
-<?php
-    }
-?>
         <div class="row-fluid vert-sep vert-sep-above">
             <div class="span5"> <!-- Features Box; -->
                 <label>Required Room Features:</label>
