@@ -42,7 +42,7 @@ if (!$recaptchaConf["success"]) {
     exit;
 }
 participant_header($title, true, 'Login');
-$badgeid = getString('badgeid');
+$badgeid = trim(getString('badgeid'));
 $email = getString('emailAddress');
 if (empty($badgeid) || empty($email)) {
     $params = array();

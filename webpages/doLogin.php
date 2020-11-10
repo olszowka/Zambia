@@ -5,7 +5,7 @@ if (!isset($_SESSION['badgeid'])) {
     require_once('CommonCode.php');
     $userIdPrompt = USER_ID_PROMPT;
     $title = "Submit Password";
-    $badgeid = getString('badgeid');
+    $badgeid = trim(getString('badgeid'));
     $password = getString('passwd');
     $query = "SELECT password, data_retention FROM Participants WHERE badgeid = ?;";
     $query_param_arr = array($badgeid);
