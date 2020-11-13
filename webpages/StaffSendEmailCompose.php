@@ -27,7 +27,7 @@ if (!$timeLimitSuccess) {
 	RenderError($title,"Error extending time limit.");
 	exit(0);
 }
-$subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
+$subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$", "\$BIO\$");
 $email = get_email_from_post();
 //Create the Transport
 $transport = Swift_SmtpTransport::newInstance(SMTP_ADDRESS,2525);
@@ -74,7 +74,7 @@ for ($i=0; $i<$recipient_count; $i++) {
     //Create the message
     $message = Swift_Message::newInstance();
     $repl_list = array($recipientinfo[$i]['badgeid'], $recipientinfo[$i]['firstname'], $recipientinfo[$i]['lastname']);
-    $repl_list = array_merge($repl_list, array($recipientinfo[$i]['email'], $recipientinfo[$i]['pubsname'], $recipientinfo[$i]['badgename']));
+    $repl_list = array_merge($repl_list, array($recipientinfo[$i]['email'], $recipientinfo[$i]['pubsname'], $recipientinfo[$i]['badgename'], $recipientinfo[$i]['bio']));
     $emailverify['body'] = str_replace($subst_list, $repl_list, $email['body']);
     if ($status === "1" || $status === "2") {
         if ($status === "1") {
