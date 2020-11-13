@@ -711,7 +711,7 @@ function set_permission_set($badgeid) {
     global $link;
     
 // First do simple permissions
-    $_SESSION['permission_set']="";
+    $_SESSION['permission_set']=[];
     $query= <<<EOD
     Select distinct permatomtag from PermissionAtoms as PA, Phases as PH,
     PermissionRoles as PR, UserHasPermissionRole as UHPR, Permissions P where
@@ -736,7 +736,7 @@ EOD;
         $_SESSION['permission_set'][]=$onerow[0];
         };
 // Second, do <<specific>> permissions
-    $_SESSION['permission_set_specific']="";
+    $_SESSION['permission_set_specific']=[];
     $query= <<<EOD
     Select distinct permatomtag, elementid from PermissionAtoms as PA, Phases as PH,
     PermissionRoles as PR, UserHasPermissionRole as UHPR, Permissions P where
