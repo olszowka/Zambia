@@ -460,7 +460,7 @@ function html_to_text($html) {
     $text = preg_replace('=<br */*>=i', "\r\n", $text);
     $text = preg_replace('=</p>=i', "\r\n\r\n", $text);
     $text = preg_replace('=<p[^>]*>=i', '', $text);
-    $text = strip_tags($text);
+    $text = html_entity_decode(strip_tags($text), ENT_QUOTES);
     return $text;
 }
 ?>
