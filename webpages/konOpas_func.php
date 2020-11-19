@@ -37,7 +37,8 @@ SELECT
 		DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins,
 		CASE
 			WHEN ISNULL(S.meetinglink) OR S.meetinglink = "" THEN S.progguidhtml
-			ELSE CONCAT(S.progguidhtml, '<p><a href="', S.meetinglink, '" target="_blank"><span style="color:blue;">Register for ', S.title, '</a></span></p>')
+            WHEN meetinglink LIKE '%register%' THEN CONCAT(S.progguidhtml, '<p><a href="', S.meetinglink, '" target="_blank"><span style="color:blue;">Register for ', TRIM(S.title), '</a></span></p>')
+			ELSE CONCAT(S.progguidhtml, '<p><a href="', S.meetinglink, '" target="_blank"><span style="color:blue;">Attend ', TRIM(S.title), ' now.</a></span></p>')
 		END AS `desc`,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time
