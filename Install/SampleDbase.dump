@@ -120,11 +120,11 @@ LOCK TABLES `CustomText` WRITE;
 /*!40000 ALTER TABLE `CustomText` DISABLE KEYS */;
 INSERT INTO `CustomText` VALUES 
   (1,'My Profile','biography_note','Note: Your biography will appear immediately following your name in the program. If you have previously been a participant, the stored bio for you will be displayed below. Please verify the text for publication.'),
-  (2,'My Availability','note_after_times','Please note: this year the Masquerade is scheduled for Sun, likely 8-11 pm.'),
-  (3,'Not Enough Panels','not_enough_panels','Panelists on 3 or more panels receive complementary memberships from Programming.  If you are interested in increasing your number of panels to take advantage of this, please contact us and we will work with you to see if it is possible.  If you are expecting a comp from helping another division, that will show up here shortly after registration processes it.  Please contact that division or registration with questions.'),
-  (4,'Enough Panels','enough_panels','Programming has requested a comp membership for you.'),
-  (5,'Note to All Panelists 1','all_panelists_1','In order to put together the entire schedule, we had to schedule some panels outside of the times that certain panelists requested.  If this happened to you, we would love to have you on the panel, but understand if you cannot make it.  Please let us know if you cannot.'),
-  (6,'Note to all Panelists 2','all_panelists_2','Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on which you would still like to participate.');
+  (2,'My Availability','note_after_times','<div>Please note: this year the Masquerade is scheduled for Sun, likely 8-11 pm.</div>'),
+  (3,'My Schedule','not_enough_panels','Panelists on 3 or more panels receive complementary memberships from Programming.  If you are interested in increasing your number of panels to take advantage of this, please contact us and we will work with you to see if it is possible.  If you are expecting a comp from helping another division, that will show up here shortly after registration processes it.  Please contact that division or registration with questions.'),
+  (4,'My Schedule','enough_panels','Programming has requested a comp membership for you.'),
+  (5,'My Schedule','all_panelists_1','<p>In order to put together the entire schedule, we had to schedule some panels outside of the times that certain panelists requested.  If this happened to you, we would love to have you on the panel, but understand if you cannot make it.  Please let us know if you cannot.</p>'),
+  (6,'My Schedule','all_panelists_2','<p>Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on which you would still like to participate.</p>');
 /*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
 UNLOCK TABLES;
 

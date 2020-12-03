@@ -87,9 +87,9 @@ if (!$regmessage) {
 participant_header($title);
 echo "<p>Below is the list of all the panels for which you are scheduled.  If you need any changes";
 echo " to this schedule please contact <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>.</p>\n";
-showCustomText("<p>","all_panelists_1","</p>");
-showCustomText("<p>","all_panelists_2","</p>");
-echo "<p>Your registration status is <span class=\"hilit\">$regmessage.</span>\n";
+echo fetchCustomText("all_panelists_1");
+echo fetchCustomText("all_panelists_2");
+echo "<p>Your registration status is <span class=\"hilit\">$regmessage</span>\n";
 echo "<p>Thank you -- <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>\n";
 RenderXSLT('my_schedule.xsl', array(), $resultXML);
 participant_footer();
