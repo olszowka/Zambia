@@ -10,6 +10,7 @@
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+  <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
   <xsl:template match="/">
     <nav id="staffNav" class="navbar navbar-inverse">
       <div class="navbar-inner">
@@ -128,7 +129,7 @@
                   <input type="hidden" value="ANY" name="divisionid"/>
                 </form>
               </li>
-              <xsl:variable name="AdminMenu" select="$AdminPhases or $ConfigureReports" />
+              <xsl:variable name="AdminMenu" select="$AdminPhases or $ConfigureReports or $Administrator" />
               <xsl:if test="$AdminMenu">
                 <li class="dropdown">
                   <a href="#admin" class="dropdown-toggle" data-toggle="dropdown">
@@ -144,6 +145,11 @@
                     <xsl:if test="$ConfigureReports">
                       <li>
                         <a href="BuildReportMenus.php">Build Report Menus</a>
+                      </li>
+                    </xsl:if>
+                    <xsl:if test="$Administrator">
+                      <li>
+                        <a href="EditCustomText.php">Edit Custom Text</a>
                       </li>
                     </xsl:if>
                   </ul>

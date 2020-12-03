@@ -10,6 +10,7 @@
   <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+  <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
   <xsl:template match="/">
     <nav id="staffNav" class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand py-1" href="#">
@@ -92,7 +93,7 @@
           <input type="hidden" value="" name="sessionid" />
           <input type="hidden" value="ANY" name="divisionid" />
         </form>
-        <xsl:if test="$AdminPhases or $ConfigureReports">
+        <xsl:if test="$AdminPhases or $ConfigureReports or $Administrator">
           <div class="navbar-nav">
             <div class="nav-item dropdown mr-4 py-0">
               <a class="nav-link dropdown-toggle py-1" href="#" id="navbarAdminDropdown" role="button" data-toggle="dropdown"
@@ -105,6 +106,9 @@
                 </xsl:if>
                 <xsl:if test="$ConfigureReports">
                   <a class="dropdown-item" href="BuildReportMenus.php">Build Report Menus</a>
+                </xsl:if>
+                <xsl:if test="$Administrator">
+                  <a class="dropdown-item" href="EditCustomText.php">Edit Custom Text</a>
                 </xsl:if>
               </div>
             </div>
