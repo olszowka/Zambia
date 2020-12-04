@@ -30,9 +30,11 @@ if (!$timeLimitSuccess) {
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$", "\$BIO\$");
 $email = get_email_from_post();
 //Create the Transport
-$transport = Swift_SmtpTransport::newInstance(SMTP_ADDRESS,SMTP_PORT);
+$transport = new Swift_SmtpTransport(SMTP_ADDRESS,SMTP_PORT);
 //Create the Mailer using your created Transport
-$mailer = Swift_Mailer::newInstance($transport);
+$mailer = new Swift_Mailer($transport);
+// And specify a time in seconds to pause for (30 secs)
+$mailer->registerPlugin(new Swift_Plugins_AntiFloodPlugin(20, 10));
 //$swift =& new Swift(new Swift_Connection_SMTP(SMTP_ADDRESS)); // Is machine name of SMTP host defined in db_name.php
 //$log =& Swift_LogContainer::getLog();
 //$log->setLogLevel(0); // 0 is minimum logging; 4 is maximum logging
@@ -72,7 +74,7 @@ if ($status === "1" || $status === "2") {
 for ($i=0; $i<$recipient_count; $i++) {
     $ok=TRUE;
     //Create the message
-    $message = Swift_Message::newInstance();
+    $message = new Swift_Message();
     $repl_list = array($recipientinfo[$i]['badgeid'], $recipientinfo[$i]['firstname'], $recipientinfo[$i]['lastname']);
     $repl_list = array_merge($repl_list, array($recipientinfo[$i]['email'], $recipientinfo[$i]['pubsname'], $recipientinfo[$i]['badgename'], $recipientinfo[$i]['bio']));
     $emailverify['body'] = str_replace($subst_list, $repl_list, $email['body']);
