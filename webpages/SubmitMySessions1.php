@@ -6,6 +6,7 @@
     require ('PartPanelInterests_Render.php');
     $delcount = 0;
     $dellist = "";
+    $insarray = [];
 	if (!empty($_POST)) {
 		foreach ($_POST as $postName => $postValue) {
 			if (substr($postName,0,5) != "dirty")
