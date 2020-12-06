@@ -33,8 +33,8 @@ $email = get_email_from_post();
 $transport = new Swift_SmtpTransport(SMTP_ADDRESS,SMTP_PORT);
 //Create the Mailer using your created Transport
 $mailer = new Swift_Mailer($transport);
-// And specify a time in seconds to pause for (30 secs)
-$mailer->registerPlugin(new Swift_Plugins_AntiFloodPlugin(20, 10));
+// And specify a time in seconds to pause for (1 secs)
+$mailer->registerPlugin(new Swift_Plugins_AntiFloodPlugin(20, 1));
 //$swift =& new Swift(new Swift_Connection_SMTP(SMTP_ADDRESS)); // Is machine name of SMTP host defined in db_name.php
 //$log =& Swift_LogContainer::getLog();
 //$log->setLogLevel(0); // 0 is minimum logging; 4 is maximum logging
