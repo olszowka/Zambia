@@ -19,6 +19,8 @@ document.addEventListener( "DOMContentLoaded", function () {
 		case "Panel Interests":
 			panelInterests.initialize();
 			break;
+		case "Edit Custom Text":
+			editCustomText.initialize();
 		default:
 			window.status="Ready.";
 		/**

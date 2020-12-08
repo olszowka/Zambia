@@ -121,10 +121,10 @@ LOCK TABLES `CustomText` WRITE;
 INSERT INTO `CustomText` VALUES 
   (1,'My Profile','biography_note',''),
   (2,'My Availability','note_after_times',''),
-  (3,'Not Enough Panels','not_enough_panels',''),
-  (4,'Enough Panels','enough_panels',''),
-  (5,'Note to All Panelists 1','all_panelists_1',''),
-  (6,'Note to all Panelists 2','all_panelists_2','');
+  (3,'My Schedule','not_enough_panels',''),
+  (4,'My Schedule','enough_panels',''),
+  (5,'My Schedule','all_panelists_1',''),
+  (6,'My Schedule','all_panelists_2','');
 /*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
 UNLOCK TABLES;
 

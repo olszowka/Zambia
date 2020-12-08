@@ -72,7 +72,7 @@ if (isset($_POST['bioText']))
     }
 $query2 = "REPLACE ParticipantHasCredential (badgeid, credentialid) VALUES ";
 $valuesClause2 = "";
-$query3 = "DELETE FROM ParticipantHasCredential WHERE badgeid = '$badgeid' AND credentialid in (";
+$query3 = "DELETE FROM ParticipantHasCredential WHERE badgeid = $badgeid AND credentialid in (";
 $credentialClause3 = "";
 foreach ($_POST as $name => $value) {
     if (mb_substr($name, 0, 13) != "credentialCHK")
@@ -80,7 +80,7 @@ foreach ($_POST as $name => $value) {
     $ccid = mb_substr($name, 13);
     switch ($value) {
         case "true":
-            $valuesClause2 .= ($valuesClause2 ? ", " : "") . "('$badgeid', $ccid)";
+            $valuesClause2 .= ($valuesClause2 ? ", " : "") . "($badgeid, $ccid)";
             break;
         case "false":
             $credentialClause3 .= ($credentialClause3 ? ", " : "") . $ccid;
