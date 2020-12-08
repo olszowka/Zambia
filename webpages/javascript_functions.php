@@ -1,7 +1,8 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrap4 = false) {
-    if ($bootstrap4) { ?>
+?>
+<?php if ($bootstrap4) { ?>
     <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
     <script src="external/bootstrap4.5.0/bootstrap.bundle.min.js" type="text/javascript"></script>
 <?php } else { ?>
@@ -57,10 +58,6 @@ function load_internal_javascript($title, $isDataTables = false) {
         case "Administer Phases":
             echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
             break;
-        case "Edit Custom Text":
-            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
-            break;
         case "Session Search Results":
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;
@@ -78,3 +75,5 @@ function load_internal_javascript($title, $isDataTables = false) {
 <?php
 }
 ?>
+
+
