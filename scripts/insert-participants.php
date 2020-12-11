@@ -61,8 +61,8 @@ for ($i = 0; $i < $n_users; $i++) {
     $bio = "Test Participant - Can Delete";
     echo "\n";
     echo "BEGIN;\n";
-    echo "INSERT INTO CongoDump(badgeid, firstname, lastname, email) VALUES($badgeid, '$firstname', '$lastname', '$email');\n";
-    echo "INSERT INTO Participants(badgeid, pubsname, badgename, bio, interested) VALUES($badgeid, '$pubsname', '$badgename', '$bio', $interested);\n";
+    echo "INSERT INTO CongoDump(badgeid, badgename, firstname, lastname, email) VALUES($badgeid, '$badgename', '$firstname', '$lastname', '$email');\n";
+    echo "INSERT INTO Participants(badgeid, pubsname, bio, interested) VALUES($badgeid, '$pubsname', '$bio', $interested);\n";
     echo "INSERT INTO UserHasPermissionRole(badgeid, permroleid) VALUES($badgeid, $roleid);\n";
     echo "COMMIT;\n";
 }
