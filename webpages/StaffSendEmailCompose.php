@@ -128,7 +128,7 @@ for ($i=0; $i<$recipient_count; $i++) {
     try {
         $message->addTo($recipientinfo[$i]['email']);
     } catch (Swift_SwiftException $e) {
-        $email_log( "\taddTo($recip[email] error: " . $e->getMessage());
+        $email_log( "\taddTo(\"$recip[email]\") error: " . $e->getMessage());
         echo $e->getMessage()."<br>\n";
         zambia_flush_buffers();
 	    $ok=FALSE;
@@ -140,9 +140,9 @@ for ($i=0; $i<$recipient_count; $i++) {
     }
     try {
         $mailer->send($message);
-        $email_log( "\tsend success!");
+        $email_log( "\tsend did not throw exception");
     } catch (Swift_SwiftException $e) {
-        $email_log( "\tsend error: " . $e->getMessage());
+        $email_log( "\tsend exception: " . $e->getMessage());
         echo $e->getMessage() . "<br>\n";
         zambia_flush_buffers();
         $ok = FALSE;
