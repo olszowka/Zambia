@@ -46,10 +46,10 @@
  * UserHasPermissionRole.badgeid, .permroleid
  * permroleid = 3 for Program Participant
  */
-$n_users = 1;
-$start_id = 200000;
-$roles = [ 'Admin' => 1, 'Staff' => 2, 'Participant' => 3];
-$roleid = $roles['Participant'];
+$n_users = 200;
+$start_id = 200001;
+$roles = [ 'Admin' => 1, 'Staff' => 2, 'Participant' => 3, 'Test' => 12];
+$roleid = $roles['Test'];
 $interested = 1; /* YES */
 for ($i = 0; $i < $n_users; $i++) {
     $badgeid = $start_id + $i;
