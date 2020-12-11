@@ -71,7 +71,17 @@ $status = checkForShowSchedule($email['body']); // "0" don't show schedule; "1" 
 if ($status === "1" || $status === "2") {
     $scheduleInfoArray = generateSchedules($status, $recipientinfo);
 }
+
+$logfile = "/tmp/email-log.txt";
+unlink($logfile);
+$email_log = function ($message) use ($logfile) {
+    $mem = memory_get_usage();
+    error_log($mem . " $message\n", 3, $logfile);
+};
+
 for ($i=0; $i<$recipient_count; $i++) {
+    $recip = $recipientinfo[$i];
+    $email_log("#$i: Sending email to $recip[badgeid] $recip[firstname] $recip[lastname] ...");
     $ok=TRUE;
     //Create the message
     $message = new Swift_Message();
@@ -100,23 +110,32 @@ for ($i=0; $i<$recipient_count; $i++) {
     $message->setBody($emailverify['body'],'text/plain');
     //$message =& new Swift_Message($email['subject'],$emailverify['body']);
     echo ($recipientinfo[$i]['pubsname']." - ".$recipientinfo[$i]['email'].": ");
+    flush();
     try {
         $message->addTo($recipientinfo[$i]['email']);
     } catch (Swift_SwiftException $e) {
+        $email_log( "\taddTo($recip[email] error: " . $e->getMessage());
         echo $e->getMessage()."<br>\n";
+        flush();
 	    $ok=FALSE;
+    } catch (Exception $exc) {
+        $email_log("\tERROR " . $exc->getMessage());
     }
     if ($emailcc != "") {
         $message->addBcc($emailcc);
     }
     try {
         $mailer->send($message);
+        $email_log( "\tsend success!");
     } catch (Swift_SwiftException $e) {
+        $email_log( "\tsend error: " . $e->getMessage());
         echo $e->getMessage() . "<br>\n";
+        flush();
         $ok = FALSE;
     }
     if ($ok == TRUE) {
         echo "Sent<br>";
+        flush();
     }
 }
 //$log =& Swift_LogContainer::getLog();
