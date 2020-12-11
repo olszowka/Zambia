@@ -72,12 +72,26 @@ if ($status === "1" || $status === "2") {
     $scheduleInfoArray = generateSchedules($status, $recipientinfo);
 }
 
-$logfile = "/tmp/email-log.txt";
+/**
+ * Log each email as it is sent, reporting memory used so far.
+ */
+$logfile = "/home/hosting/logs/zambia-last-email-log.txt";
 unlink($logfile);
+touch($logfile);
 $email_log = function ($message) use ($logfile) {
     $mem = memory_get_usage();
     error_log($mem . " $message\n", 3, $logfile);
 };
+
+/**
+ * Attempt to flush each line as it is written.
+ */
+function zambia_flush_buffers() {
+    ob_end_flush();
+    ob_flush();
+    flush();
+    ob_start();
+}
 
 for ($i=0; $i<$recipient_count; $i++) {
     $recip = $recipientinfo[$i];
@@ -110,13 +124,13 @@ for ($i=0; $i<$recipient_count; $i++) {
     $message->setBody($emailverify['body'],'text/plain');
     //$message =& new Swift_Message($email['subject'],$emailverify['body']);
     echo ($recipientinfo[$i]['pubsname']." - ".$recipientinfo[$i]['email'].": ");
-    flush();
+    zambia_flush_buffers();
     try {
         $message->addTo($recipientinfo[$i]['email']);
     } catch (Swift_SwiftException $e) {
         $email_log( "\taddTo($recip[email] error: " . $e->getMessage());
         echo $e->getMessage()."<br>\n";
-        flush();
+        zambia_flush_buffers();
 	    $ok=FALSE;
     } catch (Exception $exc) {
         $email_log("\tERROR " . $exc->getMessage());
@@ -130,12 +144,12 @@ for ($i=0; $i<$recipient_count; $i++) {
     } catch (Swift_SwiftException $e) {
         $email_log( "\tsend error: " . $e->getMessage());
         echo $e->getMessage() . "<br>\n";
-        flush();
+        zambia_flush_buffers();
         $ok = FALSE;
     }
     if ($ok == TRUE) {
         echo "Sent<br>";
-        flush();
+        zambia_flush_buffers();
     }
 }
 //$log =& Swift_LogContainer::getLog();
