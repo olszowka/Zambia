@@ -22,12 +22,23 @@ if (!mysql_cmd_with_prepare($query, 's', $query_param_arr)) {
 }
 $message = "Database updated successfully.";
 $message2 = "";
-if ($participant_array = retrieveFullParticipant($badgeid)) {
-    require('doLogin.php');
-    exit();
+$_SESSION['data_consent'] = 1;
+if (may_I('Staff')) {
+    require('StaffPage.php');
+} elseif (may_I('Participant')) {
+    if (!$participant_array = retrieveFullParticipant($badgeid)) {
+        $message_error = $message2 . "<br />Error retrieving data from DB.  No further execution possible.";
+        RenderError($message_error);
+    } else {
+        require('renderWelcome.php');
+    }
+} elseif (may_I('public_login')) {
+    require('renderBrainstormWelcome.php');
 } else {
-    $message = $message2 . "<br>Failure to re-retrieve data for Participant.";
-    RenderError($message);
-    exit();
+    unset($_SESSION['badgeid']);
+    $message_error = "There is a problem with your $userIdPrompt's permission configuration:  It doesn't have ";
+    $message_error .= "permission to access any welcome page.  Please contact Zambia staff.";
+    RenderError($message_error);
 }
+exit();
 ?>
