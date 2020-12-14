@@ -121,7 +121,8 @@ INSERT INTO `CustomText` VALUES
   (3,'My Schedule','not_enough_panels','Panelists on 3 or more panels receive complementary memberships from Programming.  If you are interested in increasing your number of panels to take advantage of this, please contact us and we will work with you to see if it is possible.  If you are expecting a comp from helping another division, that will show up here shortly after registration processes it.  Please contact that division or registration with questions.'),
   (4,'My Schedule','enough_panels','Programming has requested a comp membership for you.'),
   (5,'My Schedule','all_panelists_1','<p>In order to put together the entire schedule, we had to schedule some panels outside of the times that certain panelists requested.  If this happened to you, we would love to have you on the panel, but understand if you cannot make it.  Please let us know if you cannot.</p>'),
-  (6,'My Schedule','all_panelists_2','<p>Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on which you would still like to participate.</p>');
+  (6,'My Schedule','all_panelists_2','<p>Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on which you would still like to participate.</p>'),
+  (7,'Data Retention Consent', 'consent', '<div><p>We collect your personal data to allow us to schedule you into programming items, to publish data about your participation in programming items, and to administer the convention.  We retain this data for the duration of this convention and to assist in planning future conventions.</p><p>We do not share this data with other conventions outside of what is published for our program guides, website, and other sites we use to publish the schedule for the convention.</p><p>We transfer this data as required to print the guides, and to provide any online guides to the programming for our convention including but not limited to our website and any other on-line programing guides we may use from time to time.</p><p>Without your consent we are unable to have you as a program participant.</p></div>');
 /*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -608,7 +609,7 @@ CREATE TABLE ParticipantPasswordResetRequests (
     expirationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     selector char(16) NOT NULL DEFAULT '',
     token char(64) NOT NULL DEFAULT '',
-    cancelled tinyint(4) NOT NULL DEFAULT '0',
+    cancelled tinyint(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (badgeidentered, creationdatetime),
     UNIQUE KEY PPRR_selector (selector)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -678,9 +679,10 @@ CREATE TABLE `Participants` (
   `interested` tinyint(1) DEFAULT NULL,
   `bio` text,
   `pubsname` varchar(50) DEFAULT NULL,
-  `share_email` tinyint(11) DEFAULT '1',
+  `share_email` tinyint(1) DEFAULT '1',
   `staff_notes` text,
-  `use_photo` tinyint(4) DEFAULT NULL,
+  `use_photo` tinyint(1) DEFAULT NULL,
+  `data_retention` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -690,11 +692,11 @@ CREATE TABLE `Participants` (
 
 LOCK TABLES `Participants` WRITE;
 /*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
-INSERT INTO `Participants` (`badgeid`, `password`, `bestway`, `interested`, `bio`, `pubsname`, `share_email`, `staff_notes`, `use_photo`)
+INSERT INTO `Participants` (`badgeid`, `password`, `bestway`, `interested`, `bio`, `pubsname`, `share_email`, `staff_notes`, `use_photo`, `data_retention`)
 VALUES
-	('1','fe01ce2a7fbac8fafaed7c982a04e229',NULL,1,NULL,'Joe Staff',1,NULL,NULL),
-	('2','fe01ce2a7fbac8fafaed7c982a04e229',NULL,1,NULL,'Jane Participant',1,NULL,NULL),
-	('unrecorded','12345678901234567890123456789012',NULL,NULL,NULL,'unrecorded',1,NULL,NULL);
+    ('1','$2y$10$yE56xXk2bbcbyzlOSrOWvePLyfRqG0DFy9jsdMs97mKpdCzaFauh.',NULL,1,NULL,'Joe Staff',1,NULL,NULL, 0),
+	('2','$2y$10$/j8Xcw5jMuN/MbZ63GHJw.hG76rg./Fkf5gnORqoldRo3bqVaRbaG',NULL,1,NULL,'Jane Participant',1,NULL,NULL, 0),
+	('unrecorded','12345678901234567890123456789012',NULL,NULL,NULL,'unrecorded',1,NULL,NULL, 0);
 /*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -761,7 +763,8 @@ INSERT INTO `PatchLog` (patchname) VALUES
     ('49_phases.sql'),
     ('50_password_reset_self.sql'),
     ('51_admin_phases.sql'),
-    ('52_password_security.sql');
+    ('52_password_security.sql'),
+    ('53_data_retention.sql');
 /*!40000 ALTER TABLE `PatchLog` ENABLE KEYS */;
 UNLOCK TABLES;
 

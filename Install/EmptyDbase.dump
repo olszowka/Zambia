@@ -124,7 +124,8 @@ INSERT INTO `CustomText` VALUES
   (3,'My Schedule','not_enough_panels',''),
   (4,'My Schedule','enough_panels',''),
   (5,'My Schedule','all_panelists_1',''),
-  (6,'My Schedule','all_panelists_2','');
+  (6,'My Schedule','all_panelists_2',''),
+  (7,'Data Retention Consent', 'consent', '');
 /*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -604,14 +605,14 @@ DELIMITER ;
 DROP TABLE IF EXISTS ParticipantPasswordResetRequests;
 
 CREATE TABLE ParticipantPasswordResetRequests (
-    badgeidentered varchar(15) NOT NULL DEFAULT '' COMMENT 'Not necessary a valid badgeid, so no Foreign Key',
+    badgeidentered varchar(15) NOT NULL DEFAULT '' COMMENT 'Not necessarily a valid badgeid, so no Foreign Key',
     email varchar(255) NOT NULL DEFAULT '',
     ipaddress varchar(225) NOT NULL DEFAULT '',
     creationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expirationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     selector char(16) NOT NULL DEFAULT '',
     token char(64) NOT NULL DEFAULT '',
-    cancelled tinyint(4) NOT NULL DEFAULT '0',
+    cancelled tinyint(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (badgeidentered, creationdatetime),
     UNIQUE KEY PPRR_selector (selector)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -687,9 +688,10 @@ CREATE TABLE `Participants` (
   `interested` tinyint(1) DEFAULT NULL,
   `bio` text,
   `pubsname` varchar(50) DEFAULT NULL,
-  `share_email` tinyint(11) DEFAULT '1',
+  `share_email` tinyint(1) DEFAULT '1',
   `staff_notes` text,
-  `use_photo` tinyint(4) DEFAULT NULL,
+  `use_photo` tinyint(1) DEFAULT NULL,
+  `data_retention` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -766,7 +768,8 @@ INSERT INTO `PatchLog` (patchname) VALUES
     ('49_phases.sql'),
     ('50_password_reset_self.sql'),
     ('51_admin_phases.sql'),
-    ('52_password_security.sql');
+    ('52_password_security.sql'),
+    ('53_data_retention.sql');
 /*!40000 ALTER TABLE `PatchLog` ENABLE KEYS */;
 UNLOCK TABLES;
 

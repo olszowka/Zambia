@@ -5,8 +5,14 @@ $header_section = HEADER_STAFF;
 
 function staff_header($title, $bootstrap4 = false, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;
-    html_header($title, $bootstrap4, $is_report, $reportColumns, $reportAdditionalOptions);
     $isLoggedIn = isLoggedIn();
+    if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
+        require_once('ParticipantHeader.php');
+        require_once('ParticipantFooter.php');
+        participant_header(''); // force data consent page
+        exit();
+    }
+    html_header($title, $bootstrap4, $is_report, $reportColumns, $reportAdditionalOptions);
     $bodyClass = "";
     if ($fullPage && $bootstrap4) {
         $bodyClass = 'class="full-page bs4"';
@@ -32,8 +38,6 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
 <?php
         commonHeader('Staff', $isLoggedIn, false, 'Normal', "", $bootstrap4);
     }
-?>
-<?php
     /* Render Staff Menu */
     if ($isLoggedIn) {
         $paramArray = array();
@@ -58,3 +62,4 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
         exit();
     }
 }
+?>

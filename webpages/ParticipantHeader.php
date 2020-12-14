@@ -7,23 +7,35 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
     // $noUserRequired is true if user not required to be logged in to access this page
     // $loginPageStatus is "Login", "Logout", "Normal", "No_Permission", "Password_Reset"
     //      login page should be "Login"
+    //          don't show menu; show login form in header
     //      logout page should be "Logout"
+    //          don't show menu; show logout confirmation in header
     //      logged in user who reached page for which he does not have permission is "No_Permission"
+    //          show menu; don't show page; show "No permission" where?
+    //      pages for user to reset password are "Password_Reset"
+    //          don't show menu; show header without welcome; show page
+    //      override page to gather user data retention consent is "Consent"
+    //          don't show menu; show dataConsent page; show normal header (with welcome)
     //      all other pages should be "Normal"
+    //          show menu; show page; show normal header (with welcome)
     global $headerErrorMessage;
+    $isLoggedIn = isLoggedIn();
+    if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
+        $title = "Data Retention Consent";
+        $loginPageStatus = 'Consent';
+        $bootstrap4 = true;
+    }
     html_header($title, $bootstrap4);
-    
-if ($bootstrap4) { ?>
+    if ($bootstrap4) { ?>
 <body class="bs4">
 <?php } else { ?>
 <body>
 <?php } ?>
     <div class="container-fluid">
 <?php
-    $isLoggedIn = isLoggedIn();
     commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage, $bootstrap4);
     // below: authenticated and authorized to see a menu
-    if ($isLoggedIn && $loginPageStatus != 'Login' && 
+    if ($isLoggedIn && $loginPageStatus != 'Login' && $loginPageStatus != 'Consent' &&
         (may_I("Participant") || may_I("Staff"))) {
         if ($bootstrap4) {
             $paramArray = array();
@@ -39,7 +51,7 @@ if ($bootstrap4) { ?>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="<? echo $_SERVER['PATH_INFO'] ?>"><? echo $title ?></a>
+                    <a class="brand" href="<?php if (isset($_SERVER['PATH_INFO'])) echo $_SERVER['PATH_INFO'] ?>"><?php echo $title ?></a>
                     <div class="nav-collapse">
                         <ul class="nav">
                             <li><a href="welcome.php">Overview</a></li>
@@ -61,8 +73,11 @@ if ($bootstrap4) { ?>
             </div>
         </nav>
 <?php       }
-    } else { // not authenticated and authorized to see a menu
-        if (!$noUserRequired) {
+    } else { // couldn't show menu
+        if ($loginPageStatus === 'Consent') {
+            require('dataConsent.php');
+            exit();
+        } elseif (!$noUserRequired) { // not authenticated and authorized to see a menu
             participant_footer();
             exit();
         }

@@ -1,13 +1,13 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $headerErrorMessage, $link, $linki, $title;
+require_once('CommonCode.php');
+$userIdPrompt = USER_ID_PROMPT;
 if (!isset($_SESSION['badgeid'])) {
-    require_once('CommonCode.php');
-    $userIdPrompt = USER_ID_PROMPT;
     $title = "Submit Password";
     $badgeid = getString('badgeid');
     $password = getString('passwd');
-    $query = "SELECT password FROM Participants WHERE badgeid = ?;";
+    $query = "SELECT password, data_retention FROM Participants WHERE badgeid = ?;";
     $query_param_arr = array($badgeid);
     if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
         exit(); // Should have exited already
@@ -20,6 +20,7 @@ if (!isset($_SESSION['badgeid'])) {
     $dbobject = mysqli_fetch_object($result);
     mysqli_free_result($result);
     $dbpassword = $dbobject->password;
+    $_SESSION['data_consent'] = $dbobject->data_retention;
     if (!password_verify($password, $dbpassword)) {
         $headerErrorMessage = "Incorrect $userIdPrompt or password.";
         require('login.php');
