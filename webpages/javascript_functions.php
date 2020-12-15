@@ -58,7 +58,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
             break;
         case "Edit Custom Text":
-            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
             break;
         case "Session Search Results":

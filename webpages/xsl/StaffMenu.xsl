@@ -156,6 +156,9 @@
                       <li>
                         <a href="EditCustomText.php">Edit Custom Text</a>
                       </li>
+                      <li>
+                        <a href="EditDemographics.php">Edit Demographics</a>
+                      </li>
                     </xsl:if>
                   </ul>
                 </li>
