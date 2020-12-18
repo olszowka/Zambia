@@ -61,6 +61,11 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
             break;
+        case "Edit Demographics":
+            echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
+            echo "<script src=\"javascript/EditDemographics.js\"></script>\n";
+            break;
         case "Session Search Results":
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;

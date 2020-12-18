@@ -409,7 +409,7 @@ CREATE TABLE DemographicConfig (
 	demographicid int NOT NULL AUTO_INCREMENT,
 	shortname varchar(100) NOT NULL,
 	description varchar(1024) DEFAULT NULL,
-    value varchar(512) NOT NULL,
+	value varchar(512) NOT NULL,
 	prompt varchar(512) NOT NULL,
 	hover varchar(8192) DEFAULT NULL,
 	display_order int NOT NULL,
