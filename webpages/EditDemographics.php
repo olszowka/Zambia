@@ -10,63 +10,26 @@ $rows = 0;
 
 staff_header($title, $bootstrap4);
 if (isLoggedIn() && may_I("Administrator")) {
-	if (isset($_POST["PostCheck"])) {
-		$priorValues = interpretControlString($_POST["control"], $_POST["controliv"]);
-
-		if ($priorValues["getSessionID"] !=  session_id()) {
-            $message = "Session expired, no text updated";
-        } else {
-//            $selected = $_POST["customtextid"];
-//            if ($selected == '-1') {
-//                $selected = '';
-//            }
-//            if ($selected != '') {
-
-//                $textcontents = $_POST["textcontents"];
-//                if (mb_substr($textcontents, 0, 3) == '<p>') {
-//                    $textcontents = mb_ereg_replace('/^<p>/i', '', $textcontents);
-//                    $textcontents = mb_ereg_replace('/<\/p>\s*$/i', '', $textcontents);
-//                }
-
-
-//                $origcontents = $priorValues[$selected];
-
-//                if ($origcontents != $textcontents) {
-//                    $query = <<<EOD
-//UPDATE CustomText
-//    SET textcontents = ?
-//    WHERE customtextid = ?;
-//EOD;
-
-//                    $upd_array = array($textcontents, $selected);
-//                    $rows = mysql_cmd_with_prepare($query, "si", $upd_array);
-//                    if (is_null($rows)) {
-//                        return;
-//                    }
-
-//                    if ($rows == 1) {
-//                        $message = "Custom Text Updated";
-//                    } else {
-//                        $message = "No chages to update-rows";
-//                    }
-//                } else {
-//                    $message = "No chages to update-select";
-//                }
-//            } else {
-//                $message = "No chages to update-unchanged";
-//            }
-        }
-    }
-
 // Start of display portion
 	$paramArray = array();
 
 	$query=<<<EOD
-		SELECT JSON_ARRAYAGG(JSON_OBJECT(
+	WITH doc AS (
+	SELECT demographicid, JSON_ARRAYAGG(JSON_OBJECT(
 			'demographicid', demographicid,
+            'ordinal', ordinal,
+            'value', value,
+			'optionshort', optionshort,
+			'optionhover', optionhover,
+			'allowothertext', allowothertext,
+			'display_order', display_order
+			)) AS optionconfig
+		FROM DemographicOptionConfig
+)
+SELECT JSON_ARRAYAGG(JSON_OBJECT(
+			'demographicid', d.demographicid,
 			'shortname', d.shortname,
 			'description', d.description,
-			'value', d.value,
 			'prompt', prompt,
 			'hover', hover,
 			'display_order', d.display_order,
@@ -78,10 +41,12 @@ if (isLoggedIn() && may_I("Administrator")) {
 			'searchable', searchable,
 			'ascending', ascending,
 			'min_value', min_value,
-			'max_value', max_value
+			'max_value', max_value,
+            'options', CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END
 			)) AS config
-		FROM demographicconfig d
-		JOIN demographictypes t USING (typeid)
+		FROM DemographicConfig d
+		JOIN DemographicTypes t USING (typeid)
+        LEFT OUTER JOIN doc c USING (demographicid)
 		ORDER BY d.display_order ASC;
 EOD;
 

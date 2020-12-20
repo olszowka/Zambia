@@ -2,36 +2,17 @@
 // Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('StaffCommonCode.php');
 
-// gets data for a participant to be displayed.  Returns as XML
-function fetch_demographicOptions() {
-    global $message_error;
-    $fbadgeid = getInt("badgeid");
-    if (!$fbadgeid) {
-        exit();
-    }
-    $query["fetchParticipants"] = <<<EOD
-SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio, P.staff_notes, CD.firstname, CD.lastname, CD.badgename
-    FROM
-			 Participants P
-		JOIN CongoDump CD ON P.badgeid = CD.badgeid
-    WHERE
-        P.badgeid = "$fbadgeid"
-    ORDER BY
-        CD.lastname, CD.firstname
-EOD;
-    $resultXML = mysql_query_XML($query);
-    if (!$resultXML) {
-        RenderErrorAjax($message_error);
-        exit();
-    }
-    header("Content-Type: text/xml");
-    echo($resultXML->saveXML());
-    exit();
+function var_error_log( $object=null ){
+    ob_start();                    // start buffer capture
+    var_dump( $object );           // dump the values
+    $contents = ob_get_contents(); // put the buffer into a variable
+    ob_end_clean();                // end capture
+    error_log( $contents );        // log contents of the result of var_dump( $object )
 }
 
 function update_demographics() {
     global $linki, $message_error;
+    //error_log("string loaded: " . getString("demographics"));
     $demographics = json_decode(getString("demographics"));
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
@@ -45,14 +26,23 @@ function update_demographics() {
         }
     }
 
-// delete the ones no longer in the JSON uploaded.
-    $sql = "DELETE FROM DemographicOptionConfig WHERE demographicid NOT IN (" . mb_substr($idsFound, 1) . ");";
+    // delete the ones no longer in the JSON uploaded, check for none uploaded
+    if (mb_strlen($idsFound) < 2) {
+        $sql = "DELETE FROM DemographicOptionConfig WHERE demographicid >= 0;";
+    } else {
+        $sql = "DELETE FROM DemographicOptionConfig WHERE demographicid NOT IN (" . mb_substr($idsFound, 1) . ");";
+    }
 
     if (!mysqli_query_exit_on_error($sql)) {
         exit(); // Should have exited already.
     }
-    $deletedopt = mysqli_affected_rows($linki);
-    $sql = "DELETE FROM DemographicConfig WHERE demographicid NOT IN (" . mb_substr($idsFound, 1) . ");";
+    $optdeleted = mysqli_affected_rows($linki);
+
+    if (mb_strlen($idsFound) < 2) {
+        $sql = "DELETE FROM DemographicConfig WHERE demographicid >= 0;";
+    } else {
+        $sql = "DELETE FROM DemographicConfig WHERE demographicid NOT IN (" . mb_substr($idsFound, 1) . ");";
+    }
 
     if (!mysqli_query_exit_on_error($sql)) {
         exit(); // Should have exited already.
@@ -61,18 +51,24 @@ function update_demographics() {
 
     // insert new rows (those with id < 0)
     $inserted = 0;
+    $optinserted = 0;
+    $sql = <<<EOD
+        INSERT INTO DemographicConfig (shortname, description, prompt,
+            hover, display_order, typeid, required, publish, privacy_user, searchable, ascending, min_value, max_value)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+EOD;
+    $optinssql = <<<EOD
+        INSERT INTO DemographicOptionConfig (demographicid, ordinal, value, display_order,
+            optionshort, optionhover, allowothertext)
+        VALUES(?, ?, ?, ?, ?, ?, ?);
+EOD;
     foreach ($demographics as $demo) {
         $id = (int) $demo->demographicid;
         if ($id < 0) {
-            $sql = <<<EOD
-                INSERT INTO DemographicConfig (shortname, description, value, prompt,
-                hover, display_order, typeid, required, publish, privacy_user, searchable, ascending, min_value, max_value)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-EOD;
+
             $paramarray = array(
                 property_exists($demo, "shortname") ? $demo->shortname : "",
                 property_exists($demo, "description") ? $demo->description : null,
-                property_exists($demo, "value") ? $demo->value : "",
                 property_exists($demo, "prompt") ? $demo->prompt : "",
                 property_exists($demo, "hover") ? $demo->hover : null,
                 property_exists($demo, "display_order") ? $demo->display_order: null,
@@ -85,37 +81,63 @@ EOD;
                 property_exists($demo, "min_value") ? ($demo->min_value != "" ? $demo->min_value : null) : null,
                 property_exists($demo, "max_value") ? ($demo->max_value != "" ? $demo->max_value : null) : null
             );
-            $inserted = $inserted + mysql_cmd_with_prepare($sql, "sssssiiiiiiiii", $paramarray);
+            $inserted = $inserted + mysql_cmd_with_prepare($sql, "ssssiiiiiiiii", $paramarray);
+            $demographicid = mysqli_insert_id($linki);
+            $options = [];
+            if (property_exists($demo, "options")) {
+                $options  = json_decode(str_replace("\\\\", "", $demo->options));
+            }
+            $optord = 1;
+            $optdisplayorder = 10;
+            foreach ($options as $opt) {
+                $optparamarray = array(
+                    $demographicid, $optord,
+                    property_exists($opt, "value") ? $opt->value : "",
+                    $optdisplayorder,
+                    property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                    property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                    property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
+                );
+                $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $optparamarray);
+                $optord = $optord + 1;
+                $optdisplayorder = $optdisplayorder + 10;
+            }
         }
     }
 
     // update existing rows (those with id >= 0)
     $updated = 0;
+    $optupdated = 0;
+    $sql = <<<EOD
+        UPDATE DemographicConfig SET
+            shortname = ?,
+            description = ?,
+            prompt = ?,
+            hover = ?,
+            display_order = ?,
+            typeid = ?,
+            required = ?,
+            publish = ?,
+            privacy_user = ?,
+            searchable = ?,
+            ascending = ?,
+            min_value = ?,
+            max_value = ?
+        WHERE demographicid = ?;
+EOD;
+    $optsql = <<<EOD
+        UPDATE DemographicOptionConfig SET
+            value = ?, display_order = ?, optionshort = ?, optionhover = ?, allowothertext = ?
+        WHERE demographicid = ? AND ordinal = ?;
+EOD;
     foreach ($demographics as $demo) {
         $id = (int) $demo->demographicid;
+
         if ($id >= 0) {
-            $sql = <<<EOD
-               UPDATE DemographicConfig SET
-                    shortname = ?,
-                    description = ?,
-                    value = ?,
-                    prompt = ?,
-                    hover = ?,
-                    display_order = ?,
-                    typeid = ?,
-                    required = ?,
-                    publish = ?,
-                    privacy_user = ?,
-                    searchable = ?,
-                    ascending = ?,
-                    min_value = ?,
-                    max_value = ?
-            WHERE demographicid = ?;
-EOD;
+
             $paramarray = array(
                 property_exists($demo, "shortname") ? $demo->shortname : "",
                 property_exists($demo, "description") ? $demo->description : null,
-                property_exists($demo, "value") ? $demo->value : "",
                 property_exists($demo, "prompt") ? $demo->prompt : "",
                 property_exists($demo, "hover") ? $demo->hover : null,
                 property_exists($demo, "display_order") ? $demo->display_order: null,
@@ -125,16 +147,104 @@ EOD;
                 property_exists($demo, "privacy_user") ? $demo->privacy_user : 0,
                 property_exists($demo, "searchable") ? $demo->searchable : 0,
                 property_exists($demo, "ascending") ? $demo->ascending : 1,
-                property_exists($demo, "min_value") ? ($demo->min_value != "" ? $demo->min_value : null) : null,
-                property_exists($demo, "max_value") ? ($demo->max_value != "" ? $demo->max_value : null) : null,
+                property_exists($demo, "min_value") ? (strlen($demo->min_value) > 0 ? $demo->min_value : null) : null,
+                property_exists($demo, "max_value") ? (strlen($demo->max_value) > 0 ? $demo->max_value : null) : null,
                 $id
             );
-            $updated = $updated + mysql_cmd_with_prepare($sql, "sssssiiiiiiiiii", $paramarray);
+            $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiii", $paramarray);
+            $options = [];
+            if (property_exists($demo, "options")) {
+                $options  = json_decode(str_replace("\\\\", "", $demo->options));
+            }
+            $optdisplayorder = 10;
+            $idsFound = "";
+
+            // Delete options no longer needed
+            foreach ($options as $opt) {
+                $opt->display_order = $optdisplayorder;
+                $optdisplayorder = $optdisplayorder + 10;
+
+                $ord = (int) $opt->ordinal;
+                if ($ord > 0) {
+                    $idsFound = $idsFound . ',' . $ord;
+                }
+            }
+            $optdelsql = "DELETE FROM DemographicOptionConfig WHERE demographicid = ?";
+            if (mb_strlen($idsFound) >= 2) {
+                $optdelsql = $optdelsql . " and ordinal NOT IN (" . mb_substr($idsFound, 1) . ")";
+            }
+            $optdelsql = $optdelsql . ";";
+            error_log($optdelsql);
+            $paramarray = array($id);
+            $optdeleted = $optdeleted + mysql_cmd_with_prepare($optdelsql, "i", $paramarray);
+
+            // get new max ordinal
+            $optord = 0;
+            $sql = "SELECT MAX(ordinal) AS max FROM DemographicOptionConfig WHERE demographicid = ?;";
+            $result = mysqli_query_with_prepare_and_exit_on_error($sql, "i", $paramarray);
+            while ($row = mysqli_fetch_assoc($result)) {
+                $optord = $row["max"];
+            }
+            if ($optord == null) {
+                $optord = 0;
+            }
+
+            // Update existing options
+            foreach ($options as $opt) {
+                if ($opt->ordinal >= 0) {
+                    $paramarray = array(
+                        property_exists($opt, "value") ? $opt->value : "",
+                        $opt->display_order,
+                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
+                        $id, $opt->ordinal
+                        );
+                    $optupdated = $optupdated + mysql_cmd_with_prepare($optsql, "sisssii", $paramarray);
+                }
+            }
+
+            // Insert new options
+            foreach ($options as $opt) {
+                if ($opt->ordinal < 0) {
+                    $paramarray = array(
+                        $demographicid, $optord,
+                        property_exists($opt, "value") ? $opt->value : "",
+                        $optdisplayorder,
+                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
+                        );
+
+                    $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $optparamarray);
+                    $optord = $optord + 1;
+                }
+            }
         }
     }
-
-    $message = "<p>Database updates: " . $deleted . " deleted, " . $inserted . " inserted, " . $updated . " updated</p>";
-    echo "var message = '" . $message . "';\n";
+    $message = "";
+    if ($deleted > 0) {
+        $message = ", " . $deleted . " demographic deleted";
+    }
+    if ($inserted > 0) {
+        $message = $message . ", " . $inserted . " demographic inserted";
+    }
+    if ($updated > 0) {
+        $message = $message . ", " . $updated . " demographic updated";
+    }
+    if ($optdeleted > 0) {
+        $message = $message . ", " . $optdeleted . " options deleted";
+    }
+    if ($optinserted > 0) {
+        $message = $message . ", " . $optinserted . " options inserted";
+    }
+     if ($optupdated > 0) {
+        $message = $message . ", " . $optupdated . " options updated";
+    }
+   if (mb_strlen($message) > 2) {
+        $message = "<p>Database changes: " . mb_substr($message, 2) .  "</p>";
+        echo "message = '" . $message . "';\n";
+    }
 
     // get updated demographics now with the id's in it
     fetch_demographics();
@@ -143,11 +253,22 @@ EOD;
 function fetch_demographics() {
     // get demographic config table data
     $query=<<<EOD
-		SELECT JSON_ARRAYAGG(JSON_OBJECT(
+	WITH doc AS (
+	SELECT demographicid, JSON_ARRAYAGG(JSON_OBJECT(
 			'demographicid', demographicid,
+            'ordinal', ordinal,
+            'value', value,
+			'optionshort', optionshort,
+			'optionhover', optionhover,
+			'allowothertext', allowothertext,
+			'display_order', display_order
+			)) AS optionconfig
+		FROM DemographicOptionConfig
+)
+SELECT JSON_ARRAYAGG(JSON_OBJECT(
+			'demographicid', d.demographicid,
 			'shortname', d.shortname,
 			'description', d.description,
-			'value', d.value,
 			'prompt', prompt,
 			'hover', hover,
 			'display_order', d.display_order,
@@ -159,10 +280,12 @@ function fetch_demographics() {
 			'searchable', searchable,
 			'ascending', ascending,
 			'min_value', min_value,
-			'max_value', max_value
+			'max_value', max_value,
+            'options', CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END
 			)) AS config
-		FROM demographicconfig d
-		JOIN demographictypes t USING (typeid)
+		FROM DemographicConfig d
+		JOIN DemographicTypes t USING (typeid)
+        LEFT OUTER JOIN doc c USING (demographicid)
 		ORDER BY d.display_order ASC;
 EOD;
     $result = mysqli_query_exit_on_error($query);
@@ -175,7 +298,7 @@ EOD;
 	if ($Config == "") {
 		$Config = "[]";
     }
-    echo "demographics = " . $Config . "\n";
+    echo "demographics = " . $Config . ";\n";
 }
 
 // Start here.  Should be AJAX requests only
@@ -187,9 +310,6 @@ if ($ajax_request_action == "") {
 switch ($ajax_request_action) {
     case "fetch_demographics":
         fetch_demographics();
-        break;
-    case "fetch_demographicOptions":
-        fetch_demographicOptions();
         break;
     case "update_demographics":
         update_demographics();

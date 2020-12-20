@@ -1,11 +1,28 @@
 // Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 var configtable;
+var optiontable;
+var message = "";
+var demographicoptions = [];
 
 var EditDemographics = function () {
     var newid = -1;
     var curid = -99999;
+    var newoptionid = -1;
+    var curoptionid = -99999;
 
-    function addupdaterow(table) {
+    function escapeQuotesAccessor(value, data, type, params, column, row) {
+        //value - original value of the cell
+        //data - the data for the row
+        //type - the type of access occurring  (data|download|clipboard)
+        //params - the accessorParams object passed from the column definition
+        //column - column component for the column this accessor is bound to
+        //row - row component for the row
+        val = value.replace(/\\/g, '\\\\');
+        return val.replace(/"/g, '\\"');
+    };
+
+    function addupdaterow(table, opttable) {
+        // update table itself for future save
         var shortname = document.getElementById("shortname").value;
         var description = document.getElementById("description").value;
         var prompt = document.getElementById("prompt").value;
@@ -24,27 +41,38 @@ var EditDemographics = function () {
         if (curid == -99999) {
             curid = newid;
         }
+        if (opttable) {
+            option = JSON.stringify(opttable.getData());
+        } else {
+            option = "[]";
+        }
         table.updateOrAddData([{
             demographicid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
             typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user, searchable: searchable,
-            ascending: ascending, min_value: minvalue, max_value: maxvalue
+            ascending: ascending, min_value: minvalue, max_value: maxvalue, options: option
            }, 
         ]);
         newid = newid - 1;
+        optupdid = curid;
         curid = -99999;
+
+        document.getElementById("submitbtn").innerHTML = "Save*";
         document.getElementById("general-demo-div").style.display = "none";
+        table.clearHistory();
+        opttable.clearHistory();
     };
 
     function addnewdemo(demotable) {
         curid = -99999;
         document.getElementById("general-header").innerHTML = '<h3 class="col-auto">New Demographic - General Configuration</h3>';
-        document.getElementById("add-row").innerHTML = "Add Demographic";
+        document.getElementById("option-header").innerHTML = '<h4 class="col-auto">New Demographic - Options</h4>';
+        document.getElementById("add-row").innerHTML = "Add to Demographic Table";
         // Default values
         document.getElementById("shortname").value = "";
         document.getElementById("description").value = "";
         document.getElementById("prompt").value = "";
         document.getElementById("hover").value = "";
-        document.getElementById("typename").value = 'single-radio';
+        document.getElementById("typename").value = 'openend';
         document.getElementById("required-1").checked = true;
         document.getElementById("required-0").checked = false;
         document.getElementById("publish-1").checked = false;
@@ -55,17 +83,25 @@ var EditDemographics = function () {
         document.getElementById("searchable-0").checked = true;
         document.getElementById("ascending-1").checked = true;
         document.getElementById("ascending-0").checked = false;
-        document.getElementById("min_value").value = "";
-        document.getElementById("min_value").value = "";
+        document.getElementById("min_value").value = "0";
+        document.getElementById("max_value").value = "8192";
         // now display it, hiding ones not used by single-radio
         document.getElementById("asc_desc").style.display = "none";
         document.getElementById("value_range").style.display = "none";
         document.getElementById("general-demo-div").style.display = "block";
+        document.getElementById("message").style.display = 'none';
+        optiontable = null;
+        demographicoptions = [];
+        edit_typechange(demotable);
     }
 
     function editconfig(e, row, demotable) {
         var name = row.getCell("shortname").getValue();
+
+        document.getElementById("message").style.display = 'none';
+
         document.getElementById("general-header").innerHTML = '<h3 class="col-auto">' + name + ' - General Configuration</h3>';
+        document.getElementById("option-header").innerHTML = '<h4 class="col-auto">' + name + ' - Options</h4>';
 
         // Set up current value for all row items
         curid = row.getCell("demographicid").getValue();
@@ -85,19 +121,60 @@ var EditDemographics = function () {
         document.getElementById("ascending-1").checked = row.getCell("ascending").getValue() == "1";
         document.getElementById("ascending-0").checked = row.getCell("ascending").getValue() != "1";
         document.getElementById("min_value").value = row.getCell("min_value").getValue();
-        document.getElementById("min_value").value = row.getCell("max_value").getValue();
+        document.getElementById("max_value").value = row.getCell("max_value").getValue();
+        options = row.getCell("options").getValue();
+        if (options == "[]") {
+            demographicoptions = [];
+        } else {
+            options = options.replace(/\\\\\\"/g, '\\"');
+            //options = options.replace(/\\"/g, '"');
+            eval("demographicoptions = " + options);
+        }
 
         // now show the block
-        edit_typechange(demotable);
-        document.getElementById("add-row").innerHTML = "Update Demographic";
+        document.getElementById("add-row").innerHTML = "Update Demographic Table";
         document.getElementById("general-demo-div").style.display = "block";
+        edit_typechange(demotable);
+       
+    }
+
+   function addnewoption(optiontable) {
+        newoptionid = newoptionid - 1;
+        optiontable.addRow({demographicid: curid, ordinal: newoptionid }, false);
     }
 
     function edit_typechange(datatable) {
+        document.getElementById("message").style.display = 'none';
+
         var typename = document.getElementById("typename").value;
         var show_asc_desc = false;
         var show_range = false;
+        var range_text = "Value Range:";
+        var show_options = false;
         switch (typename) {
+            case 'single-radio':
+                show_options = true;
+                break;
+            case 'single-pulldown':
+                show_options = true;
+                break;
+            case 'multi-select list':
+                show_options = true;
+                break;
+            case 'multi-checkbox list':
+                show_options = true;
+                break;
+            case 'multi-display':
+                show_options = true;
+                break;
+            case 'openend':
+                show_range = true;
+                range_text = "Allowable openend legnth:";
+                break;
+            case 'text':
+                show_range = true;
+                range_text = "Allowable text legnth:";
+                break;
             case 'numberselect':
                 show_asc_desc = true;
                 show_range = true;
@@ -114,19 +191,82 @@ var EditDemographics = function () {
                 break;
             case 'country':
                 show_asc_desc = true;
+                show_options = true;
                 break;
             case 'states':
                 show_asc_desc = true;
+                show_options = true;
                 break;         
         };
+        document.getElementById("range-label").innerHTML = range_text;
         document.getElementById("asc_desc").style.display = show_asc_desc ? 'block' : 'none';
         document.getElementById("value_range").style.display = show_range ? 'block' : 'none';
+        document.getElementById("optiontable-div").style.display = show_options ? 'block' : 'none';
+        document.getElementById("add-option-div").style.display = show_options ? 'block' : 'none';
+        document.getElementById("optlegend-div").style.display = show_options ? 'block' : 'none';
+        if (show_options) {
+            optiontable = null;
+            optiontable = new Tabulator("#option-table", {
+                maxHeight: "250px",
+                movableRows: true,
+                tooltips: false,
+                headerSort: false,
+                history: true,
+                data: demographicoptions,
+                index: "ordinal",
+                layout: "fitDataTable",
+                columns: [
+                    { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
+                    { title: "ID", field: "demographicid", visible: false},
+                    { title: "Ordinal", field: "ordinal", visible: false },
+                    {
+                        title: "Value", field: "value", accessor: escapeQuotesAccessor, width: 120,
+                        editor: "input",
+                        editorParams: { editorAttributes: { maxlength: 512 } },
+                        //cellClick: function (e, cell) {
+                        //    editconfig(e, cell.getRow(), configtable);
+                        //},
+                    },
+                    {
+                        title: "Label", field: "optionshort", accessor: escapeQuotesAccessor, width: 200,
+                        editor: "input",
+                        editorParams: { editorAttributes: { maxlength: 64 } },
+                    },
+                    {
+                        title: "Hover Text", field: "optionhover", accessor: escapeQuotesAccessor, width: 300,
+                        editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
+                    },
+                    {
+                        title: "Other", field: "allowothertext", formatter: "tickCross",
+                        editor: "select", editorParams: {
+                            values: { 1: "Yes", 0: "No" },
+                        }
+                    },
+                    {
+                        title: "Delete", formatter: deleteicon, hozAlign: "center",
+                        cellClick: function (e, cell) {
+                            deleteDemographic(e, cell.getRow(), configtable);
+                        },
+                    },
+                ],
+                rowMoved: function (row) {
+                    document.getElementById("message").style.display = 'none';
+                    //console.log("Row: " + row.getData().name + " has been moved");
+                },
+                dataChanged: function (data) {
+                    //data - the updated table data
+                    //document.getElementById("submitbtn").innerHTML = "Save*";
+                    document.getElementById("optundo").disabled = false;
+                },
+            });
+        }
     }
 
     function deleteicon(cell, formattParams, onRendered) {
         return "&#x1F5D1;";
     }
     function deleteDemographic(e, row, demotable) {
+        document.getElementById("message").style.display = 'none';
         row.delete();
     }
 
@@ -137,30 +277,36 @@ var EditDemographics = function () {
             maxHeight: "250px",
             movableRows: true,
             tooltips: false,
+            history: true,
             headerSort: false, 
             data: demographics,
             index: "demographicid",
             layout: "fitDataTable",
-            //rowClick: function (e, row) {
-            //    if e.
-            //    editconfig(e, row, configtable);
-            //},
             columns: [
                 { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-                { title: "ID", field: "demographicid" },
+                { title: "ID", field: "demographicid", visible: false },
                 {
-                    title: "Name", field: "shortname",
+                    title: "Name", field: "shortname", accessor: escapeQuotesAccessor, width: 120,
                     editor: "input",
                     editorParams: { editorAttributes: { maxlength: 100 } },
                     cellClick: function (e, cell) {
                         editconfig(e, cell.getRow(), configtable);
                     },
                 },
-                { title: "Description", field: "description", formatter:"textarea"},
-                { title: "Prompt", field: "prompt", editor: "input", editorParams: { editorAttributes: { maxlength: 512 } } },
-                { title: "Hover Text", field: "hover", editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }},
-                { title: "Type", field: "typename" },
-                { title: "Type-ID", field: "typeid" },
+                {
+                    title: "Description", field: "description", accessor: escapeQuotesAccessor,
+                    formatter: "textarea", visible: false
+                },
+                {
+                    title: "Prompt", field: "prompt", accessor: escapeQuotesAccessor, width: 180,
+                    editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
+                },
+                {
+                    title: "Hover Text", field: "hover", accessor: escapeQuotesAccessor, width: 180,
+                    editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }
+                },
+                { title: "Type", field: "typename", width: 140 },
+                { title: "Type-ID", field: "typeid", visible: false },
                 {
                     title: "Required", field: "required", formatter: "tickCross",
                     editor: "select", editorParams: {
@@ -194,8 +340,9 @@ var EditDemographics = function () {
                         values: { 1: "Ascending", 0: "Descending" },
                     }
                 },
-                { title: "Min Value", field: "min_value", editor:"number" },
-                { title: "Max Value", field: "max_value", editor: "number" },
+                { title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right" },
+                { title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right" },
+                { title: "Options", field: "options", width: 250, accessor: escapeQuotesAccessor, visible: false },
                 {
                     title: "Delete", formatter: deleteicon, hozAlign: "center",
                     cellClick: function (e, cell) {
@@ -204,40 +351,60 @@ var EditDemographics = function () {
                 },
             ],
             rowMoved: function (row) {
-                console.log("Row: " + row.getData().name + " has been moved");
+                document.getElementById("message").style.display = 'none';
+                //console.log("Row: " + row.getData().name + " has been moved");
             },
             tooltips: function (cell) {
-                //cell - cell component
-
-                //function should return a string for the tooltip of false to hide the tooltip
-                //console.log(cell.getField());
                 if (cell.getField() != "shortname") { return false };
                 return cell.getData().description;
             },
+            dataChanged: function (data) {
+                //data - the updated table data
+                document.getElementById("submitbtn").innerHTML = "Save*";
+                if (configtable.getHistoryUndoSize() > 0) {
+                    document.getElementById("undo").disabled = false;
+                }
+            },
         });
-        configtable.hideColumn("demographicid");
-        configtable.hideColumn("typeid");
-        configtable.hideColumn("description");
         var addnewrowbut = document.getElementById("add-row");
-        addnewrowbut.addEventListener('click', function () { addupdaterow(configtable); });
+        addnewrowbut.addEventListener('click', function () { addupdaterow(configtable, optiontable); });
         var addnewbut = document.getElementById("add-demo");
         addnewbut.addEventListener('click', function () { addnewdemo(configtable); });
+        var addoptbut = document.getElementById("add-option");
+        addoptbut.addEventListener('click', function () { addnewoption(optiontable); });
         document.getElementById("typename").onchange = function () { edit_typechange(configtable); };
-        };
+   };
 
 };
 
 var editDemographics = new EditDemographics();
 
 function saveComplete(data, textStatus, jqXHR) {
+    var match = "demographics = ";
+    var match2 = "message = ";
+    message = "";
+    if (data.substring(0, match.length) == match || data.substring(0, match2.length) == match2) {
+        eval(data);
+    }
     configtable.replaceData(demographics);
     document.getElementById("saving_div").style.display = "none";
     document.getElementById("submitbtn").disabled = false;
+    document.getElementById("submitbtn").innerHTML = "Save";
+    document.getElementById("redo").disabled = true;
+    document.getElementById("undo").disabled = true;
+    document.getElementById("optredo").disabled = true;
+    document.getElementById("optundo").disabled = true;
+    if (message != "") {
+        document.getElementById("message").innerHTML = message;
+        document.getElementById("message").style.display = 'block';
+    }
 };
 
 function SaveDemographics() {
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
+    document.getElementById("message").style.display = 'none';
+    arr = configtable.getData();
     var postdata = {
         ajax_request_action: "update_demographics",
         demographics: JSON.stringify(configtable.getData())
@@ -256,6 +423,7 @@ function FetchDemographics() {
         ajax_request_action: "fetch_demographics"
     };
     document.getElementById("general-demo-div").style.display = "none";
+    document.getElementById("message").style.display = 'none';
     $.ajax({
         url: "SubmitEditDemographics.php",
         dataType: "html",
@@ -263,4 +431,56 @@ function FetchDemographics() {
         success: saveComplete,
         type: "POST"
     });
+};
+
+function Undo() {
+    configtable.undo();
+
+    var undoCount = configtable.getHistoryUndoSize();
+    if (undoCount <= 0) {
+        document.getElementById("undo").disabled = true;
+    }
+    var redoCount = configtable.getHistoryRedoSize();
+    if (redoCount > 0) {
+        document.getElementById("redo").disabled = false;
+    }
+};
+
+function Redo() {
+    configtable.redo();
+
+    var undoCount = configtable.getHistoryUndoSize();
+    if (undoCount > 0) {
+        document.getElementById("undo").disabled = false;
+    }
+    var redoCount = configtable.getHistoryRedoSize();
+    if (redoCount <= 0) {
+        document.getElementById("redo").disabled = true;
+    }
+};
+
+function OptUndo() {
+    optiontable.undo();
+
+    var undoCount = optiontable.getHistoryUndoSize();
+    if (undoCount <= 0) {
+        document.getElementById("optundo").disabled = true;
+    }
+    var redoCount = optiontable.getHistoryRedoSize();
+    if (redoCount > 0) {
+        document.getElementById("optredo").disabled = false;
+    }
+};
+
+function OptRedo() {
+    optiontable.redo();
+
+    var undoCount = optiontable.getHistoryUndoSize();
+    if (undoCount > 0) {
+        document.getElementById("optundo").disabled = false;
+    }
+    var redoCount = optiontable.getHistoryRedoSize();
+    if (redoCount <= 0) {
+        document.getElementById("optredo").disabled = true;
+    }
 };
