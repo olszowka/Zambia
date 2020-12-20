@@ -58,8 +58,11 @@ var EditDemographics = function () {
 
         document.getElementById("submitbtn").innerHTML = "Save*";
         document.getElementById("general-demo-div").style.display = "none";
+        document.getElementById("preview").innerHTML = "";
         table.clearHistory();
-        opttable.clearHistory();
+        if (opttable) {
+            opttable.clearHistory();
+        }
     };
 
     function addnewdemo(demotable) {
@@ -93,6 +96,7 @@ var EditDemographics = function () {
         optiontable = null;
         demographicoptions = [];
         edit_typechange(demotable);
+        document.getElementById("preview").innerHTML = "";
     }
 
     function editconfig(e, row, demotable) {
@@ -135,6 +139,8 @@ var EditDemographics = function () {
         document.getElementById("add-row").innerHTML = "Update Demographic Table";
         document.getElementById("general-demo-div").style.display = "block";
         edit_typechange(demotable);
+        RefreshPreview();
+
        
     }
 
@@ -214,10 +220,14 @@ var EditDemographics = function () {
                 history: true,
                 data: demographicoptions,
                 index: "ordinal",
+                initialSort: [
+                    { column: "display_order", dir: "asc" } //sort by this first
+                ],
                 layout: "fitDataTable",
                 columns: [
                     { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-                    { title: "ID", field: "demographicid", visible: false},
+                    { title: "ID", field: "demographicid", visible: false },
+                    { title: "Order", field: "display_order", visible: false },
                     { title: "Ordinal", field: "ordinal", visible: false },
                     {
                         title: "Value", field: "value", accessor: escapeQuotesAccessor, width: 120,
@@ -278,13 +288,17 @@ var EditDemographics = function () {
             movableRows: true,
             tooltips: false,
             history: true,
-            headerSort: false, 
+            headerSort: false,
+            initialSort: [
+                { column: "display_order", dir: "asc" } //sort by this first
+            ],
             data: demographics,
             index: "demographicid",
             layout: "fitDataTable",
             columns: [
                 { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
                 { title: "ID", field: "demographicid", visible: false },
+                { title: "Order", field: "display_order", visible: false },
                 {
                     title: "Name", field: "shortname", accessor: escapeQuotesAccessor, width: 120,
                     editor: "input",
@@ -483,4 +497,42 @@ function OptRedo() {
     if (redoCount <= 0) {
         document.getElementById("optredo").disabled = true;
     }
+};
+
+function RefreshComplete(data, textStatus, jqXHR) {
+    var preview = "<br/><h4>Preview</h4>" + data;
+    document.getElementById("preview").innerHTML = preview;
+}
+
+function RefreshPreview() {
+    var demographicData = {
+        shortname: document.getElementById("shortname").value,
+        prompt: document.getElementById("prompt").value,
+        hover: document.getElementById("hover").value,
+        typeid: document.getElementById("typename").selectedOptions.item(0).getAttribute("data-typeid"),
+        typename: document.getElementById("typename").value,
+        required: document.getElementById("required-1").checked,
+        publish: document.getElementById("publish-1").checked,
+        privacy_user: document.getElementById("privacy_user-1").checked,
+        searchable: document.getElementById("searchable-1").checked,
+        ascending: document.getElementById("ascending-1").checked,
+        min_value: document.getElementById("min_value").value,
+        max_value: document.getElementById("max_value").value
+    };
+    var options = [];
+    if (optiontable) {
+        options = optiontable.getData();
+    }
+    var postdata = {
+        ajax_request_action: "renderdemograhpic",
+        demographic: JSON.stringify(demographicData),
+        options: options
+    };
+    $.ajax({
+        url: "RenderDemographic.php",
+        dataType: "html",
+        data: postdata,
+        success: RefreshComplete,
+        type: "POST"
+    });
 };

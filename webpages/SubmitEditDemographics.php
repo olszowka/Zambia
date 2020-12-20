@@ -17,6 +17,7 @@ function update_demographics() {
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
     $display_order = 10;
+    var_error_log($demographics);
     foreach ($demographics as $demo) {
         $demo->display_order = $display_order;
         $display_order = $display_order + 10;
@@ -151,6 +152,8 @@ EOD;
                 property_exists($demo, "max_value") ? (strlen($demo->max_value) > 0 ? $demo->max_value : null) : null,
                 $id
             );
+            //error_log($sql);
+            //var_error_log($paramarray);
             $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiii", $paramarray);
             $options = [];
             if (property_exists($demo, "options")) {
@@ -174,14 +177,14 @@ EOD;
                 $optdelsql = $optdelsql . " and ordinal NOT IN (" . mb_substr($idsFound, 1) . ")";
             }
             $optdelsql = $optdelsql . ";";
-            error_log($optdelsql);
+            //error_log($optdelsql);
             $paramarray = array($id);
             $optdeleted = $optdeleted + mysql_cmd_with_prepare($optdelsql, "i", $paramarray);
 
             // get new max ordinal
             $optord = 0;
-            $sql = "SELECT MAX(ordinal) AS max FROM DemographicOptionConfig WHERE demographicid = ?;";
-            $result = mysqli_query_with_prepare_and_exit_on_error($sql, "i", $paramarray);
+            $maxsql = "SELECT MAX(ordinal) AS max FROM DemographicOptionConfig WHERE demographicid = ?;";
+            $result = mysqli_query_with_prepare_and_exit_on_error($maxsql, "i", $paramarray);
             while ($row = mysqli_fetch_assoc($result)) {
                 $optord = $row["max"];
             }
@@ -306,7 +309,7 @@ $ajax_request_action = getString("ajax_request_action");
 if ($ajax_request_action == "") {
     exit();
 }
-//error_log("Reached SubmitAdminParticpants. ajax_request_action: $ajax_request_action");
+
 switch ($ajax_request_action) {
     case "fetch_demographics":
         fetch_demographics();

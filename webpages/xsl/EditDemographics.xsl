@@ -185,6 +185,7 @@
           </div>
           <div id="option-table"></div>
         </div>
+        <div id="preview"></div>
         <div class="row mt-4">
           <div id="add-option-div" class="col col-auto" style="display: none;">
             <div class="row">
@@ -198,6 +199,9 @@
                 <button class="btn btn-secondary" id="add-option" name="add-option" value="addoption" type="button">Add Option Row</button>
               </div>
             </div>
+          </div>
+          <div class="col col-auto">
+            <button class="btn btn-secondary" id="refresh" name="refresh" value="refresh" type="button" onclick="RefreshPreview()">Refresh Preview</button>
           </div>
           <div class="col col-auto">
             <button class="btn btn-primary" id="add-row" name="add-row" value="addrow" type="button">Add Demographic</button>
