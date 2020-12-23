@@ -73,10 +73,25 @@ function render_demographic() {
     $options = null;
     $demographicOptions = getString("options");
     if ($demographicOptions) {
-        //error_log("demographicoptions: ". $demographicOptions);
         $demographicOptions = base64_decode($demographicOptions);
+        error_log("demographicoptions: ". $demographicOptions);
+        $useoptatob = true;
+        if (mb_substr($demographicOptions, 0, 7) == "nobtoa:") {
+            $useoptatob = false;
+            $demographicOptions = mb_substr($demographicOptions, 7);
+        }
 	    $options = json_decode($demographicOptions);
-        //var_error_log($options);
+        error_log("\n\nBefore foreach\n");
+        var_error_log($options);
+        if ($useoptatob) {
+            foreach ($options as $option) {
+                $option->value = base64_decode($option->value);
+                $option->optionshort = base64_decode($option->optionshort);
+                $option->hover = base64_decode($option->hover);
+            }
+        }
+        error_log("\n\After foreach\n");
+        var_error_log($options);
     }
 
     // Start of display portion
@@ -158,7 +173,8 @@ function render_demographic() {
             break;
         case "monthnum":
         case "monthabv":
-            RenderXSLT('RenderDemographicMonths.xsl', $paramArray, $optxml);
+        case "states":
+            RenderXSLT('RenderDemographicSelect.xsl', $paramArray, $optxml);
             break;
         case "openend":
 			RenderXSLT('RenderDemographicOpenend.xsl', $paramArray);

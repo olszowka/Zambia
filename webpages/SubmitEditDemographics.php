@@ -321,9 +321,9 @@ function fetch_demographics() {
 	SELECT demographicid, JSON_ARRAYAGG(JSON_OBJECT(
 			'demographicid', demographicid,
             'ordinal', ordinal,
-            'value', value,
-			'optionshort', optionshort,
-			'optionhover', optionhover,
+            'value', TO_BASE64(value),
+			'optionshort', TO_BASE64(optionshort),
+			'optionhover', TO_BASE64(optionhover),
 			'allowothertext', allowothertext,
 			'display_order', display_order
 			)) AS optionconfig

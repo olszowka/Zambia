@@ -186,13 +186,24 @@ var EditDemographics = function () {
         document.getElementById("min_value").value = row.getCell("min_value").getValue();
         document.getElementById("max_value").value = row.getCell("max_value").getValue();
         options = row.getCell("options").getValue();
+        optiontable = null;
         if (options.length > 0) {
             options = atob(options);
         }
         if (options.length == 0) {
             demographicoptions = [];
         } else {
+            if (options.substring(0, 7) == "nobtoa:") {
+                dopost = false;
+                options = options.substring(7);
+            } else {
+                dopost = true;
+            }
             eval("demographicoptions = " + options);
+            if (dopost) {
+                // loop over options decoding every value, optionshortname and optionhover
+                demographicoptions.forEach(decodeOption);
+            }
         }
 
         editor_init();
@@ -459,6 +470,12 @@ var EditDemographics = function () {
 
 var editDemographics = new EditDemographics();
 
+function decodeOption(option) {
+    option.value = atob(option.value);
+    option.optionshort = atob(option.optionshort);
+    option.optionhover = atob(option.optionhover);
+};
+
 function saveComplete(data, textStatus, jqXHR) {
     var match = "demographics = ";
     var match2 = "message = ";
@@ -602,14 +619,17 @@ function RefreshPreview() {
     };
     var options = [];
     if (optiontable) {
-        options = optiontable.getData();
+        console.log("from optiontable");
+        options = JSON.stringify(optiontable.getData());
     } else if (demographicoptions.length > 0) {
-        options = demographicoptions;
+        console.log("from demographicoptions");
+        options = "nobtoa:" + JSON.stringify(demographicoptions);
     }
+    console.log("options = '" + options + "'");
     var postdata = {
         ajax_request_action: "renderdemograhpic",
         demographic: btoa(JSON.stringify(demographicData)),
-        options: btoa(JSON.stringify(options))
+        options: btoa(options)
     };
     $.ajax({
         url: "RenderDemographic.php",
