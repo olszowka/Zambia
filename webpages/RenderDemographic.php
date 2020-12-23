@@ -15,10 +15,15 @@ function var_error_log( $object=null ){
 // Function ArrayToXML()
 // returns an XMLDoc as if from a query with the contents of the array
 //
-function ArrayToXML($queryname, $array) {
-    $xml = new DomDocument("1.0", "UTF-8");
-    $doc = $xml -> createElement("doc");
-    $doc = $xml -> appendChild($doc);
+function ArrayToXML($queryname, $array, $xml = null) {
+    if ($xml == null) {
+        $xml = new DomDocument("1.0", "UTF-8");
+        $doc = $xml -> createElement("doc");
+        $doc = $xml -> appendChild($doc);
+    } else {
+        //error_log($xml->saveXML());
+        $doc = $xml -> getElementsByTagName("doc")[0];
+    }
     $queryNode = $xml -> createElement("query");
     $queryNode = $doc -> appendChild($queryNode);
     $queryNode->setAttribute("queryname", $queryname);
@@ -31,10 +36,15 @@ function ArrayToXML($queryname, $array) {
     return $xml;
 }
 
-function JSONtoXML($queryname, $json) {
-    $xml = new DomDocument("1.0", "UTF-8");
-    $doc = $xml -> createElement("doc");
-    $doc = $xml -> appendChild($doc);
+function JSONtoXML($queryname, $json, $xml = null) {
+    if ($xml == null) {
+        $xml = new DomDocument("1.0", "UTF-8");
+        $doc = $xml -> createElement("doc");
+        $doc = $xml -> appendChild($doc);
+    } else {
+        //error_log($xml->saveXML());
+        $doc = $xml -> getElementsByTagName("doc")[0];
+    }
     $queryNode = $xml -> createElement("query");
     $queryNode = $doc -> appendChild($queryNode);
     $queryNode->setAttribute("queryname", $queryname);
@@ -83,9 +93,9 @@ function render_demographic() {
     $paramArray["max"] = property_exists($demo, "max_value") ? ($demo->max_value != "" ? $demo->max_value : 8192) : 8192;
 	$paramArray["size"] = min(80, $paramArray["max"]);
     $paramArray["rows"] = $paramArray["max"] > 512 ? 8 : 4;
-
+    $optxml = null;
     if ($options) {
-        if ($paramArray["ascending"] == 0) {
+        if ($paramArray["ascending"] == 0 && $paramArray["typename"] != "monthyear") {
             $options = array_reverse($options);
         }
         $optxml = JSONtoXML('options', $options);
@@ -117,11 +127,35 @@ function render_demographic() {
                     $next = $next - 1;
                 }
             }
-            var_error_log($selectarr);
-            $xml = ArrayToXML("loop", $selectarr);
-            //error_log($xml->saveXML());
-			RenderXSLT('RenderDemographicNumberSelect.xsl', $paramArray, $xml);
+            //var_error_log($selectarr);
+            $optxml = ArrayToXML("loop", $selectarr);
+            //error_log($optxml->saveXML());
+			RenderXSLT('RenderDemographicNumberSelect.xsl', $paramArray, $optxml);
 			break;
+        case "monthyear":
+            // build xml array from begin to end
+            $selectarr = [];
+            if ($paramArray["ascending"] == 1) {
+                $next = $paramArray["min"];
+                $end = $paramArray["max"];
+                while ($next <= $end) {
+                    $selectarr[] = $next;
+                    $next = $next + 1;
+                }
+            }
+            else {
+                $next = $paramArray["max"];
+                $end = $paramArray["min"];
+                while ($next >= $end) {
+                    $selectarr[] = $next;
+                    $next = $next - 1;
+                }
+            }
+            //var_error_log($selectarr);
+            $optxml = ArrayToXML("year", $selectarr, $optxml);
+            //error_log($optxml->saveXML());
+            RenderXSLT('RenderDemographicMonthyear.xsl', $paramArray, $optxml);
+            break;
         case "monthnum":
         case "monthabv":
             RenderXSLT('RenderDemographicMonths.xsl', $paramArray, $optxml);

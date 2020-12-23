@@ -422,7 +422,7 @@ var EditDemographics = function () {
                 },
                 { title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right" },
                 { title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right" },
-                { title: "Options", field: "options", width: 75 }, visible: false },
+                { title: "Options", field: "options", width: 75, visible: false },
                 {
                     title: "Delete", formatter: deleteicon, hozAlign: "center",
                     cellClick: function (e, cell) {
