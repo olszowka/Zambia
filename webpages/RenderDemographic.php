@@ -12,9 +12,62 @@ function var_error_log( $object=null ){
     error_log( $contents );        // log contents of the result of var_dump( $object )
 }
 
+// Function ArrayToXML()
+// returns an XMLDoc as if from a query with the contents of the array
+//
+function ArrayToXML($queryname, $array) {
+    $xml = new DomDocument("1.0", "UTF-8");
+    $doc = $xml -> createElement("doc");
+    $doc = $xml -> appendChild($doc);
+    $queryNode = $xml -> createElement("query");
+    $queryNode = $doc -> appendChild($queryNode);
+    $queryNode->setAttribute("queryname", $queryname);
+    foreach($array as $element) {
+        $rowNode = $xml->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        $rowNode->setAttribute("value", $element);
+    }
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
+    return $xml;
+}
+
+function JSONtoXML($queryname, $json) {
+    $xml = new DomDocument("1.0", "UTF-8");
+    $doc = $xml -> createElement("doc");
+    $doc = $xml -> appendChild($doc);
+    $queryNode = $xml -> createElement("query");
+    $queryNode = $doc -> appendChild($queryNode);
+    $queryNode->setAttribute("queryname", $queryname);
+    foreach($json as $element) {
+        $rowNode = $xml->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        foreach($element as $key => $value) {
+            $rowNode->setAttribute($key, $value);
+        }
+    }
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
+    return $xml;
+}
+
 function render_demographic() {
-	$demo = json_decode(getString("demographic"));
-	$options = json_decode(getString("demographicOptions"));
+    //error_log("\n------------------\nstart render_demographic:");
+    $demographic = getString("demographic");
+    //error_log("demographic encoded: " . $demographic);
+    $demographic = base64_decode($demographic);
+    //error_log("demographic decoded: " . $demographic);
+
+	$demo = json_decode($demographic);
+    //error_log("\ndemo:");
+    //var_error_log($demo);
+
+    $options = null;
+    $demographicOptions = getString("options");
+    if ($demographicOptions) {
+        //error_log("demographicoptions: ". $demographicOptions);
+        $demographicOptions = base64_decode($demographicOptions);
+	    $options = json_decode($demographicOptions);
+        //var_error_log($options);
+    }
 
     // Start of display portion
 	$paramArray = array();
@@ -22,7 +75,7 @@ function render_demographic() {
 	$paramArray["name"] = property_exists($demo, "shortname") ? $demo->shortname : "";
 	$paramArray["prompt"] = property_exists($demo, "prompt") ? $demo->prompt : "";
 	$paramArray["hover"] = property_exists($demo, "hover") ? $demo->hover : "";
-	$paramArray["typeid"] = (int) $demo->typeid;
+    $paramArray["typeid"] = (int) $demo->typeid;
 	$paramArray["typename"] = $demo->typename;
     $paramArray["required"] = property_exists($demo, "required") ? $demo->required : 1;
     $paramArray["ascending"] = property_exists($demo, "ascending") ? $demo->ascending : 1;
@@ -31,18 +84,56 @@ function render_demographic() {
 	$paramArray["size"] = min(80, $paramArray["max"]);
     $paramArray["rows"] = $paramArray["max"] > 512 ? 8 : 4;
 
-	var_error_log($paramArray);
+    if ($options) {
+        if ($paramArray["ascending"] == 0) {
+            $options = array_reverse($options);
+        }
+        $optxml = JSONtoXML('options', $options);
+        //error_log($optxml->saveXML());
+    }
+
+	//var_error_log($paramArray);
 
 	switch ($paramArray["typename"]) {
         case "number":
-            $paramArray["size"] = max(2, (int) (1 + log10($paramArray["max"])));
-			RenderXSLT('RenderDemographicOpenend.xsl', $paramArray);
+			RenderXSLT('RenderDemographicNumber.xsl', $paramArray);
 			break;
+        case "numberselect":
+            // build xml array from begin to end
+            $selectarr = [];
+            if ($paramArray["ascending"] == 1) {
+                $next = $paramArray["min"];
+                $end = $paramArray["max"];
+                while ($next <= $end) {
+                    $selectarr[] = $next;
+                    $next = $next + 1;
+                }
+            }
+            else {
+                $next = $paramArray["max"];
+                $end = $paramArray["min"];
+                while ($next >= $end) {
+                    $selectarr[] = $next;
+                    $next = $next - 1;
+                }
+            }
+            var_error_log($selectarr);
+            $xml = ArrayToXML("loop", $selectarr);
+            //error_log($xml->saveXML());
+			RenderXSLT('RenderDemographicNumberSelect.xsl', $paramArray, $xml);
+			break;
+        case "monthnum":
+        case "monthabv":
+            RenderXSLT('RenderDemographicMonths.xsl', $paramArray, $optxml);
+            break;
         case "openend":
 			RenderXSLT('RenderDemographicOpenend.xsl', $paramArray);
 			break;
         case "text":
 			RenderXSLT('RenderDemographicTextarea.xsl', $paramArray);
+			break;
+        case "heading":
+            RenderXSLT('RenderDemographicHeader.xsl', $paramArray);
 			break;
         default:
 			echo $paramArray["typename"] . " not yet implimented.";

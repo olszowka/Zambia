@@ -20,6 +20,7 @@ CREATE TABLE DemographicTypes (
 
 INSERT INTO DemographicTypes (typeid, shortname, description, current, display_order)
 VALUES
+	(5, 'heading', 'HTML heading/prompt without input field', 1, 5),
 	(10, 'single-radio', 'Radio button list, select one of many', 1, 10),
 	(20, 'single-pulldown', 'Select list, select one of many', 1, 20),
 	(30, 'multi-select list', 'Select list, select multiple of many with Ctrl/click', 1, 30),
@@ -27,8 +28,9 @@ VALUES
 	(50, 'multi-display', 'left<-->right select boxes, move selected options to right box', 1, 32),
 	(60, 'openend', 'Single line of text', 1, 40),
 	(70, 'text', 'Multi-line text box', 1, 50),
+	(71, 'html-text', 'HTML editor based multi-line text box', 1, 55),
 	(80, 'numberselect', 'Number from min to max, ascending or descending', 1, 60),
-    (90, 'number', 'Integer fill in the blank', 1, 61),
+	(90, 'number', 'Integer fill in the blank', 1, 61),
 	(100, 'monthnum', 'Months by number (1-12)', 1, 140),
 	(110, 'monthabv', 'Months by abbreviation (Jan-Dec)', 1, 150),
 	(120, 'monthyear', 'Months by abbreviation (Jan-Dec, current year-1900)', 1, 160),

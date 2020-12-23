@@ -17,12 +17,55 @@ var EditDemographics = function () {
         //params - the accessorParams object passed from the column definition
         //column - column component for the column this accessor is bound to
         //row - row component for the row
-        val = value.replace(/\\/g, '\\\\');
-        return val.replace(/"/g, '\\"');
+        //val = value.replace(/\\/g, '\\\\');
+        //return val.replace(/"/g, '\\"');
+        //console.log("value: " + value);
+        val = btoa(value);
+        //console.log("becomes: " + val);
+        return val;
     };
+
+    function editor_init() {
+        tinyMCE.init({
+            selector: 'input#prompt',
+            plugins: 'fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
+            browser_spellcheck: true,
+            contextmenu: false,
+            height: 100,
+            width: 900,
+            min_height: 100,
+            maxlength: 512,
+            menubar: false,
+            toolbar: [
+                'undo redo searchreplace | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link code | preview fullscreen'
+            ],
+            toolbar_mode: 'floating',
+            content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+            placeholder: 'Type prompt here...'
+        });
+        tinyMCE.init({
+            selector: 'textarea#hover',
+            plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+            browser_spellcheck: true,
+            contextmenu: false,
+            height: 200,
+            width: 900,
+            min_height: 200,
+            menubar: false,
+            toolbar: [
+                'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+            ],
+            toolbar_mode: 'floating',
+            content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+            placeholder: 'Type hover content here...'
+        });
+    }
 
     function addupdaterow(table, opttable) {
         // update table itself for future save
+        tinyMCE.triggerSave();
+
         var shortname = document.getElementById("shortname").value;
         var description = document.getElementById("description").value;
         var prompt = document.getElementById("prompt").value;
@@ -38,34 +81,48 @@ var EditDemographics = function () {
         var minvalue = document.getElementById("min_value").value;
         var maxvalue = document.getElementById("max_value").value;
 
+        // remove paragraph tags from prompt tag added by tinymce
+        if (prompt.substring(0, 3) == '<p>') {
+            prompt = prompt.substring(3, prompt.length-4);
+        }
+
         if (curid == -99999) {
             curid = newid;
         }
+        console.log("add/update " + curid);
         if (opttable) {
             option = JSON.stringify(opttable.getData());
+            console.log("-used opttable");
+        } else if (demographicoptions.length > 0) {
+            option = "nobtoa:" + JSON.stringify(demographicoptions);
+            console.log("-used demographic options: " + demographicoptions.length);
         } else {
             option = "[]";
+            console.log("-no options");
         }
         table.updateOrAddData([{
             demographicid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
-            typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user, searchable: searchable,
-            ascending: ascending, min_value: minvalue, max_value: maxvalue, options: option
+            typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user,
+            searchable: searchable, ascending: ascending, min_value: minvalue, max_value: maxvalue, options: btoa(option)
            }, 
         ]);
         newid = newid - 1;
         optupdid = curid;
         curid = -99999;
+        demographicoptions = [];
 
         document.getElementById("submitbtn").innerHTML = "Save*";
         document.getElementById("general-demo-div").style.display = "none";
         document.getElementById("preview").innerHTML = "";
+        tinymce.remove();
         table.clearHistory();
         if (opttable) {
-            opttable.clearHistory();
+            opttable = null;
         }
     };
 
     function addnewdemo(demotable) {
+        tinyMCE.remove();
         curid = -99999;
         document.getElementById("general-header").innerHTML = '<h3 class="col-auto">New Demographic - General Configuration</h3>';
         document.getElementById("option-header").innerHTML = '<h4 class="col-auto">New Demographic - Options</h4>';
@@ -95,12 +152,14 @@ var EditDemographics = function () {
         document.getElementById("message").style.display = 'none';
         optiontable = null;
         demographicoptions = [];
+        editor_init();
         edit_typechange(demotable);
         document.getElementById("preview").innerHTML = "";
     }
 
     function editconfig(e, row, demotable) {
         var name = row.getCell("shortname").getValue();
+        tinyMCE.remove();
 
         document.getElementById("message").style.display = 'none';
 
@@ -127,21 +186,21 @@ var EditDemographics = function () {
         document.getElementById("min_value").value = row.getCell("min_value").getValue();
         document.getElementById("max_value").value = row.getCell("max_value").getValue();
         options = row.getCell("options").getValue();
-        if (options == "[]") {
+        if (options.length > 0) {
+            options = atob(options);
+        }
+        if (options.length == 0) {
             demographicoptions = [];
         } else {
-            options = options.replace(/\\\\\\"/g, '\\"');
-            //options = options.replace(/\\"/g, '"');
             eval("demographicoptions = " + options);
         }
 
+        editor_init();
         // now show the block
         document.getElementById("add-row").innerHTML = "Update Demographic Table";
         document.getElementById("general-demo-div").style.display = "block";
         edit_typechange(demotable);
         RefreshPreview();
-
-       
     }
 
    function addnewoption(optiontable) {
@@ -157,19 +216,16 @@ var EditDemographics = function () {
         var show_range = false;
         var range_text = "Value Range:";
         var show_options = false;
+        var show_radios = true;
+        var default_options = false;
         switch (typename) {
+            case 'heading':
+                show_radios = false;
+                break;
             case 'single-radio':
-                show_options = true;
-                break;
             case 'single-pulldown':
-                show_options = true;
-                break;
             case 'multi-select list':
-                show_options = true;
-                break;
             case 'multi-checkbox list':
-                show_options = true;
-                break;
             case 'multi-display':
                 show_options = true;
                 break;
@@ -177,6 +233,7 @@ var EditDemographics = function () {
                 show_range = true;
                 range_text = "Allowable openend legnth:";
                 break;
+            case 'html-text':
             case 'text':
                 show_range = true;
                 range_text = "Allowable text legnth:";
@@ -189,29 +246,38 @@ var EditDemographics = function () {
                 show_range = true;
                 break;
             case 'monthnum':
+            case 'monthabv':
                 show_asc_desc = true;
+                default_options = true;
                 break;
             case 'monthyear':
                 show_asc_desc = true;
                 show_range = true;
+                default_options = true;
                 break;
             case 'country':
-                show_asc_desc = true;
-                show_options = true;
-                break;
             case 'states':
                 show_asc_desc = true;
                 show_options = true;
-                break;         
+                default_options = true;
+                break; 
         };
         document.getElementById("range-label").innerHTML = range_text;
         document.getElementById("asc_desc").style.display = show_asc_desc ? 'block' : 'none';
         document.getElementById("value_range").style.display = show_range ? 'block' : 'none';
+        document.getElementById("radio-div").style.display = show_radios ? 'block' : 'none';
         document.getElementById("optiontable-div").style.display = show_options ? 'block' : 'none';
         document.getElementById("add-option-div").style.display = show_options ? 'block' : 'none';
         document.getElementById("optlegend-div").style.display = show_options ? 'block' : 'none';
+        if (default_options) {
+            if (demographicoptions.length == 0) {
+                defaults = defaultOptions[typename];
+                defaultjson = atob(defaults);
+                eval("demographicoptions = " + defaultjson + ";");
+                console.log("added default options");
+            }
+        }
         if (show_options) {
-            optiontable = null;
             optiontable = new Tabulator("#option-table", {
                 maxHeight: "250px",
                 movableRows: true,
@@ -230,7 +296,7 @@ var EditDemographics = function () {
                     { title: "Order", field: "display_order", visible: false },
                     { title: "Ordinal", field: "ordinal", visible: false },
                     {
-                        title: "Value", field: "value", accessor: escapeQuotesAccessor, width: 120,
+                        title: "Value", field: "value", accessorData: escapeQuotesAccessor, width: 120,
                         editor: "input",
                         editorParams: { editorAttributes: { maxlength: 512 } },
                         //cellClick: function (e, cell) {
@@ -238,12 +304,12 @@ var EditDemographics = function () {
                         //},
                     },
                     {
-                        title: "Label", field: "optionshort", accessor: escapeQuotesAccessor, width: 200,
+                        title: "Label", field: "optionshort", accessorData: escapeQuotesAccessor, width: 200,
                         editor: "input",
                         editorParams: { editorAttributes: { maxlength: 64 } },
                     },
                     {
-                        title: "Hover Text", field: "optionhover", accessor: escapeQuotesAccessor, width: 300,
+                        title: "Hover Text", field: "optionhover", accessorData: escapeQuotesAccessor, width: 300,
                         editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
                     },
                     {
@@ -300,7 +366,7 @@ var EditDemographics = function () {
                 { title: "ID", field: "demographicid", visible: false },
                 { title: "Order", field: "display_order", visible: false },
                 {
-                    title: "Name", field: "shortname", accessor: escapeQuotesAccessor, width: 120,
+                    title: "Name", field: "shortname", width: 120,
                     editor: "input",
                     editorParams: { editorAttributes: { maxlength: 100 } },
                     cellClick: function (e, cell) {
@@ -308,15 +374,15 @@ var EditDemographics = function () {
                     },
                 },
                 {
-                    title: "Description", field: "description", accessor: escapeQuotesAccessor,
+                    title: "Description", field: "description", accessorData: escapeQuotesAccessor,
                     formatter: "textarea", visible: false
                 },
                 {
-                    title: "Prompt", field: "prompt", accessor: escapeQuotesAccessor, width: 180,
+                    title: "Prompt", field: "prompt", accessorData: escapeQuotesAccessor, width: 180,
                     editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
                 },
                 {
-                    title: "Hover Text", field: "hover", accessor: escapeQuotesAccessor, width: 180,
+                    title: "Hover Text", field: "hover", accessorData: escapeQuotesAccessor, width: 180,
                     editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }
                 },
                 { title: "Type", field: "typename", width: 140 },
@@ -356,7 +422,7 @@ var EditDemographics = function () {
                 },
                 { title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right" },
                 { title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right" },
-                { title: "Options", field: "options", width: 250, accessor: escapeQuotesAccessor, visible: false },
+                { title: "Options", field: "options", width: 75 }, visible: false },
                 {
                     title: "Delete", formatter: deleteicon, hozAlign: "center",
                     cellClick: function (e, cell) {
@@ -421,7 +487,7 @@ function SaveDemographics() {
     arr = configtable.getData();
     var postdata = {
         ajax_request_action: "update_demographics",
-        demographics: JSON.stringify(configtable.getData())
+        demographics: btoa(JSON.stringify(configtable.getData()))
     };
     $.ajax({
         url: "SubmitEditDemographics.php",
@@ -502,13 +568,28 @@ function OptRedo() {
 function RefreshComplete(data, textStatus, jqXHR) {
     var preview = "<br/><h4>Preview</h4>" + data;
     document.getElementById("preview").innerHTML = preview;
+    
+    id = document.getElementById("shortname").value + "-prompt";
+    hoverelement = document.getElementById(id);
+    if (hoverelement != null) {
+        hover = document.getElementById("hover").value;
+        hover = '<span class="text-left; white-space: nowrap;">' + hover + '</span>';
+        hoverelement.setAttribute('title', hover);
+        $('#' + id).tooltip();
+    }
 }
 
 function RefreshPreview() {
+    tinyMCE.triggerSave();
+    prompt = document.getElementById("prompt").value;
+    if (prompt.substring(0, 3) == '<p>') {
+        prompt = prompt.substring(3, prompt.length - 4);
+    }
+    hover = document.getElementById("hover").value;
     var demographicData = {
         shortname: document.getElementById("shortname").value,
-        prompt: document.getElementById("prompt").value,
-        hover: document.getElementById("hover").value,
+        prompt: prompt,
+        hover: hover,
         typeid: document.getElementById("typename").selectedOptions.item(0).getAttribute("data-typeid"),
         typename: document.getElementById("typename").value,
         required: document.getElementById("required-1").checked,
@@ -522,11 +603,13 @@ function RefreshPreview() {
     var options = [];
     if (optiontable) {
         options = optiontable.getData();
+    } else if (demographicoptions.length > 0) {
+        options = demographicoptions;
     }
     var postdata = {
         ajax_request_action: "renderdemograhpic",
-        demographic: JSON.stringify(demographicData),
-        options: options
+        demographic: btoa(JSON.stringify(demographicData)),
+        options: btoa(JSON.stringify(options))
     };
     $.ajax({
         url: "RenderDemographic.php",

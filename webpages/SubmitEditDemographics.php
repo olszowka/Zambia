@@ -12,12 +12,14 @@ function var_error_log( $object=null ){
 
 function update_demographics() {
     global $linki, $message_error;
+    //error_log("\n\nin update demographics:\n");
     //error_log("string loaded: " . getString("demographics"));
-    $demographics = json_decode(getString("demographics"));
+    $demographics = json_decode(base64_decode(getString("demographics")));
+    //var_error_log($demographics);
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
     $display_order = 10;
-    var_error_log($demographics);
+    //var_error_log($demographics);
     foreach ($demographics as $demo) {
         $demo->display_order = $display_order;
         $display_order = $display_order + 10;
@@ -69,9 +71,9 @@ EOD;
 
             $paramarray = array(
                 property_exists($demo, "shortname") ? $demo->shortname : "",
-                property_exists($demo, "description") ? $demo->description : null,
-                property_exists($demo, "prompt") ? $demo->prompt : "",
-                property_exists($demo, "hover") ? $demo->hover : null,
+                property_exists($demo, "description") ? base64_decode($demo->description) : null,
+                property_exists($demo, "prompt") ? base64_decode($demo->prompt) : "",
+                property_exists($demo, "hover") ? base64_decode($demo->hover) : null,
                 property_exists($demo, "display_order") ? $demo->display_order: null,
                 property_exists($demo, "typeid") ? (int) $demo->typeid: 60,
                 property_exists($demo, "required") ? $demo->required : 1,
@@ -82,23 +84,45 @@ EOD;
                 property_exists($demo, "min_value") ? ($demo->min_value != "" ? $demo->min_value : null) : null,
                 property_exists($demo, "max_value") ? ($demo->max_value != "" ? $demo->max_value : null) : null
             );
+            //error_log("\n\nInsert of " . $shortname);
+            //error_log($sql);
+            //var_error_log($paramarray);
             $inserted = $inserted + mysql_cmd_with_prepare($sql, "ssssiiiiiiiii", $paramarray);
             $demographicid = mysqli_insert_id($linki);
             $options = [];
+            $useoptatob = true;
             if (property_exists($demo, "options")) {
-                $options  = json_decode(str_replace("\\\\", "", $demo->options));
+                $optstring = base64_decode($demo->options);
+                if (mb_substr($optstring, 0, 7) == "nobtoa:") {
+                    $useoptatob = false;
+                    $optstring = mb_substr($optstring, 7);
+                }
+                $options  = json_decode($optstring);
             }
+            //error_log("\n\nOptions:\n");
+            //var_error_log($options);
             $optord = 1;
             $optdisplayorder = 10;
             foreach ($options as $opt) {
-                $optparamarray = array(
-                    $demographicid, $optord,
-                    property_exists($opt, "value") ? $opt->value : "",
-                    $optdisplayorder,
-                    property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                    property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                    property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
-                );
+                if ($useoptatob) {
+                    $optparamarray = array(
+                        $demographicid, $optord,
+                        property_exists($opt, "value") ? base64_decode($opt->value) : "",
+                        $optdisplayorder,
+                        property_exists($opt, "optionshort") ? base64_decode($opt->optionshort) : "",
+                        property_exists($opt, "optionhover") ? base64_decode($opt->optionhover) : "",
+                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
+                    );
+                } else {
+                    $optparamarray = array(
+                        $demographicid, $optord,
+                        property_exists($opt, "value") ? $opt->value : "",
+                        $optdisplayorder,
+                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
+                    );
+                }
                 $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $optparamarray);
                 $optord = $optord + 1;
                 $optdisplayorder = $optdisplayorder + 10;
@@ -133,14 +157,15 @@ EOD;
 EOD;
     foreach ($demographics as $demo) {
         $id = (int) $demo->demographicid;
-
+        //error_log("\n\nupdate loop " . $id);
         if ($id >= 0) {
+            //error_log("\n\nUpdate Processing demo id: " . $id);
 
             $paramarray = array(
                 property_exists($demo, "shortname") ? $demo->shortname : "",
-                property_exists($demo, "description") ? $demo->description : null,
-                property_exists($demo, "prompt") ? $demo->prompt : "",
-                property_exists($demo, "hover") ? $demo->hover : null,
+                property_exists($demo, "description") ? base64_decode($demo->description) : null,
+                property_exists($demo, "prompt") ? base64_decode($demo->prompt) : "",
+                property_exists($demo, "hover") ? base64_decode($demo->hover) : null,
                 property_exists($demo, "display_order") ? $demo->display_order: null,
                 property_exists($demo, "typeid") ? (int) $demo->typeid: 60,
                 property_exists($demo, "required") ? $demo->required : 1,
@@ -152,12 +177,20 @@ EOD;
                 property_exists($demo, "max_value") ? (strlen($demo->max_value) > 0 ? $demo->max_value : null) : null,
                 $id
             );
-            //error_log($sql);
+            //error_log("\n\nupdate of " . $id . "\n" . $sql);
             //var_error_log($paramarray);
             $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiii", $paramarray);
             $options = [];
+            $useoptatob = true;
             if (property_exists($demo, "options")) {
-                $options  = json_decode(str_replace("\\\\", "", $demo->options));
+                $optstring = base64_decode($demo->options);
+                if (mb_substr($optstring, 0, 7) == "nobtoa:") {
+                    $useoptatob = false;
+                    $optstring = mb_substr($optstring, 7);
+                }
+                $options  = json_decode($optstring);
+                //error_log("\n\npost json decode\n");
+                //var_error_log($options);
             }
             $optdisplayorder = 10;
             $idsFound = "";
@@ -179,11 +212,13 @@ EOD;
             $optdelsql = $optdelsql . ";";
             //error_log($optdelsql);
             $paramarray = array($id);
+            //var_error_log($paramarray);
             $optdeleted = $optdeleted + mysql_cmd_with_prepare($optdelsql, "i", $paramarray);
 
             // get new max ordinal
             $optord = 0;
             $maxsql = "SELECT MAX(ordinal) AS max FROM DemographicOptionConfig WHERE demographicid = ?;";
+            $paramarray = array($id);
             $result = mysqli_query_with_prepare_and_exit_on_error($maxsql, "i", $paramarray);
             while ($row = mysqli_fetch_assoc($result)) {
                 $optord = $row["max"];
@@ -191,18 +226,32 @@ EOD;
             if ($optord == null) {
                 $optord = 0;
             }
+            $optord = $optord + 1;
 
             // Update existing options
             foreach ($options as $opt) {
                 if ($opt->ordinal >= 0) {
-                    $paramarray = array(
-                        property_exists($opt, "value") ? $opt->value : "",
-                        $opt->display_order,
-                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
-                        $id, $opt->ordinal
+                    if ($useoptatob) {
+                        $paramarray = array(
+                            property_exists($opt, "value") ? base64_decode($opt->value) : "",
+                            $optdisplayorder,
+                            property_exists($opt, "optionshort") ? base64_decode($opt->optionshort) : "",
+                            property_exists($opt, "optionhover") ? base64_decode($opt->optionhover) : "",
+                            property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
+                            $id, $opt->ordinal
                         );
+                    } else {
+                        $paramarray = array(
+                            property_exists($opt, "value") ? $opt->value : "",
+                            $optdisplayorder,
+                            property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                            property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                            property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
+                            $id, $opt->ordinal
+                        );
+                    }
+                    //error_log("\n\n" . $optsql);
+                    //var_error_log($paramarray);
                     $optupdated = $optupdated + mysql_cmd_with_prepare($optsql, "sisssii", $paramarray);
                 }
             }
@@ -210,16 +259,28 @@ EOD;
             // Insert new options
             foreach ($options as $opt) {
                 if ($opt->ordinal < 0) {
-                    $paramarray = array(
-                        $demographicid, $optord,
-                        property_exists($opt, "value") ? $opt->value : "",
-                        $optdisplayorder,
-                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
-                        );
-
-                    $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $optparamarray);
+                    if ($useoptatob) {
+                        $paramarray = array(
+                            $id, $optord,
+                            property_exists($opt, "value") ? base64_decode($opt->value) : "",
+                            $opt->display_order,
+                            property_exists($opt, "optionshort") ? base64_decode($opt->optionshort) : "",
+                            property_exists($opt, "optionhover") ? base64_decode($opt->optionhover) : "",
+                            property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
+                            );
+                    } else {
+                        $paramarray = array(
+                           $id, $optord,
+                           property_exists($opt, "value") ? $opt->value : "",
+                           $opt->display_order,
+                           property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                           property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                           property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
+                           );
+                    }
+                    //error_log("\n\n" . $optinssql);
+                    //var_error_log($paramarray);
+                    $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $paramarray);
                     $optord = $optord + 1;
                 }
             }
@@ -267,6 +328,7 @@ function fetch_demographics() {
 			'display_order', display_order
 			)) AS optionconfig
 		FROM DemographicOptionConfig
+        GROUP BY demographicid
 )
 SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'demographicid', d.demographicid,
@@ -284,7 +346,7 @@ SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'ascending', ascending,
 			'min_value', min_value,
 			'max_value', max_value,
-            'options', CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END
+            'options', TO_BASE64(CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END)
 			)) AS config
 		FROM DemographicConfig d
 		JOIN DemographicTypes t USING (typeid)
@@ -301,6 +363,7 @@ EOD;
 	if ($Config == "") {
 		$Config = "[]";
     }
+    //error_log("\n\ndemographics = " . $Config);
     echo "demographics = " . $Config . ";\n";
 }
 

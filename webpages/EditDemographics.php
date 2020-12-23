@@ -10,6 +10,33 @@ $rows = 0;
 
 staff_header($title, $bootstrap4);
 if (isLoggedIn() && may_I("Administrator")) {
+// get default data javascript
+        $sql = <<<EOD
+        SELECT t.shortname, JSON_ARRAYAGG(JSON_OBJECT(
+            'ordinal', -d.ordinal,
+            'value', d.value,
+            'display_order', d.display_order,
+            'optionshort', d.optionshort,
+            'optionhover', d.optionhover,
+            'allowothertext', d.allowothertext
+            )) AS config
+        FROM DemographicTypeDefaults d
+		JOIN DemographicTypes t USING (typeid)
+        GROUP BY d.typeid;
+EOD;
+        $result = mysqli_query_exit_on_error($sql);
+		echo '<script type="text/javascript">' . "\n";
+		echo "defaultOptions = {\n";
+
+        while ($row = mysqli_fetch_assoc($result)) {
+			$typename = $row["shortname"];
+            $Config = $row["config"];
+			echo $typename . ': "' . base64_encode($Config) . '",' . "\n";
+        }
+        mysqli_free_result($result);
+
+        echo "};\n</script>\n";
+
 // Start of display portion
 	$paramArray = array();
 
@@ -25,6 +52,7 @@ if (isLoggedIn() && may_I("Administrator")) {
 			'display_order', display_order
 			)) AS optionconfig
 		FROM DemographicOptionConfig
+		GROUP BY demographicid
 )
 SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'demographicid', d.demographicid,
@@ -42,7 +70,7 @@ SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'ascending', ascending,
 			'min_value', min_value,
 			'max_value', max_value,
-            'options', CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END
+            'options', TO_BASE64(CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END)
 			)) AS config
 		FROM DemographicConfig d
 		JOIN DemographicTypes t USING (typeid)

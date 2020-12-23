@@ -7,8 +7,6 @@
   <xsl:param name="name" select="''"/>
   <xsl:param name="prompt" select="''"/>
   <xsl:param name="hover" select="''"/>
-  <xsl:param name="max" select="999999999"/>
-  <xsl:param name="min" select="0"/>
   <xsl:param name="required" select="0"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
@@ -44,7 +42,7 @@
           </span>
         </div>
         <div class="col col-3">
-          <input type="number">
+          <select>
             <xsl:attribute name="id">
               <xsl:value-of select="$name"/>
               <xsl:text>-input</xsl:text>
@@ -52,13 +50,12 @@
             <xsl:attribute name="name">
               <xsl:value-of select="$name"/>
             </xsl:attribute>
-            <xsl:attribute name="min">
-              <xsl:value-of select="$min"/>
-            </xsl:attribute>
-            <xsl:attribute name="max">
-              <xsl:value-of select="$max"/>
-            </xsl:attribute>
-          </input>
+            <xsl:for-each select="/doc/query[@queryname='loop']/row">
+              <option value="{@value}">
+                <xsl:value-of select="@value"/>
+              </option>
+            </xsl:for-each>
+          </select>
         </div>
       </div>
     </div>

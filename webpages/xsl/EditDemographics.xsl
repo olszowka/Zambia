@@ -73,13 +73,13 @@
         </div>
         <div class="row">
           <div class="col col-2">Prompt:</div>
-          <div class="col col-4">
-            <input type="text" id="prompt" maxlength="512" size="50"/>
+          <div class="col col-10">
+            <input type="text" id="prompt" maxlength="512" size="80"/>
           </div>
         </div>
         <div class="row">
           <div class="col col-2">Hover:</div>
-          <div class="col col-6">
+          <div class="col col-10">
             <textarea id="hover" rows="4" cols="80" maxlength="8192"></textarea>
           </div>
         </div>
@@ -92,61 +92,66 @@
                 <xsl:attribute name="data-typeid">
                   <xsl:value-of select="@typeid"/>
                 </xsl:attribute>
+                <xsl:attribute name="title">
+                  <xsl:value-of select="@description"/>
+                </xsl:attribute>
                 <xsl:value-of select="@shortname"/>
               </option>
               </xsl:for-each>
             </select>
           </div>
         </div>
-        <div class="row">
-          <div class="col col-2">Required:</div>
-          <div class="col col-4">
-            <div class="form-check-inline">
-              <input class="form-check-input" type="radio" id="required-1" name="required" value="1" checked="checked"/>
-              <label class="form-check-label" for="required-1">Yes</label>
-            </div>
-            <div class="form-check-inline">
-              <input class="form-check-input" type="radio" id="required-0" name="required" value="0"/>
-              <label class="form-check-label" for="required-0">No</label>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col col-2">Publish:</div>
-          <div class="col col-4">
-            <div class="form-check-inline">
-              <input class="form-check-input" type="radio" id="publish-1" name="publish" value="Yes"/>
-              <label class="form-check-label" for="publish-1">Yes</label>
-            </div>
-            <div class="form-check-inline">
-              <input class="form-check-input" type="radio" id="publish-0" name="publish" value="No" checked="checked"/>
-              <label class="form-check-label" for="publish-0">No</label>
+        <div id="radio-div">
+          <div class="row">
+            <div class="col col-2">Required:</div>
+            <div class="col col-4">
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="required-1" name="required" value="1" checked="checked"/>
+                <label class="form-check-label" for="required-1">Yes</label>
+              </div>
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="required-0" name="required" value="0"/>
+                <label class="form-check-label" for="required-0">No</label>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col col-2">Allow user to set privacy:</div>
-          <div class="col col-4">
-            <div class="form-check-inline">
-              <input class="form-check-input" type="radio" id="privacy_user-1" name="privacy_user" value="Yes"/>
-              <label class="form-check-label" for="privacy-1">Yes</label>
-            </div>
-            <div class="form-check-inline">
-              <input class="form-check-input" type="radio" id="privacy_user-0" name="privacy_user" value="No" checked="checked"/>
-              <label class="form-check-label" for="privacy-0">No</label>
+          <div class="row">
+            <div class="col col-2">Publish:</div>
+            <div class="col col-4">
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="publish-1" name="publish" value="Yes"/>
+                <label class="form-check-label" for="publish-1">Yes</label>
+              </div>
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="publish-0" name="publish" value="No" checked="checked"/>
+                <label class="form-check-label" for="publish-0">No</label>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col col-2">Searchable:</div>
-          <div class="col col-4">
-            <div class="form-check-inline">
-              <input class="form-check-input" type="radio" id="searchable-1" name="searchable" value="Yes"/>
-              <label class="form-check-label" for="searchable-1">Yes</label>
+          <div class="row">
+            <div class="col col-2">Allow user to set privacy:</div>
+            <div class="col col-4">
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="privacy_user-1" name="privacy_user" value="Yes"/>
+                <label class="form-check-label" for="privacy-1">Yes</label>
+              </div>
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="privacy_user-0" name="privacy_user" value="No" checked="checked"/>
+                <label class="form-check-label" for="privacy-0">No</label>
+              </div>
             </div>
-            <div class="form-check-inline">
-              <input class="form-check-input" type="radio" id="searchable-0" name="searchable" value="No" checked="checked"/>
-              <label class="form-check-label" for="searchable-0">No</label>
+          </div>
+          <div class="row">
+            <div class="col col-2">Searchable:</div>
+            <div class="col col-4">
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="searchable-1" name="searchable" value="Yes"/>
+                <label class="form-check-label" for="searchable-1">Yes</label>
+              </div>
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="searchable-0" name="searchable" value="No" checked="checked"/>
+                <label class="form-check-label" for="searchable-0">No</label>
+              </div>
             </div>
           </div>
         </div>

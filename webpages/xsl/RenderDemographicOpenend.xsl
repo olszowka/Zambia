@@ -19,10 +19,23 @@
       <div class="row mt-4">
         <div class="col col-3">
           <span>
-            <xsl:attribute name="title">
-              <xsl:value-of select="$hover"/>
+            <xsl:attribute name="id">
+              <xsl:value-of select="$name"/>
+              <xsl:text>-prompt</xsl:text>
             </xsl:attribute>
-            <xsl:value-of select="$prompt"/>
+            <xsl:attribute name="title">
+              <xsl:text>Placeholder</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="data-toggle">
+              <xsl:text>tooltip</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="data-placement">
+              <xsl:text>right</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="data-html">
+              <xsl:text>true</xsl:text>
+            </xsl:attribute>
+            <xsl:value-of select="$prompt" disable-output-escaping="yes"/>
             <xsl:if test="$required = 1">
               <span style="color: #990012;">
                 <xsl:text>*</xsl:text>
