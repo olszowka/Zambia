@@ -89,16 +89,16 @@ var EditDemographics = function () {
         if (curid == -99999) {
             curid = newid;
         }
-        console.log("add/update " + curid);
+        //console.log("add/update " + curid);
         if (opttable) {
             option = JSON.stringify(opttable.getData());
-            console.log("-used opttable");
+            //console.log("-used opttable");
         } else if (demographicoptions.length > 0) {
             option = "nobtoa:" + JSON.stringify(demographicoptions);
-            console.log("-used demographic options: " + demographicoptions.length);
+            //console.log("-used demographic options: " + demographicoptions.length);
         } else {
             option = "[]";
-            console.log("-no options");
+            //console.log("-no options");
         }
         table.updateOrAddData([{
             demographicid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
@@ -285,7 +285,7 @@ var EditDemographics = function () {
                 defaults = defaultOptions[typename];
                 defaultjson = atob(defaults);
                 eval("demographicoptions = " + defaultjson + ";");
-                console.log("added default options");
+                //console.log("added default options");
             }
         }
         if (show_options) {
@@ -500,6 +500,7 @@ function saveComplete(data, textStatus, jqXHR) {
 function SaveDemographics() {
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
+    document.getElementById("general-demo-div").style.display = "none";
     document.getElementById("message").style.display = 'none';
     arr = configtable.getData();
     var postdata = {
@@ -619,13 +620,13 @@ function RefreshPreview() {
     };
     var options = [];
     if (optiontable) {
-        console.log("from optiontable");
+        //console.log("from optiontable");
         options = JSON.stringify(optiontable.getData());
     } else if (demographicoptions.length > 0) {
-        console.log("from demographicoptions");
+        //console.log("from demographicoptions");
         options = "nobtoa:" + JSON.stringify(demographicoptions);
     }
-    console.log("options = '" + options + "'");
+    //console.log("options = '" + options + "'");
     var postdata = {
         ajax_request_action: "renderdemograhpic",
         demographic: btoa(JSON.stringify(demographicData)),
