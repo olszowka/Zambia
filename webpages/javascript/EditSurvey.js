@@ -51,6 +51,7 @@ var EditSurvey = function () {
             height: 200,
             width: 900,
             min_height: 200,
+            maxlength: 8192,
             menubar: false,
             toolbar: [
                 'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
@@ -348,8 +349,12 @@ var EditSurvey = function () {
                 },
                 dataChanged: function (data) {
                     //data - the updated table data
-                    //document.getElementById("submitbtn").innerHTML = "Save*";
                     document.getElementById("optundo").disabled = false;
+                    el = document.getElementById("add-row");
+                    buttontext = el.innerHTML;
+                    if (buttontext.substring(buttontext.length - 1) != '*') {
+                        el.innerHTML = buttontext + '*';
+                    }
                 },
             });
         }
@@ -598,8 +603,8 @@ function OptRedo() {
 function RefreshComplete(data, textStatus, jqXHR) {
     var preview = "<br/><h4>Preview</h4>" + data;
     document.getElementById("preview").innerHTML = preview;
-    
-    id = document.getElementById("shortname").value.replace(' ', '_') + "-prompt";
+    fieldname = document.getElementById("shortname").value.replace(/ /g, '_'); 
+    id = fieldname + "-prompt";
     hoverelement = document.getElementById(id);
     if (hoverelement != null) {
         hover = document.getElementById("hover").value;
@@ -607,10 +612,40 @@ function RefreshComplete(data, textStatus, jqXHR) {
         hoverelement.setAttribute('title', hover);
         $('#' + id).tooltip();
     }
+    typename = document.getElementById("typename").value;
+    if (typename == 'html-text') {
+        maxlength = document.getElementById("max_value").value;
+        if (maxlength == "" || maxlength <= 0) {
+            maxlength = 8192;
+        }
+        tinyMCE.init({
+            selector: 'textarea#' + fieldname + '-input',
+            plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+            browser_spellcheck: true,
+            contextmenu: false,
+            height: 200,
+            width: 900,
+            min_height: 200,
+            maxlength: maxlength,
+            menubar: false,
+            toolbar: [
+                'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+            ],
+            toolbar_mode: 'floating',
+            content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+            placeholder: 'Type content here...'
+        });
+    }
 }
 
 function RefreshPreview() {
     tinyMCE.triggerSave();
+    typename = document.getElementById("typename").value;
+    if (typename == 'html-text') {
+        fieldname = '#' + document.getElementById("shortname").value.replace(/ /g, '_') + '-input';
+        tinyMCE.remove(fieldname);
+    }
     prompt = document.getElementById("prompt").value;
     if (prompt.substring(0, 3) == '<p>') {
         prompt = prompt.substring(3, prompt.length - 4);

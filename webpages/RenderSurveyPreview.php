@@ -187,6 +187,7 @@ function render_question() {
 			RenderXSLT('RenderDemographicOpenend.xsl', $paramArray);
 			break;
         case "text":
+        case "html-text";
 			RenderXSLT('RenderDemographicTextarea.xsl', $paramArray);
 			break;
         case "heading":
