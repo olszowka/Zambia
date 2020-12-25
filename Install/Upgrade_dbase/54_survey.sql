@@ -1,24 +1,24 @@
-## This script add tables, fields and initial values for demographics
+## This script add tables, fields and initial values for survey
 ##
 ##	Created by Syd Weinstein on September 22, 2020
 ## 	Copyright (c) 2020 by Peter Olszowka. All rights reserved. See copyright document for more details.
 ##
-drop table if exists ParticipantDemographics;
-drop table if exists DemographicOptionConfig;
-drop table if exists DemographicConfig;
-drop table if exists DemographicTypeDefaults;
-drop table if exists DemographicTypes;
+drop table if exists ParticipantSurveyAnswers;
+drop table if exists SurveyQuestionOptionConfig;
+drop table if exists SurveyQuestionConfig;
+drop table if exists SurveyQuestionTypeDefaults;
+drop table if exists SurveyQuestionTypes;
 
-CREATE TABLE DemographicTypes (
+CREATE TABLE SurveyQuestionTypes (
 	typeid int NOT NULL AUTO_INCREMENT,
 	shortname varchar(100) NOT NULL,
 	description varchar(1024) DEFAULT NULL,
 	current tinyint DEFAULT '0',
 	display_order int NOT NULL,
 	PRIMARY KEY (typeid)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Demographic Type info.';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Type info.';
 
-INSERT INTO DemographicTypes (typeid, shortname, description, current, display_order)
+INSERT INTO SurveyQuestionTypes (typeid, shortname, description, current, display_order)
 VALUES
 	(5, 'heading', 'HTML heading/prompt without input field', 1, 5),
 	(10, 'single-radio', 'Radio button list, select one of many', 1, 10),
@@ -37,19 +37,19 @@ VALUES
 	(130, 'country', 'Country List', 1, 170),
 	(140, 'states', 'State/Province List', 1, 180);
     
-CREATE TABLE DemographicTypeDefaults (
+CREATE TABLE SurveyQuestionTypeDefaults (
 	typeid int NOT NULL,
-    ordinal int NOT NULL,
-    value varchar(512) NOT NULL,
+	ordinal int NOT NULL,
+	value varchar(512) NOT NULL,
 	display_order int NOT NULL,
 	optionshort varchar(64) NOT NULL,
 	optionhover varchar(512) DEFAULT NULL,
 	allowothertext bool DEFAULT '0',
-    PRIMARY KEY (typeid, ordinal),
-	FOREIGN KEY (typeid) REFERENCES DemographicTypes(typeid)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Demographic Type Default options';
+	PRIMARY KEY (typeid, ordinal),
+	FOREIGN KEY (typeid) REFERENCES SurveyQuestionTypes(typeid)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Type Default options';
 
-INSERT INTO DemographicTypeDefaults (typeid, ordinal, value, display_order, optionshort, optionhover, allowothertext)
+INSERT INTO SurveyQuestionTypeDefaults (typeid, ordinal, value, display_order, optionshort, optionhover, allowothertext)
 VALUES
 	(100, 1, '1', 1, 'Jan', 'January', 0),
 	(100, 2, '2', 2, 'Feb', 'February', 0),
@@ -407,8 +407,8 @@ VALUES
 	(140, 71, 'WY', 71, 'WY', 'Wyoming',0),
 	(140, 72, 'YT', 72, 'YT', 'Yukon',0);
 
-CREATE TABLE DemographicConfig (
-	demographicid int NOT NULL AUTO_INCREMENT,
+CREATE TABLE SurveyQuestionConfig (
+	questionid int NOT NULL AUTO_INCREMENT,
 	shortname varchar(100) NOT NULL,
 	description varchar(1024) DEFAULT NULL,
 	prompt varchar(512) NOT NULL,
@@ -422,32 +422,32 @@ CREATE TABLE DemographicConfig (
 	ascending bool NOT NULL DEFAULT '1',
 	min_value int DEFAULT NULL,
 	max_value int DEFAULT NULL,
-	PRIMARY KEY (demographicid),
-	FOREIGN KEY (typeid) REFERENCES DemographicTypes(typeid)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Demographic Info.';
+	PRIMARY KEY (questionid),
+	FOREIGN KEY (typeid) REFERENCES SurveyQuestionTypes(typeid)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Info.';
 
-CREATE TABLE DemographicOptionConfig (
-	demographicid int NOT NULL,
+CREATE TABLE SurveyQuestionOptionConfig (
+	questionid int NOT NULL,
 	ordinal int NOT NULL,
 	value varchar(512) NOT NULL,
 	display_order int NOT NULL,
 	optionshort varchar(64) NOT NULL,
 	optionhover varchar(512) DEFAULT NULL,
 	allowothertext bool DEFAULT '0',
-	PRIMARY KEY (demographicid, ordinal),
-	FOREIGN KEY (demographicid) REFERENCES DemographicConfig(demographicid) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Demographic Option Info.';
+	PRIMARY KEY (questionid, ordinal),
+	FOREIGN KEY (questionid) REFERENCES SurveyQuestionConfig(questionid) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Option Info.';
 
-CREATE TABLE ParticipantDemographics (
+CREATE TABLE ParticipantSurveyAnswers (
 	participantid varchar(15) NOT NULL,
-	demographicid int NOT NULL,
+	questionid int NOT NULL,
 	display_order int NOT NULL,
 	privacy_setting bool NOT NULL DEFAULT '0',
 	value varchar(8192),
 	othertext varchar(512),
-	PRIMARY KEY (participantid, demographicid),
+	PRIMARY KEY (participantid, questionid),
 	FOREIGN KEY (participantid) REFERENCES Participants(badgeid) ON DELETE CASCADE,
-	FOREIGN KEY (demographicid) REFERENCES DemographicConfig(demographicid) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant Demographic Info.';
+	FOREIGN KEY (questionid) REFERENCES SurveyQuestionConfig(questionid) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant Survey Info.';
 
-##INSERT INTO PatchLog (patchname) VALUES ('54_demographics.sql');
+##INSERT INTO PatchLog (patchname) VALUES ('54_survey.sql');
