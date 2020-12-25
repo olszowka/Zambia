@@ -103,6 +103,19 @@
         </div>
         <div id="radio-div">
           <div class="row">
+            <div class="col col-2">Display Only:</div>
+            <div class="col col-4">
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="display_only-1" name="display_only" value="Yes"/>
+                <label class="form-check-label" for="display_only-1">Yes</label>
+              </div>
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" id="display_only-0" name="display_only" value="No" checked="checked"/>
+                <label class="form-check-label" for="display_only-0">No</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="col col-2">Required:</div>
             <div class="col col-4">
               <div class="form-check-inline">

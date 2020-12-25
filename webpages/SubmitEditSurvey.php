@@ -59,8 +59,8 @@ function update_survey() {
     $optinserted = 0;
     $sql = <<<EOD
         INSERT INTO SurveyQuestionConfig (shortname, description, prompt,
-            hover, display_order, typeid, required, publish, privacy_user, searchable, ascending, min_value, max_value)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            hover, display_order, typeid, required, publish, privacy_user, searchable, ascending, display_only, min_value, max_value)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 EOD;
     $optinssql = <<<EOD
         INSERT INTO SurveyQuestionOptionConfig (questionid, ordinal, value, display_order,
@@ -83,13 +83,14 @@ EOD;
                 property_exists($quest, "privacy_user") ? $quest->privacy_user : 0,
                 property_exists($quest, "searchable") ? $quest->searchable : 0,
                 property_exists($quest, "ascending") ? $quest->ascending : 1,
+                property_exists($quest, "display_only") ? $quest->display_only : 0,
                 property_exists($quest, "min_value") ? ($quest->min_value != "" ? $quest->min_value : null) : null,
                 property_exists($quest, "max_value") ? ($quest->max_value != "" ? $quest->max_value : null) : null
             );
             //error_log("\n\nInsert of " . $quest->shortname);
             //error_log($sql);
             //var_error_log($paramarray);
-            $inserted = $inserted + mysql_cmd_with_prepare($sql, "ssssiiiiiiiii", $paramarray);
+            $inserted = $inserted + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiii", $paramarray);
             $questionid = mysqli_insert_id($linki);
             $options = [];
             $useoptatob = true;
@@ -127,7 +128,7 @@ EOD;
                     );
                 }
                 $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $optparamarray);
-                error_log("options inserted now " . $optinserted);
+                //error_log("options inserted now " . $optinserted);
                 $optord = $optord + 1;
                 $optdisplayorder = $optdisplayorder + 10;
             }
@@ -150,6 +151,7 @@ EOD;
             privacy_user = ?,
             searchable = ?,
             ascending = ?,
+            display_only = ?,
             min_value = ?,
             max_value = ?
         WHERE questionid = ?;
@@ -177,13 +179,14 @@ EOD;
                 property_exists($quest, "privacy_user") ? $quest->privacy_user : 0,
                 property_exists($quest, "searchable") ? $quest->searchable : 0,
                 property_exists($quest, "ascending") ? $quest->ascending : 1,
+                property_exists($quest, "display_only") ? $quest->display_only : 0,
                 property_exists($quest, "min_value") ? (strlen($quest->min_value) > 0 ? $quest->min_value : null) : null,
                 property_exists($quest, "max_value") ? (strlen($quest->max_value) > 0 ? $quest->max_value : null) : null,
                 $id
             );
             //error_log("\n\nupdate of " . $id . "\n" . $sql);
             //var_error_log($paramarray);
-            $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiii", $paramarray);
+            $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiiii", $paramarray);
             $options = [];
             $useoptatob = true;
             if (property_exists($quest, "options")) {
@@ -238,7 +241,7 @@ EOD;
                     if ($useoptatob) {
                         $paramarray = array(
                             property_exists($opt, "value") ? base64_decode($opt->value) : "",
-                            $optdisplayorder,
+                            $opt->display_order,
                             property_exists($opt, "optionshort") ? base64_decode($opt->optionshort) : "",
                             property_exists($opt, "optionhover") ? base64_decode($opt->optionhover) : "",
                             property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
@@ -247,7 +250,7 @@ EOD;
                     } else {
                         $paramarray = array(
                             property_exists($opt, "value") ? $opt->value : "",
-                            $optdisplayorder,
+                            $opt->display_order,
                             property_exists($opt, "optionshort") ? $opt->optionshort : "",
                             property_exists($opt, "optionhover") ? $opt->optionhover : "",
                             property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
@@ -348,6 +351,7 @@ SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'privacy_user', privacy_user,
 			'searchable', searchable,
 			'ascending', ascending,
+            'display_only', display_only,
 			'min_value', min_value,
 			'max_value', max_value,
             'options', TO_BASE64(CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END)

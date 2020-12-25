@@ -68,6 +68,7 @@ SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'privacy_user', privacy_user,
 			'searchable', searchable,
 			'ascending', ascending,
+			'display_only', display_only,
 			'min_value', min_value,
 			'max_value', max_value,
             'options', TO_BASE64(CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END)

@@ -420,6 +420,7 @@ CREATE TABLE SurveyQuestionConfig (
 	privacy_user bool NOT NULL DEFAULT '0',
 	searchable bool NOT NULL DEFAULT '0',
 	ascending bool NOT NULL DEFAULT '1',
+	display_only bool NOT NULL DEFAULT '0',
 	min_value int DEFAULT NULL,
 	max_value int DEFAULT NULL,
 	PRIMARY KEY (questionid),

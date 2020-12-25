@@ -78,6 +78,7 @@ var EditSurvey = function () {
         var privacy_user = document.getElementById("privacy_user-1").checked ? 1 : 0;
         var searchable = document.getElementById("searchable-1").checked ? 1 : 0;
         var ascending = document.getElementById("ascending-1").checked ? 1 : 0;
+        var display_only = document.getElementById("display_only-1").checked ? 1 : 0;
         var minvalue = document.getElementById("min_value").value;
         var maxvalue = document.getElementById("max_value").value;
 
@@ -103,7 +104,7 @@ var EditSurvey = function () {
         table.updateOrAddData([{
             questionid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
             typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user,
-            searchable: searchable, ascending: ascending, min_value: minvalue, max_value: maxvalue, options: btoa(option)
+            searchable: searchable, ascending: ascending, display_only: display_only, min_value: minvalue, max_value: maxvalue, options: btoa(option)
            }, 
         ]);
         newid = newid - 1;
@@ -143,6 +144,8 @@ var EditSurvey = function () {
         document.getElementById("searchable-0").checked = true;
         document.getElementById("ascending-1").checked = true;
         document.getElementById("ascending-0").checked = false;
+        document.getElementById("display_only-1").checked = false;
+        document.getElementById("display_only-0").checked = true;
         document.getElementById("min_value").value = "0";
         document.getElementById("max_value").value = "8192";
         // now display it, hiding ones not used by single-radio
@@ -183,6 +186,8 @@ var EditSurvey = function () {
         document.getElementById("searchable-0").checked = row.getCell("searchable").getValue() != "1";
         document.getElementById("ascending-1").checked = row.getCell("ascending").getValue() == "1";
         document.getElementById("ascending-0").checked = row.getCell("ascending").getValue() != "1";
+        document.getElementById("display_only-1").checked = row.getCell("display_only").getValue() == "1";
+        document.getElementById("display_only-0").checked = row.getCell("display_only").getValue() != "1";
         document.getElementById("min_value").value = row.getCell("min_value").getValue();
         document.getElementById("max_value").value = row.getCell("max_value").getValue();
         options = row.getCell("options").getValue();
@@ -400,6 +405,12 @@ var EditSurvey = function () {
                 { title: "Type", field: "typename", width: 140 },
                 { title: "Type-ID", field: "typeid", visible: false },
                 {
+                    title: "Display Only", field: "display_only", formatter: "tickCross",
+                    editor: "select", editorParams: {
+                        values: { 1: "Yes", 0: "No" },
+                    }
+                },
+                {
                     title: "Required", field: "required", formatter: "tickCross",
                     editor: "select", editorParams: {
                         values: { 1: "Yes", 0: "No" },
@@ -422,7 +433,7 @@ var EditSurvey = function () {
                     editor: "select", editorParams: {
                         values: { 1: "Yes", 0: "No" },
                     }
-                },
+                },  
                 {
                     title: "Asc/Desc", field: "ascending",
                     formatter: "lookup", formatterParams: {
@@ -616,6 +627,7 @@ function RefreshPreview() {
         privacy_user: document.getElementById("privacy_user-1").checked,
         searchable: document.getElementById("searchable-1").checked,
         ascending: document.getElementById("ascending-1").checked,
+        display_only: document.getElementById("display_only-1").checked,
         min_value: document.getElementById("min_value").value,
         max_value: document.getElementById("max_value").value
     };

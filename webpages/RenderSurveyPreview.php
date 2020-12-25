@@ -104,6 +104,7 @@ function render_question() {
 	$paramArray["typename"] = $quest->typename;
     $paramArray["required"] = property_exists($quest, "required") ? $quest->required : 1;
     $paramArray["ascending"] = property_exists($quest, "ascending") ? $quest->ascending : 1;
+    $paramArray["display_only"] = property_exists($quest, "display_only") ? $quest->display_only : 0;
 	$paramArray["min"] = property_exists($quest, "min_value") ? ($quest->min_value != "" ? $quest->min_value : 0) : 0;
     $paramArray["max"] = property_exists($quest, "max_value") ? ($quest->max_value != "" ? $quest->max_value : 8192) : 8192;
 	$paramArray["size"] = min(80, $paramArray["max"]);
