@@ -14,13 +14,13 @@
   <xsl:template match="/">
     <div>
       <xsl:attribute name="id">
-        <xsl:value-of select="$name"/>
+        <xsl:value-of select="translate($name, ' ', '_')"/>
       </xsl:attribute>
       <div class="row mt-4">
         <div class="col col-3">
           <span>
             <xsl:attribute name="id">
-              <xsl:value-of select="$name"/>
+              <xsl:value-of select="translate($name, ' ', '_')"/>
               <xsl:text>-prompt</xsl:text>
             </xsl:attribute>
             <xsl:attribute name="title">
@@ -46,11 +46,11 @@
         <div class="col col-3">
           <input type="number">
             <xsl:attribute name="id">
-              <xsl:value-of select="$name"/>
+              <xsl:value-of select="translate($name, ' ', '_')"/>
               <xsl:text>-input</xsl:text>
             </xsl:attribute>
             <xsl:attribute name="name">
-              <xsl:value-of select="$name"/>
+              <xsl:value-of select="translate($name, ' ', '_')"/>
             </xsl:attribute>
             <xsl:attribute name="min">
               <xsl:value-of select="$min"/>

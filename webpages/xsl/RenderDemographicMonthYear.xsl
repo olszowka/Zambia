@@ -12,13 +12,13 @@
   <xsl:template match="/">
     <div>
       <xsl:attribute name="id">
-        <xsl:value-of select="$name"/>
+        <xsl:value-of select="translate($name, ' ', '_')"/>
       </xsl:attribute>
       <div class="row mt-4">
         <div class="col col-3">
           <span>
             <xsl:attribute name="id">
-              <xsl:value-of select="$name"/>
+              <xsl:value-of select="translate($name, ' ', '_')"/>
               <xsl:text>-prompt</xsl:text>
             </xsl:attribute>
             <xsl:value-of select="$prompt"/>
@@ -32,11 +32,11 @@
         <div class="col col-auto">
           <select>
             <xsl:attribute name="id">
-              <xsl:value-of select="$name"/>
+              <xsl:value-of select="translate($name, ' ', '_')"/>
               <xsl:text>-month</xsl:text>
             </xsl:attribute>
             <xsl:attribute name="name">
-              <xsl:value-of select="$name"/>
+              <xsl:value-of select="translate($name, ' ', '_')"/>
             </xsl:attribute>
             <xsl:for-each select="/doc/query[@queryname='options']/row">
               <option value="{@value}">
@@ -51,11 +51,11 @@
       <div class="col col-auto">
           <select>
             <xsl:attribute name="id">
-              <xsl:value-of select="$name"/>
+              <xsl:value-of select="translate($name, ' ', '_')"/>
               <xsl:text>-year</xsl:text>
             </xsl:attribute>
             <xsl:attribute name="name">
-              <xsl:value-of select="$name"/>
+              <xsl:value-of select="translate($name, ' ', '_')"/>
             </xsl:attribute>
             <xsl:for-each select="/doc/query[@queryname='year']/row">
               <option value="{@value}">

@@ -587,7 +587,7 @@ function RefreshComplete(data, textStatus, jqXHR) {
     var preview = "<br/><h4>Preview</h4>" + data;
     document.getElementById("preview").innerHTML = preview;
     
-    id = document.getElementById("shortname").value + "-prompt";
+    id = document.getElementById("shortname").value.replace(' ', '_') + "-prompt";
     hoverelement = document.getElementById(id);
     if (hoverelement != null) {
         hover = document.getElementById("hover").value;
