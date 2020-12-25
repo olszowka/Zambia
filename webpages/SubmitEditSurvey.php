@@ -10,20 +10,20 @@ function var_error_log( $object=null ){
     error_log( $contents );        // log contents of the result of var_dump( $object )
 }
 
-function update_demographics() {
+function update_survey() {
     global $linki, $message_error;
-    //error_log("\n\nin update demographics:\n");
-    //error_log("string loaded: " . getString("demographics"));
-    $demographics = json_decode(base64_decode(getString("demographics")));
-    //var_error_log($demographics);
+    //error_log("\n\nin update surver:\n");
+    //error_log("string loaded: " . getString("survey"));
+    $questions = json_decode(base64_decode(getString("survey")));
+    //var_error_log($questions);
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
     $display_order = 10;
-    //var_error_log($demographics);
-    foreach ($demographics as $demo) {
-        $demo->display_order = $display_order;
+    //var_error_log($questions);
+    foreach ($questions as $quest) {
+        $quest->display_order = $display_order;
         $display_order = $display_order + 10;
-        $id = (int) $demo->demographicid;
+        $id = (int) $quest->questionid;
         if ($id) {
             $idsFound = $idsFound . ',' . $id;
         }
@@ -31,9 +31,9 @@ function update_demographics() {
 
     // delete the ones no longer in the JSON uploaded, check for none uploaded
     if (mb_strlen($idsFound) < 2) {
-        $sql = "DELETE FROM DemographicOptionConfig WHERE demographicid >= 0;";
+        $sql = "DELETE FROM SurveyQuestionOptionConfig WHERE questionid >= 0;";
     } else {
-        $sql = "DELETE FROM DemographicOptionConfig WHERE demographicid NOT IN (" . mb_substr($idsFound, 1) . ");";
+        $sql = "DELETE FROM SurveyQuestionOptionConfig WHERE questionid NOT IN (" . mb_substr($idsFound, 1) . ");";
     }
 
     if (!mysqli_query_exit_on_error($sql)) {
@@ -42,9 +42,9 @@ function update_demographics() {
     $optdeleted = mysqli_affected_rows($linki);
 
     if (mb_strlen($idsFound) < 2) {
-        $sql = "DELETE FROM DemographicConfig WHERE demographicid >= 0;";
+        $sql = "DELETE FROM SurveyQuestionConfig WHERE questionid >= 0;";
     } else {
-        $sql = "DELETE FROM DemographicConfig WHERE demographicid NOT IN (" . mb_substr($idsFound, 1) . ");";
+        $sql = "DELETE FROM SurveyQuestionConfig WHERE questionid NOT IN (" . mb_substr($idsFound, 1) . ");";
     }
 
     if (!mysqli_query_exit_on_error($sql)) {
@@ -56,43 +56,43 @@ function update_demographics() {
     $inserted = 0;
     $optinserted = 0;
     $sql = <<<EOD
-        INSERT INTO DemographicConfig (shortname, description, prompt,
+        INSERT INTO SurveyQuestionConfig (shortname, description, prompt,
             hover, display_order, typeid, required, publish, privacy_user, searchable, ascending, min_value, max_value)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 EOD;
     $optinssql = <<<EOD
-        INSERT INTO DemographicOptionConfig (demographicid, ordinal, value, display_order,
+        INSERT INTO SurveyQuestionOptionConfig (questionid, ordinal, value, display_order,
             optionshort, optionhover, allowothertext)
         VALUES(?, ?, ?, ?, ?, ?, ?);
 EOD;
-    foreach ($demographics as $demo) {
-        $id = (int) $demo->demographicid;
+    foreach ($questions as $quest) {
+        $id = (int) $quest->questionid;
         if ($id < 0) {
 
             $paramarray = array(
-                property_exists($demo, "shortname") ? $demo->shortname : "",
-                property_exists($demo, "description") ? base64_decode($demo->description) : null,
-                property_exists($demo, "prompt") ? base64_decode($demo->prompt) : "",
-                property_exists($demo, "hover") ? base64_decode($demo->hover) : null,
-                property_exists($demo, "display_order") ? $demo->display_order: null,
-                property_exists($demo, "typeid") ? (int) $demo->typeid: 60,
-                property_exists($demo, "required") ? $demo->required : 1,
-                property_exists($demo, "publish") ? $demo->publish : 0,
-                property_exists($demo, "privacy_user") ? $demo->privacy_user : 0,
-                property_exists($demo, "searchable") ? $demo->searchable : 0,
-                property_exists($demo, "ascending") ? $demo->ascending : 1,
-                property_exists($demo, "min_value") ? ($demo->min_value != "" ? $demo->min_value : null) : null,
-                property_exists($demo, "max_value") ? ($demo->max_value != "" ? $demo->max_value : null) : null
+                property_exists($quest, "shortname") ? $quest->shortname : "",
+                property_exists($quest, "description") ? base64_decode($quest->description) : null,
+                property_exists($quest, "prompt") ? base64_decode($quest->prompt) : "",
+                property_exists($quest, "hover") ? base64_decode($quest->hover) : null,
+                property_exists($quest, "display_order") ? $quest->display_order: null,
+                property_exists($quest, "typeid") ? (int) $quest->typeid: 60,
+                property_exists($quest, "required") ? $quest->required : 1,
+                property_exists($quest, "publish") ? $quest->publish : 0,
+                property_exists($quest, "privacy_user") ? $quest->privacy_user : 0,
+                property_exists($quest, "searchable") ? $quest->searchable : 0,
+                property_exists($quest, "ascending") ? $quest->ascending : 1,
+                property_exists($quest, "min_value") ? ($quest->min_value != "" ? $quest->min_value : null) : null,
+                property_exists($quest, "max_value") ? ($quest->max_value != "" ? $quest->max_value : null) : null
             );
             //error_log("\n\nInsert of " . $shortname);
             //error_log($sql);
             //var_error_log($paramarray);
             $inserted = $inserted + mysql_cmd_with_prepare($sql, "ssssiiiiiiiii", $paramarray);
-            $demographicid = mysqli_insert_id($linki);
+            $questionid = mysqli_insert_id($linki);
             $options = [];
             $useoptatob = true;
-            if (property_exists($demo, "options")) {
-                $optstring = base64_decode($demo->options);
+            if (property_exists($quest, "options")) {
+                $optstring = base64_decode($quest->options);
                 if (mb_substr($optstring, 0, 7) == "nobtoa:") {
                     $useoptatob = false;
                     $optstring = mb_substr($optstring, 7);
@@ -106,7 +106,7 @@ EOD;
             foreach ($options as $opt) {
                 if ($useoptatob) {
                     $optparamarray = array(
-                        $demographicid, $optord,
+                        $questionid, $optord,
                         property_exists($opt, "value") ? base64_decode($opt->value) : "",
                         $optdisplayorder,
                         property_exists($opt, "optionshort") ? base64_decode($opt->optionshort) : "",
@@ -115,7 +115,7 @@ EOD;
                     );
                 } else {
                     $optparamarray = array(
-                        $demographicid, $optord,
+                        $questionid, $optord,
                         property_exists($opt, "value") ? $opt->value : "",
                         $optdisplayorder,
                         property_exists($opt, "optionshort") ? $opt->optionshort : "",
@@ -134,7 +134,7 @@ EOD;
     $updated = 0;
     $optupdated = 0;
     $sql = <<<EOD
-        UPDATE DemographicConfig SET
+        UPDATE SurveyQuestionConfig SET
             shortname = ?,
             description = ?,
             prompt = ?,
@@ -148,33 +148,33 @@ EOD;
             ascending = ?,
             min_value = ?,
             max_value = ?
-        WHERE demographicid = ?;
+        WHERE questionid = ?;
 EOD;
     $optsql = <<<EOD
-        UPDATE DemographicOptionConfig SET
+        UPDATE SurveyQuestionOptionConfig SET
             value = ?, display_order = ?, optionshort = ?, optionhover = ?, allowothertext = ?
-        WHERE demographicid = ? AND ordinal = ?;
+        WHERE questionid = ? AND ordinal = ?;
 EOD;
-    foreach ($demographics as $demo) {
-        $id = (int) $demo->demographicid;
+    foreach ($questions as $quest) {
+        $id = (int) $quest->questionid;
         //error_log("\n\nupdate loop " . $id);
         if ($id >= 0) {
-            //error_log("\n\nUpdate Processing demo id: " . $id);
+            //error_log("\n\nUpdate Processing question id: " . $id);
 
             $paramarray = array(
-                property_exists($demo, "shortname") ? $demo->shortname : "",
-                property_exists($demo, "description") ? base64_decode($demo->description) : null,
-                property_exists($demo, "prompt") ? base64_decode($demo->prompt) : "",
-                property_exists($demo, "hover") ? base64_decode($demo->hover) : null,
-                property_exists($demo, "display_order") ? $demo->display_order: null,
-                property_exists($demo, "typeid") ? (int) $demo->typeid: 60,
-                property_exists($demo, "required") ? $demo->required : 1,
-                property_exists($demo, "publish") ? $demo->publish : 0,
-                property_exists($demo, "privacy_user") ? $demo->privacy_user : 0,
-                property_exists($demo, "searchable") ? $demo->searchable : 0,
-                property_exists($demo, "ascending") ? $demo->ascending : 1,
-                property_exists($demo, "min_value") ? (strlen($demo->min_value) > 0 ? $demo->min_value : null) : null,
-                property_exists($demo, "max_value") ? (strlen($demo->max_value) > 0 ? $demo->max_value : null) : null,
+                property_exists($quest, "shortname") ? $quest->shortname : "",
+                property_exists($quest, "description") ? base64_decode($quest->description) : null,
+                property_exists($quest, "prompt") ? base64_decode($quest->prompt) : "",
+                property_exists($quest, "hover") ? base64_decode($quest->hover) : null,
+                property_exists($quest, "display_order") ? $quest->display_order: null,
+                property_exists($quest, "typeid") ? (int) $quest->typeid: 60,
+                property_exists($quest, "required") ? $quest->required : 1,
+                property_exists($quest, "publish") ? $quest->publish : 0,
+                property_exists($quest, "privacy_user") ? $quest->privacy_user : 0,
+                property_exists($quest, "searchable") ? $quest->searchable : 0,
+                property_exists($quest, "ascending") ? $quest->ascending : 1,
+                property_exists($quest, "min_value") ? (strlen($quest->min_value) > 0 ? $quest->min_value : null) : null,
+                property_exists($quest, "max_value") ? (strlen($quest->max_value) > 0 ? $quest->max_value : null) : null,
                 $id
             );
             //error_log("\n\nupdate of " . $id . "\n" . $sql);
@@ -182,8 +182,8 @@ EOD;
             $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiii", $paramarray);
             $options = [];
             $useoptatob = true;
-            if (property_exists($demo, "options")) {
-                $optstring = base64_decode($demo->options);
+            if (property_exists($quest, "options")) {
+                $optstring = base64_decode($quest->options);
                 if (mb_substr($optstring, 0, 7) == "nobtoa:") {
                     $useoptatob = false;
                     $optstring = mb_substr($optstring, 7);
@@ -205,7 +205,7 @@ EOD;
                     $idsFound = $idsFound . ',' . $ord;
                 }
             }
-            $optdelsql = "DELETE FROM DemographicOptionConfig WHERE demographicid = ?";
+            $optdelsql = "DELETE FROM SurveyQuestionOptionConfig WHERE questionid = ?";
             if (mb_strlen($idsFound) >= 2) {
                 $optdelsql = $optdelsql . " and ordinal NOT IN (" . mb_substr($idsFound, 1) . ")";
             }
@@ -217,7 +217,7 @@ EOD;
 
             // get new max ordinal
             $optord = 0;
-            $maxsql = "SELECT MAX(ordinal) AS max FROM DemographicOptionConfig WHERE demographicid = ?;";
+            $maxsql = "SELECT MAX(ordinal) AS max FROM SurveyQuestionOptionConfig WHERE questionid = ?;";
             $paramarray = array($id);
             $result = mysqli_query_with_prepare_and_exit_on_error($maxsql, "i", $paramarray);
             while ($row = mysqli_fetch_assoc($result)) {
@@ -288,13 +288,13 @@ EOD;
     }
     $message = "";
     if ($deleted > 0) {
-        $message = ", " . $deleted . " demographic deleted";
+        $message = ", " . $deleted . " questions deleted";
     }
     if ($inserted > 0) {
-        $message = $message . ", " . $inserted . " demographic inserted";
+        $message = $message . ", " . $inserted . " questions inserted";
     }
     if ($updated > 0) {
-        $message = $message . ", " . $updated . " demographic updated";
+        $message = $message . ", " . $updated . " questions updated";
     }
     if ($optdeleted > 0) {
         $message = $message . ", " . $optdeleted . " options deleted";
@@ -310,16 +310,16 @@ EOD;
         echo "message = '" . $message . "';\n";
     }
 
-    // get updated demographics now with the id's in it
-    fetch_demographics();
+    // get updated survey now with the id's in it
+    fetch_survey();
 }
 
-function fetch_demographics() {
-    // get demographic config table data
+function fetch_survey() {
+    // get survey config table data
     $query=<<<EOD
 	WITH doc AS (
-	SELECT demographicid, JSON_ARRAYAGG(JSON_OBJECT(
-			'demographicid', demographicid,
+	SELECT questionid, JSON_ARRAYAGG(JSON_OBJECT(
+			'questionid', questionid,
             'ordinal', ordinal,
             'value', TO_BASE64(value),
 			'optionshort', TO_BASE64(optionshort),
@@ -327,11 +327,11 @@ function fetch_demographics() {
 			'allowothertext', allowothertext,
 			'display_order', display_order
 			)) AS optionconfig
-		FROM DemographicOptionConfig
-        GROUP BY demographicid
+		FROM SurveyQuestionOptionConfig
+        GROUP BY questionid
 )
 SELECT JSON_ARRAYAGG(JSON_OBJECT(
-			'demographicid', d.demographicid,
+			'questionid', d.questionid,
 			'shortname', d.shortname,
 			'description', d.description,
 			'prompt', prompt,
@@ -348,9 +348,9 @@ SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'max_value', max_value,
             'options', TO_BASE64(CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END)
 			)) AS config
-		FROM DemographicConfig d
-		JOIN DemographicTypes t USING (typeid)
-        LEFT OUTER JOIN doc c USING (demographicid)
+		FROM SurveyQuestionConfig d
+		JOIN SurveyQuestionTypes t USING (typeid)
+        LEFT OUTER JOIN doc c USING (questionid)
 		ORDER BY d.display_order ASC;
 EOD;
     $result = mysqli_query_exit_on_error($query);
@@ -363,8 +363,8 @@ EOD;
 	if ($Config == "") {
 		$Config = "[]";
     }
-    //error_log("\n\ndemographics = " . $Config);
-    echo "demographics = " . $Config . ";\n";
+    //error_log("\n\survey = " . $Config);
+    echo "survey = " . $Config . ";\n";
 }
 
 // Start here.  Should be AJAX requests only
@@ -374,11 +374,11 @@ if ($ajax_request_action == "") {
 }
 
 switch ($ajax_request_action) {
-    case "fetch_demographics":
-        fetch_demographics();
+    case "fetch_survey":
+        fetch_survey();
         break;
-    case "update_demographics":
-        update_demographics();
+    case "update_survey":
+        update_survey();
         break;
     default:
         exit();

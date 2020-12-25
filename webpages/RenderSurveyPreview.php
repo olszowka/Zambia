@@ -36,7 +36,7 @@ function ArrayToXML($queryname, $array, $xml = null) {
     return $xml;
 }
 
-function JSONtoXML($queryname, $json, $xml = null) {
+function ObjecttoXML($queryname, $json, $xml = null) {
     if ($xml == null) {
         $xml = new DomDocument("1.0", "UTF-8");
         $doc = $xml -> createElement("doc");
@@ -59,28 +59,28 @@ function JSONtoXML($queryname, $json, $xml = null) {
     return $xml;
 }
 
-function render_demographic() {
-    //error_log("\n------------------\nstart render_demographic:");
-    $demographic = getString("demographic");
-    //error_log("demographic encoded: " . $demographic);
-    $demographic = base64_decode($demographic);
-    //error_log("demographic decoded: " . $demographic);
+function render_question() {
+    //error_log("\n------------------\nstart render_question:");
+    $question = getString("question");
+    //error_log("question encoded: " . $question);
+    $question = base64_decode($question);
+    //error_log("question decoded: " . $question);
 
-	$demo = json_decode($demographic);
-    //error_log("\ndemo:");
-    //var_error_log($demo);
+	$quest = json_decode($question);
+    //error_log("\nquest:");
+    //var_error_log($quest);
 
     $options = null;
-    $demographicOptions = getString("options");
-    if ($demographicOptions) {
-        $demographicOptions = base64_decode($demographicOptions);
-        //error_log("demographicoptions: ". $demographicOptions);
+    $questionOptions = getString("options");
+    if ($questionOptions) {
+        $questionOptions = base64_decode($questionOptions);
+        //error_log("questionOptions: ". $questionOptions);
         $useoptatob = true;
-        if (mb_substr($demographicOptions, 0, 7) == "nobtoa:") {
+        if (mb_substr($questionOptions, 0, 7) == "nobtoa:") {
             $useoptatob = false;
-            $demographicOptions = mb_substr($demographicOptions, 7);
+            $questionOptions = mb_substr($questionOptions, 7);
         }
-	    $options = json_decode($demographicOptions);
+	    $options = json_decode($questionOptions);
         //error_log("\n\nBefore foreach\n");
         //var_error_log($options);
         if ($useoptatob) {
@@ -97,15 +97,15 @@ function render_demographic() {
     // Start of display portion
 	$paramArray = array();
 
-	$paramArray["name"] = property_exists($demo, "shortname") ? $demo->shortname : "";
-	$paramArray["prompt"] = property_exists($demo, "prompt") ? $demo->prompt : "";
-	$paramArray["hover"] = property_exists($demo, "hover") ? $demo->hover : "";
-    $paramArray["typeid"] = (int) $demo->typeid;
-	$paramArray["typename"] = $demo->typename;
-    $paramArray["required"] = property_exists($demo, "required") ? $demo->required : 1;
-    $paramArray["ascending"] = property_exists($demo, "ascending") ? $demo->ascending : 1;
-	$paramArray["min"] = property_exists($demo, "min_value") ? ($demo->min_value != "" ? $demo->min_value : 0) : 0;
-    $paramArray["max"] = property_exists($demo, "max_value") ? ($demo->max_value != "" ? $demo->max_value : 8192) : 8192;
+	$paramArray["name"] = property_exists($quest, "shortname") ? $quest->shortname : "";
+	$paramArray["prompt"] = property_exists($quest, "prompt") ? $quest->prompt : "";
+	$paramArray["hover"] = property_exists($quest, "hover") ? $quest->hover : "";
+    $paramArray["typeid"] = (int) $quest->typeid;
+	$paramArray["typename"] = $quest->typename;
+    $paramArray["required"] = property_exists($quest, "required") ? $quest->required : 1;
+    $paramArray["ascending"] = property_exists($quest, "ascending") ? $quest->ascending : 1;
+	$paramArray["min"] = property_exists($quest, "min_value") ? ($quest->min_value != "" ? $quest->min_value : 0) : 0;
+    $paramArray["max"] = property_exists($quest, "max_value") ? ($quest->max_value != "" ? $quest->max_value : 8192) : 8192;
 	$paramArray["size"] = min(80, $paramArray["max"]);
     $paramArray["rows"] = $paramArray["max"] > 512 ? 8 : 4;
     $optxml = null;
@@ -113,7 +113,7 @@ function render_demographic() {
         if ($paramArray["ascending"] == 0 && $paramArray["typename"] != "monthyear") {
             $options = array_reverse($options);
         }
-        $optxml = JSONtoXML('options', $options);
+        $optxml = ObjecttoXML('options', $options);
         //error_log($optxml->saveXML());
     }
 
@@ -199,8 +199,8 @@ if ($ajax_request_action == "") {
 }
 
 switch ($ajax_request_action) {
-    case "renderdemograhpic":
-        render_demographic();
+    case "renderquestion":
+        render_question();
         break;
 
     default:

@@ -628,8 +628,8 @@ function RefreshPreview() {
     }
     //console.log("options = '" + options + "'");
     var postdata = {
-        ajax_request_action: "rendersurvey",
-        survey: btoa(JSON.stringify(surveyData)),
+        ajax_request_action: "renderquestion",
+        question: btoa(JSON.stringify(surveyData)),
         options: btoa(options)
     };
     $.ajax({

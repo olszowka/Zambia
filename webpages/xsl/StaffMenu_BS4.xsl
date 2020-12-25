@@ -112,7 +112,7 @@
                 </xsl:if>
                 <xsl:if test="$Administrator">
                   <a class="dropdown-item" href="EditCustomText.php">Edit Custom Text</a>
-                  <a class="dropdown-item" href="EditSurvey.php">Edit Demographics</a>
+                  <a class="dropdown-item" href="EditSurvey.php">Edit Survey</a>
                 </xsl:if>
               </div>
             </div>
