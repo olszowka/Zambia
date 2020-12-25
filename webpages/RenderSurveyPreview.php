@@ -90,8 +90,8 @@ function render_question() {
                 $option->optionhover = base64_decode($option->optionhover);
             }
         }
-        error_log("\n\After foreach\n");
-        var_error_log($options);
+        //error_log("\n\After foreach\n");
+        //var_error_log($options);
     }
 
     // Start of display portion
@@ -176,7 +176,11 @@ function render_question() {
         case "states":
         case "country":
         case "single-pulldown":
+        case "multi-select list":
             RenderXSLT('RenderDemographicSelect.xsl', $paramArray, $optxml);
+            break;
+        case "single-radio":
+            RenderXSLT('RenderDemographicRadio.xsl', $paramArray, $optxml);
             break;
         case "openend":
 			RenderXSLT('RenderDemographicOpenend.xsl', $paramArray);

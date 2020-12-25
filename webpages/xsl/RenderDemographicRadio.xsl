@@ -8,7 +8,6 @@
   <xsl:param name="prompt" select="''"/>
   <xsl:param name="hover" select="''"/>
   <xsl:param name="required" select="0"/>
-  <xsl:param name="typename" select="''"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
     <div>
@@ -42,30 +41,33 @@
             </xsl:if>
           </span>
         </div>
-        <div class="col col-3">
-          <select>
-            <xsl:attribute name="id">
-              <xsl:value-of select="translate($name, ' ', '_')"/>
-              <xsl:text>-input</xsl:text>
-            </xsl:attribute>
-            <xsl:attribute name="name">
-              <xsl:value-of select="translate($name, ' ', '_')"/>
-            </xsl:attribute>
-            <xsl:if test="$typename = 'multi-select list'">
-              <xsl:attribute name="style">
-                <xsl:text>height: 100px;</xsl:text>
-              </xsl:attribute>
-              <xsl:attribute name="multiple"/>
-            </xsl:if>
-            <xsl:for-each select="/doc/query[@queryname='options']/row">
-              <option value="{@value}">
+        <div class="col col-9">
+          <xsl:for-each select="/doc/query[@queryname='options']/row">
+            <div class="form-check-inline">
+              <input class="form-check-input" type="radio">
+                <xsl:attribute name="id">
+                  <xsl:value-of select="translate($name, ' ', '_')"/>
+                  <xsl:text>-translate({@shortname, ' ', '_')</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="name">
+                  <xsl:value-of select="translate($name, ' ', '_')"/>
+                </xsl:attribute>
+                <xsl:attribute name="value">
+                  <xsl:value-of select="translate(@value, ' ', '_')"/>
+                </xsl:attribute>
+              </input>
+              <label class="form-check-label">
+                <xsl:attribute name="for">
+                  <xsl:value-of select="translate($name, ' ', '_')"/>
+                  <xsl:text>-translate({@shortname, ' ', '_')</xsl:text>
+                </xsl:attribute>
                 <xsl:attribute name="title">
                   <xsl:value-of select="@optionhover"/>
                 </xsl:attribute>
                 <xsl:value-of select="@optionshort"/>
-              </option>
-            </xsl:for-each>
-          </select>
+              </label>
+            </div>
+          </xsl:for-each>
         </div>
       </div>
     </div>

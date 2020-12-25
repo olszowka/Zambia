@@ -238,6 +238,7 @@ var EditSurvey = function () {
             case 'multi-select list':
             case 'multi-checkbox list':
             case 'multi-display':
+                show_asc_desc = true;
                 show_options = true;
                 break;
             case 'openend':

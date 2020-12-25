@@ -36,6 +36,7 @@ function update_survey() {
         $sql = "DELETE FROM SurveyQuestionOptionConfig WHERE questionid NOT IN (" . mb_substr($idsFound, 1) . ");";
     }
 
+    //error_log("\ndelete unused options = '" . $sql . "'");
     if (!mysqli_query_exit_on_error($sql)) {
         exit(); // Should have exited already.
     }
@@ -46,6 +47,7 @@ function update_survey() {
     } else {
         $sql = "DELETE FROM SurveyQuestionConfig WHERE questionid NOT IN (" . mb_substr($idsFound, 1) . ");";
     }
+    //error_log("\ndelete unused questions = '" . $sql . "'");
 
     if (!mysqli_query_exit_on_error($sql)) {
         exit(); // Should have exited already.
@@ -84,7 +86,7 @@ EOD;
                 property_exists($quest, "min_value") ? ($quest->min_value != "" ? $quest->min_value : null) : null,
                 property_exists($quest, "max_value") ? ($quest->max_value != "" ? $quest->max_value : null) : null
             );
-            //error_log("\n\nInsert of " . $shortname);
+            //error_log("\n\nInsert of " . $quest->shortname);
             //error_log($sql);
             //var_error_log($paramarray);
             $inserted = $inserted + mysql_cmd_with_prepare($sql, "ssssiiiiiiiii", $paramarray);
@@ -100,6 +102,7 @@ EOD;
                 $options  = json_decode($optstring);
             }
             //error_log("\n\nOptions:\n");
+            //error_log("\nsql='" . $optinssql . "'");
             //var_error_log($options);
             $optord = 1;
             $optdisplayorder = 10;
@@ -124,6 +127,7 @@ EOD;
                     );
                 }
                 $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $optparamarray);
+                error_log("options inserted now " . $optinserted);
                 $optord = $optord + 1;
                 $optdisplayorder = $optdisplayorder + 10;
             }
