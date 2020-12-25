@@ -3,7 +3,7 @@
 // File created by Syd Weinstein on 2020-09-03
 global $message_error, $title, $linki, $session;
 $bootstrap4 = true;
-$title = "Edit Demographics";
+$title = "Edit Survey";
 require_once('StaffCommonCode.php');
 $message = "";
 $rows = 0;
@@ -20,8 +20,8 @@ if (isLoggedIn() && may_I("Administrator")) {
             'optionhover', d.optionhover,
             'allowothertext', d.allowothertext
             )) AS config
-        FROM DemographicTypeDefaults d
-		JOIN DemographicTypes t USING (typeid)
+        FROM SurveyQuestionTypeDefaults d
+		JOIN SurveyQuestionTypes t USING (typeid)
         GROUP BY d.typeid;
 EOD;
         $result = mysqli_query_exit_on_error($sql);
@@ -42,8 +42,8 @@ EOD;
 
 	$query=<<<EOD
 	WITH doc AS (
-	SELECT demographicid, JSON_ARRAYAGG(JSON_OBJECT(
-			'demographicid', demographicid,
+	SELECT questionid, JSON_ARRAYAGG(JSON_OBJECT(
+			'questionid', questionid,
             'ordinal', ordinal,
             'value', TO_BASE64(value),
 			'optionshort', TO_BASE64(optionshort),
@@ -51,11 +51,11 @@ EOD;
 			'allowothertext', allowothertext,
 			'display_order', display_order
 			)) AS optionconfig
-		FROM DemographicOptionConfig
-		GROUP BY demographicid
+		FROM SurveyQuestionOptionConfig
+		GROUP BY questionid
 )
 SELECT JSON_ARRAYAGG(JSON_OBJECT(
-			'demographicid', d.demographicid,
+			'questionid', d.questionid,
 			'shortname', d.shortname,
 			'description', d.description,
 			'prompt', prompt,
@@ -72,9 +72,9 @@ SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'max_value', max_value,
             'options', TO_BASE64(CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END)
 			)) AS config
-		FROM DemographicConfig d
-		JOIN DemographicTypes t USING (typeid)
-        LEFT OUTER JOIN doc c USING (demographicid)
+		FROM SurveyQuestionConfig d
+		JOIN SurveyQuestionTypes t USING (typeid)
+        LEFT OUTER JOIN doc c USING (questionid)
 		ORDER BY d.display_order ASC;
 EOD;
 
@@ -92,13 +92,13 @@ EOD;
 	$query=<<<EOD
 	SELECT
 		typeid, shortname, description
-	FROM DemographicTypes
+	FROM SurveyQuestionTypes
 	WHERE current = 1
 	ORDER BY display_order ASC;
 EOD;
 
 	$result = mysqli_query_exit_on_error($query);
-	$resultXML = mysql_result_to_XML("demographictypes", $result);
+	$resultXML = mysql_result_to_XML("questiontypes", $result);
 	mysqli_free_result($result);
 
 	$PriorArray["getSessionID"] = session_id();
@@ -114,7 +114,7 @@ EOD;
 
 	// following line for debugging only
 	// echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
-	RenderXSLT('EditDemographics.xsl', $paramArray, $resultXML);
+	RenderXSLT('EditSurvey.xsl', $paramArray, $resultXML);
 }
 staff_footer();
 ?>

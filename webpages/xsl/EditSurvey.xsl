@@ -14,16 +14,16 @@
       <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
     </div>
     <script type="text/javascript">
-      var demographics = <xsl:value-of select="$config" disable-output-escaping="yes"/>;
+      var survey = <xsl:value-of select="$config" disable-output-escaping="yes"/>;
     </script>
     <div class="row justify-content-center mt-4">
-      <h4 class="col col-auto">Demographics</h4>
+      <h4 class="col col-auto">Survey Questions</h4>
     </div>
     <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
     <input type="hidden" id="control" name="control" value="{$control}" />
     <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
 
-      <div id="demographicsconfig"></div>
+      <div id="surveyconfig"></div>
       
       <div class="row mt-4">
         <div class="col col-auto">
@@ -33,13 +33,13 @@
           <button class="btn btn-secondary" id="redo" name="redo" value="redo" type="button" onclick="Redo()" disabled="true">Redo</button>
         </div>
         <div class="col col-auto">
-          <button class="btn btn-secondary" id="add-demo" name="add-demo" value="new" type="button">Add New</button>
+          <button class="btn btn-secondary" id="add-question" name="add-question" value="new" type="button">Add New</button>
         </div>
         <div class="col col-auto">
-          <button class="btn btn-secondary" id="resetbtn" name="resetbtn" value="undo" type="button" onclick="FetchDemographics()">Reset</button>
+          <button class="btn btn-secondary" id="resetbtn" name="resetbtn" value="undo" type="button" onclick="FetchSurvey()">Reset</button>
         </div>
         <div class="col col-auto">
-          <button class="btn btn-primary" id="submitbtn" name="submitbtn" type="save" value="save" onclick="SaveDemographics()">Save</button>
+          <button class="btn btn-primary" id="submitbtn" name="submitbtn" type="save" value="save" onclick="SaveSurvey()">Save</button>
         </div>
         <div id="saving_div" style="display: none;">
           <span style="color:blue">
@@ -49,13 +49,13 @@
       </div>
       <div class="clearboth">
         <p>
-          Click demographic name to edit the configuration of that demographic.<br/>
-          Drag slider icon to reorder the demographics.<br/>
-          Use the Add New button to add a demographic to the table, then click the name from the table to further edit the configuration.
+          Click question name to edit the configuration of that question.<br/>
+          Drag slider icon to reorder the questions.<br/>
+          Use the Add New button to add a question to the survey, then click the name from the table to further edit the configuration.
         </p>
       </div>
       
-      <div id="general-demo-div" style="display: none;">
+      <div id="general-question-div" style="display: none;">
         <div id="general-header">
           <h3 class="col col-auto">General Configuration</h3>
         </div>
@@ -87,7 +87,7 @@
           <div class="col col-2">Type:</div>
           <div class="col col-4">
             <select id="typename" name="typename">
-              <xsl:for-each select="/doc/query[@queryName='demographictypes']/row">
+              <xsl:for-each select="/doc/query[@queryName='questiontypes']/row">
               <option value="{@shortname}">
                 <xsl:attribute name="data-typeid">
                   <xsl:value-of select="@typeid"/>
@@ -209,19 +209,19 @@
             <button class="btn btn-secondary" id="refresh" name="refresh" value="refresh" type="button" onclick="RefreshPreview()">Refresh Preview</button>
           </div>
           <div class="col col-auto">
-            <button class="btn btn-primary" id="add-row" name="add-row" value="addrow" type="button">Add Demographic</button>
+            <button class="btn btn-primary" id="add-row" name="add-row" value="addrow" type="button">Add Question</button>
           </div>
         </div>
         <div id="optlegend-div" class="clearboth">
           <p>
-            Click Add Option row to add an option to this demographic.<br/>
-            Drag slider icon to reorder the demographic options.<br/>
+            Click Add Option Row to add an option to this question.<br/>
+            Drag slider icon to reorder the options for this question.<br/>
             Click in the table fields to edit the values of the option.<br/>
           </p>
         </div>
         <div class="clearboth">
           <p>
-            Click Add/Update Demographic Table to update the demographic table in this page, clicking "Save" (at the top) is needed to save the changes permanently.
+            Click Add/Update Question Table to update the question table in this page, clicking "Save" (at the top) is needed to save the changes permanently.
           </p>
         </div>
       </div>

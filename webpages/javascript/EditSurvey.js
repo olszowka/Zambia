@@ -2,9 +2,9 @@
 var configtable;
 var optiontable;
 var message = "";
-var demographicoptions = [];
+var questionoptions = [];
 
-var EditDemographics = function () {
+var EditSurvey = function () {
     var newid = -1;
     var curid = -99999;
     var newoptionid = -1;
@@ -93,15 +93,15 @@ var EditDemographics = function () {
         if (opttable) {
             option = JSON.stringify(opttable.getData());
             //console.log("-used opttable");
-        } else if (demographicoptions.length > 0) {
-            option = "nobtoa:" + JSON.stringify(demographicoptions);
-            //console.log("-used demographic options: " + demographicoptions.length);
+        } else if (questionoptions.length > 0) {
+            option = "nobtoa:" + JSON.stringify(questionoptions);
+            //console.log("-used question options: " + questionoptions.length);
         } else {
             option = "[]";
             //console.log("-no options");
         }
         table.updateOrAddData([{
-            demographicid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
+            questionid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
             typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user,
             searchable: searchable, ascending: ascending, min_value: minvalue, max_value: maxvalue, options: btoa(option)
            }, 
@@ -109,10 +109,10 @@ var EditDemographics = function () {
         newid = newid - 1;
         optupdid = curid;
         curid = -99999;
-        demographicoptions = [];
+        questionoptions = [];
 
         document.getElementById("submitbtn").innerHTML = "Save*";
-        document.getElementById("general-demo-div").style.display = "none";
+        document.getElementById("general-question-div").style.display = "none";
         document.getElementById("preview").innerHTML = "";
         tinymce.remove();
         table.clearHistory();
@@ -121,12 +121,12 @@ var EditDemographics = function () {
         }
     };
 
-    function addnewdemo(demotable) {
+    function addnewquestion(questiontable) {
         tinyMCE.remove();
         curid = -99999;
-        document.getElementById("general-header").innerHTML = '<h3 class="col-auto">New Demographic - General Configuration</h3>';
-        document.getElementById("option-header").innerHTML = '<h4 class="col-auto">New Demographic - Options</h4>';
-        document.getElementById("add-row").innerHTML = "Add to Demographic Table";
+        document.getElementById("general-header").innerHTML = '<h3 class="col-auto">New Question - General Configuration</h3>';
+        document.getElementById("option-header").innerHTML = '<h4 class="col-auto">New Question - Options</h4>';
+        document.getElementById("add-row").innerHTML = "Add to Survey";
         // Default values
         document.getElementById("shortname").value = "";
         document.getElementById("description").value = "";
@@ -148,16 +148,16 @@ var EditDemographics = function () {
         // now display it, hiding ones not used by single-radio
         document.getElementById("asc_desc").style.display = "none";
         document.getElementById("value_range").style.display = "none";
-        document.getElementById("general-demo-div").style.display = "block";
+        document.getElementById("general-question-div").style.display = "block";
         document.getElementById("message").style.display = 'none';
         optiontable = null;
-        demographicoptions = [];
+        questionoptions = [];
         editor_init();
-        edit_typechange(demotable);
+        edit_typechange(questiontable);
         document.getElementById("preview").innerHTML = "";
     }
 
-    function editconfig(e, row, demotable) {
+    function editconfig(e, row, questiontable) {
         var name = row.getCell("shortname").getValue();
         tinyMCE.remove();
 
@@ -167,7 +167,7 @@ var EditDemographics = function () {
         document.getElementById("option-header").innerHTML = '<h4 class="col-auto">' + name + ' - Options</h4>';
 
         // Set up current value for all row items
-        curid = row.getCell("demographicid").getValue();
+        curid = row.getCell("questionid").getValue();
         document.getElementById("shortname").value = name;
         document.getElementById("description").value = row.getCell("description").getValue();
         document.getElementById("prompt").value = row.getCell("prompt").getValue();
@@ -191,7 +191,7 @@ var EditDemographics = function () {
             options = atob(options);
         }
         if (options.length == 0) {
-            demographicoptions = [];
+            questionoptions = [];
         } else {
             if (options.substring(0, 7) == "nobtoa:") {
                 dopost = false;
@@ -199,24 +199,24 @@ var EditDemographics = function () {
             } else {
                 dopost = true;
             }
-            eval("demographicoptions = " + options);
+            eval("questionoptions = " + options);
             if (dopost) {
                 // loop over options decoding every value, optionshortname and optionhover
-                demographicoptions.forEach(decodeOption);
+                questionoptions.forEach(decodeOption);
             }
         }
 
         editor_init();
         // now show the block
-        document.getElementById("add-row").innerHTML = "Update Demographic Table";
-        document.getElementById("general-demo-div").style.display = "block";
-        edit_typechange(demotable);
+        document.getElementById("add-row").innerHTML = "Update Survey Table";
+        document.getElementById("general-question-div").style.display = "block";
+        edit_typechange(questiontable);
         RefreshPreview();
     }
 
    function addnewoption(optiontable) {
         newoptionid = newoptionid - 1;
-        optiontable.addRow({demographicid: curid, ordinal: newoptionid }, false);
+        optiontable.addRow({questionid: curid, ordinal: newoptionid }, false);
     }
 
     function edit_typechange(datatable) {
@@ -281,10 +281,10 @@ var EditDemographics = function () {
         document.getElementById("add-option-div").style.display = show_options ? 'block' : 'none';
         document.getElementById("optlegend-div").style.display = show_options ? 'block' : 'none';
         if (default_options) {
-            if (demographicoptions.length == 0) {
+            if (questionoptions.length == 0) {
                 defaults = defaultOptions[typename];
                 defaultjson = atob(defaults);
-                eval("demographicoptions = " + defaultjson + ";");
+                eval("questionoptions = " + defaultjson + ";");
                 //console.log("added default options");
             }
         }
@@ -295,7 +295,7 @@ var EditDemographics = function () {
                 tooltips: false,
                 headerSort: false,
                 history: true,
-                data: demographicoptions,
+                data: questionoptions,
                 index: "ordinal",
                 initialSort: [
                     { column: "display_order", dir: "asc" } //sort by this first
@@ -303,7 +303,7 @@ var EditDemographics = function () {
                 layout: "fitDataTable",
                 columns: [
                     { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-                    { title: "ID", field: "demographicid", visible: false },
+                    { title: "ID", field: "questionid", visible: false },
                     { title: "Order", field: "display_order", visible: false },
                     { title: "Ordinal", field: "ordinal", visible: false },
                     {
@@ -332,7 +332,7 @@ var EditDemographics = function () {
                     {
                         title: "Delete", formatter: deleteicon, hozAlign: "center",
                         cellClick: function (e, cell) {
-                            deleteDemographic(e, cell.getRow(), configtable);
+                            deleteQuestion(e, cell.getRow(), configtable);
                         },
                     },
                 ],
@@ -352,15 +352,15 @@ var EditDemographics = function () {
     function deleteicon(cell, formattParams, onRendered) {
         return "&#x1F5D1;";
     }
-    function deleteDemographic(e, row, demotable) {
+    function deleteQuestion(e, row, questiontable) {
         document.getElementById("message").style.display = 'none';
         row.delete();
     }
 
    this.initialize = function () {
-        //called when EditDemographics page has loaded
+        //called when EditSurvey page has loaded
 
-        configtable = new Tabulator("#demographicsconfig", {
+        configtable = new Tabulator("#surveyconfig", {
             maxHeight: "250px",
             movableRows: true,
             tooltips: false,
@@ -369,12 +369,12 @@ var EditDemographics = function () {
             initialSort: [
                 { column: "display_order", dir: "asc" } //sort by this first
             ],
-            data: demographics,
-            index: "demographicid",
+            data: survey,
+            index: "questionid",
             layout: "fitDataTable",
             columns: [
                 { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-                { title: "ID", field: "demographicid", visible: false },
+                { title: "ID", field: "questionid", visible: false },
                 { title: "Order", field: "display_order", visible: false },
                 {
                     title: "Name", field: "shortname", width: 120,
@@ -437,7 +437,7 @@ var EditDemographics = function () {
                 {
                     title: "Delete", formatter: deleteicon, hozAlign: "center",
                     cellClick: function (e, cell) {
-                        deleteDemographic(e, cell.getRow(), configtable);
+                        deleteQuestion(e, cell.getRow(), configtable);
                     },
                 },
             ],
@@ -459,8 +459,8 @@ var EditDemographics = function () {
         });
         var addnewrowbut = document.getElementById("add-row");
         addnewrowbut.addEventListener('click', function () { addupdaterow(configtable, optiontable); });
-        var addnewbut = document.getElementById("add-demo");
-        addnewbut.addEventListener('click', function () { addnewdemo(configtable); });
+        var addnewbut = document.getElementById("add-question");
+        addnewbut.addEventListener('click', function () { addnewquestion(configtable); });
         var addoptbut = document.getElementById("add-option");
         addoptbut.addEventListener('click', function () { addnewoption(optiontable); });
         document.getElementById("typename").onchange = function () { edit_typechange(configtable); };
@@ -468,7 +468,7 @@ var EditDemographics = function () {
 
 };
 
-var editDemographics = new EditDemographics();
+var editSurvey = new EditSurvey();
 
 function decodeOption(option) {
     option.value = atob(option.value);
@@ -477,13 +477,13 @@ function decodeOption(option) {
 };
 
 function saveComplete(data, textStatus, jqXHR) {
-    var match = "demographics = ";
+    var match = "survey = ";
     var match2 = "message = ";
     message = "";
     if (data.substring(0, match.length) == match || data.substring(0, match2.length) == match2) {
         eval(data);
     }
-    configtable.replaceData(demographics);
+    configtable.replaceData(survey);
     document.getElementById("saving_div").style.display = "none";
     document.getElementById("submitbtn").disabled = false;
     document.getElementById("submitbtn").innerHTML = "Save";
@@ -497,18 +497,18 @@ function saveComplete(data, textStatus, jqXHR) {
     }
 };
 
-function SaveDemographics() {
+function SaveSurvey() {
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
-    document.getElementById("general-demo-div").style.display = "none";
+    document.getElementById("general-question-div").style.display = "none";
     document.getElementById("message").style.display = 'none';
     arr = configtable.getData();
     var postdata = {
-        ajax_request_action: "update_demographics",
-        demographics: btoa(JSON.stringify(configtable.getData()))
+        ajax_request_action: "update_survey",
+        survey: btoa(JSON.stringify(configtable.getData()))
     };
     $.ajax({
-        url: "SubmitEditDemographics.php",
+        url: "SubmitEditSurvey.php",
         dataType: "html",
         data: postdata,
         success: saveComplete,
@@ -516,14 +516,14 @@ function SaveDemographics() {
     }); 
 };
 
-function FetchDemographics() {
+function FetchSurvey() {
     var postdata = {
-        ajax_request_action: "fetch_demographics"
+        ajax_request_action: "fetch_survey"
     };
-    document.getElementById("general-demo-div").style.display = "none";
+    document.getElementById("general-question-div").style.display = "none";
     document.getElementById("message").style.display = 'none';
     $.ajax({
-        url: "SubmitEditDemographics.php",
+        url: "SubmitEditSurvey.php",
         dataType: "html",
         data: postdata,
         success: saveComplete,
@@ -604,7 +604,7 @@ function RefreshPreview() {
         prompt = prompt.substring(3, prompt.length - 4);
     }
     hover = document.getElementById("hover").value;
-    var demographicData = {
+    var surveyData = {
         shortname: document.getElementById("shortname").value,
         prompt: prompt,
         hover: hover,
@@ -622,18 +622,18 @@ function RefreshPreview() {
     if (optiontable) {
         //console.log("from optiontable");
         options = JSON.stringify(optiontable.getData());
-    } else if (demographicoptions.length > 0) {
-        //console.log("from demographicoptions");
-        options = "nobtoa:" + JSON.stringify(demographicoptions);
+    } else if (questionoptions.length > 0) {
+        //console.log("from questionoptions");
+        options = "nobtoa:" + JSON.stringify(questionoptions);
     }
     //console.log("options = '" + options + "'");
     var postdata = {
-        ajax_request_action: "renderdemograhpic",
-        demographic: btoa(JSON.stringify(demographicData)),
+        ajax_request_action: "rendersurvey",
+        survey: btoa(JSON.stringify(surveyData)),
         options: btoa(options)
     };
     $.ajax({
-        url: "RenderDemographic.php",
+        url: "RenderSurveyPreview.php",
         dataType: "html",
         data: postdata,
         success: RefreshComplete,
