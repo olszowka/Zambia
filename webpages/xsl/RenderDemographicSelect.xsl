@@ -47,6 +47,9 @@
             <xsl:attribute name="id">
               <xsl:value-of select="translate($name, ' ', '_')"/>
               <xsl:text>-input</xsl:text>
+              <xsl:if test="$typename = 'multi-select list'">
+                <xsl:text>[]</xsl:text>
+              </xsl:if>
             </xsl:attribute>
             <xsl:attribute name="name">
               <xsl:value-of select="translate($name, ' ', '_')"/>
