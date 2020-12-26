@@ -3,13 +3,13 @@
 
 function validate_suggestions($paneltopics, $otherideas, $suggestedguests) {
     $retval = ""; // return "" means "passed"
-    if (strlen($paneltopics) > 10000) {
+    if (mb_strlen($paneltopics) > 10000) {
         $retval .= "Please edit your Program Topic Ideas to fewer than 10,000 characters. ";
     }
-    if (strlen($otherideas) > 10000) {
+    if (mb_strlen($otherideas) > 10000) {
         $retval .= "Please edit your Other Programming Ideas to fewer than 10,000 characters. ";
     }
-    if (strlen($suggestedguests) > 10000) {
+    if (mb_strlen($suggestedguests) > 10000) {
         $retval .= "Please edit your Suggested Guests to fewer than 10,000 characters. ";
     }
     return($retval);
@@ -172,12 +172,12 @@ function validate_session() {
 //don't validate further those not marked with 'validate' such as "dropped" or "cancelled"
         return ($flag);
     }
-    $i = strlen($session["title"]);
+    $i = mb_strlen($session["title"]);
     if ($i < 10 || $i > 48) {
         $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>48</b> characters.<br>\n";
         $flag = false;
     }
-    $i = strlen($session["progguiddesc"]);
+    $i = mb_strlen($session["progguiddesc"]);
     if ($i < 10 || $i > 500) {
         $messages .= "Description is $i characters long.  Please edit it to between";
         $messages .= " <b>10</b> and <b>500</b> characters long.<br>\n";
