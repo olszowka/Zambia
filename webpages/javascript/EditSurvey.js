@@ -199,6 +199,7 @@ var EditSurvey = function () {
         if (options.length == 0) {
             questionoptions = [];
         } else {
+            //console.log(options);
             if (options.substring(0, 7) == "nobtoa:") {
                 dopost = false;
                 options = options.substring(7);
@@ -207,11 +208,12 @@ var EditSurvey = function () {
             }
             eval("questionoptions = " + options);
             if (dopost) {
+                //console.log("doing decode");
                 // loop over options decoding every value, optionshortname and optionhover
                 questionoptions.forEach(decodeOption);
             }
         }
-
+        //console.log(questionoptions);
         editor_init();
         // now show the block
         document.getElementById("add-row").innerHTML = "Update Survey Table";
@@ -291,7 +293,7 @@ var EditSurvey = function () {
             if (questionoptions.length == 0) {
                 defaults = defaultOptions[typename];
                 defaultjson = atob(defaults);
-                eval("questionoptions = " + defaultjson + ";");
+                eval("questionoptions = " + defaultjson);
                 //console.log("added default options");
             }
         }
@@ -345,11 +347,16 @@ var EditSurvey = function () {
                 ],
                 rowMoved: function (row) {
                     document.getElementById("message").style.display = 'none';
-                    //console.log("Row: " + row.getData().name + " has been moved");
+                    //console.log("Option Row: " + row.getData().optionshort + " has been moved, now row #" + row.getPosition());
+                    if (this.getHistoryUndoSize() > 0) {
+                        document.getElementById("optundo").disabled = false;
+                    }
                 },
                 dataChanged: function (data) {
                     //data - the updated table data
-                    document.getElementById("optundo").disabled = false;
+                    if (this.getHistoryUndoSize() > 0) {
+                        document.getElementById("optundo").disabled = false;
+                    }
                     el = document.getElementById("add-row");
                     buttontext = el.innerHTML;
                     if (buttontext.substring(buttontext.length - 1) != '*') {
@@ -460,7 +467,10 @@ var EditSurvey = function () {
             ],
             rowMoved: function (row) {
                 document.getElementById("message").style.display = 'none';
-                //console.log("Row: " + row.getData().name + " has been moved");
+                //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
+                if (this.getHistoryUndoSize() > 0) {
+                    document.getElementById("undo").disabled = false;
+                }
             },
             tooltips: function (cell) {
                 if (cell.getField() != "shortname") { return false };
@@ -469,7 +479,7 @@ var EditSurvey = function () {
             dataChanged: function (data) {
                 //data - the updated table data
                 document.getElementById("submitbtn").innerHTML = "Save*";
-                if (configtable.getHistoryUndoSize() > 0) {
+                if (this.getHistoryUndoSize() > 0) {
                     document.getElementById("undo").disabled = false;
                 }
             },
@@ -480,7 +490,13 @@ var EditSurvey = function () {
         addnewbut.addEventListener('click', function () { addnewquestion(configtable); });
         var addoptbut = document.getElementById("add-option");
         addoptbut.addEventListener('click', function () { addnewoption(optiontable); });
-        document.getElementById("typename").onchange = function () { edit_typechange(configtable); };
+       document.getElementById("typename").onchange = function () { edit_typechange(configtable); };
+       //console.log("Setting up options in table");
+       for (option in survey_options) {
+           configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
+       };
+       document.getElementById("submitbtn").innerHTML = "Save";
+       configtable.clearHistory();
    };
 
 };
@@ -497,10 +513,16 @@ function saveComplete(data, textStatus, jqXHR) {
     var match = "survey = ";
     var match2 = "message = ";
     message = "";
+    //console.log(data);
     if (data.substring(0, match.length) == match || data.substring(0, match2.length) == match2) {
         eval(data);
+        configtable.replaceData(survey);
+        for (option in survey_options) {
+            //console.log(option);
+            //console.log(survey_options[option]);
+            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
+        }; 
     }
-    configtable.replaceData(survey);
     document.getElementById("saving_div").style.display = "none";
     document.getElementById("submitbtn").disabled = false;
     document.getElementById("submitbtn").innerHTML = "Save";
@@ -515,11 +537,22 @@ function saveComplete(data, textStatus, jqXHR) {
 };
 
 function SaveSurvey() {
+    //rows = configtable.getDataCount();
+    //console.log("there are " + rows + " questions in the survey");
+    //console.log("sorters: ");
+    //console.log(configtable.getSorters());
+    //for (r = 0; r < rows; r++) {
+    //    row = configtable.getRowFromPosition(r);
+    //    console.log("q[" + r + "] = " + row.getCell("shortname").getValue() + ": q" + row.getCell("questionid").getValue() +
+    //        ", d" + row.getCell("display_order").getValue());
+    //}
+    //return false;
+
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
     document.getElementById("general-question-div").style.display = "none";
     document.getElementById("message").style.display = 'none';
-    arr = configtable.getData();
+
     var postdata = {
         ajax_request_action: "update_survey",
         survey: btoa(JSON.stringify(configtable.getData()))

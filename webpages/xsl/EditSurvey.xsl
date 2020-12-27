@@ -7,15 +7,11 @@
   <xsl:param name="UpdateMessage" select="''"/>
   <xsl:param name="control" select="''"/>
   <xsl:param name="controliv" select="''"/>
-  <xsl:param name="config" select="''"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
     <div id="message" class="alert alert-success mt-4" style="display: none;">
       <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
     </div>
-    <script type="text/javascript">
-      var survey = <xsl:value-of select="$config" disable-output-escaping="yes"/>;
-    </script>
     <div class="row justify-content-center mt-4">
       <h4 class="col col-auto">Survey Questions</h4>
     </div>

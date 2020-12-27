@@ -322,22 +322,9 @@ EOD;
 }
 
 function fetch_survey() {
-    // get survey config table data
-    $query=<<<EOD
-	WITH doc AS (
-	SELECT questionid, JSON_ARRAYAGG(JSON_OBJECT(
-			'questionid', questionid,
-            'ordinal', ordinal,
-            'value', TO_BASE64(value),
-			'optionshort', TO_BASE64(optionshort),
-			'optionhover', TO_BASE64(optionhover),
-			'allowothertext', allowothertext,
-			'display_order', display_order
-			)) AS optionconfig
-		FROM SurveyQuestionOptionConfig
-        GROUP BY questionid
-)
-SELECT JSON_ARRAYAGG(JSON_OBJECT(
+    // json of current questions and question options
+	$query=<<<EOD
+		SELECT JSON_OBJECT(
 			'questionid', d.questionid,
 			'shortname', d.shortname,
 			'description', d.description,
@@ -351,28 +338,62 @@ SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'privacy_user', privacy_user,
 			'searchable', searchable,
 			'ascending', ascending,
-            'display_only', display_only,
+			'display_only', display_only,
 			'min_value', min_value,
 			'max_value', max_value,
-            'options', TO_BASE64(CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END)
-			)) AS config
+			'options', ""
+			) AS config
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
-        LEFT OUTER JOIN doc c USING (questionid)
 		ORDER BY d.display_order ASC;
 EOD;
-    $result = mysqli_query_exit_on_error($query);
-	$Config = "[]";
-    while ($row = mysqli_fetch_assoc($result)) {
-        $Config = $row["config"];
-    }
-	mysqli_free_result($result);
 
-	if ($Config == "") {
-		$Config = "[]";
+	$result = mysqli_query_exit_on_error($query);
+	$Config = "survey = [\n\t";
+    while ($row = mysqli_fetch_assoc($result)) {
+        $Config = $Config . "\t" . $row["config"] . ",\n";
     }
-    //error_log("\n\survey = " . $Config);
-    echo "survey = " . $Config . ";\n";
+	$Config = $Config . "\n];\n";
+	mysqli_free_result($result);
+	echo $Config;
+
+    $query = <<<EOD
+	SELECT questionid, display_order, JSON_OBJECT(
+		'questionid', questionid,
+        'ordinal', ordinal,
+        'value', TO_BASE64(value),
+		'optionshort', TO_BASE64(optionshort),
+		'optionhover', TO_BASE64(optionhover),
+		'allowothertext', allowothertext,
+		'display_order', display_order
+		) AS optionconfig
+	FROM SurveyQuestionOptionConfig
+	GROUP BY questionid, display_order
+	ORDER BY questionid, display_order;
+EOD;
+	$result = mysqli_query_exit_on_error($query);
+	echo "survey_options = {\n";
+
+	$cur_qid = "";
+    $cur_config = "[";
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $qid = $row["questionid"];
+        $config = $row["optionconfig"];
+
+        if ($qid != $cur_qid) {
+            if ($cur_qid != "") {
+                echo $cur_qid . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+            }
+            $cur_config = "[";
+            $cur_qid = $qid;
+        }
+        $cur_config = $cur_config . $config . ",\n";
+    }
+    mysqli_free_result($result);
+
+	echo $cur_qid . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+	echo "};\n";
 }
 
 // Start here.  Should be AJAX requests only

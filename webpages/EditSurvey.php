@@ -10,51 +10,48 @@ $rows = 0;
 
 staff_header($title, $bootstrap4);
 if (isLoggedIn() && may_I("Administrator")) {
-// get default data javascript
+// get default data options javascript
         $sql = <<<EOD
-        SELECT t.shortname, JSON_ARRAYAGG(JSON_OBJECT(
+        SELECT t.shortname, d.display_order, JSON_OBJECT(
             'ordinal', -d.ordinal,
             'value', d.value,
             'display_order', d.display_order,
             'optionshort', d.optionshort,
             'optionhover', d.optionhover,
             'allowothertext', d.allowothertext
-            )) AS config
+            ) AS config
         FROM SurveyQuestionTypeDefaults d
 		JOIN SurveyQuestionTypes t USING (typeid)
-        GROUP BY d.typeid;
+		ORDER BY t.typeid, d.display_order;
 EOD;
         $result = mysqli_query_exit_on_error($sql);
 		echo '<script type="text/javascript">' . "\n";
 		echo "defaultOptions = {\n";
 
+		$cur_typename = "";
+		$cur_config = "[";
+
         while ($row = mysqli_fetch_assoc($result)) {
 			$typename = $row["shortname"];
-            $Config = $row["config"];
-			echo $typename . ': "' . base64_encode($Config) . '",' . "\n";
+            $config = $row["config"];
+
+			if ($typename != $cur_typename) {
+                if ($cur_typename != "") {
+                    echo $cur_typename . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+                }
+				$cur_config = "[";
+                $cur_typename = $typename;
+            }
+			$cur_config = $cur_config . $config . ",\n";
         }
         mysqli_free_result($result);
+		echo $typename . ': "' . base64_encode($cur_config . "])") . '",' . "\n};\n";
 
-        echo "};\n</script>\n";
-
-// Start of display portion
+// json of current questions and question options
 	$paramArray = array();
 
 	$query=<<<EOD
-	WITH doc AS (
-	SELECT questionid, JSON_ARRAYAGG(JSON_OBJECT(
-			'questionid', questionid,
-            'ordinal', ordinal,
-            'value', TO_BASE64(value),
-			'optionshort', TO_BASE64(optionshort),
-			'optionhover', TO_BASE64(optionhover),
-			'allowothertext', allowothertext,
-			'display_order', display_order
-			)) AS optionconfig
-		FROM SurveyQuestionOptionConfig
-		GROUP BY questionid
-)
-SELECT JSON_ARRAYAGG(JSON_OBJECT(
+		SELECT JSON_OBJECT(
 			'questionid', d.questionid,
 			'shortname', d.shortname,
 			'description', d.description,
@@ -71,25 +68,61 @@ SELECT JSON_ARRAYAGG(JSON_OBJECT(
 			'display_only', display_only,
 			'min_value', min_value,
 			'max_value', max_value,
-            'options', TO_BASE64(CASE WHEN c.optionconfig IS NULL THEN "[]" ELSE c.optionconfig END)
-			)) AS config
+			'options', ""
+			) AS config
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
-        LEFT OUTER JOIN doc c USING (questionid)
 		ORDER BY d.display_order ASC;
 EOD;
 
 	$result = mysqli_query_exit_on_error($query);
-	$Config = "[]";
+	$Config = "var survey = [\n\t";
     while ($row = mysqli_fetch_assoc($result)) {
-        $Config = $row["config"];
+        $Config = $Config . "\t" . $row["config"] . ",\n";
     }
+	$Config = $Config . "\n];\n";
 	mysqli_free_result($result);
+	echo $Config;
 
-	if ($Config == "") {
-		$Config = "[]";
+    $query = <<<EOD
+	SELECT questionid, display_order, JSON_OBJECT(
+		'questionid', questionid,
+        'ordinal', ordinal,
+        'value', TO_BASE64(value),
+		'optionshort', TO_BASE64(optionshort),
+		'optionhover', TO_BASE64(optionhover),
+		'allowothertext', allowothertext,
+		'display_order', display_order
+		) AS optionconfig
+	FROM SurveyQuestionOptionConfig
+	GROUP BY questionid, display_order
+	ORDER BY questionid, display_order;
+EOD;
+	$result = mysqli_query_exit_on_error($query);
+	echo "var survey_options = {\n";
+
+	$cur_qid = "";
+    $cur_config = "[";
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $qid = $row["questionid"];
+        $config = $row["optionconfig"];
+
+        if ($qid != $cur_qid) {
+            if ($cur_qid != "") {
+                echo $cur_qid . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+            }
+            $cur_config = "[";
+            $cur_qid = $qid;
+        }
+        $cur_config = $cur_config . $config . ",\n";
     }
+    mysqli_free_result($result);
 
+	echo $cur_qid . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+	echo "};\n</script>\n";
+
+	// start of display portion
 	$query=<<<EOD
 	SELECT
 		typeid, shortname, description
@@ -107,7 +140,6 @@ EOD;
 	$ControlStrArray = generateControlString($PriorArray);
 	$paramArray["control"] = $ControlStrArray["control"];
 	$paramArray["controliv"] = $ControlStrArray["controliv"];
-	$paramArray["config"] = $Config;
 
 	if ($message != "") {
 		$paramArray["UpdateMessage"] = $message;
