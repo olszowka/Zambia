@@ -183,6 +183,9 @@ function render_question() {
         case "multi-checkbox list":
             RenderXSLT('RenderDemographicCheckboxList.xsl', $paramArray, $optxml);
             break;
+        case "multi-display":
+            RenderXSLT('RenderDemographicMultiDisplay.xsl', $paramArray, $optxml);
+            break;
         case "single-radio":
             RenderXSLT('RenderDemographicRadio.xsl', $paramArray, $optxml);
             break;
