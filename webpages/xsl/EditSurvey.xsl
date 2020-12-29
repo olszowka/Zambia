@@ -55,6 +55,7 @@
         <div id="general-header">
           <h3 class="col col-auto">General Configuration</h3>
         </div>
+        <input type="hidden" id="questionid"/>
         <div class="row mt-4">
           <div class="col col-2">Name:</div>
           <div class="col col-4">

@@ -95,7 +95,7 @@ EOD;
 		'display_order', display_order
 		) AS optionconfig
 	FROM SurveyQuestionOptionConfig
-	GROUP BY questionid, display_order
+	GROUP BY questionid, ordinal
 	ORDER BY questionid, display_order;
 EOD;
 	$result = mysqli_query_exit_on_error($query);
@@ -110,7 +110,7 @@ EOD;
 
         if ($qid != $cur_qid) {
             if ($cur_qid != "") {
-                echo $cur_qid . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+                echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
             }
             $cur_config = "[";
             $cur_qid = $qid;
@@ -119,7 +119,7 @@ EOD;
     }
     mysqli_free_result($result);
 
-	echo $cur_qid . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+	echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '"' . "\n";
 	echo "};\n</script>\n";
 
 	// start of display portion

@@ -16,7 +16,8 @@ function var_error_log( $object=null ){
 // returns an XMLDoc as if from a query with the contents of the array
 //
 function ArrayToXML($queryname, $array, $xml = null) {
-    if ($xml == null) {
+    if (is_null($xml)) {
+        error_log("array to xml - creating new xml object");
         $xml = new DomDocument("1.0", "UTF-8");
         $doc = $xml -> createElement("doc");
         $doc = $xml -> appendChild($doc);
@@ -37,7 +38,8 @@ function ArrayToXML($queryname, $array, $xml = null) {
 }
 
 function ObjecttoXML($queryname, $json, $xml = null) {
-    if ($xml == null) {
+    if (is_null($xml)) {
+        error_log("object to xml - creating new xml object");
         $xml = new DomDocument("1.0", "UTF-8");
         $doc = $xml -> createElement("doc");
         $doc = $xml -> appendChild($doc);
@@ -61,147 +63,98 @@ function ObjecttoXML($queryname, $json, $xml = null) {
 
 function render_question() {
     //error_log("\n------------------\nstart render_question:");
-    $question = getString("question");
-    //error_log("question encoded: " . $question);
-    $question = base64_decode($question);
-    //error_log("question decoded: " . $question);
+    // init xml structure for build
+    $xml = new DomDocument("1.0", "UTF-8");
+    $doc = $xml -> createElement("doc");
+    $doc = $xml -> appendChild($doc);
 
-	$quest = json_decode($question);
-    //error_log("\nquest:");
-    //var_error_log($quest);
-
-    $options = null;
-    $questionOptions = getString("options");
-    if ($questionOptions) {
-        $questionOptions = base64_decode($questionOptions);
-        //error_log("questionOptions: ". $questionOptions);
-        $useoptatob = true;
-        if (mb_substr($questionOptions, 0, 7) == "nobtoa:") {
-            $useoptatob = false;
-            $questionOptions = mb_substr($questionOptions, 7);
+    $questions = getString("questions");
+    //error_log("\n\nquestion:\n");
+    //var_error_log($questions);
+    $questions = json_decode($questions);
+    foreach ($questions as $question) {
+        $jsonstring = base64_decode($question->data);
+        $json = json_decode($jsonstring);
+        //var_error_log($json);
+        $numberquery = "years";
+        switch($json[0]->typename) {
+            case "openend":
+                 $size = $json[0]->max_value;
+                 $json[0]->size = $size > 100 ? 100 : ($size < 50 ? 50 : $size);
+                break;
+            case "text":
+            case "text-html":
+                $size = $json[0]->max_value / 4;
+                $json[0]->size = $size > 100 ? 100 : ($size < 50 ? 50 : $size);
+                $json[0]->rows = $json[0]->max_value > 500 ? 8 : 4;
+                break;
+            case "numberselect":
+                $numberquery = "options";   // fall into monthyear
+            case "monthyear":
+                // build xml array from begin to end
+                $options = [];
+                $question_id = $json[0]->questionid;
+                if ($json[0]->ascending == 1) {
+                    $next = $json[0]->min_value;
+                    $end = $json[0]->max_value;
+                    while ($next <= $end) {
+                        $ojson = new stdClass();
+                        $ojson->questionid = $question_id;
+                        $ojson->value = $next;
+                        $ojson->optionshort = $next;
+                        $options[] = $ojson;
+                        $next = $next + 1;
+                    }
+                }
+                else {
+                    $next = $json[0]->max_value;
+                    $end = $json[0]->min_value;
+                    while ($next >= $end) {
+                        $ojson = new stdClass();
+                        $ojson->questionid = $question_id;
+                        $ojson->value = $next;
+                        $ojson->optionshort = $next;
+                        $options[] = $ojson;
+                        $next = $next - 1;
+                    }
+                }
+                //var_error_log($options);
+                $xml = ObjecttoXML($numberquery, $options, $xml);
+                break;
         }
-	    $options = json_decode($questionOptions);
-        //error_log("\n\nBefore foreach\n");
-        //var_error_log($options);
-        if ($useoptatob) {
-            foreach ($options as $option) {
-                $option->value = base64_decode($option->value);
-                $option->optionshort = base64_decode($option->optionshort);
-                $option->optionhover = base64_decode($option->optionhover);
+        //var_error_log($json);
+        $xml = ObjecttoXML("questions", $json, $xml);
+    }
+    //error_log("\n\nxml after questions\n");
+    //var_error_log($xml->saveXML());
+
+    $options = getString("options");
+    if ($options) {
+        //error_log("\n\noptions: '" . $options . "'\n");
+        $prefix = "nobtoa:";
+        $do_decode = true;
+        if (mb_substr($options, 0, mb_strlen($prefix)) == $prefix) {
+            $options = mb_substr($options, mb_strlen($prefix));
+            $do_decode = false;
+        }
+        $options = json_decode($options);
+        if ($do_decode) {
+            foreach ($options as $opt) {
+                $opt->value = base64_decode($opt->value);
+                $opt->optionshort = base64_decode($opt->optionshort);
+                $opt->optionhover = base64_decode($opt->optionhover);
             }
         }
-        //error_log("\n\After foreach\n");
-        //var_error_log($options);
+        $xml = ObjecttoXML("options", $options, $xml);
     }
+    //error_log("\n\nxml after options\n");
+    //var_error_log($xml->saveXML());
 
     // Start of display portion
 	$paramArray = array();
-
-	$paramArray["name"] = property_exists($quest, "shortname") ? $quest->shortname : "";
-	$paramArray["prompt"] = property_exists($quest, "prompt") ? $quest->prompt : "";
-	$paramArray["hover"] = property_exists($quest, "hover") ? $quest->hover : "";
-    $paramArray["typeid"] = (int) $quest->typeid;
-	$paramArray["typename"] = $quest->typename;
-    $paramArray["required"] = property_exists($quest, "required") ? $quest->required : 1;
-    $paramArray["ascending"] = property_exists($quest, "ascending") ? $quest->ascending : 1;
-    $paramArray["display_only"] = property_exists($quest, "display_only") ? $quest->display_only : 0;
-	$paramArray["min"] = property_exists($quest, "min_value") ? ($quest->min_value != "" ? $quest->min_value : 0) : 0;
-    $paramArray["max"] = property_exists($quest, "max_value") ? ($quest->max_value != "" ? $quest->max_value : 8192) : 8192;
-	$paramArray["size"] = min(80, $paramArray["max"]);
-    $paramArray["rows"] = $paramArray["max"] > 512 ? 8 : 4;
-    $optxml = null;
-    if ($options) {
-        if ($paramArray["ascending"] == 0 && $paramArray["typename"] != "monthyear") {
-            $options = array_reverse($options);
-        }
-        $optxml = ObjecttoXML('options', $options);
-        //error_log($optxml->saveXML());
-    }
-
-	//var_error_log($paramArray);
-
-	switch ($paramArray["typename"]) {
-        case "number":
-			RenderXSLT('RenderDemographicNumber.xsl', $paramArray);
-			break;
-        case "numberselect":
-            // build xml array from begin to end
-            $selectarr = [];
-            if ($paramArray["ascending"] == 1) {
-                $next = $paramArray["min"];
-                $end = $paramArray["max"];
-                while ($next <= $end) {
-                    $selectarr[] = $next;
-                    $next = $next + 1;
-                }
-            }
-            else {
-                $next = $paramArray["max"];
-                $end = $paramArray["min"];
-                while ($next >= $end) {
-                    $selectarr[] = $next;
-                    $next = $next - 1;
-                }
-            }
-            //var_error_log($selectarr);
-            $optxml = ArrayToXML("loop", $selectarr);
-            //error_log($optxml->saveXML());
-			RenderXSLT('RenderDemographicNumberSelect.xsl', $paramArray, $optxml);
-			break;
-        case "monthyear":
-            // build xml array from begin to end
-            $selectarr = [];
-            if ($paramArray["ascending"] == 1) {
-                $next = $paramArray["min"];
-                $end = $paramArray["max"];
-                while ($next <= $end) {
-                    $selectarr[] = $next;
-                    $next = $next + 1;
-                }
-            }
-            else {
-                $next = $paramArray["max"];
-                $end = $paramArray["min"];
-                while ($next >= $end) {
-                    $selectarr[] = $next;
-                    $next = $next - 1;
-                }
-            }
-            //var_error_log($selectarr);
-            $optxml = ArrayToXML("year", $selectarr, $optxml);
-            //error_log($optxml->saveXML());
-            RenderXSLT('RenderDemographicMonthyear.xsl', $paramArray, $optxml);
-            break;
-        case "monthnum":
-        case "monthabv":
-        case "states":
-        case "country":
-        case "single-pulldown":
-        case "multi-select list":
-            RenderXSLT('RenderDemographicSelect.xsl', $paramArray, $optxml);
-            break;
-        case "multi-checkbox list":
-            RenderXSLT('RenderDemographicCheckboxList.xsl', $paramArray, $optxml);
-            break;
-        case "multi-display":
-            RenderXSLT('RenderDemographicMultiDisplay.xsl', $paramArray, $optxml);
-            break;
-        case "single-radio":
-            RenderXSLT('RenderDemographicRadio.xsl', $paramArray, $optxml);
-            break;
-        case "openend":
-			RenderXSLT('RenderDemographicOpenend.xsl', $paramArray);
-			break;
-        case "text":
-        case "html-text";
-			RenderXSLT('RenderDemographicTextarea.xsl', $paramArray);
-			break;
-        case "heading":
-            RenderXSLT('RenderDemographicHeader.xsl', $paramArray);
-			break;
-        default:
-			echo $paramArray["typename"] . " not yet implimented.";
-    }
+    $paramArray["size"] = 50;
+    $paramArray["rows"] = 4;
+    RenderXSLT('RenderSurvey.xsl', $paramArray, $xml);
 }
 
 // Start here.  Should be AJAX requests only

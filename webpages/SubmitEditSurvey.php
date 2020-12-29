@@ -28,6 +28,7 @@ function update_survey() {
             $idsFound = $idsFound . ',' . $id;
         }
     }
+    //error_log($idsFound);
 
     // delete the ones no longer in the JSON uploaded, check for none uploaded
     if (mb_strlen($idsFound) < 2) {
@@ -185,19 +186,24 @@ EOD;
                 $id
             );
             //error_log("\n\nupdate of " . $id . "\n" . $sql);
-            //var_error_log($paramarray);
+            var_error_log($paramarray);
             $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiiii", $paramarray);
             $options = [];
             $useoptatob = true;
             if (property_exists($quest, "options")) {
-                $optstring = base64_decode($quest->options);
-                if (mb_substr($optstring, 0, 7) == "nobtoa:") {
-                    $useoptatob = false;
-                    $optstring = mb_substr($optstring, 7);
+                $optstring = $quest->options;
+                //error_log("\n\nquestion options = '" . $optstring . "'\n\n");
+                if (mb_strlen($optstring) > 3) {
+                    $optstring = base64_decode($optstring);
+                    //error_log("\n\ndecoded optstring = '" . $optstring . "'\n\n");
+                    if (mb_substr($optstring, 0, 7) == "nobtoa:") {
+                        $useoptatob = false;
+                        $optstring = mb_substr($optstring, 7);
+                    }
+                    $options  = json_decode($optstring);
+                    //error_log("\n\npost json decode\n");
+                    //var_error_log($options);
                 }
-                $options  = json_decode($optstring);
-                //error_log("\n\npost json decode\n");
-                //var_error_log($options);
             }
             $optdisplayorder = 10;
             $idsFound = "";
@@ -219,7 +225,7 @@ EOD;
             $optdelsql = $optdelsql . ";";
             //error_log($optdelsql);
             $paramarray = array($id);
-            //var_error_log($paramarray);
+            var_error_log($paramarray);
             $optdeleted = $optdeleted + mysql_cmd_with_prepare($optdelsql, "i", $paramarray);
 
             // get new max ordinal
@@ -368,7 +374,7 @@ EOD;
 		'display_order', display_order
 		) AS optionconfig
 	FROM SurveyQuestionOptionConfig
-	GROUP BY questionid, display_order
+	GROUP BY questionid, ordinal
 	ORDER BY questionid, display_order;
 EOD;
 	$result = mysqli_query_exit_on_error($query);
@@ -383,7 +389,7 @@ EOD;
 
         if ($qid != $cur_qid) {
             if ($cur_qid != "") {
-                echo $cur_qid . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+                echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
             }
             $cur_config = "[";
             $cur_qid = $qid;
@@ -392,7 +398,7 @@ EOD;
     }
     mysqli_free_result($result);
 
-	echo $cur_qid . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+	echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
 	echo "};\n";
 }
 

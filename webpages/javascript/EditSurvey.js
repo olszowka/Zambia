@@ -109,7 +109,6 @@ var EditSurvey = function () {
            }, 
         ]);
         newid = newid - 1;
-        optupdid = curid;
         curid = -99999;
         questionoptions = [];
 
@@ -126,10 +125,12 @@ var EditSurvey = function () {
     function addnewquestion(questiontable) {
         tinyMCE.remove();
         curid = -99999;
+
         document.getElementById("general-header").innerHTML = '<h3 class="col-auto">New Question - General Configuration</h3>';
         document.getElementById("option-header").innerHTML = '<h4 class="col-auto">New Question - Options</h4>';
         document.getElementById("add-row").innerHTML = "Add to Survey";
         // Default values
+        document.getElementById("questionid").value = curid;
         document.getElementById("shortname").value = "";
         document.getElementById("description").value = "";
         document.getElementById("prompt").value = "";
@@ -172,6 +173,7 @@ var EditSurvey = function () {
 
         // Set up current value for all row items
         curid = row.getCell("questionid").getValue();
+        document.getElementById("questionid").value = curid;
         document.getElementById("shortname").value = name;
         document.getElementById("description").value = row.getCell("description").getValue();
         document.getElementById("prompt").value = row.getCell("prompt").getValue();
@@ -294,6 +296,7 @@ var EditSurvey = function () {
                 defaults = defaultOptions[typename];
                 defaultjson = atob(defaults);
                 eval("questionoptions = " + defaultjson);
+                questionoptions.forEach(assign_questionid);
                 //console.log("added default options");
             }
         }
@@ -365,6 +368,10 @@ var EditSurvey = function () {
                 },
             });
         }
+    }
+
+    function assign_questionid(option) {
+        option.questionid = curid;
     }
 
     function deleteicon(cell, formattParams, onRendered) {
@@ -673,19 +680,24 @@ function RefreshComplete(data, textStatus, jqXHR) {
 }
 
 function RefreshPreview() {
+    //console.log("In RefreshPreview");
+    //console.trace();
     tinyMCE.triggerSave();
-    typename = document.getElementById("typename").value;
+    var questionid = document.getElementById("questionid").value
+    var shortname = document.getElementById("shortname").value;
+    var typename = document.getElementById("typename").value;
     if (typename == 'html-text') {
         fieldname = '#' + document.getElementById("shortname").value.replace(/ /g, '_') + '-input';
         tinyMCE.remove(fieldname);
     }
-    prompt = document.getElementById("prompt").value;
+    var prompt = document.getElementById("prompt").value;
     if (prompt.substring(0, 3) == '<p>') {
         prompt = prompt.substring(3, prompt.length - 4);
     }
-    hover = document.getElementById("hover").value;
-    var surveyData = {
-        shortname: document.getElementById("shortname").value,
+    var hover = document.getElementById("hover").value;
+    var surveyData = [{
+        questionid: questionid,
+        shortname: shortname,
         prompt: prompt,
         hover: hover,
         typeid: document.getElementById("typename").selectedOptions.item(0).getAttribute("data-typeid"),
@@ -698,20 +710,31 @@ function RefreshPreview() {
         display_only: document.getElementById("display_only-1").checked,
         min_value: document.getElementById("min_value").value,
         max_value: document.getElementById("max_value").value
-    };
-    var options = [];
+    }];
+    var optionsjson;
+    var questions;
+    var json = "";
     if (optiontable) {
         //console.log("from optiontable");
-        options = JSON.stringify(optiontable.getData());
+        optionsjson = JSON.stringify(optiontable.getData());
     } else if (questionoptions.length > 0) {
         //console.log("from questionoptions");
-        options = "nobtoa:" + JSON.stringify(questionoptions);
+        optionsjson = "nobtoa:" + JSON.stringify(questionoptions);
     }
-    //console.log("options = '" + options + "'");
+    //console.log("options");
+    //console.log(options);
+    
+    //console.log("questions");
+    //console.log(surveyData);
+    json = JSON.stringify(surveyData);
+    //console.log("json: '" + json + "'");
+    questions = [{ id: questionid, data: btoa(json)}];
+    //console.log(questions);
+
     var postdata = {
         ajax_request_action: "renderquestion",
-        question: btoa(JSON.stringify(surveyData)),
-        options: btoa(options)
+        questions: JSON.stringify(questions),
+        options: optionsjson
     };
     $.ajax({
         url: "RenderSurveyPreview.php",
