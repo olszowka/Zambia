@@ -427,6 +427,8 @@ CREATE TABLE SurveyQuestionConfig (
 	FOREIGN KEY (typeid) REFERENCES SurveyQuestionTypes(typeid)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Info.';
 
+CREATE UNIQUE INDEX SurveyQuestionConfig_shortname ON SurveyQuestionConfig(shortname);
+
 CREATE TABLE SurveyQuestionOptionConfig (
 	questionid int NOT NULL,
 	ordinal int NOT NULL,
@@ -451,4 +453,4 @@ CREATE TABLE ParticipantSurveyAnswers (
 	FOREIGN KEY (questionid) REFERENCES SurveyQuestionConfig(questionid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant Survey Info.';
 
-##INSERT INTO PatchLog (patchname) VALUES ('54_survey.sql');
+INSERT INTO PatchLog (patchname) VALUES ('54_survey.sql');

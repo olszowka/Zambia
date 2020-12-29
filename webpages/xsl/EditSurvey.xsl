@@ -71,14 +71,16 @@
             <textarea id="description" rows="4" cols="80" maxlength="1024"></textarea>
           </div>
         </div>
-        <div class="row">
-          <div class="col col-2">Prompt:</div>
-          <div class="col col-10">
-            <input type="text" id="prompt" maxlength="512" size="80"/>
+        <div id="prompt-div">
+          <div class="row">
+            <div class="col col-2">Prompt:</div>
+            <div class="col col-10">
+              <input type="text" id="prompt" maxlength="512" size="80"/>
+            </div>
           </div>
         </div>
         <div class="row">
-          <div class="col col-2">Hover:</div>
+          <div id="hover-title" class="col col-2">Hover:</div>
           <div class="col col-10">
             <textarea id="hover" rows="4" cols="80" maxlength="8192"></textarea>
           </div>
@@ -187,11 +189,11 @@
           <div class="row">
             <div id="range-label" class="col col-2">Value Range:</div>
             <div class="col col-3">
-              Minimum:
+              <span id="min-prompt">Minimum:</span>&#160;
               <input type="number" id="min_value" size="10"/>
             </div>
-            <div class="col col-3">
-              Maximum:
+            <div id="max-div" class="col col-3">
+              <span id="max-prompt">Maximum:</span>&#160;
               <input type="number" id="max_value" size="10"/>
             </div>
           </div>

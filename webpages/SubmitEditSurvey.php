@@ -178,7 +178,7 @@ EOD;
                 $id
             );
             //error_log("\n\nupdate of " . $id . "\n" . $sql);
-            var_error_log($paramarray);
+            //var_error_log($paramarray);
             $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiiii", $paramarray);
             $options = [];
             $useoptatob = true;
@@ -217,7 +217,7 @@ EOD;
             $optdelsql = $optdelsql . ";";
             //error_log($optdelsql);
             $paramarray = array($id);
-            var_error_log($paramarray);
+            //var_error_log($paramarray);
             $optdeleted = $optdeleted + mysql_cmd_with_prepare($optdelsql, "i", $paramarray);
 
             // get new max ordinal

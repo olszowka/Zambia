@@ -158,8 +158,8 @@ var EditSurvey = function () {
         document.getElementById("message").style.display = 'none';
         optiontable = null;
         questionoptions = [];
-        editor_init();
         edit_typechange(questiontable);
+        editor_init();
         document.getElementById("preview").innerHTML = "";
     }
 
@@ -217,11 +217,12 @@ var EditSurvey = function () {
             }
         }
         //console.log(questionoptions);
-        editor_init();
+
         // now show the block
         document.getElementById("add-row").innerHTML = "Update Survey Table";
         document.getElementById("general-question-div").style.display = "block";
         edit_typechange(questiontable);
+        editor_init();
         RefreshPreview();
     }
 
@@ -240,9 +241,12 @@ var EditSurvey = function () {
         var show_options = false;
         var show_radios = true;
         var default_options = false;
+        var show_prompt = true;
+        document.getElementById("hover-title").innerHTML = (typename == "heading") ? "Text Lines:" : "Hover:";
         switch (typename) {
             case 'heading':
                 show_radios = false;
+                show_prompt = false;
                 break;
             case 'single-radio':
             case 'single-pulldown':
@@ -287,6 +291,7 @@ var EditSurvey = function () {
         };
         document.getElementById("range-label").innerHTML = range_text;
         document.getElementById("asc_desc").style.display = show_asc_desc ? 'block' : 'none';
+        document.getElementById("prompt-div").style.display = show_prompt ? 'block' : 'none';
         document.getElementById("value_range").style.display = show_range ? 'block' : 'none';
         document.getElementById("radio-div").style.display = show_radios ? 'block' : 'none';
         document.getElementById("optiontable-div").style.display = show_options ? 'block' : 'none';

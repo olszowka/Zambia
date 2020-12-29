@@ -22,6 +22,9 @@
           <li class="nav-item py-0">
             <a class="nav-link py-1" href="my_contact.php">Profile</a>
           </li>
+          <li class="nav-item py-0">
+            <a class="nav-link py-1" href="PartSurvey.php">Survey</a>
+          </li>
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='my_availability']">
             <li class="nav-item py-0">
               <a class="nav-link py-1" href="my_sched_constr.php">Availability</a>

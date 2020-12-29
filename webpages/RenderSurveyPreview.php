@@ -97,7 +97,7 @@ function render_question() {
 	$paramArray = array();
     $paramArray["size"] = 50;
     $paramArray["rows"] = 4;
-    $paramArray["buttons"] = "0";
+    $paramArray["buttons"] = "";
     RenderXSLT('RenderSurvey.xsl', $paramArray, $xml);
 }
 

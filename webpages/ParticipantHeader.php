@@ -56,6 +56,7 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                         <ul class="nav">
                             <li><a href="welcome.php">Overview</a></li>
                             <li><a href="my_contact.php">Profile</a></li>
+                            <li><a href="PartSurvey.php">Survey</a></li>
                             <?php makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false); ?>
                             <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
                             <?php makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false); ?>

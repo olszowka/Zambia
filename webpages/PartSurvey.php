@@ -4,52 +4,39 @@
 
 global $message_error, $title, $linki, $session;
 $bootstrap4 = true;
-$title = "Preview Survey";
-require_once('StaffCommonCode.php');
+$title = "Participant Survey";
+require_once('PartCommonCode.php');
 $message = "";
 $rows = 0;
 
-staff_header($title, $bootstrap4);
-if (isLoggedIn() && may_I("Administrator")) {
-// json of current questions and question options
-	$paramArray = array();
-	$query = [];
-	$query["questions"]=<<<EOD
-		SELECT d.questionid, d.shortname, d.description, prompt, hover, d.display_order, d.typeid, t.shortname as typename,
-			required, publish, privacy_user, searchable, ascending, display_only, min_value, max_value,
-			CASE
-				WHEN t.shortname = "openend" THEN
-					CASE
-						WHEN max_value > 100 THEN 100
-						WHEN max_value < 50 THEN 50
-						ELSE max_value
-					END
-				WHEN t.shortname = "text" OR t.shortname = "html-text" THEN
-					CASE
-							WHEN max_value > 400 THEN 100
-							WHEN max_value < 200 THEN 50
-							ELSE max_value / 4
-					END
-				ELSE ""
-			END AS size,
-			CASE
-				WHEN t.shortname = "text" OR t.shortname = "html-text" THEN
-					CASE WHEN max_value > 500 THEN 8 ELSE 4 END
-				ELSE ""
-			END as `rows`
-		FROM SurveyQuestionConfig d
-		JOIN SurveyQuestionTypes t USING (typeid)
-		ORDER BY d.display_order ASC;
-EOD;
+participant_header($title, false, 'Normal', $bootstrap4);
+if (isLoggedIn()) {
+	if (isset($_POST["PostCheck"])) {
+		$priorValues = interpretControlString($_POST["control"], $_POST["controliv"]);
 
-	$query["options"] = <<<EOD
-		SELECT questionid, display_order, questionid, ordinal, value, optionshort, optionhover, allowothertext, display_order
-		FROM SurveyQuestionOptionConfig
-		ORDER BY questionid, display_order;
-EOD;
-	$resultXML = mysql_query_XML($query);
+		if ($priorValues["getSessionID"] !=  session_id()) {
+            $message = "Session expired, survey not updated";
+        } else {
+		// find the data to insert/update
+			echo "<h1>Submitted data</h1>";
+			foreach ($_POST as $key => $value) {
+				echo "$key => '$value'<br/>";
+			}
+			//        if ($rows == 1) {
+			//            $message = "Survey Updated";
+			//        } else {
+			//            $message = "No chages to update-rows";
+			//        }
+			//    } else {
+			//        $message = "No chages to update-select";
+			//    }
+			//} else {
+			//    $message = "No chages to update-unchanged";
+        }
+    }
 
-	// add javascript to enable tooltips and mce editing
+    // Start of display portion
+    // add javascript to enable tooltips
 	echo <<<EOD
 <script>
 $(document).ready(function(){
@@ -80,6 +67,59 @@ $(document).ready(function(){
             placeholder: 'Type content here...'
         });
   });
+});
+</script>
+EOD;
+// json of current questions and question options
+	$paramArray = array();
+	$query = [];
+	$query["questions"]=<<<EOD
+		SELECT d.questionid, d.shortname, d.description, prompt, hover, d.display_order, d.typeid, t.shortname as typename,
+			required, publish, privacy_user, searchable, ascending, display_only, min_value, max_value,
+			CASE
+				WHEN t.shortname = "openend" THEN
+					CASE
+						WHEN max_value > 100 THEN 100
+						WHEN max_value < 50 THEN 50
+						ELSE max_value
+					END
+				WHEN t.shortname = "text" OR t.shortname = "html-text" THEN
+					CASE
+							WHEN max_value > 400 THEN 100
+							WHEN max_value < 200 THEN 50
+							ELSE max_value / 4
+					END
+				ELSE ""
+			END AS size,
+			CASE
+				WHEN t.shortname = "text" OR t.shortname = "html-text" THEN
+					CASE WHEN max_value > 500 THEN 8 ELSE 4 END
+				ELSE ""
+			END as `rows`,
+			CASE WHEN ISNULL(a.value) THEN "" ELSE a.value END AS answer,
+			CASE WHEN ISNULL(a.othertext) THEN "" ELSE a.othertext END AS othertext,
+			CASE WHEN ISNULL(a.privacy_setting) THEN publish ELSE a.privacy_setting END AS privacy_setting
+		FROM SurveyQuestionConfig d
+		JOIN SurveyQuestionTypes t USING (typeid)
+		LEFT OUTER JOIN ParticipantSurveyAnswers a ON (a.questionid = d.questionid and a.participantid = "$badgeid")
+		ORDER BY d.display_order ASC;
+EOD;
+
+	$query["options"] = <<<EOD
+		SELECT questionid, display_order, questionid, ordinal, value, optionshort, optionhover, allowothertext, display_order
+		FROM SurveyQuestionOptionConfig
+		ORDER BY questionid, display_order;
+EOD;
+	$resultXML = mysql_query_XML($query);
+
+	// add javascript to enable tooltips
+	echo <<<EOD
+<script>
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').each(function() {
+	this.title= '<span class="text-left" style="white-space: nowrap;">' + this.title + '</span>';
+	})
+  $('[data-toggle="tooltip"]').tooltip();
 });
 </script>
 EOD;
@@ -129,8 +169,23 @@ EOD;
                 break;
         }
     }
+	$sql = <<<EOD
+		SELECT count(*) AS answers
+		FROM ParticipantSurveyAnswers
+		WHERE participantid = "$badgeid";
+EOD;
+	$result = mysqli_query_exit_on_error($sql);
+	$rows = 0;
+	while ($row = mysqli_fetch_assoc($result)) {
+		$rows = $row["answers"];
+    }
 
-	$paramArray["buttons"] = "refresh";
+	$paramArray["buttons"] = $rows == 0 ?  "save" : "update";
+	$PriorArray["getSessionID"] = session_id();
+
+	$ControlStrArray = generateControlString($PriorArray);
+	$paramArray["control"] = $ControlStrArray["control"];
+	$paramArray["controliv"] = $ControlStrArray["controliv"];
 
 	if ($message != "") {
 		$paramArray["UpdateMessage"] = $message;
@@ -140,5 +195,5 @@ EOD;
 	//echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
 	RenderXSLT('RenderSurvey.xsl', $paramArray, $resultXML);
 }
-staff_footer();
+participant_footer();
 ?>
