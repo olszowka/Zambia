@@ -2,14 +2,6 @@
 // Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('StaffCommonCode.php');
 
-function var_error_log( $object=null ){
-    ob_start();                    // start buffer capture
-    var_dump( $object );           // dump the values
-    $contents = ob_get_contents(); // put the buffer into a variable
-    ob_end_clean();                // end capture
-    error_log( $contents );        // log contents of the result of var_dump( $object )
-}
-
 function update_survey() {
     global $linki, $message_error;
     //error_log("\n\nin update surver:\n");

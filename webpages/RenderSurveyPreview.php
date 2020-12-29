@@ -4,63 +4,6 @@
 
 require_once('StaffCommonCode.php');
 
-function var_error_log( $object=null ){
-    ob_start();                    // start buffer capture
-    var_dump( $object );           // dump the values
-    $contents = ob_get_contents(); // put the buffer into a variable
-    ob_end_clean();                // end capture
-    error_log( $contents );        // log contents of the result of var_dump( $object )
-}
-
-// Function ArrayToXML()
-// returns an XMLDoc as if from a query with the contents of the array
-//
-function ArrayToXML($queryname, $array, $xml = null) {
-    if (is_null($xml)) {
-        error_log("array to xml - creating new xml object");
-        $xml = new DomDocument("1.0", "UTF-8");
-        $doc = $xml -> createElement("doc");
-        $doc = $xml -> appendChild($doc);
-    } else {
-        //error_log($xml->saveXML());
-        $doc = $xml -> getElementsByTagName("doc")[0];
-    }
-    $queryNode = $xml -> createElement("query");
-    $queryNode = $doc -> appendChild($queryNode);
-    $queryNode->setAttribute("queryname", $queryname);
-    foreach($array as $element) {
-        $rowNode = $xml->createElement("row");
-        $rowNode = $queryNode->appendChild($rowNode);
-        $rowNode->setAttribute("value", $element);
-    }
-    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
-    return $xml;
-}
-
-function ObjecttoXML($queryname, $json, $xml = null) {
-    if (is_null($xml)) {
-        error_log("object to xml - creating new xml object");
-        $xml = new DomDocument("1.0", "UTF-8");
-        $doc = $xml -> createElement("doc");
-        $doc = $xml -> appendChild($doc);
-    } else {
-        //error_log($xml->saveXML());
-        $doc = $xml -> getElementsByTagName("doc")[0];
-    }
-    $queryNode = $xml -> createElement("query");
-    $queryNode = $doc -> appendChild($queryNode);
-    $queryNode->setAttribute("queryname", $queryname);
-    foreach($json as $element) {
-        $rowNode = $xml->createElement("row");
-        $rowNode = $queryNode->appendChild($rowNode);
-        foreach($element as $key => $value) {
-            $rowNode->setAttribute($key, $value);
-        }
-    }
-    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
-    return $xml;
-}
-
 function render_question() {
     //error_log("\n------------------\nstart render_question:");
     // init xml structure for build
@@ -83,7 +26,7 @@ function render_question() {
                  $json[0]->size = $size > 100 ? 100 : ($size < 50 ? 50 : $size);
                 break;
             case "text":
-            case "text-html":
+            case "html-text":
                 $size = $json[0]->max_value / 4;
                 $json[0]->size = $size > 100 ? 100 : ($size < 50 ? 50 : $size);
                 $json[0]->rows = $json[0]->max_value > 500 ? 8 : 4;
@@ -154,6 +97,7 @@ function render_question() {
 	$paramArray = array();
     $paramArray["size"] = 50;
     $paramArray["rows"] = 4;
+    $paramArray["buttons"] = "0";
     RenderXSLT('RenderSurvey.xsl', $paramArray, $xml);
 }
 

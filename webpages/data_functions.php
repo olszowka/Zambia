@@ -158,7 +158,7 @@ function get_nameemail_from_post(&$name, &$email) {
 // the $partavail global variable with it.
 //
 // Notes on variables:
-// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are indexes into Times table, 0 for unset; 
+// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are indexes into Times table, 0 for unset;
 //
 function get_participant_availability_from_post() {
     $partAvail = array();
@@ -212,7 +212,7 @@ function get_session_from_post() {
     $session["notesforprog"] = getString('notesforprog');
 }
 
-// Function set_session_defaults() 
+// Function set_session_defaults()
 // Populates the $session global variable with default data
 // for use when creating a new session.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -246,8 +246,8 @@ function set_session_defaults() {
     $session["notesforprog"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
 }
-	
-// Function set_brainstorm_session_defaults	
+
+// Function set_brainstorm_session_defaults
 // Populates the $session global variable with default data
 // for use when creating a new session in brainstorm.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -355,7 +355,7 @@ function longDayNameFromInt($daynum) {
 
 //
 // Function fix_slashes($arg)
-// Takes the string $arg and removes multiple slashes, 
+// Takes the string $arg and removes multiple slashes,
 // slash-quote and slash-double quote.
 function fix_slashes($arg) {
     while (($pos = strpos($arg, "\\\\")) !== false) {
@@ -438,26 +438,118 @@ function interpretControlString($control, $controliv) {
     return json_decode(openssl_decrypt($control, 'aes-128-cbc', ENCRYPT_KEY, 0, base64_decode($controliv)), true);
 }
 
-function addArrayToXML($array, $array_name, $XMLDoc = false) {
-    if ($XMLDoc === false) {
-        $XMLDoc = new DomDocument("1.0", "UTF-8");
-        $docNode = $XMLDoc -> createElement("doc");
-        $docNode = $XMLDoc -> appendChild($docNode);
+// Function var_error_log()
+// $object = object to be dumped to the PHP error log
+// the object is walked and written to the PHP error log using var_dump and a redirect of the output buffer.
+function var_error_log( $object=null ){
+    ob_start();                    // start buffer capture
+    var_dump( $object );           // dump the values
+    $contents = ob_get_contents(); // put the buffer into a variable
+    ob_end_clean();                // end capture
+    error_log( $contents );        // log contents of the result of var_dump( $object )
+}
+
+// Function ArrayToXML()
+// $queryname = name attribute of the query node
+// $array = array to write to that doc element as rows
+// $xml = existing XML structure, if omitted a new XML DOMDocument is created
+// returns an XML DOMDocument as if from a query with the contents of the array added
+//
+function ArrayToXML($queryname, $array, $xml = null) {
+    // Create the XML object if needed, else use the existing doc
+    if (is_null($xml)) {
+        $xml = new DomDocument("1.0", "UTF-8");
+        $doc = $xml -> createElement("doc");
+        $doc = $xml -> appendChild($doc);
+        $dosearch = false;
     } else {
-        $docNode = $XMLDoc->getElementsByTagName("doc")->item(0);
+        $doc = $xml -> getElementsByTagName("doc")[0];
+        $dosearch = true;
     }
-    $arrayNode = $XMLDoc -> createElement($array_name);
-    $arrayNode = $docNode -> appendChild($arrayNode);
-    foreach($array as $key => $value) {
-        if (gettype($key) === 'string') {
-            $arrayNode->setAttribute($key, $value);
-        } else {
-            $rowNode = $XMLDoc -> createElement("row");
-            $rowNode = $arrayNode -> appendChild($rowNode);
-            $textNode = $XMLDoc->createTextNode($value);
-            $textNode = $rowNode -> appendChild($textNode);
+    // see if there already is a query node with the name queryname
+    $queryNode = null;
+    if ($dosearch) {
+        $xpath = new DOMXPath($xml);
+        $query = "/doc/query[@queryName='options']";
+        $elements = $xpath->query($query);
+
+        if (!is_null($elements)) {
+            foreach ($elements as $element) {
+                if ($element->getAttribute("queryName") == $queryname) {
+                    $queryNode = $element;
+                    break;
+                }
+            }
         }
     }
-    return $XMLDoc;
+
+    // if not found, create a new node
+    if (is_null($queryNode)) {
+        $queryNode = $xml -> createElement("query");
+        $queryNode = $doc -> appendChild($queryNode);
+        $queryNode->setAttribute("queryName", $queryname);
+    }
+    // add the elements to the node
+    foreach($array as $element) {
+        $rowNode = $xml->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        $rowNode->setAttribute("value", $element);
+    }
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
+    return $xml;
+}
+
+// Function ObjectToXML()
+// $queryname = name attribute of the query node
+// $object = object to write to that doc element as rows
+// $xml = existing XML structure, if omitted a new XML DOMDocument is created
+// returns an XML DOMDocument as if from a query with the contents of the object added
+//
+function ObjecttoXML($queryname, $object, $xml = null) {
+    // Create the XML object if needed, else use the existing doc
+    if (is_null($xml)) {
+        error_log("object to xml - creating new xml object");
+        $xml = new DomDocument("1.0", "UTF-8");
+        $doc = $xml -> createElement("doc");
+        $doc = $xml -> appendChild($doc);
+        $dosearch = false;
+    } else {
+        //error_log($xml->saveXML());
+        $doc = $xml -> getElementsByTagName("doc")[0];
+        $dosearch = true;
+    }
+    // see if there already is a query node with the name queryname
+    $queryNode = null;
+    if ($dosearch) {
+        $xpath = new DOMXPath($xml);
+        $query = "/doc/query[@queryName='options']";
+        $elements = $xpath->query($query);
+
+        if (!is_null($elements)) {
+            foreach ($elements as $element) {
+                if ($element->getAttribute("queryName") == $queryname) {
+                    $queryNode = $element;
+                    break;
+                }
+            }
+        }
+    }
+
+    // if not found, create a new node
+    if (is_null($queryNode)) {
+        $queryNode = $xml -> createElement("query");
+        $queryNode = $doc -> appendChild($queryNode);
+        $queryNode->setAttribute("queryName", $queryname);
+    }
+    // add the elements to the node
+    foreach($object as $element) {
+        $rowNode = $xml->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        foreach($element as $key => $value) {
+            $rowNode->setAttribute($key, $value);
+        }
+    }
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
+    return $xml;
 }
 ?>

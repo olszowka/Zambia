@@ -113,6 +113,7 @@ var EditSurvey = function () {
         questionoptions = [];
 
         document.getElementById("submitbtn").innerHTML = "Save*";
+        document.getElementById("previewbtn").style.display = "none";
         document.getElementById("general-question-div").style.display = "none";
         document.getElementById("preview").innerHTML = "";
         tinymce.remove();
@@ -486,6 +487,7 @@ var EditSurvey = function () {
             dataChanged: function (data) {
                 //data - the updated table data
                 document.getElementById("submitbtn").innerHTML = "Save*";
+                document.getElementById("previewbtn").style.display = "none";
                 if (this.getHistoryUndoSize() > 0) {
                     document.getElementById("undo").disabled = false;
                 }
@@ -503,6 +505,7 @@ var EditSurvey = function () {
            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
        };
        document.getElementById("submitbtn").innerHTML = "Save";
+       document.getElementById("previewbtn").style.display = "block";
        configtable.clearHistory();
    };
 
@@ -531,8 +534,10 @@ function saveComplete(data, textStatus, jqXHR) {
         }; 
     }
     document.getElementById("saving_div").style.display = "none";
-    document.getElementById("submitbtn").disabled = false;
-    document.getElementById("submitbtn").innerHTML = "Save";
+    el = document.getElementById("submitbtn");
+    el.disabled = false;
+    el.innerHTML = "Save";
+    document.getElementById("previewbtn").style.display = "block";
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
     document.getElementById("optredo").disabled = true;
@@ -587,7 +592,9 @@ function FetchSurvey() {
         type: "POST"
     });
 };
-
+function PreviewSurvey() {
+    window.open("PreviewSurvey.php", '_blank');
+}
 function Undo() {
     configtable.undo();
 
@@ -648,7 +655,7 @@ function RefreshComplete(data, textStatus, jqXHR) {
     hoverelement = document.getElementById(id);
     if (hoverelement != null) {
         hover = document.getElementById("hover").value;
-        hover = '<span class="text-left; white-space: nowrap;">' + hover + '</span>';
+        hover = '<span class="text-left" style="white-space: nowrap;">' + hover + '</span>';
         hoverelement.setAttribute('title', hover);
         $('#' + id).tooltip();
     }

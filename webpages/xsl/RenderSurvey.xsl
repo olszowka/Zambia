@@ -5,15 +5,25 @@
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
+  <xsl:param name="buttons" select="'0'"/>
   <xsl:template match="/">
-    <xsl:apply-templates select="/doc/query[@queryname='questions']/row" />
+    <xsl:apply-templates select="/doc/query[@queryName='questions']/row" />
+    <xsl:if test="$buttons = '1'">
+      <div id="preview-buttons">
+        <div class="row mt-4">
+          <div class="col col-auto">
+            <button class="btn btn-info" id="previewbtn" name="previewbtn" type="button" value="preview" onclick="window.location.reload();">Refresh Preview</button>
+          </div>
+        </div>
+      </div>    
+    </xsl:if>
   </xsl:template>
-  <xsl:template match="/doc/query[@queryname='questions']/row">
+  <xsl:template match="/doc/query[@queryName='questions']/row">
     <xsl:choose>
       <xsl:when test="@typename = 'heading'">
         <div>
           <xsl:attribute name="id">
-            <xsl:value-of select="@name"/>
+            <xsl:value-of select="translate(@shortname, ' ', '_')"/>
           </xsl:attribute>
           <div class="row mt-4">
             <div class="col col-12">
@@ -32,17 +42,17 @@
       <xsl:otherwise>
         <div>
           <xsl:attribute name="id">
-            <xsl:value-of select="translate(@name, ' ', '_')"/>
+            <xsl:value-of select="translate(@shortname, ' ', '_')"/>
           </xsl:attribute>
           <div class="row mt-4">
             <div class="col col-3">
               <span>
                 <xsl:attribute name="id">
-                  <xsl:value-of select="translate(@name, ' ', '_')"/>
+                  <xsl:value-of select="translate(@shortname, ' ', '_')"/>
                   <xsl:text>-prompt</xsl:text>
                 </xsl:attribute>
                 <xsl:attribute name="title">
-                  <xsl:text>Placeholder</xsl:text>
+                  <xsl:value-of select="@hover"/>
                 </xsl:attribute>
                 <xsl:attribute name="data-toggle">
                   <xsl:text>tooltip</xsl:text>
@@ -117,7 +127,7 @@
   <xsl:template name="openend">
     <xsl:param name="questionid" select="''"/>
     <div class="col col-9">
-      <xsl:for-each select="/doc/query[@queryname='questions']/row[@questionid=$questionid]">
+      <xsl:for-each select="/doc/query[@queryName='questions']/row[@questionid=$questionid]">
         <input type="text">
           <xsl:attribute name="id">
             <xsl:value-of select="translate(@shortname, ' ', '_')"/>
@@ -139,7 +149,7 @@
   <xsl:template name="text">
     <xsl:param name="questionid" select="''"/>
     <div class="col col-9">
-      <xsl:for-each select="/doc/query[@queryname='questions']/row[@questionid=$questionid]">
+      <xsl:for-each select="/doc/query[@queryName='questions']/row[@questionid=$questionid]">
         <textarea>
           <xsl:attribute name="id">
             <xsl:value-of select="translate(@shortname, ' ', '_')"/>
@@ -164,7 +174,7 @@
   <xsl:template name="number">
     <xsl:param name="questionid" select="''"/>
     <div class="col col-9">
-      <xsl:for-each select="/doc/query[@queryname='questions']/row[@questionid=$questionid]">
+      <xsl:for-each select="/doc/query[@queryName='questions']/row[@questionid=$questionid]">
         <input type="number">
           <xsl:attribute name="id">
             <xsl:value-of select="translate(@shortname, ' ', '_')"/>
@@ -186,7 +196,7 @@
   <xsl:template name="selectlist">
     <xsl:param name="questionid" select="''"/>
     <div class="col col-9">
-      <xsl:for-each select="/doc/query[@queryname='questions']/row[@questionid=$questionid]">
+      <xsl:for-each select="/doc/query[@queryName='questions']/row[@questionid=$questionid]">
         <select>
           <xsl:attribute name="id">
             <xsl:value-of select="translate(@shortname, ' ', '_')"/>
@@ -204,7 +214,7 @@
             </xsl:attribute>
             <xsl:attribute name="multiple"/>
           </xsl:if>
-          <xsl:for-each select="/doc/query[@queryname='options']/row[@questionid=$questionid]">
+          <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
             <option value="{@value}">
               <xsl:if test="@optionhover != ''">
                 <xsl:attribute name="title">
@@ -230,7 +240,7 @@
         <xsl:attribute name="name">
           <xsl:value-of select="translate($shortname, ' ', '_')"/>
         </xsl:attribute>
-        <xsl:for-each select="/doc/query[@queryname='options']/row[@questionid=$questionid]">
+        <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
           <option value="{@value}">
             <xsl:attribute name="title">
               <xsl:value-of select="@optionhover"/>
@@ -249,7 +259,7 @@
         <xsl:attribute name="name">
           <xsl:value-of select="translate($shortname, ' ', '_')"/>
         </xsl:attribute>
-        <xsl:for-each select="/doc/query[@queryname='years']/row[@questionid=$questionid]">
+        <xsl:for-each select="/doc/query[@queryName='years']/row[@questionid=$questionid]">
           <option value="{@value}">
             <xsl:value-of select="@value"/>
           </option>
@@ -261,7 +271,7 @@
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="shortname" select="''"/>
     <div class="col col-9">
-      <xsl:for-each select="/doc/query[@queryname='options']/row[@questionid=$questionid]">
+      <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
         <div class="form-check-inline">
           <input class="form-check-input" type="radio">
             <xsl:attribute name="id">
@@ -294,7 +304,7 @@
     <xsl:param name="shortname" select="''"/>
     <div class="col col-9">
       <div class="tag-chk-container">
-        <xsl:for-each select="/doc/query[@queryname='options']/row[@questionid=$questionid]">
+        <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
           <label class="tag-chk-label">
             <xsl:attribute name="title">
               <xsl:value-of select="@optionhover"/>
@@ -338,7 +348,7 @@
                   <xsl:value-of select="translate($shortname, ' ', '_')"/>
                 </xsl:attribute>
                 <xsl:attribute name="multiple"/>
-                <xsl:for-each select="/doc/query[@queryname='options']/row[@questionid=$questionid]">
+                <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
                   <option value="{@value}">
                     <xsl:attribute name="title">
                       <xsl:value-of select="@optionhover"/>

@@ -37,6 +37,9 @@
         <div class="col col-auto">
           <button class="btn btn-primary" id="submitbtn" name="submitbtn" type="save" value="save" onclick="SaveSurvey()">Save</button>
         </div>
+        <div class="col col-auto">
+          <button class="btn btn-info" id="previewbtn" name="previewbtn" type="button" value="preview" onclick="PreviewSurvey()">Preview Survey</button>
+        </div>
         <div id="saving_div" style="display: none;">
           <span style="color:blue">
             <b>Saving...</b>
