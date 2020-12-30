@@ -8,8 +8,14 @@
   <xsl:param name="buttons" select="''"/>
   <xsl:param name="control" select="''"/>
   <xsl:param name="controliv" select="''"/>
+  <xsl:param name="UpdateMessage" select="''"/>
   <xsl:template match="/">
-    <form name="partsurveyform" method="POST" action="PartSurvey.php">
+    <xsl:if test="$UpdateMessage != ''">
+      <div id="message" class="alert alert-success mt-4">
+        <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
+      </div>
+    </xsl:if>
+    <form name="partsurveyform" method="POST" action="PartSurvey.php"  onsubmit="return UpdateSurvey();">
       <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
       <input type="hidden" id="control" name="control" value="{$control}" />
       <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
@@ -96,10 +102,9 @@
               <xsl:choose>
                 <xsl:when test="@display_only = 1">
                   <div class="col col-9">
-                    <xsl:value-of select="@answer"/>
+                    <xsl:value-of select="@answer" disable-output-escaping="yes"/>
                     <xsl:if test="@other_text != ''">
-                      <br/>
-                      <xsl:text>Other: </xsl:text>
+                      <xsl:text> &#160;Other: </xsl:text>
                       <xsl:value-of select="@othertext"/>
                     </xsl:if>
                     <xsl:if test="$buttons='refresh'">
@@ -133,30 +138,37 @@
                   @typename = 'single-pulldown' or @typename = 'multi-select list'">
                       <xsl:call-template name="selectlist">
                         <xsl:with-param name="questionid" select="@questionid" />
+                        <xsl:with-param name="answer" select="@answer" />
+                        <xsl:with-param name="answermulti" select="concat(',', @answer, ',')" />
                       </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="@typename = 'monthyear'">
                       <xsl:call-template name="monthyear">
                         <xsl:with-param name="questionid" select="@questionid" />
                         <xsl:with-param name="shortname" select="@shortname" />
+                        <xsl:with-param name="answer" select="@answer" />
                       </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="@typename = 'single-radio'">
                       <xsl:call-template name="radio">
                         <xsl:with-param name="questionid" select="@questionid" />
                         <xsl:with-param name="shortname" select="@shortname" />
+                        <xsl:with-param name="answer" select="@answer" />
                       </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="@typename = 'multi-checkbox list'">
                       <xsl:call-template name="selectcheckbox">
                         <xsl:with-param name="questionid" select="@questionid" />
                         <xsl:with-param name="shortname" select="@shortname" />
+                        <xsl:with-param name="answer" select="concat(',', @answer, ',')"/>
                       </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="@typename = 'multi-display'">
                       <xsl:call-template name="multi-display">
                         <xsl:with-param name="questionid" select="@questionid" />
                         <xsl:with-param name="shortname" select="@shortname" />
+                        <xsl:with-param name="answer" select="@answer" />
+                        <xsl:with-param name="answermulti" select="concat(',', @answer, ',')" />
                       </xsl:call-template>
                     </xsl:when>
                   </xsl:choose>
@@ -252,31 +264,35 @@
   </xsl:template>
   <xsl:template name="selectlist">
     <xsl:param name="questionid" select="''"/>
+    <xsl:param name="answer" select="''"/>
+    <xsl:param name="answermulti" select="''"/>
     <div class="col col-9">
       <xsl:for-each select="/doc/query[@queryName='questions']/row[@questionid=$questionid]">
         <select>
           <xsl:attribute name="id">
             <xsl:value-of select="translate(@shortname, ' ', '_')"/>
-            <xsl:text>-input</xsl:text>
-            <xsl:if test="@typename = 'multi-select list'">
-              <xsl:text>[]</xsl:text>
-            </xsl:if>
           </xsl:attribute>
           <xsl:attribute name="name">
             <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+            <xsl:if test="@typename = 'multi-select list'">
+              <xsl:text>[]</xsl:text>
+            </xsl:if>
           </xsl:attribute>
           <xsl:if test="@typename = 'multi-select list'">
             <xsl:attribute name="style">
               <xsl:text>height: 100px;</xsl:text>
             </xsl:attribute>
             <xsl:attribute name="multiple"/>
-          </xsl:if>
+          </xsl:if>     
           <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
             <option value="{@value}">
               <xsl:if test="@optionhover != ''">
                 <xsl:attribute name="title">
                   <xsl:value-of select="@optionhover"/>
                 </xsl:attribute>
+              </xsl:if>
+              <xsl:if test="(@value=$answer) or contains($answermulti, concat(',', @value, ','))">
+                <xsl:attribute name="selected"/>
               </xsl:if>
               <xsl:value-of select="@optionshort"/>
             </option>
@@ -288,6 +304,7 @@
   <xsl:template name="monthyear">
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="shortname" select="''"/>
+    <xsl:param name="answer" select="''"/>
     <div class="col col-auto">
       <select>
         <xsl:attribute name="id">
@@ -303,6 +320,9 @@
             <xsl:attribute name="title">
               <xsl:value-of select="@optionhover"/>
             </xsl:attribute>
+            <xsl:if test="contains($answer, @value)">
+              <xsl:attribute name="selected"/>
+            </xsl:if>
             <xsl:value-of select="@optionshort"/>
           </option>
         </xsl:for-each>
@@ -320,6 +340,9 @@
         </xsl:attribute>
         <xsl:for-each select="/doc/query[@queryName='years']/row[@questionid=$questionid]">
           <option value="{@value}">
+             <xsl:if test="contains($answer, @value)">
+              <xsl:attribute name="selected"/>
+            </xsl:if>
             <xsl:value-of select="@value"/>
           </option>
         </xsl:for-each>
@@ -329,20 +352,25 @@
   <xsl:template name="radio">
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="shortname" select="''"/>
+    <xsl:param name="answer" select="''"/>
     <div class="col col-9">
       <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
         <div class="form-check-inline">
           <input class="form-check-input" type="radio">
             <xsl:attribute name="id">
               <xsl:value-of select="translate($shortname, ' ', '_')"/>
-              <xsl:text>-translate($shortname, ' ', '_')</xsl:text>
+              <xsl:text>-</xsl:text>
+              <xsl:value-of select="translate(@value, ' ', '_')"/>
             </xsl:attribute>
             <xsl:attribute name="name">
               <xsl:value-of select="translate($shortname, ' ', '_')"/>
             </xsl:attribute>
             <xsl:attribute name="value">
-              <xsl:value-of select="translate(@value, ' ', '_')"/>
+              <xsl:value-of select="@value"/>
             </xsl:attribute>
+            <xsl:if test="@value=$answer">
+              <xsl:attribute name="checked"/>            
+            </xsl:if>
           </input>
           <label class="form-check-label">
             <xsl:attribute name="for">
@@ -361,8 +389,12 @@
  <xsl:template name="selectcheckbox">
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="shortname" select="''"/>
+    <xsl:param name="answer" select="''"/>
     <div class="col col-9">
       <div class="tag-chk-container">
+        <xsl:attribute name="data-answer">
+          <xsl:value-of select="$answer"/>
+        </xsl:attribute>
         <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
           <label class="tag-chk-label">
             <xsl:attribute name="title">
@@ -378,6 +410,9 @@
                 <xsl:value-of select="translate($shortname, ' ', '_')"/>
                 <xsl:text>[]</xsl:text>
               </xsl:attribute>
+            <xsl:if test="contains($answer, concat(',', @value, ','))">
+              <xsl:attribute name="checked"/>
+            </xsl:if>
             </input>
             <xsl:value-of select="@optionshort" />
           </label>        
@@ -388,6 +423,8 @@
   <xsl:template name="multi-display">
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="shortname" select="''"/>
+    <xsl:param name="answer" select="''"/>
+    <xsl:param name="answermulti" select="''"/>
       <div class="border border-dark">
           <div class="form-row">
             <div class="col col-auto">
@@ -409,12 +446,14 @@
                 </xsl:attribute>
                 <xsl:attribute name="multiple"/>
                 <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
-                  <option value="{@value}">
-                    <xsl:attribute name="title">
-                      <xsl:value-of select="@optionhover"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="@optionshort"/>
-                  </option>
+                  <xsl:if test="contains($answermulti, concat(',', @value, ',')) = false">
+                    <option value="{@value}">
+                      <xsl:attribute name="title">
+                        <xsl:value-of select="@optionhover"/>
+                      </xsl:attribute>
+                      <xsl:value-of select="@optionshort"/>
+                    </option>
+                  </xsl:if>
                 </xsl:for-each>
               </select>
             </div>
@@ -457,7 +496,7 @@
                 </xsl:attribute>
                 Selected:
               </label>
-              <select class="form-control" style="height: 120px; width: 250px;">
+              <select class="form-control" style="height: 120px; width: 250px;" data-multidisplay="yes">
                 <xsl:attribute name="id">
                   <xsl:value-of select="translate($shortname, ' ', '_')"/>
                   <xsl:text>-dest</xsl:text>
@@ -467,6 +506,16 @@
                   <xsl:text>[]</xsl:text>
                 </xsl:attribute>
                 <xsl:attribute name="multiple"/>
+                <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
+                  <xsl:if test="contains($answermulti, concat(',', @value, ','))">
+                    <option value="{@value}">
+                      <xsl:attribute name="title">
+                        <xsl:value-of select="@optionhover"/>
+                      </xsl:attribute>
+                      <xsl:value-of select="@optionshort"/>
+                    </option>
+                  </xsl:if>
+                </xsl:for-each>
               </select>
             </div>
           </div>

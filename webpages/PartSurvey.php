@@ -13,26 +13,79 @@ participant_header($title, false, 'Normal', $bootstrap4);
 if (isLoggedIn()) {
 	if (isset($_POST["PostCheck"])) {
 		$priorValues = interpretControlString($_POST["control"], $_POST["controliv"]);
+        //foreach ($priorValues as $key => $value) {
+        //        echo "$key => '$value'<br/>";
+        //    }
 
 		if ($priorValues["getSessionID"] !=  session_id()) {
             $message = "Session expired, survey not updated";
         } else {
+			$shortname_types = json_decode($priorValues["shortname_types"]);
+			//var_dump($shortname_types);
+            }
 		// find the data to insert/update
-			echo "<h1>Submitted data</h1>";
-			foreach ($_POST as $key => $value) {
-				echo "$key => '$value'<br/>";
-			}
-			//        if ($rows == 1) {
-			//            $message = "Survey Updated";
-			//        } else {
-			//            $message = "No chages to update-rows";
-			//        }
-			//    } else {
-			//        $message = "No chages to update-select";
-			//    }
-			//} else {
-			//    $message = "No chages to update-unchanged";
-        }
+			//echo "<h1>Submitted data</h1>";
+			//var_dump($_POST);
+
+            $sql = <<<EOD
+INSERT INTO ParticipantSurveyAnswers(participantid, questionid, privacy_setting, value, othertext)
+VALUES (?, ?, ?, ?, ?)
+ON DUPLICATE KEY UPDATE
+	privacy_setting = ?,
+	value = ?,
+	othertext = ?;
+EOD;
+			$parms = [];
+			$types = "";
+			$inserted = 0;
+			$updated = 0;
+			$errors = 0;
+			foreach ($shortname_types as $obj) {
+				if ($obj->typename != "heading") {
+                    $separator = ',';
+                    switch ($obj->typename) {
+                        case "monthyear":
+                            $separator = ' ';
+                        case "multi-select list":
+                        case "multi-checkbox list":
+                        case "multi-display":
+                            //echo "processing " . $obj->typename . "<br/>";
+                            //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
+                            $ans = implode($separator, $_POST[$obj->id]);
+                            $parms= array($badgeid, $obj->questionid, 0, $ans, null, 0, $ans, null);
+                            //var_dump($parms);
+                            $types = "siississ";
+                            break;
+                        default:
+                            //echo "processing default for " . $obj->typename . "<br/>";
+                            //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
+                            $parms= array($badgeid, $obj->questionid, 0, $_POST[$obj->id], null, 0, $_POST[$obj->id], null);
+                            $types = "siississ";
+                    }
+                    //var_dump($parms);
+                    $rows_modified = mysql_cmd_with_prepare($sql, $types, $parms);
+                    //echo "status = $rows_modified<br/><br/>";
+                    if ($rows_modified == 1)
+                        $inserted = $inserted + 1;
+                    else if ($rows_modified == 2)
+                        $updated = $updated + 1;
+                    else if ($rows_modified < 0) {
+                        echo("Error description: " . mysqli_error($linki) . "<br/><br/>");
+                        $errors = $errors + 1;
+                        break;
+                    }
+                }
+            }
+			$message = "";
+			if ($inserted > 0)
+				$message = $message . $inserted . " answers inserted, ";
+			if ($updated > 0)
+				$message = $message . $updated . " answers updated, ";
+			if ($message == "")
+				$message = "No changes made to survey";
+			else
+				$message = "Survey updated: " . $message;
+
     }
 
     // Start of display portion
@@ -68,6 +121,48 @@ $(document).ready(function(){
         });
   });
 });
+function fadditems(source, dest) {
+    var i;
+    var itemtext;
+    var itemvalue;
+    for (i = 0; i < source.length; i++) {
+        if (source.options[i].selected == true) {
+            itemtext = source.options[i].text;
+            itemvalue = source.options[i].value;
+            dest.options[dest.options.length] = new Option(text = itemtext, value = itemvalue);
+            source.options[i] = null;
+            i--
+        }
+    }
+}
+
+function fdropitems(source, dest) {
+    var i;
+    var itemtext;
+    var itemvalue;
+    for (i = 0; i < dest.length; i++) {
+        if (dest.options[i].selected == true) {
+            itemtext = dest.options[i].text;
+            itemvalue = dest.options[i].value;
+            source.options[source.options.length] = new Option(text = itemtext, value = itemvalue);
+            dest.options[i] = null;
+            i--
+        }
+    }
+}
+
+function UpdateSurvey() {
+	tinyMCE.triggerSave();
+    var i;
+    $('[data-multidisplay="yes"]').each(function() {
+		console.log("saving" + this.getAttribute("id"));
+		for ( i = 0 ; i <this.length ; i++ ) {
+			console.log("setting " + i + " selected");
+			this.options[i].selected=true;
+        }
+	});
+	return true;
+}
 </script>
 EOD;
 // json of current questions and question options
@@ -112,26 +207,22 @@ EOD;
 EOD;
 	$resultXML = mysql_query_XML($query);
 
-	// add javascript to enable tooltips
-	echo <<<EOD
-<script>
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').each(function() {
-	this.title= '<span class="text-left" style="white-space: nowrap;">' + this.title + '</span>';
-	})
-  $('[data-toggle="tooltip"]').tooltip();
-});
-</script>
-EOD;
-	// get any questions that need programically create options
+	// get any questions that need programically create options as well as build array for the 'save'
 	$sql = <<<EOD
-		SELECT questionid, t.shortname as typename, min_value, max_value, ascending
+		SELECT questionid, d.shortname, t.shortname as typename, min_value, max_value, ascending
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
-		WHERE t.shortname IN ('numberselect', 'monthyear');
+        WHERE t.shortname != "heading" AND d.display_only = 0;
 EOD;
 	$result = mysqli_query_exit_on_error($sql);
+	$shortname_types = [];
 	while ($row = mysqli_fetch_assoc($result)) {
+		$obj = new stdClass();
+		$obj->questionid = $row["questionid"];
+		$obj->shortname = $row["shortname"];
+		$obj->id = str_replace(' ', '_', $row["shortname"]);
+		$obj->typename = $row["typename"];
+		$shortname_types[] = $obj;
 		$numberquery = "years";
 		switch ($row["typename"]) {
 			case "numberselect":
@@ -182,6 +273,7 @@ EOD;
 
 	$paramArray["buttons"] = $rows == 0 ?  "save" : "update";
 	$PriorArray["getSessionID"] = session_id();
+	$PriorArray["shortname_types"] = json_encode($shortname_types);
 
 	$ControlStrArray = generateControlString($PriorArray);
 	$paramArray["control"] = $ControlStrArray["control"];

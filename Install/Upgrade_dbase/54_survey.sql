@@ -444,7 +444,6 @@ CREATE TABLE SurveyQuestionOptionConfig (
 CREATE TABLE ParticipantSurveyAnswers (
 	participantid varchar(15) NOT NULL,
 	questionid int NOT NULL,
-	display_order int NOT NULL,
 	privacy_setting bool NOT NULL DEFAULT '0',
 	value varchar(8192),
 	othertext varchar(512),

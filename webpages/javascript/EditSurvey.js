@@ -247,6 +247,8 @@ var EditSurvey = function () {
             case 'heading':
                 show_radios = false;
                 show_prompt = false;
+                document.getElementById("display_only-1").checked = true;
+                document.getElementById("display_only-0").checked = false;
                 break;
             case 'single-radio':
             case 'single-pulldown':
