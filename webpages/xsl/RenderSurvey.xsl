@@ -149,11 +149,12 @@
                         <xsl:with-param name="answer" select="@answer" />
                       </xsl:call-template>
                     </xsl:when>
-                    <xsl:when test="@typename = 'single-radio'">
+                    <xsl:when test="@typename = 'hor-radio' or @typename = 'vert-radio'">
                       <xsl:call-template name="radio">
                         <xsl:with-param name="questionid" select="@questionid" />
                         <xsl:with-param name="shortname" select="@shortname" />
                         <xsl:with-param name="answer" select="@answer" />
+                        <xsl:with-param name="typename" select="@typename"/>
                       </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="@typename = 'multi-checkbox list'">
@@ -353,9 +354,18 @@
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="shortname" select="''"/>
     <xsl:param name="answer" select="''"/>
+    <xsl:param name="typename" select="''"/>
     <div class="col col-9">
       <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
-        <div class="form-check-inline">
+        <div>
+          <xsl:attribute name="class">
+            <xsl:if test="$typename = 'hor-radio'">
+              <xsl:text>form-check-inline</xsl:text>
+            </xsl:if>
+            <xsl:if test="$typename = 'vert-radio'">
+              <xsl:text>form-check</xsl:text>
+            </xsl:if>
+          </xsl:attribute>
           <input class="form-check-input" type="radio">
             <xsl:attribute name="id">
               <xsl:value-of select="translate($shortname, ' ', '_')"/>

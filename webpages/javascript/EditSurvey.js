@@ -151,7 +151,7 @@ var EditSurvey = function () {
         document.getElementById("display_only-0").checked = true;
         document.getElementById("min_value").value = "0";
         document.getElementById("max_value").value = "8192";
-        // now display it, hiding ones not used by single-radio
+        // now display it, hiding ones not used by show_radios
         document.getElementById("asc_desc").style.display = "none";
         document.getElementById("value_range").style.display = "none";
         document.getElementById("general-question-div").style.display = "block";
@@ -250,7 +250,8 @@ var EditSurvey = function () {
                 document.getElementById("display_only-1").checked = true;
                 document.getElementById("display_only-0").checked = false;
                 break;
-            case 'single-radio':
+            case 'hor-radio':
+            case 'vert-radio':
             case 'single-pulldown':
             case 'multi-select list':
             case 'multi-checkbox list':

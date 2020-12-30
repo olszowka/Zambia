@@ -21,7 +21,8 @@ CREATE TABLE SurveyQuestionTypes (
 INSERT INTO SurveyQuestionTypes (typeid, shortname, description, current, display_order)
 VALUES
 	(5, 'heading', 'HTML heading/prompt without input field', 1, 5),
-	(10, 'single-radio', 'Radio button list, select one of many', 1, 10),
+	(10, 'hor-radio', 'Radio button list, select one of many-horizontal output', 1, 10),
+	(15, 'vert-radio', 'Radio button list, select one of many-vertical output', 1, 15),
 	(20, 'single-pulldown', 'Select list, select one of many', 1, 20),
 	(30, 'multi-select list', 'Select list, select multiple of many with Ctrl/click', 1, 30),
 	(40, 'multi-checkbox list', 'Checkbox list, check multiple of many', 1, 31),
