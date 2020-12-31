@@ -24,25 +24,35 @@ if (isLoggedIn()) {
 			//var_dump($shortname_types);
             }
 		// find the data to insert/update
-			//echo "<h1>Submitted data</h1>";
-			//var_dump($_POST);
+		//	echo "<h1>Submitted data</h1>";
+		//	var_dump($_POST);
 
             $sql = <<<EOD
-INSERT INTO ParticipantSurveyAnswers(participantid, questionid, privacy_setting, value, othertext)
-VALUES (?, ?, ?, ?, ?)
+INSERT INTO ParticipantSurveyAnswers(participantid, questionid, privacy_setting, value, othertext, updatedby)
+VALUES (?, ?, ?, ?, ?, ?)
 ON DUPLICATE KEY UPDATE
 	privacy_setting = ?,
 	value = ?,
-	othertext = ?;
+	othertext = ?,
+	updatedby = ?;
 EOD;
 			$parms = [];
 			$types = "";
 			$inserted = 0;
 			$updated = 0;
 			$errors = 0;
+			$types = "siisssisss";
 			foreach ($shortname_types as $obj) {
 				if ($obj->typename != "heading") {
                     $separator = ',';
+					$othertextname = $obj->id . "-othertext";
+					if (isset($_POST[$othertextname]))
+						$othertext = $_POST[$othertextname];
+					else
+                        $othertext = null;
+					if ($othertext == '')
+						$othertext = null;
+                    
                     switch ($obj->typename) {
                         case "monthyear":
                             $separator = ' ';
@@ -52,15 +62,13 @@ EOD;
                             //echo "processing " . $obj->typename . "<br/>";
                             //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
                             $ans = implode($separator, $_POST[$obj->id]);
-                            $parms= array($badgeid, $obj->questionid, 0, $ans, null, 0, $ans, null);
+                            $parms= array($badgeid, $obj->questionid, 0, $ans, $othertext, $badgeid, 0, $ans, $othertext, $badgeid);
                             //var_dump($parms);
-                            $types = "siississ";
                             break;
                         default:
                             //echo "processing default for " . $obj->typename . "<br/>";
                             //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
-                            $parms= array($badgeid, $obj->questionid, 0, $_POST[$obj->id], null, 0, $_POST[$obj->id], null);
-                            $types = "siississ";
+                            $parms= array($badgeid, $obj->questionid, 0, $_POST[$obj->id], $othertext, $badgeid, 0, $_POST[$obj->id], $othertext, $badgeid);
                     }
                     //var_dump($parms);
                     $rows_modified = mysql_cmd_with_prepare($sql, $types, $parms);
@@ -133,7 +141,6 @@ $(document).ready(function(){
     });
 $('[data-othertextcheckbox="1"]').each(function () {
 		var checked = this.getAttribute("checked");
-		console.log(checked);
 		if (checked !== null)
 			CheckboxChangeOthertext(this);
   });
@@ -182,7 +189,7 @@ EOD;
 			CASE WHEN ISNULL(a.value) THEN "" ELSE a.value END AS answer,
 			CASE WHEN ISNULL(a.othertext) THEN "" ELSE a.othertext END AS othertext,
 			CASE WHEN ISNULL(a.privacy_setting) THEN publish ELSE a.privacy_setting END AS privacy_setting,
-            CASE WHEN SUM(o.allowothertext) > 0 THEN 1 ELSE 0 END AS othertext
+            CASE WHEN SUM(o.allowothertext) > 0 THEN 1 ELSE 0 END AS allowothertext
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
 		LEFT OUTER JOIN ParticipantSurveyAnswers a ON (a.questionid = d.questionid and a.participantid = "$badgeid")

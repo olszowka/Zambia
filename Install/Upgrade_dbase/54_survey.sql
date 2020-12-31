@@ -448,6 +448,8 @@ CREATE TABLE ParticipantSurveyAnswers (
 	privacy_setting bool NOT NULL DEFAULT '0',
 	value varchar(8192),
 	othertext varchar(512),
+	lastupdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	updatedby varchar(15) NOT NULL,
 	PRIMARY KEY (participantid, questionid),
 	FOREIGN KEY (participantid) REFERENCES Participants(badgeid) ON DELETE CASCADE,
 	FOREIGN KEY (questionid) REFERENCES SurveyQuestionConfig(questionid) ON DELETE CASCADE

@@ -37,7 +37,7 @@ if (isLoggedIn() && may_I("Administrator")) {
 					CASE WHEN max_value > 500 THEN 8 ELSE 4 END
 				ELSE ""
 			END as `rows`,
-            CASE WHEN SUM(o.allowothertext) > 0 THEN 1 ELSE 0 END AS othertext
+            CASE WHEN SUM(o.allowothertext) > 0 THEN 1 ELSE 0 END AS allowothertext
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
         LEFT OUTER JOIN SurveyQuestionOptionConfig o USING (questionid)

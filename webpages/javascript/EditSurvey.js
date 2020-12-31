@@ -695,6 +695,19 @@ function RefreshComplete(data, textStatus, jqXHR) {
     $('[data-othertextselect="1"]').each(function () {
         SelectChangeOthertext(this);
     });
+    $('[data-othertextmultidisplay="1"]').each(function () {
+        lrChangeOthertext(this);
+    });
+    $('[data-othertextradio="1"]').each(function () {
+        var checked = this.getAttribute("checked");
+        if (checked !== null)
+            RadioChangeOthertext(this);
+    });
+    $('[data-othertextcheckbox="1"]').each(function () {
+        var checked = this.getAttribute("checked");
+        if (checked !== null)
+            CheckboxChangeOthertext(this);
+    });
 }
 
 function RefreshPreview() {
@@ -735,12 +748,12 @@ function RefreshPreview() {
     if (optiontable) {
         //console.log("from optiontable");
         var options = optiontable.getData();
-        var othertext = false;
+        var allowothertext = false;
         var i;
         for (i = 0; i < options.length; i++) {
-            othertext = othertext || options[i].allowothertext;
+            allowothertext = allowothertext || options[i].allowothertext;
         }
-        surveyData[0].othertext = othertext;
+        surveyData[0].allowothertext = allowothertext;
         optionsjson = JSON.stringify(optiontable.getData());
     } else if (questionoptions.length > 0) {
         //console.log("from questionoptions");
