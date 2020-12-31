@@ -140,6 +140,8 @@
                         <xsl:with-param name="questionid" select="@questionid" />
                         <xsl:with-param name="answer" select="@answer" />
                         <xsl:with-param name="answermulti" select="concat(',', @answer, ',')" />
+                        <xsl:with-param name="othertext" select="@othertext" />
+                        <xsl:with-param name="shortname" select="@shortname" />
                       </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="@typename = 'monthyear'">
@@ -155,6 +157,7 @@
                         <xsl:with-param name="shortname" select="@shortname" />
                         <xsl:with-param name="answer" select="@answer" />
                         <xsl:with-param name="typename" select="@typename"/>
+                        <xsl:with-param name="othertext" select="@othertext" />
                       </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="@typename = 'multi-checkbox list'">
@@ -162,6 +165,7 @@
                         <xsl:with-param name="questionid" select="@questionid" />
                         <xsl:with-param name="shortname" select="@shortname" />
                         <xsl:with-param name="answer" select="concat(',', @answer, ',')"/>
+                        <xsl:with-param name="othertext" select="@othertext" />
                       </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="@typename = 'multi-display'">
@@ -170,6 +174,7 @@
                         <xsl:with-param name="shortname" select="@shortname" />
                         <xsl:with-param name="answer" select="@answer" />
                         <xsl:with-param name="answermulti" select="concat(',', @answer, ',')" />
+                        <xsl:with-param name="othertext" select="@othertext" />
                       </xsl:call-template>
                     </xsl:when>
                   </xsl:choose>
@@ -267,7 +272,9 @@
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="answer" select="''"/>
     <xsl:param name="answermulti" select="''"/>
-    <div class="col col-9">
+    <xsl:param name="othertext" select="'0'"/>
+    <xsl:param name="shortname" select="''"/>
+    <div class="col col-auto">
       <xsl:for-each select="/doc/query[@queryName='questions']/row[@questionid=$questionid]">
         <select>
           <xsl:attribute name="id">
@@ -284,7 +291,15 @@
               <xsl:text>height: 100px;</xsl:text>
             </xsl:attribute>
             <xsl:attribute name="multiple"/>
-          </xsl:if>     
+          </xsl:if>
+          <xsl:if test="$othertext=1">
+            <xsl:attribute name="data-othertextselect">
+              <xsl:value-of select="$othertext"/>
+            </xsl:attribute>
+            <xsl:attribute name="onChange">
+              <xsl:text>SelectChangeOthertext(this);</xsl:text>
+            </xsl:attribute>
+          </xsl:if>
           <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
             <option value="{@value}">
               <xsl:if test="@optionhover != ''">
@@ -292,6 +307,9 @@
                   <xsl:value-of select="@optionhover"/>
                 </xsl:attribute>
               </xsl:if>
+              <xsl:attribute name="data-othertext">
+                <xsl:value-of select="@allowothertext"/>
+              </xsl:attribute>
               <xsl:if test="(@value=$answer) or contains($answermulti, concat(',', @value, ','))">
                 <xsl:attribute name="selected"/>
               </xsl:if>
@@ -301,6 +319,27 @@
         </select>
       </xsl:for-each>
     </div>
+    <xsl:if test="$othertext = 1">
+      <div class="col col-auto">
+        <label style="margin-right: 10px;">
+          <xsl:attribute name="for">
+            <xsl:value-of select="translate($shortname, ' ', '_')"/>
+            <xsl:text>-othertext</xsl:text>
+          </xsl:attribute>
+          Other:
+        </label>
+        <input type="text" maxlength="512" size="50" disabled="true">
+          <xsl:attribute name="id">
+            <xsl:value-of select="translate($shortname, ' ', '_')"/>
+            <xsl:text>-othertext</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="name">
+            <xsl:value-of select="translate($shortname, ' ', '_')"/>
+            <xsl:text>-othertext</xsl:text>
+          </xsl:attribute>
+        </input>
+      </div>
+    </xsl:if>
   </xsl:template>
   <xsl:template name="monthyear">
     <xsl:param name="questionid" select="''"/>
@@ -355,6 +394,7 @@
     <xsl:param name="shortname" select="''"/>
     <xsl:param name="answer" select="''"/>
     <xsl:param name="typename" select="''"/>
+    <xsl:param name="othertext" select="'0'"/>
     <div class="col col-9">
       <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
         <div>
@@ -378,8 +418,19 @@
             <xsl:attribute name="value">
               <xsl:value-of select="@value"/>
             </xsl:attribute>
+            <xsl:if test="$othertext=1">
+              <xsl:attribute name="data-othertext">
+                <xsl:value-of select="@allowothertext"/>
+              </xsl:attribute>
+              <xsl:attribute name="data-othertextradio">
+                <xsl:value-of select="$othertext"/>
+              </xsl:attribute>
+              <xsl:attribute name="onChange">
+                <xsl:text>RadioChangeOthertext(this);</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:if test="@value=$answer">
-              <xsl:attribute name="checked"/>            
+              <xsl:attribute name="checked"/>
             </xsl:if>
           </input>
           <label class="form-check-label">
@@ -394,17 +445,34 @@
           </label>
         </div>
       </xsl:for-each>
+      <xsl:if test="$othertext = 1">
+        <label style="margin-right: 10px;">
+          <xsl:attribute name="for">
+            <xsl:value-of select="translate($shortname, ' ', '_')"/>
+            <xsl:text>-othertext</xsl:text>
+          </xsl:attribute>
+          Other:
+        </label>
+        <input type="text" maxlength="512" size="50" disabled="true">
+          <xsl:attribute name="id">
+            <xsl:value-of select="translate($shortname, ' ', '_')"/>
+            <xsl:text>-othertext</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="name">
+            <xsl:value-of select="translate($shortname, ' ', '_')"/>
+            <xsl:text>-othertext</xsl:text>
+          </xsl:attribute>
+        </input>
+      </xsl:if>
     </div>
   </xsl:template>
  <xsl:template name="selectcheckbox">
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="shortname" select="''"/>
     <xsl:param name="answer" select="''"/>
-    <div class="col col-9">
+    <xsl:param name="othertext" select="'0'"/>
+    <div class="col col-auto">
       <div class="tag-chk-container">
-        <xsl:attribute name="data-answer">
-          <xsl:value-of select="$answer"/>
-        </xsl:attribute>
         <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
           <label class="tag-chk-label">
             <xsl:attribute name="title">
@@ -420,6 +488,17 @@
                 <xsl:value-of select="translate($shortname, ' ', '_')"/>
                 <xsl:text>[]</xsl:text>
               </xsl:attribute>
+              <xsl:if test="$othertext=1">
+                <xsl:attribute name="data-othertextcheckbox">
+                  <xsl:value-of select="$othertext"/>
+                </xsl:attribute>
+                <xsl:attribute name="data-othertext">
+                  <xsl:value-of select="@allowothertext"/>
+                </xsl:attribute>
+                <xsl:attribute name="onChange">
+                  <xsl:text>CheckboxChangeOthertext(this);</xsl:text>
+                </xsl:attribute>
+              </xsl:if>
             <xsl:if test="contains($answer, concat(',', @value, ','))">
               <xsl:attribute name="checked"/>
             </xsl:if>
@@ -429,12 +508,34 @@
         </xsl:for-each>
       </div>
     </div>
+   <xsl:if test="$othertext = 1">
+     <div class="col col-auto">
+       <label style="margin-right: 10px;">
+         <xsl:attribute name="for">
+           <xsl:value-of select="translate($shortname, ' ', '_')"/>
+           <xsl:text>-othertext</xsl:text>
+         </xsl:attribute>
+         Other:
+       </label>
+       <input type="text" maxlength="512" size="50" disabled="true">
+         <xsl:attribute name="id">
+           <xsl:value-of select="translate($shortname, ' ', '_')"/>
+           <xsl:text>-othertext</xsl:text>
+         </xsl:attribute>
+         <xsl:attribute name="name">
+           <xsl:value-of select="translate($shortname, ' ', '_')"/>
+           <xsl:text>-othertext</xsl:text>
+         </xsl:attribute>
+       </input>
+     </div>
+   </xsl:if>
   </xsl:template>
   <xsl:template name="multi-display">
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="shortname" select="''"/>
     <xsl:param name="answer" select="''"/>
     <xsl:param name="answermulti" select="''"/>
+    <xsl:param name="othertext" select="'0'"/>
       <div class="border border-dark">
           <div class="form-row">
             <div class="col col-auto">
@@ -461,6 +562,9 @@
                       <xsl:attribute name="title">
                         <xsl:value-of select="@optionhover"/>
                       </xsl:attribute>
+                      <xsl:attribute name="data-othertext">
+                        <xsl:value-of select="@allowothertext"/>
+                      </xsl:attribute>
                       <xsl:value-of select="@optionshort"/>
                     </option>
                   </xsl:if>
@@ -474,7 +578,7 @@
                   <xsl:text>-right</xsl:text>
                 </xsl:attribute>
                 <xsl:attribute name="onclick">
-                  <xsl:text>fadditems(document.getElementById('</xsl:text>
+                  <xsl:text>lradditems(document.getElementById('</xsl:text>
                   <xsl:value-of select="translate($shortname, ' ', '_')"/>
                   <xsl:text>-source'),document.getElementById('</xsl:text>
                   <xsl:value-of select="translate($shortname, ' ', '_')"/>
@@ -489,7 +593,7 @@
                   <xsl:text>-right</xsl:text>
                 </xsl:attribute>
                 <xsl:attribute name="onclick">
-                  <xsl:text>fdropitems(document.getElementById('</xsl:text>
+                  <xsl:text>lrdropitems(document.getElementById('</xsl:text>
                   <xsl:value-of select="translate($shortname, ' ', '_')"/>
                   <xsl:text>-source'),document.getElementById('</xsl:text>
                   <xsl:value-of select="translate($shortname, ' ', '_')"/>
@@ -516,11 +620,22 @@
                   <xsl:text>[]</xsl:text>
                 </xsl:attribute>
                 <xsl:attribute name="multiple"/>
+                <xsl:if test="$othertext=1">
+                  <xsl:attribute name="data-othertextmultidisplay">
+                    <xsl:value-of select="$othertext"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="onChange">
+                    <xsl:text>SelectChangeOthertext(this);</xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
                 <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
                   <xsl:if test="contains($answermulti, concat(',', @value, ','))">
                     <option value="{@value}">
                       <xsl:attribute name="title">
                         <xsl:value-of select="@optionhover"/>
+                      </xsl:attribute>
+                      <xsl:attribute name="data-othertext">
+                        <xsl:value-of select="@allowothertext"/>
                       </xsl:attribute>
                       <xsl:value-of select="@optionshort"/>
                     </option>
@@ -529,6 +644,27 @@
               </select>
             </div>
           </div>
+        <xsl:if test="$othertext = 1">
+          <div style="float: right; margin-top: 10px;">
+            <label style="margin-right: 10px;">
+              <xsl:attribute name="for">
+                <xsl:value-of select="translate($shortname, ' ', '_')"/>
+                <xsl:text>-othertext</xsl:text>
+              </xsl:attribute>
+              Other:
+            </label>
+            <input type="text" maxlength="512" size="50" disabled="true">
+              <xsl:attribute name="id">
+                <xsl:value-of select="translate($shortname, ' ', '_')"/>
+                <xsl:text>-othertext</xsl:text>
+              </xsl:attribute>
+              <xsl:attribute name="name">
+                <xsl:value-of select="translate($shortname, ' ', '_')"/>
+                <xsl:text>-othertext</xsl:text>
+              </xsl:attribute>
+            </input>
+          </div>
+        </xsl:if>
         </div>
     </xsl:template>
 </xsl:stylesheet>

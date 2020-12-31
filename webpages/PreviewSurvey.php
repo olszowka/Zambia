@@ -36,14 +36,17 @@ if (isLoggedIn() && may_I("Administrator")) {
 				WHEN t.shortname = "text" OR t.shortname = "html-text" THEN
 					CASE WHEN max_value > 500 THEN 8 ELSE 4 END
 				ELSE ""
-			END as `rows`
+			END as `rows`,
+            CASE WHEN SUM(o.allowothertext) > 0 THEN 1 ELSE 0 END AS othertext
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
+        LEFT OUTER JOIN SurveyQuestionOptionConfig o USING (questionid)
+        GROUP BY d.questionid
 		ORDER BY d.display_order ASC;
 EOD;
 
 	$query["options"] = <<<EOD
-		SELECT questionid, display_order, questionid, ordinal, value, optionshort, optionhover, allowothertext, display_order
+		SELECT questionid, display_order, ordinal, value, optionshort, optionhover, allowothertext, display_order
 		FROM SurveyQuestionOptionConfig
 		ORDER BY questionid, display_order;
 EOD;
@@ -80,41 +83,16 @@ $(document).ready(function(){
             placeholder: 'Type content here...'
         });
   });
+  $('[data-othertextselect="1"]').each(function () {
+        SelectChangeOthertext(this);
+    });
 });
-function fadditems(source, dest) {
-    var i;
-    var itemtext;
-    var itemvalue;
-    for (i = 0; i < source.length; i++) {
-        if (source.options[i].selected == true) {
-            itemtext = source.options[i].text;
-            itemvalue = source.options[i].value;
-            dest.options[dest.options.length] = new Option(text = itemtext, value = itemvalue);
-            source.options[i] = null;
-            i--
-        }
-    }
-}
 
-function fdropitems(source, dest) {
-    var i;
-    var itemtext;
-    var itemvalue;
-    for (i = 0; i < dest.length; i++) {
-        if (dest.options[i].selected == true) {
-            itemtext = dest.options[i].text;
-            itemvalue = dest.options[i].value;
-            source.options[source.options.length] = new Option(text = itemtext, value = itemvalue);
-            dest.options[i] = null;
-            i--
-        }
-    }
-}
 </script>
 EOD;
 	// get any questions that need programically create options
 	$sql = <<<EOD
-		SELECT questionid, t.shortname as typename, min_value, max_value, ascending
+		SELECT d.questionid, t.shortname as typename, min_value, max_value, ascending
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
 		WHERE t.shortname IN ('numberselect', 'monthyear');

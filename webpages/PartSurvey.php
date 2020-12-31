@@ -120,36 +120,24 @@ $(document).ready(function(){
             placeholder: 'Type content here...'
         });
   });
+  $('[data-othertextselect="1"]').each(function () {
+        SelectChangeOthertext(this);
+    });
+  $('[data-othertextmultidisplay="1"]').each(function () {
+        lrChangeOthertext(this);
+    });
+  $('[data-othertextradio="1"]').each(function () {
+		var checked = this.getAttribute("checked");
+		if (checked !== null)
+			RadioChangeOthertext(this);
+    });
+$('[data-othertextcheckbox="1"]').each(function () {
+		var checked = this.getAttribute("checked");
+		console.log(checked);
+		if (checked !== null)
+			CheckboxChangeOthertext(this);
+  });
 });
-function fadditems(source, dest) {
-    var i;
-    var itemtext;
-    var itemvalue;
-    for (i = 0; i < source.length; i++) {
-        if (source.options[i].selected == true) {
-            itemtext = source.options[i].text;
-            itemvalue = source.options[i].value;
-            dest.options[dest.options.length] = new Option(text = itemtext, value = itemvalue);
-            source.options[i] = null;
-            i--
-        }
-    }
-}
-
-function fdropitems(source, dest) {
-    var i;
-    var itemtext;
-    var itemvalue;
-    for (i = 0; i < dest.length; i++) {
-        if (dest.options[i].selected == true) {
-            itemtext = dest.options[i].text;
-            itemvalue = dest.options[i].value;
-            source.options[source.options.length] = new Option(text = itemtext, value = itemvalue);
-            dest.options[i] = null;
-            i--
-        }
-    }
-}
 
 function UpdateSurvey() {
 	tinyMCE.triggerSave();
@@ -193,15 +181,18 @@ EOD;
 			END as `rows`,
 			CASE WHEN ISNULL(a.value) THEN "" ELSE a.value END AS answer,
 			CASE WHEN ISNULL(a.othertext) THEN "" ELSE a.othertext END AS othertext,
-			CASE WHEN ISNULL(a.privacy_setting) THEN publish ELSE a.privacy_setting END AS privacy_setting
+			CASE WHEN ISNULL(a.privacy_setting) THEN publish ELSE a.privacy_setting END AS privacy_setting,
+            CASE WHEN SUM(o.allowothertext) > 0 THEN 1 ELSE 0 END AS othertext
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
 		LEFT OUTER JOIN ParticipantSurveyAnswers a ON (a.questionid = d.questionid and a.participantid = "$badgeid")
+        LEFT OUTER JOIN SurveyQuestionOptionConfig o ON (d.questionid = o.questionid)
+        GROUP BY d.questionid
 		ORDER BY d.display_order ASC;
 EOD;
 
 	$query["options"] = <<<EOD
-		SELECT questionid, display_order, questionid, ordinal, value, optionshort, optionhover, allowothertext, display_order
+		SELECT questionid, display_order, ordinal, value, optionshort, optionhover, allowothertext, display_order
 		FROM SurveyQuestionOptionConfig
 		ORDER BY questionid, display_order;
 EOD;
@@ -209,7 +200,7 @@ EOD;
 
 	// get any questions that need programically create options as well as build array for the 'save'
 	$sql = <<<EOD
-		SELECT questionid, d.shortname, t.shortname as typename, min_value, max_value, ascending
+		SELECT d.questionid, d.shortname, t.shortname as typename, min_value, max_value, ascending
 		FROM SurveyQuestionConfig d
 		JOIN SurveyQuestionTypes t USING (typeid)
         WHERE t.shortname != "heading" AND d.display_only = 0;
