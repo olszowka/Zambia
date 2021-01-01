@@ -455,4 +455,8 @@ CREATE TABLE ParticipantSurveyAnswers (
 	FOREIGN KEY (questionid) REFERENCES SurveyQuestionConfig(questionid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant Survey Info.';
 
+INSERT INTO CustomText(page, tag, textcontents)
+VALUES('Participant Survey', 'survey_displayonly', '<p>Note: Some questions may no longer allow you to enter/change their answers. The time has passed for when you can change them and they have been changed from answerable to display only.</p>
+<p>If you need to have an display only answer changed, please reach out to programming at the email address below.</p>');
+
 INSERT INTO PatchLog (patchname) VALUES ('54_survey.sql');

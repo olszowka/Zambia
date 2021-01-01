@@ -9,6 +9,13 @@ require_once('PartCommonCode.php');
 $message = "";
 $rows = 0;
 
+// Now that title is set, get common text
+if (!populateCustomTextArray()) {
+    $message_error = "Failed to retrieve custom text. " . $message_error;
+    RenderError($message_error);
+    exit();
+}
+
 participant_header($title, false, 'Normal', $bootstrap4);
 if (isLoggedIn()) {
 	if (isset($_POST["PostCheck"])) {
@@ -52,7 +59,7 @@ EOD;
                         $othertext = null;
 					if ($othertext == '')
 						$othertext = null;
-                    
+
                     switch ($obj->typename) {
                         case "monthyear":
                             $separator = ' ';
@@ -284,6 +291,8 @@ EOD;
 	// following line for debugging only
 	//echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
 	RenderXSLT('RenderSurvey.xsl', $paramArray, $resultXML);
+	echo "<br/>\n";
+	echo fetchCustomText("survey_displayonly");
 }
 participant_footer();
 ?>
