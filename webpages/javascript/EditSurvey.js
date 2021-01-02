@@ -2,7 +2,9 @@
 var configtable;
 var optiontable;
 var message = "";
+var previewmce = false;
 var questionoptions = [];
+var in_editconfig = false;  // tabulator seems to want to run the onclick twice, so this prevents that, allowing render preview to work right.
 
 var EditSurvey = function () {
     var newid = -1;
@@ -26,6 +28,7 @@ var EditSurvey = function () {
     };
 
     function editor_init() {
+        //console.log("editor_init: tinyMCE.init('input#prompt')");
         tinyMCE.init({
             selector: 'input#prompt',
             plugins: 'fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
@@ -43,6 +46,8 @@ var EditSurvey = function () {
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
             placeholder: 'Type prompt here...'
         });
+
+        //console.log("editor_init: tinyMCE.init('textarea#hover')");
         tinyMCE.init({
             selector: 'textarea#hover',
             plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
@@ -116,7 +121,9 @@ var EditSurvey = function () {
         document.getElementById("previewbtn").style.display = "none";
         document.getElementById("general-question-div").style.display = "none";
         document.getElementById("preview").innerHTML = "";
-        tinymce.remove();
+        //console.log("addupdaterow: tinyMCE.remove");
+        tinyMCE.remove();
+        previewmce = false;
         table.clearHistory();
         if (opttable) {
             opttable = null;
@@ -125,6 +132,8 @@ var EditSurvey = function () {
 
     function addnewquestion(questiontable) {
         tinyMCE.remove();
+        previewmce = false;
+        //console.log("addnewquestion: tinyMCE.remove");
         curid = -99999;
 
         document.getElementById("general-header").innerHTML = '<h3 class="col-auto">New Question - General Configuration</h3>';
@@ -165,7 +174,10 @@ var EditSurvey = function () {
 
     function editconfig(e, row, questiontable) {
         var name = row.getCell("shortname").getValue();
+        in_editconfig = true;
+        //console.log("editconfig: tinyMCE.remove()");
         tinyMCE.remove();
+        previewmce = false;
 
         document.getElementById("message").style.display = 'none';
 
@@ -331,9 +343,6 @@ var EditSurvey = function () {
                         title: "Value", field: "value", accessorData: escapeQuotesAccessor, width: 120,
                         editor: "input",
                         editorParams: { editorAttributes: { maxlength: 512 } },
-                        //cellClick: function (e, cell) {
-                        //    editconfig(e, cell.getRow(), configtable);
-                        //},
                     },
                     {
                         title: "Label", field: "optionshort", accessorData: escapeQuotesAccessor, width: 200,
@@ -412,10 +421,9 @@ var EditSurvey = function () {
                 { title: "Order", field: "display_order", visible: false },
                 {
                     title: "Name", field: "shortname", width: 120,
-                    editor: "input",
-                    editorParams: { editorAttributes: { maxlength: 100 } },
                     cellClick: function (e, cell) {
-                        editconfig(e, cell.getRow(), configtable);
+                        if (!in_editconfig)
+                            editconfig(e, cell.getRow(), configtable);
                     },
                 },
                 {
@@ -489,8 +497,15 @@ var EditSurvey = function () {
                 }
             },
             tooltips: function (cell) {
-                if (cell.getField() != "shortname") { return false };
-                return cell.getData().description;
+                switch (cell.getField()) {
+                    case "shortname":
+                        return cell.getData().description;
+                    case "hover":
+                        return cell.getData().hover;
+                    case "prompt":
+                        return cell.getData().prompt;
+                }
+                return false;
             },
             dataChanged: function (data) {
                 //data - the updated table data
@@ -668,30 +683,7 @@ function RefreshComplete(data, textStatus, jqXHR) {
         $('#' + id).tooltip();
     }
     typename = document.getElementById("typename").value;
-    if (typename == 'html-text') {
-        maxlength = document.getElementById("max_value").value;
-        if (maxlength == "" || maxlength <= 0) {
-            maxlength = 8192;
-        }
-        tinyMCE.init({
-            selector: 'textarea#' + fieldname + '-input',
-            plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
-            browser_spellcheck: true,
-            contextmenu: false,
-            height: 200,
-            width: 900,
-            min_height: 200,
-            maxlength: maxlength,
-            menubar: false,
-            toolbar: [
-                'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-                'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
-            ],
-            toolbar_mode: 'floating',
-            content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-            placeholder: 'Type content here...'
-        });
-    }
+   
     $('[data-othertextselect="1"]').each(function () {
         SelectChangeOthertext(this);
     });
@@ -708,24 +700,57 @@ function RefreshComplete(data, textStatus, jqXHR) {
         if (checked !== null)
             CheckboxChangeOthertext(this);
     });
+
+    if (typename == 'html-text') {
+        maxlength = document.getElementById("max_value").value;
+        if (maxlength == "" || maxlength <= 0) {
+            maxlength = 8192;
+        }
+
+        if (previewmce == false) {
+            //console.log("RefreshComplete: tinyMCE.init(textarea#" + fieldname + '-input)');
+            tinyMCE.init({
+                selector: 'textarea#' + fieldname + '-input',
+                plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+                browser_spellcheck: true,
+                contextmenu: false,
+                height: 200,
+                width: 900,
+                min_height: 200,
+                maxlength: maxlength,
+                menubar: false,
+                toolbar: [
+                    'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                    'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+                ],
+                toolbar_mode: 'floating',
+                content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+                placeholder: 'Type content here...'
+            });
+            previewmce = true;
+        }
+    }
+
+    in_editconfig = false;
 }
 
 function RefreshPreview() {
     //console.log("In RefreshPreview");
     //console.trace();
-    tinyMCE.triggerSave();
+    if (previewmce) {
+        fieldname = '#' + document.getElementById("shortname").value.replace(/ /g, '_') + '-input';
+        tinyMCE.remove(fieldname);
+        previewmce = false;
+    }
     var questionid = document.getElementById("questionid").value
     var shortname = document.getElementById("shortname").value;
     var typename = document.getElementById("typename").value;
-    if (typename == 'html-text') {
-        fieldname = '#' + document.getElementById("shortname").value.replace(/ /g, '_') + '-input';
-        tinyMCE.remove(fieldname);
-    }
     var prompt = document.getElementById("prompt").value;
     if (prompt.substring(0, 3) == '<p>') {
         prompt = prompt.substring(3, prompt.length - 4);
     }
     var hover = document.getElementById("hover").value;
+    console.log("Display Only: " + document.getElementById("display_only-1").checked);
     var surveyData = [{
         questionid: questionid,
         shortname: shortname,
@@ -733,12 +758,12 @@ function RefreshPreview() {
         hover: hover,
         typeid: document.getElementById("typename").selectedOptions.item(0).getAttribute("data-typeid"),
         typename: document.getElementById("typename").value,
-        required: document.getElementById("required-1").checked,
-        publish: document.getElementById("publish-1").checked,
-        privacy_user: document.getElementById("privacy_user-1").checked,
-        searchable: document.getElementById("searchable-1").checked,
-        ascending: document.getElementById("ascending-1").checked,
-        display_only: document.getElementById("display_only-1").checked,
+        required: document.getElementById("required-1").checked ? 1 : 0,
+        publish: document.getElementById("publish-1").checked ? 1 : 0,
+        privacy_user: document.getElementById("privacy_user-1").checked ? 1 : 0,
+        searchable: document.getElementById("searchable-1").checked ? 1 : 0,
+        ascending: document.getElementById("ascending-1").checked ? 1 : 0,
+        display_only: document.getElementById("display_only-1").checked ? 1 : 0,
         min_value: document.getElementById("min_value").value,
         max_value: document.getElementById("max_value").value
     }];

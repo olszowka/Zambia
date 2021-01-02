@@ -93,9 +93,94 @@
                   </xsl:attribute>
                   <xsl:value-of select="@prompt"/>
                   <xsl:if test="@required = 1">
-                    <span style="color: #990012;">
-                      <xsl:text disable-output-escaping="yes">*</xsl:text>
+                    <span style="color: #990012; font-weight: bold; font-size: 125%;">
+                      <xsl:text>*</xsl:text>
                     </span>
+                  </xsl:if>
+                  <xsl:if test="@publish = 1">
+                    <span style="color: #009912; font-weight: bold; font-size: 125%;">
+                      <xsl:text>&#8224;</xsl:text>
+                    </span>
+                  </xsl:if>
+                  <xsl:if test=" @publish = 1 and @privacy_user = 1">
+                    <br/>
+                    <i>Allow  to be published:&#160;&#160;</i>
+                    <xsl:choose>
+                      <xsl:when test="@display_only=0">
+                        <div>
+                          <xsl:attribute name="class">
+                            <xsl:text>form-check-inline</xsl:text>
+                          </xsl:attribute>
+                          <input class="form-check-input" type="radio">
+                            <xsl:attribute name="id">
+                              <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+                              <xsl:text>-privacyuser-1</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="name">
+                              <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+                              <xsl:text>-privacyuser</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="value">
+                              <xsl:text>1</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="onChange">
+                              <xsl:text>RadioChangeUserprivacy(this);</xsl:text>
+                            </xsl:attribute>
+                            <xsl:if test="@privacy_setting=1">
+                              <xsl:attribute name="checked"/>
+                            </xsl:if>
+                          </input>
+                          <label class="form-check-label">
+                            <xsl:attribute name="for">
+                              <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+                              <xsl:text>-privacyuser-1</xsl:text>
+                            </xsl:attribute>
+                            <i>Yes</i>
+                          </label>
+                        </div>
+                        <div>
+                          <xsl:attribute name="class">
+                            <xsl:text>form-check-inline</xsl:text>
+                          </xsl:attribute>
+                          <input class="form-check-input" type="radio">
+                            <xsl:attribute name="id">
+                              <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+                              <xsl:text>-privacyuser-0</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="name">
+                              <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+                              <xsl:text>-privacyuser</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="value">
+                              <xsl:text>0</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="onChange">
+                              <xsl:text>RadioChangeUserprivacy(this);</xsl:text>
+                            </xsl:attribute>
+                            <xsl:if test="@privacy_setting=0">
+                              <xsl:attribute name="checked"/>
+                            </xsl:if>
+                          </input>
+                          <label class="form-check-label">
+                            <xsl:attribute name="for">
+                              <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+                              <xsl:text>-privacyuser-0</xsl:text>
+                            </xsl:attribute>
+                            <i>No</i>
+                          </label>
+                        </div>
+                      </xsl:when>
+                      <xsl:when test="@display_only=1">
+                        <xsl:choose>
+                          <xsl:when test="@privacy_setting=0">
+                            <i>No</i>
+                          </xsl:when>
+                          <xsl:when test="@privacy_setting=1">
+                            <i>Yes</i>
+                          </xsl:when>
+                        </xsl:choose>
+                      </xsl:when>
+                    </xsl:choose>
                   </xsl:if>
                 </span>
               </div>
@@ -108,7 +193,7 @@
                       <xsl:value-of select="@othertext"/>
                     </xsl:if>
                     <xsl:if test="$buttons='refresh'">
-                      <xsl:text>Display Only set will show answer to question </xsl:text>
+                      <xsl:text>Display Only set, will show answer to question </xsl:text>
                       <xsl:value-of select="@questionid"/>
                       <xsl:text>: </xsl:text>
                       <xsl:value-of select="@shortname"/>    

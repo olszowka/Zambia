@@ -31,8 +31,8 @@ if (isLoggedIn()) {
 			//var_dump($shortname_types);
             }
 		// find the data to insert/update
-		//	echo "<h1>Submitted data</h1>";
-		//	var_dump($_POST);
+			//echo "<h1>Submitted data</h1>";
+			//var_dump($_POST);
 
             $sql = <<<EOD
 INSERT INTO ParticipantSurveyAnswers(participantid, questionid, privacy_setting, value, othertext, updatedby)
@@ -60,6 +60,12 @@ EOD;
 					if ($othertext == '')
 						$othertext = null;
 
+					$privacyname = $obj->id . "-privacyuser";
+					if (isset($_POST[$privacyname]))
+						$privacyuser = $_POST[$privacyname];
+					else
+                        $privacyuser = 0;
+
                     switch ($obj->typename) {
                         case "monthyear":
                             $separator = ' ';
@@ -69,13 +75,12 @@ EOD;
                             //echo "processing " . $obj->typename . "<br/>";
                             //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
                             $ans = implode($separator, $_POST[$obj->id]);
-                            $parms= array($badgeid, $obj->questionid, 0, $ans, $othertext, $badgeid, 0, $ans, $othertext, $badgeid);
-                            //var_dump($parms);
+                            $parms= array($badgeid, $obj->questionid, $privacyuser, $ans, $othertext, $badgeid, $privacyuser, $ans, $othertext, $badgeid);
                             break;
                         default:
                             //echo "processing default for " . $obj->typename . "<br/>";
                             //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
-                            $parms= array($badgeid, $obj->questionid, 0, $_POST[$obj->id], $othertext, $badgeid, 0, $_POST[$obj->id], $othertext, $badgeid);
+                            $parms= array($badgeid, $obj->questionid, $privacyuser, $_POST[$obj->id], $othertext, $badgeid, $privacyuser, $_POST[$obj->id], $othertext, $badgeid);
                     }
                     //var_dump($parms);
                     $rows_modified = mysql_cmd_with_prepare($sql, $types, $parms);
