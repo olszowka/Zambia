@@ -750,7 +750,6 @@ function RefreshPreview() {
         prompt = prompt.substring(3, prompt.length - 4);
     }
     var hover = document.getElementById("hover").value;
-    console.log("Display Only: " + document.getElementById("display_only-1").checked);
     var surveyData = [{
         questionid: questionid,
         shortname: shortname,
