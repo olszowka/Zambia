@@ -1,6 +1,6 @@
 /**
  * File created by Peter Olszowka July 17, 2020
- * Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 /* Page Header Stuff */
 .header-wrapper {
@@ -26,15 +26,21 @@
 .dropdown-item:hover {
   background-color: #e7ebee;
 }
+.invalid-feedback {
+  font-size: unset;
+}
 /* end of bootstrap overrides */
-/* Bootstrap extensions */
+/* Bootstrap 4 extensions */
 .col-0p5,
 .col-0p75,
 .col-1p25,
 .col-1p5,
 .col-1p75,
 .col-2p75,
-.col-3p25 {
+.col-3p25,
+.col-md-2p5,
+.col-lg-2p5,
+.col-xl-2p25 {
   position: relative;
   width: 100%;
   padding-right: 15px;
@@ -68,7 +74,29 @@
   flex: 0 0 27.083333%;
   max-width: 27.083333%;
 }
-/* End of Bootstrap extensions */
+@media (min-width: 576px) and (max-width: 767px) {
+  .col-sm-3p5 {
+    flex: 0 0 29.16667%;
+    max-width: 29.16667%;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .col-lg-2p5 {
+    flex: 0 0 20.83333%;
+    max-width: 20.83333%;
+  }
+}
+@media (min-width: 1200px) {
+  .col-xl-2p25 {
+    flex: 0 0 18.75%;
+    max-width: 18.75%;
+  }
+}
+.badge.badge-full-width {
+  width: 100%;
+  text-align: left;
+}
+/* End of Bootstrap 4 extensions */
 /* General Form Defaults */
 .tag-chk-legend {
   float: left;
@@ -96,14 +124,21 @@
 .tag-chk {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
-  /* width:2rem; */
-  /* vertical-align:-1px; */
 }
 .tag-match-radio {
   width: 1.5rem;
 }
 .tag-match-label {
   padding-right: 1.5rem;
+}
+input[type='text'],
+input[type='password'] {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+input[type='text'].disabled {
+  background-color: #e5e5e5;
+  font-style: italic;
 }
 /* End of General Form Defaults */
 /* Tabular display of session/schedule data */

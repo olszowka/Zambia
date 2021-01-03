@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 /**
  * LAYOUT
@@ -93,14 +93,8 @@ a {
   padding-right: 1em;
   text-align: right;
 }
-.note {
-  font-size: 0.85em;
-}
 .compact {
   margin-bottom: 0;
-}
-.congo_table {
-  margin-top: 1em;
 }
 .topBorder {
   border-top: 2px solid white;

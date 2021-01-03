@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 /*
  * mysql_cmd_with_prepare_multi:
@@ -56,6 +56,7 @@ function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
         $stmt = mysqli_prepare($linki, $query);
         mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
         mysqli_stmt_execute($stmt);
+        // $foo = mysqli_info($linki);
 		$rows = $rows + mysqli_affected_rows($linki);
         mysqli_stmt_close($stmt);
     }
@@ -69,6 +70,35 @@ function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
     }
 
 	return $rows;
+}
+
+function mysql_prepare_query_XML($query_array, $parmtype_array, $param_array) {
+	global $linki, $message_error;
+	$xml = new DomDocument("1.0", "UTF-8");
+	$doc = $xml -> createElement("doc");
+	$doc = $xml -> appendChild($doc);
+    foreach ($query_array as $name=>$query) {
+        $query = trim($query);
+        $parama = $param_array[$name];
+        $params = $parmtype_array[$name];
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, $params, $parama);
+        $queryNode = $xml -> createElement("query");
+        $queryNode = $doc -> appendChild($queryNode);
+        $queryNode->setAttribute("queryName", $name);
+        if ($result !== false) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $rowNode = $xml->createElement("row");
+                $rowNode = $queryNode->appendChild($rowNode);
+                foreach ($row as $fieldname => $fieldvalue) {
+                    if ($fieldvalue !== "" && $fieldvalue !== null) {
+                        $rowNode->setAttribute($fieldname, $fieldvalue);
+                    }
+                }
+            }
+        }
+        mysqli_free_result($result);
+    }
+	return $xml;
 }
 
 function mysql_query_XML($query_array) {
@@ -263,6 +293,30 @@ function prepare_db_and_more() {
 
 
     return true;
+}
+
+/*
+ * push_query_arrays:
+ *  Use to build up an update query from the page query parameters which are populated
+ *  $value -- value field to be updated to including (""); should be NULL if not to be updated
+ *  $field_name -- name of column in db table
+ *  $param_type -- 's' or 'i'; string or integer
+ *  $max_len -- for strings only; integer maximum length permitted by db column
+ *  $query_portion_arr -- array to collect portions of query in "foo = bar" format
+ *  $query_param_arr -- array of parameters to be sent to prepared statement executor
+ *  $query_param_type_str -- string of parameter types to be sent to prepared statement executor
+ */
+function push_query_arrays($value, $field_name, $param_type, $max_len, &$query_portion_arr, &$query_param_arr, &$query_param_type_str) {
+    if (!empty($value) || $value === '') {
+        if ($param_type === 's' && mb_strlen($value) > $max_len && $max_len !== 0) {
+            $message_error = "$field_name field is greater than maximum length of $max_len.  Db not updated.";
+            RenderErrorAjax($message_error);
+            exit();
+        }
+        $query_portion_arr[] = "$field_name = ?";
+        $query_param_arr[] = $value;
+        $query_param_type_str .= $param_type;
+    }
 }
 
 // The table SessionEditHistory has a timestamp column which is automatically set to the
@@ -465,6 +519,7 @@ UPDATE Sessions SET
         title="{$sessionf["title"]}",
         secondtitle="{$sessionf["secondtitle"]}",
         pocketprogtext="{$sessionf["pocketprogtext"]}",
+        progguidhtml="{$sessionf["progguidhtml"]}",
         progguiddesc="{$sessionf["progguiddesc"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
@@ -476,7 +531,8 @@ UPDATE Sessions SET
         notesforpart="{$sessionf["notesforpart"]}",
         servicenotes="{$sessionf["servnotes"]}",
         statusid="{$sessionf["status"]}",
-        notesforprog="{$sessionf["notesforprog"]}"
+        notesforprog="{$sessionf["notesforprog"]}",
+        meetinglink="{$sessionf["mlink"]}"
     WHERE
         sessionid = $id;
 EOD;
@@ -567,6 +623,8 @@ INSERT INTO Sessions SET
         secondtitle="{$sessionf["secondtitle"]}",
         pocketprogtext="{$sessionf["pocketprogtext"]}",
         progguiddesc="{$sessionf["progguiddesc"]}",
+        progguidhtml="{$sessionf["progguidhtml"]}",
+        meetinglink="{$sessionf["mlink"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
         estatten={$sessionf["estatten"]},
@@ -632,6 +690,8 @@ function filter_session() {
     $session2["secondtitle"] = mysqli_real_escape_string($linki, $session["secondtitle"]);
     $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
     $session2["progguiddesc"] = mysqli_real_escape_string($linki, $session["progguiddesc"]);
+    $session2["progguidhtml"] = mysqli_real_escape_string($linki, $session["progguidhtml"]);
+    $session2["mlink"] = mysqli_real_escape_string($linki, $session["mlink"]);
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
     if (DURATION_IN_MINUTES === TRUE) {
         $session2["duration"] = conv_min2hrsmin($session["duration"]);
@@ -683,9 +743,11 @@ function retrieve_session_from_db($sessionid) {
     $query = <<<EOD
 SELECT
         sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
-        title, secondtitle, pocketprogtext, progguiddesc, persppartinfo, duration,
-        estatten, kidscatid, signupreq, roomsetid, notesforpart, servicenotes,
-        statusid, notesforprog, warnings, invitedguest, ts
+        title, secondtitle, pocketprogtext,
+        CASE WHEN ISNULL(progguiddesc) THEN progguidhtml ELSE progguiddesc END AS progguiddesc,
+        CASE WHEN ISNULL(progguidhtml) THEN progguiddesc ELSE progguidhtml END AS progguidhtml,
+        persppartinfo, duration, estatten, kidscatid, signupreq, roomsetid, notesforpart,
+        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink
     FROM
         Sessions
     WHERE
@@ -712,6 +774,7 @@ EOD;
     $session["secondtitle"] = $sessionarray["secondtitle"];
     $session["pocketprogtext"] = $sessionarray["pocketprogtext"];
     $session["progguiddesc"] = $sessionarray["progguiddesc"];
+    $session["progguidhtml"] = $sessionarray["progguidhtml"];
     $session["persppartinfo"] = $sessionarray["persppartinfo"];
     $timearray = parse_mysql_time_hours($sessionarray["duration"]);
     if (DURATION_IN_MINUTES === TRUE) {
@@ -728,6 +791,7 @@ EOD;
     $session["status"] = $sessionarray["statusid"];
     $session["notesforprog"] = $sessionarray["notesforprog"];
     $session["invguest"] = $sessionarray["invitedguest"];
+    $session["mlink"] = $sessionarray["meetinglink"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";
     if (!$result = mysqli_query_with_error_handling($query)) {

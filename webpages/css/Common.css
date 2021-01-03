@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 
 /* This section is part of the CSS refactor 1 Feb 2011 PBO*/
@@ -43,16 +43,7 @@ textarea.readonly {
 .newforminputspan {
 }
 
-.newformlabelspan {
-}
-
 .newformselectspan {
-}
-
-.newforminput {
-}
-
-.newformlabel {
 }
 
 .newformselect {

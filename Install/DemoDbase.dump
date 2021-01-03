@@ -1,4 +1,4 @@
--- Copyright (c) 2011-2020 by Peter Olszowka. All rights reserved. See copyright document for more details.
+-- Copyright (c) 2011-2021 by Peter Olszowka. All rights reserved. See copyright document for more details.
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -66,6 +66,38 @@ INSERT INTO `CongoDump` VALUES ('1','First','Staff','Staff','781-555-1212','some
      ('2','First','Participant','Participant','617-555-1212','someoneelse@somewhereelse.com','123 Fifth Street',NULL,'Boston','MA','02100','USA','');
 /*!40000 ALTER TABLE `CongoDump` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `CongoDumpHistory`
+--
+
+DROP TABLE IF EXISTS `CongoDumpHistory`;
+CREATE TABLE CongoDumpHistory (
+    `badgeid` varchar(15) NOT NULL DEFAULT '',
+    `firstname` varchar(30) DEFAULT NULL,
+    `lastname` varchar(40) DEFAULT NULL,
+    `badgename` varchar(51) DEFAULT NULL,
+    `phone` varchar(100) DEFAULT NULL,
+    `email` varchar(100) DEFAULT NULL,
+    `postaddress1` varchar(100) DEFAULT NULL,
+    `postaddress2` varchar(100) DEFAULT NULL,
+    `postcity` varchar(50) DEFAULT NULL,
+    `poststate` varchar(25) DEFAULT NULL,
+    `postzip` varchar(10) DEFAULT NULL,
+    `postcountry` varchar(25) DEFAULT NULL,
+    `regtype` varchar(40) DEFAULT NULL,
+    `createdts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `createdbybadgeid` varchar(15) NOT NULL DEFAULT '',
+    `inactivatedts` timestamp NULL DEFAULT NULL,
+    `inactivatedbybadgeid` varchar(15) DEFAULT NULL,
+    PRIMARY KEY (`badgeid`,`createdts`),
+    KEY `badgeid` (`badgeid`),
+    KEY `createdbybadgeid` (`createdbybadgeid`),
+    KEY `inactivatedbybadgeid` (`inactivatedbybadgeid`),
+    CONSTRAINT `CongoDumpHistory_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+    CONSTRAINT `CongoDumpHistory_ibfk_2` FOREIGN KEY (`createdbybadgeid`) REFERENCES `Participants` (`badgeid`),
+    CONSTRAINT `CongoDumpHistory_ibfk_3` FOREIGN KEY (`inactivatedbybadgeid`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Contains changes to user information from registration system.';
 
 --
 -- Table structure for table `Credentials`
@@ -792,7 +824,7 @@ CREATE TABLE `PermissionAtoms` (
 
 LOCK TABLES `PermissionAtoms` WRITE;
 /*!40000 ALTER TABLE `PermissionAtoms` DISABLE KEYS */;
-INSERT INTO `PermissionAtoms` VALUES
+INSERT INTO `PermissionAtoms` (permatomid, permatomtag, elementid, page, notes) VALUES
     (1,'Staff',NULL,'renderWelcome','Enables staff menu link'),
     (2,'Administrator',NULL,'many','Reconfigure reports + ???'),
     (3,'Participant',NULL,'many','Login as Participant'),
@@ -811,7 +843,8 @@ INSERT INTO `PermissionAtoms` VALUES
     (16,'EditSesNtsAsgnPartPg',NULL,'StaffAssignParticipants','Edit «Notes for Program Staff» on «Assign Participants» page.'),
     (17,'ConfigureReports',NULL,'ConfigureReports','Enable menu option'),
     (18,'ResetUserPassword',NULL,'AdminParticipants','No one needs this permission once password overhaul is implemented and system has email integration.'),
-    (19,'AdminPhases',NULL,'AdminPhases','Change phase of Zambia use, allowing which sections are current.');
+    (19,'AdminPhases',NULL,'AdminPhases','Change phase of Zambia use, allowing which sections are current.'),
+    (20,'CreateUser',NULL,'CreateUser','Manually create user.');
 /*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
 UNLOCK TABLES;
 

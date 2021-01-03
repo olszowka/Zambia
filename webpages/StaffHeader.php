@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section;
 $header_section = HEADER_STAFF;
 
@@ -42,6 +42,7 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
     if ($isLoggedIn) {
         $paramArray = array();
         $paramArray["title"] = $title;
+        $paramArray["adduser"] = !USE_REG_SYSTEM;
         try {
             $reportMenuIncludeFilName = $bootstrap4 ? 'ReportMenuBS4Include.php' : 'ReportMenuInclude.php';
             $reportMenuIncludeFilHand = fopen ($reportMenuIncludeFilName,  'r');
@@ -62,4 +63,3 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
         exit();
     }
 }
-?>

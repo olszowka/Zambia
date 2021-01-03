@@ -1,6 +1,6 @@
 /**
  * File created by Peter Olszowka July 17, 2020
- * Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 @import (reference) "zambia_include.less";
 
@@ -34,35 +34,45 @@
         background-color:#e7ebee;
     }
 }
+
+.invalid-feedback {
+    font-size: unset;
+}
 /* end of bootstrap overrides */
 
-/* Bootstrap extensions */
-.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25 {
+/* Bootstrap 4 extensions */
+.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25, .col-md-2p5, .col-lg-2p5, .col-xl-2p25 {
     position: relative;
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
 }
+
 .col-0p5 {
     flex: 0 0 4.166667%;
     max-width: 4.166667%;
 }
+
 .col-0p75 {
     flex: 0 0 6.25%;
     max-width: 6.25%;
 }
+
 .col-1p25 {
     flex: 0 0 10.416667%;
     max-width: 10.416667%;
 }
+
 .col-1p5 {
     flex: 0 0 12.5%;
     max-width: 12.5%;
 }
+
 .col-1p75 {
     flex: 0 0 14.583333%;
     max-width: 14.583333%;
 }
+
 .col-2p75 {
     flex: 0 0 22.916667%;
     max-width: 22.916667%;
@@ -73,7 +83,37 @@
     max-width: 27.083333%;
 }
 
-/* End of Bootstrap extensions */
+@media (min-width: 576px) and (max-width: 767px) {
+    .col-sm-3p5 {
+        flex: 0 0 29.16667%;
+        max-width: 29.16667%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .col-lg-2p5 {
+        flex: 0 0 20.83333%;
+        max-width: 20.83333%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2p25 {
+        flex: 0 0 18.75%;
+        max-width: 18.75%;
+    }
+}
+
+.badge.badge-full-width {
+    width: 100%;
+    text-align: left;
+}
+
+/* End of Bootstrap 4 extensions */
 
 /* General Form Defaults */
 
@@ -84,6 +124,7 @@
     font-size: initial;
     margin-right:0.25rem;
 }
+
 .tag-chk-container {
     display:inline-block;
     background-color:@white;
@@ -95,20 +136,34 @@
     overflow-y:scroll;
     width:fit-content;
 }
+
 .tag-chk-label {
     display:block;
     line-height:1.05;
     width:fit-content;
 }
+
 .tag-chk {
     margin-left:0.5rem;
     margin-right:0.5rem;
 }
+
 .tag-match-radio {
     width: 1.5rem;
 }
+
 .tag-match-label {
     padding-right: 1.5rem;
+}
+
+input[type='text'], input[type='password'] {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+input[type='text'].disabled {
+    background-color: @lightest-gray;
+    font-style: italic;
 }
 
 /* End of General Form Defaults */
@@ -136,6 +191,7 @@
         }
     }
 }
+
 .expander {
     font-size: 1.75rem;
     transform: translate(-0.5rem, -0.5rem) rotate(0deg);

@@ -1,314 +1,497 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Created by Peter Olszowka on 2011-07-24; Updated 2015-08-29
-	Copyright (c) 2011-2016 Peter Olszowka. All rights reserved.
+	Created by Peter Olszowka on 2011-07-24;
+	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved.
 	See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output encoding="UTF-8" indent="yes" method="xml" />
-<xsl:template match="/">
-    <xsl:variable name="conName"><xsl:value-of select="/doc/options/@conName"/></xsl:variable>
-    <xsl:variable name="enableBioEdit"><xsl:value-of select="/doc/options/@enableBioEdit"/></xsl:variable>
-    <xsl:variable name="interested"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@interested"/></xsl:variable>
-    <xsl:variable name="share_email"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@share_email"/></xsl:variable>
-    <xsl:variable name="use_photo"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@use_photo"/></xsl:variable>
-    <xsl:variable name="bestway"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bestway"/></xsl:variable>
-    <xsl:variable name="bioNote"><xsl:value-of select="/doc/customText/@biography_note"/></xsl:variable>
-    <xsl:variable name="regURL"><xsl:value-of select="/doc/options/@reg_url"/></xsl:variable>
-    <script type="text/javascript">var maxBioLen = <xsl:value-of select="/doc/options/@maxBioLen"/>;</script>
-    <div class="alert-block" id="resultBoxDIV">
-      <span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.
-      </span>
-    </div>
-    <div class="row-fluid">
-      <div class="span12">
-        <form name="partform" class="form-horizontal" method="POST" action="SubmitMyContact.php">
-          <fieldset>
-          <legend>Permissions</legend>
-            <div class="control-group">
-              <label for="interested" class="control-label nowidth">I am interested and able to participate in programming for <xsl:value-of select="$conName"/>:</label>
-              <div class="controls">
-                <select id="interested" name="interested" class="yesno span2" onchange="myProfile.anyChange('interested');"
-                  onkeyup="myProfile.anyChange('interested')">
-                  <option value="0">
-                      <xsl:if test="$interested=0 or not ($interested)">
-                          <xsl:attribute name="selected">selected</xsl:attribute>
-                      </xsl:if>
-                      <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></option>
-                  <option value="1">
-                      <xsl:if test="$interested=1">
-                          <xsl:attribute name="selected">selected</xsl:attribute>
-                      </xsl:if>
-                      Yes</option>
-                  <option value="2">
-                      <xsl:if test="$interested=2">
-                          <xsl:attribute name="selected">selected</xsl:attribute>
-                      </xsl:if>
-                      No</option>
-                </select>
-              </div>
-            </div>
-          </fieldset>
-          <xsl:choose>
-            <xsl:when test="/doc/options/@enable_share_email_question">
-              <fieldset>
-                <div class="control-group">
-                  <label for="share_email" class="control-label nowidth">I give permission for <xsl:value-of select="$conName"/> to share my email address with other participants:</label>
-                  <div class="controls">
-                    <select id="share_email" name="share_email" class="span2" onchange="myProfile.anyChange('share_email')"
-                        onkeyup="myProfile.anyChange('share_email')">
-                    <option value="null">
-                        <xsl:if test="not($share_email) and $share_email!='0'"><!-- is there an explicit test for null? -->
-                            <xsl:attribute name="selected">selected</xsl:attribute>
-                        </xsl:if>
-                        <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></option>
-                    <option value="0">
-                        <xsl:if test="$share_email='0'">
-                            <xsl:attribute name="selected">selected</xsl:attribute>
-                        </xsl:if>
-                        No</option>
-                    <option value="1">
-                        <xsl:if test="$share_email='1'">
-                            <xsl:attribute name="selected">selected</xsl:attribute>
-                        </xsl:if>
-                        Yes</option>
-                    </select>
-                  </div>
+    <xsl:param name="conName" select="''"/>
+    <xsl:param name="enableShareEmailQuestion" select="'0'"/>
+    <xsl:param name="enableUsePhotoQuestion" select="'0'"/>
+    <xsl:param name="enableBestwayQuestion" select="'0'"/>
+    <xsl:param name="useRegSystem" select="0"/>
+    <xsl:param name="maxBioLen" select="500"/>
+    <xsl:param name="enableBioEdit" select="'0'"/>
+    <xsl:param name="userIdPrompt" select="''"/>
+    <xsl:output encoding="UTF-8" indent="yes" method="xml" />
+    <xsl:template match="/">
+        <xsl:variable name="use_photo" select="/doc/query[@queryName='participant_info']/row/@use_photo" />
+        <xsl:variable name="share_email" select="/doc/query[@queryName='participant_info']/row/@share_email" />
+        <xsl:variable name="interested" select="/doc/query[@queryName='participant_info']/row/@interested" />
+        <xsl:variable name="bestway" select="/doc/query[@queryName='participant_info']/row/@bestway" />
+        <xsl:variable name="bioNote" select="/doc/customText/@biography_note" />
+        <xsl:variable name="regDataNote" select="/doc/customText/@registration_data" />
+        <div id="resultBoxDIV">
+            <span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span>
+        </div>
+        <div class="container-fluid">
+            <form name="partform" class="container mt-2 mb-4">
+                <div class="row mt-3">
+                    <legend>Permissions</legend>
                 </div>
-              </fieldset>
-            </xsl:when>
-            <xsl:otherwise>
-              <input name="share_email" type="hidden" value="{$share_email}"/>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:choose>
-            <xsl:when test="/doc/options/@enable_use_photo_question">
-              <fieldset>
-                <div class="control-group">
-                  <label for="use_photo" class="control-label">I give permission for <xsl:value-of select="$conName"/> to photograph me while I am on panels and to use those
-				  images in the promotion of the convention: <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></label>
-                  <div class="controls">
-                    <select id="use_photo" name="use_photo" class="span2" onchange="myProfile.anyChange('use_photo')"
-                        onkeyup="myProfile.anyChange('use_photo')">
-                    <option value="null">
-                        <xsl:if test="not($use_photo) and $use_photo!='0'"><!-- is there an explicit test for null? -->
-                            <xsl:attribute name="selected">selected</xsl:attribute>
-                        </xsl:if>
-                        <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></option>
-                    <option value="0">
-                        <xsl:if test="$use_photo='0'">
-                            <xsl:attribute name="selected">selected</xsl:attribute>
-                        </xsl:if>
-                        No</option>
-                    <option value="1">
-                        <xsl:if test="$use_photo='1'">
-                            <xsl:attribute name="selected">selected</xsl:attribute>
-                        </xsl:if>
-                        Yes</option>
-                    </select>
-                  </div>
-                </div>
-              </fieldset>
-            </xsl:when>
-            <xsl:otherwise>
-              <input name="use_photo" type="hidden" value="{$use_photo}"/>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:choose>
-            <xsl:when test="/doc/options/@enable_bestway_question">
-              <label for="bestway">Preferred mode of contact:</label>
-              <div class="verticalRadioButs">
-                  <div class="radioNlabel">
-                      <span class="radio">
-                          <input name="bestway" id="bwemailRB" value="Email" type="radio" onchange="myProfile.anyChange('bestway')"
-                              onkeyup="myProfile.anyChange('bestway')">
-                              <xsl:if test="$bestway='Email' or not($bestway)">
-                                  <xsl:attribute name="checked" select="checked"/>
-                              </xsl:if>
-                          </input>
-                      </span>
-                      <span class="radioLabel"><label for="bwemailRB">Email</label></span>
-                  </div>
-                  <div class="radioNlabel">
-                      <span class="radio">
-                          <input name="bestway" id="bwpmailRB" value="Postal mail" type="radio" onchange="myProfile.anyChange('bestway')"
-                              onkeyup="myProfile.anyChange('bestway')">
-                              <xsl:if test="$bestway='Postal mail'">
-                                  <xsl:attribute name="checked" select="checked"/>
-                              </xsl:if>
-                          </input>
-                      </span>
-                      <span class="radioLabel"><label for="bwpmailRB">Postal Mail</label></span>
-                  </div>
-                  <div class="radioNlabel">
-                      <span class="radio">
-                          <input name="bestway" id="bwphoneRB" value="Phone" type="radio" onchange="myProfile.anyChange('bestway')"
-                              onkeyup="myProfile.anyChange('bestway')">
-                              <xsl:if test="$bestway='Phone'">
-                                  <xsl:attribute name="checked" select="checked"/>
-                              </xsl:if>
-                          </input>
-                      </span>
-                      <span class="radioLabel"><label for="bwphoneRB">Phone</label></span>
-                  </div>
-              </div>
-            </xsl:when>
-            <xsl:otherwise>
-              <input name="bestway" id="bestway" type="hidden" value="{$bestway}"/>
-            </xsl:otherwise>
-          </xsl:choose>
-          <fieldset>
-            <div class="control-group" id="passGroup">
-              <label for="password" class="control-label compact">New Password:</label>
-              <div class="controls">
-                <input type="password" size="10" name="password" id="password" onchange="myProfile.anyChange('password')" onkeyup="myProfile.anyChange('password')"/>
-              </div>
-              <label for="cpassword" class="control-label compact">Confirm Password:</label>
-              <div class="controls">
-                <input type="password" size="10" name="cpassword" id="cpassword"  onchange="myProfile.anyChange('cpassword')" onkeyup="myProfile.anyChange('cpassword')"/>
-                <span id="badPassword" class="help-inline"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>Passwords don't match!</span>
-              </div>
-            </div>
-          </fieldset>
-          <legend>Biography</legend>
-          <div class="control-group">
-          <xsl:if test="$enableBioEdit!='1'">
-              <h3 class="noteWLfPad">At this time, you may not edit either your biography or your name for publication. They have already gone to print.</h3>
-          </xsl:if>
-              <label for="pubsname" class="control-label nowidth">Your name as you wish to have it published:</label>
-              <div class="controls">
-                  <input type="text" size="20" name="pubsname" value="{/doc/query[@queryName='participant_info']/row/@pubsname}"
-                      id="pubsname" onchange="myProfile.anyChange('pubsname')" onkeyup="myProfile.anyChange('pubsname')"
-                      class="userFormINPTXT">
-                      <xsl:if test="$enableBioEdit!='1'">
-                          <xsl:attribute name="readonly">readonly</xsl:attribute>
-                      </xsl:if>
-                  </input>
-              </div>
-          </div>
-          <div class="control-group" id="bioGroup">
-            <label for="bio">Your biography (<xsl:value-of select="/doc/options/@maxBioLen"/> characters or fewer including spaces):</label>
-            <div>
-              <textarea class="span12" rows="5" cols="72" name="bio" id="bioTXTA" onchange="myProfile.anyChange('bioTXTA')"
-                  onkeyup="myProfile.anyChange('bioTXTA')"><xsl:choose>
-                  <xsl:when test="$enableBioEdit!='1'">
-                      <xsl:attribute name="readonly">readonly</xsl:attribute>
-                      <xsl:attribute name="class">span12 userFormTXT readonly</xsl:attribute>
-                  </xsl:when>
-                  <xsl:otherwise>
-                      <xsl:attribute name="class">span12 userFormTXT</xsl:attribute>
-                  </xsl:otherwise>
-                  </xsl:choose><xsl:value-of
-                  select="/doc/query[@queryName='participant_info']/row/@bio"/>
-              </textarea>
-              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><span id="badBio" class="help-inline">Biography is too long!</span>
-            </div>
-            <xsl:if test="$bioNote">
-                <div class="note"><xsl:value-of select="$bioNote" disable-output-escaping="yes"/></div>
-            </xsl:if>
-          </div>
-          <xsl:if test="/doc/query[@queryName='credentials']/row">
-              <legend>Professions</legend>
-              <div class="control-group">
-                <label>Please indicate if you are any of the following:</label>
-                <div>
-                  <xsl:for-each select="/doc/query[@queryName='credentials']/row">
-                      <xsl:sort select="@display_order" data-type="number"/>
-                      <label class="checkbox">
-                          <xsl:value-of select="@credentialname"/>
-                        <input class="checkbox" id="credentialCHK{@credentialid}" type="checkbox"
-                            onchange="myProfile.anyChange('credentialCHK{@credentialid}')"
-                            onkeyup="myProfile.anyChange('credentialCHK{@credentialid}')">
-                            <xsl:if test="@badgeid">
-                                <xsl:attribute name="checked" value="checked"/>
-                            </xsl:if>
-                            <xsl:if test="$enableBioEdit!='1'">
-                                <xsl:attribute name="disabled" value="disabled"/>
-                                <xsl:attribute name="class" value="readonly"/>
-                            </xsl:if>
-                        </input>
-                      </label>
-                  </xsl:for-each>
-                </div>
-              </div>
-          </xsl:if>
-            <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN" data-loading-text="Updating..." onclick="myProfile.updateBUTN();">Update</button>
-            <div id="congo_section">
-        		  <fieldset>
-          			<legend>Data from Registration System</legend>
-          			<div class="row-fluid">
-            			<div class="pull-left span5">
-                    <div class="congo_table">
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Badge ID</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgeid"/></span>
+                <fieldset>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="interested">
+                                I am interested and able to participate in programming for <xsl:value-of select="$conName"/>:
+                            </label>
                         </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">First Name</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@firstname"/></span>
+                        <div class="col-auto">
+                            <select id="interested" name="interested" class="mb-2 pl-2 pr-4 mycontrol">
+                                <option value="0">
+                                    <xsl:if test="$interested=0 or not ($interested)">
+                                        <xsl:attribute name="selected">selected</xsl:attribute>
+                                    </xsl:if>
+                                    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                                </option>
+                                <option value="1">
+                                    <xsl:if test="$interested=1">
+                                        <xsl:attribute name="selected">selected</xsl:attribute>
+                                    </xsl:if>
+                                    Yes
+                                </option>
+                                <option value="2">
+                                    <xsl:if test="$interested=2">
+                                        <xsl:attribute name="selected">selected</xsl:attribute>
+                                    </xsl:if>
+                                    No
+                                </option>
+                            </select>
                         </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Last Name</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@lastname"/></span>
-                        </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Badge Name</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgename"/></span>
-                        </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Phone Info</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@phone"/></span>
-                        </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Email Address</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@email"/></span>
-                        </div>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4">Postal Address</span>
-                            <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postaddress1"/></span>
-                        </div>
-                        <xsl:if test="/doc/query[@queryName='participant_info']/row/@postaddress2">
-                            <div class="congo_data row-fluid">
-                                <span class="label span4"><xsl:text disable-output-escaping="yes">Postal Address</xsl:text></span>
-                                <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postaddress2"/></span>
-                            </div>
-                        </xsl:if>
-                        <div class="congo_data row-fluid">
-                            <span class="label span4"><xsl:text disable-output-escaping="yes">Postal City</xsl:text></span>
-                            <span class="value span7">
-								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcity"/>,
-								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@poststate"/>
-								<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-								<xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postzip"/>
-							</span>
-                        </div>
-                        <xsl:if test="/doc/query[@queryName='participant_info']/row/@postcountry">
-                            <div class="congo_data row-fluid">
-                                <span class="label span4"><xsl:text disable-output-escaping="yes">Postal Country</xsl:text></span>
-                                <span class="value span7"><xsl:value-of select="/doc/query[@queryName='participant_info']/row/@postcountry"/></span>
-                            </div>
-                        </xsl:if>
                     </div>
-                  </div>
-                  <div class="pull-left span7">
-                    <p class="congo_table">Please confirm your contact information.  If it is not correct, please log into <xsl:value-of select="$conName"/>'s
-                        <a href="{$regURL}" target="_blank">on-line registration system</a> and correct it there.
-                        Please note that the password there is <span style="font-weight: bold">not the same</span> as the one you use
-                        in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>
-                  </div>
+                </fieldset>
+                <xsl:choose>
+                    <xsl:when test="$enableShareEmailQuestion = '1'">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <label for="share_email">
+                                        I give permission for <xsl:value-of select="$conName"/>
+                                        to share my email address with other participants:
+                                    </label>
+                                </div>
+                                <div class="col-auto">
+                                    <select id="share_email" name="share_email" class="mb-2 pl-2 pr-4 mycontrol">
+                                        <option value="null">
+                                            <xsl:if test="not($share_email) and $share_email !='0'"><!-- is there an explicit test for null? -->
+                                                <xsl:attribute name="selected">selected</xsl:attribute>
+                                            </xsl:if>
+                                            <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                                        </option>
+                                        <option value="0">
+                                            <xsl:if test="$share_email = '0'">
+                                                <xsl:attribute name="selected">selected</xsl:attribute>
+                                            </xsl:if>
+                                            No
+                                        </option>
+                                        <option value="1">
+                                            <xsl:if test="$share_email = '1'">
+                                                <xsl:attribute name="selected">selected</xsl:attribute>
+                                            </xsl:if>
+                                            Yes
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <input name="share_email" type="hidden" value="{$share_email}"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="$enableUsePhotoQuestion = '1'">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <label for="use_photo">
+                                        I give permission for <xsl:value-of select="$conName"/> to photograph me while
+                                        I am on panels and to use those images in the promotion of the convention:
+                                    </label>
+                                </div>
+                                <div class="col-auto">
+                                    <select id="use_photo" name="use_photo" class="mb-2 pl-2 pr-4 mycontrol">
+                                        <option value="null">
+                                            <xsl:if test="not($use_photo) and $use_photo != '0'"><!-- is there an explicit test for null? -->
+                                                <xsl:attribute name="selected">selected</xsl:attribute>
+                                            </xsl:if>
+                                            <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                                        </option>
+                                        <option value="0">
+                                            <xsl:if test="$use_photo = '0'">
+                                                <xsl:attribute name="selected">selected</xsl:attribute>
+                                            </xsl:if>
+                                            No
+                                        </option>
+                                        <option value="1">
+                                            <xsl:if test="$use_photo = '1'">
+                                                <xsl:attribute name="selected">selected</xsl:attribute>
+                                            </xsl:if>
+                                            Yes
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <input name="use_photo" type="hidden" value="{$use_photo}"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="$enableBestwayQuestion = '1'">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <label for="bestway">Preferred mode of contact:</label>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="verticalRadioButs">
+                                        <div class="radioNlabel">
+                                            <span class="radio">
+                                                <input name="bestway" id="bwemailRB" value="Email" type="radio" class="mycontrol">
+                                                    <xsl:if test="$bestway='Email' or not($bestway)">
+                                                        <xsl:attribute name="checked">checked</xsl:attribute>
+                                                    </xsl:if>
+                                                </input>
+                                            </span>
+                                            <span class="radioLabel">
+                                                <label for="bwemailRB">Email</label>
+                                            </span>
+                                        </div>
+                                        <div class="radioNlabel">
+                                            <span class="radio">
+                                                <input name="bestway" id="bwpmailRB" value="Postal mail" type="radio" class="mycontrol">
+                                                    <xsl:if test="$bestway='Postal mail'">
+                                                        <xsl:attribute name="checked">checked</xsl:attribute>
+                                                    </xsl:if>
+                                                </input>
+                                            </span>
+                                            <span class="radioLabel">
+                                                <label for="bwpmailRB">Postal Mail</label>
+                                            </span>
+                                        </div>
+                                        <div class="radioNlabel">
+                                            <span class="radio">
+                                                <input name="bestway" id="bwphoneRB" value="Phone" type="radio" class="mycontrol">
+                                                    <xsl:if test="$bestway='Phone'">
+                                                        <xsl:attribute name="checked">checked</xsl:attribute>
+                                                    </xsl:if>
+                                                </input>
+                                            </span>
+                                            <span class="radioLabel">
+                                                <label for="bwphoneRB">Phone</label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <input name="bestway" id="bestway" type="hidden" value="{$bestway}"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <div class="row mt-3">
+                    <legend>Change password</legend>
                 </div>
-        		  </fieldset>
+                <div class="row mb-3">
+                    <div class="col-auto">Leave passwords fields blank to leave password unchanged.</div>
+                </div>
+                <fieldset id="passGroup" class="control-group">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="password">New Password:</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="password" size="40" maxlength="40" name="password" id="password"
+                                class="form-control mycontrol mb-2" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="cpassword">Confirm Password:</label>
+                        </div>
+                        <div class="col-4 mb-2">
+                            <input type="password" size="40" maxlength="40" name="cpassword" id="cpassword"
+                                class="form-control mycontrol mb-2" />
+                            <div class="invalid-feedback">
+                                Passwords don't match!
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="row mt-3">
+                        <legend>Published Information</legend>
+                    </div>
+                    <xsl:if test="$enableBioEdit!='1'">
+                        <div class="row">
+                            <h3 class="noteWLfPad">At this time, you may not edit either your biography or your name for
+                                publication. They have already gone to print.
+                            </h3>
+                        </div>
+                    </xsl:if>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="pubsname">Your name as you wish to have it published:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="text" size="20" maxlength="50" name="pubsname"
+                                value="{/doc/query[@queryName='participant_info']/row/@pubsname}"
+                                id="pubsname" class="mycontrol userFormINPTXT">
+                                <xsl:if test="$enableBioEdit!='1'">
+                                    <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                </xsl:if>
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="bio">
+                                Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
+                                spaces):
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <textarea rows="5" cols="72" name="bio" id="bioTXTA" data-max-length="{$maxBioLen}">
+                                <xsl:choose>
+                                    <xsl:when test="$enableBioEdit!='1'">
+                                        <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                        <xsl:attribute name="class">span12 userFormTXT readonly mycontrol form-control</xsl:attribute>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:attribute name="class">span12 userFormTXT mycontrol form-control</xsl:attribute>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
+                            </textarea>
+                            <div id="badBio" class="invalid-feedback">Biography is too long!</div>
+                        </div>
+                    </div>
+                    <xsl:if test="$bioNote">
+                        <div class="row mt-1">
+                            <div class="col note">
+                                <xsl:value-of select="$bioNote" disable-output-escaping="yes"/>
+                            </div>
+                        </div>
+                     </xsl:if>
+                </fieldset>
+                <xsl:if test="/doc/query[@queryName='credentials']/row">
+                    <fieldset>
+                        <div class="row mt-3">
+                            <legend>Professions</legend>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <div>Please indicate if you are any of the following:</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-9 col-lg-6">
+                                <div class="row">
+                                    <xsl:for-each select="/doc/query[@queryName='credentials']/row">
+                                        <xsl:sort select="@display_order" data-type="number"/>
+                                        <div class="col-sm-6">
+                                            <label class="checkbox">
+                                                <input class="checkbox mycontrol mr-3" id="credentialCHK{@credentialid}" type="checkbox">
+                                                    <xsl:if test="@badgeid">
+                                                        <xsl:attribute name="checked">checked</xsl:attribute>
+                                                    </xsl:if>
+                                                    <xsl:if test="$enableBioEdit!='1'">
+                                                        <xsl:attribute name="disabled">disabled</xsl:attribute>
+                                                        <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                                    </xsl:if>
+                                                </input>
+                                                <xsl:value-of select="@credentialname"/>
+                                            </label>
+                                        </div>
+                                    </xsl:for-each>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </xsl:if>
+                <xsl:if test="$useRegSystem = 1"><!-- show button here if using reg system because data below not editable in that case -->
+                    <div class="row mt-3">
+                        <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN"
+                            data-loading-text="Updating..." onclick="myProfile.updateBUTN();">
+                            Update
+                        </button>
+                    </div>
+                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="$useRegSystem = 1">
+                        <div class="row mt-3">
+                            <legend>Data from Registration System</legend>
+                        </div>
+                        <xsl:if test="$regDataNote != ''">
+                            <div class="row">
+                                <div class="col">
+                                    <xsl:value-of select="$regDataNote" disable-output-escaping="yes" />
+                                </div>
+                            </div>
+                        </xsl:if>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <div class="row mt-3">
+                            <legend>Contact Information</legend>
+                        </div>
+                        <div class="row">
+                            <div class="col">Please confirm your contact information. Please provide missing information or correct what has changed.</div>
+                        </div>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <fieldset>
+                    <div>
+                        <xsl:choose>
+                            <xsl:when test="$useRegSystem = 1">
+                                <xsl:attribute name="class">row</xsl:attribute>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="class">row mt-1 mb-2</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <div class="col-sm-3 col-md-2p5 col-lg-2">
+                            <h5>
+                                <div class="badge badge-secondary badge-full-width">
+                                    <xsl:value-of select="$userIdPrompt" />
+                                </div>
+                            </h5>
+                        </div>
+                        <div class="col">
+                            <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@badgeid" />
+                        </div>
+                    </div>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">First Name</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@firstname" />
+                        <xsl:with-param name="id">fname</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="30" />
+                        <xsl:with-param name="fieldsize" select="30" />
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Last Name</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@lastname" />
+                        <xsl:with-param name="id">lname</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="40" />
+                        <xsl:with-param name="fieldsize" select="40" />
+
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Badge Name</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@badgename" />
+                        <xsl:with-param name="id">badgename</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="50" />
+                        <xsl:with-param name="fieldsize" select="50" />
+
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Phone Info</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@phone" />
+                        <xsl:with-param name="id">phone</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="80" />
+                        <xsl:with-param name="fieldsize" select="80" />
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Email Address</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@email" />
+                        <xsl:with-param name="id">email</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="100" />
+                        <xsl:with-param name="fieldsize" select="80" />
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Postal Address</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@postaddress1" />
+                        <xsl:with-param name="id">postaddress1</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="100" />
+                        <xsl:with-param name="fieldsize" select="80" />
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">(line 2)</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@postaddress2" />
+                        <xsl:with-param name="id">postaddress2</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="100" />
+                        <xsl:with-param name="fieldsize" select="80" />
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Postal City</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@postcity" />
+                        <xsl:with-param name="id">postcity</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="50" />
+                        <xsl:with-param name="fieldsize" select="50" />
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Postal State</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@poststate" />
+                        <xsl:with-param name="id">poststate</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="25" />
+                        <xsl:with-param name="fieldsize" select="25" />
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Zip Code</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@postzip" />
+                        <xsl:with-param name="id">postzip</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="10" />
+                        <xsl:with-param name="fieldsize" select="10" />
+                    </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                        <xsl:with-param name="label">Country</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@postcountry" />
+                        <xsl:with-param name="id">postcountry</xsl:with-param>
+                        <xsl:with-param name="maxlength" select="25" />
+                        <xsl:with-param name="fieldsize" select="25" />
+                    </xsl:call-template>
+                </fieldset>
+                <xsl:if test="$useRegSystem != 1"><!-- show button here if not using reg system -->
+                    <div class="row mt-3">
+                        <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN"
+                            data-loading-text="Updating..." onclick="myProfile.updateBUTN();">
+                            Update
+                        </button>
+                    </div>
+                </xsl:if>
+            </form>
+        </div>
+    </xsl:template>
+
+    <xsl:template name="regRowContents">
+        <xsl:param name="label" />
+        <xsl:param name="value" />
+        <xsl:param name="id" />
+        <xsl:param name="fieldsize" />
+        <xsl:param name="maxlength" />
+        <div class="row">
+            <div class="col-sm-3p5 col-md-3 col-lg-2">
+                <h5>
+                    <xsl:choose>
+                        <xsl:when test="$useRegSystem = 1">
+                            <div class="badge badge-secondary badge-full-width">
+                                <xsl:value-of select="$label" />
+                            </div>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <label for="{$id}" class="badge badge-secondary badge-full-width">
+                                <xsl:value-of select="$label" />
+                            </label>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </h5>
             </div>
-        </form>
-      </div>
-    </div>
-	<!--
-    <script type="text/javascript">
-      $(document).ready(
-        function() {
-        }
-      );
-    </script>
-	-->
-</xsl:template>
+            <div class="col">
+                <xsl:choose>
+                    <xsl:when test="$useRegSystem = 1">
+                        <xsl:value-of select="$value" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <input id="{$id}" name="{$id}" value="{$value}" type="text"
+                            size="{$fieldsize}" maxlength="{$maxlength}" class="mycontrol" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </div>
+        </div>
+    </xsl:template>
+
 </xsl:stylesheet>
