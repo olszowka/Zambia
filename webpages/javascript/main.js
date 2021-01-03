@@ -21,8 +21,13 @@ document.addEventListener( "DOMContentLoaded", function () {
 			break;
 		case "Edit Custom Text":
 			editCustomText.initialize();
+			break;
 		case "Edit Survey":
 			editSurvey.initialize();
+			break;
+		case "Participant Survey":
+			partSurvey.initialize();
+			break;
 		default:
 			window.status="Ready.";
 		/**

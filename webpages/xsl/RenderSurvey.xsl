@@ -10,11 +10,15 @@
   <xsl:param name="controliv" select="''"/>
   <xsl:param name="UpdateMessage" select="''"/>
   <xsl:template match="/">
-    <xsl:if test="$UpdateMessage != ''">
+    
       <div id="message" class="alert alert-success mt-4">
+        <xsl:if test="not($UpdateMessage) or ($UpdateMessage = '')">
+          <xsl:attribute name="style">
+            <xsl:text>display: none</xsl:text>
+          </xsl:attribute>
+        </xsl:if>
         <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
       </div>
-    </xsl:if>
     <form name="partsurveyform" method="POST" action="PartSurvey.php"  onsubmit="return UpdateSurvey();">
       <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
       <input type="hidden" id="control" name="control" value="{$control}" />
@@ -59,6 +63,7 @@
           <div>
             <xsl:attribute name="id">
               <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+              <xsl:text>-div</xsl:text>
             </xsl:attribute>
             <div class="row mt-4">
               <div class="col col-12">
@@ -71,6 +76,7 @@
           <div>
             <xsl:attribute name="id">
               <xsl:value-of select="translate(@shortname, ' ', '_')"/>
+              <xsl:text>-div</xsl:text>
             </xsl:attribute>
             <div class="row mt-4">
               <div class="col col-3">
@@ -88,9 +94,11 @@
                   <xsl:attribute name="data-placement">
                     <xsl:text>right</xsl:text>
                   </xsl:attribute>
-                  <xsl:attribute name="data-html">
-                    <xsl:text>true</xsl:text>
-                  </xsl:attribute>
+                  <xsl:if test="@required = 1">
+                    <xsl:attribute name="data-required">
+                      <xsl:text>1</xsl:text>
+                    </xsl:attribute>
+                  </xsl:if>
                   <xsl:value-of select="@prompt"/>
                   <xsl:if test="@required = 1">
                     <span style="color: #990012; font-weight: bold; font-size: 125%;">
@@ -390,6 +398,9 @@
               <xsl:text>SelectChangeOthertext(this);</xsl:text>
             </xsl:attribute>
           </xsl:if>
+          <xsl:if test="$answer = '' or not($answer)">
+            <option value="" disabled="" selected="true" data-othertext="0">--</option>
+          </xsl:if>
           <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
             <option value="{@value}">
               <xsl:if test="@optionhover != ''">
@@ -448,6 +459,9 @@
           <xsl:value-of select="translate($shortname, ' ', '_')"/>
           <xsl:text>[]</xsl:text>
         </xsl:attribute>
+        <xsl:if test="$answer = '' or not($answer)">
+          <option value="" disabled="" selected="true" data-othertext="0">--</option>
+        </xsl:if>
         <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
           <option value="{@value}">
             <xsl:attribute name="title">
@@ -465,12 +479,15 @@
       <select>
         <xsl:attribute name="id">
           <xsl:value-of select="translate($shortname, ' ', '_')"/>
-          <xsl:text>-year</xsl:text>
+          <xsl:text>_year</xsl:text>
         </xsl:attribute>
         <xsl:attribute name="name">
           <xsl:value-of select="translate($shortname, ' ', '_')"/>
           <xsl:text>[]</xsl:text>
         </xsl:attribute>
+        <xsl:if test="$answer = '' or not($answer)">
+          <option value="" disabled="" selected="true" data-othertext="0">--</option>
+        </xsl:if>
         <xsl:for-each select="/doc/query[@queryName='years']/row[@questionid=$questionid]">
           <option value="{@value}">
              <xsl:if test="contains($answer, @value)">

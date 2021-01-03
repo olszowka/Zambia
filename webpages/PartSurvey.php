@@ -109,70 +109,8 @@ EOD;
     }
 
     // Start of display portion
-    // add javascript to enable tooltips
-	echo <<<EOD
-<script>
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').each(function() {
-	this.title= '<span class="text-left" style="white-space: nowrap;">' + this.title + '</span>';
-	})
-  $('[data-toggle="tooltip"]').tooltip();
-  $('[data-mce="yes"]').each(function() {
-	fieldname = this.getAttribute("id");
-	height = this.getAttribute("rows") * 50;
-	maxlength = this.getAttribute("maxlength");
-	tinyMCE.init({
-            selector: "textarea#" + fieldname,
-            plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
-            browser_spellcheck: true,
-            contextmenu: false,
-            height: height,
-            width: 900,
-            min_height: 200,
-            maxlength: maxlength,
-            menubar: false,
-            toolbar: [
-                'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-                'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
-            ],
-            toolbar_mode: 'floating',
-            content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-            placeholder: 'Type content here...'
-        });
-  });
-  $('[data-othertextselect="1"]').each(function () {
-        SelectChangeOthertext(this);
-    });
-  $('[data-othertextmultidisplay="1"]').each(function () {
-        lrChangeOthertext(this);
-    });
-  $('[data-othertextradio="1"]').each(function () {
-		var checked = this.getAttribute("checked");
-		if (checked !== null)
-			RadioChangeOthertext(this);
-    });
-$('[data-othertextcheckbox="1"]').each(function () {
-		var checked = this.getAttribute("checked");
-		if (checked !== null)
-			CheckboxChangeOthertext(this);
-  });
-});
 
-function UpdateSurvey() {
-	tinyMCE.triggerSave();
-    var i;
-    $('[data-multidisplay="yes"]').each(function() {
-		console.log("saving" + this.getAttribute("id"));
-		for ( i = 0 ; i <this.length ; i++ ) {
-			console.log("setting " + i + " selected");
-			this.options[i].selected=true;
-        }
-	});
-	return true;
-}
-</script>
-EOD;
-// json of current questions and question options
+	// json of current questions and question options
 	$paramArray = array();
 	$query = [];
 	$query["questions"]=<<<EOD
