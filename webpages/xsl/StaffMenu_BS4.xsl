@@ -112,6 +112,7 @@
                 </xsl:if>
                 <xsl:if test="$Administrator">
                   <a class="dropdown-item" href="EditCustomText.php">Edit Custom Text</a>
+                  <a class="dropdown-item" href="ConfigTableEditor.php">Edit Configuration Tables</a>
                 </xsl:if>
               </div>
             </div>

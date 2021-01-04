@@ -76,6 +76,10 @@ function load_internal_javascript($title, $isDataTables = false) {
         case "Create New Session":
             echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
             break;
+        case "Edit Configuration Tables":
+            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
+            break;
         default:
             if ($isDataTables) {
                 echo "<script src=\"javascript/Reports.js\"></script>\n";
