@@ -58,7 +58,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
             break;
         case "Edit Custom Text":
-            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"external/tinymce_5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
             break;
         case "Session Search Results":
@@ -77,7 +77,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
             break;
         case "Edit Configuration Tables":
-            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"external/tinymce_5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
             echo "<script src=\"javascript/EditSurvey.js\"></script>\n";
