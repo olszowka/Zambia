@@ -9,11 +9,16 @@
   <xsl:param name="controliv" select="''"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
-    <xsl:if test="$UpdateMessage != ''">
       <div class="alert alert-success mt-4">
-        <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
+        <xsl:if test="$UpdateMessage = ''">
+          <xsl:attribute name="style">
+            <xsl:text>display: none;</xsl:text>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="$UpdateMessage != ''">
+          <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
+        </xsl:if>
       </div>
-    </xsl:if>
     <div>
       <h1 style="text-align: center;">Configuration Table Editor</h1>
       <ul class="nav nav-tabs">
@@ -59,13 +64,13 @@
               <a href="#partdesc" class="nav-link active" data-toggle="tab">Participant Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#bioeditstatuses" class="nav-link" data-toggle="tab">BioEditStatuses</a>
+              <a href="#bioeditstatuses" class="nav-link" data-toggle="tab" id="t-bioeditstatuses">BioEditStatuses</a>
             </li>
             <li class="nav-item">
-              <a href="#credentials" class="nav-link" data-toggle="tab">Credentials</a>
+              <a href="#credentials" class="nav-link" data-toggle="tab" id="t-credentials">Credentials</a>
             </li>
             <li class="nav-item">
-              <a href="#roles" class="nav-link" data-toggle="tab">Roles</a>
+              <a href="#roles" class="nav-link" data-toggle="tab" id="t-roles">Roles</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -80,12 +85,9 @@
                 <p>"Roles I'm willing to ake on" in Particpant General Interests</p>
               </ul>
             </div>
-            <div class="tab-pane mt-4 fade" id="bioeditstatuses">
-            </div>
-            <div class="tab-pane mt-4 fade" id="credentials">
-            </div>
-            <div class="tab-pane mt-4 fade" id="roles">
-            </div>
+            <div class="tab-pane mt-4 fade" id="bioeditstatuses"/>
+            <div class="tab-pane mt-4 fade" id="credentials"/>
+            <div class="tab-pane mt-4 fade" id="roles"/>
           </div> 
         </div>
         <div class="tab-pane mt-4 fade" id="session">
@@ -95,16 +97,16 @@
               <a href="#sessiondesc" class="nav-link active" data-toggle="tab">Session Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#kidscategories" class="nav-link" data-toggle="tab">KidsCategories</a>
+              <a href="#kidscategories" class="nav-link" data-toggle="tab" id="t-kidscategories">KidsCategories</a>
             </li>
             <li class="nav-item">
-              <a href="#languagestatuses" class="nav-link" data-toggle="tab">LanguageStatuses</a>
+              <a href="#languagestatuses" class="nav-link" data-toggle="tab" id="t-languagestatuses">LanguageStatuses</a>
             </li>
             <li class="nav-item">
-              <a href="#pubstatuses" class="nav-link" data-toggle="tab">PubStatuses</a>
+              <a href="#pubstatuses" class="nav-link" data-toggle="tab" id="t-pubstatuses">PubStatuses</a>
             </li>
             <li class="nav-item">
-              <a href="#sessionstatuses" class="nav-link" data-toggle="tab">SessionStatuses</a>
+              <a href="#sessionstatuses" class="nav-link" data-toggle="tab" id="t-sessionstatuses">SessionStatuses</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -121,14 +123,10 @@
                 <p>Session Status List</p>
               </ul>
             </div>  
-            <div class="tab-pane mt-4 fade" id="kidscategories">
-            </div>
-            <div class="tab-pane mt-4 fade" id="languagestatuses">
-            </div>
-            <div class="tab-pane mt-4 fade" id="pubstatuses">
-            </div>
-            <div class="tab-pane mt-4 fade" id="sessionstatuses">
-            </div>
+            <div class="tab-pane mt-4 fade" id="kidscategories"/>
+            <div class="tab-pane mt-4 fade" id="languagestatuses"/>
+            <div class="tab-pane mt-4 fade" id="pubstatuses"/>
+            <div class="tab-pane mt-4 fade" id="sessionstatuses"/>
           </div> 
         </div>
         <div class="tab-pane mt-4 fade" id="layout">
@@ -138,22 +136,22 @@
               <a href="#layoutdesc" class="nav-link active" data-toggle="tab">Convention Layout Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#divisions" class="nav-link" data-toggle="tab">Divisions</a>
+              <a href="#divisions" class="nav-link" data-toggle="tab" id="t-divisions">Divisions</a>
             </li>
             <li class="nav-item">
-              <a href="#regtypes" class="nav-link" data-toggle="tab">RegTypes</a>
+              <a href="#regtypes" class="nav-link" data-toggle="tab" id="t-regtypes">RegTypes</a>
             </li>
             <li class="nav-item">
-              <a href="#tags" class="nav-link" data-toggle="tab">Tags</a>
+              <a href="#tags" class="nav-link" data-toggle="tab" id="t-tags">Tags</a>
             </li>
             <li class="nav-item">
-              <a href="#times" class="nav-link" data-toggle="tab">Times</a>
+              <a href="#times" class="nav-link" data-toggle="tab" id="t-times">Times</a>
             </li>
             <li class="nav-item">
-              <a href="#tracks" class="nav-link" data-toggle="tab">Tracks</a>
+              <a href="#tracks" class="nav-link" data-toggle="tab" id="t-tracks">Tracks</a>
             </li>
             <li class="nav-item">
-              <a href="#Types" class="nav-link" data-toggle="tab">Types</a>
+              <a href="#Types" class="nav-link" data-toggle="tab" id="t-types">Types</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -174,18 +172,12 @@
                 <p>The list of Session Types (Panel, Workshop, ...)</p>
               </ul>
             </div>
-            <div class="tab-pane mt-4 fade" id="divisions">
-            </div>
-            <div class="tab-pane mt-4 fade" id="regtypes">
-            </div>
-            <div class="tab-pane mt-4 fade" id="tags">
-            </div>
-            <div class="tab-pane mt-4 fade" id="times">
-            </div>
-            <div class="tab-pane mt-4 fade" id="tracks">
-            </div>
-            <div class="tab-pane mt-4 fade" id="types">
-            </div>
+            <div class="tab-pane mt-4 fade" id="divisions"/>
+            <div class="tab-pane mt-4 fade" id="regtypes"/>
+            <div class="tab-pane mt-4 fade" id="tags"/>
+            <div class="tab-pane mt-4 fade" id="times"/>
+            <div class="tab-pane mt-4 fade" id="tracks"/>
+            <div class="tab-pane mt-4 fade" id="types"/>
           </div>
         </div>
         <div class="tab-pane mt-4 fade" id="facility">
@@ -195,19 +187,19 @@
               <a href="#facilitydesc" class="nav-link active" data-toggle="tab">Facility Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#rooms" class="nav-link" data-toggle="tab">Rooms</a>
+              <a href="#rooms" class="nav-link" data-toggle="tab" id="t-rooms">Rooms</a>
             </li>
             <li class="nav-item">
-              <a href="#roomsets" class="nav-link" data-toggle="tab">RoomSets</a>
+              <a href="#roomsets" class="nav-link" data-toggle="tab" id="t-roomsets">RoomSets</a>
             </li>
             <li class="nav-item">
-              <a href="#roomhasset" class="nav-link" data-toggle="tab">RoomHasSet</a>
+              <a href="#roomhasset" class="nav-link" data-toggle="tab" id="t-roomhasset">RoomHasSet</a>
             </li>
             <li class="nav-item">
-              <a href="#features" class="nav-link" data-toggle="tab">Features</a>
+              <a href="#features" class="nav-link" data-toggle="tab" id="t-features">Features</a>
             </li>
             <li class="nav-item">
-              <a href="#Services" class="nav-link" data-toggle="tab">Services</a>
+              <a href="#Services" class="nav-link" data-toggle="tab" id="t-services">Services</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -226,16 +218,11 @@
                 <p>Services available in a room for use by sessions</p>
               </ul>
             </div>
-            <div class="tab-pane mt-4 fade" id="rooms">
-            </div>
-            <div class="tab-pane mt-4 fade" id="roomsets">
-            </div>
-            <div class="tab-pane mt-4 fade" id="roomhasset">
-            </div>
-            <div class="tab-pane mt-4 fade" id="features">
-            </div>
-            <div class="tab-pane mt-4 fade" id="services">
-            </div>
+            <div class="tab-pane mt-4 fade" id="rooms"/>
+            <div class="tab-pane mt-4 fade" id="roomsets"/>
+            <div class="tab-pane mt-4 fade" id="roomhasset"/>
+            <div class="tab-pane mt-4 fade" id="features"/>
+            <div class="tab-pane mt-4 fade" id="services"/>
           </div>
         </div>    
         <div class="tab-pane mt-4 fade" id="emails">
@@ -245,13 +232,13 @@
               <a href="#emaildesc" class="nav-link active" data-toggle="tab">Email Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#emailfrom" class="nav-link" data-toggle="tab">EmailFrom</a>
+              <a href="#emailfrom" class="nav-link" data-toggle="tab" id="t-emailfrom">EmailFrom</a>
             </li>
             <li class="nav-item">
-              <a href="#emailto" class="nav-link" data-toggle="tab">EmailTo</a>
+              <a href="#emailto" class="nav-link" data-toggle="tab" id="emailto">EmailTo</a>
             </li>
             <li class="nav-item">
-              <a href="#emailcc" class="nav-link" data-toggle="tab">EmailCC</a>
+              <a href="#emailcc" class="nav-link" data-toggle="tab" id="emailcc">EmailCC</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -266,18 +253,49 @@
                 <p>List of potential CC address choices for emails sent by Zambia</p>
               </ul>
             </div>
-            <div class="tab-pane mt-4 fade" id="emailfrom">
-            </div>
-            <div class="tab-pane mt-4 fade" id="emailto">
-            </div>
-            <div class="tab-pane mt-4 fade" id="emailcc">
-            </div>
+            <div class="tab-pane mt-4 fade" id="emailfrom"/>
+            <div class="tab-pane mt-4 fade" id="emailto"/>
+            <div class="tab-pane mt-4 fade" id="emailcc"/>
           </div>
         </div>
       </div>
     </div>
-  </xsl:template>
-  <xsl:template match="editor">
-    <xsl:param name="table"
+    <div id="table-div" style="display: block">
+      <div class="row mt-4">
+        <div class="col col-12">
+          <div id="table"></div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col col-auto">
+          <button class="btn btn-secondary" id="undo" name="undo" value="undo" type="button" onclick="Undo()" disabled="true">Undo</button>
+        </div>
+        <div class="col col-auto">
+          <button class="btn btn-secondary" id="redo" name="redo" value="redo" type="button" onclick="Redo()" disabled="true">Redo</button>
+        </div>
+        <div class="col col-auto">
+          <button class="btn btn-secondary" id="add-row" name="add-row" value="new" type="button">Add New</button>
+        </div>
+        <div class="col col-auto">
+          <button class="btn btn-secondary" id="resetbtn" name="resetbtn" value="undo" type="button" onclick="FetchTable()">Reset</button>
+        </div>
+        <div class="col col-auto">
+          <button class="btn btn-primary" id="submitbtn" name="submitbtn" type="save" value="save" onclick="SaveTable()">Save</button>
+        </div>
+        <div id="saving_div" style="display: none;">
+          <span style="color:blue">
+            <b>Saving...</b>
+          </span>
+        </div>
+      </div>
+      <div class="clearboth">
+        <p>
+          Click in the table to edit each field.<br/>
+          Drag slider icon to reorder the entries.<br/>
+          Click the trashcan to delete the row.<br/>
+          Use the Add New button to add a row to the table.
+        </p>
+      </div>
+    </div>
   </xsl:template>
 </xsl:stylesheet>
