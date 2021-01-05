@@ -4,6 +4,7 @@ var table = null;
 var tablename = '';
 var message = "";
 var previewmce = false;
+var indexcol = 'display_order';
 
 var EditConfigTable = function () {
     var newid = -1;
@@ -24,7 +25,7 @@ var EditConfigTable = function () {
         return val;
     };
 
-    function addupdaterow(table, opttable) {
+    function addupdaterow(table) {
         // update table itself for future save
         tinyMCE.triggerSave();
 
@@ -53,16 +54,7 @@ var EditConfigTable = function () {
             curid = newid;
         }
         //console.log("add/update " + curid);
-        if (opttable) {
-            option = JSON.stringify(opttable.getData());
-            //console.log("-used opttable");
-        } else if (questionoptions.length > 0) {
-            option = "nobtoa:" + JSON.stringify(questionoptions);
-            //console.log("-used question options: " + questionoptions.length);
-        } else {
-            option = "[]";
-            //console.log("-no options");
-        }
+
         table.updateOrAddData([{
             questionid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
             typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user,
@@ -81,9 +73,6 @@ var EditConfigTable = function () {
         tinyMCE.remove();
         previewmce = false;
         table.clearHistory();
-        if (opttable) {
-            opttable = null;
-        }
     };
 
     function tabshown(tabname) {   
@@ -135,6 +124,65 @@ function addnewrow(table) {
 }
 
 function opentable() {
+    // get table information from tableschema
+    if (!tableschema) {
+        message = message + '<br/>Error: no schema returned for this table';
+        return false;
+    }
+    console.log(tableschema);
+    columns = new Array();
+    indexcol = 'display_order';
+    displayorder_found = false;
+    initialsort = new Array();
+    columns.push({ rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 });
+    tableschema.forEach(function (column)  {
+        if (column.COLUMN_KEY == 'PRI') {
+            indexcol = column.COLUMN_NAME;
+            initialsort.push({ column: column.COLUMN_NAME, dir: "asc" });
+            visible = (!(column.COLUMN_NAME.match(/^id/i) || column.COLUMN_NAME.match(/id$/i)) || tablename == "RoomHasSet");
+            if (visible) {
+                columns.push({
+                    title: column.COLUMN_NAME, field: column.COLUMN_NAME,
+                    visible: true,
+                    editor: "input",
+                    editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } }
+                });
+            } else {
+                columns.push({
+                    title: column.COLUMN_NAME, field: column.COLUMN_NAME,
+                    visible: false
+                });
+            }
+        } else if (column.COLUMN_NAME == 'display_order') {
+            columns.push({ title: "Order", field: "display_order", visible: false });
+            display_order = true;
+        }
+        else {
+            if (column.DATA_TYPE == 'int')
+                columns.push({ title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "number", minWidth: 50, hozAlign: "right" });
+            else {
+                width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
+                if (width < 80) width = 80;
+                if (width > 500) width = 500;
+                columns.push({
+                    title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
+                    editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } }
+                });
+            }
+        }
+    });
+    columns.push({
+        title: "Delete", formatter: deleteicon, hozAlign: "center",
+        cellClick: function (e, cell) {
+            deleterow(e, cell.getRow(), table);
+        }
+    });
+    console.log(columns);
+    
+    if (displayorder_found) {
+        initialsort = new Array();
+        initialsort.push({ column: "display_order", dir: "asc" });
+    }
     document.getElementById("table-div").style.display = "block";
     table = new Tabulator("#table", {
         maxHeight: "250px",
@@ -142,25 +190,12 @@ function opentable() {
         tooltips: false,
         history: true,
         headerSort: false,
-        initialSort: [
-            { column: "display_order", dir: "asc" } //sort by this first
-        ],
+        initialSort: initialsort,  
         data: tabledata,
-        index: "bioeditstatusid",
+        index: indexcol,
         layout: "fitDataTable",
         //autoColumns: true,
-        columns: [
-            { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-            { title: "ID", field: "bioeditstatus", visible: true },
-            { title: "Order", field: "display_order", visible: true },
-            { title: "Name", field: "bioeditstatusname", width: 120, editor: "input" },
-            {
-                title: "Delete", formatter: deleteicon, hozAlign: "center",
-                cellClick: function (e, cell) {
-                    deleterow(e, cell.getRow(), table);
-                },
-            },
-        ],
+        columns: columns,
         rowMoved: function (row) {
             document.getElementById("message").style.display = 'none';
             //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
@@ -241,7 +276,6 @@ function SaveTable() {
 };
 
 function FetchTable() {
-    tablename = 'bioeditstatuses';
     var postdata = {
         ajax_request_action: "fetchtable",
         tablename: tablename

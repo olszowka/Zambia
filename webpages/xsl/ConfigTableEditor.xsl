@@ -64,13 +64,13 @@
               <a href="#partdesc" class="nav-link active" data-toggle="tab">Participant Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#bioeditstatuses" class="nav-link" data-toggle="tab" id="t-bioeditstatuses">BioEditStatuses</a>
+              <a href="#bioeditstatuses" class="nav-link" data-toggle="tab" id="t-BioEditStatuses">BioEditStatuses</a>
             </li>
             <li class="nav-item">
-              <a href="#credentials" class="nav-link" data-toggle="tab" id="t-credentials">Credentials</a>
+              <a href="#credentials" class="nav-link" data-toggle="tab" id="t-Credentials">Credentials</a>
             </li>
             <li class="nav-item">
-              <a href="#roles" class="nav-link" data-toggle="tab" id="t-roles">Roles</a>
+              <a href="#roles" class="nav-link" data-toggle="tab" id="t-Roles">Roles</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -97,16 +97,16 @@
               <a href="#sessiondesc" class="nav-link active" data-toggle="tab">Session Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#kidscategories" class="nav-link" data-toggle="tab" id="t-kidscategories">KidsCategories</a>
+              <a href="#kidscategories" class="nav-link" data-toggle="tab" id="t-KidsCategories">KidsCategories</a>
             </li>
             <li class="nav-item">
-              <a href="#languagestatuses" class="nav-link" data-toggle="tab" id="t-languagestatuses">LanguageStatuses</a>
+              <a href="#languagestatuses" class="nav-link" data-toggle="tab" id="t-LanguageStatuses">LanguageStatuses</a>
             </li>
             <li class="nav-item">
-              <a href="#pubstatuses" class="nav-link" data-toggle="tab" id="t-pubstatuses">PubStatuses</a>
+              <a href="#pubstatuses" class="nav-link" data-toggle="tab" id="t-PubStatuses">PubStatuses</a>
             </li>
             <li class="nav-item">
-              <a href="#sessionstatuses" class="nav-link" data-toggle="tab" id="t-sessionstatuses">SessionStatuses</a>
+              <a href="#sessionstatuses" class="nav-link" data-toggle="tab" id="t-SessionStatuses">SessionStatuses</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -136,22 +136,22 @@
               <a href="#layoutdesc" class="nav-link active" data-toggle="tab">Convention Layout Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#divisions" class="nav-link" data-toggle="tab" id="t-divisions">Divisions</a>
+              <a href="#divisions" class="nav-link" data-toggle="tab" id="t-Divisions">Divisions</a>
             </li>
             <li class="nav-item">
-              <a href="#regtypes" class="nav-link" data-toggle="tab" id="t-regtypes">RegTypes</a>
+              <a href="#regtypes" class="nav-link" data-toggle="tab" id="t-RegTypes">RegTypes</a>
             </li>
             <li class="nav-item">
-              <a href="#tags" class="nav-link" data-toggle="tab" id="t-tags">Tags</a>
+              <a href="#tags" class="nav-link" data-toggle="tab" id="t-Tags">Tags</a>
             </li>
             <li class="nav-item">
-              <a href="#times" class="nav-link" data-toggle="tab" id="t-times">Times</a>
+              <a href="#times" class="nav-link" data-toggle="tab" id="t-Times">Times</a>
             </li>
             <li class="nav-item">
-              <a href="#tracks" class="nav-link" data-toggle="tab" id="t-tracks">Tracks</a>
+              <a href="#tracks" class="nav-link" data-toggle="tab" id="t-Tracks">Tracks</a>
             </li>
             <li class="nav-item">
-              <a href="#Types" class="nav-link" data-toggle="tab" id="t-types">Types</a>
+              <a href="#Types" class="nav-link" data-toggle="tab" id="t-Types">Types</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -187,19 +187,19 @@
               <a href="#facilitydesc" class="nav-link active" data-toggle="tab">Facility Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#rooms" class="nav-link" data-toggle="tab" id="t-rooms">Rooms</a>
+              <a href="#rooms" class="nav-link" data-toggle="tab" id="t-Rooms">Rooms</a>
             </li>
             <li class="nav-item">
-              <a href="#roomsets" class="nav-link" data-toggle="tab" id="t-roomsets">RoomSets</a>
+              <a href="#roomsets" class="nav-link" data-toggle="tab" id="t-RoomSets">RoomSets</a>
             </li>
             <li class="nav-item">
-              <a href="#roomhasset" class="nav-link" data-toggle="tab" id="t-roomhasset">RoomHasSet</a>
+              <a href="#roomhasset" class="nav-link" data-toggle="tab" id="t-RoomHasSet">RoomHasSet</a>
             </li>
             <li class="nav-item">
-              <a href="#features" class="nav-link" data-toggle="tab" id="t-features">Features</a>
+              <a href="#features" class="nav-link" data-toggle="tab" id="t-Features">Features</a>
             </li>
             <li class="nav-item">
-              <a href="#Services" class="nav-link" data-toggle="tab" id="t-services">Services</a>
+              <a href="#Services" class="nav-link" data-toggle="tab" id="t-Services">Services</a>
             </li>
           </ul>
           <div cass="tab-content">
@@ -232,13 +232,13 @@
               <a href="#emaildesc" class="nav-link active" data-toggle="tab">Email Configuration Tables</a>
             </li>
             <li class="nav-item">
-              <a href="#emailfrom" class="nav-link" data-toggle="tab" id="t-emailfrom">EmailFrom</a>
+              <a href="#emailfrom" class="nav-link" data-toggle="tab" id="t-EmailFrom">EmailFrom</a>
             </li>
             <li class="nav-item">
-              <a href="#emailto" class="nav-link" data-toggle="tab" id="emailto">EmailTo</a>
+              <a href="#emailto" class="nav-link" data-toggle="tab" id="t-EmailTo">EmailTo</a>
             </li>
             <li class="nav-item">
-              <a href="#emailcc" class="nav-link" data-toggle="tab" id="emailcc">EmailCC</a>
+              <a href="#emailcc" class="nav-link" data-toggle="tab" id="t-EmailCC">EmailCC</a>
             </li>
           </ul>
           <div cass="tab-content">

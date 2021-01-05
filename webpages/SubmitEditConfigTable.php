@@ -320,18 +320,43 @@ function update_table($tablename) {
 }
 
 function fetch_table($tablename) {
-    // json of current questions and question options
-	$query=<<<EOD
-		SELECT * FROM $tablename order by display_order;
+    $db = DBDB;
+    //error_log("table = " . $tablename);
+    // json of schema and table contents
+    $query=<<<EOD
+        SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH,  COLUMN_KEY FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = '$db' and TABLE_NAME = '$tablename'
+        ORDER BY ORDINAL_POSITION;
 EOD;
-    
+    $result = mysqli_query_exit_on_error($query);
+    $schema = array();
+    $displayorder_found = false;
+    $prikey = '';
+    while ($row = $result->fetch_assoc()) {
+        $schema[] = $row;
+        if ($row["COLUMN_NAME"] == 'display_order')
+            $displayorder_found = true;
+        if ($row["COLUMN_KEY"] == 'PRI')
+            $prikey = $prikey . $row["COLUMN_NAME"] . ",";
+    }
+
+    $prikey = substr($prikey, 0, -1);
+
+	mysqli_free_result($result);
+	$query="SELECT * FROM $tablename ";
+    if ($displayorder_found)
+        $query = $query . "order by display_order;";
+    else if ($prikey != ",")
+        $query = $query . "order by " . $prikey . ";";
+
 	$result = mysqli_query_exit_on_error($query);
     $rows = array();
     while ($row = $result->fetch_assoc()) {
         $rows[] = $row;
     }
 	mysqli_free_result($result);
-    echo "tabledata = " . json_encode($rows);
+    echo "tabledata = " . json_encode($rows) . ";\n";
+    echo "tableschema = " . json_encode($schema) . ";\n";
 }
 
 // Start here.  Should be AJAX requests only
