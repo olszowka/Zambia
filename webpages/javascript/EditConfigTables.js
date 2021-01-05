@@ -10,71 +10,6 @@ var EditConfigTable = function () {
     var newid = -1;
     var curid = -99999;
 
-    function escapeQuotesAccessor(value, data, type, params, column, row) {
-        //value - original value of the cell
-        //data - the data for the row
-        //type - the type of access occurring  (data|download|clipboard)
-        //params - the accessorParams object passed from the column definition
-        //column - column component for the column this accessor is bound to
-        //row - row component for the row
-        //val = value.replace(/\\/g, '\\\\');
-        //return val.replace(/"/g, '\\"');
-        //console.log("value: " + value);
-        val = btoa(value);
-        //console.log("becomes: " + val);
-        return val;
-    };
-
-    function addupdaterow(table) {
-        // update table itself for future save
-        tinyMCE.triggerSave();
-
-        var shortname = document.getElementById("shortname").value;
-        var description = document.getElementById("description").value;
-        var prompt = document.getElementById("prompt").value;
-        var hover = document.getElementById("hover").value;
-        var typeselect = document.getElementById("typename")
-        var typeid = typeselect.selectedOptions.item(0).getAttribute("data-typeid");
-        var typename = typeselect.value;
-        var required = document.getElementById("required-1").checked ? 1 : 0;
-        var publish = document.getElementById("publish-1").checked ? 1 : 0;
-        var privacy_user = document.getElementById("privacy_user-1").checked ? 1 : 0;
-        var searchable = document.getElementById("searchable-1").checked ? 1 : 0;
-        var ascending = document.getElementById("ascending-1").checked ? 1 : 0;
-        var display_only = document.getElementById("display_only-1").checked ? 1 : 0;
-        var minvalue = document.getElementById("min_value").value;
-        var maxvalue = document.getElementById("max_value").value;
-
-        // remove paragraph tags from prompt tag added by tinymce
-        if (prompt.substring(0, 3) == '<p>') {
-            prompt = prompt.substring(3, prompt.length-4);
-        }
-
-        if (curid == -99999) {
-            curid = newid;
-        }
-        //console.log("add/update " + curid);
-
-        table.updateOrAddData([{
-            questionid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
-            typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user,
-            searchable: searchable, ascending: ascending, display_only: display_only, min_value: minvalue, max_value: maxvalue, options: btoa(option)
-           }, 
-        ]);
-        newid = newid - 1;
-        curid = -99999;
-        questionoptions = [];
-
-        document.getElementById("submitbtn").innerHTML = "Save*";
-        document.getElementById("previewbtn").style.display = "none";
-        document.getElementById("general-question-div").style.display = "none";
-        document.getElementById("preview").innerHTML = "";
-        //console.log("addupdaterow: tinyMCE.remove");
-        tinyMCE.remove();
-        previewmce = false;
-        table.clearHistory();
-    };
-
     function tabshown(tabname) {   
         if (tabname.substring(0, 2) != 't-')
             document.getElementById("table-div").style.display = "none";
@@ -141,12 +76,36 @@ function opentable() {
             initialsort.push({ column: column.COLUMN_NAME, dir: "asc" });
             visible = (!(column.COLUMN_NAME.match(/^id/i) || column.COLUMN_NAME.match(/id$/i)) || tablename == "RoomHasSet");
             if (visible) {
-                columns.push({
-                    title: column.COLUMN_NAME, field: column.COLUMN_NAME,
-                    visible: true,
-                    editor: "input",
-                    editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } }
-                });
+                if (tablename == "RoomHasSet") {
+                    editor_type = 'select';
+                    selectlist = new Array();
+                    if (column.COLUMN_NAME == 'roomid') {
+                        rooms_select.forEach(function (room) { selectlist[room.roomid] = room.roomname; });
+                    }
+                    if (column.COLUMN_NAME == 'roomsetid') {
+                        roomsets_select.forEach(function (roomset) { selectlist[roomset.roomsetid] = roomset.roomsetname; });
+                    }
+                    editor_params = { values: selectlist };
+                    columns.push({
+                        title: column.COLUMN_NAME, field: column.COLUMN_NAME,
+                        visible: true,
+                        editor: editor_type,
+                        editorParams: editor_params,
+                        formatter: "lookup",
+                        formatterParams: selectlist,
+                        minWidth: 200
+                    });
+                } else {
+                    editor_type = 'input',
+                    editor_params = { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } };
+                    columns.push({
+                        title: column.COLUMN_NAME, field: column.COLUMN_NAME,
+                        visible: true,
+                        editor: editor_type,
+                        editorParams: editor_params,
+                        minWidth: 200
+                    });
+                }
             } else {
                 columns.push({
                     title: column.COLUMN_NAME, field: column.COLUMN_NAME,
@@ -185,7 +144,7 @@ function opentable() {
     }
     document.getElementById("table-div").style.display = "block";
     table = new Tabulator("#table", {
-        maxHeight: "250px",
+        maxHeight: "400px",
         movableRows: true,
         tooltips: false,
         history: true,

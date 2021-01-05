@@ -7,7 +7,7 @@ function update_table($tablename) {
     //error_log("\n\nin update table:\n");
     //error_log("string loaded: " . getString("tabledata"));
     $rows = json_decode(base64_decode(getString("tabledata")));
-    //var_error_log($rows);
+    var_error_log($rows);
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
     $display_order = 10;
@@ -343,11 +343,33 @@ EOD;
     $prikey = substr($prikey, 0, -1);
 
 	mysqli_free_result($result);
-	$query="SELECT * FROM $tablename ";
+
+    // table select - special for Room Has Set - due to needing to build selects
+    if ($tablename == 'RoomHasSet') {
+        // get values for editor select for roomid
+        $rooms = array();
+        $query = "SELECT roomid, roomname FROM Rooms ORDER BY display_order;";
+        $result = mysqli_query_exit_on_error($query);
+        while ($row = $result->fetch_assoc()) {
+            $rooms[] = $row;
+        }
+        mysqli_free_result($result);
+
+        // get values for editor select for roomid
+        $roomsets = array();
+        $query = "SELECT roomsetid, roomsetname FROM RoomSets ORDER BY display_order;";
+        $result = mysqli_query_exit_on_error($query);
+        while ($row = $result->fetch_assoc()) {
+           $roomsets[] = $row;
+        }
+        mysqli_free_result($result);
+    }
+	
+    $query="SELECT * FROM $tablename ";
     if ($displayorder_found)
-        $query = $query . "order by display_order;";
+        $query = $query . "ORDER BY display_order;";
     else if ($prikey != ",")
-        $query = $query . "order by " . $prikey . ";";
+        $query = $query . "ORDER BY " . $prikey . ";";
 
 	$result = mysqli_query_exit_on_error($query);
     $rows = array();
@@ -357,6 +379,10 @@ EOD;
 	mysqli_free_result($result);
     echo "tabledata = " . json_encode($rows) . ";\n";
     echo "tableschema = " . json_encode($schema) . ";\n";
+    if ($tablename == 'RoomHasSet') {
+        echo "rooms_select = " . json_encode($rooms) . ";\n";
+        echo "roomsets_select = " . json_encode($roomsets) . ";\n";
+    }
 }
 
 // Start here.  Should be AJAX requests only
