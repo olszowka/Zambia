@@ -9,7 +9,7 @@
   <xsl:param name="controliv" select="''"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:template match="/">
-      <div class="alert alert-success mt-4">
+      <div id="message" class="alert alert-success mt-4">
         <xsl:if test="$UpdateMessage = ''">
           <xsl:attribute name="style">
             <xsl:text>display: none;</xsl:text>
@@ -73,7 +73,7 @@
               <a href="#roles" class="nav-link" data-toggle="tab" id="t-Roles">Roles</a>
             </li>
           </ul>
-          <div cass="tab-content">
+          <div class="tab-content">
             <div class="tab-pane mt-4 fade show active" id="partdesc">
               <H3>Participant Configuration Table Usage</H3>
               <ul>
@@ -109,7 +109,7 @@
               <a href="#sessionstatuses" class="nav-link" data-toggle="tab" id="t-SessionStatuses">SessionStatuses</a>
             </li>
           </ul>
-          <div cass="tab-content">
+          <div class="tab-content">
             <div class="tab-pane mt-4 fade show active" id="sessiondesc">
               <H3>Session Configuration Table Usage</H3>
               <ul>
@@ -154,7 +154,7 @@
               <a href="#Types" class="nav-link" data-toggle="tab" id="t-Types">Types</a>
             </li>
           </ul>
-          <div cass="tab-content">
+          <div class="tab-content">
             <div class="tab-pane mt-4 fade show active" id="layoutdesc">
               <H3>Convention Layout Configuration Table Usage</H3>
               <ul>
@@ -202,7 +202,7 @@
               <a href="#Services" class="nav-link" data-toggle="tab" id="t-Services">Services</a>
             </li>
           </ul>
-          <div cass="tab-content">
+          <div class="tab-content">
             <div class="tab-pane mt-4 fade show active" id="facilitydesc">
               <H3>Facility Configuration Table Usage</H3>
               <ul>
@@ -241,7 +241,7 @@
               <a href="#emailcc" class="nav-link" data-toggle="tab" id="t-EmailCC">EmailCC</a>
             </li>
           </ul>
-          <div cass="tab-content">
+          <div class="tab-content">
             <div class="tab-pane mt-4 fade show active" id="emaildesc">
               <H3>Email Configuration Table Usage</H3>
               <ul>
@@ -260,7 +260,7 @@
         </div>
       </div>
     </div>
-    <div id="table-div" style="display: block">
+    <div id="table-div" style="display: none">
       <div class="row mt-4">
         <div class="col col-12">
           <div id="table"></div>

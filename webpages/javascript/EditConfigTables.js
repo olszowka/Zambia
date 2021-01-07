@@ -223,10 +223,11 @@ function SaveTable() {
     var postdata = {
         ajax_request_action: "updatetable",
         tabledata: btoa(JSON.stringify(table.getData())),
-        tablename: tablename
+        tablename: tablename,
+        indexcol: indexcol
     };
     $.ajax({
-        url: "SubmitEditSurvey.php",
+        url: "SubmitEditConfigTable.php",
         dataType: "html",
         data: postdata,
         success: saveComplete,
