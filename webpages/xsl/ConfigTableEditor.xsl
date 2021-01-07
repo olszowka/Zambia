@@ -292,7 +292,7 @@
         <p>
           Click in the table to edit each field.<br/>
           Drag slider icon to reorder the entries.<br/>
-          Click the trashcan to delete the row.<br/>
+          Click the trashcan to delete the row. Rows without trashcans are in use by the count of items shown.<br/>
           Use the Add New button to add a row to the table.
         </p>
       </div>
