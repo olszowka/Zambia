@@ -6,10 +6,10 @@ var message = "";
 var previewmce = false;
 var indexcol = 'display_order';
 var selectlist = null;
+var newid = -99;
+var newrow = null;
 
 var EditConfigTable = function () {
-    var newid = -1;
-    var curid = -99999;
 
     function tabshown(tabname) {   
         if (tabname.substring(0, 2) != 't-')
@@ -61,7 +61,10 @@ function deleterow(e, row, questiontable) {
 
 function addnewrow(table) {
     newid = newid - 1;
-    table.addRow({ ordinal: newid }, false);
+    var rowtxt = "row = { " + indexcol + ": " + newid + ", display_order: 99999, Usage_Count: 0 };";
+    console.log(rowtxt);
+    eval(rowtxt);
+    table.addRow(row, false);
 }
 
 function opentable() {
@@ -154,8 +157,8 @@ function opentable() {
             }
         },
     });
-    //var addnewrowbut = document.getElementById("add-row");
-    //addnewrowbut.addEventListener('click', function () { addnewrow(table); });
+    var addnewrowbut = document.getElementById("add-row");
+    addnewrowbut.addEventListener('click', function () { addnewrow(table); });
     //console.log("Setting up options in table");
     document.getElementById("submitbtn").innerHTML = "Save";
     table.clearHistory();
