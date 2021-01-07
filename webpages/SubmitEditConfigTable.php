@@ -190,37 +190,115 @@ function update_table($tablename) {
 
 function fetch_table($tablename) {
     global $schema, $displayorder_found, $prikey;
+    $db = DBDB;
     //error_log("table = " . $tablename);
     // json of schema and table contents
     fetch_schema($tablename);
 
-    // table select - special for Room Has Set - due to needing to build selects
-    if ($tablename == 'RoomHasSet') {
-        // get values for editor select for roomid
-        $rooms = array();
-        $query = "SELECT roomid, roomname FROM Rooms ORDER BY display_order;";
-        $result = mysqli_query_exit_on_error($query);
-        while ($row = $result->fetch_assoc()) {
-            $rooms[] = $row;
+    // get the foreign keys
+    $query = <<<EOD
+SELECT TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = '$db' AND (TABLE_NAME = '$tablename' OR REFERENCED_TABLE_NAME = '$tablename')
+    AND CONSTRAINT_NAME != 'PRIMARY'
+ORDER BY COLUMN_NAME, TABLE_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+EOD;
+    $foreign_keys = array();
+    $referenced_columns = array();
+    $result = mysqli_query_exit_on_error($query);
+    while ($row = $result->fetch_assoc()) {
+        if (strcasecmp($row["TABLE_NAME"], $tablename) == 0) {
+            // table refers to another table for one of its fields;
+            $referenced_columns[] = $row["COLUMN_NAME"] . ":" . $row["REFERENCED_TABLE_NAME"] . "." . $row["REFERENCED_COLUMN_NAME"];
+        } else {
+            // table is referenced by another table
+            $foreign_keys[] = $row["REFERENCED_COLUMN_NAME"] . ":" . $row["TABLE_NAME"] . "."  . $row["COLUMN_NAME"];
         }
-        mysqli_free_result($result);
+    }
+    //mysqli_free_result($result);
+    //error_log("referenced columns");
+    //var_error_log($referenced_columns);
+    //error_log("foreign keys");
+    //var_error_log($foreign_keys);
 
-        // get values for editor select for roomid
-        $roomsets = array();
-        $query = "SELECT roomsetid, roomsetname FROM RoomSets ORDER BY display_order;";
+    $withclause = "";
+    $joinclause = "";
+    $curfield = "";
+    $mycurname = "";
+    $union = "";
+    $occurs = "";
+
+    if (count($foreign_keys) > 0 ) {
+        // Build CTE's for getting count of foreign key usage
+        foreach ($foreign_keys as $key) {
+            $colonpos = strpos($key, ':');
+            $mycolname = substr($key, 0, $colonpos);
+            $periodpos = strpos($key, '.');
+            $reftable = substr($key, $colonpos + 1, $periodpos - ($colonpos + 1));
+            $reffield = substr($key, $periodpos + 1);
+            //error_log("Referenced: '$key'");
+            //error_log("colname: '$mycolname'");
+            //error_log("reftable: '$reftable'");
+            //error_log("reffield: '$reffield'");
+            if ($reffield != $curfield) {
+                $union = "";
+                if ($withclause == "")
+                    $withclause = "WITH Ref" . $reffield . " AS (\n";
+                else {
+                    $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n), Ref" . $reffield . " AS (\n";
+                    $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
+                    if ($occurs != "")
+                        $occurs .= "+";
+                    $occurs .= "SUM$curfield.occurs";
+                }
+
+                $mycurname = $mycolname;
+                $curfield = $reffield;
+            }
+            $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
+            $union = "UNION ALL";
+        }
+        $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
+        $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
+        if ($occurs != "")
+            $occurs .= "+";
+        $occurs .= "SUM$curfield.occurs";
+        $occurs = "CASE WHEN $occurs IS NULL THEN 0 ELSE $occurs END AS Usage_Count";
+    }
+    else
+        $occurs = "0 AS Usage_Count";
+
+    $refstring = "";
+    foreach($referenced_columns as $key) {
+        // table select - get select list for field that is a foreign key to another table
+        $colonpos = strpos($key, ':');
+        $colname = substr($key, 0, $colonpos);
+        $periodpos = strpos($key, '.');
+        $reftable = substr($key, $colonpos + 1, $periodpos - ($colonpos + 1));
+        $reffield = substr($key, $periodpos + 1);
+
+        //error_log("Referenced: '$key'");
+        //error_log("colname: '$colname'");
+        //error_log("reftable: '$reftable'");
+        //error_log("reffield: '$reffield'");
+        $namefield = str_replace("id", "name", $reffield);
+        $data = array();
+        $query = "SELECT $reffield AS id, $namefield AS name FROM $reftable ORDER BY display_order;";
         $result = mysqli_query_exit_on_error($query);
         while ($row = $result->fetch_assoc()) {
-           $roomsets[] = $row;
+            $data[] = $row;
         }
         mysqli_free_result($result);
+        $refstring .= $colname . "_select = " . json_encode($data) . "\n";
     }
 
-    $query="SELECT * FROM $tablename ";
+    $query="$withclause SELECT $occurs, $tablename.* FROM $tablename\n$joinclause";
     if ($displayorder_found)
         $query = $query . "ORDER BY display_order;";
     else if ($prikey != ",")
         $query = $query . "ORDER BY " . $prikey . ";";
 
+    //error_log($query);
 	$result = mysqli_query_exit_on_error($query);
     $rows = array();
     while ($row = $result->fetch_assoc()) {
@@ -229,10 +307,7 @@ function fetch_table($tablename) {
 	mysqli_free_result($result);
     echo "tabledata = " . json_encode($rows) . ";\n";
     echo "tableschema = " . json_encode($schema) . ";\n";
-    if ($tablename == 'RoomHasSet') {
-        echo "rooms_select = " . json_encode($rooms) . ";\n";
-        echo "roomsets_select = " . json_encode($roomsets) . ";\n";
-    }
+    echo $refstring;
 }
 
 // Start here.  Should be AJAX requests only

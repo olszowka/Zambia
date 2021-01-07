@@ -5,6 +5,7 @@ var tablename = '';
 var message = "";
 var previewmce = false;
 var indexcol = 'display_order';
+var selectlist = null;
 
 var EditConfigTable = function () {
     var newid = -1;
@@ -46,11 +47,16 @@ var EditConfigTable = function () {
 var editConfigTable = new EditConfigTable();
 
 function deleteicon(cell, formattParams, onRendered) {
-    return "&#x1F5D1;";
+    var value = cell.getValue();
+    if (value == 0)
+        return "&#x1F5D1;";
+    return value;
 }
 function deleterow(e, row, questiontable) {
     document.getElementById("message").style.display = 'none';
-    row.delete();
+    var count = row.getCell("Usage_Count").getValue();
+    if (count == 0)
+        row.delete();
 }
 
 function addnewrow(table) {
@@ -70,68 +76,46 @@ function opentable() {
     displayorder_found = false;
     initialsort = new Array();
     columns.push({ rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 });
-    tableschema.forEach(function (column)  {
+    tableschema.forEach(function (column) {
         if (column.COLUMN_KEY == 'PRI') {
             indexcol = column.COLUMN_NAME;
             initialsort.push({ column: column.COLUMN_NAME, dir: "asc" });
-            visible = (!(column.COLUMN_NAME.match(/^id/i) || column.COLUMN_NAME.match(/id$/i)) || tablename == "RoomHasSet");
-            if (visible) {
-                if (tablename == "RoomHasSet") {
-                    editor_type = 'select';
-                    selectlist = new Array();
-                    if (column.COLUMN_NAME == 'roomid') {
-                        rooms_select.forEach(function (room) { selectlist[room.roomid] = room.roomname; });
-                    }
-                    if (column.COLUMN_NAME == 'roomsetid') {
-                        roomsets_select.forEach(function (roomset) { selectlist[roomset.roomsetid] = roomset.roomsetname; });
-                    }
-                    editor_params = { values: selectlist };
-                    columns.push({
-                        title: column.COLUMN_NAME, field: column.COLUMN_NAME,
-                        visible: true,
-                        editor: editor_type,
-                        editorParams: editor_params,
-                        formatter: "lookup",
-                        formatterParams: selectlist,
-                        minWidth: 200
-                    });
-                } else {
-                    editor_type = 'input',
-                    editor_params = { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } };
-                    columns.push({
-                        title: column.COLUMN_NAME, field: column.COLUMN_NAME,
-                        visible: true,
-                        editor: editor_type,
-                        editorParams: editor_params,
-                        minWidth: 200
-                    });
-                }
-            } else {
-                columns.push({
-                    title: column.COLUMN_NAME, field: column.COLUMN_NAME,
-                    visible: false
-                });
-            }
+            columns.push({
+                title: column.COLUMN_NAME, field: column.COLUMN_NAME,
+                visible: false
+            });
         } else if (column.COLUMN_NAME == 'display_order') {
             columns.push({ title: "Order", field: "display_order", visible: false });
             display_order = true;
-        }
+        } else if (eval("typeof " + column.COLUMN_NAME + "_select") !== 'undefined') {
+            selectlistname = column.COLUMN_NAME + "_select";
+            editor_type = 'select';
+            selectlist = new Array();
+            eval(selectlistname + ".forEach(function (entry) { selectlist[entry.id] = entry.name; });");
+            editor_params = { values: selectlist };
+            columns.push({
+                title: column.COLUMN_NAME, field: column.COLUMN_NAME,
+                visible: true,
+                editor: editor_type,
+                editorParams: editor_params,
+                formatter: "lookup",
+                formatterParams: selectlist,
+                minWidth: 200
+            });
+        } else if (column.DATA_TYPE == 'int')
+            columns.push({ title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "number", minWidth: 50, hozAlign: "right" });
         else {
-            if (column.DATA_TYPE == 'int')
-                columns.push({ title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "number", minWidth: 50, hozAlign: "right" });
-            else {
-                width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
-                if (width < 80) width = 80;
-                if (width > 500) width = 500;
-                columns.push({
-                    title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
-                    editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } }
-                });
-            }
+            width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
+            if (width < 80) width = 80;
+            if (width > 500) width = 500;
+            columns.push({
+                title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
+                editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } }
+            });
         }
     });
     columns.push({
-        title: "Delete", formatter: deleteicon, hozAlign: "center",
+        title: "Delete", field: "Usage_Count", formatter: deleteicon, hozAlign: "center",
         cellClick: function (e, cell) {
             deleterow(e, cell.getRow(), table);
         }
