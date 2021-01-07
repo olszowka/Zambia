@@ -45,23 +45,25 @@ function update_table($tablename) {
     $rows = json_decode(base64_decode(getString("tabledata")));
     $tablename = getString("tablename");
     $indexcol = getString("indexcol");
-    error_log("table: $tablename");
-    error_log("indexcol: $indexcol");
-    var_error_log($rows);
+    //error_log("table: $tablename");
+    //error_log("indexcol: $indexcol");
+    //var_error_log($rows);
 
     fetch_schema($tablename);
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
     $display_order = 10;
     foreach ($rows as $row) {
-        $row->display_order = $display_order;
-        $display_order = $display_order + 10;
+        if ($row->display_order >= 0) {
+            $row->display_order = $display_order;
+            $display_order = $display_order + 10;
+        }
         $id = (int) $row->$indexcol;
         if ($id) {
             $idsFound = $idsFound . ',' . $id;
         }
     }
-    error_log($idsFound);
+    //error_log($idsFound);
 
     // delete the ones no longer in the JSON uploaded, check for none uploaded
     if (mb_strlen($idsFound) < 2) {
@@ -69,7 +71,7 @@ function update_table($tablename) {
     } else {
         $sql = "DELETE FROM $tablename WHERE $indexcol NOT IN (" . mb_substr($idsFound, 1) . ");";
     }
-    error_log("\ndelete unused rows = '" . $sql . "'");
+    //error_log("\ndelete unused rows = '" . $sql . "'");
 
     if (!mysqli_query_exit_on_error($sql)) {
         exit(); // Should have exited already.
@@ -85,12 +87,12 @@ function update_table($tablename) {
         //var_error_log($col);
         if ($col['EXTRA'] != 'auto_increment') {
                 $sql .= $col['COLUMN_NAME'] . ',';
-                $datatype .= strpos($col['DATA_TYPE'], 'int') != false ? 'i' : 's';
+                $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
                 $fieldcount++;
         }
     }
     if ($fieldcount > 0) {
-        $sql = substr($sql, 0, -1) . " VALUES (";
+        $sql = substr($sql, 0, -1) . ") VALUES (";
         for ($i = 0; $i < $fieldcount; $i++)
             $sql .= "?,";
         $sql = substr($sql, 0, -1) . ");";
@@ -106,9 +108,9 @@ function update_table($tablename) {
                     }
                 }
 
-                error_log("\n\nInsert of " . $id);
-                error_log($sql);
-                var_error_log($paramarray);
+                //error_log("\n\nInsert of '$id' with datatype of '$datatype'");
+                //error_log($sql);
+                //var_error_log($paramarray);
                 $inserted = $inserted + mysql_cmd_with_prepare($sql, $datatype, $paramarray);
             }
         }
@@ -116,57 +118,44 @@ function update_table($tablename) {
 
     // update existing rows (those with id >= 0)
     $updated = 0;
+    $datatype = "";
 
-//    $sql = <<<EOD
-//        UPDATE SurveyQuestionConfig SET
-//            shortname = ?,
-//            description = ?,
-//            prompt = ?,
-//            hover = ?,
-//            display_order = ?,
-//            typeid = ?,
-//            required = ?,
-//            publish = ?,
-//            privacy_user = ?,
-//            searchable = ?,
-//            ascending = ?,
-//            display_only = ?,
-//            min_value = ?,
-//            max_value = ?
-//        WHERE questionid = ?;
-//EOD;
-//    $optsql = <<<EOD
-//        UPDATE SurveyQuestionOptionConfig SET
-//            value = ?, display_order = ?, optionshort = ?, optionhover = ?, allowothertext = ?
-//        WHERE questionid = ? AND ordinal = ?;
-//EOD;
-//    foreach ($questions as $quest) {
-//        $id = (int) $quest->questionid;
-//        //error_log("\n\nupdate loop " . $id);
-//        if ($id >= 0) {
-//            //error_log("\n\nUpdate Processing question id: " . $id);
-
-//            $paramarray = array(
-//                property_exists($quest, "shortname") ? $quest->shortname : "",
-//                property_exists($quest, "description") ? base64_decode($quest->description) : null,
-//                property_exists($quest, "prompt") ? base64_decode($quest->prompt) : "",
-//                property_exists($quest, "hover") ? base64_decode($quest->hover) : null,
-//                property_exists($quest, "display_order") ? $quest->display_order: null,
-//                property_exists($quest, "typeid") ? (int) $quest->typeid: 60,
-//                property_exists($quest, "required") ? $quest->required : 1,
-//                property_exists($quest, "publish") ? $quest->publish : 0,
-//                property_exists($quest, "privacy_user") ? $quest->privacy_user : 0,
-//                property_exists($quest, "searchable") ? $quest->searchable : 0,
-//                property_exists($quest, "ascending") ? $quest->ascending : 1,
-//                property_exists($quest, "display_only") ? $quest->display_only : 0,
-//                property_exists($quest, "min_value") ? (strlen($quest->min_value) > 0 ? $quest->min_value : null) : null,
-//                property_exists($quest, "max_value") ? (strlen($quest->max_value) > 0 ? $quest->max_value : null) : null,
-//                $id
-//            );
-//            //error_log("\n\nupdate of " . $id . "\n" . $sql);
-//            //var_error_log($paramarray);
-//            $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiiii", $paramarray);
-//            }
+    $sql = "UPDATE $tablename SET\n";
+    $keytype = 's';
+    foreach($schema as $col) {
+        if ($col['COLUMN_KEY'] != 'PRI') {
+            if ($col['COLUMN_NAME'] != 'Usage_COUNT') {
+                $sql .= "\t" . $col['COLUMN_NAME'] . " = ?,\n";
+                $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
+                $fieldcount++;
+            }
+        } else {
+            $keytype = strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
+        }
+    }
+    $sql = substr($sql, 0, -2) .  "\nWHERE $prikey = ?;";
+    $datatype .= $keytype;;
+    //error_log($sql);
+    //error_log($datatype);
+    foreach ($rows as $row) {
+        $id = $row->$prikey;
+        //error_log("\n\nUpdate Loop: " . $id);
+        if ($id >= 0) {
+            $paramarray = array();
+            foreach($schema as $col) {
+                if ($col['COLUMN_KEY'] != 'PRI') {
+                    $colname = $col['COLUMN_NAME'];
+                    if ($colname != 'Usage_COUNT') {
+                        $paramarray[] = $row->$colname;
+                    }
+                }
+            }
+            $paramarray[] = $id;
+            //error_log("\n\nupdate of '$id' with '$datatype'\n" . $sql);
+            //var_error_log($paramarray);
+            $updated = $updated + mysql_cmd_with_prepare($sql, $datatype, $paramarray);
+        }
+    }
 
     $message = "";
     if ($deleted > 0) {
