@@ -1110,4 +1110,13 @@ function get_sstatus() {
     }
     return $sstatus;
 }
+
+function survey_programmed() {
+    $query = "SELECT COUNT(*) questions FROM SurveyQuestionConfig";
+    $result = mysqli_query_exit_on_error($query);
+    $questions = mysqli_fetch_row($result)[0];
+    if (isset($questions))
+           return $questions > 0;
+    return false;
+}
 ?>
