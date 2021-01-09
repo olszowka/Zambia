@@ -40,10 +40,22 @@ EOD;
 
 function update_table($tablename) {
     global $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
+
+    if (!isLoggedIn() ||  !may_I("Administrator")) {
+        fetch_table("No Permission to run Configuration Table Editor");
+        return;
+    }
+
     //error_log("\n\nin update table:\n");
     //error_log("string loaded: " . getString("tabledata"));
     $rows = json_decode(base64_decode(getString("tabledata")));
     $tablename = getString("tablename");
+
+    if (!may_I("ce_$tablename")) {
+        fetch_table("No permission to edit $tablename");
+        return;
+    }
+
     $indexcol = getString("indexcol");
     //error_log("table: $tablename");
     //error_log("indexcol: $indexcol");
@@ -182,6 +194,24 @@ function fetch_table($tablename) {
     $db = DBDB;
     $json_return = array();
     $message = "";
+
+    if (!isLoggedIn() || !may_I("Administrator")) {
+        $json_return["message"] = "No permission to run Configuration Table Editor";
+        echo json_encode($json_return) . "\n";
+        return;
+    }
+
+    if (strpos($tablename, ' ', 0) !== false) {
+        $json_return["message"] = $tablename;
+        echo json_encode($json_return) . "\n";
+        return;
+    }
+
+    if (!may_I("ce_$tablename")) {
+        $json_return["message"] = "No permission to edit $tablename";
+        echo json_encode($json_return) . "\n";
+        return;
+    }
     //error_log("table = " . $tablename);
     // json of schema and table contents
     fetch_schema($tablename);
