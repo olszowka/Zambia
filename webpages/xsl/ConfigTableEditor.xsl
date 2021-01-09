@@ -82,7 +82,7 @@
                 <li>Credentials:</li>
                 <p>Credentials list for Professions in Participant Profile</p>
                 <li>Roles</li>
-                <p>"Roles I'm willing to ake on" in Particpant General Interests</p>
+                <p>"Roles I'm willing to take on" in Particpant General Interests</p>
               </ul>
             </div>
             <div class="tab-pane mt-4 fade" id="bioeditstatuses"/>
