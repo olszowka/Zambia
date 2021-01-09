@@ -8,6 +8,8 @@ var indexcol = 'display_order';
 var selectlist = null;
 var newid = -99;
 var newrow = null;
+var fetch_json = {};
+var tableschema = null;
 
 var EditConfigTable = function () {
 
@@ -17,7 +19,7 @@ var EditConfigTable = function () {
         else {
             document.getElementById("table-div").style.display = "block";
             tablename = tabname.substring(2);
-            console.log('new table: ' + tablename);
+            //console.log('new table: ' + tablename);
             FetchTable();
         }
     }
@@ -62,18 +64,14 @@ function deleterow(e, row, questiontable) {
 function addnewrow(table) {
     newid = newid - 1;
     var rowtxt = "row = { " + indexcol + ": " + newid + ", display_order: 99999, Usage_Count: 0 };";
-    console.log(rowtxt);
+    //console.log(rowtxt);
     eval(rowtxt);
     table.addRow(row, false);
 }
 
-function opentable() {
+function opentable(tabledata) {
     // get table information from tableschema
-    if (!tableschema) {
-        message = message + '<br/>Error: no schema returned for this table';
-        return false;
-    }
-    console.log(tableschema);
+    //console.log(tableschema);
     columns = new Array();
     indexcol = 'display_order';
     displayorder_found = false;
@@ -90,11 +88,11 @@ function opentable() {
         } else if (column.COLUMN_NAME == 'display_order') {
             columns.push({ title: "Order", field: "display_order", visible: false });
             display_order = true;
-        } else if (eval("typeof " + column.COLUMN_NAME + "_select") !== 'undefined') {
+        } else if (fetch_json.hasOwnProperty(column.COLUMN_NAME + "_select")) {
             selectlistname = column.COLUMN_NAME + "_select";
             editor_type = 'select';
             selectlist = new Array();
-            eval(selectlistname + ".forEach(function (entry) { selectlist[entry.id] = entry.name; });");
+            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) { selectlist[entry.id] = entry.name; });
             editor_params = { values: selectlist };
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
@@ -123,7 +121,7 @@ function opentable() {
             deleterow(e, cell.getRow(), table);
         }
     });
-    console.log(columns);
+    //console.log(columns);
     
     if (displayorder_found) {
         initialsort = new Array();
@@ -165,30 +163,59 @@ function opentable() {
 };
 
 function saveComplete(data, textStatus, jqXHR) {
-    var match = "tabledata = ";
-    var match2 = "message = ";
     message = "";
     //console.log(data);
-    if (data.substring(0, match.length) == match || data.substring(0, match2.length) == match2) {
-        eval(data);
+    try {
+        fetch_json = JSON.parse(data);
+    } catch (error) {
+        console.log(error);
+        fetch_json = {};
+    }
+
+    if (fetch_json.hasOwnProperty('message')) {
+        message = fetch_json.message;
+        //console.log(message);
+    }       
+
+    if (fetch_json.hasOwnProperty('tableschema')) {
+        tableschema = fetch_json.tableschema;
+    } else {
+        tableschema = null;
+        message += '<br/>Error: no schema returned for this table';
+    }
+
+    proceed = true;
+    if (message != "") {
+        el = document.getElementById("message");
+        if (message.indexOf("Error:") >= 0) {
+            el.class = "alert alert-danger mt-4";
+            proceed = false;
+        } else if (message.indexOf("Warning:") >= 0) {
+            el.class = "alert alert-danger mt-4";
+            proceed = false;
+        } else {
+            el.class = "alert alert-success mt-4";
+        }
+        el.innerHTML = fetch_json.message;;
+        el.style.display = 'block';
+    }
+
+    if (proceed && fetch_json.hasOwnProperty('tabledata')) {
         //console.log(tabledata);
         if (table) {
-            table.replaceData(tabledata);
+            table.replaceData(fetch_json.tabledata);
         }
         else {
-            opentable();
+            opentable(fetch_json.tabledata);
         }
     }
+   
     document.getElementById("saving_div").style.display = "none";
     el = document.getElementById("submitbtn");
     el.disabled = false;
     el.innerHTML = "Save";
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
-    if (message != "") {
-        document.getElementById("message").innerHTML = message;
-        document.getElementById("message").style.display = 'block';
-    }
 };
 
 function SaveTable() {

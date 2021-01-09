@@ -180,9 +180,12 @@ function update_table($tablename) {
 function fetch_table($tablename) {
     global $schema, $displayorder_found, $prikey;
     $db = DBDB;
+    $json_return = array();
+    $message = "";
     //error_log("table = " . $tablename);
     // json of schema and table contents
     fetch_schema($tablename);
+    $json_return["tableschema"] = $schema;
 
     // get the foreign keys
     $query = <<<EOD
@@ -217,8 +220,8 @@ EOD;
     $union = "";
     $occurs = "";
 
+    // Build CTE's for getting count of foreign key usage
     if (count($foreign_keys) > 0 ) {
-        // Build CTE's for getting count of foreign key usage
         foreach ($foreign_keys as $key) {
             $colonpos = strpos($key, ':');
             $mycolname = substr($key, 0, $colonpos);
@@ -257,9 +260,8 @@ EOD;
     else
         $occurs = "0 AS Usage_Count";
 
-    $refstring = "";
+    // table select - get select list for field that is a foreign key to another table
     foreach($referenced_columns as $key) {
-        // table select - get select list for field that is a foreign key to another table
         $colonpos = strpos($key, ':');
         $colname = substr($key, 0, $colonpos);
         $periodpos = strpos($key, '.');
@@ -278,9 +280,15 @@ EOD;
             $data[] = $row;
         }
         mysqli_free_result($result);
-        $refstring .= $colname . "_select = " . json_encode($data) . "\n";
+        if (count($data) == 0) {
+            if ($message != "")
+                $message .= "<br/>";
+            $message .= "Warning: Cannot edit this table until the table $reftable has been edited and is not empty";
+        }
+        $json_return[$colname . "_select"] = $data;
     }
 
+    // now get the data rows
     $query="$withclause SELECT $occurs, $tablename.* FROM $tablename\n$joinclause";
     if ($displayorder_found)
         $query = $query . "ORDER BY display_order;";
@@ -294,9 +302,11 @@ EOD;
         $rows[] = $row;
     }
 	mysqli_free_result($result);
-    echo "tabledata = " . json_encode($rows) . ";\n";
-    echo "tableschema = " . json_encode($schema) . ";\n";
-    echo $refstring;
+    $json_return["tabledata"] = $rows;
+
+    if ($message != "")
+        $json_return["message"] = $message;
+    echo json_encode($json_return) . "\n";
 }
 
 // Start here.  Should be AJAX requests only
@@ -317,5 +327,4 @@ switch ($ajax_request_action) {
     default:
         exit();
 }
-
 ?>
