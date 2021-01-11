@@ -10,15 +10,14 @@
   <xsl:param name="controliv" select="''"/>
   <xsl:param name="UpdateMessage" select="''"/>
   <xsl:template match="/">
-    
-      <div id="message" class="alert alert-success mt-4">
-        <xsl:if test="not($UpdateMessage) or ($UpdateMessage = '')">
-          <xsl:attribute name="style">
-            <xsl:text>display: none</xsl:text>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
-      </div>
+    <div id="message" class="alert alert-success mt-4">
+      <xsl:if test="not($UpdateMessage) or ($UpdateMessage = '')">
+        <xsl:attribute name="style">
+          <xsl:text>display: none</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
+    </div>
     <form name="partsurveyform" method="POST">
       <xsl:if test="buttons != ''">
         <xsl:attribute name="action">

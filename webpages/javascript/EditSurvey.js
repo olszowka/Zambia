@@ -441,7 +441,7 @@ var EditSurvey = function () {
         layout: "fitDataTable",
         columns: [
             { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-            { title: "ID", field: "questionid", visible: true },
+            { title: "ID", field: "questionid", visible: false },
             { title: "Order", field: "display_order", visible: false },
             {
                 title: "Name", field: "shortname", width: 120,
@@ -505,7 +505,7 @@ var EditSurvey = function () {
             },
             { title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right" },
             { title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right" },
-            { title: "Options", field: "options", width: 75, visible: true },
+            { title: "Options", field: "options", width: 75, visible: false },
             {
                 title: "Delete", formatter: deleteicon, hozAlign: "center",
                 cellClick: function (e, cell) {

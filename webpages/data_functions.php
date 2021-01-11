@@ -508,7 +508,7 @@ function ArrayToXML($queryname, $array, $xml = null) {
 function ObjecttoXML($queryname, $object, $xml = null) {
     // Create the XML object if needed, else use the existing doc
     if (is_null($xml)) {
-        error_log("object to xml - creating new xml object");
+        //error_log("object to xml - creating new xml object");
         $xml = new DomDocument("1.0", "UTF-8");
         $doc = $xml -> createElement("doc");
         $doc = $xml -> appendChild($doc);
