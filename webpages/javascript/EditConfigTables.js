@@ -10,6 +10,7 @@ var newid = -99;
 var newrow = null;
 var fetch_json = {};
 var tableschema = null;
+var curcell = null;
 
 var EditConfigTable = function () {
 
@@ -47,6 +48,77 @@ var EditConfigTable = function () {
 };
 
 var editConfigTable = new EditConfigTable();
+
+function savetceEdit(display) {
+    if (curcell) {
+        tinyMCE.triggerSave();
+        newval = txtel.value;
+        newval = newval.replace(/\<\/p\>[ \r\n]*\<p\>/gi, "\n");
+        newval = newval.replace(/\<br *\/*\>/gi, "\n");
+        newval = newval.replace(/^\<p\> */i, "");
+        newval = newval.replace(/ *\<\/p\> *$/i, "");
+        curcell.setValue(newval);
+        tinyMCE.remove();
+        curcell = null;
+        if (display) {
+            document.getElementById("tceedit-div").style.display = "none";
+            document.getElementById("add-row").disabled = false;
+            document.getElementById("resetbtn").disabled = false;
+            document.getElementById("submitbtn").disabled = false;
+            var undoCount = table.getHistoryUndoSize();
+            if (undoCount > 0) {
+                document.getElementById("undo").disabled = false;
+            }
+            var redoCount = table.getHistoryRedoSize();
+            if (redoCount > 0) {
+                document.getElementById("redo").disabled = false;
+            }
+        }
+    }
+}
+
+function tceEditor(e, cell) {
+    txtel = document.getElementById("tceedit-textarea");
+    if (cell != curcell) {
+        savetceEdit(false);
+    }
+    cellname = cell.getField();        
+    // initialize the starting value from the current value of the cell
+    curcell = cell;
+    txtel.value = cell.getValue().replace(/\n/g, "<br/>");
+
+    el = document.getElementById("tceedit-div");
+    el.style.display = "block";
+    tinyMCE.init({
+        setup: function (editor) {
+            editor.ui.registry.addButton('customSaveButton', {
+                icon: 'save',
+                tooltip: 'Save contents back to table',
+                onAction: function () {
+                    savetceEdit(true);
+                }
+            })
+        },
+        selector: 'textarea#tceedit-textarea',
+        plugins: 'fullscreen searchreplace charmap nonbreaking visualchars',
+        browser_spellcheck: true,
+        contextmenu: false,
+        height: 400,
+        min_height: 200,
+        menubar: false,
+        toolbar: [
+            ' customSaveButton | undo redo | searchreplace |visualchars nonbreaking charmap | fullscreen'
+        ],
+        toolbar_mode: 'wrap',
+        content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+        placeholder: 'Type custom content here...'
+    });
+    document.getElementById("add-row").disabled = true;
+    document.getElementById("resetbtn").disabled = true;
+    document.getElementById("submitbtn").disabled = true; 
+    document.getElementById("undo").disabled = true;
+    document.getElementById("redo").disabled = true;
+};
 
 function deleteicon(cell, formattParams, onRendered) {
     var value = cell.getValue();
@@ -104,14 +176,27 @@ function opentable(tabledata) {
                 minWidth: 200
             });
         } else if (column.DATA_TYPE == 'int')
-            columns.push({ title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "number", minWidth: 50, hozAlign: "right" });
-        else {
+            columns.push({
+                title: column.COLUMN_NAME, field: column.COLUMN_NAME,
+                editor: "number", minWidth: 50, hozAlign: "right",
+                headerSort: true
+            });
+        else if (column.DATA_TYPE == 'text') {
+            width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
+            if (width < 80) width = 80;
+            if (width > 500) width = 500;
+            columns.push({
+                title: column.COLUMN_NAME, field: column.COLUMN_NAME, width: width,
+                cellClick: tceEditor
+            });
+        } else {
             width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
             if (width < 80) width = 80;
             if (width > 500) width = 500;
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
-                editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } }
+                editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
+                headerSort: true
             });
         }
     });
@@ -164,14 +249,14 @@ function opentable(tabledata) {
 
 function saveComplete(data, textStatus, jqXHR) {
     message = "";
-    //console.log(data);
+    console.log(data);
     try {
         fetch_json = JSON.parse(data);
     } catch (error) {
         console.log(error);
         fetch_json = {};
     }
-
+    console.log(fetch_json);
     if (fetch_json.hasOwnProperty('message')) {
         message = fetch_json.message;
         //console.log(message);
@@ -229,7 +314,6 @@ function SaveTable() {
     //        ", d" + row.getCell("display_order").getValue());
     //}
     //return false;
-
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
     document.getElementById("message").style.display = 'none';
