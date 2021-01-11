@@ -42,7 +42,7 @@ function update_table($tablename) {
     global $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
 
     if (!isLoggedIn() ||  !may_I("Administrator")) {
-        fetch_table("No Permission to run Configuration Table Editor");
+        fetch_table("No Permission to run Configuration Table Editor", "");
         return;
     }
 
@@ -52,7 +52,7 @@ function update_table($tablename) {
     $tablename = getString("tablename");
 
     if (!may_I("ce_$tablename")) {
-        fetch_table("No permission to edit $tablename");
+        fetch_table("No permission to edit $tablename", "");
         return;
     }
 
@@ -180,20 +180,19 @@ function update_table($tablename) {
         $message = $message . ", " . $updated . " rows updated";
     }
 
-   if (mb_strlen($message) > 2) {
-        $message = "<p>Database changes: " . mb_substr($message, 2) .  "</p>";
-        echo "message = '" . $message . "';\n";
-    }
+    if (mb_strlen($message) > 2)
+        $message = "<p>Database changes: " . mb_substr($message, 2) .  "</p>"; 
+    else 
+        $message = "";
 
     // get updated survey now with the id's in it
-    fetch_table($tablename);
+    fetch_table($tablename, $message);
 }
 
-function fetch_table($tablename) {
+function fetch_table($tablename, $message) {
     global $schema, $displayorder_found, $prikey;
     $db = DBDB;
     $json_return = array();
-    $message = "";
 
     if (!isLoggedIn() || !may_I("Administrator")) {
         $json_return["message"] = "No permission to run Configuration Table Editor";
@@ -348,7 +347,7 @@ if ($ajax_request_action == "") {
 switch ($ajax_request_action) {
     case "fetchtable":
         $tablename = getString("tablename");
-        fetch_table($tablename);
+        fetch_table($tablename, "");
         break;
     case "updatetable":
         $tablename = getString("tablename");
