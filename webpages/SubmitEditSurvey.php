@@ -86,13 +86,9 @@ EOD;
             $inserted = $inserted + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiii", $paramarray);
             $questionid = mysqli_insert_id($linki);
             $options = [];
-            $useoptatob = true;
             if (property_exists($quest, "options")) {
                 $optstring = base64_decode($quest->options);
-                if (mb_substr($optstring, 0, 7) == "nobtoa:") {
-                    $useoptatob = false;
-                    $optstring = mb_substr($optstring, 7);
-                }
+                $optstring = mb_substr($optstring, 7);
                 $options  = json_decode($optstring);
             }
             //error_log("\n\nOptions:\n");
@@ -188,10 +184,6 @@ EOD;
                 if (mb_strlen($optstring) > 3) {
                     $optstring = base64_decode($optstring);
                     //error_log("\n\ndecoded optstring = '" . $optstring . "'\n\n");
-                    if (mb_substr($optstring, 0, 7) == "nobtoa:") {
-                        $useoptatob = false;
-                        $optstring = mb_substr($optstring, 7);
-                    }
                     $options  = json_decode($optstring);
                     //error_log("\n\npost json decode\n");
                     //var_error_log($options);
@@ -312,14 +304,19 @@ EOD;
     }
    if (mb_strlen($message) > 2) {
         $message = "<p>Database changes: " . mb_substr($message, 2) .  "</p>";
-        echo "message = '" . $message . "';\n";
-    }
+   } else {
+       $message = "";
+   }
 
     // get updated survey now with the id's in it
-    fetch_survey();
+    fetch_survey($message);
 }
 
-function fetch_survey() {
+function fetch_survey($message) {
+    $json_return = array();
+    if ($message != "")
+        $json_return["message"] = $message;
+
     // json of current questions and question options
 	$query=<<<EOD
 		SELECT JSON_OBJECT(
@@ -347,13 +344,13 @@ function fetch_survey() {
 EOD;
 
 	$result = mysqli_query_exit_on_error($query);
-	$Config = "survey = [\n\t";
+	$Config = "[\n\t";
     while ($row = mysqli_fetch_assoc($result)) {
-        $Config = $Config . "\t" . $row["config"] . ",\n";
+        $Config .= "\t" . $row["config"] . ",\n";
     }
-	$Config = $Config . "\n];\n";
+	$Config = mb_substr($Config, 0, -2) . "\n]";
 	mysqli_free_result($result);
-	echo $Config;
+	$json_return["survey"] = base64_encode($Config);
 
     $query = <<<EOD
 	SELECT questionid, display_order, JSON_OBJECT(
@@ -370,9 +367,9 @@ EOD;
 	ORDER BY questionid, display_order;
 EOD;
 	$result = mysqli_query_exit_on_error($query);
-	echo "survey_options = {\n";
 
-	$cur_qid = "";
+	$survey_options = array();
+    $cur_qid = "";
     $cur_config = "[";
 
     while ($row = mysqli_fetch_assoc($result)) {
@@ -381,7 +378,7 @@ EOD;
 
         if ($qid != $cur_qid) {
             if ($cur_qid != "") {
-                echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
+                $survey_options[$cur_qid] = base64_encode(mb_substr($cur_config, 0, -2) . "]");
             }
             $cur_config = "[";
             $cur_qid = $qid;
@@ -390,8 +387,10 @@ EOD;
     }
     mysqli_free_result($result);
 
-	echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
-	echo "};\n";
+    $survey_options[$cur_qid] = base64_encode(mb_substr($cur_config, 0, -2) . "]");
+    $json_return["survey_options"] = $survey_options;
+
+    echo json_encode($json_return) . "\n";
 }
 
 // Start here.  Should be AJAX requests only
@@ -402,7 +401,7 @@ if ($ajax_request_action == "") {
 
 switch ($ajax_request_action) {
     case "fetch_survey":
-        fetch_survey();
+        fetch_survey("");
         break;
     case "update_survey":
         update_survey();

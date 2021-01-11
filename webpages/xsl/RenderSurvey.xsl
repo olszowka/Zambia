@@ -19,10 +19,18 @@
         </xsl:if>
         <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
       </div>
-    <form name="partsurveyform" method="POST" action="PartSurvey.php"  onsubmit="return UpdateSurvey();">
-      <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
-      <input type="hidden" id="control" name="control" value="{$control}" />
-      <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
+    <form name="partsurveyform" method="POST">
+      <xsl:if test="buttons != ''">
+        <xsl:attribute name="action">
+          <xsl:text>PartSurvey.php</xsl:text>
+        </xsl:attribute>
+        <xsl:attribute name="onsubmit">
+          <xsl:text>return UpdateSurvey();</xsl:text>
+        </xsl:attribute>
+        <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
+        <input type="hidden" id="control" name="control" value="{$control}" />
+        <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
+      </xsl:if>
       <xsl:call-template name="questions">
         <xsl:with-param name="buttons" select="$buttons" />
       </xsl:call-template>
@@ -90,6 +98,9 @@
                   </xsl:attribute>
                   <xsl:attribute name="data-toggle">
                     <xsl:text>tooltip</xsl:text>
+                  </xsl:attribute>
+                  <xsl:attribute name="data-html">
+                    <xsl:text>true</xsl:text>
                   </xsl:attribute>
                   <xsl:attribute name="data-placement">
                     <xsl:text>right</xsl:text>

@@ -14,10 +14,10 @@ if (isLoggedIn() && may_I("Administrator")) {
         $sql = <<<EOD
         SELECT t.shortname, d.display_order, JSON_OBJECT(
             'ordinal', -d.ordinal,
-            'value', d.value,
+            'value', TO_BASE64(d.value),
             'display_order', d.display_order,
-            'optionshort', d.optionshort,
-            'optionhover', d.optionhover,
+            'optionshort', TO_BASE64(d.optionshort),
+            'optionhover', TO_BASE64(d.optionhover),
             'allowothertext', d.allowothertext
             ) AS config
         FROM SurveyQuestionTypeDefaults d
@@ -37,7 +37,7 @@ EOD;
 
 			if ($typename != $cur_typename) {
                 if ($cur_typename != "") {
-                    echo $cur_typename . ': "' . base64_encode($cur_config . "];") . '",' . "\n";
+                    echo $cur_typename . ': "' . base64_encode($cur_config . "]") . '",' . "\n";
                 }
 				$cur_config = "[";
                 $cur_typename = $typename;
@@ -45,7 +45,7 @@ EOD;
 			$cur_config = $cur_config . $config . ",\n";
         }
         mysqli_free_result($result);
-		echo $typename . ': "' . base64_encode($cur_config . "])") . '",' . "\n};\n";
+		echo $typename . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '"' . "\n};\n";
 
 // json of current questions and question options
 	$paramArray = array();

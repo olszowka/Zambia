@@ -74,20 +74,14 @@ function render_question() {
     $options = getString("options");
     if ($options) {
         //error_log("\n\noptions: '" . $options . "'\n");
-        $prefix = "nobtoa:";
-        $do_decode = true;
-        if (mb_substr($options, 0, mb_strlen($prefix)) == $prefix) {
-            $options = mb_substr($options, mb_strlen($prefix));
-            $do_decode = false;
-        }
         $options = json_decode($options);
-        if ($do_decode) {
-            foreach ($options as $opt) {
-                $opt->value = base64_decode($opt->value);
-                $opt->optionshort = base64_decode($opt->optionshort);
-                $opt->optionhover = base64_decode($opt->optionhover);
-            }
+        //var_error_log($options);
+        foreach ($options as $opt) {
+            $opt->value = base64_decode($opt->value);
+            $opt->optionshort = base64_decode($opt->optionshort);
+            $opt->optionhover = base64_decode($opt->optionhover);
         }
+        //var_error_log($options);
         $xml = ObjecttoXML("options", $options, $xml);
     }
     //error_log("\n\nxml after options\n");

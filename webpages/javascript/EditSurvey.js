@@ -97,20 +97,28 @@ var EditSurvey = function () {
             curid = newid;
         }
         //console.log("add/update " + curid);
+
         if (opttable) {
-            option = JSON.stringify(opttable.getData());
+            options = opttable.getData();
+            for (i = 0; i < options.length; i++) {
+                options[i].questionid = curid;
+            }
+            option = btoa(JSON.stringify(options));
             //console.log("-used opttable");
         } else if (questionoptions.length > 0) {
-            option = "nobtoa:" + JSON.stringify(questionoptions);
+            option = bota(JSON.stringify(questionoptions));
             //console.log("-used question options: " + questionoptions.length);
         } else {
-            option = "[]";
+            option = "";
             //console.log("-no options");
         }
+        
+       //console.log("options-save");
+        //console.log(option);
         table.updateOrAddData([{
             questionid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
             typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user,
-            searchable: searchable, ascending: ascending, display_only: display_only, min_value: minvalue, max_value: maxvalue, options: btoa(option)
+            searchable: searchable, ascending: ascending, display_only: display_only, min_value: minvalue, max_value: maxvalue, options: option
            }, 
         ]);
         newid = newid - 1;
@@ -207,27 +215,22 @@ var EditSurvey = function () {
         document.getElementById("min_value").value = row.getCell("min_value").getValue();
         document.getElementById("max_value").value = row.getCell("max_value").getValue();
         options = row.getCell("options").getValue();
-        optiontable = null;
-        if (options.length > 0) {
+
+        if (options.length > 3)
             options = atob(options);
-        }
-        if (options.length == 0) {
-            questionoptions = [];
-        } else {
-            //console.log(options);
-            if (options.substring(0, 7) == "nobtoa:") {
-                dopost = false;
-                options = options.substring(7);
-            } else {
-                dopost = true;
-            }
-            eval("questionoptions = " + options);
-            if (dopost) {
-                //console.log("doing decode");
-                // loop over options decoding every value, optionshortname and optionhover
-                questionoptions.forEach(decodeOption);
-            }
-        }
+        if (options.length > 3)
+            questionoptions = JSON.parse(options);
+        optiontable = null;
+        
+        //console.log("options");
+        //console.log(options);
+        
+        //loop over options decoding every value, optionshortname and optionhover
+        for (i = 0; i < questionoptions.length; i++) {
+            questionoptions[i].value = atob(questionoptions[i].value);
+            questionoptions[i].optionshort = atob(questionoptions[i].optionshort);
+            questionoptions[i].optionhover = atob(questionoptions[i].optionhover);
+        } 
         //console.log(questionoptions);
 
         // now show the block
@@ -316,7 +319,14 @@ var EditSurvey = function () {
             if (questionoptions.length == 0) {
                 defaults = defaultOptions[typename];
                 defaultjson = atob(defaults);
-                eval("questionoptions = " + defaultjson);
+                //console.log(defaultjson);
+                try {
+                    questionoptions = JSON.parse(defaultjson);
+                    //console.log(questionoptions);
+                } catch (error) {
+                    //console.log(error);
+                }
+                //eval("questionoptions = " + defaultjson);
                 questionoptions.forEach(assign_questionid);
                 //console.log("added default options");
             }
@@ -390,6 +400,21 @@ var EditSurvey = function () {
 
     function assign_questionid(option) {
         option.questionid = curid;
+        if (option.hasOwnProperty("optionhover")) {
+            if (option.optionhover.length > 2) {
+                option.optionhover = atob(option.optionhover);
+            }
+        }
+        if (option.hasOwnProperty("optionshort")) {
+            if (option.optionshort.length > 2) {
+                option.optionshort = atob(option.optionshort);
+            }
+        }
+        if (option.hasOwnProperty("value")) {
+            if (option.value.length > 2) {
+                option.value = atob(option.value);
+            }
+        }
     }
 
     function deleteicon(cell, formattParams, onRendered) {
@@ -400,122 +425,121 @@ var EditSurvey = function () {
         row.delete();
     }
 
-   this.initialize = function () {
-        //called when EditSurvey page has loaded
-
+    this.initialize = function () {
+       //called when EditSurvey page has loaded
         configtable = new Tabulator("#surveyconfig", {
-            maxHeight: "250px",
-            movableRows: true,
-            tooltips: false,
-            history: true,
-            headerSort: false,
-            initialSort: [
-                { column: "display_order", dir: "asc" } //sort by this first
-            ],
-            data: survey,
-            index: "questionid",
-            layout: "fitDataTable",
-            columns: [
-                { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-                { title: "ID", field: "questionid", visible: false },
-                { title: "Order", field: "display_order", visible: false },
-                {
-                    title: "Name", field: "shortname", width: 120,
-                    cellClick: function (e, cell) {
-                        if (!in_editconfig)
-                            editconfig(e, cell.getRow(), configtable);
-                    },
+        maxHeight: "250px",
+        movableRows: true,
+        tooltips: false,
+        history: true,
+        headerSort: false,
+        initialSort: [
+            { column: "display_order", dir: "asc" } //sort by this first
+        ],
+        data: survey,
+        index: "questionid",
+        layout: "fitDataTable",
+        columns: [
+            { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
+            { title: "ID", field: "questionid", visible: true },
+            { title: "Order", field: "display_order", visible: false },
+            {
+                title: "Name", field: "shortname", width: 120,
+                cellClick: function (e, cell) {
+                    if (!in_editconfig)
+                        editconfig(e, cell.getRow(), configtable);
                 },
-                {
-                    title: "Description", field: "description", accessorData: escapeQuotesAccessor,
-                    formatter: "textarea", visible: false
-                },
-                {
-                    title: "Prompt", field: "prompt", accessorData: escapeQuotesAccessor, width: 180,
-                    editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
-                },
-                {
-                    title: "Hover Text", field: "hover", accessorData: escapeQuotesAccessor, width: 180,
-                    editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }
-                },
-                { title: "Type", field: "typename", width: 140 },
-                { title: "Type-ID", field: "typeid", visible: false },
-                {
-                    title: "Display Only", field: "display_only", formatter: "tickCross",
-                    editor: "select", editorParams: {
-                        values: { 1: "Yes", 0: "No" },
-                    }
-                },
-                {
-                    title: "Required", field: "required", formatter: "tickCross",
-                    editor: "select", editorParams: {
-                        values: { 1: "Yes", 0: "No" },
-                    }
-                },
-                {
-                    title: "Publish", field: "publish", formatter: "tickCross",
-                    editor: "select", editorParams: {
-                        values: { 1: "Yes", 0: "No" },
-                    }
-                },
-                {
-                    title: "Privacy", field: "privacy_user", formatter: "tickCross",
-                    editor: "select", editorParams: {
-                        values: { 1: "Yes", 0: "No" },
-                    }
-                },
-                {
-                    title: "Searchable", field: "searchable", formatter: "tickCross",
-                    editor: "select", editorParams: {
-                        values: { 1: "Yes", 0: "No" },
-                    }
-                },  
-                {
-                    title: "Asc/Desc", field: "ascending",
-                    formatter: "lookup", formatterParams: {
-                        1: "Ascending", 0: "Descending", "": "N/A"
-                    },
-                    editor: "select", editorParams: {
-                        values: { 1: "Ascending", 0: "Descending" },
-                    }
-                },
-                { title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right" },
-                { title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right" },
-                { title: "Options", field: "options", width: 75, visible: false },
-                {
-                    title: "Delete", formatter: deleteicon, hozAlign: "center",
-                    cellClick: function (e, cell) {
-                        deleteQuestion(e, cell.getRow(), configtable);
-                    },
-                },
-            ],
-            rowMoved: function (row) {
-                document.getElementById("message").style.display = 'none';
-                //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
-                if (this.getHistoryUndoSize() > 0) {
-                    document.getElementById("undo").disabled = false;
+            },
+            {
+                title: "Description", field: "description", accessorData: escapeQuotesAccessor,
+                formatter: "textarea", visible: false
+            },
+            {
+                title: "Prompt", field: "prompt", accessorData: escapeQuotesAccessor, width: 180,
+                editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
+            },
+            {
+                title: "Hover Text", field: "hover", accessorData: escapeQuotesAccessor, width: 180,
+                editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }
+            },
+            { title: "Type", field: "typename", width: 140 },
+            { title: "Type-ID", field: "typeid", visible: false },
+            {
+                title: "Display Only", field: "display_only", formatter: "tickCross",
+                editor: "select", editorParams: {
+                    values: { 1: "Yes", 0: "No" },
                 }
             },
-            tooltips: function (cell) {
-                switch (cell.getField()) {
-                    case "shortname":
-                        return cell.getData().description;
-                    case "hover":
-                        return cell.getData().hover;
-                    case "prompt":
-                        return cell.getData().prompt;
-                }
-                return false;
-            },
-            dataChanged: function (data) {
-                //data - the updated table data
-                document.getElementById("submitbtn").innerHTML = "Save*";
-                document.getElementById("previewbtn").style.display = "none";
-                if (this.getHistoryUndoSize() > 0) {
-                    document.getElementById("undo").disabled = false;
+            {
+                title: "Required", field: "required", formatter: "tickCross",
+                editor: "select", editorParams: {
+                    values: { 1: "Yes", 0: "No" },
                 }
             },
-        });
+            {
+                title: "Publish", field: "publish", formatter: "tickCross",
+                editor: "select", editorParams: {
+                    values: { 1: "Yes", 0: "No" },
+                }
+            },
+            {
+                title: "Privacy", field: "privacy_user", formatter: "tickCross",
+                editor: "select", editorParams: {
+                    values: { 1: "Yes", 0: "No" },
+                }
+            },
+            {
+                title: "Searchable", field: "searchable", formatter: "tickCross",
+                editor: "select", editorParams: {
+                    values: { 1: "Yes", 0: "No" },
+                }
+            },  
+            {
+                title: "Asc/Desc", field: "ascending",
+                formatter: "lookup", formatterParams: {
+                    1: "Ascending", 0: "Descending", "": "N/A"
+                },
+                editor: "select", editorParams: {
+                    values: { 1: "Ascending", 0: "Descending" },
+                }
+            },
+            { title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right" },
+            { title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right" },
+            { title: "Options", field: "options", width: 75, visible: true },
+            {
+                title: "Delete", formatter: deleteicon, hozAlign: "center",
+                cellClick: function (e, cell) {
+                    deleteQuestion(e, cell.getRow(), configtable);
+                },
+            },
+        ],
+        rowMoved: function (row) {
+            document.getElementById("message").style.display = 'none';
+            //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
+            if (this.getHistoryUndoSize() > 0) {
+                document.getElementById("undo").disabled = false;
+            }
+        },
+        tooltips: function (cell) {
+            switch (cell.getField()) {
+                case "shortname":
+                    return cell.getData().description;
+                case "hover":
+                    return cell.getData().hover;
+                case "prompt":
+                    return cell.getData().prompt;
+            }
+            return false;
+        },
+        dataChanged: function (data) {
+            //data - the updated table data
+            document.getElementById("submitbtn").innerHTML = "Save*";
+            document.getElementById("previewbtn").style.display = "none";
+            if (this.getHistoryUndoSize() > 0) {
+                document.getElementById("undo").disabled = false;
+            }
+        },
+    });
         var addnewrowbut = document.getElementById("add-row");
         addnewrowbut.addEventListener('click', function () { addupdaterow(configtable, optiontable); });
         var addnewbut = document.getElementById("add-question");
@@ -524,8 +548,11 @@ var EditSurvey = function () {
         addoptbut.addEventListener('click', function () { addnewoption(optiontable); });
        document.getElementById("typename").onchange = function () { edit_typechange(configtable); };
        //console.log("Setting up options in table");
-       for (option in survey_options) {
-           configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
+        for (option in survey_options) {
+            //console.log("question: " + option + " = ");
+            //console.log(survey_options[option]);
+            //console.log(atob(survey_options[option]));
+            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
        };
        document.getElementById("submitbtn").innerHTML = "Save";
        document.getElementById("previewbtn").style.display = "block";
@@ -536,26 +563,42 @@ var EditSurvey = function () {
 
 var editSurvey = new EditSurvey();
 
-function decodeOption(option) {
-    option.value = atob(option.value);
-    option.optionshort = atob(option.optionshort);
-    option.optionhover = atob(option.optionhover);
-};
-
 function saveComplete(data, textStatus, jqXHR) {
-    var match = "survey = ";
-    var match2 = "message = ";
     message = "";
     //console.log(data);
-    if (data.substring(0, match.length) == match || data.substring(0, match2.length) == match2) {
-        eval(data);
+    try {
+        data_json = JSON.parse(data);
+    } catch (error) {
+        console.log(error);
+    }
+
+    //console.log(data_json);
+    if (data_json.hasOwnProperty("message"))
+        message = data_json.message;
+
+    if (data_json.hasOwnProperty("survey")) {
+        survey = atob(data_json.survey);
+        //console.log("post atob");
+        //console.log(survey);
+        try {
+            survey = JSON.parse(survey);
+        } catch (error) {
+            console.log(error);
+        }
         configtable.replaceData(survey);
+    }
+
+    if (data_json.hasOwnProperty("survey_options")) {
+        survey_options = data_json.survey_options;
+        //console.log(survey_options);
+
         for (option in survey_options) {
             //console.log(option);
             //console.log(survey_options[option]);
-            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
+            configtable.updateOrAddData([{ questionid: option, options: survey_options[option]}]);
         }; 
     }
+
     document.getElementById("saving_div").style.display = "none";
     el = document.getElementById("submitbtn");
     el.disabled = false;
@@ -743,12 +786,14 @@ function RefreshPreview() {
         previewmce = false;
     }
     var questionid = document.getElementById("questionid").value
+    console.log(questionid);
     var shortname = document.getElementById("shortname").value;
     var typename = document.getElementById("typename").value;
     var prompt = document.getElementById("prompt").value;
     if (prompt.substring(0, 3) == '<p>') {
         prompt = prompt.substring(3, prompt.length - 4);
     }
+    tinyMCE.triggerSave();
     var hover = document.getElementById("hover").value;
     var surveyData = [{
         questionid: questionid,
@@ -775,13 +820,14 @@ function RefreshPreview() {
         var allowothertext = false;
         var i;
         for (i = 0; i < options.length; i++) {
+            options[i].questionid = questionid;
             allowothertext = allowothertext || options[i].allowothertext;
         }
         surveyData[0].allowothertext = allowothertext;
         optionsjson = JSON.stringify(optiontable.getData());
     } else if (questionoptions.length > 0) {
         //console.log("from questionoptions");
-        optionsjson = "nobtoa:" + JSON.stringify(questionoptions);
+        optionsjson = JSON.stringify(questionoptions);
     }
     //console.log("options");
     //console.log(options);
