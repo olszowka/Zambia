@@ -126,26 +126,41 @@
 }
 
 .tag-chk-container {
-    display:inline-block;
-    background-color:@white;
-    border:1px solid @darkest-gray;
-    border-radius:2px;
-    padding:0.5rem 0.5rem 0.5rem 0;
-    height:8rem;
-    min-width:8rem;
-    overflow-y:scroll;
-    width:fit-content;
+    display: inline-block;
+    background-color: @white;
+    border: 1px solid @darkest-gray;
+    border-radius: 2px;
+    padding: 0;
+    height: 8rem;
+    min-width: 8rem;
+    overflow-y: scroll;
+    width: fit-content;
+}
+.tag-chk-label-wrapper {
+    padding-bottom:0.3rem;
+    padding-top:0.3rem;
+    
+    &.disabled {
+        background-color:@lightest-gray;
+        
+        .tag-chk-label {
+            font-style: italic;
+        }
+    }
 }
 
 .tag-chk-label {
-    display:block;
-    line-height:1.05;
-    width:fit-content;
+    display: block;
+    line-height: 1.05;
+    width: fit-content;
+    padding-right: 0.5rem;
+    min-width: 8rem;
+    margin:0;
 }
 
 .tag-chk {
-    margin-left:0.5rem;
-    margin-right:0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .tag-match-radio {

@@ -153,6 +153,40 @@
                 <xsl:with-param name="maxlength" select="25" />
                 <xsl:with-param name="fieldsize" select="25" />
             </xsl:call-template>
+            <div class="row">
+                <div class="col-sm-5 col-md-4 col-lg-2p5 col-xl-2p25">
+                    <h5>
+                        <div class="badge badge-secondary badge-full-width">Permission Roles</div>
+                    </h5>
+                </div>
+                <div class="col">
+                    <xsl:choose>
+                        <xsl:when test="count(doc/query[@queryName='roles']/row) = 1">
+                            <select id="roles" name="permissionRoles[]" readonly="readonly" class="disabled">
+                                <xsl:for-each select="doc/query[@queryName='roles']/row">
+                                    <option value="{@permroleid}" selected="selected"><xsl:value-of select="@permrolename" /></option>
+                                </xsl:for-each>
+                            </select>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <div class="tag-chk-container" id="role-container">
+                                <xsl:for-each select="doc/query[@queryName='roles']/row">
+                                    <div class="tag-chk-label-wrapper">
+                                        <label class="tag-chk-label">
+                                            <input type="checkbox" name="permissionRoles[]" class="tag-chk" value="{@permroleid}" >
+                                                <xsl:if test="/doc/selectedRoles/row/text() = @permroleid">
+                                                    <xsl:attribute name="checked">checked</xsl:attribute>
+                                                </xsl:if>
+                                            </input>
+                                            <xsl:value-of select="@permrolename" />
+                                        </label>
+                                    </div>
+                                </xsl:for-each>
+                            </div>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </div>
+            </div>
             <xsl:if test="$override != ''">
                 <div class="row mt-2">
                     <div class="col-sm-7 col-md-5 col-lg-4 col-xl-3">

@@ -1,9 +1,10 @@
 <?php
 // Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-10-28
+require('EditPermRoles_FNC.php');
 
-function insert_user() {
-    global $message, $message_error, $paramArray;
+function insert_user($mayIEditAllRoles, $rolesIMayEditArr) {
+    global $linki, $message, $message_error, $paramArray;
     $message_error = "";
     $paramArray['firstname'] = getString("firstname");
     $paramArray['lastname'] = getString("lastname");
@@ -18,6 +19,7 @@ function insert_user() {
     $paramArray['postzip'] = getString("postzip");
     $paramArray['postcountry'] = getString("postcountry");
     $paramArray['override'] = getInt("override");
+    $paramArray['permissionRoles'] = getArrayOfInts("permissionRoles");
 
     if ($paramArray['badgename'] === "") {
         $paramArray['badgename'] = trim($paramArray['firstname'] . " " . $paramArray['lastname']);
@@ -68,6 +70,10 @@ EOD;
             $message_error .= "User found matching this first name and last name: Badgeid: {$row["badgeid"]}: {$row["firstname"]} " .
                 "{$row["lastname"]}, {$row["email"]}, Badgename: {$row["badgename"]} <br />\n";
         }
+        if (!$paramArray['permissionRoles'] || count($paramArray['permissionRoles']) == 0) {
+            $error = true;
+            $message_error .= "If you don't assign the user any roles, they will not be able to log in.<br />\n";
+        }
         mysqli_free_result($result);
         if ($error) {
             $message_error .= "Set Override to Yes to add this user anyway.";
@@ -103,13 +109,25 @@ EOD;
         $message_error .= "Failed adding Registration Data, User not added correctly - get help.<br />\n";
         return false;
     }
-    // permroleid 3 is Participant
-    $query = <<<EOD
-INSERT INTO UserHasPermissionRole
-    (badgeid, permroleid)
-    VALUES (?, 3);
-EOD;
-    $rows = mysql_cmd_with_prepare($query, "s", array($paramArray["badgeid"]));
+
+    if (!$mayIEditAllRoles) {
+        if (($paramArray['permissionRoles'] && count(array_diff($paramArray['permissionRoles'], $rolesIMayEditArr))) > 0) {
+            $message_error .= "Server configuration error: You attempting to add roles you do not have permission to add. Seek assistance.<br />\n";
+            return false;
+        }
+    }
+    if ($paramArray['permissionRoles'] != false) {
+        $badgeIdSafe = mysqli_real_escape_string($linki, $paramArray["badgeid"]);
+        $rolesToAddList = implode(',', array_map(function ($role) use ($badgeIdSafe) {
+            return "('$badgeIdSafe', $role)";
+        }, $paramArray['permissionRoles']));
+        $query = "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES $rolesToAddList;";
+        $result = mysqli_query_exit_on_error($query);
+        if (!$result) {
+            exit(); // should have exited already
+        }
+        $updatePerformed = true;
+    }
     if (is_null($rows) || $rows !== 1) {
         $message_error .= "Failed adding Program Participant Role - get help.<br />\n";
         return false;
@@ -130,15 +148,16 @@ $title = "Add Zambia User";
 require_once('StaffCommonCode.php'); // Checks for staff permission among other things
 $message = "";
 $paramArray = array();
-if (!may_I('CreateUser')) {
+if (!may_I('CreateUser') || !may_I('EditUserPermRoles')) {
     $message_error = "You do not have permission to access this page.";
     StaffRenderErrorPage($title, $message_error, true);
     exit();
 }
-$bootstrap4 = true;
-staff_header($title, $bootstrap4);
+$loggedInUserBadgeId = $_SESSION['badgeid'];
+['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
+staff_header($title, true);
 if (array_key_exists("PostCheck", $_POST)) {
-    $insert_successful = insert_user();
+    $insert_successful = insert_user($mayIEditAllRoles, $rolesIMayEditArr);
 }
 
 // Start of display portion
@@ -173,8 +192,44 @@ $paramArray["controliv"] = $ControlStrArray["controliv"];
 $paramArray["new_badgeid"] = $new_badgeid;
 $paramArray["updateMessage"] = $message;
 $paramArray["errorMessage"] = $message_error;
+$queryArr = array();
+if ($mayIEditAllRoles) {
+    $queryArr['roles'] = <<<EOD
+SELECT 
+        PR.permrolename, PR.permroleid
+    FROM
+        PermissionRoles PR
+    ORDER BY
+        PR.display_order;
+EOD;
+    $XMLDoc = mysql_query_XML($queryArr);
+} else {
+    $queryArr['roles'] = <<<EOD
+SELECT DISTINCT
+        PR.permrolename, PR.permroleid
+    FROM
+             UserHasPermissionRole UHPR
+        JOIN Permissions P USING (permroleid)
+        JOIN PermissionAtoms PA USING (permatomid)
+        JOIN PermissionRoles PR ON PR.permroleid = PA.elementid
+    WHERE
+            UHPR.badgeid = ?
+        AND PA.permatomtag = 'EditUserPermRoles'
+    ORDER BY
+        PR.display_order;
+EOD;
+    $XMLDoc = mysql_prepare_query_XML(
+        $queryArr,
+        array('roles' => 's'),
+        array('roles' => array($loggedInUserBadgeId))
+    );
+}
+if (is_null($paramArray['permissionRoles'])) {
+    $paramArray['permissionRoles'] = array();
+}
+addArrayToXML($paramArray['permissionRoles'], 'selectedRoles', $XMLDoc);
 // following line for debugging only
-// echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
-RenderXSLT('AddZambiaUser.xsl', $paramArray);
+// echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $XMLDoc->saveXML(), "i"));
+RenderXSLT('AddZambiaUser.xsl', $paramArray, $XMLDoc);
 staff_footer();
 ?>

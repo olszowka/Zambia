@@ -838,6 +838,7 @@ EOD;
 /* check login script, included in db_connect.php. */
 
 function isLoggedIn() {
+    global $message_error;
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['hashedPassword'])) {
         return false;
     }
@@ -873,7 +874,6 @@ function isLoggedIn() {
         return true;
     }
 }
-
 
 // Function retrieveParticipant()
 // Reads Participants tables

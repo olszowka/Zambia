@@ -110,16 +110,29 @@
   background-color: #ffffff;
   border: 1px solid #606060;
   border-radius: 2px;
-  padding: 0.5rem 0.5rem 0.5rem 0;
+  padding: 0;
   height: 8rem;
   min-width: 8rem;
   overflow-y: scroll;
   width: fit-content;
 }
+.tag-chk-label-wrapper {
+  padding-bottom: 0.3rem;
+  padding-top: 0.3rem;
+}
+.tag-chk-label-wrapper.disabled {
+  background-color: #e5e5e5;
+}
+.tag-chk-label-wrapper.disabled .tag-chk-label {
+  font-style: italic;
+}
 .tag-chk-label {
   display: block;
   line-height: 1.05;
   width: fit-content;
+  padding-right: 0.5rem;
+  min-width: 8rem;
+  margin: 0;
 }
 .tag-chk {
   margin-left: 0.5rem;

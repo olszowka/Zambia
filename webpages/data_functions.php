@@ -437,4 +437,27 @@ function generateControlString($paramArray, $controliv = '') {
 function interpretControlString($control, $controliv) {
     return json_decode(openssl_decrypt($control, 'aes-128-cbc', ENCRYPT_KEY, 0, base64_decode($controliv)), true);
 }
+
+function addArrayToXML($array, $array_name, $XMLDoc = false) {
+    if ($XMLDoc === false) {
+        $XMLDoc = new DomDocument("1.0", "UTF-8");
+        $docNode = $XMLDoc -> createElement("doc");
+        $docNode = $XMLDoc -> appendChild($docNode);
+    } else {
+        $docNode = $XMLDoc->getElementsByTagName("doc")->item(0);
+    }
+    $arrayNode = $XMLDoc -> createElement($array_name);
+    $arrayNode = $docNode -> appendChild($arrayNode);
+    foreach($array as $key => $value) {
+        if (gettype($key) === 'string') {
+            $arrayNode->setAttribute($key, $value);
+        } else {
+            $rowNode = $XMLDoc -> createElement("row");
+            $rowNode = $arrayNode -> appendChild($rowNode);
+            $textNode = $XMLDoc->createTextNode($value);
+            $textNode = $rowNode -> appendChild($textNode);
+        }
+    }
+    return $XMLDoc;
+}
 ?>

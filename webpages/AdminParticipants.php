@@ -6,10 +6,11 @@ $bootstrap4 = true;
 require_once('StaffCommonCode.php');
 $fbadgeid = getInt("badgeid");
 staff_header($title, $bootstrap4);
-if ($fbadgeid)
-	echo"<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
+if ($fbadgeid) {
+    echo "<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
+}
 ?>
-<form class="form-row">
+<form id="adminParticipantsForm" class="form-row">
     <div id="searchPartsDIV" class="container-fluid">
         <div class="row mt-3">
             <div class="col-sm-12">
@@ -50,7 +51,9 @@ if ($fbadgeid)
                     <input class="disabled" id="badgeid" type="text" readonly="readonly" size="8" />
                 </div>
             </div>
-<?php if (USE_REG_SYSTEM === TRUE) {?>
+<?php
+if (USE_REG_SYSTEM === TRUE) {
+?>
             <div class="col-sm-3">
                 <div class="">
                     <label for="lname_fname" class="mb-1">Last name, first name:</label>
@@ -59,13 +62,15 @@ if ($fbadgeid)
                     <input class="disabled" id="lname_fname" type="text" readonly="readonly" size="35" />
                 </div>
             </div>
-            <?php } else { ?>
+<?php
+} else {
+?>
             <div class="col-sm-3">
                 <div class="">
                     <label for="lastname" class="mb-1">Last name:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="lastname" type="text" size="35" maxlength="40" onchange="textChange('lastname');" onkeyup="textChange('lastname');" />
+                    <input class="userFormINPTXT mycontrol" id="lastname" type="text" size="35" maxlength="40" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -73,22 +78,32 @@ if ($fbadgeid)
                     <label for="firstname" class="mb-1">First name:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="firstname" type="text" size="35" maxlength="35" onchange="textChange('firstname');" onkeyup="textChange('firstname');"/>
+                    <input class="userFormINPTXT mycontrol" id="firstname" type="text" size="35" maxlength="35" />
                 </div>
             </div>
-            <?php }; ?>
+<?php
+};
+?>
             <div class="col-sm-3">
                 <div class="">
-                    <label for="bname" class="mb-1">Badge name:</label>
+                    <label for="badgename" class="mb-1">Badge name:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT <?php if (USE_REG_SYSTEM === TRUE) { ?>disabled <?php }; ?>"
-                        id="bname" type="text"
-                        <?php if (USE_REG_SYSTEM === TRUE) { ?>readonly="readonly" <?php } else { ?> onchange="textChange('bname');" onkeyup="textChange('bname');" <?php }; ?>
-                        size="35" maxlength="50" />
+<?php if (USE_REG_SYSTEM === TRUE) { 
+?>
+                    <input type="text" id="badgename" class="userFormINPTXT disabled" readonly="readonly" size="35" maxlength="50" />
+<?php
+} else {
+?>
+                    <input type="text" id="badgename" class="userFormINPTXT mycontrol" size="35" maxlength="50" />
+<?php
+}
+?>
                 </div>
             </div>
-<?php if (USE_REG_SYSTEM === FALSE) { ?> 
+<?php
+if (USE_REG_SYSTEM === FALSE) {
+?> 
         </div>
         <div class="row mt-3">
             <div class="col-sm-3 offset-sm-1">
@@ -96,7 +111,7 @@ if ($fbadgeid)
                     <label for="phone" class="mb-1">Phone number:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="phone" type="text" size="35" maxlength="100" onchange="textChange('phone');" onkeyup="textChange('phone');" />
+                    <input class="userFormINPTXT mycontrol" id="phone" type="text" size="35" maxlength="100" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -104,27 +119,31 @@ if ($fbadgeid)
                     <label for="email" class="mb-1">Email address:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="email" type="text" size="35" maxlength="100" onchange="textChange('email');" onkeyup="textChange('email');"/>
+                    <input class="userFormINPTXT mycontrol" id="email" type="text" size="35" maxlength="100" />
                 </div>
             </div>
-            <?php }; ?>
+<?php
+};
+?>
             <div class="col-sm-3">
                 <div class="">
-                    <label for="pname" class="mb-1">Name for publications:</label>
+                    <label for="pubsname" class="mb-1">Name for publications:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="pname" type="text" readonly="readonly" size="35" maxlength="50" onchange="textChange('pname');" onkeyup="textChange('pname');" />
+                    <input class="userFormINPTXT mycontrol" id="pubsname" type="text" readonly="readonly" size="35" maxlength="50" />
                 </div>
             </div>
         </div>
-<?php if (USE_REG_SYSTEM === FALSE) { ?>
+<?php
+if (USE_REG_SYSTEM === FALSE) {
+?>
         <div class="row mt-3">
             <div class="col-sm-3 offset-sm-1">
                 <div class="">
                     <label for="postaddress1" class="mb-1">Postal Address:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="postaddress1" type="text" size="35" maxlength="100" onchange="textChange('postaddress1');" onkeyup="textChange('postaddress1');"/>
+                    <input class="userFormINPTXT mycontrol" id="postaddress1" type="text" size="35" maxlength="100" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -132,7 +151,7 @@ if ($fbadgeid)
                     <label for="postaddress2" class="mb-1">Postal Address Line 2:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="postaddress2" type="text" size="35" maxlength="100" onchange="textChange('postaddress2');" onkeyup="textChange('postaddress2');" />
+                    <input class="userFormINPTXT mycontrol" id="postaddress2" type="text" size="35" maxlength="100" />
                 </div>
             </div>
         </div>
@@ -142,7 +161,7 @@ if ($fbadgeid)
                     <label for="postcity" class="mb-1">City:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="postcity" type="text" size="25" maxlength="50" onchange="textChange('postcity');" onkeyup="textChange('postcity');" />
+                    <input class="userFormINPTXT mycontrol" id="postcity" type="text" size="25" maxlength="50" />
                 </div>
             </div>
             <div class="col-sm-1">
@@ -150,7 +169,7 @@ if ($fbadgeid)
                     <label for="poststate" class="mb-1">State:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="poststate" type="text" size="8" maxlength="25" onchange="textChange('poststate');" onkeyup="textChange('poststate');" />
+                    <input class="userFormINPTXT mycontrol" id="poststate" type="text" size="8" maxlength="25" />
                 </div>
             </div>
             <div class="col-sm-1">
@@ -158,7 +177,7 @@ if ($fbadgeid)
                     <label for="postzip" class="mb-1">Zip Code:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="postzip" type="text" size="10" maxlength="10" onchange="textChange('postzip');" onkeyup="textChange('postzip');" />
+                    <input class="userFormINPTXT mycontrol" id="postzip" type="text" size="10" maxlength="10" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -166,18 +185,20 @@ if ($fbadgeid)
                     <label for="postcountry" class="mb-1">Country:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT" id="postcountry" type="text" size="25" maxlength="25" onchange="textChange('postcountry');" onkeyup="textChange('postcountry');"/>
+                    <input class="userFormINPTXT mycontrol" id="postcountry" type="text" size="25" maxlength="25" />
                 </div>
             </div>
         </div>
-<?php }; ?>
+<?php
+};
+?>
         <div class="row mt-3">
             <div class="container-sm p-2 my-2 border border-dark">
                 <div class="control-group">
                     <label for="interested" class="control-label">Participant is interested and available to participate
                         in <?php echo CON_NAME; ?> programming:</label>
                     <div class="controls">
-                        <select id="interested" class="yesno" disabled="disabled" onchange="anyChange();">
+                        <select id="interested" class="yesno mycontrol" disabled="disabled">
                             <option value="0" selected="selected">&nbsp</option>
                             <option value="1">Yes</option>
                             <option value="2">No</option>
@@ -187,15 +208,16 @@ if ($fbadgeid)
                 </div>
             </div>
         </div>
-<?php if (may_I("ResetUserPassword")) { ?>
+<?php
+if (may_I("ResetUserPassword")) {
+?>
         <div class="row">
             <div class="col-sm-3">
                 <div class="">
                     <label for="password">Change Participant's Password:</label>
                 </div>
                 <div>
-                    <input type="password" size="30" maxlength="40" id="password" readonly="readonly" onchange="anyChange();"
-                        onkeyup="anyChange();"/>
+                    <input type="password" size="30" maxlength="40" id="password" readonly="readonly" class="mycontrol" />
                 </div>
                 <span id="passwordsDontMatch" style="color: red;">Passwords don't match.</span>
             </div>
@@ -204,19 +226,20 @@ if ($fbadgeid)
                     <label for="cpassword">Confirm New Password:</label>
                 </div>
                 <div>
-                    <input type="password" size="30" maxlength="40" id="cpassword" readonly="readonly" onchange="anyChange();"
-                        onkeyup="anyChange();"/>
+                    <input type="password" size="30" maxlength="40" id="cpassword" readonly="readonly" class="mycontrol" />
                 </div>
             </div>
         </div>
-<?php }; ?>
+<?php
+};
+?>
         <div class="row mt-3">
             <div class="col-sm-6">
-                <div class="">
+                <div>
                     <label for="bio" class="">Participant biography:</label>
                 </div>
                 <div>
-                    <textarea id="bio" rows="4" cols="80" readonly="readonly" data-maxlength="<?php echo MAX_BIO_LEN?>" onchange="textChange('bio');" onkeyup="textChange('bio');"></textarea>
+                    <textarea id="bio" class="mycontrol" rows="4" cols="80" readonly="readonly" data-maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -224,14 +247,26 @@ if ($fbadgeid)
                     <label for="staffnotes" class="">Staff notes re. participant:</label>
                 </div>
                 <div>
-                    <textarea id="staffnotes" rows="6" cols="80" readonly="readonly"
-                        onchange="textChange('snotes');" onkeyup="textChange('snotes');"></textarea>
+                    <textarea id="staffnotes" rows="6" cols="80" readonly="readonly" class="mycontrol"></textarea>
                 </div>
             </div>
         </div>
-        <button type="button" class="btn btn-primary" data-loading-text="Updating..." id="updateBUTN"
-            onclick="updateBUTTON();" disabled="disabled">Update
-        </button>
+        <div class="row mt-3">
+            <div class="col-sm-4">
+                <div class="pb-1">
+                    User Permission Roles:
+                </div>
+                <div>
+                    <div class="tag-chk-container" id="role-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <button type="button" class="btn btn-primary" data-loading-text="Updating..." id="updateBUTN"
+                onclick="updateBUTTON();" disabled="disabled">Update
+            </button>
+        </div>
     </div>
 </form>
 <?php
