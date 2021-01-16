@@ -563,6 +563,19 @@ var EditSurvey = function () {
 
 var editSurvey = new EditSurvey();
 
+function cleanupSave(message, classtext) {
+    document.getElementById("saving_div").style.display = "none";
+    el = document.getElementById("submitbtn");
+    el.disabled = false;
+
+    if (message != "") {
+        el = document.getElementById("message");
+        el.innerHTML = message;
+        el.className = classtext;
+        el.style.display = 'block';
+    }
+};
+
 function saveComplete(data, textStatus, jqXHR) {
     message = "";
     //console.log(data);
@@ -595,24 +608,26 @@ function saveComplete(data, textStatus, jqXHR) {
         for (option in survey_options) {
             //console.log(option);
             //console.log(survey_options[option]);
-            configtable.updateOrAddData([{ questionid: option, options: survey_options[option]}]);
-        }; 
+            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
+        };
     }
 
-    document.getElementById("saving_div").style.display = "none";
-    el = document.getElementById("submitbtn");
-    el.disabled = false;
-    el.innerHTML = "Save";
     document.getElementById("previewbtn").style.display = "block";
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
     document.getElementById("optredo").disabled = true;
     document.getElementById("optundo").disabled = true;
-    if (message != "") {
-        document.getElementById("message").innerHTML = message;
-        document.getElementById("message").style.display = 'block';
-    }
-};
+
+    el = document.getElementById("submitbtn");
+    el.innerHTML = "Save";
+
+    cleanupSave(message, 'alert alert-success mt-4');
+}
+
+function saveError(xhdr, status, error) {
+    message = "Save error: " + xhdr.status + ': ' + xhdr.statusText;
+    cleanupSave(message, 'alert alert-danger mt-4');
+}
 
 function SaveSurvey() {
     //rows = configtable.getDataCount();
@@ -640,6 +655,7 @@ function SaveSurvey() {
         dataType: "html",
         data: postdata,
         success: saveComplete,
+        error: saveError,
         type: "POST"
     }); 
 };
@@ -655,6 +671,7 @@ function FetchSurvey() {
         dataType: "html",
         data: postdata,
         success: saveComplete,
+        error: saveError(),
         type: "POST"
     });
 };
@@ -777,6 +794,14 @@ function RefreshComplete(data, textStatus, jqXHR) {
     in_editconfig = false;
 }
 
+function RefreshError(xhdr, status, error) {
+    var message = '<div class="alert alert-danger mt-4">Preview error: ' + xhdr.status + ': ' + xhdr.statusText + "</div>";
+    var preview = "<br/><h4>Preview</h4>" + message;
+    document.getElementById("preview").innerHTML = preview;
+
+    in_editconfig = false;
+}
+
 function RefreshPreview() {
     //console.log("In RefreshPreview");
     //console.trace();
@@ -849,6 +874,7 @@ function RefreshPreview() {
         dataType: "html",
         data: postdata,
         success: RefreshComplete,
+        error: RefreshError,
         type: "POST"
     });
 };

@@ -18,10 +18,30 @@ var InviteParticipants = function() {
                 searchPlaceholderValue: "Type here to search list."
             });
         }
+        $('[data-toggle="tooltip"]').each(function () {
+            this.title = '<span class="text-left" style="white-space: nowrap;">' + this.title + '</span>';
+        })
+        $('[data-toggle="tooltip"]').tooltip();
     };
 };
 
 var inviteParticipants = new InviteParticipants();
+
+function Save(savetype) {
+    console.log(savetype);
+    if (savetype == 'filter') {
+        document.getElementById('submittype').value = 'filter';
+        document.getElementById('invform').submit();
+        return true;
+    }
+    if (savetype == 'invite') {
+        document.getElementById('submittype').value = 'invite';
+        document.getElementById('invform').submit();
+        return true;
+    }
+    return false;
+
+};
 
 /* This file should be included only on relevant page.  See main.js and javascript_functions.php */
 document.addEventListener('DOMContentLoaded', inviteParticipants.initialize.bind(inviteParticipants));

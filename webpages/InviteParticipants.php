@@ -7,13 +7,18 @@ require_once('StaffCommonCode.php');
 staff_header($title, $bootstrap4);
 $message = "";
 $alerttype = "success";
+$submittype = "";
 if(may_I("Staff")) {
-
-    if (isset($_POST["selpart"])) {
+    var_error_log($_POST);
+    if (isset($_POST["submittype"])) 
+        $submittype = $_POST["submittype"];
+    if ($submittype == 'invite')
+        {
         $partbadgeid = mysqli_real_escape_string($linki, getString("selpart"));
         $sessionid = getInt("selsess", 0);
         if (($partbadgeid == '') || ($sessionid == 0)) {
-            echo "<p class=\"alert alert-error\">Database not updated. Select a participant and a session.</p>";
+            $message = "<p class=\"alert alert-error\">Database not updated. Select a participant and a session.</p>";
+            $alerttype = "warning";
         } else {
             $query = "INSERT INTO ParticipantSessionInterest SET badgeid='$partbadgeid', ";
             $query .= "sessionid=$sessionid;";
@@ -30,7 +35,8 @@ if(may_I("Staff")) {
 
         }
     }
-    $query = <<<EOD
+    $query = [];
+    $query['participants'] = <<<EOD
 SELECT
         CD.lastname,
         CD.firstname,
@@ -45,10 +51,8 @@ SELECT
     ORDER BY
         IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
 EOD;
-    if (!$Presult = mysqli_query_exit_on_error($query)) {
-        exit(); // Should have exited already
-    }
-    $query = <<<EOD
+
+    $query['sessions'] = <<<EOD
 SELECT
         T.trackname, S.sessionid, S.title
     FROM
@@ -60,32 +64,65 @@ SELECT
     ORDER BY
         T.trackname, S.sessionid, S.title;
 EOD;
-    if (!$Sresult = mysqli_query_exit_on_error($query)) {
-        exit(); // Should have exited already
-    }
 
-    $participants = array();
-    while (list($lastname, $firstname, $badgename, $badgeid, $pubsname) = mysqli_fetch_array($Presult, MYSQLI_NUM)) {
-        $name = "";
-        if ($pubsname != "") {
-            $name = htmlspecialchars($pubsname);
-        } else {
-            if (mb_strlen($lastname) > 0)
-                $name =  htmlspecialchars($lastname) . ", ";
-            $name .= htmlspecialchars($firstname);
+    // get searchable survey response options
+    $query['questions'] = <<<EOD
+SELECT s.questionid, s.shortname, s.hover, t.shortname as typename
+FROM surveyquestionconfig s
+JOIN surveyquestiontypes t USING (typeid)
+WHERE searchable = 1
+ORDER BY s.display_order;
+EOD;
+    $query['options'] = <<<EOD
+SELECT o.questionid, o.ordinal, o.optionshort, o.optionhover, o.value
+FROM surveyquestionoptionconfig o
+JOIN surveyquestionconfig s USING (questionid)
+WHERE s.searchable = 1
+ORDER by o.questionid, o.display_order
+EOD;
+    $resultXML = mysql_query_XML($query);
+
+    // get any questions that need programically create options
+	$sql = <<<EOD
+		SELECT d.questionid, t.shortname as typename, min_value, max_value, ascending
+		FROM SurveyQuestionConfig d
+		JOIN SurveyQuestionTypes t USING (typeid)
+		WHERE t.shortname = 'monthyear';
+EOD;
+	$result = mysqli_query_exit_on_error($sql);
+	while ($row = mysqli_fetch_assoc($result)) {
+
+
+        // build xml array from begin to end
+        $options = [];
+        $question_id = $row["questionid"];
+        if ($row["ascending"] == 1) {
+            $next = $row["min_value"];
+            $end = $row["max_value"];
+            while ($next <= $end) {
+                $ojson = new stdClass();
+                $ojson->questionid = $question_id;
+                $ojson->value = $next;
+                $ojson->optionshort = $next;
+                $options[] = $ojson;
+                $next = $next + 1;
+            }
         }
-        $name .= " (" . htmlspecialchars($badgename) . ") - ";
-        $name .= htmlspecialchars($badgeid);
-        $participants[] = (object) array('badgeid' => $badgeid, 'name' => $name );
+        else {
+            $next = $row["max_value"];
+            $end = $row["min_value"];
+            while ($next >= $end) {
+                $ojson = new stdClass();
+                $ojson->questionid = $question_id;
+                $ojson->value = $next;
+                $ojson->optionshort = $next;
+                $options[] = $ojson;
+                $next = $next - 1;
+            }
+        }
+        //var_error_log($options);
+        $resultXML = ObjecttoXML('years', $options, $resultXML);
     }
-    $resultXML = ObjecttoXML('participants', $participants);
-
-    $sessions = array();
-    while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
-        $name =  htmlspecialchars($trackname) . " - " .  htmlspecialchars($sessionid) . " - " . htmlspecialchars($title);
-        $sessions[] = (object) array('sessionid' => $sessionid, 'title' => $name );
-    }
-    $resultXML = ObjecttoXML('sessions', $sessions, $resultXML);
 
     $PriorArray["getSessionID"] = session_id();
 

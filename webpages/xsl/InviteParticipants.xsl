@@ -1,6 +1,7 @@
 <?xml version='1.0'?>
 <!-- Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <xsl:import href="renderSurveySearch.xsl"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:param name="control" select="''"/>
   <xsl:param name="controliv" select="''"/>
@@ -25,7 +26,8 @@
         <p id="invite-participants-intro">Use this tool to put sessions marked "invited guests only" on a participant's interest list.</p>
       </div>
     </div>
-    <form name="invform" method="POST" action="InviteParticipants.php">
+    <form id="invform" name="invform" method="POST" action="InviteParticipants.php">
+      <input type="hidden" id="submittype" name="submittype" value=""/>
       <div class="row mt-2">
         <div class="col col-5">
           <label for="participant-select">Select Participant:&#160;</label>
@@ -58,9 +60,15 @@
       </div>
       <div class="row mt-4">
         <div class="col col-auto">
-          <button class="btn btn-primary" type="submit" name="Invite" >Invite</button>
+          <button class="btn btn-primary" id="invite" type="invite" name="Invite" value="0" onclick="return Save('invite');">Invite</button>
         </div>
       </div>
     </form>
+      <xsl:apply-imports/>
+      <div class="row mt-4">
+        <div class="col col-auto">
+          <button class="btn btn-info" id="filter" type="filter" name="Filter" value="1" onclick="return Save('filter');">Apply Filter</button>
+        </div>
+      </div>
   </xsl:template>
 </xsl:stylesheet>
