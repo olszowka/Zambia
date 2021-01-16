@@ -2,6 +2,7 @@
 //	Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 require_once('StaffCommonCode.php');
+require_once('surveyFilterBuild.php');
 
 function invite_participant() {
     global $linki;
@@ -31,105 +32,21 @@ function invite_participant() {
     echo json_encode($json_return) . "\n";
 }
 
-// Start here.  Should be AJAX requests only
-$ajax_request_action = getString("ajax_request_action");
-if ($ajax_request_action == "" || !isLoggedIn() || !may_I("Administrator")) {
-    exit();
-}
-
 function filter_participants() {
     global $linki;
 
     $filterlist = json_decode(getString("filters"));
     $matchall = getString('matchall');
-    error_log("filters=");
-    var_error_log($filterlist);
-    error_log("matchall = " . $matchall);
+    //error_log("filters=");
+    //var_error_log($filterlist);
+    //error_log("matchall = " . $matchall);
 
-    // build question where clause
+    // build question filter clauses
     $andor = $matchall == "true" ? ' AND ' : ' OR ';
-    $filterwhere = '';
-    $qfilter = array();
-    foreach ($filterlist as $filter) {
-        if (array_key_exists($filter->questionid, $qfilter))
-            $qfilter[$filter->questionid]  .= ',' . $filter->value;
-        else
-            $qfilter[$filter->questionid] = $filter->value;
-    }
+    $qcte = survey_filter_prepare_filter($filterlist, $andor);
+    $query = survey_filter_build_cte($qcte);
 
-    error_log("qfilter");
-    var_error_log($qfilter);
-
-    // having built question lookup, now deal with the matches
-    foreach($filterlist as $filter) {
-        switch ($filter->type) {
-            case 'text':
-                if ($filterwhere != "")
-                    $filterwhere .= $andor;
-                $filterwhere .= "(SA.questionid=" . $filter->questionid . " AND SA.value LIKE '%" . $filter->value . "%')\n";
-                break;
-            case 'min':
-            case 'max':
-                if ($qfilter[$filter->questionid] != "") {
-                    if ($filterwhere != "")
-                        $filterwhere .= $andor;
-                    $range = explode(",", $qfilter[$filter->questionid]);
-                    if (count($range) == 2) {
-                        $min = $range[0] > $range[1] ? $range[1] : $range[0];
-                        $max = $range[0] < $range[1] ? $range[1] : $range[0];
-                        $filterwhere .= "(SA.questionid=" . $filter->questionid . " AND CAST(SA.value AS UNSIGNED) BETWEEN $min AND $max)\n";
-                    } else {
-                        $filterwhere .= "(SA.questionid=" . $filter->questionid . " AND CAST(SA.value AS UNSIGNED) " .
-                            $filter->type == 'min' ? ">= " : "<= " . $range[0] . ")\n";
-                    }
-                    $qfilter[$filter->questionid] = "";
-                }
-                break;
-            case 'check':
-                if ($qfilter[$filter->questionid] != "") {
-                    if ($filterwhere != "")
-                        $filterwhere .= $andor;
-
-                    $range = explode(",", $qfilter[$filter->questionid]);
-                    $values = "";
-                    foreach ($range as $value) {
-                        $values .= "CONCAT(',', SA.value, ',') LIKE '%,$value,%' OR ";
-                    }
-                    $filterwhere .= "(SA.questionid=" . $filter->questionid . " AND (" . mb_substr($values, 0, -3) . "))\n";
-                    $qfilter[$filter->questionid] = "";
-                }
-                break;
-            case 'month':
-            case 'year':
-                if ($qfilter[$filter->questionid] != "") {
-                    if ($filterwhere != "")
-                        $filterwhere .= $andor;
-                    $range = explode(",", $qfilter[$filter->questionid]);
-                    $months = array();
-                    $years = array();
-                    foreach ($range as $value) {
-                        if (is_numeric($value))
-                            $years[] = $value;
-                        else
-                            $months[] = $value;
-                    }
-                    $values = "(";
-                    foreach ($months as $value) {
-                        $values .= "SA.value LIKE '$value %' OR ";
-                    }
-                    $values = mb_substr($values, 0, -3) . ") AND (";
-                    foreach ($years as $value) {
-                        $values .= "SA.value LIKE '% $value' OR ";
-                    }
-                    $values = mb_substr($values, 0, -3) . ")";
-                    $filterwhere .= "(SA.questionid=" . $filter->questionid . " AND " . $values . ")\n";
-                    $qfilter[$filter->questionid] = "";
-                }
-                break;
-        }
-    }
-
-    $query = <<<EOD
+    $query .= <<<EOD
 SELECT DISTINCT
         CD.lastname,
         CD.firstname,
@@ -146,18 +63,18 @@ SELECT DISTINCT
              Participants P
         JOIN CongoDump CD USING(badgeid)
 EOD;
-    IF ($filterwhere != "") {
-        $query .= "\n\tJOIN ParticipantSurveyAnswers SA ON (P.badgeid=SA.participantid)\n";
-        $filterwhere = "AND (\n" . $filterwhere . ")";
-    }
+    $query .= survey_filter_build_join($qcte);
     $query .= <<<EOD
     WHERE
-        P.interested=1 $filterwhere
+        P.interested=1
+EOD;
+    $query .= survey_filter_build_where($qcte, $andor);
+    $query .= <<<EOD
     ORDER BY
         IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
 EOD;
 
-    error_log("\nquery: $query\n\n");
+    //error_log("\nquery: $query\n\n");
 
     $result = mysqli_query_exit_on_error($query);
 	$participants = array();
@@ -172,6 +89,12 @@ EOD;
 	$json_return["participants"] = $participants;
     $json_return["select"] = $select;
     echo json_encode($json_return);
+}
+
+// Start here.  Should be AJAX requests only
+$ajax_request_action = getString("ajax_request_action");
+if ($ajax_request_action == "" || !isLoggedIn() || !may_I("Administrator")) {
+    exit();
 }
 
 switch ($ajax_request_action) {

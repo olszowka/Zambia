@@ -157,7 +157,7 @@ function filter() {
             filterlist.push({ type: filtertype, id: id, questionid: questionid, value: value });
     });
 
-    console.log(filterlist);
+    //console.log(filterlist);
     var postdata = {
         ajax_request_action: "filter",
         filters: JSON.stringify(filterlist),
