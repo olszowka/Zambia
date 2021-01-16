@@ -25,12 +25,11 @@
       <div class="col col-12">
         <p id="invite-participants-intro">Use this tool to put sessions marked "invited guests only" on a participant's interest list.</p>
       </div>
-    </div>
-    <form id="invform" name="invform" method="POST" action="InviteParticipants.php">
-      <input type="hidden" id="submittype" name="submittype" value=""/>
-      <div class="row mt-2">
-        <div class="col col-5">
-          <label for="participant-select">Select Participant:&#160;</label>
+    </div> 
+    <div class="row mt-2">
+      <div class="col col-5">
+        <label for="participant-select">Select Participant:&#160;</label>
+        <div id="participant-select-div">
           <select id="participant-select" name="selpart">
             <option value="" selected="selected" disabled="true">Select Participant</option>
             <xsl:for-each select="/doc/query[@queryName='participants']/row">
@@ -43,31 +42,31 @@
             </xsl:for-each>
           </select>
         </div>
-        <div class="col col-5">
-          <label for="session-select">Select Session:&#160;</label>
-          <select id="session-select" name="selsess">
-            <option value="0" selected="selected" disabled="true">Select Session</option>
-            <xsl:for-each select="/doc/query[@queryName='sessions']/row">
-              <option>
-                <xsl:attribute name="value">
-                  <xsl:value-of select="@sessionid"/>
-                </xsl:attribute>
-                <xsl:value-of select="@title"/>
-              </option>
-            </xsl:for-each>
-          </select>
-        </div>
       </div>
-      <div class="row mt-4">
-        <div class="col col-auto">
-          <button class="btn btn-primary" id="invite" type="invite" name="Invite" value="0" onclick="return Save('invite');">Invite</button>
-        </div>
+      <div class="col col-5">
+        <label for="session-select">Select Session:&#160;</label>
+        <select id="session-select" name="selsess">
+          <option value="0" selected="selected" disabled="true">Select Session</option>
+          <xsl:for-each select="/doc/query[@queryName='sessions']/row">
+            <option>
+              <xsl:attribute name="value">
+                <xsl:value-of select="@sessionid"/>
+              </xsl:attribute>
+              <xsl:value-of select="@title"/>
+            </option>
+          </xsl:for-each>
+        </select>
       </div>
-    </form>
+    </div>
+    <div class="row mt-4">
+      <div class="col col-auto">
+        <button class="btn btn-primary" id="invite" type="invite" name="Invite" value="0" onclick="invite();">Invite</button>
+      </div>
+    </div>
       <xsl:apply-imports/>
       <div class="row mt-4">
         <div class="col col-auto">
-          <button class="btn btn-info" id="filter" type="filter" name="Filter" value="1" onclick="return Save('filter');">Apply Filter</button>
+          <button class="btn btn-info" id="filter" type="filter" name="Filter" value="1" onclick="filter();">Apply Filter</button>
         </div>
       </div>
   </xsl:template>

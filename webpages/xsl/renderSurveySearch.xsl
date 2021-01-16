@@ -45,8 +45,7 @@
               </xsl:when>
               <xsl:when test="@typename = 'number'">
                 <xsl:call-template name="number">
-                  <xsl:with-param name="questionid" select="@questionid" />
-                  
+                  <xsl:with-param name="questionid" select="@questionid" />  
                 </xsl:call-template>
               </xsl:when>
               <xsl:when test="@typename = 'monthyear'">
@@ -70,7 +69,7 @@
             <xsl:attribute name="class">
               <xsl:text>form-check-inline</xsl:text>
             </xsl:attribute>
-            <input class="form-check-input" type="radio" id="match-any" name="match-type" value="any"/>
+            <input class="form-check-input" type="radio" id="match-any" name="match-type" value="any" checked="true"/>
             <label class="form-check-label" style="margin-right: 10px;">
               <xsl:attribute name="for">
                 <xsl:text>match-any</xsl:text>
@@ -91,7 +90,7 @@
   </xsl:template>
   <xsl:template name="openend">
     <xsl:param name="questionid" select="''"/>
-    <input type="text">
+    <input type="text" data-filter="text">
       <xsl:attribute name="id">
         <xsl:value-of select="$questionid"/>
         <xsl:text>-search</xsl:text>
@@ -114,7 +113,7 @@
       </xsl:attribute>
       Min:
     </label>
-    <input type="number">
+    <input type="number" data-filter="min">
       <xsl:attribute name="id">
         <xsl:value-of select="$questionid"/>
         <xsl:text>-search-min</xsl:text>
@@ -135,7 +134,7 @@
       </xsl:attribute>
       Max:
     </label>
-    <input type="number">
+    <input type="number" data-filter="max">
       <xsl:attribute name="id">
         <xsl:value-of select="$questionid"/>
         <xsl:text>-search-max</xsl:text>
@@ -159,7 +158,7 @@
               <xsl:attribute name="title">
                 <xsl:value-of select="@optionhover"/>
               </xsl:attribute>
-              <input type="checkbox" class="tag-chk">
+              <input type="checkbox" class="tag-chk" data-filter="month">
                 <xsl:attribute name="id">
                   <xsl:value-of select="$questionid"/>
                   <xsl:text>-</xsl:text>
@@ -182,7 +181,7 @@
               <xsl:attribute name="title">
                 <xsl:value-of select="@optionhover"/>
               </xsl:attribute>
-              <input type="checkbox" class="tag-chk">
+              <input type="checkbox" class="tag-chk" data-filter="year">
                 <xsl:attribute name="id">
                   <xsl:value-of select="$questionid"/>
                   <xsl:text>-</xsl:text>
@@ -208,11 +207,11 @@
           <xsl:attribute name="title">
             <xsl:value-of select="@optionhover"/>
           </xsl:attribute>
-          <input type="checkbox" class="tag-chk">
+          <input type="checkbox" class="tag-chk" data-filter="check">
             <xsl:attribute name="id">
               <xsl:value-of select="$questionid"/>
               <xsl:text>-</xsl:text>
-              <xsl:value-of select="translate(@optionshort, ' ', '_')"/>
+              <xsl:value-of select="translate(@value, ' ', '_')"/>
             </xsl:attribute>
             <xsl:attribute name="name">
               <xsl:value-of select="$questionid"/>

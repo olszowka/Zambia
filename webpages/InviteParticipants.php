@@ -9,32 +9,6 @@ $message = "";
 $alerttype = "success";
 $submittype = "";
 if(may_I("Staff")) {
-    var_error_log($_POST);
-    if (isset($_POST["submittype"])) 
-        $submittype = $_POST["submittype"];
-    if ($submittype == 'invite')
-        {
-        $partbadgeid = mysqli_real_escape_string($linki, getString("selpart"));
-        $sessionid = getInt("selsess", 0);
-        if (($partbadgeid == '') || ($sessionid == 0)) {
-            $message = "<p class=\"alert alert-error\">Database not updated. Select a participant and a session.</p>";
-            $alerttype = "warning";
-        } else {
-            $query = "INSERT INTO ParticipantSessionInterest SET badgeid='$partbadgeid', ";
-            $query .= "sessionid=$sessionid;";
-            $result = mysqli_query($linki, $query);
-            if ($result) {
-                $message =  "<p>Database successfully updated.</p>";
-            } elseif (mysqli_errno($linki) == 1062) {
-                $message =  "<p>Database not updated. That participant was already invited to that session.</p>";
-                $alerttype = "warning";
-            } else {
-                $message = $query . "<p>Database not updated.</p>";
-                $alerttype = "danger";
-            }
-
-        }
-    }
     $query = [];
     $query['participants'] = <<<EOD
 SELECT
@@ -42,7 +16,13 @@ SELECT
         CD.firstname,
         CD.badgename,
         P.badgeid,
-        P.pubsname
+        P.pubsname,
+        CONCAT(
+            CASE 
+                WHEN P.pubsname != "" THEN P.pubsname
+                WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname) 
+                ELSE CD.firstname
+            END, ' (', CD.badgename, ') - ', P.badgeid) AS name
     FROM
              Participants P
         JOIN CongoDump CD USING(badgeid)

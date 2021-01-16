@@ -395,7 +395,7 @@ EOD;
 
 // Start here.  Should be AJAX requests only
 $ajax_request_action = getString("ajax_request_action");
-if ($ajax_request_action == "") {
+if ($ajax_request_action == "" || !isLoggedIn() || !may_I("Administrator")) {
     exit();
 }
 

@@ -28,6 +28,9 @@ document.addEventListener( "DOMContentLoaded", function () {
 		case "Participant Survey":
 			partSurvey.initialize();
 			break;
+		case "Invite Participants":
+			inviteParticipants.initialize();
+			break;
 		default:
 			window.status="Ready.";
 		/**

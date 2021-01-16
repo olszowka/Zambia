@@ -568,11 +568,13 @@ function cleanupSave(message, classtext) {
     el = document.getElementById("submitbtn");
     el.disabled = false;
 
+    el = document.getElementById("message");
     if (message != "") {
-        el = document.getElementById("message");
         el.innerHTML = message;
         el.className = classtext;
         el.style.display = 'block';
+    } else {
+        el.style.display = 'none';
     }
 };
 
