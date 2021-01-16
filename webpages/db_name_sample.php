@@ -67,8 +67,5 @@ define("USE_REG_SYSTEM", FALSE);
 // True -> Zambia users loaded from reg system into CongoDump; staff users cannot edit them
 // False -> Zambia users created and edited by staff users in Zambia
 define("REG_PART_PREFIX", "");
-// only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter
-// staff default regtype, only needed for USE_REG_SYSTEM = FALSE
-define("REG_STAFF_DEFAULT", "StaffComp");
-define("REG_PART_DEFAULT", "ParticipantComp");
+// only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
 ?>
