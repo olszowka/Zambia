@@ -157,7 +157,8 @@ INSERT INTO `CustomText` VALUES
   (4,'My Schedule','enough_panels',''),
   (5,'My Schedule','all_panelists_1',''),
   (6,'My Schedule','all_panelists_2',''),
-  (7,'Data Retention Consent', 'consent', '');
+  (7,'Data Retention Consent', 'consent', ''),
+  (8, 'My Profile', 'registration_data', '');
 /*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
 UNLOCK TABLES;
 
