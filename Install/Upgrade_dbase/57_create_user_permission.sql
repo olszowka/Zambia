@@ -90,7 +90,7 @@ INSERT INTO Permissions (permatomid, phaseid, permroleid, badgeid)
             );
 
 INSERT INTO CustomText 
-    (customtextid, page, tag, textcontents)
+    (page, tag, textcontents)
     VALUES
-    (8, 'My Profile', 'registration_data', '<p>Please confirm your contact information.  If it is not correct, please log into Zambia Demo\'s <a href="https://reg.arisia.org" target="_blank">on-line registration system</a> and correct it there. Please note that the password there is <b>not the same</b> as the one you use in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>');
+    ('My Profile', 'registration_data', '<p>Please confirm your contact information.  If it is not correct, please log into Zambia Demo\'s <a href="https://reg.arisia.org" target="_blank">on-line registration system</a> and correct it there. Please note that the password there is <b>not the same</b> as the one you use in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>');
 INSERT INTO PatchLog (patchname) VALUES ('57_create_user_permission.sql');

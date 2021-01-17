@@ -43,12 +43,12 @@ if ($fbadgeid) {
     <div id="resultBoxDIV" class="container-fluid"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
     <div id="resultsDiv" class="container-fluid">
         <div class="row mt-3">
-            <div class="col-sm-1">
+            <div class="col-sm-2 col-xl-1">
                 <div class="">
                     <label for="badgeid" class="mb-1"><?php echo USER_ID_PROMPT; ?>:</label>
                 </div>
                 <div>
-                    <input class="disabled" id="badgeid" type="text" readonly="readonly" size="8" />
+                    <input class="col-text-input disabled" id="badgeid" type="text" readonly="readonly" />
                 </div>
             </div>
 <?php
@@ -59,7 +59,7 @@ if (USE_REG_SYSTEM === TRUE) {
                     <label for="lname_fname" class="mb-1">Last name, first name:</label>
                 </div>
                 <div>
-                    <input class="disabled" id="lname_fname" type="text" readonly="readonly" size="35" />
+                    <input class="col-text-input disabled" id="lname_fname" type="text" readonly="readonly" style="max-width:20rem;" />
                 </div>
             </div>
 <?php
@@ -70,7 +70,7 @@ if (USE_REG_SYSTEM === TRUE) {
                     <label for="lastname" class="mb-1">Last name:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="lastname" type="text" size="35" maxlength="40" />
+                    <input class="col-text-input mycontrol" id="lastname" type="text" maxlength="40" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -78,7 +78,7 @@ if (USE_REG_SYSTEM === TRUE) {
                     <label for="firstname" class="mb-1">First name:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="firstname" type="text" size="35" maxlength="35" />
+                    <input class="col-text-input mycontrol" id="firstname" type="text" maxlength="35" />
                 </div>
             </div>
 <?php
@@ -91,11 +91,11 @@ if (USE_REG_SYSTEM === TRUE) {
                 <div>
 <?php if (USE_REG_SYSTEM === TRUE) { 
 ?>
-                    <input type="text" id="badgename" class="userFormINPTXT disabled" readonly="readonly" size="35" maxlength="50" />
+                    <input type="text" id="badgename" class="col-text-input disabled" readonly="readonly" maxlength="50" />
 <?php
 } else {
 ?>
-                    <input type="text" id="badgename" class="userFormINPTXT mycontrol" size="35" maxlength="50" />
+                    <input type="text" id="badgename" class="col-text-input mycontrol" maxlength="50" />
 <?php
 }
 ?>
@@ -106,12 +106,12 @@ if (USE_REG_SYSTEM === FALSE) {
 ?> 
         </div>
         <div class="row mt-3">
-            <div class="col-sm-3 offset-sm-1">
+            <div class="col-sm-3 offset-sm-2 offset-xl-1">
                 <div class="">
                     <label for="phone" class="mb-1">Phone number:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="phone" type="text" size="35" maxlength="100" />
+                    <input class="col-text-input mycontrol" id="phone" type="text" maxlength="100" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -119,7 +119,7 @@ if (USE_REG_SYSTEM === FALSE) {
                     <label for="email" class="mb-1">Email address:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="email" type="text" size="35" maxlength="100" />
+                    <input class="col-text-input mycontrol" id="email" type="text" maxlength="100" />
                 </div>
             </div>
 <?php
@@ -130,7 +130,7 @@ if (USE_REG_SYSTEM === FALSE) {
                     <label for="pubsname" class="mb-1">Name for publications:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="pubsname" type="text" readonly="readonly" size="35" maxlength="50" />
+                    <input class="col-text-input mycontrol" id="pubsname" type="text" readonly="readonly" maxlength="50" />
                 </div>
             </div>
         </div>
@@ -138,12 +138,12 @@ if (USE_REG_SYSTEM === FALSE) {
 if (USE_REG_SYSTEM === FALSE) {
 ?>
         <div class="row mt-3">
-            <div class="col-sm-3 offset-sm-1">
+            <div class="col-sm-3 offset-sm-2 offset-xl-1">
                 <div class="">
                     <label for="postaddress1" class="mb-1">Postal Address:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="postaddress1" type="text" size="35" maxlength="100" />
+                    <input class="col-text-input mycontrol" id="postaddress1" type="text" maxlength="100" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -151,17 +151,17 @@ if (USE_REG_SYSTEM === FALSE) {
                     <label for="postaddress2" class="mb-1">Postal Address Line 2:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="postaddress2" type="text" size="35" maxlength="100" />
+                    <input class="col-text-input mycontrol" id="postaddress2" type="text" maxlength="100" />
                 </div>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-sm-2 offset-sm-1">
+            <div class="col-sm-2 offset-sm-2 offset-xl-1">
                 <div class="">
                     <label for="postcity" class="mb-1">City:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="postcity" type="text" size="25" maxlength="50" />
+                    <input class="col-text-input mycontrol" id="postcity" type="text" maxlength="50" />
                 </div>
             </div>
             <div class="col-sm-1">
@@ -169,15 +169,15 @@ if (USE_REG_SYSTEM === FALSE) {
                     <label for="poststate" class="mb-1">State:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="poststate" type="text" size="8" maxlength="25" />
+                    <input class="col-text-input mycontrol" id="poststate" type="text" maxlength="25" />
                 </div>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-2">
                 <div class="">
                     <label for="postzip" class="mb-1">Zip Code:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="postzip" type="text" size="10" maxlength="10" />
+                    <input class="col-text-input mycontrol" id="postzip" type="text" maxlength="10" style="max-width:7rem;" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -185,7 +185,7 @@ if (USE_REG_SYSTEM === FALSE) {
                     <label for="postcountry" class="mb-1">Country:</label>
                 </div>
                 <div>
-                    <input class="userFormINPTXT mycontrol" id="postcountry" type="text" size="25" maxlength="25" />
+                    <input class="col-text-input mycontrol" id="postcountry" type="text" maxlength="25" />
                 </div>
             </div>
         </div>
@@ -217,7 +217,7 @@ if (may_I("ResetUserPassword")) {
                     <label for="password">Change Participant's Password:</label>
                 </div>
                 <div>
-                    <input type="password" size="30" maxlength="40" id="password" readonly="readonly" class="mycontrol" />
+                    <input type="password" maxlength="40" id="password" readonly="readonly" class="mycontrol" />
                 </div>
                 <span id="passwordsDontMatch" style="color: red;">Passwords don't match.</span>
             </div>
@@ -226,7 +226,7 @@ if (may_I("ResetUserPassword")) {
                     <label for="cpassword">Confirm New Password:</label>
                 </div>
                 <div>
-                    <input type="password" size="30" maxlength="40" id="cpassword" readonly="readonly" class="mycontrol" />
+                    <input type="password" maxlength="40" id="cpassword" readonly="readonly" class="mycontrol" />
                 </div>
             </div>
         </div>
