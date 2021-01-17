@@ -42,12 +42,16 @@ ALTER TABLE PermissionRoles
 UPDATE PermissionRoles
     SET display_order = 10 * permroleid;
 
+ALTER TABLE Permissions DROP CONSTRAINT Permissions_ibfk_1;
+ALTER TABLE Permissions ADD CONSTRAINT Permissions_ibfk_1 FOREIGN KEY (permatomid)
+	REFERENCES PermissionAtoms(permatomid) ON UPDATE CASCADE;
+
 /**
   Admin role gets to administer all roles
   Senior staff role gets to administer staff and participant roles
  */
 INSERT INTO Permissions (permatomid, phaseid, permroleid, badgeid) VALUES
-    (21, NULL, 1, NULL), (22, NULL, 12, NULL), (23, NULL, 12, NULL);
+    (20, NULL, 1, NULL), (21, NULL, 1, NULL), (22, NULL, 12, NULL), (23, NULL, 12, NULL);
 
 /**
   Copy all staff permissions to senior staff it doesn't already have
