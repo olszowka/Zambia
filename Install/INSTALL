@@ -7,11 +7,13 @@ Comments:
 
 You need a server with: 
   - apache
+     - Zambia might work with other web servers, but hasn't been tested on them.
   - php
+     - version 7.X >= 7.1.  It might work with 8.X, but hasn't been tested on it. 
      - needs to have xsl and multibyte libraries installed and enabled
        (often, but not always, included by default)
   - mysql
-  - an instance of smtp which will relay from Zambia/php
+  - a mail relay to accept mail for sending via smtp
        (optional; needed only if you want to send email from Zambia)
 Please test them and make sure they work.  
 
@@ -72,10 +74,7 @@ use DemoDbase.dump or SampleDbase.dump.
 Checking out the html and php code. 
 
    cd /home/petero/public_html
-   svn checkout svn://svn.code.sf.net/p/zambia/code/trunk/webpages zambiademo
-
-You probably want to talk with us first and find out what revision is 
-currently recommented.
+   git clone https://github.com/olszowka/Zambia.git zambiademo
 
 4 - Tweak the configuration to use your database and specify other preferences
 
@@ -123,14 +122,13 @@ Options for SMTP_PROTOCOL are "", "SSL", or "TLS".  Blank/Default is no encrypti
 
 8 - Backups are a good thing 
 
-If you are changing php and html files, you'll need to talk to us about 
-access to svn check your changes into svn.   
+If you are changing php and html files, I suggest you fork Zambia on github and commit your changes to your fork.
 
 If you care about dbase content, see backup_mysql and clean_backups in the 
 scripts directory.  You'll want to run them or something similar.   
 
 9 - Reaching us
 
-I can be reached at zambia-support@arisia.org 
+I can be reached via github.
 
    Have Fun!   -- PeterO
