@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding="UTF-8"?>
-<!-- Copyright (c) 2019-2020 Peter Olszowka. All rights reserved. See copyright document for more details.-->
+<!-- Copyright (c) 2019-2021 Peter Olszowka. All rights reserved. See copyright document for more details.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:param name="header_version" select="'Participant'"/><!-- "Staff" or "Participant" -->
     <xsl:param name="logged_in" select="false()" /><!-- TRUE/FALSE -->
@@ -11,7 +11,7 @@
     <xsl:param name="header_error_message" select="''" />
     <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:template match="/">
-        <header class="header-wrapper">
+        <header class="header-wrapper" data-pbo="GlobalHeader.xsl:14">
             <div id="reg-header-container" class="collapsible-wrapper">
                 <div id="reg-header">
                     <xsl:choose>
@@ -56,32 +56,32 @@
                         </xsl:when>
                         <xsl:when test="not($no_user_required)">
                             <div>
-                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="doLogin.php">
+                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="doLogin.php" data-pbo="GlobalHeader.xsl:59">
                                     <fieldset id="login-box">
                                         <xsl:choose>
                                             <xsl:when test="$login_page_status='Normal'">
                                                 <div class="login-alert-container">
-                                                    <span class="alert alert-error">Session expired. Please log in again.</span>
+                                                    <div class="alert alert-error">Session expired. Please log in again.</div>
                                                 </div>
                                             </xsl:when>
                                             <xsl:when test="$login_page_status='Logout'">
                                                 <div class="login-alert-container">
-                                                    <span class="alert alert-success">You have logged out successfully.</span>
+                                                    <div class="alert alert-success">You have logged out successfully.</div>
                                                 </div>
                                             </xsl:when>
                                             <xsl:when test="$login_page_status='Password_Reset'">
                                                 <div class="login-alert-container">
-                                                    <span class="alert alert-success">You have changed your password successfully.</span>
+                                                    <div class="alert alert-success">You have changed your password successfully.</div>
                                                 </div>
                                             </xsl:when>
                                             <xsl:when test="$login_page_status='No_Permission'">
                                                 <div class="login-alert-container">
-                                                    <span class="alert alert-error">You do not have permission to access this page.</span>
+                                                    <div class="alert alert-error">You do not have permission to access this page.</div>
                                                 </div>
                                             </xsl:when>
                                             <xsl:when test="$header_error_message != ''">
                                                 <div class="login-alert-container">
-                                                    <span class="alert alert-error"><xsl:value-of select="$header_error_message" /></span>
+                                                    <div class="alert alert-error"><xsl:value-of select="$header_error_message" /></div>
                                                 </div>
                                             </xsl:when>
                                             <xsl:otherwise>

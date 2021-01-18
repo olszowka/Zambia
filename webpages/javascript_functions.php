@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrap4 = false) {
     if ($bootstrap4) { ?>
     <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
@@ -64,15 +64,24 @@ function load_internal_javascript($title, $isDataTables = false) {
         case "Session Search Results":
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;
+        case "Administer Participants":
+            echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
+            break;
+        case "My Profile":
+            echo "<script src=\"javascript/myProfile.js\"></script>";
+            break;
+        case "Edit Session":
+            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
+            break;
+        case "Create New Session":
+            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
+            break;
         default:
             if ($isDataTables) {
                 echo "<script src=\"javascript/Reports.js\"></script>\n";
             }
     }
 ?>
-<script src="javascript/AdminParticipants.js"></script>
-<script src="javascript/editCreateSession.js"></script>
-<script src="javascript/myProfile.js"></script>
 <script src="javascript/staffMaintainSchedule.js"></script>
 <script src="javascript/partPanelInterests.js"></script>
 <?php

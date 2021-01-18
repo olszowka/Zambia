@@ -88,7 +88,13 @@
     </xsl:template>
 
     <xsl:template match="/doc/query[@queryName='tags']/row">
-        <label class="tag-chk-label"><input type="checkbox" name="tags[]" class="tag-chk" value="{@tagid}" /><xsl:value-of select="@tagname" /></label>
+        <div class="tag-chk-label-wrapper">
+            <label class="tag-chk-label">
+                <input type="checkbox" name="tags[]" class="tag-chk" value="{@tagid}" />
+                <xsl:value-of select="@tagname" />
+            </label>
+        </div>
+        
     </xsl:template>
 
 </xsl:stylesheet>

@@ -1,12 +1,13 @@
 <?php
-//	Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Invite Participants";
 require_once('StaffCommonCode.php');
 staff_header($title);
 
-if (isset($_POST["selpart"])) {
-    $partbadgeid = mysqli_real_escape_string($linki, getString("selpart"));
+$selpart = getString("selpart");
+if ($selpart !== NULL) {
+    $partbadgeid = mysqli_real_escape_string($linki, $selpart);
     $sessionid = getInt("selsess", 0);
     if (($partbadgeid == '') || ($sessionid == 0)) {
         echo "<p class=\"alert alert-error\">Database not updated. Select a participant and a session.</p>";

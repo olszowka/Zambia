@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30) {
@@ -66,9 +66,9 @@ function conv_min2hrsmin($mininput) {
 // and confirms it is an integer.
 // Safe from referencing nonexisting array index
 function getInt($name, $default = false) {
-    if (isset($_GET[$name])) {
+    if (array_key_exists($name, $_GET)) {
         $int = $_GET[$name];
-    } elseif (isset($_POST[$name])) {
+    } elseif (array_key_exists($name, $_POST)) {
         $int = $_POST[$name];
     } else {
         return $default;
@@ -86,9 +86,9 @@ function getInt($name, $default = false) {
 // and confirms it is an integer.
 // Safe from referencing nonexisting array index
 function getArrayOfInts($name, $default = false) {
-    if (isset($_GET[$name])) {
+    if (array_key_exists($name, $_GET)) {
         $intArr = $_GET[$name];
-    } elseif (isset($_POST[$name])) {
+    } elseif (array_key_exists($name, $_POST)) {
         $intArr = $_POST[$name];
     } else {
         return $default;
@@ -109,18 +109,17 @@ function getArrayOfInts($name, $default = false) {
     }
 }
 
-
 // Function getString("name")
 // gets a parameter from $_GET[] or $_POST[] of name
 // and strips slashes
 // Safe from referencing nonexisting array index
 function getString($name) {
-    if (isset($_GET[$name])) {
+    if (array_key_exists($name, $_GET)) {
         $string = $_GET[$name];
-    } elseif (isset($_POST[$name])) {
+    } elseif (array_key_exists($name, $_POST)) {
         $string = $_POST[$name];
     } else {
-        return "";
+        return NULL;
     }
     return stripslashes($string);
 }
@@ -130,9 +129,9 @@ function getString($name) {
 // in form of array and strips slashes from each element
 // Safe from referencing nonexisting array index
 function getArrayOfStrings($name) {
-    if (isset($_GET[$name])) {
+    if (array_key_exists($name, $_GET)) {
         $array = $_GET[$name];
-    } elseif (isset($_POST[$name])) {
+    } elseif (array_key_exists($name, $_POST)) {
         $array = $_POST[$name];
     } else {
         return array();
@@ -437,5 +436,28 @@ function generateControlString($paramArray, $controliv = '') {
 // returns the original associative array sent to generateControlString()
 function interpretControlString($control, $controliv) {
     return json_decode(openssl_decrypt($control, 'aes-128-cbc', ENCRYPT_KEY, 0, base64_decode($controliv)), true);
+}
+
+function addArrayToXML($array, $array_name, $XMLDoc = false) {
+    if ($XMLDoc === false) {
+        $XMLDoc = new DomDocument("1.0", "UTF-8");
+        $docNode = $XMLDoc -> createElement("doc");
+        $docNode = $XMLDoc -> appendChild($docNode);
+    } else {
+        $docNode = $XMLDoc->getElementsByTagName("doc")->item(0);
+    }
+    $arrayNode = $XMLDoc -> createElement($array_name);
+    $arrayNode = $docNode -> appendChild($arrayNode);
+    foreach($array as $key => $value) {
+        if (gettype($key) === 'string') {
+            $arrayNode->setAttribute($key, $value);
+        } else {
+            $rowNode = $XMLDoc -> createElement("row");
+            $rowNode = $arrayNode -> appendChild($rowNode);
+            $textNode = $XMLDoc->createTextNode($value);
+            $textNode = $rowNode -> appendChild($textNode);
+        }
+    }
+    return $XMLDoc;
 }
 ?>

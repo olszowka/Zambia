@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2019-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2019-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 function html_header($title, $bootstrap4 = false, $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;
     require_once ("javascript_functions.php");
@@ -10,6 +10,7 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
     <meta charset="utf-8">
     <title>Zambia &ndash; <?php echo $title ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <?php if ($bootstrap4) { ?>
     <link rel="stylesheet" href="external/bootstrap4.5.0/bootstrap.min.css" type="text/css" >
 <?php } else { ?>

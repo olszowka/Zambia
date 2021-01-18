@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!--
     Created by Peter Olszowka on 2020-04-12;
-    Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="title" select="''" />
@@ -75,6 +75,11 @@
                   <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
                     <li>
                       <a href="StaffSendEmailCompose.php">Send email</a>
+                    </li>
+                  </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='CreateUser']">
+                    <li>
+                      <a href="AddZambiaUser.php">Create User</a>
                     </li>
                   </xsl:if>
                 </ul>

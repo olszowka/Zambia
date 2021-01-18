@@ -1,8 +1,7 @@
 <?php
-// Copyright (c) 2008-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2008-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message, $message_error, $message2, $title;
 // $participant_array is defined by file including this.
-//error_log("Zambia: Reached renderWelcome.php"); 
 $title = "Participant View";
 require_once('PartCommonCode.php');
 participant_header($title);
@@ -58,7 +57,7 @@ if (may_I('postcon')) { ?>
                     </div>
 				</div>
 			</fieldset>
-			<?php } else { ?>
+			<?php } else if (DEFAULT_USER_PASSWORD) { ?>
 			<p> Thank you for changing your password. For future changes, use the "My Profile" tab.</p>
             <?php } ?>
             <button class="btn btn-primary" type="submit" name="submit" >Update</button>
