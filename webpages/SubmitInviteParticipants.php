@@ -7,8 +7,13 @@ require_once('surveyFilterBuild.php');
 function invite_participant() {
     global $linki;
 
-    $partbadgeid = mysqli_real_escape_string($linki, getString("selpart"));
+    $partbadgeid = getString("selpart");
+    if ($partbadgeid !== NULL)
+        $partbadgeid = mysqli_real_escape_string($linki, $partbadgeid);
+    else
+        $partbadgeid = '';
     $sessionid = getInt("selsess", 0);
+
     if (($partbadgeid == '') || ($sessionid == 0)) {
         $message = "<p class=\"alert alert-error\">Database not updated. Select a participant and a session.</p>";
         $alerttype = "warning";
