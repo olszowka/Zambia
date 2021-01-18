@@ -11,10 +11,26 @@ var newrow = null;
 var fetch_json = {};
 var tableschema = null;
 var curcell = null;
+var dirty = false;
+var nexttab = null;
 
 var EditConfigTable = function () {
 
-    function tabshown(tabname) {   
+    function tabshown(newtabname) {
+        var tabname = newtabname;
+
+       // if top level tab clicked, find which sub tab is open
+        if (newtabname.match(/-top$/i)) {
+            $("a.active").each(function () {
+                attr = $(this).attr("data-top");
+                if (attr == newtabname) {
+                    //console.log(", top=" + $(this).attr("data-top"));
+                    tabname = this.id;
+                }
+            });
+        }
+
+        // now with the subtab (clicked or refed by top), see if it needs a table and data fetched
         if (tabname.substring(0, 2) != 't-')
             document.getElementById("table-div").style.display = "none";
         else {
@@ -25,6 +41,17 @@ var EditConfigTable = function () {
         }
     }
 
+    // show unsaved data modal popup if dirty
+    function tabprehide(tabname, newtab) {
+        //console.log('prehide:' + tabname + ", " + newtab + ", dirty: " + dirty);
+        if (!dirty)
+            return true;
+        nexttab = newtab;
+        $("#unsavedWarningModal").modal('show');
+        return false;
+    }
+
+    // clear table of any tab being closed
     function tabhide(tabname) {
         if (table) {
             table = null;
@@ -38,16 +65,35 @@ var EditConfigTable = function () {
        $('.nav-tabs a').on('shown.bs.tab', function (event) {
            var x = event.target.id;         // active tab
             tabshown(x);
+       });
+        $('.nav-tabs a').on('hide.bs.tab', function (event) {
+            var x = event.target.id;        // to be hidden tab
+            var n = event.relatedTarget.id;    // to be shown tab
+            //console.log('act = ' + x);
+            return tabprehide(x, n);
         });
         $('.nav-tabs a').on('hidden.bs.tab', function (event) {
-            var x = event.target.id         // active tab
+            var x = event.target.id;        // active tab
             //console.log('act = ' + x);
             tabhide(x);
+        $("#unsavedWarningModal").modal({ show: false });
         });
     }
 };
 
 var editConfigTable = new EditConfigTable();
+
+function discardChanges() {
+    //console.log("in discardChanges(), nexttab = '" + nexttab + "'");
+    $("#unsavedWarningModal").modal('hide');
+    dirty = false;
+    if (nexttab) {
+        //console.log("going to tab: " + nexttab);
+        $('#' + nexttab).tab('show');
+        //tabshown(nexttab);
+    }
+    return true;
+}
 
 function savetceEdit(display) {
     if (curcell) {
@@ -142,8 +188,8 @@ function addnewrow(table) {
 }
 
 function cellChanged(cell) {
-    console.log(cell.getValue());
-    cell.getElement().style.backgroundColor = "#c0c0ff";
+    dirty = true;
+    cell.getElement().style.backgroundColor = "#fff3cd";
 }
 
 function opentable(tabledata) {
@@ -235,11 +281,13 @@ function opentable(tabledata) {
             document.getElementById("message").style.display = 'none';
             //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
             if (this.getHistoryUndoSize() > 0) {
+                dirty = true;
                 document.getElementById("undo").disabled = false;
             }
         },
         dataChanged: function (data) {
             //data - the updated table data
+            dirty = true;
             document.getElementById("submitbtn").innerHTML = "Save*";
             if (this.getHistoryUndoSize() > 0) {
                 document.getElementById("undo").disabled = false;
@@ -305,21 +353,12 @@ function saveComplete(data, textStatus, jqXHR) {
     el = document.getElementById("submitbtn");
     el.disabled = false;
     el.innerHTML = "Save";
+    dirty = false;
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
 };
 
 function SaveTable() {
-    //rows = table.getDataCount();
-    //console.log("there are " + rows + " questions in the survey");
-    //console.log("sorters: ");
-    //console.log(table.getSorters());
-    //for (r = 0; r < rows; r++) {
-    //    row = table.getRowFromPosition(r);
-    //    console.log("q[" + r + "] = " + row.getCell("shortname").getValue() + ": q" + row.getCell("questionid").getValue() +
-    //        ", d" + row.getCell("display_order").getValue());
-    //}
-    //return false;
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
     document.getElementById("message").style.display = 'none';
@@ -359,6 +398,7 @@ function Undo() {
     var undoCount = table.getHistoryUndoSize();
     if (undoCount <= 0) {
         document.getElementById("undo").disabled = true;
+        dirty = false;
     }
     var redoCount = table.getHistoryRedoSize();
     if (redoCount > 0) {
@@ -372,6 +412,7 @@ function Redo() {
     var undoCount = table.getHistoryUndoSize();
     if (undoCount > 0) {
         document.getElementById("undo").disabled = false;
+        dirty = true;
     }
     var redoCount = table.getHistoryRedoSize();
     if (redoCount <= 0) {
