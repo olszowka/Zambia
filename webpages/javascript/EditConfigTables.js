@@ -141,6 +141,11 @@ function addnewrow(table) {
     table.addRow(row, false);
 }
 
+function cellChanged(cell) {
+    console.log(cell.getValue());
+    cell.getElement().style.backgroundColor = "#c0c0ff";
+}
+
 function opentable(tabledata) {
     // get table information from tableschema
     //console.log(tableschema);
@@ -223,6 +228,7 @@ function opentable(tabledata) {
         data: tabledata,
         index: indexcol,
         layout: "fitDataTable",
+        cellEdited: cellChanged,
         //autoColumns: true,
         columns: columns,
         rowMoved: function (row) {
@@ -249,14 +255,14 @@ function opentable(tabledata) {
 
 function saveComplete(data, textStatus, jqXHR) {
     message = "";
-    console.log(data);
+    //console.log(data);
     try {
         fetch_json = JSON.parse(data);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         fetch_json = {};
     }
-    console.log(fetch_json);
+    //console.log(fetch_json);
     if (fetch_json.hasOwnProperty('message')) {
         message = fetch_json.message;
         //console.log(message);
