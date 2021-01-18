@@ -989,7 +989,10 @@ INSERT INTO Permissions
     (17, NULL, 1, NULL),
     (19, NULL, 1, NULL),
     (20, NULL, 1, NULL),
-    (20, NULL, 12, NULL);
+    (20, NULL, 12, NULL),
+    (21, NULL, 1, NULL),
+    (22, NULL, 12, NULL),
+    (23, NULL, 12, NULL);
 /*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
