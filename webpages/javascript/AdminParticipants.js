@@ -46,12 +46,12 @@ function checkIfDirty(mode) {
     if (!mode && (badgenameDirty || bioDirty || emailDirty || firstnameDirty || interestedDirty || lastnameDirty ||
         $password.val() || phoneDirty || postaddress1Dirty || postaddress2Dirty || postcityDirty || poststateDirty ||
         postzipDirty || postcountryDirty || pubsnameDirty || rolesDirty || staffnotesDirty)) {
-        $("#unsavedWarningDIV").modal('show');
+        $("#unsavedWarningModal").modal('show');
         $("#cancelOpenSearchBUTN").blur();
         return false;
     }
     if (mode) {
-        $("#unsavedWarningDIV").modal('hide');
+        $("#unsavedWarningModal").modal('hide');
     }
     return !(mode === "cancel");
 }
@@ -59,7 +59,7 @@ function checkIfDirty(mode) {
 function chooseParticipant(badgeid, override) {
     //debugger;
     if (!checkIfDirty(override)) {
-        $('#warnName').html($("#pname").val());
+        $('#warnName').html($pubsname.val());
         $('#warnNewBadgeID').html(badgeid);
         return;
     }
@@ -232,6 +232,7 @@ function fetchUserPermRolesCallback(data, textStatus, jqXHR) {
 function getUpdateResults(data, textStatus, jqXHR) {
     $("#resultBoxDIV").html(data);
     $('#resultBoxDIV').show();
+    window.scrollTo(0, 0);
     setTimeout(function () {
         $updateButton.button().attr("disabled", "disabled");
     }, 0);
@@ -293,14 +294,12 @@ function initializeAdminParticipants() {
     $passwordsDontMatch.hide();
     $('#resultsDiv').hide();
     $('#resultBoxDIV').hide();
-    $("#unsavedWarningDIV").modal({backdrop: 'static', keyboard: true, show: false});
+    $("#unsavedWarningModal").modal({show: false});
     var $toggleSearchResultsBUTN = $("#toggleSearchResultsBUTN");
     $toggleSearchResultsBUTN.click(toggleSearchResultsBUTN);
     $toggleSearchResultsBUTN.prop("disabled", true).prop("hidden", true);
     resultsHidden = true;
     $("#searchPartsBUTN").click(doSearchPartsBUTN);
-    $("#cancelOpenSearchBUTN").button();
-    $("#overrideOpenSearchBUTN").button();
     $("#searchResultsDIV").html("").hide('fast');
     if (fbadgeid) { // signal from page initializer that page was requested to
         // to be preloaded with a participant

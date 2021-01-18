@@ -11,6 +11,7 @@ if ($fbadgeid) {
 }
 ?>
 <form id="adminParticipantsForm" class="form-row">
+    <div id="resultBoxDIV" class="container-fluid"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
     <div id="searchPartsDIV" class="container-fluid">
         <div class="row mt-3">
             <div class="col-sm-12">
@@ -26,21 +27,25 @@ if ($fbadgeid) {
         <div style="margin-top: 1em; height:250px; overflow:auto; border: 1px solid grey" id="searchResultsDIV">&nbsp;
         </div>
     </div>
-    <div class="modal hide" id="unsavedWarningDIV">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">x</button>
-            <h3>Data Not Saved</h3>
-        </div>
-        <div class="modal-body">
-            <p>You have unsaved changes for <span id='warnName'></span>!</p>
-            <p class="hide" id='warnNewBadgeID'></p>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn btn-primary" id="cancelOpenSearchBUTN" data-dismiss="modal">Cancel</a>
-            <a href="#" class="btn" id="overrideOpenSearchBUTN" onclick="return loadNewParticipant();" data-dismiss="modal">Discard changes</a>
+    <div id="unsavedWarningModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Data Not Saved</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>You have unsaved changes for <span id='warnName'></span>, <?php echo USER_ID_PROMPT; ?>: <span id='warnNewBadgeID'></span>!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancelOpenSearchBUTN" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="overrideOpenSearchBUTN" class="btn btn-secondary" onclick="return loadNewParticipant();" >Discard changes</button>
+                </div>
+            </div>
         </div>
     </div>
-    <div id="resultBoxDIV" class="container-fluid"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
     <div id="resultsDiv" class="container-fluid">
         <div class="row mt-3">
             <div class="col-sm-2 col-xl-1">
