@@ -20,26 +20,47 @@
         </xsl:if>
       </div>
     <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']">
+      <div id="unsavedWarningModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Data Not Saved</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&#215;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>
+                You have unsaved changes highlighted in the table below!
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="cancelOpenSearchBUTN" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+              <button type="button" id="overrideOpenSearchBUTN" class="btn btn-secondary" onclick="return discardChanges();" >Discard changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div>
         <h1 style="text-align: center;">Configuration Table Editor</h1>
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <a href="#overview" class="nav-link active" data-toggle="tab">Overview</a>
+            <a href="#overview" class="nav-link active" data-toggle="tab" id="overview-top">Overview</a>
           </li>
           <li class="nav-item">
-            <a href="#part" class="nav-link" data-toggle="tab">Participants</a>
+            <a href="#part" class="nav-link" data-toggle="tab" id="part-top">Participants</a>
           </li>
           <li class="nav-item">
-            <a href="#session" class="nav-link" data-toggle="tab">Sessions</a>
+            <a href="#session" class="nav-link" data-toggle="tab" id="session-top">Sessions</a>
           </li>
           <li class="nav-item">
-            <a href="#layout" class="nav-link" data-toggle="tab">Layout</a>
+            <a href="#layout" class="nav-link" data-toggle="tab" id="layout-top">Layout</a>
           </li>
           <li class="nav-item">
-            <a href="#facility" class="nav-link" data-toggle="tab">Facility</a>
+            <a href="#facility" class="nav-link" data-toggle="tab" id="facility-top">Facility</a>
           </li>
           <li class="nav-item">
-            <a href="#emails" class="nav-link" data-toggle="tab">Emails</a>
+            <a href="#emails" class="nav-link" data-toggle="tab" id="emails-top">Emails</a>
           </li>
         </ul>
         <div class="tab-content">
@@ -62,21 +83,21 @@
             <h2>Participant Configuration Tables</h2>
             <ul class="nav nav-tabs">
               <li class="nav-item">
-                <a href="#partdesc" class="nav-link active" data-toggle="tab">Participant Configuration Tables</a>
+                <a href="#partdesc" class="nav-link active" data-toggle="tab" id="part-overview">Participant Configuration Tables</a>
               </li>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses']">
                 <li class="nav-item">
-                  <a href="#bioeditstatuses" class="nav-link" data-toggle="tab" id="t-BioEditStatuses">BioEditStatuses</a>
+                  <a href="#bioeditstatuses" class="nav-link" data-toggle="tab" data-top="part-top" id="t-BioEditStatuses">BioEditStatuses</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Credentials']">
                 <li class="nav-item">
-                  <a href="#credentials" class="nav-link" data-toggle="tab" id="t-Credentials">Credentials</a>
+                  <a href="#credentials" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Credentials">Credentials</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles']">
                 <li class="nav-item">
-                  <a href="#roles" class="nav-link" data-toggle="tab" id="t-Roles">Roles</a>
+                  <a href="#roles" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Roles">Roles</a>
                 </li>
               </xsl:if>
             </ul>
@@ -117,22 +138,22 @@
               </li>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_KidsCategories']">
                 <li class="nav-item">
-                  <a href="#kidscategories" class="nav-link" data-toggle="tab" id="t-KidsCategories">KidsCategories</a>
+                  <a href="#kidscategories" class="nav-link" data-toggle="tab" data-top="session-top" id="t-KidsCategories">KidsCategories</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_LanguageStatuses']">
                 <li class="nav-item">
-                  <a href="#languagestatuses" class="nav-link" data-toggle="tab" id="t-LanguageStatuses">LanguageStatuses</a>
+                  <a href="#languagestatuses" class="nav-link" data-toggle="tab" data-top="session-top" id="t-LanguageStatuses">LanguageStatuses</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_PubStatuses']">
                 <li class="nav-item">
-                  <a href="#pubstatuses" class="nav-link" data-toggle="tab" id="t-PubStatuses">PubStatuses</a>
+                  <a href="#pubstatuses" class="nav-link" data-toggle="tab" data-top="session-top" id="t-PubStatuses">PubStatuses</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_SessionStatuses']">
                 <li class="nav-item">
-                  <a href="#sessionstatuses" class="nav-link" data-toggle="tab" id="t-SessionStatuses">SessionStatuses</a>
+                  <a href="#sessionstatuses" class="nav-link" data-toggle="tab" data-top="session-top" id="t-SessionStatuses">SessionStatuses</a>
                 </li>
               </xsl:if>
             </ul>
@@ -180,32 +201,32 @@
               </li>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Divisions']">
                 <li class="nav-item">
-                  <a href="#divisions" class="nav-link" data-toggle="tab" id="t-Divisions">Divisions</a>
+                  <a href="#divisions" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Divisions">Divisions</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RegTypes']">
                 <li class="nav-item">
-                  <a href="#regtypes" class="nav-link" data-toggle="tab" id="t-RegTypes">RegTypes</a>
+                  <a href="#regtypes" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-RegTypes">RegTypes</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tags']">
                 <li class="nav-item">
-                  <a href="#tags" class="nav-link" data-toggle="tab" id="t-Tags">Tags</a>
+                  <a href="#tags" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Tags">Tags</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Times']">
                 <li class="nav-item">
-                  <a href="#times" class="nav-link" data-toggle="tab" id="t-Times">Times</a>
+                  <a href="#times" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Times">Times</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tracks']">
                 <li class="nav-item">
-                  <a href="#tracks" class="nav-link" data-toggle="tab" id="t-Tracks">Tracks</a>
+                  <a href="#tracks" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Tracks">Tracks</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Types']">
                 <li class="nav-item">
-                  <a href="#Types" class="nav-link" data-toggle="tab" id="t-Types">Types</a>
+                  <a href="#Types" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Types">Types</a>
                 </li>
               </xsl:if>
             </ul>
@@ -267,27 +288,27 @@
               </li>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Rooms']">
                 <li class="nav-item">
-                  <a href="#rooms" class="nav-link" data-toggle="tab" id="t-Rooms">Rooms</a>
+                  <a href="#rooms" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Rooms">Rooms</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomSets']">
                 <li class="nav-item">
-                  <a href="#roomsets" class="nav-link" data-toggle="tab" id="t-RoomSets">RoomSets</a>
+                  <a href="#roomsets" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-RoomSets">RoomSets</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet']">
                 <li class="nav-item">
-                  <a href="#roomhasset" class="nav-link" data-toggle="tab" id="t-RoomHasSet">RoomHasSet</a>
+                  <a href="#roomhasset" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-RoomHasSet">RoomHasSet</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features']">
                 <li class="nav-item">
-                  <a href="#features" class="nav-link" data-toggle="tab" id="t-Features">Features</a>
+                  <a href="#features" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Features">Features</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Services']">
                 <li class="nav-item">
-                  <a href="#Services" class="nav-link" data-toggle="tab" id="t-Services">Services</a>
+                  <a href="#Services" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Services">Services</a>
                 </li>
               </xsl:if>
             </ul>
@@ -340,17 +361,17 @@
               </li>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailFrom']">
                 <li class="nav-item">
-                  <a href="#emailfrom" class="nav-link" data-toggle="tab" id="t-EmailFrom">EmailFrom</a>
+                  <a href="#emailfrom" class="nav-link" data-toggle="tab" data-top="emails-top" id="t-EmailFrom">EmailFrom</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailTo']">
                 <li class="nav-item">
-                  <a href="#emailto" class="nav-link" data-toggle="tab" id="t-EmailTo">EmailTo</a>
+                  <a href="#emailto" class="nav-link" data-toggle="tab" data-top="emails-top" id="t-EmailTo">EmailTo</a>
                 </li>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailCC']">
                 <li class="nav-item">
-                  <a href="#emailcc" class="nav-link" data-toggle="tab" id="t-EmailCC">EmailCC</a>
+                  <a href="#emailcc" class="nav-link" data-toggle="tab" data-top="emails-top" id="t-EmailCC">EmailCC</a>
                 </li>
               </xsl:if>
             </ul>
