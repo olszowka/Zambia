@@ -39,28 +39,30 @@ var $postzip;
 var $postcountry;
 var $passwordsDontMatch;
 var $updateButton;
+var saveNewBadgeId;
 
-function checkIfDirty(mode) {
+function isDirty(override) {
     //called when user clicks "Search for participants" on the page
-    //debugger;
-    if (!mode && (badgenameDirty || bioDirty || emailDirty || firstnameDirty || interestedDirty || lastnameDirty ||
+    if (override === undefined) {
+        override = false;
+    }
+    if (!override && (badgenameDirty || bioDirty || emailDirty || firstnameDirty || interestedDirty || lastnameDirty ||
         $password.val() || phoneDirty || postaddress1Dirty || postaddress2Dirty || postcityDirty || poststateDirty ||
         postzipDirty || postcountryDirty || pubsnameDirty || rolesDirty || staffnotesDirty)) {
         $("#unsavedWarningModal").modal('show');
         $("#cancelOpenSearchBUTN").blur();
-        return false;
+        return true;
     }
-    if (mode) {
+    if (override) {
         $("#unsavedWarningModal").modal('hide');
     }
-    return !(mode === "cancel");
+    return false;
 }
 
 function chooseParticipant(badgeid, override) {
     //debugger;
-    if (!checkIfDirty(override)) {
-        $('#warnName').html($pubsname.val());
-        $('#warnNewBadgeID').html(badgeid);
+    if (isDirty(override)) {
+        saveNewBadgeId = badgeid;
         return;
     }
     var badgeidJQSel = badgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
@@ -88,8 +90,10 @@ function chooseParticipant(badgeid, override) {
     $postcountry.val(postcountry).prop("defaultValue", postcountry).prop("readOnly", false);
     $("#lname_fname").val($("#lnameSPAN_" + badgeidJQSel).text());
     $badgename.val($("#bnameSPAN_" + badgeidJQSel).text());
-    var pname = $("#pnameSPAN_" + badgeidJQSel).text();
-    $pubsname.val(pname).prop("defaultValue", pname).prop("readOnly", false);
+    var pubsname = $("#pnameSPAN_" + badgeidJQSel).text();
+    $pubsname.val(pubsname).prop("defaultValue", pubsname).prop("readOnly", false);
+    $('#warnName').html(pubsname);
+    $('#warnNewBadgeID').html(badgeid);
     originalInterested = $("#interestedHID_" + badgeidJQSel).val();
     if (!originalInterested) {
         originalInterested = "0";
@@ -138,8 +142,6 @@ function chooseParticipant(badgeid, override) {
 }
 
 function doSearchPartsBUTN() {
-    if (!checkIfDirty())
-        return;
     //called when user clicks "Search" within dialog
     var x = document.getElementById("searchPartsINPUT").value;
     if (!x)
@@ -187,7 +189,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     $poststate.val(node.getAttribute("poststate")).prop("defaultValue", node.getAttribute("poststate")).prop("readOnly", false);
     $postzip.val(node.getAttribute("postzip")).prop("defaultValue", node.getAttribute("postzip")).prop("readOnly", false);
     $postcountry.val(node.getAttribute("postcountry")).prop("defaultValue", node.getAttribute("postcountry")).prop("readOnly", false);
-    $badgename.val(node.getAttribute("badgename")).prop("defaultValue", node.getAttribute("badgename")).prop("readOnly", false);;
+    $badgename.val(node.getAttribute("badgename")).prop("defaultValue", node.getAttribute("badgename")).prop("readOnly", false);
     $pubsname.val(node.getAttribute("pubsname")).prop("defaultValue", node.getAttribute("pubsname")).prop("readOnly", false);
     originalInterested = node.getAttribute("interested");
     if (!originalInterested)
@@ -299,7 +301,7 @@ function initializeAdminParticipants() {
     $toggleSearchResultsBUTN.click(toggleSearchResultsBUTN);
     $toggleSearchResultsBUTN.prop("disabled", true).prop("hidden", true);
     resultsHidden = true;
-    $("#searchPartsBUTN").click(doSearchPartsBUTN);
+    $("#searchPartsBUTN").on('click', doSearchPartsBUTN);
     $("#searchResultsDIV").html("").hide('fast');
     if (fbadgeid) { // signal from page initializer that page was requested to
         // to be preloaded with a participant
@@ -309,8 +311,7 @@ function initializeAdminParticipants() {
 }
 
 function loadNewParticipant() {
-    var id = $('#warnNewBadgeID').html();
-    chooseParticipant(id, 'override');
+    chooseParticipant(saveNewBadgeId, true);
     return true;
 }
 
