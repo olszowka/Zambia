@@ -62,33 +62,33 @@
         <div class="row mt-4">
           <div class="col col-2">Name:</div>
           <div class="col col-4">
-            <input type="text" id="shortname" maxlength="100" size="50"/>
+            <input type="text" id="shortname" maxlength="100" size="50" data-dirty="q" onchange="qfChange(this,false);"/>
           </div>
         </div>
         <div class="row">
           <div class="col col-2">Description:</div>
           <div class="col col-6">
-            <textarea id="description" rows="4" cols="80" maxlength="1024"></textarea>
+            <textarea id="description" rows="4" cols="80" maxlength="1024" data-dirty="q" onchange="qfChange(this,false);"></textarea>
           </div>
         </div>
         <div id="prompt-div">
           <div class="row">
             <div class="col col-2">Prompt:</div>
-            <div class="col col-10">
+            <div class="col col-auto" id="prompt-area">
               <input type="text" id="prompt" maxlength="512" size="80"/>
             </div>
           </div>
         </div>
         <div class="row">
           <div id="hover-title" class="col col-2">Hover:</div>
-          <div class="col col-10">
+          <div class="col col-auto" id="hover-area">
             <textarea id="hover" rows="4" cols="80" maxlength="8192"></textarea>
           </div>
         </div>
         <div class="row">
           <div class="col col-2">Type:</div>
           <div class="col col-4">
-            <select id="typename" name="typename">
+            <select id="typename" name="typename" data-dirty="q">
               <xsl:for-each select="/doc/query[@queryName='questiontypes']/row">
               <option value="{@shortname}">
                 <xsl:attribute name="data-typeid">
@@ -106,65 +106,64 @@
         <div id="radio-div">
           <div class="row">
             <div class="col col-2">Display Only:</div>
-            <div class="col col-4">
+            <div class="col col-auto" id="display_only">
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="display_only-1" name="display_only" value="Yes"/>
-                <label class="form-check-label" for="display_only-1">Yes</label>
+                <input class="form-check-input" type="radio" id="display_only-1" name="display_only" value="Yes" data-dirty="q" onchange="qfChange(this,false);"/><label class="form-check-label" for="display_only-1">Yes</label>
               </div>
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="display_only-0" name="display_only" value="No" checked="checked"/>
+                <input class="form-check-input" type="radio" id="display_only-0" name="display_only" value="No" checked="checked" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="display_only-0">No</label>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col col-2">Required:</div>
-            <div class="col col-4">
+            <div class="col col-auto" id="required">
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="required-1" name="required" value="1" checked="checked"/>
+                <input class="form-check-input" type="radio" id="required-1" name="required" value="1" checked="checked" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="required-1">Yes</label>
               </div>
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="required-0" name="required" value="0"/>
+                <input class="form-check-input" type="radio" id="required-0" name="required" value="0" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="required-0">No</label>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col col-2">Publish:</div>
-            <div class="col col-4">
+            <div class="col col-auto" id="publish">
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="publish-1" name="publish" value="Yes"/>
+                <input class="form-check-input" type="radio" id="publish-1" name="publish" value="Yes" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="publish-1">Yes</label>
               </div>
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="publish-0" name="publish" value="No" checked="checked"/>
+                <input class="form-check-input" type="radio" id="publish-0" name="publish" value="No" checked="checked" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="publish-0">No</label>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col col-2">Allow user to set privacy:</div>
-            <div class="col col-4">
+            <div class="col col-auto" id="privacy_user">
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="privacy_user-1" name="privacy_user" value="Yes"/>
+                <input class="form-check-input" type="radio" id="privacy_user-1" name="privacy_user" value="Yes" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="privacy-1">Yes</label>
               </div>
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="privacy_user-0" name="privacy_user" value="No" checked="checked"/>
+                <input class="form-check-input" type="radio" id="privacy_user-0" name="privacy_user" value="No" checked="checked" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="privacy-0">No</label>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col col-2">Searchable:</div>
-            <div class="col col-4">
+            <div class="col col-auto" id="searchable">
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="searchable-1" name="searchable" value="Yes"/>
+                <input class="form-check-input" type="radio" id="searchable-1" name="searchable" value="Yes" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="searchable-1">Yes</label>
               </div>
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="searchable-0" name="searchable" value="No" checked="checked"/>
+                <input class="form-check-input" type="radio" id="searchable-0" name="searchable" value="No" checked="checked" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="searchable-0">No</label>
               </div>
             </div>
@@ -173,13 +172,13 @@
         <div id="asc_desc">
           <div class="row">
             <div class="col col-2">Ascending/Descending:</div>
-            <div class="col col-4">
+            <div class="col col-auto" id="ascending">
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="ascending-1" name="ascending" value="" checked="checked"/>
+                <input class="form-check-input" type="radio" id="ascending-1" name="ascending" value="" checked="checked" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="ascending-1">Ascending</label>
               </div>
               <div class="form-check-inline">
-                <input class="form-check-input" type="radio" id="ascending-0" name="ascending" value=""/>
+                <input class="form-check-input" type="radio" id="ascending-0" name="ascending" value="" data-dirty="q" onchange="qfChange(this,false);"/>
                 <label class="form-check-label" for="ascending-0">Descending</label>
               </div>
             </div>
@@ -190,11 +189,11 @@
             <div id="range-label" class="col col-2">Value Range:</div>
             <div class="col col-3">
               <span id="min-prompt">Minimum:</span>&#160;
-              <input type="number" id="min_value" size="10"/>
+              <input type="number" id="min_value" size="10" data-dirty="q" onchange="qfChange(this,false);"/>
             </div>
             <div id="max-div" class="col col-3">
               <span id="max-prompt">Maximum:</span>&#160;
-              <input type="number" id="max_value" size="10"/>
+              <input type="number" id="max_value" size="10" data-dirty="q" onchange="qfChange(this,false);"/>
             </div>
           </div>
         </div>

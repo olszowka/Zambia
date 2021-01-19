@@ -5,6 +5,11 @@ var message = "";
 var previewmce = false;
 var questionoptions = [];
 var in_editconfig = false;  // tabulator seems to want to run the onclick twice, so this prevents that, allowing render preview to work right.
+var warningcolor = "#fff3cd";
+var hoverdirty = false;
+var promptdirty = false;
+var optionsdirty = false;
+var questionsdirty = false;
 
 var EditSurvey = function () {
     var newid = -1;
@@ -29,6 +34,8 @@ var EditSurvey = function () {
 
     function editor_init() {
         //console.log("editor_init: tinyMCE.init('input#prompt')");
+        hoverdirty = false;
+        promptdirty = false;
         tinyMCE.init({
             selector: 'input#prompt',
             plugins: 'fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
@@ -44,7 +51,13 @@ var EditSurvey = function () {
             ],
             toolbar_mode: 'floating',
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-            placeholder: 'Type prompt here...'
+            placeholder: 'Type prompt here...',
+            setup: function (editor) {
+                editor.on('Change', function (e) {
+                    qfChange("prompt", true);
+                    promptdirty = true;
+                })
+            }
         });
 
         //console.log("editor_init: tinyMCE.init('textarea#hover')");
@@ -64,7 +77,14 @@ var EditSurvey = function () {
             ],
             toolbar_mode: 'floating',
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-            placeholder: 'Type hover content here...'
+            placeholder: 'Type hover content here...',
+            setup: function (editor) {
+                editor.on('Change', function (e) {
+                    //console.log(e);
+                    qfChange("hover", true);
+                    hoverdirty = true;
+                })
+            }
         });
     }
 
@@ -175,7 +195,7 @@ var EditSurvey = function () {
         document.getElementById("message").style.display = 'none';
         optiontable = null;
         questionoptions = [];
-        edit_typechange(questiontable);
+        edit_typechange(questiontable, false);
         editor_init();
         document.getElementById("preview").innerHTML = "";
     }
@@ -195,36 +215,92 @@ var EditSurvey = function () {
         // Set up current value for all row items
         curid = row.getCell("questionid").getValue();
         document.getElementById("questionid").value = curid;
-        document.getElementById("shortname").value = name;
-        document.getElementById("description").value = row.getCell("description").getValue();
-        document.getElementById("prompt").value = row.getCell("prompt").getValue();
-        document.getElementById("hover").value = row.getCell("hover").getValue();
-        document.getElementById("typename").value = row.getCell("typename").getValue();
-        document.getElementById("required-1").checked = row.getCell("required").getValue() == "1";
-        document.getElementById("required-0").checked = row.getCell("required").getValue() != "1";
-        document.getElementById("publish-1").checked = row.getCell("publish").getValue() == "1";
-        document.getElementById("publish-0").checked = row.getCell("publish").getValue() != "1";
-        document.getElementById("privacy_user-1").checked = row.getCell("privacy_user").getValue() == "1";
-        document.getElementById("privacy_user-0").checked = row.getCell("privacy_user").getValue() != "1";
-        document.getElementById("searchable-1").checked = row.getCell("searchable").getValue() == "1";
-        document.getElementById("searchable-0").checked = row.getCell("searchable").getValue() != "1";
-        document.getElementById("ascending-1").checked = row.getCell("ascending").getValue() == "1";
-        document.getElementById("ascending-0").checked = row.getCell("ascending").getValue() != "1";
-        document.getElementById("display_only-1").checked = row.getCell("display_only").getValue() == "1";
-        document.getElementById("display_only-0").checked = row.getCell("display_only").getValue() != "1";
-        document.getElementById("min_value").value = row.getCell("min_value").getValue();
-        document.getElementById("max_value").value = row.getCell("max_value").getValue();
+
+        el = document.getElementById("shortname");
+        el.value = name;
+        el.setAttribute('default-value', el.value);
+
+        el = document.getElementById("description");
+        el.value = row.getCell("description").getValue();
+        el.setAttribute('default-value', el.value);
+
+        el = document.getElementById("prompt");
+        el.value = row.getCell("prompt").getValue();
+        el.setAttribute('default-value', el.value);
+
+        el = document.getElementById("hover");
+        el.value = row.getCell("hover").getValue();
+        el.setAttribute('default-value', el.value);
+
+        el = document.getElementById("typename");
+        el.value = row.getCell("typename").getValue();
+        el.setAttribute('default-value', el.value);
+
+        el = document.getElementById("required-1");
+        el.checked = row.getCell("required").getValue() == "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("required-0");
+        el.checked = row.getCell("required").getValue() != "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("publish-1");
+        el.checked = row.getCell("publish").getValue() == "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("publish-0");
+        el.checked = row.getCell("publish").getValue() != "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("privacy_user-1");
+        el.checked = row.getCell("privacy_user").getValue() == "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("privacy_user-0");
+        el.checked = row.getCell("privacy_user").getValue() != "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("searchable-1")
+        el.checked = row.getCell("searchable").getValue() == "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("searchable-0");
+        el.checked = row.getCell("searchable").getValue() != "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("ascending-1");
+        el.checked = row.getCell("ascending").getValue() == "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("ascending-0");
+        el.checked = row.getCell("ascending").getValue() != "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("display_only-1");
+        el.checked = row.getCell("display_only").getValue() == "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("display_only-0");
+        el.checked = row.getCell("display_only").getValue() != "1";
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("min_value");
+        el.value = row.getCell("min_value").getValue();
+        el.setAttribute('default-value', el.value);
+
+        el = document.getElementById("max_value");
+        el.value = row.getCell("max_value").getValue();
+        el.setAttribute('default-value', el.value);
+
         options = row.getCell("options").getValue();
 
+        questionoptions = [];
         if (options.length > 3)
             options = atob(options);
         if (options.length > 3)
             questionoptions = JSON.parse(options);
         optiontable = null;
-        
-        //console.log("options");
-        //console.log(options);
-        
+      
         //loop over options decoding every value, optionshortname and optionhover
         for (i = 0; i < questionoptions.length; i++) {
             questionoptions[i].value = atob(questionoptions[i].value);
@@ -236,7 +312,7 @@ var EditSurvey = function () {
         // now show the block
         document.getElementById("add-row").innerHTML = "Update Survey Table";
         document.getElementById("general-question-div").style.display = "block";
-        edit_typechange(questiontable);
+        edit_typechange(questiontable, false);
         editor_init();
         RefreshPreview();
     }
@@ -246,10 +322,13 @@ var EditSurvey = function () {
         optiontable.addRow({questionid: curid, ordinal: newoptionid }, false);
     }
 
-    function edit_typechange(datatable) {
+    function edit_typechange(datatable, colorchange) {
         document.getElementById("message").style.display = 'none';
 
-        var typename = document.getElementById("typename").value;
+        var el = document.getElementById("typename");
+        if (colorchange)
+            qfChange(el, false);
+        var typename = el.value;
         var show_asc_desc = false;
         var show_range = false;
         var range_text = "Value Range:";
@@ -344,6 +423,7 @@ var EditSurvey = function () {
                     { column: "display_order", dir: "asc" } //sort by this first
                 ],
                 layout: "fitDataTable",
+                cellEdited: optionCellChanged,
                 columns: [
                     { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
                     { title: "ID", field: "questionid", visible: false },
@@ -386,6 +466,7 @@ var EditSurvey = function () {
                 dataChanged: function (data) {
                     //data - the updated table data
                     if (this.getHistoryUndoSize() > 0) {
+                        optionsdirty = true;
                         document.getElementById("optundo").disabled = false;
                     }
                     el = document.getElementById("add-row");
@@ -439,6 +520,7 @@ var EditSurvey = function () {
         data: survey,
         index: "questionid",
         layout: "fitDataTable",
+        cellEdited: surveyCellChanged,
         columns: [
             { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
             { title: "ID", field: "questionid", visible: false },
@@ -536,6 +618,7 @@ var EditSurvey = function () {
             document.getElementById("submitbtn").innerHTML = "Save*";
             document.getElementById("previewbtn").style.display = "none";
             if (this.getHistoryUndoSize() > 0) {
+                questionsdirty = true;
                 document.getElementById("undo").disabled = false;
             }
         },
@@ -546,7 +629,7 @@ var EditSurvey = function () {
         addnewbut.addEventListener('click', function () { addnewquestion(configtable); });
         var addoptbut = document.getElementById("add-option");
         addoptbut.addEventListener('click', function () { addnewoption(optiontable); });
-       document.getElementById("typename").onchange = function () { edit_typechange(configtable); };
+       document.getElementById("typename").onchange = function () { edit_typechange(configtable, true); };
        //console.log("Setting up options in table");
         for (option in survey_options) {
             //console.log("question: " + option + " = ");
@@ -562,6 +645,61 @@ var EditSurvey = function () {
 };
 
 var editSurvey = new EditSurvey();
+
+function optionCellChanged(cell) {
+    optionsdirty = true;
+    cell.getElement().style.backgroundColor = warningcolor;
+}
+
+function surveyCellChanged(cell) {
+    questionsdirty = true;
+    cell.getElement().style.backgroundColor = warningcolor;
+}
+
+function qfChange(el, mce) {
+    if (mce) {
+        el = document.getElementById(el);
+    }
+    var logmsg = "qfChange: " + el.id + ", type=" + el.type;
+    var value = null;
+    var default_value = el.getAttribute("default-value");
+    var colorel = el;
+    switch (el.type) {
+        case 'radio':
+            value = el.checked.toString();
+            logmsg += ", checked=" + value;
+            //console.log("name = " + el.name);
+            colorel = document.getElementById(el.name);
+            break;
+        case 'text':
+        case 'textarea':
+            value = el.value;
+            logmsg += ", text=" + value;
+            colorel = document.getElementById(el.id + "-area");
+            if (colorel === null)
+                colorel = el;
+            break;
+        default:
+            value = el.value;
+            logmsg += ", value=" + value;
+    }
+
+    logmsg += ", default-value=" + default_value;
+    //console.log(logmsg);
+    //console.log("typeof default_value: " + typeof default_value + " typeof value: " + typeof value);
+    if ((default_value != value) || mce) {
+        //console.log("!=");
+        if (mce) 
+            colorel.style.cssText = "border-width: 4px; border-style: solid; border-color: " + warningcolor + ";";
+        else
+            colorel.style.backgroundColor = warningcolor;
+    }
+    else {
+        //console.log("==");
+        //console.log(colorel);
+        colorel.style.backgroundColor = null;
+    }
+}
 
 function cleanupSave(message, classtext) {
     document.getElementById("saving_div").style.display = "none";
@@ -673,7 +811,7 @@ function FetchSurvey() {
         dataType: "html",
         data: postdata,
         success: saveComplete,
-        error: saveError(),
+        error: saveError,
         type: "POST"
     });
 };
@@ -686,6 +824,7 @@ function Undo() {
     var undoCount = configtable.getHistoryUndoSize();
     if (undoCount <= 0) {
         document.getElementById("undo").disabled = true;
+        questionsdirty = false;
     }
     var redoCount = configtable.getHistoryRedoSize();
     if (redoCount > 0) {
@@ -698,6 +837,7 @@ function Redo() {
 
     var undoCount = configtable.getHistoryUndoSize();
     if (undoCount > 0) {
+        questionsdirty = true;
         document.getElementById("undo").disabled = false;
     }
     var redoCount = configtable.getHistoryRedoSize();
@@ -711,6 +851,7 @@ function OptUndo() {
 
     var undoCount = optiontable.getHistoryUndoSize();
     if (undoCount <= 0) {
+        optionsdirty = false;
         document.getElementById("optundo").disabled = true;
     }
     var redoCount = optiontable.getHistoryRedoSize();
@@ -724,6 +865,7 @@ function OptRedo() {
 
     var undoCount = optiontable.getHistoryUndoSize();
     if (undoCount > 0) {
+        optionsdirty = true;
         document.getElementById("optundo").disabled = false;
     }
     var redoCount = optiontable.getHistoryRedoSize();
@@ -813,7 +955,7 @@ function RefreshPreview() {
         previewmce = false;
     }
     var questionid = document.getElementById("questionid").value
-    console.log(questionid);
+    //console.log(questionid);
     var shortname = document.getElementById("shortname").value;
     var typename = document.getElementById("typename").value;
     var prompt = document.getElementById("prompt").value;
