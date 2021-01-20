@@ -12,6 +12,27 @@
     <div id="message" class="alert alert-success mt-4" style="display: none;">
       <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
     </div>
+    <div id="unsavedWarningModal" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Data Not Saved</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&#215;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="unsaved-div">
+            <p>
+              You have unsaved changes highlighted in the survey question configuration below!
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="cancelUnsavedBUTN" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            <button type="button" id="discardUnsavedBUTN" class="btn btn-secondary" onclick="return discardChanges();" >Discard changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row justify-content-center mt-4">
       <h4 class="col col-auto">Survey Questions</h4>
     </div>
