@@ -5,6 +5,7 @@
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
+  <xsl:param name="surveys" select="'0'"/>
 	<xsl:template match="/">
 		<xsl:variable name="editSessionNotes" select="doc/parameters/@editSessionNotes = 'true'" />
 		<hr />
@@ -87,6 +88,11 @@
 					</select>
 					<button type="submit" name="update" class="btn btn-primary">Add</button>
 					<button type="button" id="BioBtn" class="btn btn-info" data-loading-text="Fetching Bio...">Show Bio</button>
+          <xsl:if test="$surveys > 0">
+            <button type="button" class="btn btn-info" title="Show Survey Results" onclick="showSurveyResults('partDropdown', 'element');">
+              Show Survey Results
+            </button>
+          </xsl:if>
 				</div>
 			</div>
 		</form>
@@ -133,6 +139,17 @@
 					<xsl:value-of select="@pubsname" />
 					<xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
 					<button type="button" rel="popover" class="btn btn-info btn-mini" data-content="{@bio}" data-original-title="Bio for {@pubsname}">Bio</button>
+          <xsl:if test="@answercount > 0">
+            <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
+            <button type="button" class="btn btn-info btn-mini" title="Survey results for {@pubsname}">
+              <xsl:attribute name="onclick">
+                <xsl:text>showSurveyResults('</xsl:text>
+                <xsl:value-of select="@badgeid"/>
+                <xsl:text>', 'badgeid');</xsl:text>
+              </xsl:attribute>
+              Survey
+            </button>
+          </xsl:if>
 				</div>
 				<div class="span2">
 					<xsl:text>Rank: </xsl:text>

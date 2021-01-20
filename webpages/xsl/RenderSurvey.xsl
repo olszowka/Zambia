@@ -6,6 +6,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:param name="buttons" select="''"/>
+  <xsl:param name="pubsname" select="''"/>
+  <xsl:param name="answercount" select="''"/>
   <xsl:param name="control" select="''"/>
   <xsl:param name="controliv" select="''"/>
   <xsl:param name="UpdateMessage" select="''"/>
@@ -19,7 +21,7 @@
       <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
     </div>
     <form name="partsurveyform" method="POST">
-      <xsl:if test="buttons != ''">
+      <xsl:if test="buttons != '' and buttons != 'close'">
         <xsl:attribute name="action">
           <xsl:text>PartSurvey.php</xsl:text>
         </xsl:attribute>
@@ -30,36 +32,58 @@
         <input type="hidden" id="control" name="control" value="{$control}" />
         <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
       </xsl:if>
+      <xsl:if test="$buttons = 'close'">
+        <div class="row justify-content-center mt-4">
+          <h1>
+            Survey Results for <xsl:value-of select="$pubsname"/>
+          </h1>
+        </div>
+        <xsl:if test="$answercount = 0">
+          <br/>
+          <h3>The survey has not been answered by this participant.</h3>
+        </xsl:if>
+      </xsl:if>
       <xsl:call-template name="questions">
         <xsl:with-param name="buttons" select="$buttons" />
       </xsl:call-template>
-      <xsl:if test="$buttons = 'refresh'">
-        <div id="preview-buttons">
-          <div class="row mt-4">
-            <div class="col col-auto">
-              <button class="btn btn-info" id="previewbtn" name="previewbtn" type="button" value="preview" onclick="window.location.reload();">Refresh Preview</button>
+      <xsl:choose>
+        <xsl:when test="$buttons = 'close'">
+          <div id="preview-buttons">
+            <div class="row mt-4">
+              <div class="col col-auto">
+                <button class="btn btn-info" id="closebtn" name="closebtn" type="button" value="close" onclick="window.close();">Close Window</button>
+              </div>
             </div>
           </div>
-        </div>
-      </xsl:if>
-      <xsl:if test="$buttons = 'save'">
-        <div id="submit-buttons">
-          <div class="row mt-4">
-            <div class="col col-auto">
-              <button class="btn btn-primary" id="submitbtn" name="submitbbtn" type="submit" value="submit">Save Survey</button>
+        </xsl:when>
+        <xsl:when test="$buttons = 'refresh'">
+          <div id="preview-buttons">
+            <div class="row mt-4">
+              <div class="col col-auto">
+                <button class="btn btn-info" id="previewbtn" name="previewbtn" type="button" value="preview" onclick="window.location.reload();">Refresh Preview</button>
+              </div>
             </div>
           </div>
-        </div>
-      </xsl:if>
-      <xsl:if test="$buttons = 'update'">
-        <div id="submit-buttons">
-          <div class="row mt-4">
-            <div class="col col-auto">
-              <button class="btn btn-primary" id="submitbtn" name="submitbbtn" type="submit" value="submit">Update Survey</button>
+        </xsl:when>
+        <xsl:when test="$buttons = 'save'">
+          <div id="submit-buttons">
+            <div class="row mt-4">
+              <div class="col col-auto">
+                <button class="btn btn-primary" id="submitbtn" name="submitbbtn" type="submit" value="submit">Save Survey</button>
+              </div>
             </div>
           </div>
-        </div>
-      </xsl:if>
+        </xsl:when>
+        <xsl:when test="$buttons = 'update'">
+          <div id="submit-buttons">
+            <div class="row mt-4">
+              <div class="col col-auto">
+                <button class="btn btn-primary" id="submitbtn" name="submitbbtn" type="submit" value="submit">Update Survey</button>
+              </div>
+            </div>
+          </div>
+        </xsl:when>
+      </xsl:choose>
     </form>
   </xsl:template>
   <xsl:template name="questions">

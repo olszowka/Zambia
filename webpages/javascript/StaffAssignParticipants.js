@@ -124,3 +124,14 @@ var assignParticipants = new StaffAssignParticipants();
 
 /* This file should be included only on relevant page.  See main.js  and javascript_functions.php */
 document.addEventListener('DOMContentLoaded', assignParticipants.initialize.bind(assignParticipants));
+
+function showSurveyResults(who, whotype) {
+    //console.log("In showSurveyResults(" + who + ',' + whotype + ')');
+    if (whotype == 'element') {
+        el = document.getElementById(who);
+        badgeid = el.value;
+    } else
+        badgeid = who;
+    //console.log("badgeid = '" + badgeid + "'");
+    window.open('StaffViewSurveyResults.php?badgeid=' + badgeid, "_blank");
+}

@@ -66,6 +66,16 @@ SELECT
         sessionid=$selsessionid;
 EOD;
 $queryArray["participantInterest"] = <<<EOD
+WITH AnsweredSurvey(participantid, answercount) AS (
+    SELECT participantid, COUNT(*) AS answercount
+    FROM ParticipantSurveyAnswers
+), R2(badgeid, sessionid) AS (
+    SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
+    UNION
+    SELECT badgeid, sessionid FROM ParticipantSessionInterest WHERE sessionid=$selsessionid
+), R(badgeid, sessionid) AS (
+    SELECT DISTINCT badgeid, sessionid FROM R2
+)
 SELECT
 		POS.badgeid AS posbadgeid,
 		COALESCE(POS.moderator, 0) AS moderator,
@@ -77,18 +87,14 @@ SELECT
 		PSI.comments,
 		P.bio,
 		PHR.roleid,
-        IF(P.interested = 1, 1, 0) AS attending
-    FROM
-                  Participants AS P
-             JOIN
-                  (SELECT DISTINCT badgeid, sessionid FROM
-                      (SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
-                          UNION
-                       SELECT badgeid, sessionid FROM ParticipantSessionInterest WHERE sessionid=$selsessionid) AS R2
-                      ) AS R USING (badgeid)
-        LEFT JOIN ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
-        LEFT JOIN ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
-        LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10 /* moderator */
+        IF(P.interested = 1, 1, 0) AS attending,
+        IFNULL(A.answercount, 0) AS answercount
+    FROM Participants AS P
+    JOIN R ON (P.badgeid = R.badgeid)            
+    LEFT JOIN ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
+    LEFT JOIN ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
+    LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10 /* moderator */
+    LEFT JOIN AnsweredSurvey A ON (A.participantid = P.badgeid)
 	WHERE
 			POS.sessionid = $selsessionid
 		OR	POS.sessionid IS NULL
@@ -109,24 +115,27 @@ if (($resultXML = mysql_query_XML($queryArray)) === false) {
     exit();
 }
 $otherParticipantsQuery = <<<EOD
+WITH AnsweredSurvey(participantid, answercount) AS (
+    SELECT participantid, COUNT(*) AS answercount
+    FROM ParticipantSurveyAnswers
+), SessionParticipants(badgeid) AS (
+    SELECT badgeid
+    FROM
+        ParticipantSessionInterest
+    WHERE
+        sessionid = $selsessionid
+)
 SELECT
         P.pubsname,
         P.badgeid,
-        CD.lastname
+        CD.lastname,
+        IFNULL(A.answercount, 0) as answercount
     FROM
         Participants P
-    JOIN
-        CongoDump CD USING(badgeid)
-    WHERE
-            P.interested = 1
-        AND NOT EXISTS (
-            SELECT *
-                FROM
-                    ParticipantSessionInterest
-                WHERE
-                        sessionid = $selsessionid
-                    AND badgeid = P.badgeid
-            );
+    JOIN CongoDump CD USING(badgeid)
+    LEFT OUTER JOIN SessionParticipants S ON (P.badgeid = S.badgeid)
+    LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
+    WHERE P.interested = 1 AND S.badgeid IS NULL;
 EOD;
 $otherParticipantsResult = mysqli_query_exit_on_error($otherParticipantsQuery);
 
@@ -136,6 +145,7 @@ $queryNode = $resultXML->createElement("query");
 $queryNode = $docNode->appendChild($queryNode);
 $queryNode->setAttribute("queryName", "otherParticipants");
 $regexArr = array();
+$SurveysAnswered = 0;
 while ($row = mysqli_fetch_assoc($otherParticipantsResult)) {
     $rowNode = $resultXML->createElement("row");
     $rowNode = $queryNode->appendChild($rowNode);
@@ -154,6 +164,7 @@ while ($row = mysqli_fetch_assoc($otherParticipantsResult)) {
     }
     $rowNode->setAttribute("sortableName", $sortableName);
     $rowNode->setAttribute("sortableNameLc", mb_convert_case($sortableName, MB_CASE_LOWER));
+    $SurveysAnswered += $row['answercount'];
 }
 
 $parametersNode = $resultXML->createElement("parameters");
@@ -161,7 +172,9 @@ $parametersNode = $docNode->appendChild($parametersNode);
 if (may_I('EditSesNtsAsgnPartPg')) {
     $parametersNode->setAttribute("editSessionNotes", "true");
 }
+$paramArray = array();
+$paramArray['surveys'] = $SurveysAnswered;
 //echo($resultXML->saveXML()); //for debugging only
-RenderXSLT('StaffAssignParticipants.xsl', array(), $resultXML);
+RenderXSLT('StaffAssignParticipants.xsl', $paramArray, $resultXML);
 staff_footer();
 ?>
