@@ -72,7 +72,7 @@ SELECT
 		P.badgeid,
 		P.pubsname,
 		P.staff_notes,
-		IFNULL(PSI.rank, 99) AS rank,
+		IFNULL(PSI.rank, 99) AS `rank`,
 		PSI.willmoderate,
 		PSI.comments,
 		P.bio,
@@ -96,7 +96,7 @@ SELECT
 		attending DESC,
 		moderator DESC,
 		IFNULL(POS.badgeid, "~") ASC,
-		rank ASC,
+		`rank` ASC,
 		P.pubsname ASC;
 EOD;
 if (($resultXML = mysql_query_XML($queryArray)) === false) {
