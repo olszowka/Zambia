@@ -141,13 +141,17 @@ function filter() {
         switch (filtertype) {
             case 'check':
             case 'month':
-            case 'year':
                 value = this.id.replace(/^[^-]*-/, '');
                 add = this.checked;
                 break;
             case 'min':
             case 'max':
             case 'text':
+                value = this.value;
+                add = value != "";
+                break;
+            case 'from-monthyear':
+            case 'to-monthyear':
                 value = this.value;
                 add = value != "";
                 break;

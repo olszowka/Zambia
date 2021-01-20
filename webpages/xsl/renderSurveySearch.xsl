@@ -56,6 +56,7 @@
               <xsl:otherwise>
                 <xsl:call-template name="selectlist">
                   <xsl:with-param name="questionid" select="@questionid" />
+                  <xsl:with-param name="typename" select="@typename" />
                 </xsl:call-template>
               </xsl:otherwise>          
             </xsl:choose>
@@ -152,62 +153,123 @@
     <xsl:param name="questionid" select="''"/>
     <div class="row">
       <div class="col col-auto">
-        <div class="tag-chk-container" style="min-width: 2rem;">
+        <label style="margin-right: 12px;">
+          <xsl:attribute name="for">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-</xsl:text>
+            <xsl:value-of select="translate(@optionshort, ' ', '_')"/>
+            <xsl:text>-min-month</xsl:text>
+          </xsl:attribute>
+          From:
+        </label>
+        <select data-filter="from-monthyear">
+          <xsl:attribute name="id">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-from-month</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="name">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-from-month</xsl:text>
+          </xsl:attribute>
+          <option value="" selected="true">--</option>
           <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
-            <label class="tag-chk-label">
+            <option value="{@value}">
               <xsl:attribute name="title">
                 <xsl:value-of select="@optionhover"/>
               </xsl:attribute>
-              <input type="checkbox" class="tag-chk" data-filter="month">
-                <xsl:attribute name="id">
-                  <xsl:value-of select="$questionid"/>
-                  <xsl:text>-</xsl:text>
-                  <xsl:value-of select="translate(@optionshort, ' ', '_')"/>
-                </xsl:attribute>
-                <xsl:attribute name="name">
-                  <xsl:value-of select="$questionid"/>
-                  <xsl:text>-search[]</xsl:text>
-                </xsl:attribute>
-              </input>
-              <xsl:value-of select="@optionshort" />
-            </label>
+              <xsl:value-of select="@optionshort"/>
+            </option>
           </xsl:for-each>
-        </div>
+        </select>
       </div>
       <div class="col col-auto">
-        <div class="tag-chk-container" style="min-width: 2rem;">
-        <xsl:for-each select="/doc/query[@queryName='years']/row[@questionid=$questionid]">
-            <label class="tag-chk-label">
+        <select data-filter="from-monthyear">
+          <xsl:attribute name="id">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-from-year</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="name">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-min-year</xsl:text>
+          </xsl:attribute>
+          <option value="" selected="true">--</option>
+          <xsl:for-each select="/doc/query[@queryName='years']/row[@questionid=$questionid]">
+            <option value="{@value}">
+              <xsl:value-of select="@value"/>
+            </option>
+          </xsl:for-each>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-auto">
+        <label style="margin-right: 31px;">
+          <xsl:attribute name="for">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-</xsl:text>
+            <xsl:value-of select="translate(@optionshort, ' ', '_')"/>
+            <xsl:text>-to-month</xsl:text>
+          </xsl:attribute>
+          To:
+        </label>
+        <select data-filter="to-monthyear">
+          <xsl:attribute name="id">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-to-month</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="name">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-to-month</xsl:text>
+          </xsl:attribute>
+          <option value="" selected="true">--</option>
+          <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
+            <option value="{@value}">
               <xsl:attribute name="title">
                 <xsl:value-of select="@optionhover"/>
               </xsl:attribute>
-              <input type="checkbox" class="tag-chk" data-filter="year">
-                <xsl:attribute name="id">
-                  <xsl:value-of select="$questionid"/>
-                  <xsl:text>-</xsl:text>
-                  <xsl:value-of select="translate(@optionshort, ' ', '_')"/>
-                </xsl:attribute>
-                <xsl:attribute name="name">
-                  <xsl:value-of select="$questionid"/>
-                  <xsl:text>-search[]</xsl:text>
-                </xsl:attribute>
-              </input>
-              <xsl:value-of select="@optionshort" />
-            </label>
+              <xsl:value-of select="@optionshort"/>
+            </option>
           </xsl:for-each>
-        </div>
-      </div>      
+        </select>
+      </div>
+      <div class="col col-auto">
+        <select data-filter="to-monthyear">
+          <xsl:attribute name="id">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-to-year</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="name">
+            <xsl:value-of select="$questionid"/>
+            <xsl:text>-to-year</xsl:text>
+          </xsl:attribute>
+          <option value="" selected="true">--</option>
+          <xsl:for-each select="/doc/query[@queryName='years']/row[@questionid=$questionid]">
+            <option value="{@value}">
+              <xsl:value-of select="@value"/>
+            </option>
+          </xsl:for-each>
+        </select>
+      </div>
     </div>
   </xsl:template>
   <xsl:template name="selectlist">
     <xsl:param name="questionid" select="''"/>
+    <xsl:param name="typename" select="''"/>
     <div class="tag-chk-container" style="min-width: 2rem;">
       <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
         <label class="tag-chk-label">
           <xsl:attribute name="title">
             <xsl:value-of select="@optionhover"/>
           </xsl:attribute>
-          <input type="checkbox" class="tag-chk" data-filter="check">
+          <input type="checkbox" class="tag-chk">
+            <xsl:choose>
+              <xsl:when test="$typename = 'monthnum' or $typename = 'monthabv'">
+                <xsl:attribute name="data-filter">month</xsl:attribute>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:attribute name="data-filter">check</xsl:attribute>
+              </xsl:otherwise>
+            </xsl:choose>
             <xsl:attribute name="id">
               <xsl:value-of select="$questionid"/>
               <xsl:text>-</xsl:text>
