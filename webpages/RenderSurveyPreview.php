@@ -73,7 +73,7 @@ function render_question() {
 
     $options = getString("options");
     if ($options) {
-        error_log("\n\noptions: '" . $options . "'\n");
+        //error_log("\n\noptions: '" . $options . "'\n");
         $options = json_decode($options);
         //var_error_log($options);
         foreach ($options as $opt) {

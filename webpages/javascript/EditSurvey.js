@@ -128,7 +128,7 @@ var EditSurvey = function () {
             option = btoa(JSON.stringify(options));
             //console.log("-used opttable");
         } else if (questionoptions.length > 0) {
-            option = bota(JSON.stringify(questionoptions));
+            option = btoa(JSON.stringify(questionoptions));
             //console.log("-used question options: " + questionoptions.length);
         } else {
             option = "";
@@ -504,9 +504,8 @@ var EditSurvey = function () {
                     questionoptions = JSON.parse(defaultjson);
                     //console.log(questionoptions);
                 } catch (error) {
-                    //console.log(error);
+                    console.log(error);
                 }
-                //eval("questionoptions = " + defaultjson);
                 questionoptions.forEach(assign_questionid);
                 //console.log("added default options");
             }
@@ -582,21 +581,6 @@ var EditSurvey = function () {
 
     function assign_questionid(option) {
         option.questionid = curid;
-        if (option.hasOwnProperty("optionhover")) {
-            if (option.optionhover.length > 2) {
-                option.optionhover = atob(option.optionhover);
-            }
-        }
-        if (option.hasOwnProperty("optionshort")) {
-            if (option.optionshort.length > 2) {
-                option.optionshort = atob(option.optionshort);
-            }
-        }
-        if (option.hasOwnProperty("value")) {
-            if (option.value.length > 2) {
-                option.value = atob(option.value);
-            }
-        }
     }
 
     function deleteicon(cell, formattParams, onRendered) {
@@ -1171,13 +1155,17 @@ function RefreshPreview() {
         }
         surveyData[0].allowothertext = allowothertext;
         optionsjson = JSON.stringify(options);
-        console.log("optiontable:");
-        console.log(optionsjson);
+        //console.log("optiontable:");
+        //console.log(optionsjson);
     } else if (questionoptions.length > 0) {
         //console.log("from questionoptions");
+        var i;
+        for (i = 0; i < questionoptions.length; i++) {
+            questionoptions[i].questionid = questionid;
+        }
         optionsjson = JSON.stringify(questionoptions);
-        console.log("questionoptions:");
-        console.log(optionsjson);
+        //console.log("questionoptions:");
+        //console.log(optionsjson);
     }
     //console.log("options");
     //console.log(options);

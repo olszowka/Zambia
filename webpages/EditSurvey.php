@@ -37,7 +37,7 @@ EOD;
 
 			if ($typename != $cur_typename) {
                 if ($cur_typename != "") {
-                    echo $cur_typename . ': "' . base64_encode($cur_config . "]") . '",' . "\n";
+                    echo $cur_typename . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
                 }
 				$cur_config = "[";
                 $cur_typename = $typename;
