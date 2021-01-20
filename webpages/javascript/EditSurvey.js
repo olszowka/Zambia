@@ -161,7 +161,14 @@ var EditSurvey = function () {
         questiondivshown = false;
     };
 
-    function addnewquestion(questiontable) {
+    function addnewquestion() {
+        if (questionDirtyCheck(null))
+            return;
+
+        editSurvey.processNewQuestion()
+    }
+
+    this.processNewQuestion = function () {
         tinyMCE.remove();
         previewmce = false;
         //console.log("addnewquestion: tinyMCE.remove");
@@ -172,26 +179,91 @@ var EditSurvey = function () {
         document.getElementById("add-row").innerHTML = "Add to Survey";
         // Default values
         document.getElementById("questionid").value = curid;
-        document.getElementById("shortname").value = "";
-        document.getElementById("description").value = "";
-        document.getElementById("prompt").value = "";
-        document.getElementById("hover").value = "";
-        document.getElementById("typename").value = 'openend';
-        document.getElementById("required-1").checked = true;
-        document.getElementById("required-0").checked = false;
-        document.getElementById("publish-1").checked = false;
-        document.getElementById("publish-0").checked = true;
-        document.getElementById("privacy_user-1").checked = false;
-        document.getElementById("privacy_user-0").checked = true;
-        document.getElementById("searchable-1").checked = false;
-        document.getElementById("searchable-0").checked = true;
-        document.getElementById("ascending-1").checked = true;
-        document.getElementById("ascending-0").checked = false;
-        document.getElementById("display_only-1").checked = false;
-        document.getElementById("display_only-0").checked = true;
-        document.getElementById("min_value").value = "0";
-        document.getElementById("max_value").value = "8192";
-        // now display it, hiding ones not used by show_radios
+        el = document.getElementById("shortname");
+        el.value = "";
+        el.setAttribute('default-value', el.value);
+        el.style.backgroundColor = null;
+
+        el = document.getElementById("description");
+        el.value = "";
+        el.setAttribute('default-value', el.value);
+        el.style.backgroundColor = null;
+
+        el = document.getElementById("prompt");
+        el.value = "";
+        el.setAttribute('default-value', el.value);
+        colorel = document.getElementById("prompt-area")
+        colorel.style.cssText = null;
+        colorel.style.backgroundColor = null;
+
+        el = document.getElementById("hover");
+        el.value = "";
+        el.setAttribute('default-value', el.value);
+        colorel = document.getElementById("hover-area")
+        colorel.style.cssText = null;
+        colorel.style.backgroundColor = null;
+
+        el = document.getElementById("typename");
+        el.value = 'openend';
+        el.setAttribute('default-value', el.value);
+        el.style.backgroundColor = null;
+
+        el = document.getElementById("required-1");
+        el.checked = true;
+        el.setAttribute('default-value', el.checked);
+        document.getElementById(el.name).style.backgroundColor = null;
+        el = document.getElementById("required-0");
+        el.checked = false;
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("publish-1");
+        el.checked = false;
+        el.setAttribute('default-value', el.checked);
+        document.getElementById(el.name).style.backgroundColor = null;
+        el = document.getElementById("publish-0");
+        el.checked = true;
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("privacy_user-1");
+        el.checked = false;
+        el.setAttribute('default-value', el.checked);
+        document.getElementById(el.name).style.backgroundColor = null;
+        el = document.getElementById("privacy_user-0");
+        el.checked = true;
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("searchable-1");
+        el.checked = false;
+        document.getElementById(el.name).style.backgroundColor = null;
+        el = document.getElementById("searchable-0");
+        el.checked = true;
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("ascending-1");
+        el.checked = true;
+        el.setAttribute('default-value', el.checked);
+        document.getElementById(el.name).style.backgroundColor = null;
+        el = document.getElementById("ascending-0");
+        el.checked = false;
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("display_only-1");
+        el.checked = false;
+        el.setAttribute('default-value', el.checked);
+        document.getElementById(el.name).style.backgroundColor = null;
+        el = document.getElementById("display_only-0");
+        el.checked = true;
+        el.setAttribute('default-value', el.checked);
+
+        el = document.getElementById("min_value");
+        el.value = "0";
+        el.setAttribute('default-value', el.value);
+        el.style.backgroundColor = null;
+        el = document.getElementById("max_value");
+        el.value = "8192";
+        el.setAttribute('default-value', el.value);
+        el.style.backgroundColor = null;
+        // now display it, hiding ones not used by show_radios for default openend
         document.getElementById("asc_desc").style.display = "none";
         document.getElementById("value_range").style.display = "none";
         document.getElementById("general-question-div").style.display = "block";
@@ -201,72 +273,13 @@ var EditSurvey = function () {
         edit_typechange(false);
         editor_init();
         document.getElementById("preview").innerHTML = "";
-    }
+    };
 
     function editconfig(row) {
         // check for dirty prior configuration section
-        if (questiondivshown) {
-            var dirty = hoverdirty || promptdirty || optionsdirty;
-            if (!dirty) {
-                el = document.getElementById("shortname");
-                dirty = el.value != el.getAttribute('default-value');
-            }
-            if (!dirty) {
-                el = document.getElementById("description");
-                dirty = el.value != el.getAttribute('default-value');
-            }
-            
-            if (!dirty) {
-                el = document.getElementById("typename");
-                dirty = el.value != el.getAttribute('default-value');
-            }
-            // for radios, only need to check one of the two because both change if 1 is changed
-            if (!dirty) {
-                el = document.getElementById("required-1");
-                dirty = el.checked.toString() != el.getAttribute('default-value');
-            }
+        if (questionDirtyCheck(row))
+            return;
 
-            if (!dirty) {
-                el = document.getElementById("publish-1");
-                dirty = el.checked.toString() != el.getAttribute('default-value');
-            }
-
-            if (!dirty) {
-                el = document.getElementById("privacy_user-1");
-                dirty = el.checked.toString() != el.getAttribute('default-value');
-            }
-
-            if (!dirty) {
-                el = document.getElementById("searchable-1");
-                dirty = el.checked.toString() != el.getAttribute('default-value');
-            }
-
-            if (!dirty) {
-                el = document.getElementById("ascending-1");
-                dirty = el.checked.toString() != el.getAttribute('default-value');
-            }
-
-            if (!dirty) {
-                el = document.getElementById("display_only-1");
-                dirty = el.checked.toString() != el.getAttribute('default-value');
-            }
-
-            if (!dirty) {
-                el = document.getElementById("min_value");
-                dirty = el.value.toString() != el.getAttribute('default-value');
-            }
-
-            if (!dirty) {
-                el = document.getElementById("max_value");
-                dirty = el.value.toString() != el.getAttribute('default-value');
-            }
-
-            if (dirty) {
-                nextrow = row;
-                $("#unsavedWarningModal").modal('show');
-                return;
-            }
-        }
         editSurvey.processEditConfig(row);
     }
 
@@ -388,12 +401,12 @@ var EditSurvey = function () {
             questionoptions = JSON.parse(options);
         optiontable = null;
 
-        //loop over options decoding every value, optionshortname and optionhover
-        for (i = 0; i < questionoptions.length; i++) {
-            questionoptions[i].value = atob(questionoptions[i].value);
-            questionoptions[i].optionshort = atob(questionoptions[i].optionshort);
-            questionoptions[i].optionhover = atob(questionoptions[i].optionhover);
-        }
+        ////loop over options decoding every value, optionshortname and optionhover
+        //for (i = 0; i < questionoptions.length; i++) {
+        //    questionoptions[i].value = atob(questionoptions[i].value);
+        //    questionoptions[i].optionshort = atob(questionoptions[i].optionshort);
+        //    questionoptions[i].optionhover = atob(questionoptions[i].optionhover);
+        //}
         //console.log(questionoptions);
 
         // now show the block
@@ -483,7 +496,7 @@ var EditSurvey = function () {
         document.getElementById("add-option-div").style.display = show_options ? 'block' : 'none';
         document.getElementById("optlegend-div").style.display = show_options ? 'block' : 'none';
         if (default_options) {
-            if (questionoptions.length == 0) {
+            if ((questionoptions.length == 0) || colorchange) {
                 defaults = defaultOptions[typename];
                 defaultjson = atob(defaults);
                 //console.log(defaultjson);
@@ -740,7 +753,74 @@ function discardChanges() {
     if (nextrow) {
         editSurvey.processEditConfig(nextrow);
         nextrow = null;
+    } else
+        editSurvey.processNewQuestion();
+}
+
+function questionDirtyCheck(row) {
+    if (questiondivshown) {
+        var dirty = hoverdirty || promptdirty || optionsdirty;
+        if (!dirty) {
+            el = document.getElementById("shortname");
+            dirty = el.value != el.getAttribute('default-value');
+        }
+        if (!dirty) {
+            el = document.getElementById("description");
+            dirty = el.value != el.getAttribute('default-value');
+        }
+
+        if (!dirty) {
+            el = document.getElementById("typename");
+            dirty = el.value != el.getAttribute('default-value');
+        }
+        // for radios, only need to check one of the two because both change if 1 is changed
+        if (!dirty) {
+            el = document.getElementById("required-1");
+            dirty = el.checked.toString() != el.getAttribute('default-value');
+        }
+
+        if (!dirty) {
+            el = document.getElementById("publish-1");
+            dirty = el.checked.toString() != el.getAttribute('default-value');
+        }
+
+        if (!dirty) {
+            el = document.getElementById("privacy_user-1");
+            dirty = el.checked.toString() != el.getAttribute('default-value');
+        }
+
+        if (!dirty) {
+            el = document.getElementById("searchable-1");
+            dirty = el.checked.toString() != el.getAttribute('default-value');
+        }
+
+        if (!dirty) {
+            el = document.getElementById("ascending-1");
+            dirty = el.checked.toString() != el.getAttribute('default-value');
+        }
+
+        if (!dirty) {
+            el = document.getElementById("display_only-1");
+            dirty = el.checked.toString() != el.getAttribute('default-value');
+        }
+
+        if (!dirty) {
+            el = document.getElementById("min_value");
+            dirty = el.value.toString() != el.getAttribute('default-value');
+        }
+
+        if (!dirty) {
+            el = document.getElementById("max_value");
+            dirty = el.value.toString() != el.getAttribute('default-value');
+        }
+
+        if (dirty) {
+            nextrow = row;
+            $("#unsavedWarningModal").modal('show');
+            return true;
+        }
     }
+    return false;
 }
 
 function optionCellChanged(cell) {
@@ -1090,10 +1170,14 @@ function RefreshPreview() {
             allowothertext = allowothertext || options[i].allowothertext;
         }
         surveyData[0].allowothertext = allowothertext;
-        optionsjson = JSON.stringify(optiontable.getData());
+        optionsjson = JSON.stringify(options);
+        console.log("optiontable:");
+        console.log(optionsjson);
     } else if (questionoptions.length > 0) {
         //console.log("from questionoptions");
         optionsjson = JSON.stringify(questionoptions);
+        console.log("questionoptions:");
+        console.log(optionsjson);
     }
     //console.log("options");
     //console.log(options);
