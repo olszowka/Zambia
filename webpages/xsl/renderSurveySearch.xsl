@@ -63,7 +63,7 @@
           </div>
         </xsl:for-each>
       </div>
-      <div class="row mt-2">
+      <div class="row mt-2 mb-4">
         <div class="col col-auto">
           Match:
           <div>
@@ -85,6 +85,11 @@
               selections in all column <i>(and)</i>
             </label>
           </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-auto">
+          <button class="btn btn-info" id="filter" type="button" name="Filter" value="1">Apply Filter</button>
         </div>
       </div>
     </div>

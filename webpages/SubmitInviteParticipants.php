@@ -37,75 +37,13 @@ function invite_participant() {
     echo json_encode($json_return) . "\n";
 }
 
-function filter_participants() {
-    global $linki;
-
-    $filterlist = json_decode(getString("filters"));
-    $matchall = getString('matchall');
-    //error_log("filters=");
-    //var_error_log($filterlist);
-    //error_log("matchall = " . $matchall);
-
-    // build question filter clauses
-    $andor = $matchall == "true" ? ' AND ' : ' OR ';
-    $qcte = survey_filter_prepare_filter($filterlist, $andor);
-    $query = survey_filter_build_cte($qcte);
-
-    $query .= <<<EOD
-SELECT DISTINCT
-        CD.lastname,
-        CD.firstname,
-        CD.badgename,
-        P.badgeid,
-        P.pubsname,
-        CONCAT(
-            CASE
-                WHEN P.pubsname != "" THEN P.pubsname
-                WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
-                ELSE CD.firstname
-            END, ' (', CD.badgename, ') - ', P.badgeid) AS name
-    FROM
-             Participants P
-        JOIN CongoDump CD USING(badgeid)
-EOD;
-    $query .= survey_filter_build_join($qcte);
-    $query .= <<<EOD
-    WHERE
-        P.interested=1
-EOD;
-    $query .= survey_filter_build_where($qcte, $andor);
-    $query .= <<<EOD
-    ORDER BY
-        IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
-EOD;
-
-    //error_log("\nquery: $query\n\n");
-
-    $result = mysqli_query_exit_on_error($query);
-	$participants = array();
-    $select = '<select id="participant-select" name="selpart">' . "\n" .
-        '<option value="" selected="selected" disabled="true">Select Participant</option>' . "\n";
-    while ($row = mysqli_fetch_assoc($result)) {
-        $participants[] =  $row;
-        $select .= '<option value="' . $row["badgeid"] . '">' . $row["name"] . "</option>\n";
-    }
-    $select .= "</select>\n";
-	mysqli_free_result($result);
-	$json_return["participants"] = $participants;
-    $json_return["select"] = $select;
-    echo json_encode($json_return);
-}
-
 // Start here.  Should be AJAX requests only
 $ajax_request_action = getString("ajax_request_action");
-if ($ajax_request_action == "" || !isLoggedIn() || !may_I("Administrator")) {
+if ($ajax_request_action == "" || !isLoggedIn() || !may_I("Staff")) {
     exit();
 }
 
 switch ($ajax_request_action) {
-    case "filter":
-        filter_participants();
-        break;
     case "invite":
         invite_participant();
         break;

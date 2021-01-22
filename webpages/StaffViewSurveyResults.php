@@ -13,11 +13,18 @@ $rows = 0;
 staff_header($title, $bootstrap4);
 if (isLoggedIn() && may_I("Staff")) {
 	// Start of display portion
-
+?>
+<script type="text/javascript">
+	$(document).ready(function () {
+    	$('.alert').alert();
+	});
+</script>
+<?php
 	// json of current questions and question options
 	$badgeid = getString('badgeid');
+	$resultXML = null;
+	$paramArray = array();
 	if ($badgeid) {
-		$paramArray = array();
 		$query = [];
 		$query["questions"]=<<<EOD
 		SELECT d.questionid, d.shortname, d.description, prompt, hover, d.display_order, d.typeid, t.shortname as typename,
@@ -81,16 +88,20 @@ EOD;
 			$paramArray['answercount'] = $row['answercount'];
         }
 
-		$paramArray["buttons"] = "close";
 
-		if ($message != "") {
-			$paramArray["UpdateMessage"] = $message;
-		}
 
-		// following line for debugging only
-		//echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
-		RenderXSLT('RenderSurvey.xsl', $paramArray, $resultXML);
+
+    } else {
+		$message = "No participant selected";
     }
+	$paramArray["buttons"] = "close";
+
+    if ($message != "") {
+        $paramArray["UpdateMessage"] = $message;
+    }
+	// following line for debugging only
+    //echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
+    RenderXSLT('RenderSurvey.xsl', $paramArray, $resultXML);
 }
 staff_footer();
 ?>

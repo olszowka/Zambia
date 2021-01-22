@@ -12,7 +12,7 @@
   <xsl:param name="controliv" select="''"/>
   <xsl:param name="UpdateMessage" select="''"/>
   <xsl:template match="/">
-    <div id="message" class="alert alert-success mt-4">
+    <div id="message" class="alert alert-success mt-4 alert-dismissible fade show">
       <xsl:if test="not($UpdateMessage) or ($UpdateMessage = '')">
         <xsl:attribute name="style">
           <xsl:text>display: none</xsl:text>
@@ -61,6 +61,9 @@
             <div class="row mt-4">
               <div class="col col-auto">
                 <button class="btn btn-info" id="previewbtn" name="previewbtn" type="button" value="preview" onclick="window.location.reload();">Refresh Preview</button>
+              </div>
+              <div class="col col-auto">
+                <button class="btn btn-info" id="closebtn" name="closebtn" type="button" value="close" onclick="window.close();">Close Window</button>
               </div>
             </div>
           </div>

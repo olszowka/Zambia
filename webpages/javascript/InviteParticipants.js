@@ -25,6 +25,9 @@ var InviteParticipants = function() {
             this.title = '<span class="text-left" style="white-space: nowrap;">' + this.title + '</span>';
         })
         $('[data-toggle="tooltip"]').tooltip();
+        el = document.getElementById("filter");
+        if (el)
+            el.addEventListener('click', filter);
     };
 };
 
@@ -37,6 +40,7 @@ function inviteComplete(data, textStatus, jqXHR) {
         data_json = JSON.parse(data);
     } catch (error) {
         console.log(error);
+        return;
     }
 
     //console.log(data_json);
@@ -165,11 +169,12 @@ function filter() {
     var postdata = {
         ajax_request_action: "filter",
         filters: JSON.stringify(filterlist),
-        matchall: document.getElementById("match-all").checked == "1" ? 'true' : 'false'
+        matchall: document.getElementById("match-all").checked == "1" ? 'true' : 'false',
+        source: "invite"
     };
     document.getElementById("message").style.display = 'none';
     $.ajax({
-        url: "SubmitInviteParticipants.php",
+        url: "SubmitFilterParticipants.php",
         dataType: "html",
         data: postdata,
         success: filterComplete,

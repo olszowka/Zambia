@@ -60,14 +60,9 @@
     </div>
     <div class="row mt-4">
       <div class="col col-auto">
-        <button class="btn btn-primary" id="invite" type="invite" name="Invite" value="0" onclick="invite();">Invite</button>
+        <button class="btn btn-primary" id="invite" type="button" name="Invite" value="0" onclick="invite();">Invite</button>
       </div>
     </div>
       <xsl:apply-imports/>
-      <div class="row mt-4">
-        <div class="col col-auto">
-          <button class="btn btn-info" id="filter" type="filter" name="Filter" value="1" onclick="filter();">Apply Filter</button>
-        </div>
-      </div>
   </xsl:template>
 </xsl:stylesheet>
