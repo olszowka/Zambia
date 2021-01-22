@@ -6,6 +6,10 @@ $bootstrap4 = true;
 require_once('StaffCommonCode.php');
 $fbadgeid = getInt("badgeid");
 staff_header($title, $bootstrap4);
+if (!isLoggedIn() || !may_I('Staff')) {
+    staff_footer();
+    exit();
+}
 if ($fbadgeid) {
     echo "<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
 }
@@ -268,9 +272,15 @@ if (may_I("ResetUserPassword")) {
             </div>
         </div>
         <div class="row mt-3">
-            <button type="button" class="btn btn-primary" data-loading-text="Updating..." id="updateBUTN"
-                onclick="updateBUTTON();" disabled="disabled">Update
-            </button>
+            <div class="col col-auto">
+                <button type="button" class="btn btn-primary" data-loading-text="Updating..." id="updateBUTN"
+                    onclick="updateBUTTON();" disabled="disabled">Update
+                </button>
+            </div>
+            <div class="col col-auto" id="showsurveydiv" style="display: none;">
+                <button type="button" class="btn btn-info" id="showsurveyBTN" disabled="disabled"                     onclick="showSurveyBUTTON();">Show Survey Responses
+                </button>
+            </div>
         </div>
     </div>
 </form>

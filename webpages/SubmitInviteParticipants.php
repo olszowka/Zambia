@@ -1,6 +1,8 @@
 <?php
 //	Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-
+global $returnAjaxErrors, $return500errors;
+$returnAjaxErrors = true;
+$return500errors = true;
 require_once('StaffCommonCode.php');
 require_once('surveyFilterBuild.php');
 
@@ -38,6 +40,9 @@ function invite_participant() {
 }
 
 // Start here.  Should be AJAX requests only
+global $returnAjaxErrors, $return500errors;
+$returnAjaxErrors = true;
+$return500errors = true;
 $ajax_request_action = getString("ajax_request_action");
 if ($ajax_request_action == "" || !isLoggedIn() || !may_I("Staff")) {
     exit();
@@ -48,6 +53,8 @@ switch ($ajax_request_action) {
         invite_participant();
         break;
     default:
+        $message_error = "Internal error.";
+        RenderErrorAjax($message_error);
         exit();
 }
 

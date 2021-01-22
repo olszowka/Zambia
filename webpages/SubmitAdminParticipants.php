@@ -254,38 +254,49 @@ function perform_search() {
     if (is_numeric($searchString)) {
         $searchString =  mysqli_real_escape_string($linki, $searchString);
         $query["searchParticipants"] = <<<EOD
-			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio,
-                    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-                    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-                    CD.postcountry, CD.regtype
-			    FROM
-						 Participants P
-					JOIN CongoDump CD ON P.badgeid = CD.badgeid
-			    WHERE
-			        P.badgeid = "$searchString"
-			    ORDER BY
-			        CD.lastname, CD.firstname
+WITH AnsweredSurvey(participantid, answercount) AS (
+    SELECT participantid, COUNT(*) AS answercount
+    FROM ParticipantSurveyAnswers
+    WHERE participantid = "$searchString";
+)
+SELECT
+	P.badgeid, P.pubsname, P.interested, P.bio,
+    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) as answercount
+FROM
+    Participants P
+	JOIN CongoDump CD ON P.badgeid = CD.badgeid
+    LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
+WHERE
+	P.badgeid = "$searchString"
+ORDER BY
+	CD.lastname, CD.firstname
 EOD;
         $xml = mysql_query_XML($query);
     } else {
         $searchString = '%' . $searchString . '%';
         $query = <<<EOD
-			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio,
-                    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-                    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-                    CD.postcountry, CD.regtype
-			    FROM
-						 Participants P
-					JOIN CongoDump CD ON P.badgeid = CD.badgeid
-			    WHERE
-			           P.pubsname LIKE ?
-					OR CD.lastname LIKE ?
-					OR CD.firstname LIKE ?
-					OR CD.badgename LIKE ?
-			    ORDER BY
-			        CD.lastname, CD.firstname
+WITH AnsweredSurvey(participantid, answercount) AS (
+    SELECT participantid, COUNT(*) AS answercount
+    FROM ParticipantSurveyAnswers
+)
+SELECT
+	P.badgeid, P.pubsname, P.interested, P.bio,
+    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) as answercount
+FROM
+	Participants P
+	JOIN CongoDump CD ON P.badgeid = CD.badgeid
+    LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
+WHERE
+		P.pubsname LIKE ?
+	OR CD.lastname LIKE ?
+	OR CD.firstname LIKE ?
+	OR CD.badgename LIKE ?
+ORDER BY
+	CD.lastname, CD.firstname
 EOD;
         $param_arr = array($searchString,$searchString,$searchString,$searchString);
         $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
@@ -322,7 +333,7 @@ function fetch_user_perm_roles() {
         ['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
         if ($mayIEditAllRoles) {
             $query = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 1 AS mayedit
     FROM
                   PermissionRoles PR
@@ -338,8 +349,8 @@ EOD;
                     array("permroles" => array($fetchedUserBadgeId)));
         } else { // has permission to edit only specific perm roles
             $query = <<<EOD
-SELECT 
-        PR.permrolename, PR.permroleid, UHPR.badgeid, 
+SELECT
+        PR.permrolename, PR.permroleid, UHPR.badgeid,
         IF(ISNULL(SQ.elementid), 0, 1) AS mayedit
     FROM
                   PermissionRoles PR
@@ -347,7 +358,7 @@ SELECT
                 UHPR.badgeid = ?
             AND UHPR.permroleid = PR.permroleid
         LEFT JOIN (
-            SELECT 
+            SELECT
                     PA.elementid
                 FROM
                          UserHasPermissionRole UHPR
@@ -368,7 +379,7 @@ EOD;
         }
     } else { // has no permission to edit user perm roles
         $query = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 0 AS mayedit
     FROM
                   PermissionRoles PR
@@ -395,7 +406,7 @@ EOD;
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-if (!isLoggedIn()) {
+if (!isLoggedIn() || !may_I('Staff')) {
     $message_error = "You are not logged in or your session has expired.";
     RenderErrorAjax($message_error);
     exit();
