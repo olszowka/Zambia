@@ -127,7 +127,7 @@
 	</xsl:template>
 	<xsl:template match="doc/query[@queryName='participantInterest']/row">
     <xsl:if test="preceding-sibling::*[1]/@attending='1' and @attending='0'">
-      <div class="row mt-1 bg-danger text-white">
+      <div class="row mt-1 bs4-alert-danger">
         <div class="col col-12">
           <span style="font-weight: bold;">Not Attending</span>
         </div>
@@ -138,10 +138,10 @@
         <xsl:text>row mp-2</xsl:text>
         <xsl:choose>
           <xsl:when test="@attending='0'">
-            <xsl:text> bg-danger text-white</xsl:text>
+            <xsl:text> bs4-alert-danger</xsl:text>
           </xsl:when>
           <xsl:when test="@moderator='1'">
-            <xsl:text> bg-success text-white</xsl:text>
+            <xsl:text> bs4-alert-success</xsl:text>
           </xsl:when>
         </xsl:choose>
       </xsl:attribute>
@@ -223,10 +223,10 @@
     <div>
       <xsl:choose>
         <xsl:when test="@attending='0'">
-          <xsl:attribute name="class">row bg-danger text-white</xsl:attribute>
+          <xsl:attribute name="class">row bs4-alert-danger</xsl:attribute>
         </xsl:when>
         <xsl:when test="@moderator='1'">
-          <xsl:attribute name="class">row bg-success text-white</xsl:attribute>
+          <xsl:attribute name="class">row bs4-alert-success</xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
           <xsl:attribute name="class">row</xsl:attribute>
@@ -248,7 +248,7 @@
             <xsl:attribute name="class">col col-10</xsl:attribute>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:attribute name="class">col col-10 bg-info text-white</xsl:attribute>
+            <xsl:attribute name="class">col col-10 bs4-alert-info</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:value-of select="@comments"/>
@@ -258,10 +258,10 @@
       <div>
         <xsl:choose>
           <xsl:when test="@attending='0'">
-            <xsl:attribute name="class">row bg-danger text-white</xsl:attribute>
+            <xsl:attribute name="class">row bs4-alert-danger</xsl:attribute>
           </xsl:when>
           <xsl:when test="@moderator='1'">
-            <xsl:attribute name="class">row bg-success text-white</xsl:attribute>
+            <xsl:attribute name="class">row bs4-alert-success</xsl:attribute>
           </xsl:when>
           <xsl:otherwise>
             <xsl:attribute name="class">row</xsl:attribute>
