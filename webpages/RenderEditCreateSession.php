@@ -116,7 +116,42 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             </div>
         </div>
         <div class="row-fluid">
+<?php
+    if (HTML_SESSION === TRUE) {
+?>
             <div class="span6">
+                <label class="control-label" for="progguidhtml">Description:</label>
+                <textarea class="span12 textlabelarea" rows="4" cols="70" name="progguidhtml"
+                    id="progguidhtml"><?php echo $session["progguidhtml"]?></textarea>
+            </div>
+            <div class="span6">
+                <label class="control-label" for="progguiddesc">Plain Text Description (updates on Save):</label>
+                <textarea class="span12 textlabelarea" rows="4" cols="70" name="progguiddesc" id="progguiddesc"
+                    readonly="readonly"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
+                <?php
+        if (BILINGUAL === TRUE) {
+                ?>
+                <label class="control-label vert-sep vert-sep-above" for="pocketprogtext">
+                    <?php echo SECOND_DESCRIPTION_CAPTION;?>:
+                </label>
+                <textarea class="span12 textlabelarea" rows="4" cols="70" 
+                    name="pocketprogtext"><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></textarea>
+                <?php
+        } else {
+        // The pocketprogtext field is no longer used on the form, but the code expects it.
+                ?>
+                <input type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT);?>" />
+                <?php
+        }
+                ?>
+                <label class="control-label vert-sep vert-sep-above" for="persppartinfo">Prospective Participant Info:</label>
+                <textarea class="span12 textlabelarea" rows="4" cols="70" name="persppartinfo"
+                    id="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></textarea>
+            </div>
+<?php
+    } else {
+?>
+        <div class="span6">
                 <label class="control-label" for="progguiddesc">Description:</label>
                 <textarea class="span12 textlabelarea"
                     rows="4" cols="70" name="progguiddesc"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
@@ -128,7 +163,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             </div>
         </div>
 <?php
-    if (BILINGUAL === TRUE) {
+        if (BILINGUAL === TRUE) {
 ?>
         <div class="row-fluid">
             <div class="span6">
@@ -138,13 +173,15 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             </div>
         </div>
 <?php
-    } else {
-                // The pocketprogtext field is no longer used on the form, but the code expects it.
+        } else {
+            // The pocketprogtext field is no longer used on the form, but the code expects it.
 ?>
         <input type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT);?>" />
 <?php
-    }
+        }
+     }
 ?>
+        </div>
         <div class="row-fluid vert-sep vert-sep-above">
             <div class="span5"> <!-- Features Box; -->
                 <label>Required Room Features:</label>
@@ -218,15 +255,27 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     rows="3" cols="70" name="notesforprog" ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES);?></textarea>
             </div>
         </div>
-        <div id="buttonBox" class="clearfix">
-            <div class="pull-right">
-                <button class="btn" type=reset value="reset">Reset</button>
-                <button class="btn btn-primary" type=submit value="save" onclick="mysubmit()">Save</button>
-            </div>
+<?php
+    if (MEETING_LINK === TRUE) {
+?>
+        <div class="row-fluid vert-sep vert-sep-above">
+                    <div class="control-group">
+                        <label class="control-label" for="meetinglink">Meeting Link:</label>
+                        <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"],ENT_COMPAT);?>" />
+                    </div>
+                </div>
+<?php
+    }
+?>
+                <div id="buttonBox" class="clearfix">
+                    <div class="pull-right">
+                        <button class="btn" type=reset value="reset">Reset</button>
+                        <button class="btn btn-primary" type=submit value="save" onclick="mysubmit()">Save</button>
+                    </div>
+                </div>
+                <input type="hidden" name="action" value="<?php echo ($action === "create") ? "create" : "edit"; ?>" />
+            </form>
         </div>
-        <input type="hidden" name="action" value="<?php echo ($action === "create") ? "create" : "edit"; ?>" />
-    </form>
-</div>
 <?php
     staff_footer();
 }

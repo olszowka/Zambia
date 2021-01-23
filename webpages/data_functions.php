@@ -158,7 +158,7 @@ function get_nameemail_from_post(&$name, &$email) {
 // the $partavail global variable with it.
 //
 // Notes on variables:
-// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are indexes into Times table, 0 for unset; 
+// $_POST["availstarttime_$i"], $_POST["availendtime_$i"] are indexes into Times table, 0 for unset;
 //
 function get_participant_availability_from_post() {
     $partAvail = array();
@@ -195,7 +195,11 @@ function get_session_from_post() {
     $session["title"] = getString('title');
     $session["secondtitle"] = getString('secondtitle');
     $session["pocketprogtext"] = getString('pocketprogtext');
-    $session["progguiddesc"] = getString('progguiddesc');
+    $session["progguidhtml"] = getString('progguidhtml');
+    if (HTML_SESSION === TRUE)
+        $session["progguiddesc"] = html_to_text(getString('progguidhtml'));
+    else
+        $session["progguiddesc"] = getString('progguiddesc');
     $session["persppartinfo"] = getString('persppartinfo');
     $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
@@ -210,9 +214,13 @@ function get_session_from_post() {
     $session["servnotes"] = getString('servnotes');
     $session["status"] = getInt('status');
     $session["notesforprog"] = getString('notesforprog');
+    if (MEETING_LINK === TRUE)
+        $session["mlink"] = getString('mlink');
+    else
+        $session["mlink"] = "";
 }
 
-// Function set_session_defaults() 
+// Function set_session_defaults()
 // Populates the $session global variable with default data
 // for use when creating a new session.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -231,6 +239,7 @@ function set_session_defaults() {
     $session["secondtitle"] = "";
     $session["pocketprogtext"] = "";
     $session["persppartinfo"] = "";
+    $session["progguidhtml"] = "";
     $session["progguiddesc"] = "";
     $session["featdest"] = "";
     $session["servdest"] = "";
@@ -245,9 +254,10 @@ function set_session_defaults() {
     $session["status"] = 6; // default to "Edit Me"
     $session["notesforprog"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
+    $session["mlink"] = "";
 }
-	
-// Function set_brainstorm_session_defaults	
+
+// Function set_brainstorm_session_defaults
 // Populates the $session global variable with default data
 // for use when creating a new session in brainstorm.  Note that if a field is
 // an index into a table of options, the default value of "0" signifies
@@ -355,7 +365,7 @@ function longDayNameFromInt($daynum) {
 
 //
 // Function fix_slashes($arg)
-// Takes the string $arg and removes multiple slashes, 
+// Takes the string $arg and removes multiple slashes,
 // slash-quote and slash-double quote.
 function fix_slashes($arg) {
     while (($pos = strpos($arg, "\\\\")) !== false) {
@@ -459,5 +469,21 @@ function addArrayToXML($array, $array_name, $XMLDoc = false) {
         }
     }
     return $XMLDoc;
+}
+
+// Function html_to_text()
+//  $html = html text to convert
+//  returns plain text with <p>'s converted to two newlines and <br>'s converted to one newline.
+//  remove html codes preserving line break
+function html_to_text($html) {
+    $text = preg_replace('=^<p>=i', '', $html);
+    $text = preg_replace('=</p>$=i', '', $text);
+    $text = str_replace("\r", '', $text);
+    $text = str_replace("\n", '', $text);
+    $text = preg_replace('=<br */*>=i', "\r\n", $text);
+    $text = preg_replace('=</p>=i', "\r\n\r\n", $text);
+    $text = preg_replace('=<p[^>]*>=i', '', $text);
+    $text = html_entity_decode(strip_tags($text), ENT_QUOTES);
+    return $text;
 }
 ?>
