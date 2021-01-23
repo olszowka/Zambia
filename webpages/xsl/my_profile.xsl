@@ -275,8 +275,8 @@
                           <div id="badBio" class="invalid-feedback">Biography is too long!</div>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="com-sm-12">
+                      <div class="row mt-2">
+                        <div class="col-sm-12">
                           <label for="bio">Plain Text Version (Automatically derived from HTML version on pressing UPDATE):</label>
                           <textarea rows="5" cols="72" name="bio" id="bioTXTA">
                             <xsl:attribute name="readonly">readonly</xsl:attribute>

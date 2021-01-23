@@ -9,6 +9,7 @@ function MyProfile() {
     var bioOK = true;
 	var maxBioLen;
 	var htmlbioused = false;
+	var bio_updated = false;
 	var $password;
 	var $cpassword;
 	var $submitBTN;
@@ -34,20 +35,11 @@ function MyProfile() {
     
 	this.validateBio = function validateBio() {
 		var biolen;
-		if (htmlbioused) {
-			tinymce.triggerSave();
-			if ($htmlbioTextarea.length < 1) {
-				return;
-			}
-			var bio = $htmlbioTextarea.val();
-			biolen = bio.length;
-		} else {
-			if ($bioTextarea.length < 1) {
-				return;
-			}
-			var bio = $bioTextarea.val();
-			biolen = bio.length;
+		if ($bioTextarea.length < 1) {
+			return;
 		}
+		var bio = $bioTextarea.val();
+		biolen = bio.length;
 		if (biolen > maxBioLen) {
 			$bioTextarea.addClass("is-invalid");
 			$badBio.show();
@@ -60,6 +52,7 @@ function MyProfile() {
 	};
 
 	this.bioChange = function bioChange() {
+		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
 		anyDirty = true;
 		this.validateBio();
 		$("#submitBTN").prop("disabled", (!pwOK || !bioOK || (!anyDirty && !pw)));
@@ -130,10 +123,43 @@ function MyProfile() {
 		
 	};
 
-    this.updateBUTN = function updateBUTN() {
+	this.getLength = function getLength(data, textStatus, jqXHR) {
+		//console.log(data);
+		try {
+			jsondata = JSON.parse(data);
+		} catch (error) {
+			console.log(error);
+			return;
+		}
+		$bioTextarea.val(jsondata["bio"]);
+		bio_updated = true;
+		myProfile.validateBio();
+		if (bioOK) 
+			updateBUTTON();
+	}
+
+	this.updateBUTN = function updateBUTN() {
 		$("#submitBTN").button('loading');
-		if (htmlbioused)
+		if (htmlbioused && bio_updated == false) {
 			tinymce.triggerSave();
+
+			if ($htmlbioTextarea.val().length > maxBioLen) {
+				var postdata = {
+					ajax_request_action: "convert_bio",
+					htmlbio: $htmlbioTextarea.val()
+				};
+				$.ajax({
+					url: "SubmitMyContact.php",
+					dataType: "html",
+					data: postdata,
+					success: myProfile.getLength,
+					error: myProfile.showAjaxError,
+					type: "POST"
+				});
+				return;
+			}
+		}
+		bio_updated = false;
 
         var postdata = {
             ajax_request_action: "update_participant"
@@ -176,7 +202,7 @@ function MyProfile() {
     };
 
 	this.showUpdateBio = function showUpdateBio(data, textStatus, jqXHR) {
-		console.log(data);
+		//console.log(data);
 		try {
 			jsondata = JSON.parse(data);
 		} catch (error) {

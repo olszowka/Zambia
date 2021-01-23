@@ -19,7 +19,7 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio,
+        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
         P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
         CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry
     FROM
@@ -255,7 +255,7 @@ function perform_search() {
         $searchString =  mysqli_real_escape_string($linki, $searchString);
         $query["searchParticipants"] = <<<EOD
 			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio,
+			        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
                     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
                     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
                     CD.postcountry, CD.regtype
@@ -272,7 +272,7 @@ EOD;
         $searchString = '%' . $searchString . '%';
         $query = <<<EOD
 			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio,
+			        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
                     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
                     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
                     CD.postcountry, CD.regtype
@@ -322,7 +322,7 @@ function fetch_user_perm_roles() {
         ['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
         if ($mayIEditAllRoles) {
             $query = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 1 AS mayedit
     FROM
                   PermissionRoles PR
@@ -338,8 +338,8 @@ EOD;
                     array("permroles" => array($fetchedUserBadgeId)));
         } else { // has permission to edit only specific perm roles
             $query = <<<EOD
-SELECT 
-        PR.permrolename, PR.permroleid, UHPR.badgeid, 
+SELECT
+        PR.permrolename, PR.permroleid, UHPR.badgeid,
         IF(ISNULL(SQ.elementid), 0, 1) AS mayedit
     FROM
                   PermissionRoles PR
@@ -347,7 +347,7 @@ SELECT
                 UHPR.badgeid = ?
             AND UHPR.permroleid = PR.permroleid
         LEFT JOIN (
-            SELECT 
+            SELECT
                     PA.elementid
                 FROM
                          UserHasPermissionRole UHPR
@@ -368,7 +368,7 @@ EOD;
         }
     } else { // has no permission to edit user perm roles
         $query = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 0 AS mayedit
     FROM
                   PermissionRoles PR
@@ -389,6 +389,15 @@ EOD;
     }
     // $foo = mb_ereg_replace("<(row|query)([^>]*)/[ ]*>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"); //for debugging only
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
+}
+
+function convert_bio() {
+    $htmlbio = getString("htmlbio");
+    $bio = html_to_text($htmlbio);
+    $results = [];
+    $results["bio"] = $bio;
+    $results["len"] = mb_strlen($bio);
+    echo json_encode($results);
 }
 
 // Start here.  Should be AJAX requests only
@@ -420,6 +429,9 @@ switch ($ajax_request_action) {
         break;
     case "fetch_user_perm_roles":
         fetch_user_perm_roles();
+        break;
+    case "convert_bio":
+        convert_bio();
         break;
     default:
         $message_error = "Internal error.";

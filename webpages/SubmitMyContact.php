@@ -234,6 +234,15 @@ function fetch_bio($badgeid) {
     exit();
 }
 
+function convert_bio() {
+    $htmlbio = getString("htmlbio");
+    $bio = html_to_text($htmlbio);
+    $results = [];
+    $results["bio"] = $bio;
+    $results["len"] = mb_strlen($bio);
+    echo json_encode($results);
+}
+
 // Start here.  Should be AJAX requests only
 if (!isLoggedIn()) {
     $message_error = "You are not logged in or your session has expired.";
@@ -260,6 +269,9 @@ switch ($ajax_request_action) {
         break;
     case "update_participant":
         update_participant($badgeid);
+        break;
+    case "convert_bio":
+        convert_bio();
         break;
     default:
         exit();

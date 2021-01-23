@@ -240,12 +240,29 @@ if (may_I("ResetUserPassword")) {
 ?>
         <div class="row mt-3">
             <div class="col-sm-6">
-                <div>
-                    <label for="bio" class="">Participant biography:</label>
-                </div>
-                <div>
-                    <textarea id="bio" class="mycontrol" rows="4" cols="80" readonly="readonly" data-maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
-                </div>
+                
+<?php
+if (HTML_BIO === TRUE) {
+?>
+              <div>
+                <label for="htmlbio" class="">Participant biography:</label>
+              </div>
+              <div class="newforminput">
+                <textarea id="htmlbio" rows="4" cols="80" readonly="readonly" maxlength="<?php echo MAX_BIO_LEN?>" onchange="textChange('htmlbio');" onkeyup="textChange('htmlbio');"></textarea>
+              </div>
+<?php
+} else {
+?>
+              <div>
+                <label for="bio" class="">Participant biography:</label>
+              </div>
+              <div>
+                <textarea id="bio" class="mycontrol" rows="4" cols="80" readonly="readonly" data-maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
+              </div>
+            
+<?php
+}
+?>
             </div>
             <div class="col-sm-6">
                 <div class="">
@@ -254,6 +271,18 @@ if (may_I("ResetUserPassword")) {
                 <div>
                     <textarea id="staffnotes" rows="6" cols="80" readonly="readonly" class="mycontrol"></textarea>
                 </div>
+<?php
+if (HTML_BIO === TRUE) {
+?>
+              <div class="newformlabel">
+                 <label for="bio" class="newformlabel">Text biography (updates only after Update is pressed):</label>
+              </div>
+              <div class="newforminput">
+                  <textarea id="bio" rows="8" cols="80" readonly="readonly" maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
+              </div>
+<?php
+}
+?>
             </div>
         </div>
         <div class="row mt-3">
