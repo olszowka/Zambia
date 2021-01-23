@@ -68,6 +68,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
             break;
         case "My Profile":
+            echo "<script src=\"external/tinymce_5.4.2/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/myProfile.js\"></script>";
             break;
         case "Edit Session":

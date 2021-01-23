@@ -7,12 +7,16 @@ function MyProfile() {
     var cpw;
     var pwOK = true;
     var bioOK = true;
-    var maxBioLen;
+	var maxBioLen;
+	var htmlbioused = false;
 	var $password;
 	var $cpassword;
 	var $submitBTN;
 	var $bioTextarea;
+	var $htmlbioTextarea;
 	var $resultBoxDiv;
+	var $badBio;
+	
 	
     this.validatePW = function validatePW() {
 		pw = $password.val();
@@ -28,18 +32,37 @@ function MyProfile() {
 		}
 	};
     
-    this.validateBio = function validateBio() {
-        if ($bioTextarea.length < 1) {
-            return;
-        }
-    	var bio = $bioTextarea.val();
-		if (bio.length > maxBioLen) {
+	this.validateBio = function validateBio() {
+		var biolen;
+		if (htmlbioused) {
+			tinymce.triggerSave();
+			if ($htmlbioTextarea.length < 1) {
+				return;
+			}
+			var bio = $htmlbioTextarea.val();
+			biolen = bio.length;
+		} else {
+			if ($bioTextarea.length < 1) {
+				return;
+			}
+			var bio = $bioTextarea.val();
+			biolen = bio.length;
+		}
+		if (biolen > maxBioLen) {
 			$bioTextarea.addClass("is-invalid");
+			$badBio.show();
 			bioOK = false;
 		} else {
 			$bioTextarea.removeClass("is-invalid");
+			$badBio.hide();
 			bioOK = true;
 		}
+	};
+
+	this.bioChange = function bioChange() {
+		anyDirty = true;
+		this.validateBio();
+		$("#submitBTN").prop("disabled", (!pwOK || !bioOK || (!anyDirty && !pw)));
 	};
 
     this.anyChange = function anyChange(event) {
@@ -47,7 +70,7 @@ function MyProfile() {
 		anyDirty = true;
 		var $target = $(event.target);
 		var targetId = $target.attr("id");
-		if (targetId === "bioTXTA") {
+		if (targetId === "bioTXTA" || targetId === "htmlbioTXTA") {
 			this.validateBio();
 		} else if (targetId === "password" || targetId === "cpassword") {
 			this.validatePW();
@@ -65,7 +88,36 @@ function MyProfile() {
 		$submitBTN = $("#submitBTN");
 		$submitBTN.button().prop("disabled", true);
 		$bioTextarea = $("#bioTXTA");
+		$badBio = $("#badBio");
 		maxBioLen = $bioTextarea.data("maxLength");
+		$htmlbioTextarea = $("#htmlbioTXTA");
+		if ($htmlbioTextarea) {
+			tinymce.init({
+				selector: 'textarea#htmlbioTXTA',
+				plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
+				browser_spellcheck: true,
+				contextmenu: false,
+				height: 400,
+				min_height: 200,
+				menubar: false,
+				toolbar: [
+					'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
+					'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
+				],
+				toolbar_mode: 'wrap',
+				content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+				placeholder: 'Type custom content here...',
+				setup: function (ed) {
+					ed.on('change', function (e) {
+						myProfile.bioChange();
+					});
+				},
+				init_instance_callback: function (editor) {
+					$(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
+				}
+			});
+			htmlbioused = true;
+		}
 		this.validateBio();
 		$("select.mycontrol").on("change", boundAnyChange);
 		$("input.mycontrol[type='text']").on("input", boundAnyChange);
@@ -75,10 +127,14 @@ function MyProfile() {
 		$("textarea.mycontrol").on("input", boundAnyChange);
 		$resultBoxDiv = $("#resultBoxDIV");
 		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		
 	};
 
     this.updateBUTN = function updateBUTN() {
 		$("#submitBTN").button('loading');
+		if (htmlbioused)
+			tinymce.triggerSave();
+
         var postdata = {
             ajax_request_action: "update_participant"
         };
@@ -119,6 +175,17 @@ function MyProfile() {
         });
     };
 
+	this.showUpdateBio = function showUpdateBio(data, textStatus, jqXHR) {
+		console.log(data);
+		try {
+			jsondata = JSON.parse(data);
+		} catch (error) {
+			console.log(error);
+			return;
+		}
+		$("#bioTXTA").val(jsondata["bio"]);
+	};
+
     this.showUpdateResults = function showUpdateResults(data, textStatus, jqXHR) {
         //ajax success callback function
 		$resultBoxDiv.html(data).css("visibility", "visible");
@@ -129,7 +196,18 @@ function MyProfile() {
         setTimeout(function () {
 			$submitBTN.button().prop("disabled", true);
         }, 0);
-        document.getElementById("resultBoxDIV").scrollIntoView(false);
+		document.getElementById("resultBoxDIV").scrollIntoView(false);
+		if (htmlbioused) {
+			$.ajax({
+				url: "SubmitMyContact.php",
+				dataType: "html",
+				data: ({
+					ajax_request_action: "fetch_bio"
+				}),
+				success: myProfile.showUpdateBio,
+				type: "POST"
+			});
+		}
     };
 
     this.showAjaxError = function showAjaxError(data, textStatus, jqXHR) {
