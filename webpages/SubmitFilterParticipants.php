@@ -20,7 +20,9 @@ function filter_participants() {
     // build question filter clauses
     $andor = $matchall == "true" ? ' AND ' : ' OR ';
     $qcte = survey_filter_prepare_filter($filterlist, $andor);
-    $query = survey_filter_build_cte($qcte);
+    $query = "";
+    if (DBVER >= "8")
+        $query = survey_filter_build_cte($qcte);
 
     if ($source == "invite") {
         $query .= <<<EOD
@@ -55,11 +57,13 @@ EOD;
     }
     if ($source == 'assign') {
         $selsessionid = getString("sessionid");
-        if ($query == '')
-            $query .= "WITH ";
-        else
-            $query .= ", ";
-        $query .= <<<EOD
+        if (DBVER >= "8") {
+            if ($query == '')
+                $query .= "WITH ";
+            else
+                $query .= ", ";
+
+            $query .= <<<EOD
 AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
@@ -84,10 +88,37 @@ FROM Participants P
 JOIN CongoDump CD USING(badgeid)
 
 EOD;
-        $query .= survey_filter_build_join($qcte);
+        } else {
+            $query .= <<<EOD
+SELECT
+    CD.lastname,
+    CD.firstname,
+    CD.badgename,
+    P.badgeid,
+    P.pubsname,
+    CONCAT(CASE
+        WHEN P.pubsname != "" THEN P.pubsname
+        WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
+        ELSE CD.firstname
+    END, ' (', CD.badgename, ') - ', P.badgeid) AS name,
+    IFNULL(A.answercount, 0) as answercount
+FROM Participants P
+JOIN CongoDump CD USING(badgeid)
+
+EOD;
+
+        }
+        $query .= survey_filter_build_join_subquery($qcte);
         $query .= <<<EOD
-LEFT OUTER JOIN SessionParticipants S ON (P.badgeid = S.badgeid)
-LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
+LEFT OUTER JOIN (
+ SELECT badgeid
+    FROM ParticipantSessionInterest
+    WHERE sessionid = $selsessionid
+) S ON (P.badgeid = S.badgeid)
+LEFT OUTER JOIN (
+    SELECT participantid, COUNT(*) AS answercount
+    FROM ParticipantSurveyAnswers
+) A ON (P.badgeid = A.participantid)
 WHERE P.interested = 1 AND S.badgeid IS NULL
 
 EOD;

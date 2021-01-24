@@ -253,17 +253,18 @@ function perform_search() {
         exit();
     if (is_numeric($searchString)) {
         $searchString =  mysqli_real_escape_string($linki, $searchString);
-        $query["searchParticipants"] = <<<EOD
+        if (DBVER >= "8") {
+            $query["searchParticipants"] = <<<EOD
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
-    WHERE participantid = "$searchString";
+    WHERE participantid = "$searchString"
 )
 SELECT
 	P.badgeid, P.pubsname, P.interested, P.bio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) as answercount
+    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
 FROM
     Participants P
 	JOIN CongoDump CD ON P.badgeid = CD.badgeid
@@ -273,10 +274,32 @@ WHERE
 ORDER BY
 	CD.lastname, CD.firstname
 EOD;
+        } else {
+            $query["searchParticipants"] = <<<EOD
+SELECT
+	P.badgeid, P.pubsname, P.interested, P.bio,
+    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
+FROM
+    Participants P
+	JOIN CongoDump CD ON P.badgeid = CD.badgeid
+        LEFT OUTER JOIN (
+            SELECT participantid, COUNT(*) AS answercount
+                FROM ParticipantSurveyAnswers
+                WHERE participantid = "$searchString"
+    ) A ON (P.badgeid = A.participantid)
+WHERE
+	P.badgeid = "$searchString"
+ORDER BY
+	CD.lastname, CD.firstname
+EOD;
+        }
         $xml = mysql_query_XML($query);
     } else {
         $searchString = '%' . $searchString . '%';
-        $query = <<<EOD
+        if (DBVER >= "8") {
+            $query = <<<EOD
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
@@ -285,7 +308,7 @@ SELECT
 	P.badgeid, P.pubsname, P.interested, P.bio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) as answercount
+    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
 FROM
 	Participants P
 	JOIN CongoDump CD ON P.badgeid = CD.badgeid
@@ -298,10 +321,34 @@ WHERE
 ORDER BY
 	CD.lastname, CD.firstname
 EOD;
+        } else {
+             $query = <<<EOD
+SELECT
+	P.badgeid, P.pubsname, P.interested, P.bio,
+    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
+FROM
+	Participants P
+	JOIN CongoDump CD ON P.badgeid = CD.badgeid
+    LEFT OUTER JOIN (
+         SELECT participantid, COUNT(*) AS answercount
+            FROM ParticipantSurveyAnswers
+) A ON (P.badgeid = A.participantid)
+WHERE
+		P.pubsname LIKE ?
+	OR CD.lastname LIKE ?
+	OR CD.firstname LIKE ?
+	OR CD.badgename LIKE ?
+ORDER BY
+	CD.lastname, CD.firstname
+EOD;
+        }
         $param_arr = array($searchString,$searchString,$searchString,$searchString);
         $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
         $xml = mysql_result_to_XML("searchParticipants", $result);
     }
+
     if (!$xml) {
         echo $message_error;
         exit();

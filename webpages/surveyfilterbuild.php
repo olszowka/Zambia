@@ -178,6 +178,15 @@ function survey_filter_build_join($qcte) {
     $join = "";
     foreach ($qcte as $qid => $cte) {
         $join .= "JOIN S$qid ON (S$qid.participantid = P.badgeid)\n";
+
+    }
+    return $join;
+}
+
+function survey_filter_build_join_subquery($qcte) {
+    $join = "";
+    foreach ($qcte as $qid => $cte) {
+        $join .= "JOIN (\n$cte\n) S$qid ON (S$qid.participantid = P.badgeid)\n";
     }
     return $join;
 }

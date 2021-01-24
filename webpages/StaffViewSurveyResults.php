@@ -61,8 +61,8 @@ if (isLoggedIn() && may_I("Staff")) {
 		ORDER BY d.display_order ASC;
 EOD;
 		$resultXML = mysql_query_XML($query);
-
-		$query = <<<EOD
+		if (DBVER >= "8") {
+			$query = <<<EOD
 WiTH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
@@ -73,6 +73,18 @@ JOIN CongoDump CD USING (badgeid)
 LEFT OUTER JOIN AnsweredSurvey A ON (A.participantid = P.badgeid)
 WHERE P.badgeid = '$badgeid';
 EOD;
+		} else {
+			$query = <<<EOD
+SELECT CD.firstname, CD.lastname, CD.badgename, P.pubsname, IFNULL(A.answercount, 0) AS answercount
+FROM Participants P
+JOIN CongoDump CD USING (badgeid)
+LEFT OUTER JOIN (
+	SELECT participantid, COUNT(*) AS answercount
+		FROM ParticipantSurveyAnswers
+) A ON (A.participantid = P.badgeid)
+WHERE P.badgeid = '$badgeid';
+EOD;
+		}
 		$result = mysqli_query_exit_on_error($query);
 		while ($row = mysqli_fetch_assoc($result)) {
 			$pubsname = $row["pubsname"];

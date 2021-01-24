@@ -278,6 +278,7 @@ function getUpdateResults(data, textStatus, jqXHR) {
 
 function hideSearchResults() {
     resultsHidden = true;
+    $('#resultBoxDIV').hide()
     $("#searchResultsDIV").hide("fast");
     $("#toggleSearchResultsBUTN").prop("disabled", false).prop("hidden", false);
     $("#toggleText").html("Show");

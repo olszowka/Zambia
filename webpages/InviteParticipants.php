@@ -71,8 +71,6 @@ EOD;
 EOD;
 	$result = mysqli_query_exit_on_error($sql);
 	while ($row = mysqli_fetch_assoc($result)) {
-
-
         // build xml array from begin to end
         $options = [];
         $question_id = $row["questionid"];
