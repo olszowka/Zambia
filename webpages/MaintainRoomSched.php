@@ -29,7 +29,7 @@ if (isset($_POST["selroom"]) && $_POST["selroom"] != "0") { // room was selected
 }
 
 if ($conflict != true) {
-    $queryArray["rooms"] = "SELECT roomid, roomname, function, is_scheduled FROM Rooms ORDER BY display_order";
+    $queryArray["rooms"] = "SELECT roomid, roomname, `function`, is_scheduled FROM Rooms ORDER BY display_order";
     if (($resultXML = mysql_query_XML($queryArray)) === false) {
         RenderErrorAjax($message_error); //header has already been sent, so can just send error message and stop.
         exit();
@@ -79,7 +79,7 @@ if ($conflict==true) {
 $query = <<<EOD
 SELECT
         roomid, roomname, opentime1, closetime1, opentime2, closetime2, opentime3, closetime3,
-        function, floor, height, dimensions, area, notes
+        `function`, floor, height, dimensions, area, notes
     FROM
         Rooms
     WHERE

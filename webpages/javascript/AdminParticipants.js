@@ -18,6 +18,7 @@ var rolesDirty = false;
 var staffnotesDirty = false;
 var originalInterested = "0";
 var fbadgeid;
+var curbadgeid;
 var resultsHidden = true;
 var max_bio_len = 500;
 var $interested;
@@ -39,6 +40,8 @@ var $postzip;
 var $postcountry;
 var $passwordsDontMatch;
 var $updateButton;
+var $showSurveyDiv;
+var $showSurveyBtn;
 var saveNewBadgeId;
 
 function isDirty(override) {
@@ -65,6 +68,7 @@ function chooseParticipant(badgeid, override) {
         saveNewBadgeId = badgeid;
         return;
     }
+    curbadgeid = badgeid;
     var badgeidJQSel = badgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
     hideSearchResults();
     $("#badgeid").val($("#bidSPAN_" + badgeidJQSel).text());
@@ -127,6 +131,14 @@ function chooseParticipant(badgeid, override) {
     $updateButton.prop("disabled", true);
     $("#resultBoxDIV").html("").hide();
     $passwordsDontMatch.hide();
+    var answercount = $("#answercountHID_" + badgeidJQSel).val();
+    if (answercount > 0) {
+        $showSurveyDiv.show();
+        $showSurveyBtn.prop("disabled", false);
+    } else {
+        $showSurveyDiv.hide();
+        $showSurveyBtn.prop("disabled", true);
+    }
     max_bio_len = document.getElementById("bio").dataset.maxLength;
     $.ajax({
         url: "SubmitAdminParticipants.php",
@@ -266,6 +278,7 @@ function getUpdateResults(data, textStatus, jqXHR) {
 
 function hideSearchResults() {
     resultsHidden = true;
+    $('#resultBoxDIV').hide()
     $("#searchResultsDIV").hide("fast");
     $("#toggleSearchResultsBUTN").prop("disabled", false).prop("hidden", false);
     $("#toggleText").html("Show");
@@ -293,6 +306,8 @@ function initializeAdminParticipants() {
     $postcountry = $("#postcountry");
     $passwordsDontMatch = $("#passwordsDontMatch");
     $updateButton = $("#updateBUTN");
+    $showSurveyDiv = $("#showsurveydiv");
+    $showSurveyBtn = $("#showsurveyBTN");
     $passwordsDontMatch.hide();
     $('#resultsDiv').hide();
     $('#resultBoxDIV').hide();
@@ -578,3 +593,9 @@ function writeSearchResults(data, textStatus, jqXHR) {
     showSearchResults();
 }
 
+function showSurveyBUTTON() {
+    //console.log("In showSurveyBUTTON()");
+    if (curbadgeid != '') {
+        window.open('StaffViewSurveyResults.php?badgeid=' + curbadgeid, "_blank");
+    }
+}

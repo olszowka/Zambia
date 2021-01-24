@@ -61,6 +61,20 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
             break;
+        case "Edit Survey":
+            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
+            echo "<script src=\"javascript/EditSurvey.js\"></script>\n";
+            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
+            break;
+        case "Participant Survey":
+            echo "<script src=\"javascript/PartSurvey.js\"></script>\n";
+            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
+        case "Preview Survey":
+            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
+            break;
         case "Session Search Results":
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;

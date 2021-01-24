@@ -157,6 +157,9 @@
                         <a href="EditCustomText.php">Edit Custom Text</a>
                       </li>
                       <li>
+                        <a href="EditSurvey.php">Edit Survey</a>
+                      </li>
+                      <li>
                         <a href="ConfigTableEditor.php">Edit Configuration Tables</a>
                       </li>
                     </xsl:if>

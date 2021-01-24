@@ -5,6 +5,7 @@
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="title" select="''" />
+  <xsl:param name="survey" select="'false'" />
   <xsl:template match="/">
     <nav id="participantNav" class="navbar navbar-expand-lg navbar-dark bg-dark">
       <span class="navbar-brand py-1">
@@ -22,6 +23,11 @@
           <li class="nav-item py-0">
             <a class="nav-link py-1" href="my_contact.php">Profile</a>
           </li>
+          <xsl:if test="$survey">
+            <li class="nav-item py-0">
+              <a class="nav-link py-1" href="PartSurvey.php">Survey</a>
+            </li>
+          </xsl:if>
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='my_availability']">
             <li class="nav-item py-0">
               <a class="nav-link py-1" href="my_sched_constr.php">Availability</a>

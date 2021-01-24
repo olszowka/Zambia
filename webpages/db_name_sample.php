@@ -6,6 +6,7 @@ define("DBHOSTNAME", "localhost");
 define("DBUSERID", "zambiademo");
 define("DBPASSWORD", "4fandom");
 define("DBDB", "zambiademo");
+define("DBVER", "5.7");
 define("CON_NAME", "Zambia Demo");
 define("BRAINSTORM_EMAIL", "brain@somewhere.net");
 define("PROGRAM_EMAIL", "program@somewhere.net");

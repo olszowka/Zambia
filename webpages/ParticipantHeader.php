@@ -37,9 +37,14 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
     // below: authenticated and authorized to see a menu
     if ($isLoggedIn && $loginPageStatus != 'Login' && $loginPageStatus != 'Consent' &&
         (may_I("Participant") || may_I("Staff"))) {
+    // check if survey is defined to set Survey Menu item in paramArray
+        if (!isset($_SESSION['survey_exists'])) {
+            $_SESSION['survey_exists'] = survey_programmed();
+        }
         if ($bootstrap4) {
             $paramArray = array();
             $paramArray["title"] = $title;
+            $paramArray["survey"] = $_SESSION['survey_exists'];
             RenderXSLT('ParticipantMenu_BS4.xsl', $paramArray, GeneratePermissionSetXML());
         } else {
 ?>
@@ -56,7 +61,10 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                         <ul class="nav">
                             <li><a href="welcome.php">Overview</a></li>
                             <li><a href="my_contact.php">Profile</a></li>
-                            <?php makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false); ?>
+                            <?php if ($_SESSION['survey_exists']) { ?>
+                            <li><a href="PartSurvey.php">Survey</a></li>
+                            <?php }
+                                  makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false); ?>
                             <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
                             <?php makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false); ?>
                             <?php makeMenuItem("Session Interests", may_I('my_panel_interests'),"PartPanelInterests.php",false); ?>
