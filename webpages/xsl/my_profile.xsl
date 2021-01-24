@@ -12,6 +12,7 @@
     <xsl:param name="useRegSystem" select="0"/>
     <xsl:param name="maxBioLen" select="500"/>
     <xsl:param name="enableBioEdit" select="'0'"/>
+    <xsl:param name="htmlbio" select="'0'"/>
     <xsl:param name="userIdPrompt" select="''"/>
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
@@ -246,32 +247,73 @@
                             </input>
                         </div>
                     </div>
-                    <div class="row">
+                  <xsl:choose>
+                    <xsl:when test="$htmlbio = '1'">
+                      <div class="row">
                         <div class="col-sm-12">
-                            <label for="bio">
-                                Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
-                                spaces):
-                            </label>
+                          <label for="htmlbio">
+                            Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
+                            spaces):
+                          </label>
                         </div>
-                    </div>
-                    <div class="row">
+                      </div>
+                      <div class="row">
                         <div class="col-sm-12">
-                            <textarea rows="5" cols="72" name="bio" id="bioTXTA" data-max-length="{$maxBioLen}">
-                                <xsl:choose>
-                                    <xsl:when test="$enableBioEdit!='1'">
-                                        <xsl:attribute name="readonly">readonly</xsl:attribute>
-                                        <xsl:attribute name="class">span12 userFormTXT readonly mycontrol form-control</xsl:attribute>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:attribute name="class">span12 userFormTXT mycontrol form-control</xsl:attribute>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                                <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
-                            </textarea>
-                            <div id="badBio" class="invalid-feedback">Biography is too long!</div>
+                          <textarea rows="5" cols="72" name="htmlbio" id="htmlbioTXTA"          
+                            onchange="myProfile.bioChange()" onkeyup="myProfile.bioChange()"
+                            data-max-length="{$maxBioLen}">
+                              <xsl:choose>
+                                <xsl:when test="$enableBioEdit!='1'">
+                                  <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                  <xsl:attribute name="class">col-sm-12 userFormTXT readonly mycontrol form-control</xsl:attribute>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:attribute name="class">col-sm-12 userFormTXT mycontrol form-control</xsl:attribute>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                              <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@htmlbio"/></textarea>
+                          <div id="badBio" class="invalid-feedback">Biography is too long!</div>
                         </div>
-                    </div>
-                    <xsl:if test="$bioNote">
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-12">
+                          <label for="bio">Plain Text Version (Automatically derived from HTML version on pressing UPDATE):</label>
+                          <textarea rows="5" cols="72" name="bio" id="bioTXTA">
+                            <xsl:attribute name="readonly">readonly</xsl:attribute>
+                            <xsl:attribute name="class">col-sm-12 userFormTXT readonly</xsl:attribute>
+                            <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
+                          </textarea>
+                        </div>
+                      </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <label for="bio">
+                            Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
+                            spaces):
+                          </label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <textarea rows="5" cols="72" name="bio" id="bioTXTA" data-max-length="{$maxBioLen}">
+                            <xsl:choose>
+                              <xsl:when test="$enableBioEdit!='1'">
+                                <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                <xsl:attribute name="class">span12 userFormTXT readonly mycontrol form-control</xsl:attribute>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:attribute name="class">span12 userFormTXT mycontrol form-control</xsl:attribute>
+                              </xsl:otherwise>
+                            </xsl:choose>
+                            <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/></textarea>
+                          <div id="badBio" class="invalid-feedback">Biography is too long!</div>
+                        </div>
+                      </div>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                  <xsl:if test="$bioNote">
                         <div class="row mt-1">
                             <div class="col note">
                                 <xsl:value-of select="$bioNote" disable-output-escaping="yes"/>

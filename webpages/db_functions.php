@@ -691,7 +691,10 @@ function filter_session() {
     $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
     $session2["progguiddesc"] = mysqli_real_escape_string($linki, $session["progguiddesc"]);
     $session2["progguidhtml"] = mysqli_real_escape_string($linki, $session["progguidhtml"]);
-    $session2["mlink"] = mysqli_real_escape_string($linki, $session["mlink"]);
+    if (MEETING_LINK === TRUE)
+        $session2["mlink"] = mysqli_real_escape_string($linki, $session["mlink"]);
+    else
+        $session2["mlink"] = "";
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
     if (DURATION_IN_MINUTES === TRUE) {
         $session2["duration"] = conv_min2hrsmin($session["duration"]);

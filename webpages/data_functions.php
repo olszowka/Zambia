@@ -195,7 +195,11 @@ function get_session_from_post() {
     $session["title"] = getString('title');
     $session["secondtitle"] = getString('secondtitle');
     $session["pocketprogtext"] = getString('pocketprogtext');
-    $session["progguiddesc"] = getString('progguiddesc');
+    $session["progguidhtml"] = getString('progguidhtml');
+    if (HTML_SESSION === TRUE)
+        $session["progguiddesc"] = html_to_text(getString('progguidhtml'));
+    else
+        $session["progguiddesc"] = getString('progguiddesc');
     $session["persppartinfo"] = getString('persppartinfo');
     $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
@@ -210,6 +214,10 @@ function get_session_from_post() {
     $session["servnotes"] = getString('servnotes');
     $session["status"] = getInt('status');
     $session["notesforprog"] = getString('notesforprog');
+    if (MEETING_LINK === TRUE)
+        $session["mlink"] = getString('mlink');
+    else
+        $session["mlink"] = "";
 }
 
 // Function set_session_defaults()
@@ -231,6 +239,7 @@ function set_session_defaults() {
     $session["secondtitle"] = "";
     $session["pocketprogtext"] = "";
     $session["persppartinfo"] = "";
+    $session["progguidhtml"] = "";
     $session["progguiddesc"] = "";
     $session["featdest"] = "";
     $session["servdest"] = "";
@@ -245,6 +254,7 @@ function set_session_defaults() {
     $session["status"] = 6; // default to "Edit Me"
     $session["notesforprog"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
+    $session["mlink"] = "";
 }
 
 // Function set_brainstorm_session_defaults
@@ -551,5 +561,21 @@ function ObjecttoXML($queryname, $object, $xml = null) {
     }
     // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
     return $xml;
+}
+
+// Function html_to_text()
+//  $html = html text to convert
+//  returns plain text with <p>'s converted to two newlines and <br>'s converted to one newline.
+//  remove html codes preserving line break
+function html_to_text($html) {
+    $text = preg_replace('=^<p>=i', '', $html);
+    $text = preg_replace('=</p>$=i', '', $text);
+    $text = str_replace("\r", '', $text);
+    $text = str_replace("\n", '', $text);
+    $text = preg_replace('=<br */*>=i', "\r\n", $text);
+    $text = preg_replace('=</p>=i', "\r\n\r\n", $text);
+    $text = preg_replace('=<p[^>]*>=i', '', $text);
+    $text = html_entity_decode(strip_tags($text), ENT_QUOTES);
+    return $text;
 }
 ?>

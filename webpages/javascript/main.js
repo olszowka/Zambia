@@ -34,6 +34,12 @@ document.addEventListener( "DOMContentLoaded", function () {
 		case "Edit Configuration Tables":
 			editConfigTable.initialize();
 			break;
+		case "Edit Session":
+			initializeSessionEdit();
+			break;
+		case "Create New Session":
+			initializeSessionEdit();
+			break
 		default:
 			window.status="Ready.";
 		/**

@@ -19,7 +19,7 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio,
+        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
         P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
         CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry
     FROM
@@ -449,6 +449,15 @@ EOD;
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
 }
 
+function convert_bio() {
+    $htmlbio = getString("htmlbio");
+    $bio = html_to_text($htmlbio);
+    $results = [];
+    $results["bio"] = $bio;
+    $results["len"] = mb_strlen($bio);
+    echo json_encode($results);
+}
+
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
@@ -478,6 +487,9 @@ switch ($ajax_request_action) {
         break;
     case "fetch_user_perm_roles":
         fetch_user_perm_roles();
+        break;
+    case "convert_bio":
+        convert_bio();
         break;
     default:
         $message_error = "Internal error.";

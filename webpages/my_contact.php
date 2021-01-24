@@ -9,9 +9,9 @@ SELECT
 		CD.badgeid, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email,
 			CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
 			CD.postcountry, P.pubsname, P.password, P.bestway, P.interested, P.bio,
-			P.share_email, P.use_photo
+			P.htmlbio, P.share_email, P.use_photo
 	FROM
-			CongoDump CD
+	   CongoDump CD
 	   JOIN Participants P USING (badgeid)
     WHERE
         CD.badgeid=?;
@@ -41,6 +41,7 @@ $paramArray['enableBestwayQuestion'] = ENABLE_BESTWAY_QUESTION ? 1 : 0;
 $paramArray['useRegSystem'] = USE_REG_SYSTEM ? 1 : 0;
 $paramArray['maxBioLen'] = MAX_BIO_LEN;
 $paramArray['enableBioEdit'] = may_I('EditBio');
+$paramArray['htmlbio'] = HTML_BIO ? 1 : 0;
 $paramArray['userIdPrompt'] = USER_ID_PROMPT;
 participant_header($title, false, 'Normal', true);
 $resultXML = appendCustomTextArrayToXML($resultXML);
