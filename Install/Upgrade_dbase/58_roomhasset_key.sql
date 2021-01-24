@@ -18,16 +18,16 @@ INSERT INTO RoomHasSet_tmp(roomid, roomsetid, capacity)
 SELECT roomid, roomsetid, capacity
 FROM RoomHasSet;
 
-ALTER TABLE RoomHasSet DROP CONSTRAINT RoomHasSet_ibfk_1;
-ALTER TABLE RoomHasSet DROP CONSTRAINT RoomHasSet_ibfk_2;
+ALTER TABLE RoomHasSet DROP FOREIGN KEY RoomHasSet_ibfk_1;
+ALTER TABLE RoomHasSet DROP FOREIGN KEY RoomHasSet_ibfk_2;
 
 RENAME TABLE RoomHasSet TO RoomHasSet_obsolete;
 RENAME TABLE RoomHasSet_tmp to RoomHasSet;
 
 ALTER TABLE RoomHasSet 
-	ADD CONSTRAINT RoomHasSet_ibfk_1 FOREIGN KEY (roomid) REFERENCES rooms (roomid);
+	ADD CONSTRAINT RoomHasSet_ibfk_1 FOREIGN KEY (roomid) REFERENCES Rooms (roomid);
 ALTER TABLE RoomHasSet 
-	ADD CONSTRAINT RoomHasSet_ibfk_2 FOREIGN KEY (roomsetid) REFERENCES roomsets (roomsetid);
+	ADD CONSTRAINT RoomHasSet_ibfk_2 FOREIGN KEY (roomsetid) REFERENCES RoomSets (roomsetid);
 
 ##When you are sure it worked, (or in a later patch), drop the old _obsolete table
 ##DROP TABLE RoomHasSet_obsolete;
