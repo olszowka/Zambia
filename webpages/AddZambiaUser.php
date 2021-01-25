@@ -224,10 +224,11 @@ EOD;
         array('roles' => array($loggedInUserBadgeId))
     );
 }
-if (is_null($paramArray['permissionRoles'])) {
+if (!array_key_exists('permissionRoles', $paramArray)) {
     $paramArray['permissionRoles'] = array();
 }
 ArrayToXML('selectedRoles', $paramArray['permissionRoles'], $XMLDoc);
+unset($paramArray['permissionRoles']);
 // following line for debugging only
 // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $XMLDoc->saveXML(), "i"));
 RenderXSLT('AddZambiaUser.xsl', $paramArray, $XMLDoc);
