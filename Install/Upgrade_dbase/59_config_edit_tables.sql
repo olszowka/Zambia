@@ -39,4 +39,21 @@ WHERE permatomtag IN ('ce_Credentials', 'ce_Roles', 'ce_KidsCategories',
 	'ce_Features', 'ce_Services', 'ce_EmailFrom', 'ce_EmailTo',
 	'ce_EmailCC');
 
+ALTER TABLE RegTypes RENAME RegTypes_obsolete;
+
+CREATE TABLE RegTypes (
+  regtypeid int NOT NULL AUTO_INCREMENT,
+  display_order int NULL DEFAULT 0,
+  regtype varchar(40) NOT NULL DEFAULT '',
+  message varchar(100) DEFAULT NULL,
+  PRIMARY KEY (regtypeid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO RegTypes(regtype, message)
+SELECT regtype, message 
+FROM RegTypes_obsolete;
+
+CREATE UNIQUE INDEX RegTypes_Regtype
+ON RegTypes(regtype);
+
 INSERT INTO PatchLog (patchname) VALUES ('59_config_edit_tables.sql');
