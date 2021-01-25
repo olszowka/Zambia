@@ -63,7 +63,7 @@ EOD;
     }
 
     // check for any survey stuff defined, before doing survey queries
-    $sql = "SELECT COUNT(*) AS questions FROM SurveyQuestionConfig;";
+    $sql = "SELECT COUNT(*) AS questions FROM SurveyQuestionConfig WHERE searchable = 1;";
     $result = mysqli_query_exit_on_error($sql);
     $row = mysqli_fetch_assoc($result);
     if ($row)
