@@ -26,18 +26,19 @@ if (isLoggedIn() && may_I("Administrator")) {
 EOD;
         $result = mysqli_query_exit_on_error($sql);
 		echo '<script type="text/javascript">' . "\n";
-		echo "defaultOptions = {\n";
-
+		
+		$do = "defaultOptions = {\n";
 		$cur_typename = "";
 		$cur_config = "[";
-
+		$rowcount = 0;
         while ($row = mysqli_fetch_assoc($result)) {
 			$typename = $row["shortname"];
             $config = $row["config"];
+			$rowcount++;
 
 			if ($typename != $cur_typename) {
                 if ($cur_typename != "") {
-                    echo $cur_typename . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
+                    $do .= $cur_typename . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
                 }
 				$cur_config = "[";
                 $cur_typename = $typename;
@@ -45,7 +46,11 @@ EOD;
 			$cur_config = $cur_config . $config . ",\n";
         }
         mysqli_free_result($result);
-		echo $typename . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '"' . "\n};\n";
+		if ($rowcount > 0)
+			$do .= $typename . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '"' . "\n};\n";
+		else
+			$do .= "};\n";
+		echo $do;
 
 // json of current questions and question options
 	$paramArray = array();
@@ -103,10 +108,11 @@ EOD;
 
 	$cur_qid = "";
     $cur_config = "[";
-
+	$rowcount = 0;
     while ($row = mysqli_fetch_assoc($result)) {
         $qid = $row["questionid"];
         $config = $row["optionconfig"];
+		$rowcount++;
 
         if ($qid != $cur_qid) {
             if ($cur_qid != "") {
@@ -118,8 +124,8 @@ EOD;
         $cur_config = $cur_config . $config . ",\n";
     }
     mysqli_free_result($result);
-
-	echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '"' . "\n";
+	if ($rowcount > 0)
+		echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '"' . "\n";
 	echo "};\n</script>\n";
 
 	// start of display portion

@@ -7,6 +7,7 @@
   <xsl:import href="renderSurveySearch.xsl"/>
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
   <xsl:param name="surveys" select="'0'"/>
+  <xsl:param name="SurveyUsed" select="'0'"/>
 	<xsl:template match="/">
 		<xsl:variable name="editSessionNotes" select="doc/parameters/@editSessionNotes = 'true'" />
     <div id="message" alert-dismissible="true" fade="true" show="true" class="alert mt-4 alert-success" style="display: none;">
@@ -92,11 +93,15 @@
         <div class="col col-auto">
           <label for="partDropdown">Assign participant not indicated as interested or invited.</label>
         </div>
-        <div class="col col-auto">
-          <button type="button" id="showhideSurveyFilter" class="btn btn-secondary" onclick="toggleShowFilter();">Show Survey Filter</button>
-        </div>
+        <xsl:if test="$SurveyUsed = '1'">
+          <div class="col col-auto">
+            <button type="button" id="showhideSurveyFilter" class="btn btn-secondary" onclick="toggleShowFilter();">Show Survey Filter</button>
+          </div>
+        </xsl:if>
       </div>
-      <xsl:apply-imports/>
+      <xsl:if test="$SurveyUsed = '1'">
+        <xsl:apply-imports/>
+      </xsl:if>
       <div class="row mt-4" id="assign-participant-row">
         <div class="col col-5">
           <span id="popover-target"></span>

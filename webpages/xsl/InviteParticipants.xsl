@@ -7,6 +7,7 @@
   <xsl:param name="controliv" select="''"/>
   <xsl:param name="UpdateMessage" select="''"/>
   <xsl:param name="MessageAlertType" select="'success'"/>
+  <xsl:param name="SurveyUsed" select="'0'"/>
   <xsl:template match="/">
     <div id="message" alert-dismissible="true" fade="true" show="true">
       <xsl:attribute name="class">
@@ -63,6 +64,8 @@
         <button class="btn btn-primary" id="invite" type="button" name="Invite" value="0" onclick="invite();">Invite</button>
       </div>
     </div>
+    <xsl:if test="$SurveyUsed = '1'">
       <xsl:apply-imports/>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
