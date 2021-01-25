@@ -132,7 +132,7 @@ EOD;
         $message_error .= "Failed adding Program Participant Role - get help.<br />\n";
         return false;
     }
-    
+
     // TODO: Add code to support other roles if user has permission and data set.
 
     $message = "User {$paramArray["badgeid"]}: {$paramArray["firstname"]} {$paramArray["lastname"]}, " .
@@ -195,7 +195,7 @@ $paramArray["errorMessage"] = $message_error;
 $queryArr = array();
 if ($mayIEditAllRoles) {
     $queryArr['roles'] = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid
     FROM
         PermissionRoles PR
@@ -227,7 +227,7 @@ EOD;
 if (is_null($paramArray['permissionRoles'])) {
     $paramArray['permissionRoles'] = array();
 }
-addArrayToXML($paramArray['permissionRoles'], 'selectedRoles', $XMLDoc);
+ArrayToXML('selectedRoles', $paramArray['permissionRoles'], $XMLDoc);
 // following line for debugging only
 // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $XMLDoc->saveXML(), "i"));
 RenderXSLT('AddZambiaUser.xsl', $paramArray, $XMLDoc);
