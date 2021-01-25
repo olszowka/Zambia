@@ -61,6 +61,17 @@ EOD;
         staff_footer();
         exit();
     }
+
+    // check for any survey stuff defined, before doing survey queries
+    $sql = "SELECT COUNT(*) AS questions FROM SurveyQuestionConfig;";
+    $result = mysqli_query_exit_on_error($sql);
+    $row = mysqli_fetch_assoc($result);
+    if ($row)
+        $SurveyUsed = $row["questions"]  > 0;
+    else
+        $SurveyUsed = false;
+
+    mysqli_free_result($result);
     $queryArray["timestampsetup1"] = "SET @maxcr = (SELECT max(createdts) FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid);";
     $queryArray["timestampsetup2"] = "SET @maxin = (SELECT max(inactivatedts) FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid);";
     $queryArray["maxtimestamp"] = "SELECT IF(@maxcr IS NULL, @maxin, IF(@maxin IS NULL, @maxcr, IF(@maxcr > @maxin, @maxcr, @maxin))) AS maxtimestamp;";
@@ -154,20 +165,22 @@ ORDER BY
 	P.pubsname ASC;
 EOD;
     }
-    $queryArray['questions'] = <<<EOD
+    if ($SurveyUsed) {
+        $queryArray['questions'] = <<<EOD
 SELECT s.questionid, s.shortname, s.hover, t.shortname as typename
-FROM surveyquestionconfig s
-JOIN surveyquestiontypes t USING (typeid)
+FROM SurveyQuestionConfig s
+JOIN SurveyQuestionTypes t USING (typeid)
 WHERE searchable = 1
 ORDER BY s.display_order;
 EOD;
-    $queryArray['options'] = <<<EOD
+        $queryArray['options'] = <<<EOD
 SELECT o.questionid, o.ordinal, o.optionshort, o.optionhover, o.value
-FROM surveyquestionoptionconfig o
-JOIN surveyquestionconfig s USING (questionid)
+FROM SurveyQuestionoptionConfig o
+JOIN SurveyQuestionConfig s USING (questionid)
 WHERE s.searchable = 1
 ORDER by o.questionid, o.display_order
 EOD;
+    }
     if (($resultXML = mysql_query_XML($queryArray)) === false) {
         if (!isset($message_error)) {
             $message_error = "";
@@ -177,45 +190,46 @@ EOD;
         staff_footer();
         exit();
     }
-    
-    // get any questions that need programically create options
-	$sql = <<<EOD
-		SELECT d.questionid, t.shortname as typename, min_value, max_value, ascending
-		FROM SurveyQuestionConfig d
-		JOIN SurveyQuestionTypes t USING (typeid)
-		WHERE t.shortname = 'monthyear';
+    if ($SurveyUsed) {
+        // get any questions that need programically create options
+	    $sql = <<<EOD
+SELECT d.questionid, t.shortname as typename, min_value, max_value, ascending
+FROM SurveyQuestionConfig d
+JOIN SurveyQuestionTypes t USING (typeid)
+WHERE t.shortname = 'monthyear';
 EOD;
-	$result = mysqli_query_exit_on_error($sql);
-	while ($row = mysqli_fetch_assoc($result)) {
-        // build xml array from begin to end
-        $options = [];
-        $question_id = $row["questionid"];
-        if ($row["ascending"] == 1) {
-            $next = $row["min_value"];
-            $end = $row["max_value"];
-            while ($next <= $end) {
-                $ojson = new stdClass();
-                $ojson->questionid = $question_id;
-                $ojson->value = $next;
-                $ojson->optionshort = $next;
-                $options[] = $ojson;
-                $next = $next + 1;
+	    $result = mysqli_query_exit_on_error($sql);
+	    while ($row = mysqli_fetch_assoc($result)) {
+            // build xml array from begin to end
+            $options = [];
+            $question_id = $row["questionid"];
+            if ($row["ascending"] == 1) {
+                $next = $row["min_value"];
+                $end = $row["max_value"];
+                while ($next <= $end) {
+                    $ojson = new stdClass();
+                    $ojson->questionid = $question_id;
+                    $ojson->value = $next;
+                    $ojson->optionshort = $next;
+                    $options[] = $ojson;
+                    $next = $next + 1;
+                }
             }
-        }
-        else {
-            $next = $row["max_value"];
-            $end = $row["min_value"];
-            while ($next >= $end) {
-                $ojson = new stdClass();
-                $ojson->questionid = $question_id;
-                $ojson->value = $next;
-                $ojson->optionshort = $next;
-                $options[] = $ojson;
-                $next = $next - 1;
+            else {
+                $next = $row["max_value"];
+                $end = $row["min_value"];
+                while ($next >= $end) {
+                    $ojson = new stdClass();
+                    $ojson->questionid = $question_id;
+                    $ojson->value = $next;
+                    $ojson->optionshort = $next;
+                    $options[] = $ojson;
+                    $next = $next - 1;
+                }
             }
+            //var_error_log($options);
+            $resultXML = ObjecttoXML('years', $options, $resultXML);
         }
-        //var_error_log($options);
-        $resultXML = ObjecttoXML('years', $options, $resultXML);
     }
     if (DBVER > "8") {
         $otherParticipantsQuery = <<<EOD
@@ -316,6 +330,7 @@ EOD;
     }
     $paramArray = array();
     $paramArray['surveys'] = $SurveysAnswered;
+    $paramArray["SurveyUsed"] = $SurveyUsed ? "1" : "0";
     //echo($resultXML->saveXML()); //for debugging only
     RenderXSLT('StaffAssignParticipants.xsl', $paramArray, $resultXML);
 }
