@@ -160,7 +160,7 @@ function validate_session() {
         $messages .= "Estimated attendance must be a positive integer or blank.<br>\n";
         $flag = false;
     }
-    if ($session["track"] == 0) {
+    if ($session["track"] == 0 && TRACK_TAG_USAGE !== "TAG_ONLY") {
         $messages .= "Please select a track.<br>\n";
         $flag = false;
     }
@@ -208,7 +208,7 @@ function validate_session() {
         $messages .= "Please select a room set.<br>\n";
         $flag = false;
     }
-    if ($session["track"] == 0 || $session["track"] == 99) { // don't allow "Unspecified"
+    if (($session["track"] == 0 || $session["track"] == 99) && TRACK_TAG_USAGE !== "TAG_ONLY") { // don't allow "Unspecified"
         $messages .= "Please select a track.<br>\n";
         $flag = false;
     }
