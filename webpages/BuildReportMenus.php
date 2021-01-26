@@ -67,6 +67,20 @@ ksort($reportCategories, SORT_NATURAL);
 $reportMenuFilHand = fopen('ReportMenuInclude.php', 'wb');
 $reportMenuBS4FilHand = fopen('ReportMenuBS4Include.php', 'wb');
 $staffReportsICIFilHand = fopen('staffReportsInCategoryInclude.php', 'wb');
+if ($reportMenuFilHand === false || $reportMenuBS4FilHand === false || $staffReportsICIFilHand === false) {
+    staff_header($title, true);
+?>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="alert alert-danger" role="alert">
+                Build Reports Failed: invalid permissions, check installation of Zambia.
+            </div>
+        </div>
+    </div>
+<?php
+    staff_footer();
+    return;
+}
 fwrite($staffReportsICIFilHand, "<?php\n");
 fwrite($staffReportsICIFilHand, "\$reportCategories = array();\n");
 foreach ($reportCategories as $reportCategory => $reportCategoryArray) {
