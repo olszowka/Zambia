@@ -5,8 +5,11 @@ $title = "Reports in Category";
 require_once('StaffCommonCode.php');
 $CON_NAME = CON_NAME;
 $reportcategoryid = getString("reportcategory");
+if ($reportcategoryid === null)
+    $reportcategoryid = "";
+
 $prevErrorLevel = error_reporting();
-$tempErrorLevel = $prevErrorLevel && ~ E_WARNING;
+$tempErrorLevel = $prevErrorLevel & ~ E_WARNING;
 error_reporting($tempErrorLevel);
 $includeFile = 'staffReportsInCategoryInclude.php';
 if (!include $includeFile) {
