@@ -199,7 +199,7 @@ function opentable(tabledata) {
     indexcol = 'display_order';
     displayorder_found = false;
     initialsort = new Array();
-    columns.push({ rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 });
+    columns.push({ rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30, maxWidth:30 });
     tableschema.forEach(function (column) {
         if (column.COLUMN_KEY == 'PRI') {
             indexcol = column.COLUMN_NAME;
@@ -229,8 +229,7 @@ function opentable(tabledata) {
         } else if (column.DATA_TYPE == 'int')
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
-                editor: "number", minWidth: 50, hozAlign: "right",
-                headerSort: true
+                editor: "number", minWidth: 50, hozAlign: "right", 
             });
         else if (column.DATA_TYPE == 'text') {
             width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
@@ -247,7 +246,6 @@ function opentable(tabledata) {
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
                 editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
-                headerSort: true
             });
         }
     });
@@ -362,7 +360,7 @@ function SaveTable() {
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
     document.getElementById("message").style.display = 'none';
-
+    console.log(table.getData());
     var postdata = {
         ajax_request_action: "updatetable",
         tabledata: btoa(JSON.stringify(table.getData())),
