@@ -12,7 +12,7 @@ $tagmatch = getString('tagmatch');
 if (TRACK_TAG_USAGE !== "TAG_ONLY")
     $addtrack = "T.trackname,";
 else
-    $addtract = "";
+    $addtrack = "";
 // List of sessions that match search criteria
 // Includes sessions in which participant is already interested if they do match match search
 // Use "Session Interests" page to just see everything in which you are interested
