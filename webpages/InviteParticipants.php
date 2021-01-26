@@ -66,7 +66,7 @@ ORDER BY s.display_order;
 EOD;
         $query['options'] = <<<EOD
 SELECT o.questionid, o.ordinal, o.optionshort, o.optionhover, o.value
-FROM SurveyQuestionoptionConfig o
+FROM SurveyQuestionOptionConfig o
 JOIN SurveyQuestionConfig s USING (questionid)
 WHERE s.searchable = 1
 ORDER by o.questionid, o.display_order
