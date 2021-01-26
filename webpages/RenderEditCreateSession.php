@@ -51,10 +51,20 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <select name="divisionid" class="span2">
                     <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
                 </select>
+<?php
+    if (TRACK_TAG_USAGE !== "TAG_ONLY") {
+?>
                 <label class="control-label" for="track">Track: </label>
                 <select name="track" class="span2">
                     <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
                 </select>
+<?php
+    } else {
+?>
+                <input type="hidden" name="track" value="0"/>
+<?php
+    }
+?>
                 <label class="control-label" for="type">Type: </label>
                 <select name="type" class="span2">
                     <?php populate_select_from_table("Types", $session["type"], "SELECT", FALSE); ?>
@@ -192,6 +202,9 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </div>
                 </div>
             </div> <!-- Services -->
+<?php
+    if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
+?>
             <div class="span2" style="float: left;"> 
                 <label class="control-label" for="tagdest">Tags:
                     <select class="span12" id="tagdest" name="tagdest[]" multiple>
@@ -199,6 +212,13 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     </select>
                 </label>
             </div>
+<?php
+    } else {
+?>
+            <input type="hidden" name="tagdest[]" value="" />
+<?php
+    }
+?>
         </div>
         <hr class="nospace" />
         <div class="row-fluid form-vertical">
