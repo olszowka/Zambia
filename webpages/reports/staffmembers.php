@@ -39,7 +39,11 @@ EOD;
             $badPasswordArr[] = "'{$resultObj->badgeid}'";
         }
     }
-    $badPasswordList = implode(',', $badPasswordArr);
+    if (count($badPasswordArr) > 0)
+        $badPasswordList = implode(',', $badPasswordArr);
+    else
+        $badPasswordList = '-99999999';
+    
     $report['queries']['bad_password'] = "SELECT badgeid FROM Participants WHERE badgeid IN ($badPasswordList);";
 }
 

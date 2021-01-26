@@ -186,7 +186,7 @@ function get_participant_availability_from_post() {
 function get_session_from_post() {
     global $session;
     $session["sessionid"] = getInt('sessionid');
-    $session["track"] = getInt('track');
+    $session["track"] = getInt('track', 0);
     $session["type"] = getInt('type');
     $session["divisionid"] = getInt('divisionid');
     $session["pubstatusid"] = getInt('pubstatusid');

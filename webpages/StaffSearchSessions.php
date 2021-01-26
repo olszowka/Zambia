@@ -4,12 +4,16 @@
     $title = "Search Sessions";
     require_once('StaffCommonCode.php');
     staff_header($title);
+    if (may_I('Staff')) {
 ?>
 
 <div class="row-fluid">
     <form method=POST action="ShowSessions.php" class="well form-horizontal">
         <fieldset>
         <p class="">Session Search (shows same data as Precis View for each session):</p>
+<?php
+        if (TRACK_TAG_USAGE !== "TAG_ONLY") {
+?>
         <div class="control-group">
             <label for="track" class="control-label">Track: </label>
             <div class="controls">
@@ -18,6 +22,13 @@
               </select>
             </div>
         </div>
+<?php
+        } else {
+?>
+           <input id="track" type="hidden" name="track" Value="0"/>
+<?php
+        }
+?>
         <div class="control-group">
             <label for="type" class="control-label">Type: </label>
             <div class="controls">
@@ -56,6 +67,9 @@
               <P class="help-inline">Leave blank for any</P>
             </div>
         </div>
+<?php
+        if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
+?>
         <div class="control-group control-group-horizontal">
             <label for="tags" class="control-label">Tags:</label>
             <div class="controls">
@@ -73,8 +87,18 @@
                 <label>Select no tags to match everything</label>
             </div>
         </div>
+<?php
+        } else {
+?>
+            <input id="tags" type="hidden" name="tags[]" value="" />
+<?php
+        }
+?>
         <button type="submit" value="search" class="btn btn-primary">Search</button>
       </fieldset>
     </form>
 </div>
-<?php staff_footer(); ?>
+<?php
+    }
+    staff_footer(); 
+?>

@@ -20,8 +20,12 @@ function RenderPrecis($result, $showlinks) {
             echo "<a href=\"StaffAssignParticipants.php?selsess=" . $sessionid . "\">" . $sessionid . "</a>";
         }
         echo "&nbsp;&nbsp;</td>\n";
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $trackname . "</td>\n";
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $typename . "</td>\n";
+        if (TRACK_TAG_USAGE !== "TAG_ONLY") {
+            echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $trackname . "</td>\n";
+            echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $typename . "</td>\n";
+        } else {
+            echo "  <td class=\"border0000\" colspan=\"2\" style=\"font-weight:bold\">" . $typename . "</td>\n";
+        }
         echo "  <td class=\"border0000\" style=\"font-weight:bold\">";
         if ($showlinks) {
             echo "<a href=\"EditSession.php?id=" . $sessionid . "\">" . htmlspecialchars($title, ENT_NOQUOTES) . "</a>";
