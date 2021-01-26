@@ -203,9 +203,9 @@ function opentable(tabledata) {
     tableschema.forEach(function (column) {
         if (column.COLUMN_KEY == 'PRI') {
             indexcol = column.COLUMN_NAME;
-            initialsort.push({ column: column.COLUMN_NAME, dir: "asc" });
+            initialsort.push({ column: indexcol, dir: "asc" });
             columns.push({
-                title: column.COLUMN_NAME, field: column.COLUMN_NAME,
+                title: indexcol, field: indexcol,
                 visible: false
             });
         } else if (column.COLUMN_NAME == 'display_order') {
@@ -259,7 +259,7 @@ function opentable(tabledata) {
     });
     //console.log(columns);
     
-    if (displayorder_found) {
+    if (display_order) {
         initialsort = new Array();
         initialsort.push({ column: "display_order", dir: "asc" });
     }
