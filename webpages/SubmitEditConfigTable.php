@@ -221,7 +221,7 @@ function fetch_table($tablename, $message) {
 SELECT TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
 FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE TABLE_SCHEMA = '$db' AND (TABLE_NAME = '$tablename' OR REFERENCED_TABLE_NAME = '$tablename')
-    AND CONSTRAINT_NAME != 'PRIMARY'
+    AND CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_COLUMN_NAME != ''
 ORDER BY COLUMN_NAME, TABLE_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
 EOD;
     $foreign_keys = array();
@@ -277,7 +277,7 @@ EOD;
                     if ($joinclause == "")
                         $joinclause = "LEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
                     else {
-                        $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
+                        $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\nLEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
                         if ($occurs != "")
                             $occurs .= "+";
                         $occurs .= "SUM$curfield.occurs";
@@ -292,7 +292,7 @@ EOD;
             else
                 $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
             $union = "UNION ALL";
-        }
+        }        
         if (DBVER >= "8") {
             $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
             $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
