@@ -261,7 +261,7 @@ WITH AnsweredSurvey(participantid, answercount) AS (
     WHERE participantid = "$searchString"
 )
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio,
+	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
@@ -277,7 +277,7 @@ EOD;
         } else {
             $query["searchParticipants"] = <<<EOD
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio,
+	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
@@ -305,7 +305,7 @@ WITH AnsweredSurvey(participantid, answercount) AS (
     FROM ParticipantSurveyAnswers
 )
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio,
+	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
@@ -324,7 +324,7 @@ EOD;
         } else {
              $query = <<<EOD
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio,
+	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
