@@ -74,7 +74,7 @@ function getInt($name, $default = false) {
         return $default;
     }
     $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
-    if (empty($t)) {
+    if (empty($t) && $t !== 0) {
         return $default;
     } else {
         return(intval($t));
@@ -186,7 +186,7 @@ function get_participant_availability_from_post() {
 function get_session_from_post() {
     global $session;
     $session["sessionid"] = getInt('sessionid');
-    $session["track"] = getInt('track', 0);
+    $session["track"] = getInt('track');
     $session["type"] = getInt('type');
     $session["divisionid"] = getInt('divisionid');
     $session["pubstatusid"] = getInt('pubstatusid');
