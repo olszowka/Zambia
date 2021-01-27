@@ -49,6 +49,8 @@ function update_participant() {
     $participantBadgeId = getString("badgeid");
     $password = getString("password");
     $bio = getString("bio");
+    if (HTML_BIO === TRUE)
+        $htmlbio = getString("htmlbio");
     $pubsname = getString("pubsname");
     $staffnotes = getString("staffnotes");
     $interested = getInt("interested", NULL);
@@ -61,6 +63,8 @@ function update_participant() {
         if (!is_null($password)) {
             push_query_arrays(password_hash($password, PASSWORD_DEFAULT), 'password', 's', 254, $query_portion_arr, $query_param_arr, $query_param_type_str);
         }
+        if (HTML_BIO === true)
+            push_query_arrays($htmlbio, 'htmlbio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($bio, 'bio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($pubsname, 'pubsname', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($staffnotes, 'staff_notes', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
@@ -89,7 +93,7 @@ function update_participant() {
     $poststate = getString("poststate");
     $postzip = getString("postzip");
     $postcountry = getString("postcountry");
-    
+
     if (!is_null($lastname) || !is_null($firstname) || !is_null($badgename) || !is_null($phone) || !is_null($email) || !is_null($postaddress1)
         || !is_null($postaddress2) || !is_null($postcity) || !is_null($poststate) || !is_null($postzip) || !is_null($postcountry)) {
         if (USE_REG_SYSTEM) {
@@ -101,7 +105,7 @@ function update_participant() {
         $query = <<<EOD
 UPDATE CongoDumpHistory
     SET inactivatedts = CURRENT_TIMESTAMP, inactivatedbybadgeid = ?
-    WHERE 
+    WHERE
             badgeid = ?
         AND inactivatedts IS NULL;
 EOD;
