@@ -102,7 +102,8 @@ function chooseParticipant(badgeid, override) {
     var postcountry = $("#postcountryHID_" + badgeidJQSel).val();
     $postcountry.val(postcountry).prop("defaultValue", postcountry).prop("readOnly", false);
     $("#lname_fname").val($("#lnameSPAN_" + badgeidJQSel).text());
-    $badgename.val($("#bnameSPAN_" + badgeidJQSel).text());
+    var badgename = $("#bnameSPAN_" + badgeidJQSel).text();
+    $badgename.val(badgename).prop("defaultValue", badgename).prop("readOnly", false);
     var pubsname = $("#pnameSPAN_" + badgeidJQSel).text();
     $pubsname.val(pubsname).prop("defaultValue", pubsname).prop("readOnly", false);
     $('#warnName').html(pubsname);
@@ -421,7 +422,7 @@ function processChange() {
             staffnotesDirty = ($staffnotes.val() !== $staffnotes.prop("defaultValue"));
             break;
         case 'pubsname':
-            pubsnameDirty = ($staffnotes.val() !== $staffnotes.prop("defaultValue"));
+            pubsnameDirty = ($pubsname.val() !== $pubsname.prop("defaultValue"));
             break;
         case 'lastname':
             lastnameDirty = ($lastname.val() !== $lastname.prop("defaultValue"));
