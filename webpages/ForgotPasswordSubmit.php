@@ -179,12 +179,24 @@ if ($ok) {
         $sendMailResult = $mailer->send($message);
     } catch (Swift_TransportException $e) {
         $ok = FALSE;
-        error_log("Swift transport exception: send email failed.");
+        error_log("Swift transport exception: send email failed, adding to queue.");
+        $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailsubject, body, status) VALUES(?, ?, ?, ?, ?);";
+        $param_arr = array($email, $fromAddress, $subjectLine, $emailBody, $e->getCode());
+        $types = "ssssi";
+        $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
     } catch (Swift_SwiftException $e) {
         $ok = FALSE;
-        error_log("Swift exception: send email failed.");
+        error_log("Swift exception: send email failed, adding to queue.");
+        $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailsubject, body, status) VALUES(?, ?, ?, ?, ?);";
+        $param_arr = array($email, $fromAddress, $subjectLine, $emailBody, $e->getCode());
+        $types = "ssssi";
+        $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
     }
 }
+$sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailsubject, status) VALUES(?, ?, ?, ?);";
+$param_arr = array($email, $fromAddress, $subjectLine, $ok);
+$types = "sssi";
+$rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
 
 // regular response is name as error response above
 RenderXSLT('ForgotPasswordResponse.xsl', $responseParams);
