@@ -7,6 +7,9 @@ require_once('StaffCommonCode.php'); //reset connection to db and check if logge
 require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
 global $title, $message, $link;
+if (!(isLoggedIn() && may_I("SendEmail"))) {
+    exit(0);
+}
 if (isset($_POST['sendto'])) { // page has been visited before
 // restore previous values to form
     $email = get_email_from_post();
@@ -22,6 +25,10 @@ if (empty($_POST['navigate']) || $_POST['navigate']!='send') {
 // render_send_email_engine($email,$message_warning);
 $title = "Staff Send Email";
 $timeLimitSuccess = set_time_limit(600);
+if (SMTP_QUEUEONLY === TRUE) {
+    $bootstrap4 = true;
+    staff_header($title, $bootstrap4);
+}
 if (!$timeLimitSuccess) {
 	RenderError("Error extending time limit.");
 	exit(0);
@@ -106,16 +113,39 @@ for ($i=0; $i<$recipient_count; $i++) {
     if ($emailcc != "") {
         $message->addBcc($emailcc);
     }
-    try {
-        $mailer->send($message);
-    } catch (Swift_SwiftException $e) {
-        echo $e->getMessage() . "<br>\n";
-        $ok = FALSE;
+    if (SMTP_QUEUEONLY === TRUE) {
+        $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailcc, emailsubject, body, status) VALUES(?, ?, ?, ?, ?, ?);";
+        $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $emailverify['body'], 0);
+        $types = "sssssi";
+        $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+        if ($rows == 1)
+            echo "Queued<br>";
+        else
+            echo "Queue failed<br>";
+    } else {
+        try {
+            $mailer->send($message);
+        }
+        catch (Swift_SwiftException $e) {
+            echo $e->getMessage() . ", adding to queue<br>\n";
+            $ok = FALSE;
+            $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailcc, emailsubject, body, status) VALUES(?, ?, ?, ?, ?, ?);";
+            $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $emailverify['body'], $e->getCode());
+            $types = "sssssi";
+            $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+        }
+        if ($ok == TRUE) {
+            echo "Sent<br>";
+        }
     }
-    if ($ok == TRUE) {
-        echo "Sent<br>";
-    }
+    $sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailcc, emailsubject, status) VALUES(?, ?, ?, ?, ?);";
+    $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $ok);
+    $types = "ssssi";
+    $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
 }
 //$log =& Swift_LogContainer::getLog();
 //echo $log->dump(true);
+if (SMTP_QUEUEONLY === TRUE) {
+    staff_footer();
+}
 ?>

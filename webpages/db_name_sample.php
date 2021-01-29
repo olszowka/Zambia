@@ -30,6 +30,7 @@ define("SMTP_PORT", "587"); // Likely options are "587", "2525", "25", or "465".
 define("SMTP_PROTOCOL", "TLS"); // Options are "", "SSL", or "TLS".  Blank/Default is no encryption. See documentation for your mail relay service.
 define("SMTP_USER", "foo"); // Use "" to skip authentication. See documentation for your mail relay service.
 define("SMTP_PASSWORD", "bar"); // Use "" to skip authentication. See documentation for your mail relay service.
+define("SMTP_QUEUEONLY", FALSE); // TRUE = add to DB queue, schedule processEmailQueue.php as a cron job do the send, FALSE send immediately, add to queue only on transport failure
 define("PREF_TTL_SESNS_LMT", 10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT", 5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS", 8); // Number of rows of availability records to render
