@@ -13,6 +13,9 @@ function MyProfile() {
 	var $submitBTN;
 	var $bioTextarea;
 	var $resultBoxDiv;
+	var $uploadZone = null;
+	var $uploadPhoto = null;
+	var uploadLock = false;
 	
     this.validatePW = function validatePW() {
 		pw = $password.val();
@@ -75,6 +78,55 @@ function MyProfile() {
 		$("textarea.mycontrol").on("input", boundAnyChange);
 		$resultBoxDiv = $("#resultBoxDIV");
 		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		if (window.File && window.FileReader && window.FileList && window.Blob) {
+			$uploadZone = document.getElementById("photoUploadArea");
+			$uploadPhoto = document.getElementById("uploadedPhoto");
+			// hover
+			$uploadPhoto.addEventListener("dragenter", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				$uploadZone.classList.remove('alert-secondary');
+				$uploadZone.classList.add('alert-dark');
+			});
+			$uploadPhoto.addEventListener("dragleave", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				$uploadZone.classList.remove('alert-dark');
+				$uploadZone.classList.add('alert-secondary');
+			});
+			// upload
+			$uploadPhoto.addEventListener("dragover", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+			});
+			$uploadPhoto.addEventListener("drop", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				$uploadZone.classList.remove('alert-dark');
+				$uploadZone.classList.add('alert-secondary');
+				$message = "";
+				if (uploadLock) {
+					message = "Upload already in progress, please wait";
+				} else if (e.dataTransfer.files.length == 1) {
+					f = e.dataTransfer.files[0];
+					if (!f.type.match(/image\/(jpeg|png)/i)) {
+						$message = "Only jpg and png files allowed";
+					} else if (f.name.match(/\.(jpg|jpeg|png)$/i))
+						myProfile.starttransfer(f);
+					else
+						$message = "Only jpg and png files allowed";
+				} else {
+					$message = "Drag only one picture";
+				}
+				if ($message) {
+					var content;
+					content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">$message.</div></div></div>`;
+					$resultBoxDiv.html(content).css("visibility", "visible");
+					document.getElementById("resultBoxDIV").scrollIntoView(false);
+				}
+			});
+		};
+
 	};
 
     this.updateBUTN = function updateBUTN() {
@@ -141,6 +193,23 @@ function MyProfile() {
         }
         $resultBoxDiv.html(content).css("visibility", "visible");
         document.getElementById("resultBoxDIV").scrollIntoView(false);
-    };
+	};
+
+	this.transfercomplete = function transfercomplete(data, textStatus, jqXHR) {
+	}
+
+	this.starttransfer = function starttransfer(f) {
+		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		uploadLock = true;
+		xhr = new XMLHttpRequest();
+		xhr.open("POST", "SubmitMyContact.php");
+		xhr.onload = myProfile.transfercomplete;
+		xhr.onerror = myProfile.showAjaxError;
+		data = new FormData();
+		data.append('ajax_request_action', 'uploadPhoto');
+		data.append('photo', f);
+		console.log(data);
+		xhr.send(data);
+	};
 
 }

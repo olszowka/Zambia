@@ -71,7 +71,7 @@ define("REG_PART_PREFIX", "");
 // Items for Photo Upload/Approval
 define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
 define("PHOTO_UPLOAD_DIRECTORY", "../upload_photos");  // outside of web server path, only served by PHP
-define("PHOTO_PUBLIC_DIRECTORY", "/webpages/participant_photos"); // inside of web server path, can be served outside of PHP
+define("PHOTO_PUBLIC_DIRECTORY", "/participant_photos"); // inside of web server path, can be served outside of PHP
 define("PHOTO_FILE_TYPES", "jpg,png"); // comma separated list of allowed file types/suffixes (will be verified by PHP)
 define("PHOTO_DIMENSIONS", "200,200,800,800,1048576"); // comma separated list min width/height, max width/height, file size
 define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participants without photo

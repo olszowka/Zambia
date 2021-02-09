@@ -19,6 +19,22 @@ CREATE TABLE PhotoDenialReasons (
   PRIMARY KEY (photodenialreasonid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE PhotoUploadStatus (
+  photouploadstatus int NOT NULL,
+  statustext varchar(64) NOT NULL,
+  photoneedsapproval tinyint DEFAULT '0',
+  photoapproved tinyint DEFAULT '0',
+  PRIMARY KEY (photouploadstatus)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO PhotoUploadStatus (photouploadstatus, statustext, photoneedsapproval, photoapproved)
+VALUES (0, "No photo uploaded", 0, 0),
+(1, "Photo waiting for approval", 1, 0),
+(2, "Updated photo waiting for approval", 1, 1),
+(3, "Denied - see denial reason", 0, 0),
+(4, "Updated photo denied, existing photo still available", 0, 1),
+(5, "Photo approved", 0, 1);
+
 ## Table name is too long for the atom id, lINSERT INTO PermissionAtoms(permatomid, permatomtag, page, notes)
 VALUES
 (2021, 'ce_PhotoDenialReasons', 'Edit Configuration Tables', 'enables edit');
@@ -40,5 +56,11 @@ JOIN PermissionRoles r ON (r.permrolename = 'Administrator')
 WHERE permatomtag = 'ce_PhotoDenialReasons';
 
 ALTER TABLE Participants ADD CONSTRAINT Participants_photodeny FOREIGN KEY (photodenialreasonid) REFERENCES PhotoDenialReasons (photodenialreasonid);
+
+ALTER TABLE Participants ADD CONSTRAINT participantphotostatus_fk
+	FOREIGN KEY (photouploadstatus) REFERENCES PhotoUploadStatus (photouploadstatus);
+
+INSERT INTO CustomText(page, tag, textcontents)
+VALUES ('My Profile', 'photo_note', 'Note: Photos should be of type JPEG (.jpg) or PNG (.png) and should be about 800x800. You will be able to crop and rotate the image. To upload a photo, either drag the file to be uploaded to the upload photo area or click the upload photo button to use a file picker to select the file to upload. All photos uploaded will be reviewed for approval. The approved photo will be available to publications and on-line guides. If you have an approved photo, the new photo uploaded will be added to the review queue and it will replace the approved photo once reviewed and accepted.');
 
 INSERT INTO PatchLog (patchname) VALUES ('60_photos.sql');

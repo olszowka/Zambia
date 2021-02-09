@@ -13,6 +13,9 @@
     <xsl:param name="maxBioLen" select="500"/>
     <xsl:param name="enableBioEdit" select="'0'"/>
     <xsl:param name="userIdPrompt" select="''"/>
+    <xsl:param name="defaultPhotoName" select="''"/>
+    <xsl:param name="approvedPhotoURL" select="''"/>
+    <xsl:param name="enablePhotos" select="'0'"/>
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
         <xsl:variable name="use_photo" select="/doc/query[@queryName='participant_info']/row/@use_photo" />
@@ -21,6 +24,7 @@
         <xsl:variable name="bestway" select="/doc/query[@queryName='participant_info']/row/@bestway" />
         <xsl:variable name="bioNote" select="/doc/customText/@biography_note" />
         <xsl:variable name="regDataNote" select="/doc/customText/@registration_data" />
+        <xsl:variable name="photoNote" select="/doc/customText/@photo_note" />
         <div id="resultBoxDIV">
             <span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span>
         </div>
@@ -278,6 +282,89 @@
                             </div>
                         </div>
                      </xsl:if>
+                  <xsl:if test="$enablePhotos = 1">
+                    <div class="row mt-2">
+                      <div class="col-sm-4 card alert-secondary">
+                        <p class="card-title">
+                          Upload Photo: Drag/Drop file or <button type="button" class="btn btn-secondary btn-sm" id="uploadPhoto">Choose File</button>
+                        </p>
+                        <div class="card-body" id="photoUploadArea">
+                          <img class="upload-image" style="width: 300px;" id="uploadedPhoto">
+                            <xsl:attribute name="src">
+                              <xsl:choose>
+                                <xsl:when test="/doc/query[@queryName='participant_info']/row/@uploadedphotofilename != ''">
+                                  <xsl:text>SubmitMyContact.php?ajax_request_action=fetchPhoto</xsl:text>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:value-of select="$approvedPhotoURL"/>
+                                  <xsl:text>/</xsl:text>
+                                  <xsl:value-of select="$defaultPhotoName"/>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </xsl:attribute>
+                          </img>
+                        </div>
+                      </div>
+                      <div class="col-sm-1"></div>
+                      <div class="col-sm-4 card alert-secondary">
+                        <p class="card-title">Approved Photo</p>
+                        <div class="card-body">
+                          <img class="approved-image" style="width: 300px;">
+                            <xsl:attribute name="src">
+                              <xsl:value-of select="$approvedPhotoURL"/>
+                              <xsl:text>/</xsl:text>
+                              <xsl:choose>
+                                <xsl:when test="/doc/query[@queryName='participant_info']/row/@approvedphotofilename != ''">
+                                  <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@approvedphotofilename"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:value-of select="$defaultPhotoName"/>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </xsl:attribute>
+                          </img>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-5">
+                        <input type="hidden">
+                          <xsl:attribute name="value">
+                            <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@photouploadstatus"/>
+                          </xsl:attribute>
+                        </input>
+                        Photo Status: 
+                        <xsl:choose>
+                          <xsl:when test="/doc/query[@queryName='participant_info']/row/@photouploadstatus = '-1'">No Photo Uploaded</xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@statustext"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </div>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-sm-5">
+                        <button type="button" class="btn btn-danger btn-sm" id="deleteUploadPhoto">
+                          <xsl:if test="string-length(/doc/query[@queryName='participant_info']/row/@uploadedphotofilename) = 0">
+                            <xsl:attribute name="disabled">true</xsl:attribute>
+                          </xsl:if>
+                          Delete Uploaded Photo
+                        </button>
+                      </div>
+                      <xsl:if test="/doc/query[@queryName='participant_info']/row/@approvedphotofilename != ''">
+                        <div class="col-sm-5">
+                          <button type="button" class="btn btn-danger btn-sm" id="deleteApprovedPhoto">
+                            Delete Approved Photo
+                          </button>
+                        </div>
+                      </xsl:if>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-sm-12">
+                        <xsl:value-of select="$photoNote" disable-output-escaping="yes"/>
+                      </div>
+                    </div> 
+                  </xsl:if>
                 </fieldset>
                 <xsl:if test="/doc/query[@queryName='credentials']/row">
                     <fieldset>
@@ -456,7 +543,6 @@
             </form>
         </div>
     </xsl:template>
-
     <xsl:template name="regRowContents">
         <xsl:param name="label" />
         <xsl:param name="value" />
@@ -493,5 +579,4 @@
             </div>
         </div>
     </xsl:template>
-
 </xsl:stylesheet>
