@@ -22,18 +22,21 @@ CREATE TABLE PhotoDenialReasons (
 CREATE TABLE PhotoUploadStatus (
   photouploadstatus int NOT NULL,
   statustext varchar(64) NOT NULL,
-  photoneedsapproval tinyint DEFAULT '0',
-  photoapproved tinyint DEFAULT '0',
   PRIMARY KEY (photouploadstatus)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+## bit 0 = uploaded photo available
+## bit 1 = uploaded photo denied
+## bit 2 = approved photo available
+INSERT INTO PhotoUploadStatus (photouploadstatus, statustext)
+VALUES (0, "No photo uploaded"),
+(1, "Photo waiting for approval"),
+(2, "Denied - see denial reason"),
+(3, "Denied photo replaced, waiting for approval"),
+(4, "Photo approved"),
+(5, "Updated photo waiting for approval"),
+(6, "Updated photo denied and deleted, existing photo still available"),
+(7, "Updated photo denied, existing photo still available");
 
-INSERT INTO PhotoUploadStatus (photouploadstatus, statustext, photoneedsapproval, photoapproved)
-VALUES (0, "No photo uploaded", 0, 0),
-(1, "Photo waiting for approval", 1, 0),
-(2, "Updated photo waiting for approval", 1, 1),
-(3, "Denied - see denial reason", 0, 0),
-(4, "Updated photo denied, existing photo still available", 0, 1),
-(5, "Photo approved", 0, 1);
 
 ## Table name is too long for the atom id, lINSERT INTO PermissionAtoms(permatomid, permatomtag, page, notes)
 VALUES
