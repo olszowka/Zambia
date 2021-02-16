@@ -11,8 +11,8 @@ SELECT
 			CD.postcountry, P.pubsname, P.password, P.bestway, P.interested, P.bio,
 			P.share_email, P.use_photo, P.uploadedphotofilename, P.approvedphotofilename,
 			P.photodenialreasonothertext,
-			CASE WHEN ISNULL(P.photouploadstatus) THEN -1 ELSE P.photouploadstatus END AS photouploadstatus,
-			R.statustext, R.photoapproved, R.photoneedsapproval, D.reasontext
+			CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+			R.statustext, D.reasontext
 	FROM CongoDump CD
 	JOIN Participants P USING (badgeid)
 	LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)

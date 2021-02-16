@@ -214,6 +214,7 @@ function uploadphoto() {
     $fname = $_FILES["photo"]["name"];
     $upload_error = $_FILES["photo"]["error"];
     $upload_size = $_FILES["photo"]["size"];
+    list($min_width, $min_height, $max_width, $max_height, $max_size) = explode(',', PHOTO_DIMENSIONS);
     error_log("source = $source of type $type with status $upload_error");
     if ($upload_error) {
          RenderErrorAjax("Error uploading photo.  Check if too large (Max 2MB)");
@@ -226,11 +227,59 @@ function uploadphoto() {
 
     $ext = pathinfo($fname, PATHINFO_EXTENSION);
     error_log("original name =  $fname, ext = $ext");
+    # get image size for resizing
+    list($up_width, $up_height) = getimagesize($source);
+    error_log("w: $up_width, h: $up_height");
     $dest = getcwd();
     $newname = hash('md5', $badgeid, false) . "." . $ext;
     $dest .= "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $newname;
     error_log("dest = $dest");
-    move_uploaded_file($source, $dest);
+
+    $resize = 1;
+    # check if need to resize
+    if ($up_width < $min_width && $up_height < $min_height) {
+        # resize - too small
+        $resizemin = max($min_width / $up_width, $min_height / $up_height);
+        $resizemax = max($max_width / $up_width, $max_height / $up_height);
+        if (intval($resizemin + 1) > $resizemax)
+            $resize = $resizemin;
+        else
+            $resize = intval($resizemin + 1);
+    }
+    if ($up_width > $max_width && $up_height > $max_height) {
+        # resize - too big
+        $resizemin = max($up_width / $max_height, $up_height / $max_height);
+        $resizemax = max($up_width / $min_height, $up_height / $min_height);
+        if (intval($resizemin + 1) > $resizemax)
+            $resize = 1.0/$resizemin;
+        else
+            $resize = 1.0/intval($resizemin + 1);
+    }
+    error_log("resize: $resize");
+    if ($resize != 1) {
+        if ($ext == 'png')
+            $originalimage = imagecreatefrompng($source);
+        else
+            $originalimage = imagecreatefromjpeg($source);
+
+        $newwidth = intval($up_width * $resize);
+        $newheight = intval($up_height * $resize);
+        error_log("nw: $newwidth, nh: $newheight");
+        $resizedimage = imagecreatetruecolor($newwidth, $newheight);
+        imagecopyresampled($resizedimage, $originalimage, 0, 0, 0, 0, $newwidth, $newheight, $up_width, $up_height);
+        if ($ext == 'png')
+            $result = imagepng($resizedimage, $dest);
+        else
+            $result = imagejpeg($resizedimage, $dest);
+        imagedestroy($resizedimage);
+    }
+    else
+        $result = move_uploaded_file($source, $dest);
+
+    if ($result == false) {
+        RenderErrorAjax("Error with uploaded image, unable to save");
+        exit();
+    }
 
     $sql = <<<EOD
 UPDATE Participants
@@ -238,25 +287,43 @@ SET
     uploadedphotofilename = ?,
     photodenialreasonid = NULL,
     photodenialreasonothertext = NULL,
-    photouploadstatus = CASE
-        WHEN ISNULL(approvedphotofilename) THEN 1
-        WHEN LENGTH(approvedphotofilename) > 0 THEN 2
-    ELSE 1 END
-WHERE badgeid = ?;
 EOD;
+    $sql .= " photouploadstatus = ((photouploadstatus | " . strval(PHOTO_UPLOAD_MASK) . ") &  ~" . strval(PHOTO_DENIED_MASK) . ")\nWHERE badgeid = ?;";
+    error_log($sql);
     $paramarray = array();
-    $paramarray[0] = $newname;
-    $paramarray[1] = $badgeid;
+    $paramarray[] = $newname;
+    $paramarray[] = $badgeid;
     $rows = mysql_cmd_with_prepare($sql, "ss", $paramarray);
-
-    if ($rows == 1)
-        $json_return["message"] = "$fname uploaded";
-    else {
+    if ($rows === false) {
         RenderErrorAjax("Unable to update database");
         exit();
     }
+    if ($rows == 1 || $rows == 0)
+        $json_return["message"] = "$fname uploaded";
+    else {
+        RenderErrorAjax("Error updating database");
+        exit();
+    }
 
-    $json_return["newpath"] = $newname;
+    $sql = <<<EOD
+SELECT CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus, R.statustext
+FROM Participants P
+LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+WHERE badgeid = ?;
+EOD;
+
+    $paramarray = array();
+    $paramarray[] = $badgeid;
+    $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
+    $row = mysqli_fetch_assoc($result);
+    if (!$row) {
+        $json_return["message"] = "Error fetching Photo Status";
+    }
+    $json_return["photostatus"] = $row["statustext"];
+    $dest = getcwd();
+    $dest .= "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $newname;
+
+    $json_return["image"] = "data:$type;base64," . base64_encode(file_get_contents($dest));
     echo json_encode($json_return) . "\n";
 }
 
@@ -271,8 +338,63 @@ function fetchphoto() {
     if (!$row)
         exit();
     $dest = getcwd();
-    $fname = $dest .= "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
-    echo file_get_contents($fname);
+    $dest .= "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
+    echo file_get_contents($dest);
+}
+
+function deleteuploadedphoto() {
+    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title, $badgeid;
+
+    $json_return = array();
+    $dest = getcwd();
+    $do_update = true;
+
+    $sql = "SELECT uploadedphotofilename FROM Participants WHERE badgeid = ?";
+    $paramarray = array();
+    $paramarray[0] = $badgeid;
+    $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
+    $row = mysqli_fetch_assoc($result);
+    if (!$row) {
+        $json_return["message"] = "Error fetching photo to delete";
+        $do_update = false;
+    } else {
+        $fname = $dest . "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
+        if (!unlink($fname)) {
+            $json_return["message"] = "Error deleting photo";
+            $do_update = false;
+        }
+    }
+    if ($do_update) {
+        $sql = "UPDATE Participants SET uploadedphotofilename = NULL, photodenialreasonothertext = NULL, photodenialreasonid = NULL," .
+           " photouploadstatus = photouploadstatus & ~" . strval(PHOTO_UPLOAD_MASK) . " & ~" . strval(PHOTO_DENIED_MASK) .
+           "\nWHERE badgeid = ?;";
+        $paramarray = array();
+        $paramarray[0] = $badgeid;
+        error_log("Sql=\n$sql\n");
+        $rows =  mysql_cmd_with_prepare($sql, 's', $paramarray);
+        if ($rows != 1) {
+            $json_return["message"] = "Error updating database";
+        }
+
+        $sql = <<<EOD
+SELECT CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus, R.statustext
+FROM Participants P
+LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+WHERE badgeid = ?;
+EOD;
+
+        $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
+        $row = mysqli_fetch_assoc($result);
+        if (!$row) {
+            $json_return["message"] = "Error fetching Photo Status";
+        }
+        $json_return["photostatus"] = $row["statustext"];
+
+        $fname = $dest . PHOTO_PUBLIC_DIRECTORY . "/" . PHOTO_DEFAULT_IMAGE;
+        error_log("Default path = $fname");
+        $json_return["image"] = 'data:image/png;base64,' . base64_encode(file_get_contents($fname));
+    }
+    echo json_encode($json_return) . "\n";
 }
 
 // start of AJAX dispatch
@@ -303,6 +425,9 @@ switch ($action) {
         break;
     case 'fetchPhoto':
         fetchphoto();
+        break;
+    case 'delete_uploaded_photo':
+        deleteuploadedphoto();
         break;
     default:
         $message_error = "Invalid ajax_request_action: $action.  Database not updated.";

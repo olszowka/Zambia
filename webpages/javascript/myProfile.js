@@ -15,7 +15,9 @@ function MyProfile() {
 	var $resultBoxDiv;
 	var $uploadZone = null;
 	var $uploadPhoto = null;
-	var uploadLock = false;
+	var $uploadPhotoDelete = null;
+	var $uploadPhotoStatus = null;
+	var uploadlock = false;
 	
     this.validatePW = function validatePW() {
 		pw = $password.val();
@@ -78,9 +80,20 @@ function MyProfile() {
 		$("textarea.mycontrol").on("input", boundAnyChange);
 		$resultBoxDiv = $("#resultBoxDIV");
 		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		$uploadZone = document.getElementById("photoUploadArea");
+		$uploadPhoto = document.getElementById("uploadedPhoto");
+		$uploadPhotoDelete = document.getElementById("deleteUploadPhoto");
+		$uploadPhotoStatus = document.getElementById("uploadedPhotoStatus");
+		if ($uploadPhotoDelete) {
+			$uploadPhotoDelete.addEventListener("click", function (e) {
+				if (uploadlock) {
+					message = "Upload in progress, please wait";
+				} else {
+					myProfile.deleteuploadedphoto();
+				}
+			});
+		}
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
-			$uploadZone = document.getElementById("photoUploadArea");
-			$uploadPhoto = document.getElementById("uploadedPhoto");
 			// hover
 			$uploadPhoto.addEventListener("dragenter", function (e) {
 				e.preventDefault();
@@ -104,29 +117,28 @@ function MyProfile() {
 				e.stopPropagation();
 				$uploadZone.classList.remove('alert-dark');
 				$uploadZone.classList.add('alert-secondary');
-				$message = "";
-				if (uploadLock) {
+				message = "";
+				if (uploadlock) {
 					message = "Upload already in progress, please wait";
 				} else if (e.dataTransfer.files.length == 1) {
 					f = e.dataTransfer.files[0];
 					if (!f.type.match(/image\/(jpeg|png)/i)) {
-						$message = "Only jpg and png files allowed";
+						message = "Only jpg and png files allowed";
 					} else if (f.name.match(/\.(jpg|jpeg|png)$/i))
 						myProfile.starttransfer(f);
 					else
-						$message = "Only jpg and png files allowed";
+						message = "Only jpg and png files allowed";
 				} else {
-					$message = "Drag only one picture";
+					message = "Drag only one picture";
 				}
-				if ($message) {
+				if (message) {
 					var content;
-					content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">$message.</div></div></div>`;
+					content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">` + message + `.</div></div></div>`;
 					$resultBoxDiv.html(content).css("visibility", "visible");
 					document.getElementById("resultBoxDIV").scrollIntoView(false);
 				}
 			});
 		};
-
 	};
 
     this.updateBUTN = function updateBUTN() {
@@ -192,24 +204,117 @@ function MyProfile() {
             content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">An error occurred on the server.</div></div></div>`;
         }
         $resultBoxDiv.html(content).css("visibility", "visible");
-        document.getElementById("resultBoxDIV").scrollIntoView(false);
+		document.getElementById("resultBoxDIV").scrollIntoView(false);
+		uploadlock = false;
 	};
 
 	this.transfercomplete = function transfercomplete(data, textStatus, jqXHR) {
+		uploadlock = false;
+		message = "";
+		//console.log(data);
+		try {
+			data_json = JSON.parse(data);
+		} catch (error) {
+			console.log(error);
+		}
+
+		//console.log(data_json);
+		if (data_json.hasOwnProperty("message"))
+			message = data_json.message;
+		// enable delete button
+		if ($uploadPhotoDelete)
+			$uploadPhotoDelete.disabled = false;
+
+		// reload default photo
+		if (data_json.hasOwnProperty("image")) {
+			$uploadPhoto.src = data_json["image"];
+		}
+
+		if (data_json.hasOwnProperty("photostatus")) {
+			$uploadPhotoStatus.innerHTML = data_json["photostatus"];
+		}
+		if (message != "") {
+			if (message.startsWith("Error"))
+				alert_type = "alert-danger";
+			else
+				alert_type = "alert-success";
+			content = '<div class="row mt-3"><div class="col-12"><div class="alert ' + alert_type + '" role="alert">' + message + '</div></div></div>';
+			$resultBoxDiv.html(content).css("visibility", "visible");
+			document.getElementById("resultBoxDIV").scrollIntoView(false);
+		}
 	}
 
 	this.starttransfer = function starttransfer(f) {
 		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
-		uploadLock = true;
-		xhr = new XMLHttpRequest();
-		xhr.open("POST", "SubmitMyContact.php");
-		xhr.onload = myProfile.transfercomplete;
-		xhr.onerror = myProfile.showAjaxError;
-		data = new FormData();
-		data.append('ajax_request_action', 'uploadPhoto');
-		data.append('photo', f);
-		console.log(data);
-		xhr.send(data);
+		uploadlock = true;
+		postdata = new FormData();
+		postdata.append('ajax_request_action', 'uploadPhoto');
+		postdata.append('photo', f);
+
+		$.ajax({
+			url: "SubmitMyContact.php",
+			dataType: "html",
+			data: postdata,
+			success: myProfile.transfercomplete,
+			error: myProfile.showAjaxError,
+			async: true,
+			cache: false,
+			contentType: false,
+			processData: false,
+			timeout: 60000,
+			type: "POST"
+		});
+	};
+
+	this.deleteuploadedcomplete = function deleteuploadedcomplete(data, textStatus, jqXHR) {
+		uploadlock = false;
+		message = "";
+		//console.log(data);
+		try {
+			data_json = JSON.parse(data);
+		} catch (error) {
+			console.log(error);
+		}
+
+		//console.log(data_json);
+		if (data_json.hasOwnProperty("message"))
+			message = data_json.message;
+		// disable delete button
+		if ($uploadPhotoDelete)
+			$uploadPhotoDelete.disabled = true;
+		// reload default photo
+		if (data_json.hasOwnProperty("image")) {
+			$uploadPhoto.src = data_json["image"];
+		}
+		if (data_json.hasOwnProperty("photostatus")) {
+			$uploadPhotoStatus.innerHTML = data_json["photostatus"];
+		}
+
+		if (message != "") {
+			if (message.startsWith("Error"))
+				alert_type = "alert-danger";
+			else
+				alert_type = "alert-success"
+			content = '<div class="row mt-3"><div class="col-12"><div class="alert ' + alert_type + '" role="alert">' + message + '</div></div></div>';
+			$resultBoxDiv.html(content).css("visibility", "visible");
+			document.getElementById("resultBoxDIV").scrollIntoView(false);
+		}
+	}
+
+	this.deleteuploadedphoto = function deleteuploadedphoto() {
+		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		uploadlock = true;
+		var postdata = {
+			ajax_request_action: "delete_uploaded_photo"
+		};
+		$.ajax({
+			url: "SubmitMyContact.php",
+			dataType: "html",
+			data: postdata,
+			success: myProfile.deleteuploadedcomplete,
+			error: myProfile.showAjaxError,
+			type: "POST"
+		});
 	};
 
 }

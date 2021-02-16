@@ -333,13 +333,15 @@
                             <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@photouploadstatus"/>
                           </xsl:attribute>
                         </input>
-                        Photo Status: 
-                        <xsl:choose>
-                          <xsl:when test="/doc/query[@queryName='participant_info']/row/@photouploadstatus = '-1'">No Photo Uploaded</xsl:when>
-                          <xsl:otherwise>
-                            <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@statustext"/>
-                          </xsl:otherwise>
-                        </xsl:choose>
+                        <xsl:text>Photo Status: </xsl:text>
+                        <span id="uploadedPhotoStatus">
+                          <xsl:choose>
+                            <xsl:when test="/doc/query[@queryName='participant_info']/row/@photouploadstatus = '-1'">No Photo Uploaded</xsl:when>
+                            <xsl:otherwise>
+                              <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@statustext"/>
+                            </xsl:otherwise>
+                          </xsl:choose>
+                        </span>
                       </div>
                     </div>
                     <div class="row mt-1">
