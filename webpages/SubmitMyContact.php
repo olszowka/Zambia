@@ -209,26 +209,28 @@ EOD;
 
 function uploadphoto() {
     global $linki, $message_error, $returnAjaxErrors, $return500errors, $title, $badgeid;
-    $source = $_FILES["photo"]["tmp_name"];
-    $type = $_FILES["photo"]["type"];
-    $fname = $_FILES["photo"]["name"];
-    $upload_error = $_FILES["photo"]["error"];
-    $upload_size = $_FILES["photo"]["size"];
+    $pos = strpos($_POST["photo"], ",");
+    $source = substr($_POST["photo"], $pos + 1);
+    $type = substr($_POST["photo"], 0, $pos);
+    error_log($type);
+    //error_log($source);
+
+    $image = base64_decode($source);
+    $image_size = strlen($image);
+    list($up_width, $up_height) = getimagesizefromstring($image);
     list($min_width, $min_height, $max_width, $max_height, $max_size) = explode(',', PHOTO_DIMENSIONS);
-    error_log("source = $source of type $type with status $upload_error");
-    if ($upload_error) {
-         RenderErrorAjax("Error uploading photo.  Check if too large (Max 2MB)");
-         exit();
-    }
+
     if (!(preg_match("/image\/jpg/i", $type) || preg_match("/image\/png/i", $type) || preg_match("/image\/jpeg/i", $type))) {
          RenderErrorAjax("Photo must be a JPG/JPEG or PNG image file");
          exit();
     }
 
-    $ext = pathinfo($fname, PATHINFO_EXTENSION);
-    error_log("original name =  $fname, ext = $ext");
+    if (preg_match("/image\/png/i", $type))
+        $ext = 'png';
+    else
+        $ext = 'jpg';
+
     # get image size for resizing
-    list($up_width, $up_height) = getimagesize($source);
     error_log("w: $up_width, h: $up_height");
     $dest = getcwd();
     $newname = hash('md5', $badgeid, false) . "." . $ext;
@@ -257,10 +259,7 @@ function uploadphoto() {
     }
     error_log("resize: $resize");
     if ($resize != 1) {
-        if ($ext == 'png')
-            $originalimage = imagecreatefrompng($source);
-        else
-            $originalimage = imagecreatefromjpeg($source);
+        $originalimage = imagecreatefromstring($image);
 
         $newwidth = intval($up_width * $resize);
         $newheight = intval($up_height * $resize);
@@ -273,12 +272,22 @@ function uploadphoto() {
             $result = imagejpeg($resizedimage, $dest);
         imagedestroy($resizedimage);
     }
-    else
-        $result = move_uploaded_file($source, $dest);
-
-    if ($result == false) {
-        RenderErrorAjax("Error with uploaded image, unable to save");
-        exit();
+    else {
+        if ($image_size > $max_size) {
+            RenderErrorAjax("Image is too large, maximim size = $max_size");
+            exit();
+        }
+        $fd = fopen($dest, 'wb');
+        if ($fd === false) {
+            RenderErrorAjax("Error with uploaded image, unable to create file");
+            exit();
+        }
+        $len = fwrite($fd, $image, $image_size);
+        if ($len != $image_size) {
+            RenderErrorAjax("Error with uploaded image, unable to save");
+            exit();
+        }
+        fclose($fd);
     }
 
     $sql = <<<EOD
@@ -299,7 +308,7 @@ EOD;
         exit();
     }
     if ($rows == 1 || $rows == 0)
-        $json_return["message"] = "$fname uploaded";
+        $json_return["message"] = "Image uploaded";
     else {
         RenderErrorAjax("Error updating database");
         exit();
@@ -415,6 +424,8 @@ if (array_key_exists('ajax_request_action', $_POST)) {
 } else {
     $action = '';
 }
+
+error_log("Action = $action");
 
 switch ($action) {
     case 'update_participant':

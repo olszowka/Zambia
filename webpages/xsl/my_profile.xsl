@@ -284,12 +284,25 @@
                      </xsl:if>
                   <xsl:if test="$enablePhotos = 1">
                     <div class="row mt-2">
-                      <div class="col-sm-4 card alert-secondary">
+                      <div class="col-sm-5 card alert-secondary">
+                        <input type="file" id="chooseFileName" name="chooseFileName" accept="image/png, image/jpeg, image/jpg" style="display: none"/>
                         <p class="card-title">
                           Upload Photo: Drag/Drop file or <button type="button" class="btn btn-secondary btn-sm" id="uploadPhoto">Choose File</button>
                         </p>
-                        <div class="card-body" id="photoUploadArea">
-                          <img class="upload-image" style="width: 300px;" id="uploadedPhoto">
+                        <div class="card-body" id="photoUploadArea" style="margin-right: auto; margin-left: auto; margin-top:0;">
+                          <input type="hidden" name="defaultPhoto" id="default_photo">
+                            <xsl:attribute name="value">
+                              <xsl:choose>
+                                <xsl:when test="/doc/query[@queryName='participant_info']/row/@uploadedphotofilename != ''">
+                                  <xsl:text>0</xsl:text>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:text>1</xsl:text>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </xsl:attribute>
+                          </input>
+                          <img class="upload-image" style="width: 400px; height: 400px; object-fit: scale-down; margin-top:0; margin-right: auto; margin-left: auto;" id="uploadedPhoto">
                             <xsl:attribute name="src">
                               <xsl:choose>
                                 <xsl:when test="/doc/query[@queryName='participant_info']/row/@uploadedphotofilename != ''">
@@ -304,12 +317,19 @@
                             </xsl:attribute>
                           </img>
                         </div>
+                        <div class="btn-group" role="group" aria-label="crop actions">
+                          <button type="button" class="btn btn-primary btn-sm" id="crop" style="display: none" onClick="myProfile.crop();">Crop</button>
+                          <button type="button" class="btn btn-primary btn-sm" id="save_crop" style="display: none" onClick="myProfile.savecrop();">Save Crop</button>
+                          <button type="button" class="btn btn-secondary btn-sm" id="rotate_left" style="display: none" onClick="myProfile.rotate(90);">Rotate Left</button>
+                          <button type="button" class="btn btn-secondary btn-sm" id="rotate_right" style="display: none" onClick="myProfile.rotate(-90);">Rotate Right</button>
+                          <button type="button" class="btn btn-warning btn-sm" id="cancel_crop" style="display: none" onClick="myProfile.cancelcrop();">Cancel Crop</button>
+                        </div>
                       </div>
                       <div class="col-sm-1"></div>
-                      <div class="col-sm-4 card alert-secondary">
+                      <div class="col-sm-5 card alert-secondary">
                         <p class="card-title">Approved Photo</p>
                         <div class="card-body">
-                          <img class="approved-image" style="width: 300px;">
+                          <img class="approved-image" style="width: 400px; height: 400px; object-fit: scale-down; margin-top:0; margin-right: auto; margin-left: auto;">
                             <xsl:attribute name="src">
                               <xsl:value-of select="$approvedPhotoURL"/>
                               <xsl:text>/</xsl:text>
@@ -346,12 +366,17 @@
                     </div>
                     <div class="row mt-1">
                       <div class="col-sm-5">
-                        <button type="button" class="btn btn-danger btn-sm" id="deleteUploadPhoto">
-                          <xsl:if test="string-length(/doc/query[@queryName='participant_info']/row/@uploadedphotofilename) = 0">
-                            <xsl:attribute name="disabled">true</xsl:attribute>
-                          </xsl:if>
-                          Delete Uploaded Photo
-                        </button>
+                        <div class="btn-group" role="group" aria-label="Photo Update/Delete actions">
+                          <button type="button" class="btn btn-danger btn-sm" id="deleteUploadPhoto" onClick="myProfile.deleteuploadedphoto();">
+                            <xsl:if test="string-length(/doc/query[@queryName='participant_info']/row/@uploadedphotofilename) = 0">
+                              <xsl:attribute name="style">display: none;</xsl:attribute>
+                            </xsl:if>
+                            Delete Uploaded Photo
+                          </button>
+                          <button type="button" class="btn btn-primary btn-sm" id="updateUploadPhoto" style="display: none;" onClick="myProfile.starttransfer();">
+                            Upload Updated Photo
+                          </button>
+                        </div>
                       </div>
                       <xsl:if test="/doc/query[@queryName='participant_info']/row/@approvedphotofilename != ''">
                         <div class="col-sm-5">

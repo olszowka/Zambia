@@ -14,10 +14,14 @@ function MyProfile() {
 	var $bioTextarea;
 	var $resultBoxDiv;
 	var $uploadZone = null;
-	var $uploadPhoto = null;
+	var $uploadedPhoto = null;
+	var $uploadChooseFile = null;
+	var $chooseFileName = null;
 	var $uploadPhotoDelete = null;
+	var $uploadUpdatedPhoto = null;
 	var $uploadPhotoStatus = null;
 	var uploadlock = false;
+	var cropper = null;
 	
     this.validatePW = function validatePW() {
 		pw = $password.val();
@@ -81,62 +85,60 @@ function MyProfile() {
 		$resultBoxDiv = $("#resultBoxDIV");
 		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
 		$uploadZone = document.getElementById("photoUploadArea");
-		$uploadPhoto = document.getElementById("uploadedPhoto");
+		$uploadChooseFile = document.getElementById("uploadPhoto");
+		$chooseFileName = document.getElementById("chooseFileName");
+		$uploadedPhoto = document.getElementById("uploadedPhoto");
 		$uploadPhotoDelete = document.getElementById("deleteUploadPhoto");
+		$uploadUpdatedPhoto = document.getElementById("updateUploadPhoto");
 		$uploadPhotoStatus = document.getElementById("uploadedPhotoStatus");
-		if ($uploadPhotoDelete) {
-			$uploadPhotoDelete.addEventListener("click", function (e) {
-				if (uploadlock) {
-					message = "Upload in progress, please wait";
-				} else {
-					myProfile.deleteuploadedphoto();
-				}
+		if (document.getElementById("default_photo").value == '0')
+			document.getElementById("crop").style.display = 'block';
+		
+		if ($uploadChooseFile) {
+			$uploadChooseFile.addEventListener("click", function (e) {
+				$chooseFileName.value = null;
+				$chooseFileName.click();
+			});
+			$chooseFileName.addEventListener("change", function (e) {
+				myProfile.loaduploadimage(e.target.files[0]);
 			});
 		}
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			// hover
-			$uploadPhoto.addEventListener("dragenter", function (e) {
+			$uploadedPhoto.addEventListener("dragenter", function (e) {
 				e.preventDefault();
 				e.stopPropagation();
 				$uploadZone.classList.remove('alert-secondary');
 				$uploadZone.classList.add('alert-dark');
 			});
-			$uploadPhoto.addEventListener("dragleave", function (e) {
+			$uploadedPhoto.addEventListener("dragleave", function (e) {
 				e.preventDefault();
 				e.stopPropagation();
 				$uploadZone.classList.remove('alert-dark');
 				$uploadZone.classList.add('alert-secondary');
 			});
 			// upload
-			$uploadPhoto.addEventListener("dragover", function (e) {
+			$uploadedPhoto.addEventListener("dragover", function (e) {
 				e.preventDefault();
 				e.stopPropagation();
 			});
-			$uploadPhoto.addEventListener("drop", function (e) {
+			$uploadedPhoto.addEventListener("drop", function (e) {
 				e.preventDefault();
 				e.stopPropagation();
 				$uploadZone.classList.remove('alert-dark');
 				$uploadZone.classList.add('alert-secondary');
-				message = "";
-				if (uploadlock) {
-					message = "Upload already in progress, please wait";
-				} else if (e.dataTransfer.files.length == 1) {
+				if (e.dataTransfer.files.length == 1) {
 					f = e.dataTransfer.files[0];
 					if (!f.type.match(/image\/(jpeg|png)/i)) {
-						message = "Only jpg and png files allowed";
+						myProfile.showErrorMessage("Only jpg and png files allowed");
 					} else if (f.name.match(/\.(jpg|jpeg|png)$/i))
-						myProfile.starttransfer(f);
+						myProfile.loaduploadimage(f);
 					else
-						message = "Only jpg and png files allowed";
+						myProfile.showErrorMessage("Only jpg and png files allowed");
 				} else {
-					message = "Drag only one picture";
+					myProfile.showErrorMessage("Drag only one picture");
 				}
-				if (message) {
-					var content;
-					content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">` + message + `.</div></div></div>`;
-					$resultBoxDiv.html(content).css("visibility", "visible");
-					document.getElementById("resultBoxDIV").scrollIntoView(false);
-				}
+				
 			});
 		};
 	};
@@ -196,6 +198,12 @@ function MyProfile() {
         document.getElementById("resultBoxDIV").scrollIntoView(false);
     };
 
+	this.showErrorMessage = function showErrorMessage(message) {
+		content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">` + message + `</div></div></div>`;
+		$resultBoxDiv.html(content).css("visibility", "visible");
+		document.getElementById("resultBoxDIV").scrollIntoView(false);
+	};
+
     this.showAjaxError = function showAjaxError(data, textStatus, jqXHR) {
         var content;
         if (data && data.responseText) {
@@ -222,12 +230,17 @@ function MyProfile() {
 		if (data_json.hasOwnProperty("message"))
 			message = data_json.message;
 		// enable delete button
-		if ($uploadPhotoDelete)
-			$uploadPhotoDelete.disabled = false;
+		$uploadPhotoDelete.style.display = 'block';
+		$uploadUpdatedPhoto.style.display = 'none';
+		document.getElementById("crop").style.display = 'block';
+		document.getElementById("save_crop").style.display = 'none';
+		document.getElementById("rotate_left").style.display = 'none';
+		document.getElementById("rotate_right").style.display = 'none';
+		document.getElementById("cancel_crop").style.display = 'none';
 
 		// reload default photo
 		if (data_json.hasOwnProperty("image")) {
-			$uploadPhoto.src = data_json["image"];
+			$uploadedPhoto.src = data_json["image"];
 		}
 
 		if (data_json.hasOwnProperty("photostatus")) {
@@ -244,12 +257,18 @@ function MyProfile() {
 		}
 	}
 
-	this.starttransfer = function starttransfer(f) {
+	this.starttransfer = function starttransfer() {
+		if (uploadlock) {
+			myProfile.showErrorMessage("Upload in progress, please wait");
+			return false;
+		}
 		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
 		uploadlock = true;
-		postdata = new FormData();
-		postdata.append('ajax_request_action', 'uploadPhoto');
-		postdata.append('photo', f);
+		
+		var postdata = {
+			ajax_request_action: 'uploadPhoto',
+			photo: $uploadedPhoto.src
+		};
 
 		$.ajax({
 			url: "SubmitMyContact.php",
@@ -257,11 +276,6 @@ function MyProfile() {
 			data: postdata,
 			success: myProfile.transfercomplete,
 			error: myProfile.showAjaxError,
-			async: true,
-			cache: false,
-			contentType: false,
-			processData: false,
-			timeout: 60000,
 			type: "POST"
 		});
 	};
@@ -280,11 +294,16 @@ function MyProfile() {
 		if (data_json.hasOwnProperty("message"))
 			message = data_json.message;
 		// disable delete button
-		if ($uploadPhotoDelete)
-			$uploadPhotoDelete.disabled = true;
+		$uploadPhotoDelete.style.display = 'none';
+		document.getElementById("crop").style.display = 'none';
+		document.getElementById("save_crop").style.display = 'none';
+		document.getElementById("rotate_left").style.display = 'none';
+		document.getElementById("rotate_right").style.display = 'none';
+		document.getElementById("cancel_crop").style.display = 'none';
+
 		// reload default photo
 		if (data_json.hasOwnProperty("image")) {
-			$uploadPhoto.src = data_json["image"];
+			$uploadedPhoto.src = data_json["image"];
 		}
 		if (data_json.hasOwnProperty("photostatus")) {
 			$uploadPhotoStatus.innerHTML = data_json["photostatus"];
@@ -302,6 +321,10 @@ function MyProfile() {
 	}
 
 	this.deleteuploadedphoto = function deleteuploadedphoto() {
+		if (uploadlock) {
+			myProfile.showErrorMessage("Upload in progress, please wait");
+			return false;
+		}
 		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
 		uploadlock = true;
 		var postdata = {
@@ -317,4 +340,85 @@ function MyProfile() {
 		});
 	};
 
+	this.crop = function crop() {
+		if (cropper) {
+			cropper.destroy();
+			cropper = null;
+		}
+		document.getElementById("crop").style.display = 'none';
+		document.getElementById("save_crop").style.display = 'block';
+		document.getElementById("rotate_left").style.display = 'block';
+		document.getElementById("rotate_right").style.display = 'block';
+		document.getElementById("cancel_crop").style.display = 'block';
+		$uploadUpdatedPhoto.style.display = 'none';
+
+		cropper = new Croppie($uploadedPhoto, {
+			boundary: { width: 400, height: 400, 'margin-right': 'auto', 'margin-left': 'auto' },
+			enableResize: true,
+			enforceBoundary: true,
+			enableZoom: true,
+			viewport: { width: 400, height: 400, type: 'square' },
+			enableOrientation: true,
+		});
+	}
+
+	this.rotate = function rotate(deg) {
+		if (cropper) {
+			cropper.rotate(deg);
+		}
+	};
+
+	this.cancelcrop = function cancelcrop() {
+		if (cropper) {
+			cropper.destroy();
+			cropper = null;
+		}
+		document.getElementById("crop").style.display = 'block';
+		document.getElementById("save_crop").style.display = 'none';
+		document.getElementById("rotate_left").style.display = 'none';
+		document.getElementById("rotate_right").style.display = 'none';
+		document.getElementById("cancel_crop").style.display = 'none';
+		$uploadUpdatedPhoto.style.display = 'block';
+	};
+
+	this.savecrop = function savecrop() {
+		if (cropper) {
+			cropper.result({ type: 'base64', size: 'original', format: 'png', quality: 1, circle: false }).then(function (blob) {
+				//console.log(blob);
+				$uploadedPhoto.src = blob;
+			});
+			cropper.destroy();
+			cropper = null;
+			document.getElementById("crop").style.display = 'block';
+			document.getElementById("save_crop").style.display = 'none';
+			document.getElementById("rotate_left").style.display = 'none';
+			document.getElementById("rotate_right").style.display = 'none';
+			document.getElementById("cancel_crop").style.display = 'none';
+			$uploadUpdatedPhoto.style.display = 'block';
+		}
+	};
+
+	this.loaduploadimage = function loaduploadimage(file) {
+		if (cropper) {
+			cropper.destroy();
+			cropper = null;
+		}
+		if (!(file.type.match('image/jp.*') || file.type.match('image/png.*'))) {
+			alert("Only jpeg/jpg or png images allowed");
+		}
+		else {
+			var reader = new FileReader();
+			reader.onload = (function (thefile) {
+				return function (e) {
+					$uploadedPhoto.src = e.target.result;
+					document.getElementById("crop").style.display = 'block';
+				}
+			})(file);
+
+			reader.readAsDataURL(file);
+		}
+
+		pickedfile = $chooseFileName.value;
+		$uploadUpdatedPhoto.style.display = 'block';
+	}
 }
