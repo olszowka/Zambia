@@ -318,10 +318,10 @@
                           </img>
                         </div>
                         <div class="btn-group" role="group" aria-label="crop actions">
-                          <button type="button" class="btn btn-primary btn-sm" id="crop" style="display: none" onClick="myProfile.crop();">Crop</button>
-                          <button type="button" class="btn btn-primary btn-sm" id="save_crop" style="display: none" onClick="myProfile.savecrop();">Save Crop</button>
-                          <button type="button" class="btn btn-secondary btn-sm" id="rotate_left" style="display: none" onClick="myProfile.rotate(90);">Rotate Left</button>
-                          <button type="button" class="btn btn-secondary btn-sm" id="rotate_right" style="display: none" onClick="myProfile.rotate(-90);">Rotate Right</button>
+                          <button type="button" class="btn btn-primary btn-sm" id="crop" style="display: none;" onClick="myProfile.crop();">Crop</button>
+                          <button type="button" class="btn btn-primary btn-sm" id="save_crop" style="display: none; margin-right: 10px;" onClick="myProfile.savecrop();">Save Crop</button>
+                          <button type="button" class="btn btn-secondary btn-sm" id="rotate_left" style="display: none; margin-right: 10px;" onClick="myProfile.rotate(90);">Rotate Left</button>
+                          <button type="button" class="btn btn-secondary btn-sm" id="rotate_right" style="display: none; margin-right: 10px;" onClick="myProfile.rotate(-90);">Rotate Right</button>
                           <button type="button" class="btn btn-warning btn-sm" id="cancel_crop" style="display: none" onClick="myProfile.cancelcrop();">Cancel Crop</button>
                         </div>
                       </div>

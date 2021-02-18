@@ -249,11 +249,36 @@ EOD;
 function perform_search() {
     global $linki, $message_error;
     $searchString = getString("searchString");
-    if ($searchString == "")
+    $photosApproval = getString("photosApproval");
+    if ($searchString == "" && $photosApproval == false)
         exit();
-    if (is_numeric($searchString)) {
-        $searchString =  mysqli_real_escape_string($linki, $searchString);
-        $query["searchParticipants"] = <<<EOD
+    $mask = PHOTO_NEED_APPROVAL_MASK;
+    $needs = PHOTO_NEED_APPROVAL;
+    $json_return = array ();
+    if ($photosApproval == "true") {
+        $needswhere = " AND (P.photouploadstatus & $mask) = $needs ";
+    } else {
+        $needswhere = "";
+    }
+    if ($photosApproval == "true" && $searchString == "") {
+
+        $query = <<<EOD
+            SELECT
+			    P.badgeid, P.pubsname, P.interested, P.bio,
+                P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+                CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+                CD.postcountry, CD.regtype
+			FROM
+						Participants P
+				JOIN CongoDump CD ON P.badgeid = CD.badgeid
+			WHERE
+			    (P.photouploadstatus & $mask) = $needs
+			ORDER BY
+			    CD.lastname, CD.firstname
+EOD;
+        $result = mysqli_query_exit_on_error($query);
+    } else if (is_numeric($searchString)) {
+        $query = <<<EOD
 			SELECT
 			        P.badgeid, P.pubsname, P.interested, P.bio,
                     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
@@ -263,11 +288,12 @@ function perform_search() {
 						 Participants P
 					JOIN CongoDump CD ON P.badgeid = CD.badgeid
 			    WHERE
-			        P.badgeid = "$searchString"
+			        P.badgeid = ? $needswhere
 			    ORDER BY
 			        CD.lastname, CD.firstname
 EOD;
-        $xml = mysql_query_XML($query);
+        $param_arr = array($searchString);
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
     } else {
         $searchString = '%' . $searchString . '%';
         $query = <<<EOD
@@ -280,17 +306,29 @@ EOD;
 						 Participants P
 					JOIN CongoDump CD ON P.badgeid = CD.badgeid
 			    WHERE
-			           P.pubsname LIKE ?
+			           (P.pubsname LIKE ?
 					OR CD.lastname LIKE ?
 					OR CD.firstname LIKE ?
 					OR CD.badgename LIKE ?
+                    OR P.badgeid LIKE ?) $needswhere
 			    ORDER BY
 			        CD.lastname, CD.firstname
 EOD;
-        $param_arr = array($searchString,$searchString,$searchString,$searchString);
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
-        $xml = mysql_result_to_XML("searchParticipants", $result);
+        $param_arr = array($searchString,$searchString,$searchString,$searchString,$searchString);
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, "sssss", $param_arr);
     }
+    $xml = mysql_result_to_XML("searchParticipants", $result);
+    $rows = mysqli_num_rows($result);
+    if ($rows > 1) {
+        mysqli_data_seek($result, 0);
+        $bidarray = array ();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $bidarray[] = $row["badgeid"];
+        }
+        $json_return["badgeids"] = $bidarray;
+    }
+
+    mysqli_free_result($result);
     if (!$xml) {
         echo $message_error;
         exit();
@@ -305,7 +343,9 @@ EOD;
     header("Content-Type: text/html");
     $paramArray = array("userIdPrompt" => USER_ID_PROMPT);
     //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xml->saveXML(), "i")); //for debugging only
-    RenderXSLT('AdminParticipants.xsl', $paramArray, $xml);
+    $json_return["HTML"] = RenderXSLT('AdminParticipants.xsl', $paramArray, $xml, true);
+    $json_return["rowcount"] = $rows;
+    echo json_encode($json_return);
 	exit();
 }
 
@@ -322,7 +362,7 @@ function fetch_user_perm_roles() {
         ['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
         if ($mayIEditAllRoles) {
             $query = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 1 AS mayedit
     FROM
                   PermissionRoles PR
@@ -338,8 +378,8 @@ EOD;
                     array("permroles" => array($fetchedUserBadgeId)));
         } else { // has permission to edit only specific perm roles
             $query = <<<EOD
-SELECT 
-        PR.permrolename, PR.permroleid, UHPR.badgeid, 
+SELECT
+        PR.permrolename, PR.permroleid, UHPR.badgeid,
         IF(ISNULL(SQ.elementid), 0, 1) AS mayedit
     FROM
                   PermissionRoles PR
@@ -347,7 +387,7 @@ SELECT
                 UHPR.badgeid = ?
             AND UHPR.permroleid = PR.permroleid
         LEFT JOIN (
-            SELECT 
+            SELECT
                     PA.elementid
                 FROM
                          UserHasPermissionRole UHPR
@@ -368,7 +408,7 @@ EOD;
         }
     } else { // has no permission to edit user perm roles
         $query = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 0 AS mayedit
     FROM
                   PermissionRoles PR

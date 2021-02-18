@@ -15,4 +15,7 @@ define("PHOTO_UPLOAD_MASK", 1);
 define("PHOTO_DENIED_MASK", 2);
 // bit 2: Approved Photo Availalbe (0 = no, 1 = yes)
 define("PHOTO_APPROVED_MASK", 4);
+// Photos needing Approval Mask = Uploaded + !denied
+define("PHOTO_NEED_APPROVAL_MASK", 3);
+define("PHOTO_NEED_APPROVAL", 1);
 ?>
