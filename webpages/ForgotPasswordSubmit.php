@@ -176,25 +176,27 @@ try {
 }
 if ($ok) {
     try {
+        $code = 0;
         $sendMailResult = $mailer->send($message);
     } catch (Swift_TransportException $e) {
         $ok = FALSE;
-        error_log("Swift transport exception: send email failed, adding to queue.");
-        $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailsubject, body, status) VALUES(?, ?, ?, ?, ?);";
-        $param_arr = array($email, $fromAddress, $subjectLine, $emailBody, $e->getCode());
-        $types = "ssssi";
-        $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+        $code = $e->getCode();
+        if ($code < 500) {
+            error_log("Swift transport exception: send email failed, adding to queue.");
+            $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailsubject, body, status) VALUES(?, ?, ?, ?, ?);";
+            $param_arr = array($email, $fromAddress, $subjectLine, $emailBody, $e->getCode());
+            $types = "ssssi";
+            $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+        } else {
+            error_log("Swift transport exception: send email failed, with code $code, not adding to queue.");
+        }
     } catch (Swift_SwiftException $e) {
         $ok = FALSE;
-        error_log("Swift exception: send email failed, adding to queue.");
-        $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailsubject, body, status) VALUES(?, ?, ?, ?, ?);";
-        $param_arr = array($email, $fromAddress, $subjectLine, $emailBody, $e->getCode());
-        $types = "ssssi";
-        $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+        error_log("Swift exception: add address $email failed");
     }
 }
 $sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailsubject, status) VALUES(?, ?, ?, ?);";
-$param_arr = array($email, $fromAddress, $subjectLine, $ok);
+$param_arr = array($email, $fromAddress, $subjectLine, $code);
 $types = "sssi";
 $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
 

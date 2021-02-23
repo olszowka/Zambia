@@ -14,6 +14,8 @@ $now = new DateTime();
 echo "Queue run started at " . $now->format('Y-m-d H:m:i') . "\n";
 
 $mailer = get_swift_mailer();
+//$logger = new Swift_Plugins_Loggers_EchoLogger();
+//$mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
 
 $sql = "SELECT emailqueueid, emailto, emailfrom, emailcc, emailsubject, body, status, emailtimestamp FROM EmailQueue;";
 $result = mysqli_query_exit_on_error($sql);
@@ -38,15 +40,30 @@ while($row = mysqli_fetch_assoc($result)) {
         try {
             $message->addTo($emailto);
             try {
+                $code = 0;
                 $sendMailResult = $mailer->send($message);
             }
             catch (Swift_TransportException $e) {
-                $action = "leave";
-                error_log("Swift transport exception: send email failed, leaving in queue.");
+                $msg = $e->getMessage();
+                $code = $e->getCode();
+                if ($code < 500) {
+                    $action = "leave";
+                    error_log("Swift transport exception: $msg; send email failed, leaving in queue.");
+                } else {
+                    $action = "delete";
+                    error_log("Swift transport exception: $msg; send email failed, deleting from queue.");
+                }
             }
             catch (Swift_SwiftException $e) {
-                $action = "leave";
-                error_log("Swift transport exception: send email failed, leaving in queue.");
+                $msg = $e->getMessage();
+                $code = $e->getCode();
+                if ($code < 500) {
+                    $action = "leave";
+                    error_log("Swift transport exception: $msg; send email failed, leaving in queue.");
+                } else {
+                    $action = "delete";
+                    error_log("Swift transport exception: $msg; send email failed, deleting from queue.");
+                }
             }
         }
         catch (Swift_SwiftException $e) {
@@ -63,9 +80,15 @@ while($row = mysqli_fetch_assoc($result)) {
     }
 
     if ($action == "delete") {
-        $sql = "DELETE FROM EmailQueue where emailqueueid = ?;";
+        $sql = "DELETE FROM EmailQueue WHERE emailqueueid = ?;";
         $param_arr = array($queueid);
         $types = "i";
+        $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+    }
+    if ($action == "leave") {
+        $sql = "UPDATE EmailQueue set status = ? WHERE emailqueueid = ?;";
+        $param_arr = array($code, $queueid);
+        $types = "ii";
         $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
     }
 }
