@@ -136,13 +136,13 @@ if (!isset($daymap)) {
         <div class="row-fluid">
             <div class="span6">
                 <label>Please don't schedule me for a session that conflicts with:</label>
-                <textarea class="span12" name="preventconflict" rows=3 cols=72><?php
+                <textarea class="span12" name="preventconflict" rows=3 cols=72 maxlength="255"><?php
                     echo htmlspecialchars($partAvail["preventconflict"], ENT_NOQUOTES); ?></textarea>
             </div>
 
             <div class="span6">
                 <label>Other constraints or conflicts that we should know about?</label>
-                <textarea class="span12" name="otherconstraints" rows=3 cols=72><?php
+                <textarea class="span12" name="otherconstraints" rows=3 cols=72 maxlength="255"><?php
                     echo htmlspecialchars($partAvail["otherconstraints"], ENT_NOQUOTES); ?></textarea>
             </div>
         </div>

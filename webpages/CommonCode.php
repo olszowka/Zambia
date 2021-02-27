@@ -1,5 +1,6 @@
 <?php
 //	Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+require_once('mysql_shim.php'); // Added by Dan Franklin
 require_once('error_functions.php');
 require_once('Constants.php');
 require_once('data_functions.php');

@@ -29,19 +29,61 @@
  */
 require_once 'XPDO.inc';
 
-error_reporting(E_ALL);
+$me = array_shift($argv);
 
+error_reporting(E_ALL);
+    
 /**
- * These should be updated each year
+ * These may need to be changed
  */
 $test = false;
-$lastYear = 18;
-$thisYear = 19;
-$truncate = true; /* True if the Zambia DB is not yet in use */
+$truncate = false; /* True if the Zambia DB is not yet in use */
 $brainstorm = true; /* Leave true if the Zambia Participants table does not have a brainstorm entry */
 /**
- * End of section that needs updating each year
+ * End of section that may need changing.
  */
+
+$usage="Usage: $me [--test] [--truncate|--no-truncate] [--add-brainstorm] YY\n" .
+    "\t--test\t\tUses test database instead of live one, for testing changes to this script\n" .
+    "\t--truncate\tTruncates participant and schedule tables. Use after loading last year's DB and before Zambia is in use.\n" .
+    "\t--no-brainstorm\tDoes not add a 'brainstorm' account, normally used for brainstorm session suggestions\n" .
+    "\tYY\t\t2-digit year of the upcoming con.\n";
+    "";
+
+while (count($argv) > 0 && substr($argv[0], 0, 1) == '-') {
+    $option = array_shift($argv);
+    switch ($option) {
+
+    case '--test':
+        $test = true;
+        break;
+    case '--truncate':
+        $truncate = true;
+        break;
+    case '--no-truncate':
+        $truncate = false;
+        break;
+    case '--no-brainstorm':
+        $brainstorm = false;
+        break;
+
+    default:
+        print $usage;
+        exit(1);
+    }
+}
+if (count($argv) == 0) {
+    print "$usage\n\n";
+    print "$me: Specify 2-digit year of the upcoming con\n";
+    exit(1);
+}
+$year = $argv[0];
+if (!preg_match('/^\d\d$/', $year) || $year < 20 || $year > 99) {
+    print "$me: Year $year doesn't look right. Must be 2 digit year of the upcoming con.\n";
+    exit(1);
+}
+$thisYear = $year;
+$lastYear = $thisYear - 1;
 
 $host = 'localhost';
 $lastDBname = "hosting_zambia_{$lastYear}";
@@ -317,7 +359,7 @@ if ($brainstorm) {
 
 foreach ($badgeInfo as $row) {
     $id = $row['badgeid'];
-    $name = $row[pubsname];
+    $name = $row['pubsname'];
     try {
         $thisDB->insertRow('Participants', $row);
         print "Added back badge $id ($name)\n";
@@ -351,9 +393,20 @@ $thisDB->commit();
 
 function getPassword()
 {
+    $password = getPasswordFromIni();
+    if ($password) {
+        return $password;
+    }
+    $password = getPasswordFromConsole();
+    return $password;
+}
+
+function getPasswordFromIni()
+{
     $iniFile = $_ENV['HOME'] . '/.my.cnf';
 
     if (!file_exists($iniFile)) {
+        print "No file $iniFile found for password\n";
         return '';
     }
 
@@ -364,4 +417,15 @@ function getPassword()
     }
     print "Password found in $iniFile\n";
     return $ini['password'];
+}
+
+function getPasswordFromConsole()
+{
+    print "DB Password: ";
+    fflush(STDOUT);
+    system("stty -echo");
+    $password = rtrim(fgets(STDIN), PHP_EOL);
+    system("stty echo");
+    print "\n";
+    return $password;
 }

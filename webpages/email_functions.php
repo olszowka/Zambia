@@ -89,6 +89,7 @@ function render_send_email($email, $message_warning) {
     echo "<tr><td>\$FIRSTNAME\$</td><td>\$PUBNAME\$</td></tr>\n";
     echo "<tr><td>\$LASTNAME\$</td><td>\$BADGENAME\$</td></tr>\n";
     echo "<tr><td>\$EVENTS_SCHEDULE\$</td><td>\$FULL_SCHEDULE\$</td></tr>\n";
+    echo "<tr><td>\$BIO\$</td><td>&nbsp;</td></tr>\n";
     echo "</table>\n";
     staff_footer();
     }

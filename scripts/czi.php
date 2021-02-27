@@ -70,6 +70,7 @@ $cm_event_id = cm_event_id;
 $default_zambia_password_md5_for_not_login = default_zambia_password_md5_for_not_login;
 
 function myquery($connection, $query_string) {
+	global $error_file_handle, $log_file_handle;
 	$result = $connection->query($query_string);
 	if ($result === false) {
 		fwrite($error_file_handle, strftime("%F %T")." Query failed.\n");

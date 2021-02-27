@@ -27,12 +27,14 @@ if (!$timeLimitSuccess) {
 	RenderError($title,"Error extending time limit.");
 	exit(0);
 }
-$subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
+$subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$", "\$BIO\$");
 $email = get_email_from_post();
 //Create the Transport
-$transport = Swift_SmtpTransport::newInstance(SMTP_ADDRESS,2525);
+$transport = new Swift_SmtpTransport(SMTP_ADDRESS,SMTP_PORT);
 //Create the Mailer using your created Transport
-$mailer = Swift_Mailer::newInstance($transport);
+$mailer = new Swift_Mailer($transport);
+// And specify a time in seconds to pause for (1 secs)
+$mailer->registerPlugin(new Swift_Plugins_AntiFloodPlugin(20, 1));
 //$swift =& new Swift(new Swift_Connection_SMTP(SMTP_ADDRESS)); // Is machine name of SMTP host defined in db_name.php
 //$log =& Swift_LogContainer::getLog();
 //$log->setLogLevel(0); // 0 is minimum logging; 4 is maximum logging
@@ -69,12 +71,36 @@ $status = checkForShowSchedule($email['body']); // "0" don't show schedule; "1" 
 if ($status === "1" || $status === "2") {
     $scheduleInfoArray = generateSchedules($status, $recipientinfo);
 }
+
+/**
+ * Log each email as it is sent, reporting memory used so far.
+ */
+$logfile = "/home/hosting/logs/zambia-last-email-log.txt";
+unlink($logfile);
+touch($logfile);
+$email_log = function ($message) use ($logfile) {
+    $mem = memory_get_usage();
+    error_log($mem . " $message\n", 3, $logfile);
+};
+
+/**
+ * Attempt to flush each line as it is written.
+ */
+function zambia_flush_buffers() {
+    ob_end_flush();
+    ob_flush();
+    flush();
+    ob_start();
+}
+
 for ($i=0; $i<$recipient_count; $i++) {
+    $recip = $recipientinfo[$i];
+    $email_log("#$i: Sending email to $recip[badgeid] $recip[firstname] $recip[lastname] ...");
     $ok=TRUE;
     //Create the message
-    $message = Swift_Message::newInstance();
+    $message = new Swift_Message();
     $repl_list = array($recipientinfo[$i]['badgeid'], $recipientinfo[$i]['firstname'], $recipientinfo[$i]['lastname']);
-    $repl_list = array_merge($repl_list, array($recipientinfo[$i]['email'], $recipientinfo[$i]['pubsname'], $recipientinfo[$i]['badgename']));
+    $repl_list = array_merge($repl_list, array($recipientinfo[$i]['email'], $recipientinfo[$i]['pubsname'], $recipientinfo[$i]['badgename'], $recipientinfo[$i]['bio']));
     $emailverify['body'] = str_replace($subst_list, $repl_list, $email['body']);
     if ($status === "1" || $status === "2") {
         if ($status === "1") {
@@ -98,23 +124,32 @@ for ($i=0; $i<$recipient_count; $i++) {
     $message->setBody($emailverify['body'],'text/plain');
     //$message =& new Swift_Message($email['subject'],$emailverify['body']);
     echo ($recipientinfo[$i]['pubsname']." - ".$recipientinfo[$i]['email'].": ");
+    zambia_flush_buffers();
     try {
         $message->addTo($recipientinfo[$i]['email']);
     } catch (Swift_SwiftException $e) {
+        $email_log( "\taddTo(\"$recip[email]\") error: " . $e->getMessage());
         echo $e->getMessage()."<br>\n";
+        zambia_flush_buffers();
 	    $ok=FALSE;
+    } catch (Exception $exc) {
+        $email_log("\tERROR " . $exc->getMessage());
     }
     if ($emailcc != "") {
         $message->addBcc($emailcc);
     }
     try {
         $mailer->send($message);
+        $email_log( "\tsend did not throw exception");
     } catch (Swift_SwiftException $e) {
+        $email_log( "\tsend exception: " . $e->getMessage());
         echo $e->getMessage() . "<br>\n";
+        zambia_flush_buffers();
         $ok = FALSE;
     }
     if ($ok == TRUE) {
         echo "Sent<br>";
+        zambia_flush_buffers();
     }
 }
 //$log =& Swift_LogContainer::getLog();

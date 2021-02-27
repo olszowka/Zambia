@@ -27,6 +27,7 @@ define("DURATION_IN_MINUTES","FALSE"); // TRUE: in mmm; False: in hh:mm
         // affects session edit/create page only, not reports
 define("DEFAULT_DURATION","1:15"); // must correspond to DURATION_IN_MINUTES
 define("SMTP_ADDRESS","smtp-out.netbusters.com");
+define("SMTP_PORT","25");
 define("SWIFT_DIRECTORY","/home/zambia_admin/Swift/"); //location of installed swift library
 define("PREF_TTL_SESNS_LMT",10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT",5); // Input data verification limit for preferred daily limit of sessions
