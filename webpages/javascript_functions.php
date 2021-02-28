@@ -65,12 +65,18 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;
         case "Administer Participants":
-            echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
             echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
             break;
-        case "My Profile":
+        case "Administer Photos":
             echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
+            echo "<script src=\"javascript/AdminPhotos.js\"></script>\n";
+            break;
+        case "My Profile":
             echo "<script src=\"javascript/myProfile.js\"></script>";
+            break;
+        case "My Photo":
+            echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
+            echo "<script src=\"javascript/myPhoto.js\"></script>";
             break;
         case "Edit Session":
             echo "<script src=\"javascript/editCreateSession.js\"></script>\n";

@@ -40,6 +40,7 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
         if ($bootstrap4) {
             $paramArray = array();
             $paramArray["title"] = $title;
+            $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
             RenderXSLT('ParticipantMenu_BS4.xsl', $paramArray, GeneratePermissionSetXML());
         } else {
 ?>
@@ -56,6 +57,7 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                         <ul class="nav">
                             <li><a href="welcome.php">Overview</a></li>
                             <li><a href="my_contact.php">Profile</a></li>
+                            <?php makeMenuItem("Photo", PARTICIPANT_PHOTOS === TRUE, "my_photo.php", false); ?>
                             <?php makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false); ?>
                             <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
                             <?php makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false); ?>

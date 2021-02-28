@@ -9,14 +9,9 @@ SELECT
 		CD.badgeid, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email,
 			CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
 			CD.postcountry, P.pubsname, P.password, P.bestway, P.interested, P.bio,
-			P.share_email, P.use_photo, P.uploadedphotofilename, P.approvedphotofilename,
-			P.photodenialreasonothertext,
-			CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-			R.statustext, D.reasontext
+			P.share_email, P.use_photo
 	FROM CongoDump CD
 	JOIN Participants P USING (badgeid)
-	LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-	LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
     WHERE
         CD.badgeid=?;
 EOD;
@@ -46,9 +41,6 @@ $paramArray['useRegSystem'] = USE_REG_SYSTEM ? 1 : 0;
 $paramArray['maxBioLen'] = MAX_BIO_LEN;
 $paramArray['enableBioEdit'] = may_I('EditBio');
 $paramArray['userIdPrompt'] = USER_ID_PROMPT;
-$paramArray['defaultPhotoName'] = PHOTO_DEFAULT_IMAGE;
-$paramArray['approvedPhotoURL'] = PHOTO_PUBLIC_DIRECTORY;
-$paramArray['enablePhotos'] = PARTICIPANT_PHOTOS ? 1 : 0;
 participant_header($title, false, 'Normal', true);
 $resultXML = appendCustomTextArrayToXML($resultXML);
 RenderXSLT('my_profile.xsl', $paramArray, $resultXML);
