@@ -59,6 +59,7 @@ define("DEFAULT_USER_PASSWORD", "changeme"); // Note, Zambia will never directly
 // does not use a default password, leave this empty ''.
 define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag fields are used -- one of 4 following values:
 // "TAG_ONLY" : Track field is not used and will be hidden where possible.
+//      NOTE: TAG_ONLY requires that trackid 1 exist in Tracks, be the hidden track for TAG_ONLY and have selfselect be set to 1 (1, "Tag Based", 10, 1)
 // "TAG_OVER_TRACK" : Both fields are used, but primary sorting and filtering is by Tag.
 // "TRACK_OVER_TAG" : Both fields are used, but primary sorting and filtering is by Track.
 // "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
