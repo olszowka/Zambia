@@ -19,16 +19,18 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio,
-        P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
-        CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry
-    FROM
-			 Participants P
-		JOIN CongoDump CD ON P.badgeid = CD.badgeid
-    WHERE
-        P.badgeid = ?
-    ORDER BY
-        CD.lastname, CD.firstname
+    P.badgeid, P.pubsname, P.interested, P.bio,
+    P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
+    CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry,
+    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+	R.statustext, D.reasontext
+FROM Participants P
+JOIN CongoDump CD ON P.badgeid = CD.badgeid
+LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
+LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+WHERE P.badgeid = ?
+ORDER BY CD.lastname, CD.firstname
 EOD;
     $param_arr = array($fbadgeid);
     $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
@@ -89,7 +91,7 @@ function update_participant() {
     $poststate = getString("poststate");
     $postzip = getString("postzip");
     $postcountry = getString("postcountry");
-    
+
     if (!is_null($lastname) || !is_null($firstname) || !is_null($badgename) || !is_null($phone) || !is_null($email) || !is_null($postaddress1)
         || !is_null($postaddress2) || !is_null($postcity) || !is_null($poststate) || !is_null($postzip) || !is_null($postcountry)) {
         if (USE_REG_SYSTEM) {
@@ -101,7 +103,7 @@ function update_participant() {
         $query = <<<EOD
 UPDATE CongoDumpHistory
     SET inactivatedts = CURRENT_TIMESTAMP, inactivatedbybadgeid = ?
-    WHERE 
+    WHERE
             badgeid = ?
         AND inactivatedts IS NULL;
 EOD;
@@ -249,70 +251,48 @@ EOD;
 function perform_search() {
     global $linki, $message_error;
     $searchString = getString("searchString");
-    $photosApproval = getString("photosApproval");
-    if ($searchString == "" && $photosApproval == false)
+    if ($searchString == "")
         exit();
-    $mask = PHOTO_NEED_APPROVAL_MASK;
-    $needs = PHOTO_NEED_APPROVAL;
     $json_return = array ();
-    if ($photosApproval == "true") {
-        $needswhere = " AND (P.photouploadstatus & $mask) = $needs ";
-    } else {
-        $needswhere = "";
-    }
-    if ($photosApproval == "true" && $searchString == "") {
-
+    if (is_numeric($searchString)) {
         $query = <<<EOD
-            SELECT
-			    P.badgeid, P.pubsname, P.interested, P.bio,
-                P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-                CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-                CD.postcountry, CD.regtype
-			FROM
-						Participants P
-				JOIN CongoDump CD ON P.badgeid = CD.badgeid
-			WHERE
-			    (P.photouploadstatus & $mask) = $needs
-			ORDER BY
-			    CD.lastname, CD.firstname
-EOD;
-        $result = mysqli_query_exit_on_error($query);
-    } else if (is_numeric($searchString)) {
-        $query = <<<EOD
-			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio,
-                    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-                    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-                    CD.postcountry, CD.regtype
-			    FROM
-						 Participants P
-					JOIN CongoDump CD ON P.badgeid = CD.badgeid
-			    WHERE
-			        P.badgeid = ? $needswhere
-			    ORDER BY
-			        CD.lastname, CD.firstname
+SELECT
+	P.badgeid, P.pubsname, P.interested, P.bio,
+    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+    CD.postcountry, CD.regtype, P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+	R.statustext, D.reasontext
+FROM Participants P
+JOIN CongoDump CD ON P.badgeid = CD.badgeid
+LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
+LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+WHERE P.badgeid = ?
+ORDER BY CD.lastname, CD.firstname
 EOD;
         $param_arr = array($searchString);
         $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
     } else {
         $searchString = '%' . $searchString . '%';
         $query = <<<EOD
-			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio,
-                    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-                    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-                    CD.postcountry, CD.regtype
-			    FROM
-						 Participants P
-					JOIN CongoDump CD ON P.badgeid = CD.badgeid
-			    WHERE
-			           (P.pubsname LIKE ?
-					OR CD.lastname LIKE ?
-					OR CD.firstname LIKE ?
-					OR CD.badgename LIKE ?
-                    OR P.badgeid LIKE ?) $needswhere
-			    ORDER BY
-			        CD.lastname, CD.firstname
+SELECT
+	P.badgeid, P.pubsname, P.interested, P.bio,
+    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+    CD.postcountry, CD.regtype, P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+	R.statustext, D.reasontext
+FROM Participants P
+JOIN CongoDump CD ON P.badgeid = CD.badgeid
+LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
+LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+WHERE
+	    (P.pubsname LIKE ?
+    OR CD.lastname LIKE ?
+    OR CD.firstname LIKE ?
+    OR CD.badgename LIKE ?
+    OR P.badgeid LIKE ?)
+ORDER BY CD.lastname, CD.firstname
 EOD;
         $param_arr = array($searchString,$searchString,$searchString,$searchString,$searchString);
         $result = mysqli_query_with_prepare_and_exit_on_error($query, "sssss", $param_arr);

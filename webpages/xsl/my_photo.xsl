@@ -99,6 +99,21 @@
                     </span>
                   </div>
                 </div>
+                <xsl:if test="/doc/query[@queryName='participant_info']/row/@photodenialreasonid > 0">
+                  <div class="row mt-1">
+                    <div class="col-sm-5">
+                      <xsl:text>Denial Reason: </xsl:text>
+                      <span id="DeniallReason">
+                        <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@reasontext"/>
+                        <xsl:if test="/doc/query[@queryName='participant_info']/row/@photodenialreasonothertext != ''">
+                          <xsl:text> (</xsl:text>
+                          <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@photodenialreasonothertext"/>
+                          <xsl:text>)</xsl:text>
+                        </xsl:if>
+                      </span>
+                    </div>
+                  </div>
+                </xsl:if>
                 <div class="row mt-1">
                   <div class="col-sm-5">
                     <div class="btn-group" role="group" aria-label="Photo Update/Delete actions">
@@ -114,6 +129,7 @@
                     </div>
                   </div>
                   <xsl:if test="/doc/query[@queryName='participant_info']/row/@approvedphotofilename != ''">
+                    <div class="col-sm-1"></div>
                     <div class="col-sm-5">
                       <button type="button" class="btn btn-danger btn-sm" id="deleteApprovedPhoto">
                         Delete Approved Photo
@@ -128,42 +144,6 @@
                 </div> 
               </xsl:if>
             </form>
-        </div>
-    </xsl:template>
-    <xsl:template name="regRowContents">
-        <xsl:param name="label" />
-        <xsl:param name="value" />
-        <xsl:param name="id" />
-        <xsl:param name="fieldsize" />
-        <xsl:param name="maxlength" />
-        <div class="row">
-            <div class="col-sm-3p5 col-md-3 col-lg-2">
-                <h5>
-                    <xsl:choose>
-                        <xsl:when test="$useRegSystem = 1">
-                            <div class="badge badge-secondary badge-full-width">
-                                <xsl:value-of select="$label" />
-                            </div>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <label for="{$id}" class="badge badge-secondary badge-full-width">
-                                <xsl:value-of select="$label" />
-                            </label>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </h5>
-            </div>
-            <div class="col">
-                <xsl:choose>
-                    <xsl:when test="$useRegSystem = 1">
-                        <xsl:value-of select="$value" />
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <input id="{$id}" name="{$id}" value="{$value}" type="text"
-                            size="{$fieldsize}" maxlength="{$maxlength}" class="mycontrol" />
-                    </xsl:otherwise>
-                </xsl:choose>
-            </div>
         </div>
     </xsl:template>
 </xsl:stylesheet>

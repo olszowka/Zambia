@@ -6,7 +6,7 @@ require ('PartCommonCode.php'); // initialize db; check login;
 //                                  set $badgeid from session
 $queryArray["participant_info"] = <<<EOD
 SELECT
-	P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+	P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext, P.photodenialreasonid,
 	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
 	R.statustext, D.reasontext
 FROM Participants P
