@@ -151,7 +151,7 @@ function uploadphoto() {
     $pos = strpos($_POST["photo"], ",");
     $source = substr($_POST["photo"], $pos + 1);
     $type = substr($_POST["photo"], 0, $pos);
-    error_log($type);
+    //error_log($type);
     //error_log($source);
 
     $image = base64_decode($source);
@@ -170,11 +170,11 @@ function uploadphoto() {
         $ext = 'jpg';
 
     # get image size for resizing
-    error_log("w: $up_width, h: $up_height");
+    //error_log("w: $up_width, h: $up_height");
     $dest = getcwd();
     $newname = hash('md5', $participantBadgeId, false) . "." . $ext;
     $dest .= "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $newname;
-    error_log("dest = $dest");
+    //error_log("dest = $dest");
 
     $resize = 1;
     # check if need to resize
@@ -196,13 +196,13 @@ function uploadphoto() {
         else
             $resize = 1.0/intval($resizemin + 1);
     }
-    error_log("resize: $resize");
+    //error_log("resize: $resize");
     if ($resize != 1) {
         $originalimage = imagecreatefromstring($image);
 
         $newwidth = intval($up_width * $resize);
         $newheight = intval($up_height * $resize);
-        error_log("nw: $newwidth, nh: $newheight");
+        //error_log("nw: $newwidth, nh: $newheight");
         $resizedimage = imagecreatetruecolor($newwidth, $newheight);
         imagecopyresampled($resizedimage, $originalimage, 0, 0, 0, 0, $newwidth, $newheight, $up_width, $up_height);
         if ($ext == 'png')
@@ -237,7 +237,7 @@ SET
     photodenialreasonothertext = NULL,
 EOD;
     $sql .= " photouploadstatus = ((photouploadstatus | " . strval(PHOTO_UPLOAD_MASK) . ") &  ~" . strval(PHOTO_DENIED_MASK) . ")\nWHERE badgeid = ?;";
-    error_log($sql);
+    //error_log($sql);
     $paramarray = array();
     $paramarray[] = $newname;
     $paramarray[] = $participantBadgeId;
@@ -288,7 +288,7 @@ function fetch_photo() {
     $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
     $row = mysqli_fetch_assoc($result);
     if (!$row)
-        exit();
+        return;
     $dest = getcwd();
     $dest .= "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
     echo file_get_contents($dest);
@@ -313,7 +313,10 @@ function deleteuploadedphoto() {
         $do_update = false;
     } else {
         $fname = $dest . "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
-        if (!unlink($fname)) {
+        try {
+            unlink($fname);
+        } catch (Exception $e) {
+            error_log("Caught: " . $e->getMessage());
             $json_return["message"] = "Error deleting photo";
             $do_update = false;
         }
@@ -324,7 +327,7 @@ function deleteuploadedphoto() {
            "\nWHERE badgeid = ?;";
         $paramarray = array();
         $paramarray[0] = $participantBadgeId;
-        error_log("Sql=\n$sql\n");
+        //error_log("Sql=\n$sql\n");
         $rows =  mysql_cmd_with_prepare($sql, 's', $paramarray);
         if ($rows != 1) {
             $json_return["message"] = "Error updating database";
@@ -345,7 +348,7 @@ EOD;
         $json_return["photostatus"] = $row["statustext"];
 
         $fname = $dest . PHOTO_PUBLIC_DIRECTORY . "/" . PHOTO_DEFAULT_IMAGE;
-        error_log("Default path = $fname");
+        //error_log("Default path = $fname");
         $json_return["image"] = 'data:image/png;base64,' . base64_encode(file_get_contents($fname));
     }
     echo json_encode($json_return) . "\n";
@@ -367,7 +370,7 @@ function denyphoto() {
     $paramarray[0] = $othertext;
     $paramarray[1] = $reasoncode;
     $paramarray[2] = $participantBadgeId;
-    error_log("Sql=\n$sql\n");
+    //error_log("Sql=\n$sql\n");
     $rows =  mysql_cmd_with_prepare($sql, 'sis', $paramarray);
     if ($rows != 1) {
         $json_return["message"] = "Error updating database";
@@ -391,7 +394,7 @@ EOD;
         $json_return["message"] = "Error fetching Photo Status";
     }
     $json_return["photostatus"] = $row["statustext"];
-    $json_return["photostatusis"] = $row["photouploadstatus"];
+    $json_return["photostatusid"] = $row["photouploadstatus"];
     $json_return["othertext"] = $row["photodenialreasonothertext"];
     $json_return["reasontext"] = $row["reasontext"];
     $json_return["reasonid"] = $row["photodenialreasonid"];
@@ -399,6 +402,83 @@ EOD;
     echo json_encode($json_return) . "\n";
 };
 
+function approvephoto() {
+    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
+
+    $participantBadgeId = getString("badgeid");
+    $json_return = array();
+    $move_ok = true;
+
+    $sql = "SELECT uploadedphotofilename, approvedphotofilename FROM Participants WHERE badgeid = ?";
+    $paramarray = array();
+    $paramarray[0] = $participantBadgeId;
+    $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
+    $row = mysqli_fetch_assoc($result);
+    if (!$row)
+        return;
+    $dest = getcwd();
+    $oldfilename = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/" . $row["approvedphotofilename"];
+    if (strlen($oldfilename) > 0) {
+        try {
+            unlink($oldfilename);
+        }
+        catch (Exception $e) {
+            error_log("Caught: " . $e->getMessage());
+            $json_return["message"] = "Error deleting prior approved photo";
+            $move_ok = false;
+        }
+    }
+
+    if ($move_ok) {
+        $filename = $row["uploadedphotofilename"];
+        $upload_path = $dest .  "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $filename;
+        $approved_path = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/pp" . $filename;
+        try {
+            rename($upload_path, $approved_path);
+        } catch (Exception $e) {
+            error_log("Caught: " . $e->getMessage());
+            $json_return["message"] = "Error moving approved photo";
+            $move_ok = false;
+        }
+    }
+
+    if ($move_ok) {
+        $sql = "UPDATE Participants SET uploadedphotofilename = NULL, approvedphotofilename = 'pp" . $filename . "', " .
+            "photodenialreasonothertext = NULL, photouploadstatus = " . strval(PHOTO_APPROVED_MASK) . " WHERE badgeid = ?";
+        $paramarray = array();
+        $paramarray[0] = $participantBadgeId;
+        //error_log("Sql=\n$sql\n");
+        $rows =  mysql_cmd_with_prepare($sql, 's', $paramarray);
+        if ($rows != 1) {
+            $json_return["message"] = "Error updating database";
+        } else {
+            $sql = <<<EOD
+SELECT
+    P.photodenialreasonothertext, P.photodenialreasonid, P.approvedphotofilename,
+    CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+    R.statustext, D.reasontext
+FROM Participants P
+LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
+LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+WHERE P.badgeid = ?
+EOD;
+            $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
+            $row = mysqli_fetch_assoc($result);
+            if (!$row) {
+                $json_return["message"] = "Error fetching Photo Status";
+            } else {
+                $json_return["photostatus"] = $row["statustext"];
+                $json_return["photostatusid"] = $row["photouploadstatus"];
+                $json_return["othertext"] = $row["photodenialreasonothertext"];
+                $json_return["reasontext"] = $row["reasontext"];
+                $json_return["reasonid"] = $row["photodenialreasonid"];
+                $json_return["approvedphoto"] = $row["approvedphotofilename"];
+                $json_return["message"] = "Photo approved";
+            }
+        }
+    }
+    echo json_encode($json_return) . "\n";
+};
 
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
@@ -436,10 +516,13 @@ switch ($ajax_request_action) {
     case 'deny_photo':
         denyphoto();
         break;
+    case 'approve_photo':
+        approvephoto();
+        break;
     default:
         $message_error = "Internal error.";
         RenderErrorAjax($message_error);
-        exit();
-}
 
+}
+exit();
 ?>

@@ -107,7 +107,7 @@ if (PARTICIPANT_PHOTOS === TRUE) {
             <div class="col-sm-1"></div>
                 <div class="col-sm-5 card alert-secondary">
                     <p class="card-title">Approved Photo</p>
-                    <div class="card-body">
+                    <div class="card-body" style="margin-right: auto; margin-left: auto; margin-top:0;">
                         <img class="approved-image" id="approvedPhoto" style="width: 400px; height: 400px; object-fit: scale-down; margin-top:0; margin-right: auto; margin-left: auto;" />
                     </div>
                 </div>

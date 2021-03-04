@@ -368,7 +368,11 @@ function deleteuploadedphoto() {
         $do_update = false;
     } else {
         $fname = $dest . "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
-        if (!unlink($fname)) {
+        try {
+            unlink($fname);
+        }
+        catch (Exception $e) {
+            error_log("Caught: " . $e->getMessage());
             $json_return["message"] = "Error deleting photo";
             $do_update = false;
         }

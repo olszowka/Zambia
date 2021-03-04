@@ -1,10 +1,7 @@
 // Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-var approvalDirty = false;
-var denyOtherTextDirty = false;
 var fbadgeid;
 var resultsHidden = true;
 var $denyButton = null;
-var saveNewBadgeId;
 var $prevBTN = null;
 var $nextBTN = null;
 var searchIndex = 0;
@@ -31,24 +28,25 @@ var $denialReasonSPAN = null
 var $denyDetailsDIV = null;
 var uploadlock = false;
 var cropper = null;
+var $cropBTN = null;
+var $cropsaveBTN = null;
+var $cropleftBTN = null
+var $croprightBTN = null;
+var $cropcancelBTN = null;
 var default_photo = null;
 var approved_dir = '/';
 var curbadgeid = null;
 
-function isDirty(override) {
-    //called when user clicks "Search for participants" on the page
-    if (override === undefined) {
-        override = false;
-    }
-    if (!override && (approvalDirty || denyOtherTextDirty)) {
-        $("#unsavedWarningModal").modal('show');
-        $("#cancelOpenSearchBUTN").blur();
-        return true;
-    }
-    if (override) {
-        $("#unsavedWarningModal").modal('hide');
-    }
-    return false;
+const crop_hideall = 0;
+const crop_showbtn = 1;
+const crop_showdirections = 2;
+
+function changeCropDisplay(cropstyle) { // 0 = hide all, 1 = show crop button, 2 = show crop directions
+    $cropBTN.style.display = cropstyle == 1 ? 'block' : 'none';
+    $cropsaveBTN.style.display = cropstyle == 2 ? 'block' :  'none';
+    $cropleftBTN.style.display = cropstyle == 2 ? 'block' : 'none';
+    $croprightBTN.style.display = cropstyle == 2 ? 'block' : 'none';
+    $cropcancelBTN.style.display = cropstyle == 2 ? 'block' : 'none';
 }
 
 function nextParticipant() {
@@ -67,10 +65,6 @@ function prevParticipant() {
 
 function chooseParticipant(badgeid, override) {
     //debugger;
-    if (isDirty(override)) {
-        saveNewBadgeId = badgeid;
-        return;
-    }
     curbadgeid = badgeid;
     var badgeidJQSel = badgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
     hideSearchResults();
@@ -94,8 +88,6 @@ function chooseParticipant(badgeid, override) {
     $('#warnName').html(lnamefname);
     $('#warnNewBadgeID').html(badgeid);
     var denyOtherText = $("#approvalNotesHID_" + badgeidJQSel).val();
-    denyOtherTextDirty = false;
-    approvalDirty = false;
     $('#resultsDiv').show();
     $denyButton.disabled = true;
     $denyReasonDIV.style.display = 'none';
@@ -120,11 +112,8 @@ function chooseParticipant(badgeid, override) {
         $approvePhoto.style.display = 'block';
         $denyPhoto.style.display = 'block';
         $uploadUpdatedPhoto.style.display = 'none';
-        document.getElementById("crop").style.display = 'block';
-        document.getElementById("save_crop").style.display = 'none';
-        document.getElementById("rotate_left").style.display = 'none';
-        document.getElementById("rotate_right").style.display = 'none';
-        document.getElementById("cancel_crop").style.display = 'none';
+        changeCropDisplay(crop_showbtn);
+        
     }
     else {
         $uploadPhotoDelete.style.display = 'none';
@@ -132,14 +121,10 @@ function chooseParticipant(badgeid, override) {
         $approvePhoto.style.display = 'none';
         $denyPhoto.style.display = 'none';
         $uploadedPhoto.src = default_photo;
-        document.getElementById("crop").style.display = 'none';
-        document.getElementById("save_crop").style.display = 'none';
-        document.getElementById("rotate_left").style.display = 'none';
-        document.getElementById("rotate_right").style.display = 'none';
-        document.getElementById("cancel_crop").style.display = 'none';
+        changeCropDisplay(crop_hideall);
     }
     approvedPhotoName = $("#approvedphotoHID_" + badgeidJQSel).val();
-    if ($approvedPhoto.length > 0) {
+    if (approvedPhotoName.length > 0) {
         $approvedPhoto.src = approved_dir + approvedPhotoName;
     } else {
         $approvedPhoto.src = default_photo;
@@ -207,7 +192,7 @@ function initializeAdminPhotos() {
     //called when JQuery says AdminParticipants page has loaded
     //debugger;
     default_photo = document.getElementById('default_photo').value;
-    approved_dir = default_photo.substr(0, default_photo.lastIndexOf('/'));
+    approved_dir = default_photo.substr(0, default_photo.lastIndexOf('/') + 1);
     $lastname = $("#lastname");
     $firstname = $("#firstname");
     $badgename = $("#badgename");
@@ -228,6 +213,11 @@ function initializeAdminPhotos() {
     $denyOtherText = document.getElementById("denyOtherText");
     $denialReasonSPAN = document.getElementById("denialReasonSPAN");
     $denyDetailsDIV = document.getElementById("denyDetailsDIV");
+    $cropBTN = document.getElementById("crop");
+    $cropsaveBTN = document.getElementById("save_crop");
+    $cropleftBTN = document.getElementById("rotate_left");
+    $croprightBTN = document.getElementById("rotate_right");
+    $cropcancelBTN = document.getElementById("cancel_crop");
     $('#resultsDiv').hide();
     $('#resultBoxDIV').hide();
     $("#unsavedWarningModal").modal({show: false});
@@ -295,11 +285,6 @@ function initializeAdminPhotos() {
 
 }
 
-function loadNewParticipant() {
-    chooseParticipant(saveNewBadgeId, true);
-    return true;
-}
-
 function showAjaxError(data, textStatus, jqXHR) {
     var $resultBoxDIV = $("#resultBoxDIV");
     if (data && data.responseText) {
@@ -320,8 +305,6 @@ function showSearchResults() {
 
 function showUpdateResults(data, textStatus, jqXHR) {
     //ajax success callback function
-    denyOtherTextDirty = false;
-    approvalDirty = false;
     $('#updateBUTN').button('reset');
     $updateButton.prop("disabled", true);
     // update the selection list
@@ -384,11 +367,7 @@ function crop() {
         cropper.destroy();
         cropper = null;
     }
-    document.getElementById("crop").style.display = 'none';
-    document.getElementById("save_crop").style.display = 'block';
-    document.getElementById("rotate_left").style.display = 'block';
-    document.getElementById("rotate_right").style.display = 'block';
-    document.getElementById("cancel_crop").style.display = 'block';
+    changeCropDisplay(crop_showdirections);
     $uploadUpdatedPhoto.style.display = 'none';
 
     cropper = new Croppie($uploadedPhoto, {
@@ -412,11 +391,7 @@ function cancelcrop() {
         cropper.destroy();
         cropper = null;
     }
-    document.getElementById("crop").style.display = 'block';
-    document.getElementById("save_crop").style.display = 'none';
-    document.getElementById("rotate_left").style.display = 'none';
-    document.getElementById("rotate_right").style.display = 'none';
-    document.getElementById("cancel_crop").style.display = 'none';
+    changeCropDisplay(crop_showbtn);
     $uploadUpdatedPhoto.style.display = 'block';
 };
 
@@ -428,11 +403,7 @@ function savecrop() {
         });
         cropper.destroy();
         cropper = null;
-        document.getElementById("crop").style.display = 'block';
-        document.getElementById("save_crop").style.display = 'none';
-        document.getElementById("rotate_left").style.display = 'none';
-        document.getElementById("rotate_right").style.display = 'none';
-        document.getElementById("cancel_crop").style.display = 'none';
+        changeCropDisplay(crop_showbtn);
         $uploadUpdatedPhoto.style.display = 'block';
     }
 };
@@ -459,11 +430,7 @@ function transfercomplete(data, textStatus, jqXHR) {
     // enable delete button
     $uploadPhotoDelete.style.display = 'block';
     $uploadUpdatedPhoto.style.display = 'none';
-    document.getElementById("crop").style.display = 'block';
-    document.getElementById("save_crop").style.display = 'none';
-    document.getElementById("rotate_left").style.display = 'none';
-    document.getElementById("rotate_right").style.display = 'none';
-    document.getElementById("cancel_crop").style.display = 'none';
+    changeCropDisplay(crop_showbtn);
 
     var badgeidJQSel = curbadgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
     console.log("uploSWS photo for badgeid = " + badgeidJQSel);
@@ -547,12 +514,7 @@ function deleteuploadedcomplete(data, textStatus, jqXHR) {
     if (data_json.hasOwnProperty("message"))
         message = data_json.message;
     // disable delete button
-    $uploadPhotoDelete.style.display = 'none';
-    document.getElementById("crop").style.display = 'none';
-    document.getElementById("save_crop").style.display = 'none';
-    document.getElementById("rotate_left").style.display = 'none';
-    document.getElementById("rotate_right").style.display = 'none';
-    document.getElementById("cancel_crop").style.display = 'none';
+    changeCropDisplay(crop_hideall);
     $uploadPhotoDelete.style.display = 'none';
     $approvePhoto.style.display = 'none';
     $denyPhoto.style.display = 'none';
@@ -626,7 +588,7 @@ function loaduploadimage(file) {
         reader.onload = (function (thefile) {
             return function (e) {
                 $uploadedPhoto.src = e.target.result;
-                document.getElementById("crop").style.display = 'block';
+                $cropBTN.style.display = 'block';
             }
         })(file);
 
@@ -665,7 +627,7 @@ function denycomplete(data, textStatus, jqXHR) {
         console.log(error);
     }
 
-    console.log(data_json);
+    //console.log(data_json);
 
     $denyOtherText.value = "";
     $denyReason.selectedIndex = 0;
@@ -673,10 +635,10 @@ function denycomplete(data, textStatus, jqXHR) {
     $denyReasonDIV.style.display = 'none';
 
     var badgeidJQSel = curbadgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
-    console.log("denmied photo for badgeid = " + badgeidJQSel);
+    //console.log("denied photo for badgeid = " + badgeidJQSel);
     if (data_json.hasOwnProperty("photostatus")) {
         $uploadPhotoStatus.innerHTML = data_json["photostatus"];
-        $("#photouploadstatusHID_" + badgeidJQSel).val(data_json["photostatus"]);
+        $("#photouploadstatusHID_" + badgeidJQSel).val(data_json["photostatus"])
         $("#statustextSPAN_" + badgeidJQSel).text(data_json["photostatus"]);
     }
 
@@ -726,6 +688,79 @@ function doDeny() {
         dataType: "html",
         data: postdata,
         success: denycomplete,
+        error: showAjaxError,
+        type: "POST"
+    });
+};
+
+function approvecomplete(data, textStatus, jqXHR) {
+    uploadlock = false;
+    message = "";
+    //console.log(data);
+    try {
+        data_json = JSON.parse(data);
+    } catch (error) {
+        console.log(error);
+    }
+
+    console.log(data_json);
+
+    $denyOtherText.value = "";
+    $denyReason.selectedIndex = 0;
+    $denyButton.disabled = true;
+    $denyReasonDIV.style.display = 'none';
+
+    var badgeidJQSel = curbadgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
+    console.log("approved photo for badgeid = " + badgeidJQSel);
+    if (data_json.hasOwnProperty("photostatus")) {
+        $uploadPhotoStatus.innerHTML = data_json["photostatus"];
+        $("#photouploadstatusHID_" + badgeidJQSel).val(data_json["photostatus"]);
+        $("#statustextSPAN_" + badgeidJQSel).text(data_json["photostatus"]);
+    }
+    if (data_json.hasOwnProperty("approvedphoto")) {
+        $approvedPhoto.src = approved_dir + data_json["approvedphoto"];
+        $uploadedPhoto.src = default_photo;
+        $("#uploadedphotoHID_" + badgeidJQSel).val("");
+        $("#denialOtherTextHID_" + badgeidJQSel).val("");
+        $('#reasontextHID_' + badgeidJQSel).val("");
+        $denialReasonSPAN.textContent = "";
+        $denyDetailsDIV.style.display = 'none';
+        changeCropDisplay(crop_hideall);
+        $uploadPhotoDelete.style.display = 'none';
+        $uploadUpdatedPhoto.style.display = 'none';
+        $approvePhoto.style.display = 'none';
+        $denyPhoto.style.display = 'none';
+    } else {
+        $approvedPhoto.src = default_photo;
+    }
+
+    if (message != "") {
+        if (message.startsWith("Error"))
+            alert_type = "alert-danger";
+        else
+            alert_type = "alert-success"
+        content = '<div class="row mt-3"><div class="col-12"><div class="alert ' + alert_type + '" role="alert">' + message + '</div></div></div>';
+        $resultBoxDiv.html(content).css("visibility", "visible");
+        document.getElementById("resultBoxDIV").scrollIntoView(false);
+    }
+}
+
+function approvephoto() {
+    if (uploadlock) {
+        showErrorMessage("Photo change in progress, please wait");
+        return false;
+    }
+    $resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+    uploadlock = true;
+    var postdata = {
+        ajax_request_action: "approve_photo",
+        badgeid: curbadgeid,
+    };
+    $.ajax({
+        url: "SubmitAdminPhotos.php",
+        dataType: "html",
+        data: postdata,
+        success: approvecomplete,
         error: showAjaxError,
         type: "POST"
     });
