@@ -64,7 +64,7 @@
                   <div class="col-sm-5 card alert-secondary">
                     <p class="card-title">Approved Photo</p>
                     <div class="card-body">
-                      <img class="approved-image" style="width: 400px; height: 400px; object-fit: scale-down; margin-top:0; margin-right: auto; margin-left: auto;">
+                      <img class="approved-image" style="width: 400px; height: 400px; object-fit: scale-down; margin-top:0; margin-right: auto; margin-left: auto;" id="approvedPhoto">
                         <xsl:attribute name="src">
                           <xsl:value-of select="$approvedPhotoURL"/>
                           <xsl:text>/</xsl:text>
@@ -131,7 +131,7 @@
                   <xsl:if test="/doc/query[@queryName='participant_info']/row/@approvedphotofilename != ''">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-5">
-                      <button type="button" class="btn btn-danger btn-sm" id="deleteApprovedPhoto">
+                      <button type="button" class="btn btn-danger btn-sm" id="deleteApprovedPhoto" onClick="myPhoto.deleteapprovedphoto();">
                         Delete Approved Photo
                       </button>
                     </div>

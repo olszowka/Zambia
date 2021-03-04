@@ -5,11 +5,13 @@ function MyPhoto() {
 	var $resultBoxDiv = null;
 	var $uploadZone = null;
 	var $uploadedPhoto = null;
+	var $approvedPhoto = null;
 	var $uploadChooseFile = null;
 	var $chooseFileName = null;
 	var $uploadPhotoDelete = null;
 	var $uploadUpdatedPhoto = null;
 	var $uploadPhotoStatus = null;
+	var $approvedPhotoDelete = null;
 	var uploadlock = false;
 	var cropper = null;
 
@@ -20,7 +22,9 @@ function MyPhoto() {
 		$uploadChooseFile = document.getElementById("uploadPhoto");
 		$chooseFileName = document.getElementById("chooseFileName");
 		$uploadedPhoto = document.getElementById("uploadedPhoto");
+		$approvedPhoto = document.getElementById("approvedPhoto");
 		$uploadPhotoDelete = document.getElementById("deleteUploadPhoto");
+		$approvedPhotoDelete = document.getElementById("deleteApprovedPhoto");
 		$uploadUpdatedPhoto = document.getElementById("updateUploadPhoto");
 		$uploadPhotoStatus = document.getElementById("uploadedPhotoStatus");
 		if (document.getElementById("default_photo").value == '0')
@@ -82,7 +86,7 @@ function MyPhoto() {
 	};
 
     this.showAjaxError = function showAjaxError(data, textStatus, jqXHR) {
-        var content;
+		var content;
         if (data && data.responseText) {
             content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">${data.responseText}</div></div></div>`;
         } else {
@@ -212,6 +216,61 @@ function MyPhoto() {
 			dataType: "html",
 			data: postdata,
 			success: myPhoto.deleteuploadedcomplete,
+			error: myPhoto.showAjaxError,
+			type: "POST"
+		});
+	};
+
+	this.deleteapprovedcomplete = function deleteapprovedcomplete(data, textStatus, jqXHR) {
+		uploadlock = false;
+		message = "";
+		//console.log(data);
+		try {
+			data_json = JSON.parse(data);
+		} catch (error) {
+			console.log(error);
+		}
+
+		//console.log(data_json);
+		if (data_json.hasOwnProperty("message"))
+			message = data_json.message;
+		// disable delete button
+		$approvedPhotoDelete.style.display = 'none';
+
+		// reload default photo
+		if (data_json.hasOwnProperty("image")) {
+			$approvedPhoto.src = data_json["image"];
+		}
+		if (data_json.hasOwnProperty("photostatus")) {
+			$uploadPhotoStatus.innerHTML = data_json["photostatus"];
+		}
+
+		if (message != "") {
+			if (message.startsWith("Error"))
+				alert_type = "alert-danger";
+			else
+				alert_type = "alert-success"
+			content = '<div class="row mt-3"><div class="col-12"><div class="alert ' + alert_type + '" role="alert">' + message + '</div></div></div>';
+			$resultBoxDiv.html(content).css("visibility", "visible");
+			document.getElementById("resultBoxDIV").scrollIntoView(false);
+		}
+	}
+
+	this.deleteapprovedphoto = function deleteapprovedphoto() {
+		if (uploadlock) {
+			myPhoto.showErrorMessage("Upload in progress, please wait");
+			return false;
+		}
+		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		uploadlock = true;
+		var postdata = {
+			ajax_request_action: "delete_approved_photo"
+		};
+		$.ajax({
+			url: "SubmitMyContact.php",
+			dataType: "html",
+			data: postdata,
+			success: myPhoto.deleteapprovedcomplete,
 			error: myPhoto.showAjaxError,
 			type: "POST"
 		});

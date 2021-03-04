@@ -326,7 +326,8 @@ EOD;
     $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
     $row = mysqli_fetch_assoc($result);
     if (!$row) {
-        $json_return["message"] = "Error fetching Photo Status";
+        RenderErrorAjax("Error fetching Photo Status");
+        exit();
     }
     $json_return["photostatus"] = $row["statustext"];
     $dest = getcwd();
@@ -364,19 +365,20 @@ function deleteuploadedphoto() {
     $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
     $row = mysqli_fetch_assoc($result);
     if (!$row) {
-        $json_return["message"] = "Error fetching photo to delete";
-        $do_update = false;
-    } else {
-        $fname = $dest . "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
-        try {
-            unlink($fname);
-        }
-        catch (Exception $e) {
-            error_log("Caught: " . $e->getMessage());
-            $json_return["message"] = "Error deleting photo";
-            $do_update = false;
-        }
+        RenderErrorAjax("Error fetching photo to delete");
+        exit();
     }
+
+    $fname = $dest . "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
+    try {
+        unlink($fname);
+    }
+    catch (Exception $e) {
+        error_log("Caught: " . $e->getMessage());
+        $json_return["message"] = "Error deleting photo";
+        $do_update = false;
+    }
+
     if ($do_update) {
         $sql = "UPDATE Participants SET uploadedphotofilename = NULL, photodenialreasonothertext = NULL, photodenialreasonid = NULL," .
            " photouploadstatus = photouploadstatus & ~" . strval(PHOTO_UPLOAD_MASK) . " & ~" . strval(PHOTO_DENIED_MASK) .
@@ -386,7 +388,8 @@ function deleteuploadedphoto() {
         error_log("Sql=\n$sql\n");
         $rows =  mysql_cmd_with_prepare($sql, 's', $paramarray);
         if ($rows != 1) {
-            $json_return["message"] = "Error updating database";
+            RenderErrorAjax("Error updating database");
+            exit();
         }
 
         $sql = <<<EOD
@@ -400,15 +403,77 @@ EOD;
         $row = mysqli_fetch_assoc($result);
         if (!$row) {
             $json_return["message"] = "Error fetching Photo Status";
+        } else {
+            $json_return["photostatus"] = $row["statustext"];
+            $json_return["message"] = "Uploaded photo deleted";
         }
-        $json_return["photostatus"] = $row["statustext"];
 
         $fname = $dest . PHOTO_PUBLIC_DIRECTORY . "/" . PHOTO_DEFAULT_IMAGE;
         error_log("Default path = $fname");
         $json_return["image"] = 'data:image/png;base64,' . base64_encode(file_get_contents($fname));
     }
     echo json_encode($json_return) . "\n";
-}
+};
+
+function deleteapprovedphoto() {
+    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title, $badgeid;
+
+    $json_return = array();
+    $dest = getcwd();
+    $do_update = true;
+
+    $sql = "SELECT approvedphotofilename FROM Participants WHERE badgeid = ?";
+    $paramarray = array();
+    $paramarray[0] = $badgeid;
+    $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
+    $row = mysqli_fetch_assoc($result);
+    if (!$row) {
+        RenderErrorAjax("Error fetching photo to delete");
+        exit();
+    }
+    $fname = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/" . $row["approvedphotofilename"];
+    try {
+        unlink($fname);
+    }
+    catch (Exception $e) {
+        error_log("Caught: " . $e->getMessage());
+        $json_return["message"] = "Error deleting approved photo";
+        $do_update = false;
+    }
+    if ($do_update) {
+        $sql = "UPDATE Participants SET approvedphotofilename = NULL, photouploadstatus = photouploadstatus & ~" . strval(PHOTO_APPROVED_MASK) .
+           "\nWHERE badgeid = ?;";
+        $paramarray = array();
+        $paramarray[0] = $badgeid;
+        error_log("Sql=\n$sql\n");
+        $rows =  mysql_cmd_with_prepare($sql, 's', $paramarray);
+        if ($rows != 1) {
+            RenderErrorAjax("Unable to update database");
+            exit();
+        }
+
+        $sql = <<<EOD
+SELECT CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus, R.statustext
+FROM Participants P
+LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+WHERE badgeid = ?;
+EOD;
+
+        $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
+        $row = mysqli_fetch_assoc($result);
+        if (!$row) {
+            $json_return["message"] = "Error fetching Photo Status";
+        } else {
+            $json_return["message"] = "Approved photo deleted";
+            $json_return["photostatus"] = $row["statustext"];
+        }
+
+        $fname = $dest . PHOTO_PUBLIC_DIRECTORY . "/" . PHOTO_DEFAULT_IMAGE;
+        error_log("Default path = $fname");
+        $json_return["image"] = 'data:image/png;base64,' . base64_encode(file_get_contents($fname));
+    }
+    echo json_encode($json_return) . "\n";
+};
 
 // start of AJAX dispatch
 if (!isLoggedIn()) {
@@ -443,6 +508,9 @@ switch ($action) {
         break;
     case 'delete_uploaded_photo':
         deleteuploadedphoto();
+        break;
+    case 'delete_approved_photo':
+        deleteapprovedphoto();
         break;
     default:
         $message_error = "Invalid ajax_request_action: $action.  Database not updated.";
