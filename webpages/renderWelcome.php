@@ -4,7 +4,8 @@ global $message, $message_error, $message2, $title;
 // $participant_array is defined by file including this.
 $title = "Participant View";
 require_once('PartCommonCode.php');
-participant_header($title);
+populateCustomTextArray(); // title changed above, reload custom text with the proper page title
+participant_header($title, false, 'Normal', true);
 if ($message_error != "") {
     echo "<P class=\"alert alert-error\">$message_error</P>\n";
 }
@@ -21,69 +22,74 @@ if (may_I('postcon')) { ?>
     participant_footer();
     exit();
 }
-?>
+    ?>
     
-<div class="row-fluid">
-	<div class="span12">
+<form name="pwform" method=POST action="SubmitWelcome.php">
+<div class="row mt-4">
+	<div class="col col-sm-12">
 		<h3>Please check back often as more options will become available as we get closer to the convention.</h3>
 		<p>Dear <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?>,</p>
 		<p>Welcome to the <?php echo CON_NAME; ?> Programming website.</p>
 		<h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming. You will be scheduled only if you say YES.</h4>
-		<form class="form-horizontal" name="pwform" method=POST action="SubmitWelcome.php">
-			<fieldset>
-                <div id="update_section" class="control-group">
-                    <label for="interested" class="control-label">Are you interested?</label>
-                    <div class="controls">
-                    <?php $int=$participant_array['interested']; ?>
-                    <select id="interested" name="interested" class="span2">
-                        <option value=0 <?php if ($int==0) {echo "selected=\"selected\"";} ?> >&nbsp;</option>
-                        <option value=1 <?php if ($int==1) {echo "selected=\"selected\"";} ?> >Yes</option>
-                        <option value=2 <?php if ($int==2) {echo "selected=\"selected\"";} ?> >No</option>
-                    </select>
-				</div>
-			  </div>
-			</fieldset>
-            <?php if ($participant_array['chpw']) { ?>
-            <h4>Now take a moment and personalize your password.</h4>
-            <fieldset>
-                <div class="control-group">
-                    <label class="control-label nowidth" for="password">New Password:</label>
-                    <div class="controls">
-                        <input id="password" type="password" size="10" name="password" />
-                    </div>
-                    <label class="control-label nowidth" for="cpassword">Confirm New Password:</label>
-                    <div class="controls">
-                        <input id="cpassword" type="password" size="10" name="cpassword" />
-                    </div>
-				</div>
-			</fieldset>
-			<?php } else if (DEFAULT_USER_PASSWORD) { ?>
-			<p> Thank you for changing your password. For future changes, use the "My Profile" tab.</p>
-            <?php } ?>
-            <button class="btn btn-primary" type="submit" name="submit" >Update</button>
-		</form>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col col-sm-1"></div>
+    <div class="col col-sm-9">
+        <div id="update_section">
+            <label for="interested" style="margin-right: 5px;">Are you interested?</label>
+            <?php $int=$participant_array['interested']; ?>
+            <select id="interested" name="interested">
+                <option value=0 <?php if ($int==0) {echo "selected=\"selected\"";} ?> >&nbsp;</option>
+                <option value=1 <?php if ($int==1) {echo "selected=\"selected\"";} ?> >Yes</option>
+                <option value=2 <?php if ($int==2) {echo "selected=\"selected\"";} ?> >No</option>
+            </select>
+		</div>
 	</div>
 </div>
-<div class="row-fluid">
-	<div class="span12">
+<div class="row mt-2">
+	<div class="col col-sm-12">
+        <?php if ($participant_array['chpw']) { ?>
+        <h4>Now take a moment and personalize your password.</h4>
+    </div>
+</div>
+ <div class="row mt-2">
+    <div class="col col-sm-1"></div>
+    <div class="col col-sm-9">
+        <fieldset>
+            <label for="password" style="margin-right: 5px;">New Password:</label>
+            <input id="password" type="password" size="10" name="password" />
+            <label for="cpassword" style="margin-left: 20px; margin-right:5px;" >Confirm New Password:</label>
+            <input id="cpassword" type="password" size="10" name="cpassword" />
+		</fieldset>
+        <?php } ?>
+     </div>
+</div>
+ <div class="row mt-2">
+    <div class="col col-sm-12">
+        <button class="btn btn-primary" type="submit" name="submit" >Update</button>
+	</div>
+</div>
+</form>
+<div class="row mt-4">
+	<div class="col col-sm-12">
 		<p> Use the "Profile" menu to:</p>
         <ul>
-            <li> Check your contact information. </li>
+            <li> Check your contact information.</li>
+            <li> Change your password.</li>
             <li> Indicate whether you will be participating in <?php echo CON_NAME; ?>.</li>
             <li> Opt out of sharing your email address with other program participants.</li>
             <li> Edit your name as you want to appear in our publications.</li>
             <li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
         </ul>
-		<?php if (may_I('my_panel_interests')) { ?>
-        <p> Use the "Session Interests" menu to:</p>
-            <ul>
-                <li> See what selections you have made for sessions.</li>
-                <li> Alter or give more information about your selections.</li>
-                <li> Rank the preference of your selections.</li>
-            </ul>
-        <?php } else { ?>
-        <p> The "Session Interests" menu is currently unavailable. Check back later.</p>
+        <?php if (may_I('my_availability')) { ?>
+        <p> Use the "Availability" menu to:</p>
+        <ul>
+            <li> Number of sessions you are interested in and on which days.</li>
+            <li> List the times during the convention you are availalbe.</li>
+        </ul>
         <?php } ?>
+
         <?php if (may_I('my_gen_int_write')) { ?>
         <p> Use the "General Interests" menu to:</p>
         <ul>
@@ -97,17 +103,6 @@ if (may_I('postcon')) { ?>
             <li> This is currently read-only as con is approaching.  If you need to make a change here, please email us:  <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
         </ul>
         <?php } ?>
-
-        <?php if (may_I('my_schedule')) { ?>
-        <p> Use the "My Schedule" menu to:</p>
-        <ul>
-            <li> See what you have been scheduled to do at con.</li>
-            <li> If there are issues, conflict or questions please email us at 
-                <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
-        </ul>
-        <?php } else { ?>
-        <p> The "My Schedule" menu is currently unavailable.  Check back later.</p>
-        <?php } ?>
         
         <?php if (may_I('search_panels')) { ?>
         <p> Use the "Search Sessions" menu to:</p>
@@ -119,6 +114,26 @@ if (may_I('postcon')) { ?>
         <p> The "Search Sessions" menu is currently unavailable.  Check back later.</p>
         <?php } ?>
         
+        <?php if (may_I('my_panel_interests')) { ?>
+        <p> Use the "Session Interests" menu to:</p>
+            <ul>
+                <li> See what selections you have made for sessions.</li>
+                <li> Alter or give more information about your selections.</li>
+                <li> Rank the preference of your selections.</li>
+            </ul>
+        <?php } else { ?>
+        <p> The "Session Interests" menu is currently unavailable. Check back later.</p>
+        <?php } ?>        <?php if (may_I('my_schedule')) { ?>
+        <p> Use the "My Schedule" menu to:</p>
+        <ul>
+            <li> See what you have been scheduled to do at con.</li>
+            <li> If there are issues, conflict or questions please email us at 
+                <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
+        </ul>
+        <?php } else { ?>
+        <p> The "My Schedule" menu is currently unavailable.  Check back later.</p>
+        <?php } ?>
+       
         <?php if (may_I('BrainstormSubmit')) { ?>
         <p> Use the "Suggest a Session" menu to:</p>  
         <ul>
@@ -128,7 +143,19 @@ if (may_I('postcon')) { ?>
         <?php } else { ?>
         <p> The "Suggest a Session" menu is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></p>
         <?php } ?>
-
+	</div>
+</div>
+<?php 
+    $add_pert_overview = fetchCustomText("part_overview");
+    if (strlen($add_pert_overview) > 0) { ?>
+<div class="row mt-4">
+	<div class="col col-sm-12">
+        <?php echo fetchCustomText("part_overview"); ?>
+    </div>
+</div>
+<?php } ?>
+<div class="row mt-4">
+	<div class="col col-sm-12">
         <p>Thank you for your time, and we look forward to seeing you at <?php echo CON_NAME; ?>.</p> 
         <p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </p>
     </div>
