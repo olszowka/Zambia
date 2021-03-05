@@ -560,8 +560,11 @@ if (!isLoggedIn()) {
     $message_error = "You are not logged in or your session has expired.";
     RenderErrorAjax($message_error);
     exit();
-
 }
+
+if (!may_I('AdminPhotos'))
+    exit(0);
+
 $ajax_request_action = getString("ajax_request_action");
 if (is_null($ajax_request_action)) {
     $message_error = "Internal error.";

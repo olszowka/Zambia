@@ -9,7 +9,7 @@ staff_header($title, $bootstrap4);
 if ($fbadgeid) {
     echo "<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
 }
-if (PARTICIPANT_PHOTOS === TRUE) {
+if (PARTICIPANT_PHOTOS === TRUE && may_I('AdminPhotos')) {
     $denyReasons = array();
     $sql = "SELECT photodenialreasonid, reasontext FROM PhotoDenialReasons ORDER BY display_order;";
     $result = mysqli_query_exit_on_error($sql);
