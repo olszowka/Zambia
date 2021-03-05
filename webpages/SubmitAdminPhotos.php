@@ -522,7 +522,7 @@ function deleteapprovedphoto() {
            "\nWHERE badgeid = ?;";
         $paramarray = array();
         $paramarray[0] = $participantBadgeId;
-        error_log("Sql=\n$sql\n");
+        //error_log("Sql=\n$sql\n");
         $rows =  mysql_cmd_with_prepare($sql, 's', $paramarray);
         if ($rows != 1) {
             RenderErrorAjax("Unable to update database");
@@ -571,7 +571,7 @@ if (is_null($ajax_request_action)) {
     RenderErrorAjax($message_error);
     exit();
 }
-error_log("Reached SubmitAdminParticpants. ajax_request_action: $ajax_request_action");
+//error_log("Reached SubmitAdminParticpants. ajax_request_action: $ajax_request_action");
 switch ($ajax_request_action) {
     case "fetch_participant":
         fetch_participant();
