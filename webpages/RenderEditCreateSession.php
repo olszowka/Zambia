@@ -61,7 +61,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 <?php
     } else {
 ?>
-                <input type="hidden" name="track" value="0"/>
+                <input type="hidden" name="track" value="<?php echo DEFAULT_TAG_ONLY_TRACK?>"/>
 <?php
     }
 ?>

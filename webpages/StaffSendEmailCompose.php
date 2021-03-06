@@ -124,22 +124,31 @@ for ($i=0; $i<$recipient_count; $i++) {
             echo "Queue failed<br>";
     } else {
         try {
+            $code = 0;
             $mailer->send($message);
         }
         catch (Swift_SwiftException $e) {
-            echo $e->getMessage() . ", adding to queue<br>\n";
+            $code = $e->getCode();
+            if ($code < 500) {
+                echo $e->getMessage() . ", adding to queue<br>\n";
+            } else {
+                echo $e->getMessage() . ", not able to be retried.<br>\n";
+            }
+
             $ok = FALSE;
-            $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailcc, emailsubject, body, status) VALUES(?, ?, ?, ?, ?, ?);";
-            $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $emailverify['body'], $e->getCode());
-            $types = "sssssi";
-            $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+            if ($code < 500) {
+                $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailcc, emailsubject, body, status) VALUES(?, ?, ?, ?, ?, ?);";
+                $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $emailverify['body'], $e->getCode());
+                $types = "sssssi";
+                $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+            }
         }
         if ($ok == TRUE) {
             echo "Sent<br>";
         }
     }
     $sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailcc, emailsubject, status) VALUES(?, ?, ?, ?, ?);";
-    $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $ok);
+    $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $code);
     $types = "ssssi";
     $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
 }
