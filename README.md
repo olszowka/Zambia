@@ -28,7 +28,7 @@ These libraries are included in the repo and should just work if you leave as is
   * JQuery 1.7.2 / 3.5.1
   * JQueryUI 1.8.16
   * Tabulator 4.9.1
-  * TinyMCE 5.4.2
+  * TinyMCE 5.6.2
 * Server Side  
   * Swift mailer 5.4.8
   * Guzzle 6.5.3
