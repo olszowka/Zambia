@@ -1,11 +1,15 @@
 <?php
-// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-require_once('StaffCommonCode.php');
+// Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $returnAjaxErrors, $return500errors;
+$returnAjaxErrors = true;
+$return500errors = true;
+require_once('StaffCommonCode.php'); // will check if logged in and for staff privileges
 
 $schema_loaded = false;
 $schema = array();
 $displayorder_found = false;
 $prikey = '';
+$json_return = array();
 
 function fetch_schema($tablename) {
     global $schema, $displayorder_found, $prikey, $schema_loaded;
@@ -15,9 +19,15 @@ function fetch_schema($tablename) {
         //error_log("table = " . $tablename);
         // json of schema and table contents
         $query=<<<EOD
-            SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH,  COLUMN_KEY, EXTRA FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_SCHEMA = '$db' and TABLE_NAME = '$tablename'
-            ORDER BY ORDINAL_POSITION;
+SELECT
+        COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY, EXTRA
+    FROM
+        INFORMATION_SCHEMA.COLUMNS
+    WHERE
+            TABLE_SCHEMA = '$db'
+        AND TABLE_NAME = '$tablename'
+    ORDER BY
+        ORDINAL_POSITION;
 EOD;
         $result = mysqli_query_exit_on_error($query);
         $schema = array();
@@ -25,10 +35,12 @@ EOD;
         $prikey = '';
         while ($row = $result->fetch_assoc()) {
             $schema[] = $row;
-            if ($row["COLUMN_NAME"] == 'display_order')
+            if ($row["COLUMN_NAME"] == 'display_order') {
                 $displayorder_found = true;
-            if ($row["COLUMN_KEY"] == 'PRI')
+            }
+            if ($row["COLUMN_KEY"] == 'PRI') {
                 $prikey = $prikey . $row["COLUMN_NAME"] . ",";
+            }
         }
 
         $prikey = substr($prikey, 0, -1);
@@ -39,27 +51,19 @@ EOD;
 }
 
 function update_table($tablename) {
-    global $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
+    global $json_return, $linki, $schema, $prikey;
 
-    if (!isLoggedIn() ||  !may_I("Administrator")) {
-        fetch_table("No Permission to run Configuration Table Editor", "");
-        return;
+    if (!(may_I('ce_All') || may_I("ce_$tablename"))) {
+        $message_error = "You do not have permission to view this page.";
+        RenderErrorAjax($message_error);
+        exit();
     }
 
-    //error_log("\n\nin update table:\n");
-    //error_log("string loaded: " . getString("tabledata"));
     $rows = json_decode(base64_decode(getString("tabledata")));
+    // $json_return['debug'] = print_r($rows, true);
     $tablename = getString("tablename");
 
-    if (!may_I("ce_$tablename")) {
-        fetch_table("No permission to edit $tablename", "");
-        return;
-    }
-
     $indexcol = getString("indexcol");
-    //error_log("table: $tablename");
-    //error_log("indexcol: $indexcol");
-    //var_error_log($rows);
 
     fetch_schema($tablename);
     // reset display order to match new order and find which rows to delete
@@ -98,15 +102,16 @@ function update_table($tablename) {
     foreach($schema as $col) {
         //var_error_log($col);
         if ($col['EXTRA'] != 'auto_increment') {
-                $sql .= $col['COLUMN_NAME'] . ',';
-                $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
-                $fieldcount++;
+            $sql .= $col['COLUMN_NAME'] . ',';
+            $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
+            $fieldcount++;
         }
     }
     if ($fieldcount > 0) {
         $sql = substr($sql, 0, -1) . ") VALUES (";
-        for ($i = 0; $i < $fieldcount; $i++)
+        for ($i = 0; $i < $fieldcount; $i++) {
             $sql .= "?,";
+        }
         $sql = substr($sql, 0, -1) . ");";
 
         $paramarray = array();
@@ -180,24 +185,22 @@ function update_table($tablename) {
         $message = $message . ", " . $updated . " rows updated";
     }
 
-    if (mb_strlen($message) > 2)
-        $message = "<p>Database changes: " . mb_substr($message, 2) .  "</p>";
-    else
+    if (mb_strlen($message) > 2) {
+        $message = "<p>Database changes: " . mb_substr($message, 2) . "</p>";
+    } else {
         $message = "";
+    }
 
-    // get updated survey now with the id's in it
     fetch_table($tablename, $message);
 }
 
 function fetch_table($tablename, $message) {
-    global $schema, $displayorder_found, $prikey;
+    global $displayorder_found, $json_return, $schema;
     $db = DBDB;
-    $json_return = array();
-
-    if (!isLoggedIn() || !may_I("Administrator")) {
-        $json_return["message"] = "No permission to run Configuration Table Editor";
-        echo json_encode($json_return) . "\n";
-        return;
+    if (!(may_I('ce_All') || may_I("ce_$tablename"))) {
+        $message_error = "You do not have permission to view this page.";
+        RenderErrorAjax($message_error);
+        exit();
     }
 
     if (strpos($tablename, ' ', 0) !== false) {
@@ -206,23 +209,26 @@ function fetch_table($tablename, $message) {
         return;
     }
 
-    if (!may_I("ce_$tablename")) {
-        $json_return["message"] = "No permission to edit $tablename";
-        echo json_encode($json_return) . "\n";
-        return;
-    }
-    //error_log("table = " . $tablename);
     // json of schema and table contents
     fetch_schema($tablename);
     $json_return["tableschema"] = $schema;
 
     // get the foreign keys
     $query = <<<EOD
-SELECT TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
-FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-WHERE TABLE_SCHEMA = '$db' AND (TABLE_NAME = '$tablename' OR REFERENCED_TABLE_NAME = '$tablename')
-    AND CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_COLUMN_NAME != ''
-ORDER BY COLUMN_NAME, TABLE_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+SELECT
+        TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+    FROM
+        INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+    WHERE
+            TABLE_SCHEMA = '$db'
+        AND (
+               TABLE_NAME = '$tablename'
+            OR REFERENCED_TABLE_NAME = '$tablename'
+            )
+        AND CONSTRAINT_NAME != 'PRIMARY'
+        AND REFERENCED_COLUMN_NAME != ''
+    ORDER BY
+        COLUMN_NAME, TABLE_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME;
 EOD;
     $foreign_keys = array();
     $referenced_columns = array();
@@ -233,79 +239,43 @@ EOD;
             $referenced_columns[] = $row["COLUMN_NAME"] . ":" . $row["REFERENCED_TABLE_NAME"] . "." . $row["REFERENCED_COLUMN_NAME"];
         } else {
             // table is referenced by another table
-            $foreign_keys[] = $row["REFERENCED_COLUMN_NAME"] . ":" . $row["TABLE_NAME"] . "."  . $row["COLUMN_NAME"];
+            $foreign_keys[] = array(
+                "TABLE_NAME" => $row["TABLE_NAME"],
+                "COLUMN_NAME" => $row["COLUMN_NAME"],
+                "REFERENCED_TABLE_NAME" => $row["REFERENCED_TABLE_NAME"],
+                "REFERENCED_COLUMN_NAME" => $row["REFERENCED_COLUMN_NAME"]);
         }
     }
-    //mysqli_free_result($result);
-    //error_log("referenced columns");
-    //var_error_log($referenced_columns);
-    //error_log("foreign keys");
-    //var_error_log($foreign_keys);
-
-    $withclause = "";
-    $joinclause = "";
-    $curfield = "";
-    $mycurname = "";
-    $union = "";
-    $occurs = "";
 
     // Build CTE's for getting count of foreign key usage
     if (count($foreign_keys) > 0 ) {
+        $innerQueryArray = array();
         foreach ($foreign_keys as $key) {
-            $colonpos = strpos($key, ':');
-            $mycolname = substr($key, 0, $colonpos);
-            $periodpos = strpos($key, '.');
-            $reftable = substr($key, $colonpos + 1, $periodpos - ($colonpos + 1));
-            $reffield = substr($key, $periodpos + 1);
-            //error_log("Referenced: '$key'");
-            //error_log("colname: '$mycolname'");
-            //error_log("reftable: '$reftable'");
-            //error_log("reffield: '$reffield'");
-            if ($reffield != $curfield) {
-                $union = "";
-                if (DBVER >= "8") {
-                    if ($withclause == "")
-                        $withclause = "WITH Ref" . $reffield . " AS (\n";
-                    else {
-                        $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n), Ref" . $reffield . " AS (\n";
-                        $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-                        if ($occurs != "")
-                            $occurs .= "+";
-                        $occurs .= "SUM$curfield.occurs";
-                    }
-                } else {
-                    if ($joinclause == "")
-                        $joinclause = "LEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
-                    else {
-                        $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\nLEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
-                        if ($occurs != "")
-                            $occurs .= "+";
-                        $occurs .= "SUM$curfield.occurs";
-                    }
-                }
-
-                $mycurname = $mycolname;
-                $curfield = $reffield;
-            }
-            if (DBVER >= "8")
-                $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
-            else
-                $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
-            $union = "UNION ALL";
-        }        
-        if (DBVER >= "8") {
-            $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
-            $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-        } else {
-            $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
+            $innerQueryArray[] = "SELECT ${key["COLUMN_NAME"]} AS ${key["REFERENCED_COLUMN_NAME"]}, count(*) AS occurs FROM ${key["TABLE_NAME"]} GROUP BY ${key["COLUMN_NAME"]}";
         }
-        if ($occurs != "")
-            $occurs .= "+";
-        $occurs .= "SUM$curfield.occurs";
-        $occurs = "CASE WHEN $occurs IS NULL THEN 0 ELSE $occurs END AS Usage_Count";
+        $innerQuery = implode(" UNION ALL ", $innerQueryArray);
+        if (count($innerQueryArray) > 1) {
+            $middleQuery = "SELECT ${key["REFERENCED_COLUMN_NAME"]}, sum(occurs) AS occurs FROM ($innerQuery) AS union1 GROUP BY ${key["REFERENCED_COLUMN_NAME"]}";
+        } else {
+            $middleQuery = $innerQuery;
+        }
+        $mainQuery = "SELECT ${key["REFERENCED_TABLE_NAME"]}.*, ifnull(occurs, 0) AS Usage_Count FROM ${key["REFERENCED_TABLE_NAME"]} LEFT JOIN ($middleQuery) AS union2 USING (${key["REFERENCED_COLUMN_NAME"]})";
+    } else {
+        $mainQuery = "SELECT *, 0 AS Usage_Count FROM $tablename";
     }
-    else
-        $occurs = "0 AS Usage_Count";
+    if ($displayorder_found) {
+        $mainQuery .= " ORDER BY display_order"; // Table data must be sent in display_order order because tabulator will send it back that way and that's how we track order changes by the user.
+    }
+    $mainQuery .= ";";
+    // now get the data rows
+
+    $result = mysqli_query_exit_on_error($mainQuery);
+    $rows = array();
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+    mysqli_free_result($result);
+    $json_return["tabledata"] = $rows;
 
     // table select - get select list for field that is a foreign key to another table
     foreach($referenced_columns as $key) {
@@ -315,10 +285,6 @@ EOD;
         $reftable = substr($key, $colonpos + 1, $periodpos - ($colonpos + 1));
         $reffield = substr($key, $periodpos + 1);
 
-        //error_log("Referenced: '$key'");
-        //error_log("colname: '$colname'");
-        //error_log("reftable: '$reftable'");
-        //error_log("reffield: '$reffield'");
         $namefield = str_replace("id", "name", $reffield);
         $data = array();
         $query = "SELECT $reffield AS id, $namefield AS name FROM $reftable ORDER BY display_order;";
@@ -328,31 +294,18 @@ EOD;
         }
         mysqli_free_result($result);
         if (count($data) == 0) {
-            if ($message != "")
+            if ($message != "") {
                 $message .= "<br/>";
+            }
             $message .= "Warning: Cannot edit this table until the table $reftable has been edited and is not empty";
         }
         $json_return[$colname . "_select"] = $data;
     }
 
-    // now get the data rows
-    $query="$withclause SELECT $occurs, $tablename.* FROM $tablename\n$joinclause";
-    if ($displayorder_found)
-        $query = $query . "ORDER BY display_order;";
-    else if ($prikey != ",")
-        $query = $query . "ORDER BY " . $prikey . ";";
 
-    //error_log($query);
-	$result = mysqli_query_exit_on_error($query);
-    $rows = array();
-    while ($row = $result->fetch_assoc()) {
-        $rows[] = $row;
-    }
-	mysqli_free_result($result);
-    $json_return["tabledata"] = $rows;
-
-    if ($message != "")
+    if ($message != "") {
         $json_return["message"] = $message;
+    }
     echo json_encode($json_return) . "\n";
 }
 

@@ -123,7 +123,7 @@ function RenderErrorAjax($message_error) {
 function Render500ErrorAjax($message_error) {
     // pages which know how to handle 500 errors are expected to format the error message appropriately.
     header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error', true, 500);
-    echo "$message_error";
+    echo $message_error;
 }
 
 ?>

@@ -11,6 +11,13 @@
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
   <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
+  <xsl:variable name="EditAnyTable" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_All' or
+      @permatomtag='ce_BioEditStatuses' or @permatomtag='ce_Credentials' or @permatomtag='ce_Divisions' or
+      @permatomtag='ce_EmailCC' or @permatomtag='ce_EmailFrom' or @permatomtag='ce_EmailTo' or @permatomtag='ce_Features' or
+      @permatomtag='ce_KidsCategories' or @permatomtag='ce_LanguageStatuses' or @permatomtag='ce_PubStatuses' or
+      @permatomtag='ce_RegTypes' or @permatomtag='ce_Roles' or @permatomtag='ce_Rooms' or @permatomtag='ce_RoomSets' or
+      @permatomtag='ce_RoomHasSet' or @permatomtag='ce_Services' or @permatomtag='ce_SessionStatuses' or
+      @permatomtag='ce_Tags' or @permatomtag='ce_Times' or @permatomtag='ce_Tracks' or @permatomtag='ce_Types']"/>
   <xsl:template match="/">
     <nav id="staffNav" class="navbar navbar-inverse">
       <div class="navbar-inner">
@@ -134,7 +141,7 @@
                   <input type="hidden" value="ANY" name="divisionid"/>
                 </form>
               </li>
-              <xsl:variable name="AdminMenu" select="$AdminPhases or $ConfigureReports or $Administrator" />
+              <xsl:variable name="AdminMenu" select="$AdminPhases or $ConfigureReports or $Administrator or $EditAnyTable" />
               <xsl:if test="$AdminMenu">
                 <li class="dropdown">
                   <a href="#admin" class="dropdown-toggle" data-toggle="dropdown">
@@ -156,6 +163,8 @@
                       <li>
                         <a href="EditCustomText.php">Edit Custom Text</a>
                       </li>
+                    </xsl:if>
+                    <xsl:if test="$EditAnyTable">
                       <li>
                         <a href="ConfigTableEditor.php">Edit Configuration Tables</a>
                       </li>

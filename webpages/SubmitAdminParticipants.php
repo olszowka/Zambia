@@ -4,13 +4,12 @@
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-require_once('StaffCommonCode.php'); // will check for staff privileges
+require_once('StaffCommonCode.php'); // will check if logged in and for staff privileges
 require('EditPermRoles_FNC.php');
 // skip to below all functions
 
 // gets data for a participant to be displayed.  Returns as XML
 function fetch_participant() {
-    global $message_error;
     $fbadgeid = getString("badgeid");
     if (empty($fbadgeid)) {
         $message_error = "Internal error.";
