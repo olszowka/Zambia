@@ -23,7 +23,7 @@
                   <xsl:for-each select="/doc/query[@queryName='searchReg']/row">
                       <tr class="action" id="actionDIV_{@id}">
                         <td class="action">
-                          <input type="checkbox" class="tag-chk mycontrol" id="importBOX_{@id}"></input>
+                          <input type="checkbox" class="id-chk mycontrol" id="importBOX_{@id}" value="${@id}"></input>
                         </td>
                         <td><xsl:value-of select="@id"/></td>
                         <td><xsl:value-of select="@last_name"/>, <xsl:value-of select="@first_name"/></td>

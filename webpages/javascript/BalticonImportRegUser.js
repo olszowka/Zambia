@@ -2,6 +2,7 @@
 var importDirty = false;
 var roleDirty = false;
 var $updateBTN = null;
+var suppressHide = false;
 
 function isDirty(override) {
     //called when user clicks "Search for participants" on the page
@@ -92,9 +93,24 @@ function showSearchResults() {
     $("#searchResultsDIV").show("fast").css("overflow-y", "auto");
 }
 
+function showImportResults(data, textStatus, jqXHR) {
+    //ajax success callback function
+    $('#updateBTN').button('reset');
+    $updateBTN.prop("disabled", true);
+
+    var $resultBoxDIV = $("#resultBoxDIV");
+    $resultBoxDIV.html(data).show();
+    window.scrollTo(0, 0);
+
+    importDirty = false;
+    roleDirty = false;
+    suppressHide = true;
+    doSearchImportBUTN();
+}
+
 function updateBUTTON() {
     //debugger;
-    $updateBUTN.button('Importing...');
+    $updateBTN.button('Importing...');
     var postdata = {
         ajax_request_action: "import_users",
         id: $("#badgeid").val()
@@ -109,14 +125,26 @@ function updateBUTTON() {
             rolesToAdd.push($check.val());
         }
     });
+    var idsToAdd = [];
+    $(".id-chk").each(function () {
+        $check = $(this);
+        checked = $check.is(":checked");
+        defaultChecked = $check.prop("defaultChecked");
+        if (checked && !defaultChecked) {
+            idsToAdd.push($check.val());
+        }
+    });
     if (rolesToAdd.length > 0) {
         postdata.rolesToAdd = rolesToAdd;
-    }     
+    }
+    if (idsToAdd.length > 0) {
+        postdata.idsToAdd = idsToAdd;
+    }   
     $.ajax({
         url: "BalticonSubmitImportRegUser.php",
         dataType: "html",
         data: postdata,
-        success: getImportResults,
+        success: showImportResults,
         error: showAjaxError,
         type: "POST"
     });
@@ -126,7 +154,10 @@ function writeSearchResults(data, textStatus, jqXHR) {
     //ajax success callback function
     $("#searchResultsDIV").html(data).show('fast');
     $('#searchImportBUTN').button('reset');
-    $('#resultBoxDIV').hide();
+    if (suppressHide)
+        suppressHide = false;
+    else
+        $('#resultBoxDIV').hide();
     showSearchResults();
     $.ajax({
         url: "BalticonSubmitImportRegUser.php",
