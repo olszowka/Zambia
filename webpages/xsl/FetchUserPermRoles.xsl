@@ -16,7 +16,7 @@
                 </xsl:otherwise>
             </xsl:choose>
             <label class="tag-chk-label">
-                <input type="checkbox" name="permroles[]" class="tag-chk mycontrol" value="{@permroleid}" >
+                <input type="checkbox" name="permroles[]" id="role_{@permroleid}" class="tag-chk mycontrol" value="{@permroleid}" >
                     <xsl:if test="@badgeid">
                         <xsl:attribute name="checked" >checked</xsl:attribute>
                     </xsl:if>

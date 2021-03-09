@@ -98,6 +98,9 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
             break;
+        case "Import Reg User":
+            echo "<script src=\"javascript/BalticonImportRegUser.js\"></script>\n";
+            break;
         default:
             if ($isDataTables) {
                 echo "<script src=\"javascript/Reports.js\"></script>\n";

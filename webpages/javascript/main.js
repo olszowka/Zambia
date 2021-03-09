@@ -39,6 +39,9 @@ document.addEventListener( "DOMContentLoaded", function () {
 			break;
 		case "Create New Session":
 			initializeSessionEdit();
+			break;
+		case "Import Reg User":
+			initializeImportRegUser();
 			break
 		default:
 			window.status="Ready.";
