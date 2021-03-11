@@ -13,11 +13,25 @@ function MyPhoto() {
 	var $uploadPhotoStatus = null;
 	var $approvedPhotoDelete = null;
 	var uploadlock = false;
+	var savedDeleteButtonDisplay = 'none';
+	var savedUploadButtonDisplay = 'none';
 	var cropper = null;
+	var $cropBTN = null;
+	var $cropsaveBTN = null;
+	var $cropleftBTN = null;
+	var $croprightBTN = null;
+	var $cropcancelBTN = null;
+
+	const crop_hideall = 0;
+	const crop_showbtn = 1;
+	const crop_showdirections = 2;
 
 	this.initialize = function initialize() {
-		$resultBoxDiv = $("#resultBoxDIV");
-		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		// initialize message box for use by both ajax return messsages and javascript error messages
+		$resultBoxDiv = document.getElementById("resultBoxDIV");
+		myPhoto.clearMessage();
+
+		// get element shortcuts
 		$uploadZone = document.getElementById("photoUploadArea");
 		$uploadChooseFile = document.getElementById("uploadPhoto");
 		$chooseFileName = document.getElementById("chooseFileName");
@@ -27,9 +41,16 @@ function MyPhoto() {
 		$approvedPhotoDelete = document.getElementById("deleteApprovedPhoto");
 		$uploadUpdatedPhoto = document.getElementById("updateUploadPhoto");
 		$uploadPhotoStatus = document.getElementById("uploadedPhotoStatus");
-		if (document.getElementById("default_photo").value == '0')
-			document.getElementById("crop").style.display = 'block';
-		
+		$cropBTN = document.getElementById("crop");
+		$cropsaveBTN = document.getElementById("save_crop");
+		$cropleftBTN = document.getElementById("rotate_left");
+		$croprightBTN = document.getElementById("rotate_right");
+		$cropcancelBTN = document.getElementById("cancel_crop");
+
+		// set initial crop button display settings
+		myPhoto.changeCropDisplay(document.getElementById("default_photo").value == '0' ? crop_showbtn : crop_hideall);
+
+		// if photos are enabled in the configuration
 		if ($uploadChooseFile) {
 			$uploadChooseFile.addEventListener("click", function (e) {
 				$chooseFileName.value = null;
@@ -39,6 +60,8 @@ function MyPhoto() {
 				myPhoto.loaduploadimage(e.target.files[0]);
 			});
 		}
+
+		// if browser supports drag and drop of photos
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			// hover
 			$uploadedPhoto.addEventListener("dragenter", function (e) {
@@ -79,22 +102,48 @@ function MyPhoto() {
 		};
 	};
 
+	this.setMessage = function setMessage(content) {
+		$resultBoxDiv.innerHTML = content
+		$resultBoxDiv.style.visibility = "visible";
+		$resultBoxDiv.scrollIntoView(false);
+	}
+
+	this.clearMessage = function clearMessage() {
+		$resultBoxDiv.innerHTML = "&nbsp;";
+		$resultBoxDiv.style.visibility = "hidden";
+	}
+
+	this.changeCropDisplay = function changeCropDisplay(cropstyle) { // 0 = hide all, 1 = show crop button, 2 = show crop directions
+		$cropBTN.style.display = cropstyle == 1 ? 'block' : 'none';
+		$cropsaveBTN.style.display = cropstyle == 2 ? 'block' : 'none';
+		$cropleftBTN.style.display = cropstyle == 2 ? 'block' : 'none';
+		$croprightBTN.style.display = cropstyle == 2 ? 'block' : 'none';
+		$cropcancelBTN.style.display = cropstyle == 2 ? 'block' : 'none';
+	}
+
 	this.showErrorMessage = function showErrorMessage(message) {
 		content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">` + message + `</div></div></div>`;
-		$resultBoxDiv.html(content).css("visibility", "visible");
-		document.getElementById("resultBoxDIV").scrollIntoView(false);
+		myPhoto.setMessage(content);
 	};
 
-    this.showAjaxError = function showAjaxError(data, textStatus, jqXHR) {
-		var content;
-        if (data && data.responseText) {
-            content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">${data.responseText}</div></div></div>`;
-        } else {
-            content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">An error occurred on the server.</div></div></div>`;
-        }
-        $resultBoxDiv.html(content).css("visibility", "visible");
-		document.getElementById("resultBoxDIV").scrollIntoView(false);
+	this.showMessage = function showMessage(message) {
+		if (message == "")
+			return;
+		if (message.startsWith("Error"))
+			alert_type = "alert-danger";
+		else
+			alert_type = "alert-success";
+		content = '<div class="row mt-3"><div class="col-12"><div class="alert ' + alert_type + '" role="alert">' + message + '</div></div></div>';
+
+		myPhoto.setMessage(content);
+	};
+
+	this.showAjaxError = function showAjaxError(data, textStatus, jqXHR) {
 		uploadlock = false;
+        if (data && data.responseText)
+			myPhoto.showErrorMessage(data.responseText);
+        else
+			myPhoto.showErrorMessage("An error occurred on the server.");
 	};
 
 	this.transfercomplete = function transfercomplete(data, textStatus, jqXHR) {
@@ -113,11 +162,7 @@ function MyPhoto() {
 		// enable delete button
 		$uploadPhotoDelete.style.display = 'block';
 		$uploadUpdatedPhoto.style.display = 'none';
-		document.getElementById("crop").style.display = 'block';
-		document.getElementById("save_crop").style.display = 'none';
-		document.getElementById("rotate_left").style.display = 'none';
-		document.getElementById("rotate_right").style.display = 'none';
-		document.getElementById("cancel_crop").style.display = 'none';
+		myPhoto.changeCropDisplay(crop_showbtn);
 
 		// reload default photo
 		if (data_json.hasOwnProperty("image")) {
@@ -127,15 +172,7 @@ function MyPhoto() {
 		if (data_json.hasOwnProperty("photostatus")) {
 			$uploadPhotoStatus.innerHTML = data_json["photostatus"];
 		}
-		if (message != "") {
-			if (message.startsWith("Error"))
-				alert_type = "alert-danger";
-			else
-				alert_type = "alert-success";
-			content = '<div class="row mt-3"><div class="col-12"><div class="alert ' + alert_type + '" role="alert">' + message + '</div></div></div>';
-			$resultBoxDiv.html(content).css("visibility", "visible");
-			document.getElementById("resultBoxDIV").scrollIntoView(false);
-		}
+		myPhoto.showMessage(message);
 	}
 
 	this.starttransfer = function starttransfer() {
@@ -143,7 +180,7 @@ function MyPhoto() {
 			myPhoto.showErrorMessage("Upload in progress, please wait");
 			return false;
 		}
-		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		myPhoto.clearMessage();
 		uploadlock = true;
 		
 		var postdata = {
@@ -176,11 +213,8 @@ function MyPhoto() {
 			message = data_json.message;
 		// disable delete button
 		$uploadPhotoDelete.style.display = 'none';
-		document.getElementById("crop").style.display = 'none';
-		document.getElementById("save_crop").style.display = 'none';
-		document.getElementById("rotate_left").style.display = 'none';
-		document.getElementById("rotate_right").style.display = 'none';
-		document.getElementById("cancel_crop").style.display = 'none';
+		savedDeleteButtonDisplay = 'none';
+		myPhoto.changeCropDisplay(crop_hideall);
 
 		// reload default photo
 		if (data_json.hasOwnProperty("image")) {
@@ -190,15 +224,7 @@ function MyPhoto() {
 			$uploadPhotoStatus.innerHTML = data_json["photostatus"];
 		}
 
-		if (message != "") {
-			if (message.startsWith("Error"))
-				alert_type = "alert-danger";
-			else
-				alert_type = "alert-success"
-			content = '<div class="row mt-3"><div class="col-12"><div class="alert ' + alert_type + '" role="alert">' + message + '</div></div></div>';
-			$resultBoxDiv.html(content).css("visibility", "visible");
-			document.getElementById("resultBoxDIV").scrollIntoView(false);
-		}
+		myPhoto.showMessage(message);
 	}
 
 	this.deleteuploadedphoto = function deleteuploadedphoto() {
@@ -206,7 +232,8 @@ function MyPhoto() {
 			myPhoto.showErrorMessage("Upload in progress, please wait");
 			return false;
 		}
-		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+
+		myPhoto.clearMessage();
 		uploadlock = true;
 		var postdata = {
 			ajax_request_action: "delete_uploaded_photo"
@@ -245,15 +272,7 @@ function MyPhoto() {
 			$uploadPhotoStatus.innerHTML = data_json["photostatus"];
 		}
 
-		if (message != "") {
-			if (message.startsWith("Error"))
-				alert_type = "alert-danger";
-			else
-				alert_type = "alert-success"
-			content = '<div class="row mt-3"><div class="col-12"><div class="alert ' + alert_type + '" role="alert">' + message + '</div></div></div>';
-			$resultBoxDiv.html(content).css("visibility", "visible");
-			document.getElementById("resultBoxDIV").scrollIntoView(false);
-		}
+		myPhoto.showMessage(message);
 	}
 
 	this.deleteapprovedphoto = function deleteapprovedphoto() {
@@ -261,7 +280,7 @@ function MyPhoto() {
 			myPhoto.showErrorMessage("Upload in progress, please wait");
 			return false;
 		}
-		$resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+		myPhoto.clearMessage();
 		uploadlock = true;
 		var postdata = {
 			ajax_request_action: "delete_approved_photo"
@@ -277,16 +296,16 @@ function MyPhoto() {
 	};
 
 	this.crop = function crop() {
+		myPhoto.clearMessage();
 		if (cropper) {
 			cropper.destroy();
 			cropper = null;
 		}
-		document.getElementById("crop").style.display = 'none';
-		document.getElementById("save_crop").style.display = 'block';
-		document.getElementById("rotate_left").style.display = 'block';
-		document.getElementById("rotate_right").style.display = 'block';
-		document.getElementById("cancel_crop").style.display = 'block';
+		myPhoto.changeCropDisplay(crop_showdirections);
+		savedUploadButtonDisplay = $uploadUpdatedPhoto.style.display;
+		savedDeleteButtonDisplay = $uploadPhotoDelete.style.display;
 		$uploadUpdatedPhoto.style.display = 'none';
+		$uploadPhotoDelete.style.display = 'none';
 
 		cropper = new Croppie($uploadedPhoto, {
 			boundary: { width: 400, height: 400, 'margin-right': 'auto', 'margin-left': 'auto' },
@@ -309,12 +328,9 @@ function MyPhoto() {
 			cropper.destroy();
 			cropper = null;
 		}
-		document.getElementById("crop").style.display = 'block';
-		document.getElementById("save_crop").style.display = 'none';
-		document.getElementById("rotate_left").style.display = 'none';
-		document.getElementById("rotate_right").style.display = 'none';
-		document.getElementById("cancel_crop").style.display = 'none';
-		$uploadUpdatedPhoto.style.display = 'block';
+		myPhoto.changeCropDisplay(crop_showbtn);
+		$uploadUpdatedPhoto.style.display = savedUploadButtonDisplay;
+		$uploadPhotoDelete.style.display = savedDeleteButtonDisplay;
 	};
 
 	this.savecrop = function savecrop() {
@@ -325,12 +341,9 @@ function MyPhoto() {
 			});
 			cropper.destroy();
 			cropper = null;
-			document.getElementById("crop").style.display = 'block';
-			document.getElementById("save_crop").style.display = 'none';
-			document.getElementById("rotate_left").style.display = 'none';
-			document.getElementById("rotate_right").style.display = 'none';
-			document.getElementById("cancel_crop").style.display = 'none';
+			myPhoto.changeCropDisplay(crop_showbtn);
 			$uploadUpdatedPhoto.style.display = 'block';
+			$uploadPhotoDelete.style.display = savedDeleteButtonDisplay;
 		}
 	};
 
@@ -338,16 +351,17 @@ function MyPhoto() {
 		if (cropper) {
 			cropper.destroy();
 			cropper = null;
+			$uploadPhotoDelete.style.display = savedDeleteButtonDisplay;
 		}
+		myPhoto.clearMessage();
 		if (!(file.type.match('image/jp.*') || file.type.match('image/png.*'))) {
 			alert("Only jpeg/jpg or png images allowed");
-		}
-		else {
+		} else {
 			var reader = new FileReader();
 			reader.onload = (function (thefile) {
 				return function (e) {
 					$uploadedPhoto.src = e.target.result;
-					document.getElementById("crop").style.display = 'block';
+					myPhoto.changeCropDisplay(crop_showbtn);
 				}
 			})(file);
 
@@ -356,5 +370,5 @@ function MyPhoto() {
 
 		pickedfile = $chooseFileName.value;
 		$uploadUpdatedPhoto.style.display = 'block';
-	}
+	};
 }
