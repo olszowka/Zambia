@@ -371,8 +371,8 @@ ORDER BY
 	CD.lastname, CD.firstname
 EOD;
         }
-        $param_arr = array($searchString,$searchString,$searchString,$searchString,$searchString);
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, "sssss", $param_arr);
+        $param_arr = array($searchString,$searchString,$searchString,$searchString);
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
     }
     $xml = mysql_result_to_XML("searchParticipants", $result);
     $rows = mysqli_num_rows($result);
