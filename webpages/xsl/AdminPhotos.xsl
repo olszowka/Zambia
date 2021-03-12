@@ -32,16 +32,6 @@
                         <input type="hidden" id="denialOtherTextHID_{@badgeid}">
                             <xsl:attribute name="value"><xsl:value-of select="@photodenialreasonothertext"/></xsl:attribute>
                         </input>
-                        <input type="hidden" id="lastnameHID_{@badgeid}">
-                          <xsl:attribute name="value">
-                            <xsl:value-of select="@lastname"/>
-                          </xsl:attribute>
-                        </input>
-                        <input type="hidden" id="firstnameHID_{@badgeid}">
-                          <xsl:attribute name="value">
-                            <xsl:value-of select="@firstname"/>
-                          </xsl:attribute>
-                        </input>
                         <input type="hidden" id="uploadedphotoHID_{@badgeid}">
                           <xsl:attribute name="value">
                             <xsl:value-of select="@uploadedphotofilename"/>

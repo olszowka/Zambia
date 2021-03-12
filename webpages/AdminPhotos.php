@@ -36,7 +36,7 @@ if (PARTICIPANT_PHOTOS === TRUE && may_I('AdminPhotos')) {
                 <button type="button" class="btn btn-secondary" id="toggleSearchResultsBUTN"><span id="toggleText">Hide</span> Results</button>
             </div>
         </div>
-        <div style="margin-top: 1em; height:250px; overflow:auto; border: 1px solid grey" id="searchResultsDIV">&nbsp;
+        <div style="margin-top: 1em; height:250px; border: 1px solid grey" id="searchResultsDIV">&nbsp;
         </div>
     </div>
     <div id="unsavedWarningModal" class="modal" tabindex="-1" role="dialog">
@@ -59,7 +59,6 @@ if (PARTICIPANT_PHOTOS === TRUE && may_I('AdminPhotos')) {
         </div>
     </div>
     <div id="resultsDiv" class="container-fluid">
-        <div id="resultBoxDIV" style="visibility: hidden;"></div>
         <div class="row mt-3">
             <div class="col-sm-2 col-xl-1">
                 <div class="">
