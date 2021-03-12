@@ -309,7 +309,8 @@ WHERE
 	P.badgeid = ?
 ORDER BY
 	CD.lastname, CD.firstname
-EOD;
+EOD; 
+        }
         $param_arr = array($searchString);
         $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
     } else {
@@ -343,7 +344,7 @@ ORDER BY
 	CD.lastname, CD.firstname
 EOD;
         } else {
-             $query = <<<EOD
+            $query = <<<EOD
 SELECT
 	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
@@ -369,6 +370,7 @@ WHERE
 ORDER BY
 	CD.lastname, CD.firstname
 EOD;
+        }
         $param_arr = array($searchString,$searchString,$searchString,$searchString,$searchString);
         $result = mysqli_query_with_prepare_and_exit_on_error($query, "sssss", $param_arr);
     }

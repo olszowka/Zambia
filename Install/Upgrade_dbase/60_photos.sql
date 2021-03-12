@@ -49,7 +49,7 @@ INSERT INTO Permissions(permatomid, phaseid, permroleid)
 SELECT a.permatomid, null, r.permroleid 
 FROM PermissionAtoms a
 JOIN PermissionRoles r ON (r.permrolename = 'Administrator')
-WHERE permatomtag IN  'ce_PhotoDenialReasons', 'AdminPhotos');
+WHERE permatomtag IN  ('ce_PhotoDenialReasons', 'AdminPhotos');
 
 INSERT INTO Permissions(permatomid, phaseid, permroleid)
 SELECT a.permatomid, null, r.permroleid 
