@@ -54,6 +54,7 @@ $paramArray = array();
 $paramArray["conName"] = CON_NAME;
 $paramArray["showTags"] = TRACK_TAG_USAGE !== "TRACK_ONLY";
 $paramArray["showTrack"] = TRACK_TAG_USAGE !== "TAG_ONLY";
+$paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
 // echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 RenderXSLT('PartSearchSessions.xsl', $paramArray, $resultXML);
 

@@ -7,6 +7,7 @@
   <xsl:param name="title" select="''" />
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
+  <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
   <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
@@ -45,6 +46,9 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarParticipantsDropdown">
               <a class="dropdown-item" href="AdminParticipants.php">Administer</a>
+              <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
+                <a class="dropdown-item" href="AdminPhotos.php">Photos</a>              
+              </xsl:if>
               <a class="dropdown-item" href="InviteParticipants.php">Invite to a Session</a>
               <a class="dropdown-item" href="StaffAssignParticipants.php">Assign to a Session</a>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">

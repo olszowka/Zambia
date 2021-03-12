@@ -7,6 +7,7 @@
   <xsl:param name="title" select="''" />
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
+  <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
@@ -66,6 +67,11 @@
                   <li>
                     <a href="AdminParticipants.php">Administer</a>
                   </li>
+                  <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
+                    <li>
+                      <a href="AdminPhotos.php">Photos</a>
+                    </li>
+                  </xsl:if>
                   <li>
                     <a href="InviteParticipants.php">Invite to a Session</a>
                   </li>

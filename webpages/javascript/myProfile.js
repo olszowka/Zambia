@@ -236,6 +236,12 @@ function MyProfile() {
 		}
     };
 
+	this.showErrorMessage = function showErrorMessage(message) {
+		content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">` + message + `</div></div></div>`;
+		$resultBoxDiv.html(content).css("visibility", "visible");
+		document.getElementById("resultBoxDIV").scrollIntoView(false);
+	};
+
     this.showAjaxError = function showAjaxError(data, textStatus, jqXHR) {
         var content;
         if (data && data.responseText) {
@@ -244,7 +250,7 @@ function MyProfile() {
             content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">An error occurred on the server.</div></div></div>`;
         }
         $resultBoxDiv.html(content).css("visibility", "visible");
-        document.getElementById("resultBoxDIV").scrollIntoView(false);
-    };
-
+		document.getElementById("resultBoxDIV").scrollIntoView(false);
+		uploadlock = false;
+	};
 }

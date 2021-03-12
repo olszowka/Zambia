@@ -47,6 +47,11 @@ var $updateButton;
 var $showSurveyDiv;
 var $showSurveyBtn;
 var saveNewBadgeId;
+var $prevBTN = null;
+var $nextBTN = null;
+var searchIndex = 0;
+var badgeList = null;
+var searchCount = -1;
 
 function isDirty(override) {
     //called when user clicks "Search for participants" on the page
@@ -66,6 +71,20 @@ function isDirty(override) {
     return false;
 }
 
+function nextParticipant() {
+    if (searchIndex < (searchCount - 1)) {
+        searchIndex++;
+        chooseParticipant(badgeList[searchIndex], false);
+    }
+}
+
+function prevParticipant() {
+    if (searchIndex > 0) {
+        searchIndex--;
+        chooseParticipant(badgeList[searchIndex], false);
+    }
+}
+
 function chooseParticipant(badgeid, override) {
     //debugger;
     if (isDirty(override)) {
@@ -80,6 +99,13 @@ function chooseParticipant(badgeid, override) {
     curbadgeid = badgeid;
     var badgeidJQSel = badgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
     hideSearchResults();
+    if (badgeList) {
+        searchIndex = badgeList.indexOf(badgeid, 0);
+        if ($prevBTN)
+            $prevBTN.disabled = searchIndex < 1;
+        if ($nextBTN)
+            $nextBTN.disabled = searchIndex == (badgeList.length - 1);   
+    }
     $("#badgeid").val($("#bidSPAN_" + badgeidJQSel).text());
     var lastname = $("#lastnameHID_" + badgeidJQSel).val();
     $lastname.val(lastname).prop("defaultValue", lastname).prop("readOnly", false);
@@ -207,7 +233,8 @@ function startTinymce() {
 function doSearchPartsBUTN() {
     //called when user clicks "Search" within dialog
     var x = document.getElementById("searchPartsINPUT").value;
-    if (!x)
+    var p = document.getElementById("searchPhotoApproval").checked;
+    if (!x && !p)
         return;
     $('#searchPartsBUTN').button('loading');
     $.ajax({
@@ -215,6 +242,7 @@ function doSearchPartsBUTN() {
         dataType: "html",
         data: ({
             searchString: x,
+            photosApproval: p,
             ajax_request_action: "perform_search"
         }),
         success: writeSearchResults,
@@ -381,6 +409,8 @@ function initializeAdminParticipants() {
         fetchParticipant(fbadgeid);
     }
     $("#adminParticipantsForm").on("input", ".mycontrol", processChange);
+    $prevBTN = document.getElementById("prevSearchResultBUTN");
+    $nextBTN = document.getElementById("nextSearchResultBUTN");
 }
 
 function loadNewParticipant() {
@@ -706,8 +736,38 @@ function validateBioCharacterLength() {
 
 function writeSearchResults(data, textStatus, jqXHR) {
     //ajax success callback function
-    $("#searchResultsDIV").html(data).show('fast');
+    data_json = new Array();
+    data_json["HTML"] = "";
+    data_json["rowcount"] = 0;
+    try {
+        data_json = JSON.parse(data);
+    } catch (error) {
+        console.log(error);
+    }
+    console.log(data_json);
+ 
+    $("#searchResultsDIV").html(data_json["HTML"]).show('fast');
     $('#searchPartsBUTN').button('reset');
+    searchCount = data_json["rowcount"];
+    if (searchCount > 1) {
+        if ($prevBTN) {
+            $prevBTN.style.display = "block";
+            $prevBTN.disabled = true;
+        }
+        else
+            $prevBTN.style.display = "none";
+
+        if ($nextBTN) {
+            $nextBTN.style.display = "block";
+            $nextBTN.disabled = false;
+        }
+        else
+            $nextBTN.style.display = "none";
+        badgeList = data_json["badgeids"];
+    } else
+        badgeList = null;
+
+    searchIndex = -1;
     showSearchResults();
 }
 

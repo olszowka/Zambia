@@ -43,6 +43,7 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
         $paramArray = array();
         $paramArray["title"] = $title;
         $paramArray["adduser"] = !USE_REG_SYSTEM;
+        $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
         try {
             $reportMenuIncludeFilName = $bootstrap4 ? 'ReportMenuBS4Include.php' : 'ReportMenuInclude.php';
             $reportMenuIncludeFilHand = fopen ($reportMenuIncludeFilName,  'r');

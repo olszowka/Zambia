@@ -10,6 +10,12 @@ document.addEventListener( "DOMContentLoaded", function () {
 		case "My Profile":
 			myProfile.initialize();
 			break;
+		case "Administer Photos":
+			initializeAdminPhotos();
+			break;
+		case "My Photo":
+			myPhoto.initialize();
+			break;
 		case "Grid Scheduler":
 			staffMaintainSchedule.initialize();
 			break;

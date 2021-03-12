@@ -39,7 +39,11 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
         echo htmlentities(json_encode($reportAdditionalOptions));
         echo "\">";
     }
-} ?>
+}
+if (PARTICIPANT_PHOTOS === TRUE) {
+    echo "    <link rel=\"stylesheet\" href=\"external/croppie.2.6.5/croppie.css\" type=\"text/css\" />\n";
+}
+?>
     <link rel="shortcut icon" href="images/favicon.ico">
     <script type="text/javascript">
         var thisPage="<?php echo $title; ?>";
