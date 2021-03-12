@@ -1,6 +1,6 @@
 <?php
 // Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
+global $linki, $message_error, $returnAjaxErrors, $return500errors, $title
 $title = "My Profile";
 require('PartCommonCode.php'); // initialize db; check login;
 //                                  set $badgeid from session
@@ -220,8 +220,8 @@ EOD;
     }
 }
 
-function uploadphoto() {
-    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title, $badgeid;
+function uploadphoto($badgeid) {
+    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
     $pos = strpos($_POST["photo"], ",");
     $source = substr($_POST["photo"], $pos + 1);
     $type = substr($_POST["photo"], 0, $pos);
@@ -350,8 +350,8 @@ EOD;
     echo json_encode($json_return) . "\n";
 }
 
-function fetchphoto() {
-    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title, $badgeid;
+function fetchphoto($badgeid) {
+    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
 
     $sql = "SELECT uploadedphotofilename FROM Participants WHERE badgeid = ?";
     $paramarray = array();
@@ -365,8 +365,8 @@ function fetchphoto() {
     echo file_get_contents($dest);
 }
 
-function deleteuploadedphoto() {
-    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title, $badgeid;
+function deleteuploadedphoto($badgeid) {
+    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
 
     $json_return = array();
     $dest = getcwd();
@@ -428,8 +428,8 @@ EOD;
     echo json_encode($json_return) . "\n";
 };
 
-function deleteapprovedphoto() {
-    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title, $badgeid;
+function deleteapprovedphoto($badgeid) {
+    global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
 
     $json_return = array();
     $dest = getcwd();
@@ -488,6 +488,28 @@ EOD;
     echo json_encode($json_return) . "\n";
 };
 
+function fetch_bio($badgeid) {
+    global $linki, $message_error, $returnAjaxErrors, $return500errors;
+    $result = mysqli_query_with_prepare_and_exit_on_error("SELECT P.bio FROM Participants P WHERE P.badgeid=?;", "s", array($badgeid));
+    $row = mysqli_fetch_assoc($result);
+    if (!$row) {
+        $message_error = "Error retrieving updated bio";
+        RenderErrorAjax($message_error);
+        exit();
+    }
+    echo json_encode($row);
+    exit();
+}
+
+function convert_bio() {
+    $htmlbio = getString("htmlbio");
+    $bio = html_to_text($htmlbio);
+    $results = [];
+    $results["bio"] = $bio;
+    $results["len"] = mb_strlen($bio);
+    echo json_encode($results);
+}
+
 // start of AJAX dispatch
 if (!isLoggedIn()) {
     $message_error = "You are not logged in or your session has expired.";
@@ -520,16 +542,16 @@ switch ($action) {
         convert_bio();
         break;
     case 'uploadPhoto':
-        uploadphoto();
+        uploadphoto($badgeid);
         break;
     case 'fetchPhoto':
-        fetchphoto();
+        fetchphoto($badgeid);
         break;
     case 'delete_uploaded_photo':
-        deleteuploadedphoto();
+        deleteuploadedphoto($badgeid);
         break;
     case 'delete_approved_photo':
-        deleteapprovedphoto();
+        deleteapprovedphoto($badgeid);
         break;
     default:
         $message_error = "Invalid ajax_request_action: $action.  Database not updated.";

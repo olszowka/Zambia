@@ -324,11 +324,16 @@ SELECT
 	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
+    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
+    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+	R.statustext, D.reasontext
 FROM
 	Participants P
 	JOIN CongoDump CD ON P.badgeid = CD.badgeid
     LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
+    LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
+    LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
 WHERE
 		P.pubsname LIKE ?
 	OR CD.lastname LIKE ?
@@ -353,9 +358,9 @@ FROM
     LEFT OUTER JOIN (
          SELECT participantid, COUNT(*) AS answercount
             FROM ParticipantSurveyAnswers
-) A ON (P.badgeid = A.participantid)
-LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+    ) A ON (P.badgeid = A.participantid)
+    LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
+    LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
 WHERE
 		P.pubsname LIKE ?
 	OR CD.lastname LIKE ?
