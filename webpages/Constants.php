@@ -10,7 +10,6 @@ define("HEADER_STAFF", 2003);
 define("SubmitAgeLimit", 3600);
 // For TAG_ONLY default track must be self select and of this ID
 define("DEFAULT_TAG_ONLY_TRACK", 1);
-define("SubmitAgeLimit", 3600);
 // Photo Upload Status
 // bit 0: Uploaded Photo Available (0 = no, 1 = yes)
 define("PHOTO_UPLOAD_MASK", 1);
