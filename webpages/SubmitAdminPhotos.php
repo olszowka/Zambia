@@ -236,7 +236,7 @@ SET
     photodenialreasonid = NULL,
     photodenialreasonothertext = NULL,
 EOD;
-    $sql .= " photouploadstatus = ((photouploadstatus | " . strval(PHOTO_UPLOAD_MASK) . ") &  ~" . strval(PHOTO_DENIED_MASK) . ")\nWHERE badgeid = ?;";
+    $sql .= " photouploadstatus = ((IFNULL(photouploadstatus, 0) | " . strval(PHOTO_UPLOAD_MASK) . ") &  ~" . strval(PHOTO_DENIED_MASK) . ")\nWHERE badgeid = ?;";
     //error_log($sql);
     $paramarray = array();
     $paramarray[] = $newname;
@@ -324,7 +324,7 @@ function deleteuploadedphoto() {
 
     if ($do_update) {
         $sql = "UPDATE Participants SET uploadedphotofilename = NULL, photodenialreasonothertext = NULL, photodenialreasonid = NULL," .
-           " photouploadstatus = photouploadstatus & ~" . strval(PHOTO_UPLOAD_MASK) . " & ~" . strval(PHOTO_DENIED_MASK) .
+           " photouploadstatus = IFNULL(photouploadstatus, 0) & ~" . strval(PHOTO_UPLOAD_MASK) . " & ~" . strval(PHOTO_DENIED_MASK) .
            "\nWHERE badgeid = ?;";
         $paramarray = array();
         $paramarray[0] = $participantBadgeId;
@@ -368,7 +368,7 @@ function denyphoto() {
     $json_return = array();
 
     $sql = "UPDATE Participants SET photodenialreasonothertext = ?, photodenialreasonid = ?," .
-           " photouploadstatus = photouploadstatus | " . strval(PHOTO_DENIED_MASK) . " WHERE badgeid = ?;";
+           " photouploadstatus = IFNULL(photouploadstatus, 0) | " . strval(PHOTO_DENIED_MASK) . " WHERE badgeid = ?;";
     $paramarray = array();
     $paramarray[0] = $othertext;
     $paramarray[1] = $reasoncode;
@@ -518,7 +518,7 @@ function deleteapprovedphoto() {
     }
 
     if ($do_update) {
-        $sql = "UPDATE Participants SET approvedphotofilename = NULL, photouploadstatus = photouploadstatus & ~" . strval(PHOTO_APPROVED_MASK) .
+        $sql = "UPDATE Participants SET approvedphotofilename = NULL, photouploadstatus = IFNULL(photouploadstatus, 0) & ~" . strval(PHOTO_APPROVED_MASK) .
            "\nWHERE badgeid = ?;";
         $paramarray = array();
         $paramarray[0] = $participantBadgeId;
