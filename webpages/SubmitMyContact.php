@@ -1,6 +1,6 @@
 <?php
 // Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $linki, $message_error, $returnAjaxErrors, $return500errors, $title
+global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
 $title = "My Profile";
 require('PartCommonCode.php'); // initialize db; check login;
 //                                  set $badgeid from session
