@@ -154,7 +154,7 @@ function HandleSearchParameters() {
     $message_error = '';
     return (true);
 } // End of HandleSearchParameters()
-    
+
 function PerformPrevSessionSearch () {
     global $SessionSearchParameters, $message_error,$message,$result,$linki;
     $query= <<<EOD
@@ -258,24 +258,26 @@ function ProcessImportSessions() {
         if (isset($_POST["import$i"])) {
             $previousconid = mysqli_real_escape_string($linki, $_POST["previousconid$i"]);
             $previoussessionid = mysqli_real_escape_string($linki, $_POST["previoussessionid$i"]);
-            $query2 = "INSERT INTO Sessions\n";
-            $query2 .= "        (sessionid, trackid, typeid, divisionid, pubstatusid, \n";
-            $query2 .= "        languagestatusid, pubsno, title, secondtitle, pocketprogtext, \n";
-            $query2 .= "        progguiddesc, persppartinfo, duration, estatten, kidscatid, \n";
-            $query2 .= "        signupreq, roomsetid, notesforpart, servicenotes, statusid, \n";
-            $query2 .= "        notesforprog, warnings, invitedguest, ts) \n";
-            $query2 .= "    SELECT\n";
-            $query2 .= "            NULL sessionid, COALESCE(TC.currenttrackid, 99), PS.typeid, PS.divisionid, 2 pubstatusid, \n";
-            $query2 .= "            PS.languagestatusid, NULL pubsno, PS.title, PS.secondtitle, PS.pocketprogtext, \n";
-            $query2 .= "            PS.progguiddesc, PS.persppartinfo, PS.duration, PS.estatten, PS.kidscatid, \n";
-            $query2 .= "            PS.signupreq, 99 roomsetid, NULL notesforpart, NULL servicenotes, 6 statusid, \n";
-            $query2 .= "            PS.notesforprog, NULL warnings, PS.invitedguest, CURRENT_TIMESTAMP ts \n";
-            $query2 .= "        FROM\n";
-            $query2 .= "            PreviousSessions PS LEFT JOIN\n";
-            $query2 .= "            TrackCompatibility TC USING (previousconid, previoustrackid)\n";
-            $query2 .= "        WHERE\n";
-            $query2 .= "            previousconid=$previousconid AND\n";
-            $query2 .= "            previoussessionid=$previoussessionid\n";
+            $query2 = <<<EOD
+INSERT INTO Sessions
+    (sessionid, trackid, typeid, divisionid, pubstatusid,
+    languagestatusid, pubsno, title, secondtitle, pocketprogtext,
+    progguiddesc, progguidhtml, persppartinfo, duration, estatten, kidscatid,
+    signupreq, roomsetid, notesforpart, servicenotes, statusid,
+    notesforprog, warnings, invitedguest, ts)
+SELECT
+    NULL sessionid, COALESCE(TC.currenttrackid, 99), PS.typeid, PS.divisionid, 2 pubstatusid,
+    PS.languagestatusid, NULL pubsno, PS.title, PS.secondtitle, PS.pocketprogtext,
+    PS.progguiddesc, IFNULL(PS.progguidhtml, PS.progguiddesc), PS.persppartinfo, PS.duration, PS.estatten, PS.kidscatid,
+    PS.signupreq, 99 roomsetid, NULL notesforpart, NULL servicenotes, 6 statusid,
+    PS.notesforprog, NULL warnings, PS.invitedguest, CURRENT_TIMESTAMP ts
+FROM
+    PreviousSessions PS LEFT JOIN
+    TrackCompatibility TC USING (previousconid, previoustrackid)
+WHERE
+    previousconid=$previousconid AND
+    previoussessionid=$previoussessionid
+EOD;
             //echo $query2;
             $result = mysqli_query_with_error_handling($query1);
             if (!$result) {
