@@ -7,7 +7,7 @@
 // $paramArray(optional) array of name value pairs to be set as global parameters for xsl stylesheet
 // $xmlDoc(optional) a Dom Document (XML) to be transformed.  If missing, an empty one will be transformed.
 // Results of transformation are written immediately to the output.
-function RenderXSLT($xslFilename, $paramArray = [], $xmlDoc = false) {
+function RenderXSLT($xslFilename, $paramArray = [], $xmlDoc = false, $noecho = false) {
     if (!$xmlDoc) {
         $xmlDoc = new DomDocument("1.0", "UTF-8");
         $emptyDoc = $xmlDoc->createElement("doc");
@@ -23,5 +23,8 @@ function RenderXSLT($xslFilename, $paramArray = [], $xmlDoc = false) {
         }
     }
     $html = $xslt->transformToXML($xmlDoc);
+    if ($noecho)
+        return mb_ereg_replace("<(div|span|b|textarea|script)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i");
+
     echo(mb_ereg_replace("<(div|span|b|textarea|script)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
 }
