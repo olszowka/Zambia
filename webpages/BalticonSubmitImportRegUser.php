@@ -47,11 +47,25 @@ function import_users() {
     mysqli_query_exit_on_error("START TRANSACTION;");
 
     // Import reg info to CongoDump
+    // MySQL 5.x doesn't support ROW_NUMBER(), so it has to be faked with this kludg
     $sql = <<<EOD
 INSERT INTO CongoDump (badgeid,firstname,lastname,badgename,phone,email,postaddress1,postaddress2,postcity,poststate,postzip,postcountry,regtype)
-SELECT  id, first_name, last_name, badge_name, phone, email_addr, address, addr_2, city, state, zip, country, 'IMPORTED'
-FROM balticonReg.perinfo
-WHERE id IN ($idstr);
+SELECT id, first_name, last_name, badge_name, phone, email_addr, address, addr_2, city, state, zip, country, label
+FROM (
+    SELECT @row_number := CASE WHEN @id = id THEN @row_number + 1 ELSE 1 END AS num,
+    @id := id AS id, first_name, last_name, badge_name, phone, email_addr,
+    address, addr_2, city, state, zip, country, label
+    FROM (
+        SELECT P.id, first_name, last_name, badge_name, phone, email_addr,
+        address, addr_2, city, state, zip, country, M.label
+        FROM balticonReg.perinfo P
+        JOIN balticonReg.reg R ON (R.perid = P.id)
+        JOIN balticonReg.memList M ON (R.memID = M.id AND R.conid = M.conid)
+        WHERE P.id IN ($idstr)
+        ORDER BY P.id, M.conid desc
+    ) T, (SELECT @id:=0,@row_number:=0) as ID
+) T2
+WHERE num = 1;
 EOD;
      mysqli_query_with_error_handling($sql);
      $rows = mysqli_affected_rows($linki);

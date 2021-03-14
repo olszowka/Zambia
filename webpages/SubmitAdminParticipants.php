@@ -260,11 +260,11 @@ function perform_search() {
     $json_return = array ();
     if (is_numeric($searchString)) {
         if (DBVER >= "8") {
-            $query["searchParticipants"] = <<<EOD
+            $query = <<<EOD
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
-    WHERE participantid = "$searchString"
+    WHERE participantid = ?
 )
 SELECT
 	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
@@ -286,7 +286,7 @@ ORDER BY
 	CD.lastname, CD.firstname
 EOD;
         } else {
-            $query["searchParticipants"] = <<<EOD
+            $query = <<<EOD
 SELECT
 	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
@@ -301,7 +301,7 @@ FROM
         LEFT OUTER JOIN (
             SELECT participantid, COUNT(*) AS answercount
                 FROM ParticipantSurveyAnswers
-                WHERE participantid = "$searchString"
+                WHERE participantid = ?
     ) A ON (P.badgeid = A.participantid)
 LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
 LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
@@ -311,8 +311,8 @@ ORDER BY
 	CD.lastname, CD.firstname
 EOD; 
         }
-        $param_arr = array($searchString);
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
+        $param_arr = array($searchString, $searchString);
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, "ss", $param_arr);
     } else {
         $searchString = '%' . $searchString . '%';
         if (DBVER >= "8") {
