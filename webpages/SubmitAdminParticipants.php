@@ -89,7 +89,7 @@ function update_participant() {
     $poststate = getString("poststate");
     $postzip = getString("postzip");
     $postcountry = getString("postcountry");
-    
+
     if (!is_null($lastname) || !is_null($firstname) || !is_null($badgename) || !is_null($phone) || !is_null($email) || !is_null($postaddress1)
         || !is_null($postaddress2) || !is_null($postcity) || !is_null($poststate) || !is_null($postzip) || !is_null($postcountry)) {
         if (USE_REG_SYSTEM) {
@@ -101,13 +101,31 @@ function update_participant() {
         $query = <<<EOD
 UPDATE CongoDumpHistory
     SET inactivatedts = CURRENT_TIMESTAMP, inactivatedbybadgeid = ?
-    WHERE 
+    WHERE
             badgeid = ?
         AND inactivatedts IS NULL;
 EOD;
         $rows = mysql_cmd_with_prepare($query, "ss", array($loggedInUserBadgeId, $participantBadgeId));
         if (is_null($rows)) {
             exit();
+        }
+        if ($rows == 0) {   // no record existed with old values, add one
+            $query = <<<EOD
+INSERT INTO CongoDumpHistory
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
+    SELECT
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
+        FROM
+            CongoDump
+        WHERE
+            badgeid = ?;
+EOD;
+            $rows = mysql_cmd_with_prepare($query, "ss", array($loggedInUserBadgeId, $participantBadgeId));
+            if ($rows != 1) {
+                $message_error = "Error updating db. (insert history record)";
+                Render500ErrorAjax($message_error);
+                exit();
+            }
         }
 
         $query_preable = "UPDATE CongoDump SET ";
