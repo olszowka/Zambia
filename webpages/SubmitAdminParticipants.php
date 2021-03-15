@@ -115,6 +115,24 @@ EOD;
         if (is_null($rows)) {
             exit();
         }
+        if ($rows == 0) {   // no record existed with old values, add one
+            $query = <<<EOD
+INSERT INTO CongoDumpHistory
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
+    SELECT
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
+        FROM
+            CongoDump
+        WHERE
+            badgeid = ?;
+EOD;
+            $rows = mysql_cmd_with_prepare($query, "ss", array($loggedInUserBadgeId, $participantBadgeId));
+            if ($rows != 1) {
+                $message_error = "Error updating db. (insert history record)";
+                Render500ErrorAjax($message_error);
+                exit();
+            }
+        }
 
         $query_preable = "UPDATE CongoDump SET ";
         $query_portion_arr = array();
