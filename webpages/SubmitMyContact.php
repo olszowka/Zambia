@@ -147,59 +147,79 @@ UPDATE CongoDumpHistory
             badgeid = ?
         AND inactivatedts IS NULL;
 EOD;
-        $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
-        if (is_null($rows)) {
-            exit();
-        }
-
-        $query_preable = "UPDATE CongoDump SET ";
-        $query_portion_arr = array();
-        $query_param_arr = array();
-        $query_param_type_str = "";
-        push_query_arrays($fname, 'firstname', 's', 30, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($lname, 'lastname', 's', 40, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($badgename, 'badgename', 's', 51, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($phone, 'phone', 's', 100, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($email, 'email', 's', 100, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postaddress1, 'postaddress1', 's', 100, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postaddress2, 'postaddress2', 's', 100, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postcity, 'postcity', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($poststate, 'poststate', 's', 25, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postzip, 'postzip', 's', 10, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postcountry, 'postcountry', 's', 25, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        $query_param_arr[] = $badgeid;
-        $query_param_type_str .= 's';
-        $query = $query_preable . implode(', ', $query_portion_arr) . " WHERE badgeid = ?";
-        $rows = mysql_cmd_with_prepare($query, $query_param_type_str, $query_param_arr);
-        if ($rows !== 1) {
-            $message_error = "Error updating db.";
-            Render500ErrorAjax($message_error);
-            exit();
-        }
-
-        $query = <<<EOD
+    $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
+    if (is_null($rows)) {
+        $message_error = "Error updating db. (close history record";
+        Render500ErrorAjax($message_error);
+        exit();
+    }
+    if ($rows == 0) {   // no record existed with old values, add one
+         $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
         FROM
             CongoDump
         WHERE
             badgeid = ?;
 EOD;
-        $rows = mysql_cmd_with_prepare($query, "s", array($badgeid));
-        if ($rows !== 1) {
-            $message_error = "Error updating db.";
+        $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
+        if ($rows != 1) {
+            $message_error = "Error updating db. (insert history record)";
             Render500ErrorAjax($message_error);
             exit();
         }
-        $CongoDumpUpdated = true;
     }
-    if (empty($password) && !$ParticipantsUpdated and !$CongoDumpUpdated) {
-        $message_error = "No data found to update. Database not updated.";
+
+    $query_preable = "UPDATE CongoDump SET ";
+    $query_portion_arr = array();
+    $query_param_arr = array();
+    $query_param_type_str = "";
+    push_query_arrays($fname, 'firstname', 's', 30, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($lname, 'lastname', 's', 40, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($badgename, 'badgename', 's', 51, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($phone, 'phone', 's', 100, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($email, 'email', 's', 100, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($postaddress1, 'postaddress1', 's', 100, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($postaddress2, 'postaddress2', 's', 100, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($postcity, 'postcity', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($poststate, 'poststate', 's', 25, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($postzip, 'postzip', 's', 10, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    push_query_arrays($postcountry, 'postcountry', 's', 25, $query_portion_arr, $query_param_arr, $query_param_type_str);
+    $query_param_arr[] = $badgeid;
+    $query_param_type_str .= 's';
+    $query = $query_preable . implode(', ', $query_portion_arr) . " WHERE badgeid = ?";
+    $rows = mysql_cmd_with_prepare($query, $query_param_type_str, $query_param_arr);
+    if ($rows != 1) {
+        $message_error = "Error updating db. (record update)";
         Render500ErrorAjax($message_error);
         exit();
     }
+
+        $query = <<<EOD
+INSERT INTO CongoDumpHistory
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid)
+    SELECT
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, ?
+        FROM
+            CongoDump
+        WHERE
+            badgeid = ?;
+EOD;
+    $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
+    if ($rows != 1) {
+        $message_error = "Error updating db. (history create)";
+        Render500ErrorAjax($message_error);
+        exit();
+    }
+    $CongoDumpUpdated = true;
+}
+if (empty($password) && !$ParticipantsUpdated and !$CongoDumpUpdated) {
+    $message_error = "No data found to update. Database not updated.";
+    Render500ErrorAjax($message_error);
+    exit();
+}
 ?>
     <div class="row mt-3">
     <div class="col-12">
