@@ -553,7 +553,7 @@ if (array_key_exists('ajax_request_action', $_POST)) {
 $badgeid = isset($_SESSION['badgeid']) ? $_SESSION['badgeid'] : null;
 switch ($action) {
     case 'update_participant':
-        updateparticipant($badgeid);
+        update_participant($badgeid);
         break;
     case "fetch_bio":
         fetch_bio($badgeid);
