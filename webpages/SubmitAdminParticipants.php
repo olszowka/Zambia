@@ -135,7 +135,7 @@ EOD;
         }
         // for Balticon update perinfo then congodump so if the congodump fails, it gets it from reginfo, and if the cron job runs, congodump is the same either way
         if (is_numeric($participantBadgeId)) {
-            $query_preable = "UPDATE reg_test.perinfo SET ";
+            $query_preable = "UPDATE balticonReg.perinfo SET ";
             $query_portion_arr = array();
             $query_param_arr = array();
             $query_param_type_str = "";
