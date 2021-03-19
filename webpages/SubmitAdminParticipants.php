@@ -134,13 +134,13 @@ EOD;
             }
         }
         // for Balticon update perinfo then congodump so if the congodump fails, it gets it from reginfo, and if the cron job runs, congodump is the same either way
-        if (is_numeric($badgeid)) {}
+        if (is_numeric($participantBadgeId)) {
             $query_preable = "UPDATE reg_test.perinfo SET ";
             $query_portion_arr = array();
             $query_param_arr = array();
             $query_param_type_str = "";
-            push_query_arrays($fname, 'first_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
-            push_query_arrays($lname, 'last_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+            push_query_arrays($firstname, 'first_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+            push_query_arrays($lastname, 'last_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
             push_query_arrays($badgename, 'badge_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
             push_query_arrays($phone, 'phone', 's', 15, $query_portion_arr, $query_param_arr, $query_param_type_str);
             push_query_arrays($email, 'email_addr', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
