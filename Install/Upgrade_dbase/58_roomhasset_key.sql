@@ -13,7 +13,7 @@ CREATE TABLE RoomHasSet_tmp (
     UNIQUE KEY `previous_primary_key` (`roomid`,`roomsetid`),
     KEY roomid (roomid),
     KEY roomsetid (roomsetid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO RoomHasSet_tmp(roomid, roomsetid, capacity)
     SELECT roomid, roomsetid, capacity

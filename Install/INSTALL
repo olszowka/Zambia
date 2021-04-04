@@ -9,7 +9,7 @@ You need a server with:
   - apache
      - Zambia might work with other web servers, but hasn't been tested on them.
   - php
-     - version 7.X >= 7.1.  It might work with 8.X, but hasn't been tested on it. 
+     - version 7.X >= 7.4.  It might work with 8.X, but hasn't been tested on it. 
      - needs to have xsl and multibyte libraries installed and enabled
        (often, but not always, included by default)
   - mysql
@@ -91,7 +91,7 @@ or whatever your URL is...
 
 6 - Ah, an account for in zambia so you can log in.  That would be useful.
 
-Zambia is intended to take a feed from the registration system to create and configure users.  However, the
+Zambia may take a feed from the registration system to create and configure users.  However, the
 code for handling that is specific to each registration system and not in the master branch. 
 
 There is a script add_zambia_users.php in scripts directory to add users.
