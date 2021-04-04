@@ -29,6 +29,20 @@
 .invalid-feedback {
   font-size: unset;
 }
+.bs4 .nav-tabs {
+  border-bottom: 2px solid #b5b5b5;
+}
+.bs4 .nav-tabs .nav-link {
+  background-color: #e5e5e5;
+  border: 2px solid #b5b5b5;
+  margin-left: 1px;
+  margin-right: 1px;
+}
+.bs4 .nav-tabs .nav-item.show .nav-link,
+.bs4 .nav-tabs .nav-link.active {
+  background-color: #ffffff;
+  border-color: #212121 #212121 #b5b5b5;
+}
 /* end of bootstrap overrides */
 /* Bootstrap 4 extensions */
 .col-0p5,
@@ -95,6 +109,9 @@
 .badge.badge-full-width {
   width: 100%;
   text-align: left;
+}
+.hidden {
+  display: none !important;
 }
 /* End of Bootstrap 4 extensions */
 /* General Form Defaults */
@@ -185,3 +202,11 @@ input[type='text'].disabled {
 .collapsed .expander {
   transform: translate(0, 0.1rem) rotate(90deg);
 }
+/* Tabulator overrides */
+.bs4 .tabulator-row.tabulator-selectable:hover {
+  background-color: #c9c9c9;
+}
+.bs4 .tabulator-cell.tabulator-editing {
+  background-color: #ffffff;
+}
+/* End of Tabulator overrides */

@@ -38,6 +38,24 @@
 .invalid-feedback {
     font-size: unset;
 }
+
+.bs4 {
+    .nav-tabs {
+        border-bottom: 2px solid @gray;
+        
+        .nav-link {
+            background-color: @lightest-gray;
+            border: 2px solid @gray;
+            margin-left: 1px;
+            margin-right: 1px;
+        }
+
+        .nav-item.show .nav-link, .nav-link.active {
+            background-color: @white;
+            border-color: @near-black @near-black @gray;
+        }
+    }
+}
 /* end of bootstrap overrides */
 
 /* Bootstrap 4 extensions */
@@ -113,6 +131,9 @@
     text-align: left;
 }
 
+.hidden {
+    display:none !important;
+}
 /* End of Bootstrap 4 extensions */
 
 /* General Form Defaults */
@@ -220,3 +241,15 @@ input[type='text'].disabled {
         transform: translate(0, 0.1rem) rotate(90deg);
     }
 }
+/* Tabulator overrides */
+.bs4 {
+    .tabulator-row.tabulator-selectable:hover {
+        background-color:@light-gray;
+    }
+
+    .tabulator-cell.tabulator-editing {
+        background-color: @white;
+    }
+}
+/* End of Tabulator overrides */
+

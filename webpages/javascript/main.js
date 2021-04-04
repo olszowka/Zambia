@@ -21,6 +21,8 @@ document.addEventListener( "DOMContentLoaded", function () {
 			break;
 		case "Edit Custom Text":
 			editCustomText.initialize();
+		case "Edit Configuration Tables":
+			editConfigTable.initialize();
 		default:
 			window.status="Ready.";
 		/**

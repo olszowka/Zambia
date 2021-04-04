@@ -3,7 +3,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -17,13 +17,13 @@
 
 DROP TABLE IF EXISTS `BioEditStatuses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `BioEditStatuses` (
   `bioeditstatusid` INT(11) NOT NULL auto_increment,
   `bioeditstatusname` varchar(60) DEFAULT NULL,
   `display_order` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY  (`bioeditstatusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -32,7 +32,11 @@ CREATE TABLE `BioEditStatuses` (
 
 LOCK TABLES `BioEditStatuses` WRITE;
 /*!40000 ALTER TABLE `BioEditStatuses` DISABLE KEYS */;
-INSERT INTO `BioEditStatuses` VALUES (1,"Needs editing and translation",1),(2,"Editing done--needs translation",2),(3,"Translation done--needs editing",3),(4,"Editing and translation done",4);
+INSERT INTO `BioEditStatuses`
+VALUES (1, 'Needs editing and translation', 1),
+       (2, 'Editing done--needs translation', 2),
+       (3, 'Translation done--needs editing', 3),
+       (4, 'Editing and translation done', 4);
 /*!40000 ALTER TABLE `BioEditStatuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -42,7 +46,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `CongoDump`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `CongoDump` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `firstname` varchar(30) DEFAULT NULL,
@@ -58,7 +62,7 @@ CREATE TABLE `CongoDump` (
   `postcountry` varchar(25) DEFAULT NULL,
   `regtype` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +104,7 @@ CREATE TABLE CongoDumpHistory (
     CONSTRAINT `CongoDumpHistory_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
     CONSTRAINT `CongoDumpHistory_ibfk_2` FOREIGN KEY (`createdbybadgeid`) REFERENCES `Participants` (`badgeid`),
     CONSTRAINT `CongoDumpHistory_ibfk_3` FOREIGN KEY (`inactivatedbybadgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Contains changes to user information from registration system.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='Contains changes to user information from registration system.';
 
 --
 -- Table structure for table `Credentials`
@@ -108,13 +112,13 @@ CREATE TABLE CongoDumpHistory (
 
 DROP TABLE IF EXISTS `Credentials`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Credentials` (
   `credentialid` int(11) NOT NULL AUTO_INCREMENT,
   `credentialname` varchar(100) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`credentialid`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,7 +137,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `CustomText`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `CustomText` (
   `customtextid` int(11) NOT NULL AUTO_INCREMENT,
   `page` varchar(100) DEFAULT NULL,
@@ -141,7 +145,7 @@ CREATE TABLE `CustomText` (
   `textcontents` text,
   PRIMARY KEY (`customtextid`),
   UNIQUE KEY `page` (`page`,`tag`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,13 +172,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Divisions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Divisions` (
   `divisionid` int(11) NOT NULL AUTO_INCREMENT,
   `divisionname` varchar(30) DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`divisionid`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,14 +205,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EmailCC`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `EmailCC` (
   `emailccid` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(50) DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT '0',
   `emailaddress` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`emailccid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,14 +231,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EmailFrom`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `EmailFrom` (
   `emailfromid` int(11) NOT NULL AUTO_INCREMENT,
   `emailfromdescription` varchar(30) DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT '0',
   `emailfromaddress` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`emailfromid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -253,7 +257,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EmailQueue`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `EmailQueue` (
   `emailqueueid` int(11) NOT NULL AUTO_INCREMENT,
   `emailto` varchar(255) DEFAULT NULL,
@@ -264,7 +268,7 @@ CREATE TABLE `EmailQueue` (
   `status` int(11) NOT NULL,
   `emailtimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`emailqueueid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -282,14 +286,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EmailTo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `EmailTo` (
   `emailtoid` int(11) NOT NULL AUTO_INCREMENT,
   `emailtodescription` varchar(75) DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT '0',
   `emailtoquery` text,
   PRIMARY KEY (`emailtoid`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -308,13 +312,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Features`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Features` (
   `featureid` int(11) NOT NULL AUTO_INCREMENT,
   `featurename` varchar(50) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`featureid`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -333,13 +337,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `KidsCategories`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `KidsCategories` (
   `kidscatid` int(11) NOT NULL AUTO_INCREMENT,
   `kidscatname` varchar(50) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`kidscatid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -358,13 +362,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `LanguageStatuses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `LanguageStatuses` (
   `languagestatusid` int(11) NOT NULL AUTO_INCREMENT,
   `languagestatusname` varchar(30) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`languagestatusid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -383,7 +387,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantAvailability`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantAvailability` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `maxprog` int(11) DEFAULT NULL,
@@ -392,7 +396,7 @@ CREATE TABLE `ParticipantAvailability` (
   `numkidsfasttrack` int(11) DEFAULT NULL,
   PRIMARY KEY (`badgeid`),
   CONSTRAINT `ParticipantAvailability_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -410,14 +414,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantAvailabilityDays`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantAvailabilityDays` (
   `badgeid` varchar(15) NOT NULL,
   `day` smallint(6) NOT NULL,
   `maxprog` int(11) DEFAULT NULL,
   PRIMARY KEY (`badgeid`,`day`),
   CONSTRAINT `ParticipantAvailabilityDays_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -435,7 +439,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantAvailabilityTimes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantAvailabilityTimes` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `availabilitynum` int(11) NOT NULL DEFAULT '0',
@@ -443,7 +447,7 @@ CREATE TABLE `ParticipantAvailabilityTimes` (
   `endtime` time DEFAULT NULL,
   PRIMARY KEY (`badgeid`,`availabilitynum`),
   CONSTRAINT `ParticipantAvailabilityTimes_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -461,7 +465,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantHasCredential`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantHasCredential` (
   `badgeid` varchar(15) NOT NULL,
   `credentialid` int(11) NOT NULL,
@@ -469,7 +473,7 @@ CREATE TABLE `ParticipantHasCredential` (
   KEY `phcfk2` (`credentialid`),
   CONSTRAINT `phcfk1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `phcfk2` FOREIGN KEY (`credentialid`) REFERENCES `Credentials` (`credentialid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -487,7 +491,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantHasRole`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantHasRole` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `roleid` int(11) NOT NULL DEFAULT '0',
@@ -495,7 +499,7 @@ CREATE TABLE `ParticipantHasRole` (
   KEY `roleid` (`roleid`),
   CONSTRAINT `ParticipantHasRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantHasRole_ibfk_2` FOREIGN KEY (`roleid`) REFERENCES `Roles` (`roleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -513,7 +517,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantInterests`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantInterests` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `yespanels` text,
@@ -523,7 +527,7 @@ CREATE TABLE `ParticipantInterests` (
   `otherroles` text,
   PRIMARY KEY (`badgeid`),
   CONSTRAINT `ParticipantInterests_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -541,7 +545,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantOnSession`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantOnSession` (
   `participantonsessionid` int(11) NOT NULL AUTO_INCREMENT,
   `badgeid` varchar(15) NOT NULL DEFAULT '',
@@ -552,7 +556,7 @@ CREATE TABLE `ParticipantOnSession` (
   KEY `sessionid` (`sessionid`),
   CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.  Set by staff.';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.  Set by staff.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -598,7 +602,7 @@ CREATE TABLE `ParticipantOnSessionHistory` (
   CONSTRAINT `ParticipantOnSessionHistory_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `ParticipantOnSessionHistory_ibfk_3` FOREIGN KEY (`createdbybadgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantOnSessionHistory_ibfk_4` FOREIGN KEY (`inactivatedbybadgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 DELIMITER ;;
 /*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
@@ -624,13 +628,13 @@ DELIMITER ;;
             NOT(NEW.createdts <=> OLD.createdts) OR
             NOT(NEW.createdbybadgeid <=> OLD.createdbybadgeid) THEN
             SIGNAL sqlstate '45000' SET message_text = 'Update field other than inactivated... in table ParticipantOnSessionHistory.';
-        END IF;	
+        END IF;
         DELETE FROM ParticipantOnSession
             WHERE
                     badgeid = OLD.badgeid
                 AND sessionid = OLD.sessionid
                 AND moderator = OLD.moderator;
-	END */;;
+    END */;;
 /*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
 /*!50003 CREATE */ /*!50003 TRIGGER `POSH_delete_trig` BEFORE DELETE ON `ParticipantOnSessionHistory` FOR EACH ROW SIGNAL sqlstate '45000' SET MESSAGE_TEXT = 'May only insert and update table ParticipantOnSessionHistory.' */;;
 DELIMITER ;
@@ -652,7 +656,7 @@ CREATE TABLE ParticipantPasswordResetRequests (
     cancelled tinyint(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (badgeidentered, creationdatetime),
     UNIQUE KEY PPRR_selector (selector)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Table structure for table `ParticipantSessionInterest`
@@ -660,7 +664,7 @@ CREATE TABLE ParticipantPasswordResetRequests (
 
 DROP TABLE IF EXISTS `ParticipantSessionInterest`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantSessionInterest` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `sessionid` int(11) NOT NULL DEFAULT '0',
@@ -673,7 +677,7 @@ CREATE TABLE `ParticipantSessionInterest` (
   CONSTRAINT `ParticipantSessionInterest_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_3` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_4` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -691,7 +695,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ParticipantSuggestions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ParticipantSuggestions` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `paneltopics` text,
@@ -699,7 +703,7 @@ CREATE TABLE `ParticipantSuggestions` (
   `suggestedguests` text,
   PRIMARY KEY (`badgeid`),
   CONSTRAINT `ParticipantSuggestions_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -717,7 +721,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Participants`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Participants` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `password` varchar(255) DEFAULT NULL,
@@ -730,7 +734,7 @@ CREATE TABLE `Participants` (
   `use_photo` tinyint(1) DEFAULT NULL,
   `data_retention` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -741,7 +745,7 @@ LOCK TABLES `Participants` WRITE;
 /*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
 INSERT INTO `Participants` (`badgeid`, `password`, `bestway`, `interested`, `bio`, `pubsname`, `share_email`, `staff_notes`, `use_photo`, `data_retention`)
 VALUES
-	('unrecorded','12345678901234567890123456789012',NULL,NULL,NULL,'unrecorded',1,NULL,NULL, 0);
+    ('unrecorded','12345678901234567890123456789012',NULL,NULL,NULL,'unrecorded',1,NULL,NULL, 0);
 /*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -751,11 +755,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PatchLog`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PatchLog` (
   `patchname` varchar(40) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -810,7 +814,9 @@ INSERT INTO `PatchLog` (patchname) VALUES
     ('51_admin_phases.sql'),
     ('52_password_security.sql'),
     ('53_data_retention.sql'),
-    ('57_create_user_permission.sql');
+    ('57_create_user_permission.sql'),
+    ('58_roomhasset_key.sql'),
+    ('59_config_edit_tables.sql');
 /*!40000 ALTER TABLE `PatchLog` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -820,16 +826,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PermissionAtoms`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PermissionAtoms` (
-  `permatomid` int(11) NOT NULL AUTO_INCREMENT,
-  `permatomtag` varchar(20) NOT NULL DEFAULT '',
-  `elementid` int(11) DEFAULT NULL,
-  `page` varchar(30) DEFAULT NULL,
-  `notes` text,
-  PRIMARY KEY (`permatomid`),
-  UNIQUE KEY `taginx` (`permatomtag`,`elementid`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+    `permatomid` int(11) NOT NULL AUTO_INCREMENT,
+    `permatomtag` varchar(20) NOT NULL DEFAULT '',
+    `elementid` int(11) DEFAULT NULL,
+    `page` varchar(30) DEFAULT NULL,
+    `notes` text,
+    PRIMARY KEY (`permatomid`),
+    UNIQUE KEY `taginx` (`permatomtag`,`elementid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -861,7 +867,29 @@ INSERT INTO `PermissionAtoms` (permatomid, permatomtag, elementid, page, notes) 
     (20,'CreateUser',NULL,'CreateUser','Manually create user.'),
     (21,'EditUserPermRoles',NULL,'Admin Participants','Control all user permission roles. Also used on create user page.'),
     (22,'EditUserPermRoles',3,'Admin Participants','Control participant user permission role only. Also used on create user page.'),
-    (23,'EditUserPermRoles',2,'Admin Participants','Control staff user permission role only. Also used on create user page.');
+    (23,'EditUserPermRoles',2,'Admin Participants','Control staff user permission role only. Also used on create user page.'),
+    (2000, 'ce_All', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2001, 'ce_BioEditStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2002, 'ce_Credentials', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2003, 'ce_Divisions', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2004, 'ce_EmailCC', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2005, 'ce_EmailFrom', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2006, 'ce_EmailTo', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2007, 'ce_Features', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2008, 'ce_KidsCategories', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2009, 'ce_LanguageStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2010, 'ce_PubStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2011, 'ce_RegTypes', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2012, 'ce_Roles', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2013, 'ce_Rooms', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2014, 'ce_RoomSets', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2015, 'ce_RoomHasSet', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2016, 'ce_Services', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2017, 'ce_SessionStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2018, 'ce_Tags', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2019, 'ce_Times', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2020, 'ce_Tracks', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2021, 'ce_Types', NULL, 'Edit Configuration Tables', 'enables edit');
 /*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -871,14 +899,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PermissionRoles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PermissionRoles` (
   `permroleid` int(11) NOT NULL AUTO_INCREMENT,
   `permrolename` varchar(100) DEFAULT NULL,
   `notes` text,
   `display_order` int(11),
   PRIMARY KEY (`permroleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -909,7 +937,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Permissions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Permissions` (
   `permissionid` int(11) NOT NULL AUTO_INCREMENT,
   `permatomid` int(11) NOT NULL DEFAULT '0',
@@ -923,7 +951,7 @@ CREATE TABLE `Permissions` (
   CONSTRAINT `Permissions_ibfk_1` FOREIGN KEY (`permatomid`) REFERENCES `PermissionAtoms` (`permatomid`),
   CONSTRAINT `Permissions_ibfk_2` FOREIGN KEY (`phaseid`) REFERENCES `Phases` (`phaseid`),
   CONSTRAINT `Permissions_ibfk_3` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 4096 kB';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 4096 kB';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -999,7 +1027,8 @@ INSERT INTO Permissions
     (20, NULL, 12, NULL),
     (21, NULL, 1, NULL),
     (22, NULL, 12, NULL),
-    (23, NULL, 12, NULL);
+    (23, NULL, 12, NULL),
+    (2000, NULL, 1, NULL);
 /*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1012,7 +1041,7 @@ CREATE TABLE `Phases` (
   `implemented` tinyint(1) DEFAULT '0',
   `display_order` int DEFAULT NULL,
   PRIMARY KEY (`phaseid`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Configuration info.';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='Configuration info.';
 
 --
 -- Dumping data for table `Phases`
@@ -1039,7 +1068,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PreviousConTracks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PreviousConTracks` (
   `previousconid` int(11) NOT NULL,
   `previoustrackid` int(11) NOT NULL,
@@ -1047,7 +1076,7 @@ CREATE TABLE `PreviousConTracks` (
   PRIMARY KEY (`previousconid`,`previoustrackid`),
   KEY `previousconid` (`previousconid`),
   CONSTRAINT `PreviousCons_ibfk_1` FOREIGN KEY (`previousconid`) REFERENCES `PreviousCons` (`previousconid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1065,13 +1094,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PreviousCons`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PreviousCons` (
   `previousconid` int(11) NOT NULL AUTO_INCREMENT,
   `previousconname` varchar(128) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`previousconid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1089,13 +1118,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PreviousParticipants`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PreviousParticipants` (
   `badgeid` varchar(15) NOT NULL,
   `bio` text,
   `staff_notes` text,
   PRIMARY KEY (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1113,7 +1142,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PreviousSessions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PreviousSessions` (
   `previousconid` int(11) NOT NULL,
   `previoussessionid` int(11) NOT NULL,
@@ -1150,7 +1179,7 @@ CREATE TABLE `PreviousSessions` (
   CONSTRAINT `PreviousSessions_ibfk_5` FOREIGN KEY (`divisionid`) REFERENCES `Divisions` (`divisionid`),
   CONSTRAINT `PreviousSessions_ibfk_6` FOREIGN KEY (`languagestatusid`) REFERENCES `LanguageStatuses` (`languagestatusid`),
   CONSTRAINT `PreviousSessions_ibfk_7` FOREIGN KEY (`kidscatid`) REFERENCES `KidsCategories` (`kidscatid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1168,13 +1197,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `PubStatuses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PubStatuses` (
   `pubstatusid` int(11) NOT NULL AUTO_INCREMENT,
   `pubstatusname` varchar(12) DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pubstatusid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1193,12 +1222,15 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `RegTypes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RegTypes` (
-  `regtype` varchar(40) NOT NULL DEFAULT '',
-  `message` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`regtype`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    `regtypeid` int NOT NULL AUTO_INCREMENT,
+    `regtype` varchar(40) NOT NULL default '',
+    `message` varchar(100) default NULL,
+    `display_order` int NULL DEFAULT 0,
+    PRIMARY KEY (`regtypeid`),
+    UNIQUE KEY `RegTypes_Regtype` (`regtype`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1207,7 +1239,16 @@ CREATE TABLE `RegTypes` (
 
 LOCK TABLES `RegTypes` WRITE;
 /*!40000 ALTER TABLE `RegTypes` DISABLE KEYS */;
-INSERT INTO `RegTypes` VALUES ('Adult','Registered'),('Adult Pre-35','Registered'),('Adult Pre-50','Registered'),('Adult YA 2013','Registered'),('Adult-Pre35','Registered'),('Adult-Pre40','Registered'),('Adult-Pre50','Registered'),('AdultFull','Registered'),('AdultFullYA','Registered'),('AdultPre1','Registered'),('AdultPre2','Registered'),('AdultPre3','Registered'),('AdultRoll','Registered'),('AdultRollover','Registered'),('AdultUpgrade','Registered'),('AdultYA','Registered'),('AdultYearAhead','Registered'),('Comp-Elf','Registered and Comp\'ed'),('Comp10Events','Registered and Comp\'ed'),('Comp10Friday','Registered and Comp\'ed for Friday only'),('Comp10Gaming','Registered and Comp\'ed'),('Comp10ProgP','Registered and Comp\'ed'),('Comp10Sat','Registered and Comp\'ed for Saturday only'),('Comp10Sun','Registered and Comp\'ed for Sunday only'),('CompEvents','Registered and Comp\'ed'),('CompFri','Registered and Comp\'ed for Friday'),('CompGaming','Registered and Comp\'ed'),('CompMon','Registered and Comp\'ed for Monday only'),('CompProg','Registered and Comp\'ed'),('CompRoll','Registered and Comp\'ed'),('CompRollover','Registered and Comp\'ed'),('CompSat','Registered and Comp\'ed for Saturday'),('CompSun','Registered and Comp\'ed for Sunday'),('EarnComp10Chr','Registered and Comp\'ed'),('EarnComp10Event','Registered and Comp\'ed'),('EarnComp10FF','Registered and Comp\'ed'),('EarnComp10Other','Registered and Comp\'ed'),('EarnComp10Prog','Registered and Comp\'ed'),('EarnComp10Pubs','Registered and Comp\'ed'),('EarnComp10Svc','Registered and Comp\'ed'),('EarnComp10Tech','Registered and Comp\'ed'),('EarnComp11','Registered and Comp\'ed'),('EarnComp12','Comp\'ed'),('ElfComp','Registered and Comp\'ed'),('EventComp','Comp\'ed'),('Former GoH','Registered and Comp\'ed'),('FormerGoH','Registered and Comp\'ed'),('FTPre2','Registered to attend Fasttrack'),('GoH','Registered and Comp\'ed'),('KIT','Special status for child who will be accompanied by parent'),('Panelist','Registered and Comp\'ed'),('PP_Comp','Comp\'ed'),('Student','Registered'),('VDiscount','Registered');
+INSERT INTO `RegTypes` (regtypeid, regtype, message, display_order)
+VALUES (1, 'Adult-RolloverC', 'Registered and Comp\'ed', 10),
+       (2, 'Adult-YearAhead', 'Registered', 20),
+       (3, 'AdultFull', 'Registered', 30),
+       (4, 'AdultFull-Comp', 'Registered and Comp\'ed', 40),
+       (5, 'AdultFull-Pre-1', 'Registered', 50),
+       (6, 'AdultFull-Pre-2', 'Registered', 60),
+       (7, 'ProgramComp', 'Registered and Comp\'ed', 70),
+       (8, 'Promotional', 'Registered', 80),
+       (9, 'Student', 'Registered', 90);
 /*!40000 ALTER TABLE `RegTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1217,13 +1258,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Roles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Roles` (
   `roleid` int(11) NOT NULL AUTO_INCREMENT,
   `rolename` varchar(50) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`roleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1242,16 +1283,19 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `RoomHasSet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RoomHasSet` (
-  `roomid` int(11) NOT NULL DEFAULT '0',
-  `roomsetid` int(11) NOT NULL DEFAULT '0',
-  `capacity` int(11) DEFAULT NULL,
-  PRIMARY KEY (`roomid`,`roomsetid`),
-  KEY `roomsetid` (`roomsetid`),
-  CONSTRAINT `RoomHasSet_ibfk_1` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`),
-  CONSTRAINT `RoomHasSet_ibfk_2` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    `roomhassetid` int NOT NULL AUTO_INCREMENT,
+    `roomid` int(11) NOT NULL default '0',
+    `roomsetid` int(11) NOT NULL default '0',
+    `capacity` int(11) default NULL,
+    PRIMARY KEY (roomhassetid),
+    UNIQUE KEY `previous_primary_key` (`roomid`,`roomsetid`),
+    KEY roomid (roomid),
+    KEY roomsetid (roomsetid),
+    CONSTRAINT `RoomHasSet_ibfk_1` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`),
+    CONSTRAINT `RoomHasSet_ibfk_2` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1260,7 +1304,92 @@ CREATE TABLE `RoomHasSet` (
 
 LOCK TABLES `RoomHasSet` WRITE;
 /*!40000 ALTER TABLE `RoomHasSet` DISABLE KEYS */;
-INSERT INTO `RoomHasSet` VALUES (1,1,1080),(1,2,1500),(1,4,1500),(1,5,860),(2,1,320),(2,2,460),(2,4,500),(2,5,270),(3,1,320),(3,2,460),(3,4,500),(3,5,270),(4,1,110),(4,2,150),(4,3,32),(4,4,160),(4,5,84),(4,6,39),(4,7,48),(5,1,110),(5,2,150),(5,3,32),(5,4,160),(5,5,84),(5,6,39),(5,7,48),(6,1,110),(6,2,180),(6,3,32),(6,4,170),(6,5,96),(6,6,39),(6,7,48),(7,1,680),(7,2,960),(7,4,1000),(7,5,570),(8,1,320),(8,2,460),(8,4,500),(8,5,270),(9,1,680),(9,2,960),(9,4,1000),(9,5,570),(12,4,430),(13,1,260),(13,2,390),(13,4,390),(13,5,240),(13,6,81),(13,7,96),(14,1,70),(14,2,120),(14,3,32),(14,4,120),(14,5,69),(14,6,36),(14,7,42),(15,1,80),(15,2,130),(15,3,32),(15,4,120),(15,5,72),(15,6,42),(15,7,48),(16,1,80),(16,2,140),(16,3,32),(16,4,140),(16,5,87),(16,6,42),(16,7,48),(17,1,160),(17,2,250),(17,4,240),(17,5,140),(17,6,50),(17,7,60),(18,1,180),(18,2,270),(18,4,270),(18,5,159),(18,6,44),(18,7,72),(19,1,90),(19,2,140),(19,3,38),(19,4,130),(19,5,72),(19,6,42),(19,7,48),(20,1,90),(20,2,140),(20,3,38),(20,4,140),(20,5,72),(20,6,42),(20,7,48),(21,1,90),(21,2,140),(21,3,38),(21,4,140),(21,5,72),(21,6,42),(21,7,48),(22,1,50),(22,2,70),(22,3,20),(22,4,80),(22,5,45),(22,6,24),(22,7,30),(23,1,40),(23,2,60),(23,3,14),(23,4,60),(23,5,30),(23,6,18),(23,7,24),(24,1,40),(24,2,60),(24,3,14),(24,4,60),(24,5,30),(24,6,18),(24,7,24),(25,1,30),(25,2,50),(25,3,14),(25,4,50),(25,5,24),(25,6,18),(25,7,24),(26,1,60),(26,2,100),(26,3,26),(26,4,105),(26,5,63),(26,6,30),(26,7,36),(27,1,50),(27,2,90),(27,3,26),(27,4,80),(27,5,48),(27,6,30),(27,7,36),(28,1,80),(28,2,120),(28,3,38),(28,4,120),(28,5,78),(28,6,42),(28,7,48),(29,1,80),(29,2,120),(29,3,38),(29,4,120),(29,5,78),(29,6,42),(29,7,48),(30,1,30),(30,2,40),(30,3,14),(30,4,40),(30,5,24),(30,6,24),(30,7,30),(31,1,20),(31,2,40),(31,3,14),(31,4,40),(31,5,24),(31,6,18),(31,7,24),(32,3,10),(33,3,18),(34,1,560),(34,2,780),(34,4,800),(34,5,470),(35,1,180),(35,2,320),(35,4,330),(35,5,170),(35,6,66),(35,7,70),(36,1,150),(36,2,240),(36,4,220),(36,5,150),(36,6,48),(36,7,60),(37,1,140),(37,2,260),(37,4,240),(37,5,135),(37,6,50),(37,7,66),(38,1,380),(38,2,580),(38,4,550),(38,5,300),(39,1,330),(39,2,490),(39,4,460),(39,5,270),(40,1,110),(40,2,160),(40,3,32),(40,4,150),(40,5,90),(40,6,39),(40,7,48),(41,1,60),(41,2,120),(41,3,32),(41,4,110),(41,5,60),(41,6,36),(41,7,42),(42,1,40),(42,2,70),(42,3,18),(42,4,60),(42,5,33),(42,6,18),(42,7,24),(43,1,60),(43,2,135),(43,3,26),(43,4,130),(43,5,72),(43,6,33),(43,7,42),(44,3,18),(45,4,100),(46,4,1800),(51,10,50);
+INSERT INTO `RoomHasSet` (`roomhassetid`, `roomid`, `roomsetid`, `capacity`)
+    VALUES
+    (1,2,10,20),
+    (2,3,2,20),
+    (3,3,3,24),
+    (4,3,5,40),
+    (5,3,10,26),
+    (6,4,2,50),
+    (7,4,3,48),
+    (8,4,5,89),
+    (9,4,10,40),
+    (10,5,10,10),
+    (11,6,10,10),
+    (12,7,2,20),
+    (13,7,3,21),
+    (14,7,5,50),
+    (15,7,10,22),
+    (16,8,2,50),
+    (17,8,3,47),
+    (18,8,5,91),
+    (19,8,10,34),
+    (20,9,2,20),
+    (21,9,3,21),
+    (22,9,5,50),
+    (23,9,10,22),
+    (24,10,2,20),
+    (25,10,3,23),
+    (26,10,5,45),
+    (27,10,10,22),
+    (28,11,2,10),
+    (29,11,3,6),
+    (30,11,5,14),
+    (31,11,10,10),
+    (32,12,2,20),
+    (33,12,3,12),
+    (34,12,5,38),
+    (35,12,10,16),
+    (36,13,2,30),
+    (37,13,3,30),
+    (38,13,5,63),
+    (39,13,10,28),
+    (40,14,2,20),
+    (41,14,3,15),
+    (42,14,5,44),
+    (43,14,10,22),
+    (44,15,2,10),
+    (45,15,3,9),
+    (46,15,5,32),
+    (47,15,10,16),
+    (48,16,2,20),
+    (49,16,3,24),
+    (50,16,5,49),
+    (51,16,10,22),
+    (52,17,2,10),
+    (53,17,3,9),
+    (54,17,5,20),
+    (55,17,10,10),
+    (56,18,2,40),
+    (57,18,3,27),
+    (58,18,5,65),
+    (59,18,10,40),
+    (60,19,3,18),
+    (61,19,5,30),
+    (62,19,10,16),
+    (63,20,10,8),
+    (64,21,2,30),
+    (65,21,3,32),
+    (66,21,5,80),
+    (67,21,10,34),
+    (68,22,2,20),
+    (69,22,3,24),
+    (70,22,5,55),
+    (71,22,10,28),
+    (72,23,10,8),
+    (73,24,2,60),
+    (74,24,3,60),
+    (75,24,5,115),
+    (76,24,10,58),
+    (77,25,2,60),
+    (78,25,3,60),
+    (79,25,5,108),
+    (80,25,10,54),
+    (81,26,2,20),
+    (82,26,3,23),
+    (83,26,5,47),
+    (84,26,10,22);
 /*!40000 ALTER TABLE `RoomHasSet` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1270,13 +1399,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `RoomSets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RoomSets` (
   `roomsetid` int(11) NOT NULL AUTO_INCREMENT,
   `roomsetname` varchar(50) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`roomsetid`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1295,7 +1424,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Rooms`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Rooms` (
   `roomid` int(11) NOT NULL AUTO_INCREMENT,
   `roomname` varchar(50) DEFAULT NULL,
@@ -1314,7 +1443,7 @@ CREATE TABLE `Rooms` (
   `closetime3` time DEFAULT NULL,
   `is_scheduled` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`roomid`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1408,7 +1537,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Schedule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Schedule` (
   `scheduleid` int(11) NOT NULL AUTO_INCREMENT,
   `sessionid` int(11) NOT NULL DEFAULT '0',
@@ -1419,7 +1548,7 @@ CREATE TABLE `Schedule` (
   KEY `roomid` (`roomid`),
   CONSTRAINT `Schedule_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `Schedule_ibfk_2` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1437,13 +1566,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Services` (
   `serviceid` int(11) NOT NULL AUTO_INCREMENT,
   `servicename` varchar(50) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`serviceid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1462,13 +1591,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `SessionEditCodes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SessionEditCodes` (
   `sessioneditcode` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(40) DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`sessioneditcode`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1487,7 +1616,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `SessionEditHistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SessionEditHistory` (
   `sessionid` int(11) NOT NULL DEFAULT '0',
   `badgeid` varchar(15) DEFAULT NULL,
@@ -1505,7 +1634,7 @@ CREATE TABLE `SessionEditHistory` (
   CONSTRAINT `SessionEditHistory_ibfk_2` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `SessionEditHistory_ibfk_3` FOREIGN KEY (`sessioneditcode`) REFERENCES `SessionEditCodes` (`sessioneditcode`),
   CONSTRAINT `SessionEditHistory_ibfk_4` FOREIGN KEY (`statusid`) REFERENCES `SessionStatuses` (`statusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 8192 kB';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 8192 kB';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1523,7 +1652,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `SessionHasFeature`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SessionHasFeature` (
   `sessionid` int(11) NOT NULL DEFAULT '0',
   `featureid` int(11) NOT NULL DEFAULT '0',
@@ -1531,7 +1660,7 @@ CREATE TABLE `SessionHasFeature` (
   KEY `featureid` (`featureid`),
   CONSTRAINT `SessionHasFeature_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `SessionHasFeature_ibfk_2` FOREIGN KEY (`featureid`) REFERENCES `Features` (`featureid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1554,7 +1683,7 @@ CREATE TABLE `SessionHasTag` (
     KEY `Fkey2` (`tagid`),
     CONSTRAINT `Fkey1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
     CONSTRAINT `Fkey2` FOREIGN KEY (`tagid`) REFERENCES `Tags` (`tagid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Table structure for table `SessionHasService`
@@ -1562,7 +1691,7 @@ CREATE TABLE `SessionHasTag` (
 
 DROP TABLE IF EXISTS `SessionHasService`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SessionHasService` (
   `sessionid` int(11) NOT NULL DEFAULT '0',
   `serviceid` int(11) NOT NULL DEFAULT '0',
@@ -1570,7 +1699,7 @@ CREATE TABLE `SessionHasService` (
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `SessionHasService_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `SessionHasService_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `Services` (`serviceid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1588,7 +1717,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `SessionStatuses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SessionStatuses` (
   `statusid` int(11) NOT NULL AUTO_INCREMENT,
   `statusname` varchar(50) DEFAULT NULL,
@@ -1596,7 +1725,7 @@ CREATE TABLE `SessionStatuses` (
   `may_be_scheduled` tinyint(4) NOT NULL DEFAULT '0',
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`statusid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1615,7 +1744,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Sessions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Sessions` (
   `sessionid` int(11) NOT NULL AUTO_INCREMENT,
   `trackid` int(11) NOT NULL DEFAULT '0',
@@ -1658,7 +1787,7 @@ CREATE TABLE `Sessions` (
   CONSTRAINT `Sessions_ibfk_6` FOREIGN KEY (`pubstatusid`) REFERENCES `PubStatuses` (`pubstatusid`),
   CONSTRAINT `Sessions_ibfk_7` FOREIGN KEY (`divisionid`) REFERENCES `Divisions` (`divisionid`),
   CONSTRAINT `Sessions_ibfk_8` FOREIGN KEY (`languagestatusid`) REFERENCES `LanguageStatuses` (`languagestatusid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1676,11 +1805,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Tags`;
 CREATE TABLE `Tags` (
-                        `tagid` int(11) NOT NULL auto_increment,
-                        `tagname` varchar(30) character set utf8 collate utf8_general_ci default NULL,
-                        `display_order` int(11) NOT NULL default '0',
-                        PRIMARY KEY  (`tagid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    `tagid` int(11) NOT NULL AUTO_INCREMENT,
+    `tagname` varchar(30) DEFAULT NULL,
+    `display_order` int(11) NOT NULL DEFAULT '0',
+    PRIMARY KEY  (`tagid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `Tags`
@@ -1703,7 +1832,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Times`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Times` (
   `timeid` int(11) NOT NULL,
   `timedisplay` char(14) DEFAULT NULL,
@@ -1713,7 +1842,7 @@ CREATE TABLE `Times` (
   `avail_start` tinyint(4) DEFAULT NULL,
   `avail_end` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`timeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1732,7 +1861,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `TrackCompatibility`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `TrackCompatibility` (
   `previousconid` int(11) NOT NULL,
   `previoustrackid` int(11) NOT NULL,
@@ -1741,7 +1870,7 @@ CREATE TABLE `TrackCompatibility` (
   KEY `currenttrackid` (`currenttrackid`),
   CONSTRAINT `TrackCompatibility_ibfk_1` FOREIGN KEY (`previousconid`, `previoustrackid`) REFERENCES `PreviousConTracks` (`previousconid`, `previoustrackid`),
   CONSTRAINT `TrackCompatibility_ibfk_2` FOREIGN KEY (`currenttrackid`) REFERENCES `Tracks` (`trackid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1759,14 +1888,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Tracks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Tracks` (
   `trackid` int(11) NOT NULL AUTO_INCREMENT,
   `trackname` varchar(50) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   `selfselect` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`trackid`)
-) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1785,14 +1914,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Types` (
   `typeid` int(11) NOT NULL AUTO_INCREMENT,
   `typename` varchar(50) DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   `selfselect` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`typeid`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1836,7 +1965,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `UserHasPermissionRole`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `UserHasPermissionRole` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `permroleid` int(11) NOT NULL DEFAULT '0',
@@ -1844,7 +1973,7 @@ CREATE TABLE `UserHasPermissionRole` (
   KEY `FK_UserHasPermissionRole` (`permroleid`),
   CONSTRAINT `UserHasPermissionRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `UserHasPermissionRole_ibfk_2` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
