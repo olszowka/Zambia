@@ -73,7 +73,7 @@ if (!empty($titlesearch)) {
     $x = mysqli_real_escape_string($linki, $titlesearch);
     $queryArray["sessions"] .= "                     AND S2.title LIKE \"%$x%\"\n";
 }
-if ($tagArr !== false && count($tagArr) > 0 && TRACK_TAG_USAGE !== "TAG_ONLY") {
+if ($tagArr !== false && count($tagArr) > 0 && TRACK_TAG_USAGE !== "TRACK_ONLY") {
     if ($tagmatch =='all') {
         foreach ($tagArr as $tag) {
             $queryArray["sessions"] .= " AND EXISTS (SELECT * FROM SessionHasTag WHERE sessionid = S2.sessionid AND tagid = $tag)";
