@@ -41,8 +41,10 @@ EOD;
 <?php
     echo "     <option value=0" . (($selsessionid == 0) ? "selected" : "") . ">Select Session</option>\n";
     while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
-        echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "");
-        echo ">" . htmlspecialchars($trackname) . " - ";
+        echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "") .  ">";
+        if (TRACK_TAG_USAGE !== "TAG_ONLY") {
+            echo htmlspecialchars($trackname) . " - ";
+        }
         echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
     }
     mysqli_free_result($Sresult);
@@ -53,9 +55,8 @@ EOD;
         <button id='sessionBtn' type='submit' name='submit' class='btn btn-primary'>Select Session</button>
     </div>
 <?php
-    if (isset($_SESSION['return_to_page'])) {
+    if (isset($_SESSION['return_to_page']))
         echo "<div class='col col-auto'><a href=\"" . $_SESSION['return_to_page'] . "\">Return to report</a></div>";
-    }
     echo "</div></form>\n";
     if ($topsectiononly) {
         staff_footer();
