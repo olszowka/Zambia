@@ -37,8 +37,9 @@ $Sresult = mysqli_query_exit_on_error($query);
 <?php
 echo "     <option value=0" . (($selsessionid == 0) ? "selected" : "") . ">Select Session</option>\n";
 while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
-    echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "");
-    echo ">" . htmlspecialchars($trackname) . " - ";
+    echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "") . ">";
+    if (TRACK_TAG_USAGE !== "TAG_ONLY")
+        echo htmlspecialchars($trackname) . " - ";
     echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
 }
 mysqli_free_result($Sresult);
