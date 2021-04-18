@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2009-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function validate_suggestions($paneltopics, $otherideas, $suggestedguests) {
     $retval = ""; // return "" means "passed"
@@ -24,9 +24,9 @@ function validate_session_interests($max_si_row) {
     global $session_interests, $message;
     $flag = true;
     $message = "";
-    $count = array(0, 0, 0, 0, 0);
+    $count = array(0, 0, 0, 0, 0, 0);
     for ($i = 1; $i <= $max_si_row; $i++) {
-        if ($session_interests[$i]['rank'] == "" or $session_interests[$i]['delete']) {
+        if (empty($session_interests[$i]['rank'] ) || $session_interests[$i]['delete']) {
             continue;
         }
         if (filter_var($session_interests[$i]['rank'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 5))) == false) {
@@ -38,7 +38,7 @@ function validate_session_interests($max_si_row) {
         }
     }
     if ($count[1] > 4 or $count[2] > 4 or $count[3] > 4 or $count[4] > 4) {
-        $message .= "You may not use preferences 1-4 more than 4 times each.<BR>\n";
+        $message .= "You may not use preferences 1-4 more than 4 times each.<br>\n";
         $flag = false;
     }
     return ($flag);
@@ -52,7 +52,7 @@ function validate_session_interests($max_si_row) {
 function validate_add_session_interest($sessionid, $badgeid, $mode) {
     global $message, $title;
     if (!($mode == ParticipantAddSession or $mode == StaffInviteSession)) {
-        $message = "Function validate_add_session_interest called with invalid mode.<BR>\n";
+        $message = "Function validate_add_session_interest called with invalid mode.<br>\n";
         return (false);
     }
     if (filter_var($sessionid, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1))) == false) {
@@ -160,7 +160,7 @@ function validate_session() {
         $messages .= "Estimated attendance must be a positive integer or blank.<br>\n";
         $flag = false;
     }
-    if ($session["track"] == 0) {
+    if ($session["track"] == 0 && TRACK_TAG_USAGE !== "TAG_ONLY") {
         $messages .= "Please select a track.<br>\n";
         $flag = false;
     }
@@ -208,7 +208,7 @@ function validate_session() {
         $messages .= "Please select a room set.<br>\n";
         $flag = false;
     }
-    if ($session["track"] == 0 || $session["track"] == 99) { // don't allow "Unspecified"
+    if (($session["track"] == 0 || $session["track"] == 99) && TRACK_TAG_USAGE !== "TAG_ONLY") { // don't allow "Unspecified"
         $messages .= "Please select a track.<br>\n";
         $flag = false;
     }

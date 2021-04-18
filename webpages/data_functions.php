@@ -74,7 +74,7 @@ function getInt($name, $default = false) {
         return $default;
     }
     $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
-    if (empty($t)) {
+    if (empty($t) && $t !== 0) {
         return $default;
     } else {
         return(intval($t));
@@ -470,7 +470,7 @@ function ArrayToXML($queryname, $array, $xml = null) {
     $queryNode = null;
     if ($dosearch) {
         $xpath = new DOMXPath($xml);
-        $query = "/doc/query[@queryName='options']";
+        $query = "/doc/query[@queryName='$queryname']";
         $elements = $xpath->query($query);
 
         if (!is_null($elements)) {

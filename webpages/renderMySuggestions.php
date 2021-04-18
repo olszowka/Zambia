@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 function renderMySuggestions($title, $error, $message, $paneltopics, $otherideas, $suggestedguests) {
     participant_header($title);
     if ($error) {
@@ -10,6 +10,7 @@ function renderMySuggestions($title, $error, $message, $paneltopics, $otherideas
     if (!may_I('my_suggestions_write')) {
         echo "<p>We're sorry, but we are unable to accept your suggestions at this time.\n";
     }
+    echo "<div class=\"my-suggestions-wrapper\">";
     echo "<form name=\"addform\" method=\"post\" action=\"SubmitMySuggestions.php\">\n";
     echo "<div class=\"titledtextarea\">\n";
     echo "    <label for=\"paneltopics\">Program Topic Ideas:</label>\n";
@@ -41,5 +42,6 @@ function renderMySuggestions($title, $error, $message, $paneltopics, $otherideas
     }
     echo "</div>\n";
     echo "</form>\n";
+    echo "</div>\n";
     participant_footer();
 } ?>

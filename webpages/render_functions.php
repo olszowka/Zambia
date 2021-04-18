@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2007-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2007-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 //	RenderPrecis display requires:  a query result containing rows with these fields IN THIS ORDER:
 //	$sessionid, $trackname, $typename, $title, $duration, $estatten, $progguiddesc, $persppartinfo, $starttime, $roomname, $statusname
 //	it displays the precis view of the data.
@@ -20,8 +20,12 @@ function RenderPrecis($result, $showlinks) {
             echo "<a href=\"StaffAssignParticipants.php?selsess=" . $sessionid . "\">" . $sessionid . "</a>";
         }
         echo "&nbsp;&nbsp;</td>\n";
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $trackname . "</td>\n";
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $typename . "</td>\n";
+        if (TRACK_TAG_USAGE !== "TAG_ONLY") {
+            echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $trackname . "</td>\n";
+            echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $typename . "</td>\n";
+        } else {
+            echo "  <td class=\"border0000\" colspan=\"2\" style=\"font-weight:bold\">" . $typename . "</td>\n";
+        }
         echo "  <td class=\"border0000\" style=\"font-weight:bold\">";
         if ($showlinks) {
             echo "<a href=\"EditSession.php?id=" . $sessionid . "\">" . htmlspecialchars($title, ENT_NOQUOTES) . "</a>";

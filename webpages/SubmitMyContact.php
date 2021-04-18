@@ -148,7 +148,26 @@ UPDATE CongoDumpHistory
 EOD;
     $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
     if (is_null($rows)) {
-        exit();
+        $message_error = "Error updating db. (close CongoDumpHistory record)";
+        Render500ErrorAjax($message_error);
+    }
+    if ($rows == 0) {   // no record existed with old values, add one
+        $query = <<<EOD
+INSERT INTO CongoDumpHistory
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
+    SELECT
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
+        FROM
+            CongoDump
+        WHERE
+            badgeid = ?;
+EOD;
+        $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
+        if ($rows != 1) {
+            $message_error = "Error updating db. (insert CongoDumpHistory record)";
+            Render500ErrorAjax($message_error);
+            exit();
+        }
     }
 
     $query_preable = "UPDATE CongoDump SET ";
@@ -171,7 +190,7 @@ EOD;
     $query = $query_preable . implode(', ', $query_portion_arr) . " WHERE badgeid = ?";
     $rows = mysql_cmd_with_prepare($query, $query_param_type_str, $query_param_arr);
     if ($rows !== 1) {
-        $message_error = "Error updating db.";
+        $message_error = "Error updating db. (record update)";
         Render500ErrorAjax($message_error);
         exit();
     }
@@ -180,15 +199,15 @@ EOD;
 INSERT INTO CongoDumpHistory
     (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, ?
         FROM
             CongoDump
         WHERE
             badgeid = ?;
 EOD;
-    $rows = mysql_cmd_with_prepare($query, "s", array($badgeid));
-    if ($rows !== 1) {
-        $message_error = "Error updating db.";
+    $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
+    if ($rows != 1) {
+        $message_error = "Error updating db. (history create)";
         Render500ErrorAjax($message_error);
         exit();
     }

@@ -68,7 +68,6 @@ function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
 	if ($message_error != "") {
         return NULL;
     }
-
 	return $rows;
 }
 

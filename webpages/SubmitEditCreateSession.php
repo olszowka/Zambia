@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2019 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2021 The Zambia Group. All rights reserved. See copyright document for more details.
     $action=$_POST["action"]; // "create" or "edit" or "brainstorm"
     if ($action=="brainstorm") {
             require_once ('BrainstormCommonCode.php');
@@ -18,6 +18,9 @@
     $email_status=validate_name_email($name,$email);; /* return true if OK.  Store error messages in
         global $messages */
     get_session_from_post(); // store in global $session array
+    if (TRACK_TAG_USAGE === 'TAG_ONLY') {
+        $session["track"] = DEFAULT_TAG_ONLY_TRACK;
+    }
     prepare_db_and_more();
     $status=validate_session(); /* return true if OK.  Store error messages in
         global $messages */
@@ -60,7 +63,10 @@
     $id=insert_session();
     if (!$id) {
         $message_warn=""; // warning message
-        $message_warn.="<BR>".$query."\nUnknown error creating record.  Database not updated successfully.";
+        if (!isset($query)) {
+            $query = "";
+        }
+        $message_warn.="<br>".$query."\nUnknown error creating record.  Database not updated successfully.";
         if ($action=='brainstorm') {
                 BrainstormRenderCreateSession($session,$message_warn,$message_error);
                 }

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $participant, $message_error, $message2, $congoinfo, $session_interests, $session_interest_index, $title;
 $title = "Select Sessions";
 require('PartCommonCode.php'); //define database functions
@@ -12,14 +12,20 @@ if ($addInterest !== false) {
         $query = "INSERT INTO ParticipantSessionInterest SET badgeid=\"$badgeid\", sessionid = $id";
         mysqli_query_exit_on_error($query);
     }
+} else {
+    $inscount = 0;
 }
+
 $deleteInterest = getArrayOfInts('deleteInterest');
 if ($deleteInterest !== false) {
     $delcount = count($deleteInterest);
     $dellist = implode(',', $deleteInterest);
     $query = "DELETE FROM ParticipantSessionInterest WHERE badgeid=\"$badgeid\" AND sessionid in ($dellist)";
     mysqli_query_exit_on_error($query);
+} else {
+    $delcount = 0;
 }
+
 $messageSave = "";
 if (($delcount == 0) && ($inscount == 0)) {
     $messageSave = "No changes to database requested.";
