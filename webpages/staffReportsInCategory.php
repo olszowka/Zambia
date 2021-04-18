@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2015-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title;
 $title = "Reports in Category";
 require_once('StaffCommonCode.php');

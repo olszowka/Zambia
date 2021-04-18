@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section;
 $header_section = HEADER_PARTICIPANT;
 
@@ -58,6 +58,7 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                             <li><a href="my_contact.php">Profile</a></li>
                             <?php makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false); ?>
                             <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
+                            <?php makeMenuItem("My Suggestions",1,"my_suggestions.php",false); ?>
                             <?php makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false); ?>
                             <?php makeMenuItem("Session Interests", may_I('my_panel_interests'),"PartPanelInterests.php",false); ?>
                             <?php makeMenuItem("My Schedule", may_I('my_schedule'),"MySchedule.php",false); ?>

@@ -171,10 +171,11 @@
                         <xsl:otherwise>
                             <div class="tag-chk-container" id="role-container">
                                 <xsl:for-each select="doc/query[@queryName='roles']/row">
+                                    <xsl:variable name="permroleid" select="@permroleid" />
                                     <div class="tag-chk-label-wrapper">
                                         <label class="tag-chk-label">
-                                            <input type="checkbox" name="permissionRoles[]" class="tag-chk" value="{@permroleid}" >
-                                                <xsl:if test="/doc/selectedRoles/row/text() = @permroleid">
+                                            <input type="checkbox" name="permissionRoles[]" class="tag-chk" value="{$permroleid}" >
+                                                <xsl:if test="/doc/query[@queryName='selectedRoles']/row[@value=$permroleid]">
                                                     <xsl:attribute name="checked">checked</xsl:attribute>
                                                 </xsl:if>
                                             </input>

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
     // This function will output the page with the form to add or create a session
     // Variables
     //     action: "brainstorm"
@@ -23,8 +23,8 @@ function BrainstormRenderCreateSession ($session, $message1, $message2) {
     }
     //error_log("Zambia: ".print_r($session,TRUE));
   ?>
-<script language="javascript" type="text/javascript">
-var phase1required=new Array("name", "email", "track", "title", "progguiddesc");
+<script type="text/javascript">
+var phase1required = Array("name", "email", "track", "title", "progguiddesc");
 var currentPhase, unhappyColour, happyColor;
 
 function colourCodeElements(phaseName, unhappyC, happyC) {
@@ -59,7 +59,7 @@ var enable = true;
 				case "LABEL":
 					break;
 				case "SELECT":
-					if (o.options[o.selectedIndex].value == 0) {
+					if (o.options[o.selectedIndex].value === 0) {
 						enable = false;
 						relatedO.style.color = unhappyColor;
 					}
@@ -68,7 +68,7 @@ var enable = true;
 					}
 					break;
 				case "TEXTAREA":
-					if (o.value == "") {
+					if (o.value === "") {
 						enable = false;
 						relatedO.style.color = unhappyColor;
 					}
@@ -77,7 +77,7 @@ var enable = true;
 					}
 					break;
 				case "INPUT":
-					if (o.value == "") {
+					if (o.value === "") {
 						enable = false;
 						relatedO.style.color = unhappyColor;
 					}
@@ -93,9 +93,9 @@ var enable = true;
 	if (saveButton != null) {
 		saveButton.disabled = !enable;
 	}	
-	var saveButton = document.getElementById("sButtonBottom");
-	if (saveButton != null) {
-		saveButton.disabled = !enable;
+	var saveButton2 = document.getElementById("sButtonBottom");
+	if (saveButton2 != null) {
+		saveButton2.disabled = !enable;
 	}	
 }
 </script>
@@ -161,7 +161,7 @@ var enable = true;
         <INPUT type=submit ID="sButtonBottom" value="Save">
       </FORM>
   </DIV>
-  <script language="javascript" type="text/javascript">
+  <script type="text/javascript">
   colourCodeElements("phase1", "red", "green");
   checkSubmitButton();
   </script>

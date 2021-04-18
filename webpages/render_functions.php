@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2007-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2007-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 //	RenderPrecis display requires:  a query result containing rows with these fields IN THIS ORDER:
 //	$sessionid, $trackname, $typename, $title, $duration, $estatten, $progguiddesc, $persppartinfo, $starttime, $roomname, $statusname
 //	it displays the precis view of the data.

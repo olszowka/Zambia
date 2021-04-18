@@ -164,15 +164,15 @@ function tceEditor(e, cell) {
 
 function deleteicon(cell, formattParams, onRendered) {
     var value = cell.getValue();
-    if (value === 0)
-        return "&#x1F5D1;";
-    return value;
+    return value === '0' ? '&#x1F5D1;' : value;
 }
+
 function deleterow(e, row, questiontable) {
     document.getElementById('message').classList.add('hidden');
     var count = row.getCell("Usage_Count").getValue();
-    if (count === 0)
+    if (count === '0') {
         row.delete();
+    }
 }
 
 function addnewrow(table) {
