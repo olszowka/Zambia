@@ -76,8 +76,10 @@ var EditConfigTable = function () {
             var x = event.target.id;        // active tab
             //console.log('act = ' + x);
             tabhide(x);
-        $("#unsavedWarningModal").modal({ show: false });
+            $("#unsavedWarningModal").modal({ show: false });
         });
+        var addnewrowbut = document.getElementById("add-row");
+        addnewrowbut.addEventListener('click', function () { addnewrow(table); });
     }
 };
 
@@ -292,8 +294,7 @@ function opentable(tabledata) {
             }
         },
     });
-    var addnewrowbut = document.getElementById("add-row");
-    addnewrowbut.addEventListener('click', function () { addnewrow(table); });
+   
     //console.log("Setting up options in table");
     document.getElementById("submitbtn").innerHTML = "Save";
     table.clearHistory();
