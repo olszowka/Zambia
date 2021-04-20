@@ -63,7 +63,6 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                             <li><a href="welcome.php">Overview</a></li>
                             <li><a href="my_contact.php">Profile</a></li>
                             <?php makeMenuItem("Photo", PARTICIPANT_PHOTOS === TRUE, "my_photo.php", false); ?>
-                            <?php makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false); ?>
                             <?php if ($_SESSION['survey_exists']) { ?>
                             <li><a href="PartSurvey.php">Survey</a></li>
                             <?php }
