@@ -19,7 +19,7 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
     <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
 <?php } ?>
     <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
-    <link rel="stylesheet" href="external/tabulator-4.9.1/css/tabulator.min.css" type="text/css" >
+    <link rel="stylesheet" href="external/tabulator-4.9.3/css/tabulator.min.css" type="text/css" >
     <link rel="stylesheet" href="css/zambia_common.css" type="text/css" media="screen" />
 <?php if ($bootstrap4) { ?>
     <link rel="stylesheet" href="css/zambia_bs4.css" type="text/css" media="screen" />
