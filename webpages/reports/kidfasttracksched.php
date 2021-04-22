@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'FastTrack Schedule (easy troubleshooting)';
 $report['description'] = 'What is happening in FastTrack';
 $report['categories'] = array(
-    'Fast Track Reports' => 650,
+//    'Fast Track Reports' => 650,
 );
 $report['queries'] = [];
 $report['queries']['schedule'] =<<<'EOD'
