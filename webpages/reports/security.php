@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Security Report';
 $report['description'] = 'List all sessions where age is restricted and/or security is explicity requested';
 $report['categories'] = array(
-    'Security Reports' => 1130,
+//    'Security Reports' => 1130,
 );
 $report['columns'] = array(
     array("orderData" => 1, "width" => "7em"),

@@ -4,8 +4,8 @@ $report = [];
 $report['name'] = 'Gaming Packet Export';
 $report['description'] = 'Export CSV file of Gaming Packet Export';
 $report['categories'] = array(
-    'Reports downloadable as CSVs' => 110,
-    'Gaming Reports' => 40
+//    'Reports downloadable as CSVs' => 110,
+//    'Gaming Reports' => 40
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;

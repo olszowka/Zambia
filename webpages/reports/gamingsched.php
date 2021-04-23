@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Gaming Schedule';
 $report['description'] = 'Full schedule of everything in track gaming (with participants).';
 $report['categories'] = array(
-    'Gaming Reports' => 550,
+//    'Gaming Reports' => 550,
 );
 $report['columns'] = array(
     array("width" => "11em"),
