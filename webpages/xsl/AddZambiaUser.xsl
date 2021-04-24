@@ -208,13 +208,11 @@
             </xsl:if>
             <div class="row justify-content-center mt-4">
                 <div class="col-auto">
-                    <button class="btn btn-secondary" id="resetbtn" name="resetbtn" value="undo" type="button">Reset
-                    </button>
+                    <button class="btn btn-secondary" id="resetbtn" name="resetbtn" value="undo" type="reset">Reset</button>
                 </div>
                 <div class="col-auto">
                     <button class="btn btn-primary" id="submitbtn" name="submitbtn" type="submit" value="save"
-                            onclick="AddUser()">Add
-                    </button>
+                            onclick="AddUser()">Add</button>
                 </div>
             </div>
         </form>
