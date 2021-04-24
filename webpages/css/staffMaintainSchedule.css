@@ -299,6 +299,10 @@ i.getSessionInfo {
     margin-right: 1px;
 }
 
+#tabs #tabs-content-wrapper {
+    flex-basis: 20rem;
+}
+
 #tabs-rooms div[id^='roomidDIV_'] {
     line-height: 17px;
 }
