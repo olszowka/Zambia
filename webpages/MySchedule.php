@@ -40,7 +40,7 @@ SELECT
 EOD;
 $queryArr["participants"] = <<<EOD
 SELECT
-        POS.sessionid, CD.badgename, P.pubsname, 
+        POS.sessionid, CD.badgename, P.pubsname,
         IF (P.share_email=1, CD.email, NULL) AS email,
         POS.moderator, PSI.comments
     FROM
@@ -61,14 +61,16 @@ if (!$resultXML) {
 }
 //echo($resultXML->saveXML());
 //exit();
-$query = "SELECT message FROM CongoDump C LEFT JOIN RegTypes R USING (regtype) ";
-$query .= "WHERE C.badgeid='$badgeid'";
-if (!$result = mysqli_query_with_error_handling($query)) {
-    exit(); // Should have exited already
+if (false) { // lock out code for now to get/display the reg status for VB55, need to remove this code and make it work right for B56.
+    $query = "SELECT message FROM CongoDump C LEFT JOIN RegTypes R USING (regtype) ";
+    $query .= "WHERE C.badgeid='$badgeid'";
+    if (!$result = mysqli_query_with_error_handling($query)) {
+        exit(); // Should have exited already
+    }
+    $row = mysqli_fetch_array($result, MYSQLI_NUM);
+    mysqli_free_result($result);
+    $regmessage = $row[0];
 }
-$row = mysqli_fetch_array($result, MYSQLI_NUM);
-mysqli_free_result($result);
-$regmessage = $row[0];
 $query = "SELECT count(*) FROM ParticipantOnSession POS JOIN Schedule SCH USING (sessionid) ";
 $query .= "WHERE badgeid='$badgeid'";
 if (!$result = mysqli_query_with_error_handling($query)) {
@@ -77,11 +79,13 @@ if (!$result = mysqli_query_with_error_handling($query)) {
 $row = mysqli_fetch_array($result, MYSQLI_NUM);
 mysqli_free_result($result);
 $poscount = $row[0];
-if (!$regmessage) {
-    if ($poscount >= 3) {
-        $regmessage = "not registered.</span><span> " . fetchCustomText("enough_panels");
-    } else {
-        $regmessage = "not registered.</span><span> " . fetchCustomText("not_enough_panels");
+if (false) { // lock out code for now to get/display the reg status for VB55, need to remove this code and make it work right for B56.
+    if (!$regmessage) {
+        if ($poscount >= 3) {
+            $regmessage = "not registered.</span><span> " . fetchCustomText("enough_panels");
+        } else {
+            $regmessage = "not registered.</span><span> " . fetchCustomText("not_enough_panels");
+        }
     }
 }
 participant_header($title);
@@ -89,7 +93,9 @@ echo "<p>Below is the list of all the panels for which you are scheduled.  If yo
 echo " to this schedule please contact <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>.</p>\n";
 echo fetchCustomText("all_panelists_1");
 echo fetchCustomText("all_panelists_2");
-echo "<p>Your registration status is <span class=\"hilit\">$regmessage</span>\n";
+if (false) { // lock out code for now to get/display the reg status for VB55, need to remove this code and make it work right for B56.
+    echo "<p>Your registration status is <span class=\"hilit\">$regmessage</span>\n";
+}
 echo "<p>Thank you -- <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>\n";
 RenderXSLT('my_schedule.xsl', array(), $resultXML);
 participant_footer();
