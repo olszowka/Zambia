@@ -6,7 +6,7 @@ $title = "Welcome";
 $interested = getString('interested');
 $password = getString('password');
 $cpassword = getString('cpassword');
-if ($password === "" and $cpassword === "") {
+if (($password === "" or $password === null) and ($cpassword === "" or $cpassword === null)) {
     $update_password = false;
 } elseif ($password === $cpassword) {
     $update_password = true;
