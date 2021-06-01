@@ -69,4 +69,7 @@ define("USE_REG_SYSTEM", FALSE);
 // False -> Zambia users created and edited by staff users in Zambia
 define("REG_PART_PREFIX", "");
 // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
+define("CON_THEME", "");
+// if con-specific theming should be applied, you can reference a theme css here.
+// for example: define("CON_THEME", "themes/reallybigcon/main.css");
 ?>
