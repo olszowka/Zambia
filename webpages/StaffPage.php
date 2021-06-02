@@ -3,9 +3,26 @@
     global $participant, $message_error, $message2, $congoinfo, $title;
     $title = "Staff Overview";
     require_once('StaffCommonCode.php');
-    staff_header($title);
+    staff_header($title, true);
 ?>
 
+<div class="card mt-2">
+<div class="card-header">
+<h2><?php echo CON_NAME; ?></h2>
+<p><?php 
+    $timeZone = PHP_DEFAULT_TIMEZONE;
+    $dateSrc = CON_START_DATIM;
+
+    $dateTime = new DateTime($dateSrc, new DateTimeZone($timeZone));
+    $endTime = new DateTime($dateSrc, new DateTimeZone($timeZone));
+    $endTime->add(new DateInterval('P'.CON_NUM_DAYS.'D'));
+    $endTime->sub(new DateInterval('PT1H'));
+    echo $dateTime->format('D, d M Y');
+    echo ' - ';
+    echo $endTime->format('D, d M Y');
+  ?></p>
+  </div>
+  <div class="card-body">
 <p> Please note the tabs above.   One of them will take you to your 
 participant view.  Another will allow you to manage Sessions.  Note that 
 Sessions is the generic term we are using for all Events, Films, Panels, 
@@ -57,4 +74,6 @@ workflow for this year if you want to see it happen this year.
 Number of con days: <?php echo CON_NUM_DAYS; ?><br />
 Con name: <?php echo CON_NAME; ?><br />
 
+</div>
+</div>
 <?php staff_footer(); ?>
