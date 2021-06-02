@@ -20,7 +20,7 @@
     echo $dateTime->format('D, d M Y');
     echo ' - ';
     echo $endTime->format('D, d M Y');
-  ?></p>
+  ?> (<?php echo CON_NUM_DAYS ?> days)</p>
   </div>
   <div class="card-body">
 <p> Please note the tabs above.   One of them will take you to your 
@@ -69,10 +69,6 @@ This is a category we can mine for ideas in future years.
 years.  They are here for your reference and in general should be mined for 
 information.  Feel free to import a session from a previous year into the 
 workflow for this year if you want to see it happen this year. 
-
-<p>
-Number of con days: <?php echo CON_NUM_DAYS; ?><br />
-Con name: <?php echo CON_NAME; ?><br />
 
 </div>
 </div>
