@@ -44,6 +44,7 @@ define("SECOND_DESCRIPTION_CAPTION", "Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
+define("EMAIL_LOGIN_SUPPORTED", FALSE); // Can users use their email address as a userid?
 define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and reCAPTCHA integration.
 define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
 define("PASSWORD_RESET_LINK_TIMEOUT", "PT01H"); // How long until password reset link expires See https://www.php.net/manual/en/dateinterval.construct.php for format.

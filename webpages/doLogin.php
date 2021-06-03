@@ -7,7 +7,10 @@ if (!isset($_SESSION['badgeid'])) {
     $title = "Submit Password";
     $badgeid = getString('badgeid');
     $password = getString('passwd');
-    $query = "SELECT password, data_retention FROM Participants WHERE badgeid = ?;";
+    $query = "SELECT p.password, p.data_retention, p.badgeid FROM Participants p WHERE p.badgeid = ?;";
+    if (strpos($badgeid, '@') !== false && defined('EMAIL_LOGIN_SUPPORTED') && EMAIL_LOGIN_SUPPORTED === true) {
+        $query = "SELECT p.password, p.data_retention, p.badgeid FROM Participants p, CongoDump c WHERE p.badgeid = c.badgeid and c.email = ?;";
+    }
     $query_param_arr = array($badgeid);
     if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
         exit(); // Should have exited already
@@ -19,6 +22,8 @@ if (!isset($_SESSION['badgeid'])) {
     }
     $dbobject = mysqli_fetch_object($result);
     mysqli_free_result($result);
+    $query_param_arr = array($dbobject->badgeid);
+    $badgeid = $dbobject->badgeid;
     $dbpassword = $dbobject->password;
     $_SESSION['data_consent'] = $dbobject->data_retention;
     if (!password_verify($password, $dbpassword)) {
