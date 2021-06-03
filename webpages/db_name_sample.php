@@ -69,4 +69,13 @@ define("USE_REG_SYSTEM", FALSE);
 // False -> Zambia users created and edited by staff users in Zambia
 define("REG_PART_PREFIX", "");
 // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
+define("CON_THEME", "");
+// if con-specific theming should be applied, you can reference a theme css here.
+// for example: define("CON_THEME", "themes/reallybigcon/main.css");
+define("CON_HEADER_IMG", "");
+// to improve the con branding, you can define a con-specific header image that will take the place of the 
+// Zambia illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
+define("CON_HEADER_IMG_ALT", "");
+// to improve the con branding, you can specify the alt-text of the header image. For example:
+// define("CON_HEADER_IMG_ALT", "Really Big Con Logo);
 ?>
