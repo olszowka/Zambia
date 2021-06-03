@@ -7,12 +7,15 @@ if (!isset($_SESSION['badgeid'])) {
     $title = "Submit Password";
     $badgeid = getString('badgeid');
     $password = getString('passwd');
-    $query = "SELECT p.password, p.data_retention, p.badgeid FROM Participants p WHERE p.badgeid = ?;";
-    if (strpos($badgeid, '@') !== false && defined('EMAIL_LOGIN_SUPPORTED') && EMAIL_LOGIN_SUPPORTED === true) {
-        $query = "SELECT p.password, p.data_retention, p.badgeid FROM Participants p, CongoDump c WHERE p.badgeid = c.badgeid and c.email = ?;";
-    }
     $query_param_arr = array($badgeid);
-    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
+    $query = "SELECT p.password, p.data_retention, p.badgeid FROM Participants p WHERE p.badgeid = ?;";
+    $query_definition = 's';
+    if (defined('EMAIL_LOGIN_SUPPORTED') && EMAIL_LOGIN_SUPPORTED === true) {
+        $query = "SELECT p.password, p.data_retention, p.badgeid FROM Participants p WHERE p.badgeid = ? or p.badgeid in (select c.badgeid from CongoDump c where c.email = ?);";
+        $query_param_arr = array($badgeid, $badgeid);
+        $query_definition = 'ss';
+    }
+    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, $query_definition, $query_param_arr)) {
         exit(); // Should have exited already
     }
     if (mysqli_num_rows($result) != 1) {
