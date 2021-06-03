@@ -6,6 +6,8 @@
     <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "Consent", "No_Permission", "Password_Reset" -->
     <xsl:param name="no_user_required" select="false()" /><!-- TRUE/FALSE -->
     <xsl:param name="CON_NAME" select="''" />
+    <xsl:param name="headerimg" select="'images/Z_illuminated.jpg'" />
+    <xsl:param name="headerimgalt" select="'Zambia &quot;Z&quot; logo'" />
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
     <xsl:param name="header_error_message" select="''" />
@@ -23,7 +25,10 @@
                         </xsl:when>
                     </xsl:choose>
                     <div class="header-contents">
-                        <img src="images/Z_illuminated.jpg" alt="Zambia &quot;Z&quot; logo" class="wide-only" />
+                        <img class="d-none d-lg-block" >
+                            <xsl:attribute name="src"><xsl:value-of select="$headerimg" /></xsl:attribute>
+                            <xsl:attribute name="alt"><xsl:value-of select="$headerimgalt" /></xsl:attribute>
+	                    </img>
                         <h1 class="wide-medium-only">
                             <xsl:text>Zambia</xsl:text>
                             <span class="wide-only">
