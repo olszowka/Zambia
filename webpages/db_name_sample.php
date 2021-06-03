@@ -67,6 +67,7 @@ define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all use
 define("USE_REG_SYSTEM", FALSE);
 // True -> Zambia users loaded from reg system into CongoDump; staff users cannot edit them
 // False -> Zambia users created and edited by staff users in Zambia
+define("USE_PRONOUNS", FALSE); // let participants specify their pronouns
 define("REG_PART_PREFIX", "");
 // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
 define("CON_THEME", "");

@@ -154,7 +154,7 @@ CREATE TABLE `CustomText` (
 
 LOCK TABLES `CustomText` WRITE;
 /*!40000 ALTER TABLE `CustomText` DISABLE KEYS */;
-INSERT INTO `CustomText` VALUES 
+INSERT INTO `CustomText` VALUES
   (1,'My Profile','biography_note','Note: Your biography will appear immediately following your name in the program. If you have previously been a participant, the stored bio for you will be displayed below. Please verify the text for publication.'),
   (2,'My Availability','note_after_times','<div>Please note: this year the Masquerade is scheduled for Sun, likely 8-11 pm.</div>'),
   (3,'My Schedule','not_enough_panels','Panelists on 3 or more panels receive complementary memberships from Programming.  If you are interested in increasing your number of panels to take advantage of this, please contact us and we will work with you to see if it is possible.  If you are expecting a comp from helping another division, that will show up here shortly after registration processes it.  Please contact that division or registration with questions.'),
@@ -187,7 +187,7 @@ CREATE TABLE `Divisions` (
 
 LOCK TABLES `Divisions` WRITE;
 /*!40000 ALTER TABLE `Divisions` DISABLE KEYS */;
-INSERT INTO `Divisions` VALUES 
+INSERT INTO `Divisions` VALUES
   (1,'Other',11),
   (2,'Programming',1),
   (3,'Events',2),
@@ -733,6 +733,7 @@ CREATE TABLE `Participants` (
   `staff_notes` text,
   `use_photo` tinyint(1) DEFAULT NULL,
   `data_retention` tinyint(1) NOT NULL DEFAULT '0',
+  `pronouns` varchar(25) DEFAULT NULL,
   PRIMARY KEY (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -860,7 +861,7 @@ INSERT INTO `PermissionAtoms` (permatomid, permatomtag, elementid, page, notes) 
     (13,'public_login',NULL,'Login','Brainstorm user can log in'),
     (14,'SendEmail',NULL,'StaffManageParticipants','Access to Send email set of pages'),
     (15,'postcon',NULL,'renderWelcome','Forces participant welcome page to display only post con message.'),
-    (16,'EditSesNtsAsgnPartPg',NULL,'StaffAssignParticipants','Edit «Notes for Program Staff» on «Assign Participants» page.'),
+    (16,'EditSesNtsAsgnPartPg',NULL,'StaffAssignParticipants','Edit ï¿½Notes for Program Staffï¿½ on ï¿½Assign Participantsï¿½ page.'),
     (17,'ConfigureReports',NULL,'ConfigureReports','Enable menu option'),
     (18,'ResetUserPassword',NULL,'AdminParticipants','No one needs this permission once password overhaul is implemented and system has email integration.'),
     (19,'AdminPhases',NULL,'AdminPhases','Change phase of Zambia use, allowing which sections are current.'),
@@ -960,7 +961,7 @@ CREATE TABLE `Permissions` (
 
 LOCK TABLES `Permissions` WRITE;
 /*!40000 ALTER TABLE `Permissions` DISABLE KEYS */;
-INSERT INTO Permissions 
+INSERT INTO Permissions
     (permatomid, phaseid, permroleid, badgeid)
     VALUES
     (3, 1, 3, NULL),
@@ -1930,7 +1931,7 @@ CREATE TABLE `Types` (
 
 LOCK TABLES `Types` WRITE;
 /*!40000 ALTER TABLE `Types` DISABLE KEYS */;
-INSERT INTO `Types` VALUES 
+INSERT INTO `Types` VALUES
   (1,'Panel',1,1),
   (2,'Workshop',2,0),
   (3,'Room Turn',500,0),

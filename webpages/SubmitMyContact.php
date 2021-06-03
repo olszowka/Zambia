@@ -77,6 +77,15 @@ if (isset($_POST['pubsname']))
         Render500ErrorAjax($message_error);
         exit();
     }
+if (isset($_POST['pronouns']))
+    if ($may_edit_bio) {
+        $pronouns = stripslashes($_POST['pronouns']);
+        $updateClause .= "pronouns=\"" . mysqli_real_escape_string($linki, $pronouns) . "\", ";
+    } else {
+        $message_error = "You may not update your pronouns for publications at this time.  Database not updated.";
+        Render500ErrorAjax($message_error);
+        exit();
+    }
 if (isset($_POST['bio']))
     if ($may_edit_bio) {
         $updateClause .= "bio=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['bio'])) . "\", ";
