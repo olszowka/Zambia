@@ -11,6 +11,12 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $paramArray["login_page_status"] = $loginPageStatus;
     $paramArray["CON_NAME"] = CON_NAME;
     $paramArray["badgename"] = isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '';
+    if (defined('CON_HEADER_IMG') && CON_HEADER_IMG !== "") {
+        $paramArray["headerimg"] = CON_HEADER_IMG;
+    }
+    if (defined('CON_HEADER_IMG_ALT') && CON_HEADER_IMG_ALT !== "") {
+        $paramArray["headerimgalt"] = CON_HEADER_IMG_ALT;
+    }
     $paramArray["USER_ID_PROMPT"] = USER_ID_PROMPT;
     $paramArray["header_error_message"] = $headerErrorMessage;
     $paramArray["no_user_required"] = $noUserRequired;
