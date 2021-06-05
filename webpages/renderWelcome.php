@@ -75,7 +75,7 @@ if (may_I('postcon')) { ?>
                     </div>
                 </form>
                 <?php if (!$participant_array['chpw'] && DEFAULT_USER_PASSWORD) { ?>
-                    <p class="mt-3">Thank you for changing your password. For future changes, use the "My Profile" tab.</p>
+                    <p class="mt-3">Thank you for changing your password. For future changes, use the "Profile" tab.</p>
                 <?php } ?>
             </div>
         </div>
