@@ -210,3 +210,12 @@ input[type='text'].disabled {
   background-color: #ffffff;
 }
 /* End of Tabulator overrides */
+.session-status-definitions {
+  max-width: 90rem;
+}
+.session-status-definitions dt {
+  margin-left: 2rem;
+}
+.session-status-definitions dd {
+  margin-left: 4rem;
+}
