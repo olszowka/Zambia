@@ -7,7 +7,7 @@ require_once('ParticipantFooter.php');
 
 $title="Login";
 
-participant_header($title, false, 'Login');
+participant_header($title, false, 'Login', true);
 
 if (SHOW_BRAINSTORM_LOGIN_HINT === TRUE) {
 ?>

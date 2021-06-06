@@ -4,7 +4,7 @@ require_once('PartCommonCode.php');
 session_destroy();                 // Destroy session data
 $_SESSION = array();               // Unset session data
 unset($_COOKIE[session_name()]);   // Clear cookie
-participant_header("Logout", false, 'Logout');
+participant_header("Logout", false, 'Logout', true);
 participant_footer();
 ?>
 

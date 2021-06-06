@@ -8,10 +8,10 @@ if (!isset($_SESSION['badgeid'])) {
     $badgeid = getString('badgeid');
     $password = getString('passwd');
     $query_param_arr = array($badgeid);
-    $query = "SELECT p.password, p.data_retention, p.badgeid FROM Participants p WHERE p.badgeid = ?;";
+    $query = "SELECT password, data_retention, badgeid FROM Participants WHERE badgeid = ?;";
     $query_definition = 's';
     if (defined('EMAIL_LOGIN_SUPPORTED') && EMAIL_LOGIN_SUPPORTED === true) {
-        $query = "SELECT p.password, p.data_retention, p.badgeid FROM Participants p WHERE p.badgeid = ? or p.badgeid in (select c.badgeid from CongoDump c where c.email = ?);";
+        $query = "SELECT P.password, P.data_retention, P.badgeid FROM Participants P JOIN CongoDump C USING (badgeid) WHERE P.badgeid = ? OR C.email = ?;";
         $query_param_arr = array($badgeid, $badgeid);
         $query_definition = 'ss';
     }
