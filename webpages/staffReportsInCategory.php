@@ -23,19 +23,38 @@ if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     RenderError($message_error);
     exit();
 }
-staff_header($title);
-echo "<dl>\n";
+staff_header($title, true);
+?>
+<div class="container">
+    <div class="card mt-2">
+        <div class="card-header">
+            <h2>Staff Reports</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class=" col-md-9">
+                    <div class="list-group">
+<?php 
 if ($reportcategoryid === "") {
     foreach ($reportNames as $reportFileName => $reportName) {
-        echo "<dt><a href='generateReport.php?reportName=$reportFileName'>$reportName</a></dt>\n";
-        echo "<dd>{$reportDescriptions[$reportFileName]}</dd>";
+        echo "<a class='list-group-item list-group-item-action flex-column align-items-start' href='generateReport.php?reportName=$reportFileName'>\n<h5>$reportName</h5>\n";
+        echo "<div>{$reportDescriptions[$reportFileName]}</div>";
+        echo "</a>";
     }
 } else {
     foreach ($reportCategories[$reportcategoryid] as $reportFileName) {
-        echo "<dt><a href='generateReport.php?reportName=$reportFileName'>$reportNames[$reportFileName]</a></dt>\n";
-        echo "<dd>{$reportDescriptions[$reportFileName]}</dd>";
+        echo "<a class='list-group-item list-group-item-action flex-column align-items-start' href='generateReport.php?reportName=$reportFileName'>\n<h5>$reportNames[$reportFileName]</h5>\n";
+        echo "<div>{$reportDescriptions[$reportFileName]}</div>";
+        echo "</a>";
     }
 }
-echo "</dl>\n";
+?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php 
 staff_footer();
 ?>
