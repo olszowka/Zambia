@@ -28,7 +28,17 @@ staff_header($title, true);
 <div class="container">
     <div class="card mt-2">
         <div class="card-header">
-            <h2>Staff Reports</h2>
+            <h2>
+<?php
+            if ($reportcategoryid === "") {
+?>
+                All Reports
+<?php
+            } else {
+                echo $reportcategoryid;
+            }
+?>
+            </h2>
         </div>
         <div class="card-body">
             <div class="row">
