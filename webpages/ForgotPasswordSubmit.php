@@ -7,6 +7,7 @@ require ('PartCommonCode.php');
 require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('external/guzzlehttp-guzzle-6.5.3/vendor/autoload.php');
+require_once('login_functions.php');
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
     participant_header($title, true, 'Login');
@@ -46,7 +47,7 @@ $badgeid = getString('badgeid');
 $email = getString('emailAddress');
 if (empty($badgeid) || empty($email)) {
     $params = array();
-    $params["USER_ID_PROMPT"] = USER_ID_PROMPT;
+    $params["USER_ID_PROMPT"] = get_user_id_prompt();
     $params["error_message"] = "Both ${params['USER_ID_PROMPT']} and email address are required.";
     RenderXSLT('ForgotPassword.xsl', $params);
     participant_footer();

@@ -127,9 +127,6 @@
                     <xsl:when test="$header_error_message != ''">
                         <div class="alert alert-danger"><xsl:value-of select="$header_error_message" /></div>
                     </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:attribute name="class">extended</xsl:attribute>
-                    </xsl:otherwise>
                 </xsl:choose>
 
                 <div class="card">

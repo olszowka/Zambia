@@ -2,7 +2,8 @@
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $headerErrorMessage, $link, $linki, $title;
 require_once('CommonCode.php');
-$userIdPrompt = USER_ID_PROMPT;
+require_once('login_functions.php');
+$userIdPrompt = get_user_id_prompt();
 if (!isset($_SESSION['badgeid'])) {
     $title = "Submit Password";
     $badgeid = getString('badgeid');
@@ -10,8 +11,18 @@ if (!isset($_SESSION['badgeid'])) {
     $query_param_arr = array($badgeid);
     $query = "SELECT password, data_retention, badgeid FROM Participants WHERE badgeid = ?;";
     $query_definition = 's';
-    if (defined('EMAIL_LOGIN_SUPPORTED') && EMAIL_LOGIN_SUPPORTED === true) {
-        $query = "SELECT P.password, P.data_retention, P.badgeid FROM Participants P JOIN CongoDump C USING (badgeid) WHERE P.badgeid = ? OR C.email = ?;";
+    if (is_email_login_supported()) {
+        $query = <<<EOD
+SELECT 
+       P.password, P.data_retention, P.badgeid 
+  FROM 
+       Participants P 
+  JOIN CongoDump C USING (badgeid)
+ WHERE 
+        P.badgeid = ?
+     OR 
+        C.email = ?;
+EOD;
         $query_param_arr = array($badgeid, $badgeid);
         $query_definition = 'ss';
     }
