@@ -14,8 +14,6 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     if (!may_I('my_gen_int_write')) {
         echo "<p>We're sorry, but we are unable to accept your suggestions at this time.\n";
     }
-    echo "<div class=\"card\">\n";
-    echo "<div class=\"card-body\">\n";
     echo "<form name=\"addform\" method=POST action=\"SubmitMyInterests.php\">\n";
     echo "<input type=\"hidden\" name=\"newrow\" value=\"" . ($newrow ? 1 : 0) . "\">\n";
     echo "<input type=\"hidden\" name=\"rolerows\" value=\"" . $rolerows . "\">\n";
@@ -58,10 +56,8 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "</div>\n";
     echo "<p class=\"mt-3\">Roles I'm willing to take on:</p>\n";
     echo "<div class=\"row mt-3\">\n";
-    echo "    <div class=\"control-group col-12\">\n";
-    echo "        <div class=\"roles-list-container\">";
     for ($i = 1; $i < $rolerows; $i++) {
-        echo "        <div class=\"role-entry-container\">";
+        echo "        <div class=\"col-md-4\">";
         echo "                <input type=checkbox name=\"willdorole" . $i . "\" id=\"willdorole" . $i . "\"";
         if (isset($rolearray[$i]["badgeid"])) {
             echo "checked";
@@ -71,13 +67,14 @@ function renderMyInterests($title, $error, $message, $rolearray) {
         }
         echo ">";
         echo "    <label class=\"checkbox\" for=\"willdorole" . $i . "\">" . $rolearray[$i]["rolename"] . "\n";
-        echo "</div>\n";
         echo "                <input type=hidden name=\"diddorole" . $i . "\" value=\"";
         echo ((isset($rolearray[$i]["badgeid"])) ? 1 : 0) . "\">\n";
         echo "                <input type=hidden name=\"roleid" . $i . "\" value=\"" . $rolearray[$i]["roleid"] . "\">\n";
         echo "                <input type=hidden name=\"rolename" . $i . "\" value=\"" . $rolearray[$i]["rolename"] . "\">\n";
+        echo "</div>\n";
     }
 
+    echo "        <div class=\"col-md-4\">";
     echo "                <input class=\"checkbox\" type=checkbox name=\"willdorole0\" id=\"willdorole0\" ";
     if (isset($rolearray[0]["badgeid"])) {
         echo "checked";
@@ -91,7 +88,8 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "                <input type=hidden name=\"rolename0\" value=\"" . $rolearray[0]["rolename"] . "\">\n";
     echo "                <input type=hidden name=\"diddorole0\" value=\"";
     echo ((isset($rolearray[0]["badgeid"])) ? 1 : 0) . "\">\n";
-    echo "</div>"; // close roles-list-container div
+    echo "</div></div>";
+    echo "<div class=\"row\"><div class=\"col-12\">";
     echo "<label class=\"mt-3\" for=\"otherroles\">Description for \"Other\" Roles:</label>\n";
     echo "<textarea class=\"form-control\" id=\"otherroles\" name=\"otherroles\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
@@ -105,7 +103,5 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     }
     echo "</div></div>\n";
     echo "</form>\n";
-    echo "</div>\n";
-    echo "</div>\n";
     echo "</div>\n";
 } ?>
