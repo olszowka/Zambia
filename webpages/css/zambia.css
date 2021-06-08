@@ -453,10 +453,6 @@ table.multcol-list td {
   display: none !important;
   visibility: hidden !important;
 }
-.roles-list-container {
-  column-count: 3;
-  max-width: 70rem;
-}
 /**
  * General spacing bits
  */
