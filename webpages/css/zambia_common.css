@@ -151,3 +151,7 @@ select {
 .note {
   font-size: 90%;
 }
+.roles-list-container {
+  column-count: 3;
+  max-width: 70rem;
+}
