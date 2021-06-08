@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "My Schedule";
 require('PartCommonCode.php'); // initialize db; check login;

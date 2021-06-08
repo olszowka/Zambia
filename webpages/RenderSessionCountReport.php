@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 function RenderSessionCountReport($result) {
     global $title;
     $title = "Session Count Report";

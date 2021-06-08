@@ -2,7 +2,7 @@
 <!--
 	my_schedule
 	Created by Peter Olszowka on 2013-12-09.
-	Copyright (c) 2013 Peter Olszowka. All rights reserved.
+	Copyright (c) 2013-2021 Peter Olszowka. All rights reserved.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
