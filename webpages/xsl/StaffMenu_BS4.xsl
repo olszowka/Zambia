@@ -57,6 +57,9 @@
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='CreateUser']">
                   <a class="dropdown-item" href="AddZambiaUser.php">Create User</a>
               </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='d3_ImportUsers']">
+                <a class="dropdown-item" href="Discon3ImportRegUser.php">Import User From Reg</a>
+              </xsl:if>
             </div>
           </li>
           <li class="nav-item dropdown mr-2 py-0">

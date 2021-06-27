@@ -88,6 +88,11 @@
                       <a href="AddZambiaUser.php">Create User</a>
                     </li>
                   </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='d3_ImportUsers']">
+                    <li>
+                      <a href="Discon3ImportRegUser.php">Import User From Reg</a>
+                    </li>
+                  </xsl:if>
                 </ul>
               </li>
               <li class="dropdown">
