@@ -486,6 +486,13 @@
                         <xsl:with-param name="maxlength" select="25" />
                         <xsl:with-param name="fieldsize" select="25" />
                     </xsl:call-template>
+                    <xsl:call-template name="regRowContents">
+                      <xsl:with-param name="label">Registration Type</xsl:with-param>
+                      <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@regtype" />
+                      <xsl:with-param name="id">regtype</xsl:with-param>
+                      <xsl:with-param name="maxlength" select="25" />
+                      <xsl:with-param name="fieldsize" select="25" />
+                    </xsl:call-template>
                 </fieldset>
                 <xsl:if test="$useRegSystem != 1"><!-- show button here if not using reg system -->
                     <div class="row mt-3">

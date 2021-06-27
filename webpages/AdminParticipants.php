@@ -222,10 +222,10 @@ if (USE_REG_SYSTEM === FALSE) {
                 </div>
             </div>
         </div>
+        <div class="row">
 <?php
 if (may_I("ResetUserPassword")) {
 ?>
-        <div class="row">
             <div class="col-sm-3">
                 <div class="">
                     <label for="password">Change Participant's Password:</label>
@@ -242,11 +242,18 @@ if (may_I("ResetUserPassword")) {
                 <div>
                     <input type="password" maxlength="40" id="cpassword" readonly="readonly" class="mycontrol" />
                 </div>
-            </div>
-        </div>
+            </div>     
 <?php
 };
 ?>
+            <div class="col-sm-3">
+                <div class="">
+                    <label for="regtype">Registration type:</label>
+                </div>
+                <div id="regtype">
+                </div>
+            </div>
+        </div>
         <div class="row mt-3">
             <div class="col-sm-6">
                 
