@@ -13,10 +13,11 @@
                   <tr>
                     <th>Import</th>
                     <th>Badge ID</th>
+                    <th>Membership</th>
                     <th>Last, First Name</th>
                     <th>Badge Name</th>
                     <th>Email</th>
-                    <th>City, State, Zip</th>
+                    <th>City, State/Prov, Postal Code</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -26,9 +27,10 @@
                           <input type="checkbox" class="id-chk mycontrol" id="importBOX_{@id}" value="${@id}"></input>
                         </td>
                         <td><xsl:value-of select="@id"/></td>
+                        <td><xsl:value-of select="@regtype"/></td>
                         <td><xsl:value-of select="@last_name"/>, <xsl:value-of select="@first_name"/></td>
                         <td><xsl:value-of select="@badge_name"/></td>
-                        <td><xsl:value-of select="@email_address"/></td>
+                        <td><xsl:value-of select="@email_addr"/></td>
                         <td>
                           <xsl:value-of select="@city"/>, <xsl:value-of select="@state"/> <xsl:value-of select="@zip"/>
                         </td>

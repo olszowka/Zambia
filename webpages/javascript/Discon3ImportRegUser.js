@@ -27,7 +27,7 @@ function doSearchImportBUTN() {
         return false;
     $('#searchImportBUTN').button('loading');
     $.ajax({
-        url: "BalticonSubmitImportRegUser.php",
+        url: "Discon3SubmitImportRegUser.php",
         dataType: "html",
         data: ({
             searchString: x,
@@ -141,7 +141,7 @@ function updateBUTTON() {
         postdata.idsToAdd = idsToAdd;
     }   
     $.ajax({
-        url: "BalticonSubmitImportRegUser.php",
+        url: "Discon3SubmitImportRegUser.php",
         dataType: "html",
         data: postdata,
         success: showImportResults,
@@ -160,7 +160,7 @@ function writeSearchResults(data, textStatus, jqXHR) {
         $('#resultBoxDIV').hide();
     showSearchResults();
     $.ajax({
-        url: "BalticonSubmitImportRegUser.php",
+        url: "Discon3SubmitImportRegUser.php",
         dataType: "html",
         data: ({
             ajax_request_action: "fetch_user_perm_roles"

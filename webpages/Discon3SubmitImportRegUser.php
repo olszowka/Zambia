@@ -1,9 +1,10 @@
 <?php
 // Copyright (c) 2006-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Start here.  Should be AJAX requests only
-global $returnAjaxErrors, $return500errors;
+global $returnAjaxErrors, $return500errors, $pgconn;
 $returnAjaxErrors = true;
 $return500errors = true;
+$pgconn = null;
 require_once('StaffCommonCode.php'); // will check for staff privileges
 require('EditPermRoles_FNC.php');
 // skip to below all functions
@@ -121,45 +122,93 @@ EOD;
 }
 
 function perform_search() {
-    global $linki, $message_error;
+    global $linki, $message_error, $pgconn;
+
+    if ($pgconn == null) {
+        error_log("making new Postgress connection");
+        $pgconn = pg_connect(WELLINGTONPROD);
+        if (!$pgconn) {
+            RenderErrorAjax("Unable to connect to Wellington");
+            exit();
+        }
+    }
+    error_log("postgress connection good");
+
     $searchString = getString("searchString");
     if ($searchString == "")
         exit();
+           $query = <<<EOD
+SELECT
+	r.id,
+	CASE
+		WHEN COALESCE(ct.preferred_last_name, '') <> '' THEN ct.preferred_last_name
+		ELSE ct.last_name
+	END AS last_name,
+	CASE
+		WHEN COALESCE(ct.preferred_first_name, '') <> '' THEN ct.preferred_first_name
+		ELSE ct.first_name
+	END AS first_name, u.email AS email_addr,
+	CASE
+		WHEN ct.badge_title <> '' THEN ct.badge_title
+		ELSE TRIM(
+			CASE
+				WHEN COALESCE(ct.preferred_first_name, '') <> '' THEN ct.preferred_first_name
+				ELSE ct.first_name
+			END || ' ' ||
+			CASE
+				WHEN COALESCE(ct.preferred_last_name, '') <> '' THEN ct.preferred_last_name
+				ELSE ct.last_name
+			END
+		)
+	END	AS badge_name,
+	ct.city, ct.province AS state, ct.postal AS zip,
+	m.name AS regtype
+FROM public.reservations r
+JOIN public.claims cl ON cl.reservation_id = r.id
+JOIN public.dc_contacts ct ON (cl.id = ct.claim_id)
+JOIN public.users u ON (cl.user_id = u.id)
+JOIN public.orders o ON (r.id = o.reservation_id AND o.active_to IS NULL)
+JOIN public.memberships m ON (o.membership_id = m.id)
+EOD;
+
     if (is_numeric($searchString)) {
-        $searchString =  mysqli_real_escape_string($linki, $searchString);
-        $query["searchReg"] = <<<EOD
-SELECT
-	id, last_name, first_name, email_addr, badge_name, city, state, zip
-FROM
-    balticonReg.perinfo P
-	LEFT OUTER JOIN CongoDump CD ON P.id = CD.badgeid
+        error_log("Numeric string");
+        $query .= <<<EOD
 WHERE
-	P.id = "$searchString" AND CD.badgeid IS NULL AND P.active = 'Y' and P.banned = 'N'
+	r.id = $1
 ORDER BY
 	P.last_name, P.first_name
 EOD;
-        $xml = mysql_query_XML($query);
     } else {
+        error_log("non numberic string");
         $searchString = '%' . $searchString . '%';
-        $query = <<<EOD
-SELECT
-	id, last_name, first_name, email_addr, badge_name, city, state, zip
-FROM
-    balticonReg.perinfo P
-	LEFT OUTER JOIN CongoDump CD ON P.id = CD.badgeid
+        $query .= <<<EOD
 WHERE
-		(P.badge_name LIKE ?
-	OR P.last_name LIKE ?
-	OR P.first_name LIKE ?
-	OR P.badge_name LIKE ?)
-    AND CD.badgeid IS NULL AND P.active = 'Y' and P.banned = 'N'
+	(ct.badge_title ILIKE $1
+	OR ct.last_name ILIKE $1
+	OR ct.first_name ILIKE $1
+	OR ct.badge_title ILIKE $1
+    OR ct.preferred_first_name ILIKE $1
+    OR ct.preferred_last_name ILIKE $1)
 ORDER BY
-	P.last_name, P.first_name
+	ct.last_name, ct.first_name
 EOD;
-    $param_arr = array($searchString,$searchString,$searchString,$searchString);
-    $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
-    $xml = mysql_result_to_XML("searchReg", $result);
     }
+    error_log("query = '" . $query . "'");
+
+    $param_arr = array($searchString);
+    $result = pg_query_params($pgconn, $query, $param_arr);
+    if (!$result) {
+        RenderErrorAjax("Wellington query error" . pg_result_error($result, PGSQL_STATUS_STRING));
+        exit();
+    }
+
+    $results = [];
+    while ($row = pg_fetch_assoc($result))
+        $results[] = $row;
+
+    $xml = ObjecttoXML("searchReg", $results);
+    pg_free_result($result);
 
     if (!$xml) {
         echo $message_error;
@@ -168,7 +217,7 @@ EOD;
     header("Content-Type: text/html");
     $paramArray = array("userIdPrompt" => USER_ID_PROMPT);
     //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xml->saveXML(), "i")); //for debugging only
-    RenderXSLT('BalticonImportRegUser.xsl', $paramArray, $xml);
+    RenderXSLT('Discon3ImportRegUser.xsl', $paramArray, $xml);
 	exit();
 }
 
@@ -234,7 +283,7 @@ function convert_bio() {
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-if (!isLoggedIn() || !may_I('balt_ImportUsers')) {
+if (!isLoggedIn() || !may_I('d3_ImportUsers')) {
     $message_error = "You are not logged in or your session has expired.";
     RenderErrorAjax($message_error);
     exit();
