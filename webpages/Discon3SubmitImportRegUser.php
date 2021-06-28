@@ -12,8 +12,7 @@ require('EditPermRoles_FNC.php');
 // gets data for a participant to be displayed.  Returns as XML
 
 function import_users() {
-    global $linki, $message_error, $message;
-    $importPerformed = false;
+    global $linki, $message_error, $message, $pgconn;
     $loggedInUserBadgeId = $_SESSION["badgeid"];
     $idsToAddarr = getArrayOfInts("idsToAdd");
     $rolesToAddArr = getArrayOfInts("rolesToAdd");
@@ -44,32 +43,124 @@ function import_users() {
     $idstr = join(",", $idsToAddarr);
     $usercnt = count($idsToAddarr);
 
+    if ($pgconn == null) {
+        //error_log("making new Postgress connection");
+        $pgconn = pg_connect(WELLINGTONPROD);
+        if (!$pgconn) {
+            RenderErrorAjax("Unable to connect to Wellington");
+            exit();
+        }
+    }
+    //error_log("postgress connection good");
+
+
+    // get the array of users to add to CongoDump
+    $sql = <<<EOD
+SELECT
+	r.id AS badgeid,
+	CASE
+		WHEN COALESCE(ct.preferred_first_name, '') <> '' THEN ct.preferred_first_name
+		ELSE ct.first_name
+	END AS firstname,
+    CASE
+		WHEN COALESCE(ct.preferred_last_name, '') <> '' THEN ct.preferred_last_name
+		ELSE ct.last_name
+	END AS lastname,
+	CASE
+		WHEN ct.badge_title <> '' THEN ct.badge_title
+		ELSE TRIM(
+			CASE
+				WHEN COALESCE(ct.preferred_first_name, '') <> '' THEN ct.preferred_first_name
+				ELSE ct.first_name
+			END || ' ' ||
+			CASE
+				WHEN COALESCE(ct.preferred_last_name, '') <> '' THEN ct.preferred_last_name
+				ELSE ct.last_name
+			END
+		)
+	END	AS badgename,
+    u.email AS email,
+    ct.address_line_1 AS postaddress1,
+    ct.address_line_2 AS postaddress2,
+	ct.city AS postcity,
+    ct.province AS poststate,
+    ct.postal AS postzip,
+    ct.country AS postcountry,
+	m.name AS regtype
+FROM public.reservations r
+JOIN public.claims cl ON cl.reservation_id = r.id
+JOIN public.dc_contacts ct ON (cl.id = ct.claim_id)
+JOIN public.users u ON (cl.user_id = u.id)
+JOIN public.orders o ON (r.id = o.reservation_id AND o.active_to IS NULL)
+JOIN public.memberships m ON (o.membership_id = m.id)
+WHERE
+	r.id IN ($idstr);
+EOD;
+    $result = pg_query($pgconn, $sql);
+    if (!$result) {
+        RenderErrorAjax("Wellington query error" . pg_result_error($result, PGSQL_STATUS_STRING));
+        exit();
+    }
+
+    $sqlcd = "INSERT INTO CongoDump (badgeid,firstname,lastname,badgename,email,postaddress1,postaddress2,postcity,poststate,postzip,postcountry,regtype)\n VALUES ";
+    $sqlpart = "INSERT INTO Participants (badgeid, password, pubsname)\n VALUES ";
+    $sqlrole = "INSERT INTO UserHasPermissionRole (badgeid, permroleid)\n VALUES ";
+
+    $rows = 0;
+    while ($row = pg_fetch_assoc($result)) {
+        if ($rows > 0) {
+            $sqlcd .= ",\n ";
+            $sqlpart .= ",\n ";
+            $sqlrole .= ",\n ";
+        }
+
+        $rows++;
+        $sqlcd .= "('"
+            . mysqli_real_escape_string($linki, $row['badgeid']) . "', '"
+            . mysqli_real_escape_string($linki, $row['firstname']) . "', '"
+            . mysqli_real_escape_string($linki, $row['lastname']) . "', '"
+            . mysqli_real_escape_string($linki, $row['badgename']) . "', '"
+            . mysqli_real_escape_string($linki, $row['email']) . "', '"
+            . mysqli_real_escape_string($linki, $row['postaddress1']) . "', '"
+            . mysqli_real_escape_string($linki, $row['postaddress2']) . "', '"
+            . mysqli_real_escape_string($linki, $row['postcity']) . "', '"
+            . mysqli_real_escape_string($linki, $row['poststate']) . "', '"
+            . mysqli_real_escape_string($linki, $row['postzip']) . "', '"
+            . mysqli_real_escape_string($linki, $row['postcountry']) . "', '"
+            . mysqli_real_escape_string($linki, $row['regtype'])
+            . "')";
+
+        $sqlpart .= "('"
+            . mysqli_real_escape_string($linki, $row['badgeid']) . "', '"
+            . "invalid', '"
+            . mysqli_real_escape_string($linki, $row['badgename'])
+             . "')";
+
+        $ids = 0;
+        foreach ($rolesToAddArr as $id) {
+            if ($ids > 0)
+                $sqlpart .= ",\n ";
+            $ids++;
+
+            $sqlrole .= "('"
+                . mysqli_real_escape_string($linki, $row['badgeid']) . "', '"
+                . mysqli_real_escape_string($linki, $id)
+            . "')";
+        }
+    }
+    $sqlcd .= ";\n";
+    $sqlpart .= ";\n";
+    $sqlrole .= ";\n";
+
+    error_log($sqlcd);
+    error_log($sqlpart);
+    error_log($sqlrole);
     // start the transaction
     mysqli_query_exit_on_error("START TRANSACTION;");
 
     // Import reg info to CongoDump
-    // MySQL 5.x doesn't support ROW_NUMBER(), so it has to be faked with this kludg
-    $sql = <<<EOD
-INSERT INTO CongoDump (badgeid,firstname,lastname,badgename,phone,email,postaddress1,postaddress2,postcity,poststate,postzip,postcountry,regtype)
-SELECT id, first_name, last_name, badge_name, phone, email_addr, address, addr_2, city, state, zip, country, label
-FROM (
-    SELECT @row_number := CASE WHEN @id = id THEN @row_number + 1 ELSE 1 END AS num,
-    @id := id AS id, first_name, last_name, badge_name, phone, email_addr,
-    address, addr_2, city, state, zip, country, label
-    FROM (
-        SELECT P.id, first_name, last_name, badge_name, phone, email_addr,
-        address, addr_2, city, state, zip, country, M.label
-        FROM balticonReg.perinfo P
-        JOIN balticonReg.reg R ON (R.perid = P.id)
-        JOIN balticonReg.memList M ON (R.memID = M.id AND R.conid = M.conid)
-        WHERE P.id IN ($idstr)
-        ORDER BY P.id, M.conid desc
-    ) T, (SELECT @id:=0,@row_number:=0) as ID
-) T2
-WHERE num = 1;
-EOD;
-     mysqli_query_with_error_handling($sql);
-     $rows = mysqli_affected_rows($linki);
+    mysqli_query_with_error_handling($sqlcd);
+    $rows = mysqli_affected_rows($linki);
 
      if (is_null($rows) || $rows !== $usercnt) {
          mysqli_query_with_error_handling("ROLLBACK;");
@@ -77,13 +168,8 @@ EOD;
          exit();
      }
      // now build the participants
-     $sql = <<<EOD
-INSERT INTO Participants (badgeid, password, pubsname)
-SELECT  id, "invalid", badge_name
-FROM balticonReg.perinfo
-WHERE id IN ($idstr);
-EOD;
-     mysqli_query_with_error_handling($sql);
+
+     mysqli_query_with_error_handling($sqlpart);
      $rows = mysqli_affected_rows($linki);
      if (is_null($rows) || $rows !== $usercnt) {
          mysqli_query_with_error_handling("ROLLBACK;");
@@ -91,21 +177,13 @@ EOD;
          exit();
      }
      // and add the permissions
-    $sql = <<<EOD
-INSERT INTO UserHasPermissionRole (badgeid, permroleid)
-SELECT  id, ?
-FROM balticonReg.perinfo
-WHERE id IN ($idstr);
-EOD;
-    $paramarray = array();
-    foreach ($rolesToAddArr as $id) {
-        $paramarray[0] = $id;
-        $rows = mysql_cmd_with_prepare($sql, 'i', $paramarray);
-        if (is_null($rows) || $rows !== $usercnt) {
-            mysqli_query_with_error_handling("ROLLBACK;");
-            RenderErrorAjax("Error: adding permission roles from reg import");
-            exit();
-        }
+     mysqli_query_with_error_handling($sqlrole);
+     $rows = mysqli_affected_rows($linki);
+
+    if (is_null($rows) || $rows !== $usercnt) {
+        mysqli_query_with_error_handling("ROLLBACK;");
+        RenderErrorAjax("Error: adding permission roles from reg import");
+        exit();
     }
     // all done commit the sequence
     mysqli_query_with_error_handling("COMMIT;");
@@ -125,14 +203,14 @@ function perform_search() {
     global $linki, $message_error, $pgconn;
 
     if ($pgconn == null) {
-        error_log("making new Postgress connection");
+        //error_log("making new Postgress connection");
         $pgconn = pg_connect(WELLINGTONPROD);
         if (!$pgconn) {
             RenderErrorAjax("Unable to connect to Wellington");
             exit();
         }
     }
-    error_log("postgress connection good");
+    //error_log("postgress connection good");
 
     $searchString = getString("searchString");
     if ($searchString == "")
@@ -172,29 +250,30 @@ JOIN public.memberships m ON (o.membership_id = m.id)
 EOD;
 
     if (is_numeric($searchString)) {
-        error_log("Numeric string");
+        //error_log("Numeric string");
         $query .= <<<EOD
+
 WHERE
 	r.id = $1
 ORDER BY
 	P.last_name, P.first_name
 EOD;
     } else {
-        error_log("non numberic string");
+        //error_log("non numberic string");
         $searchString = '%' . $searchString . '%';
         $query .= <<<EOD
 WHERE
-	(ct.badge_title ILIKE $1
-	OR ct.last_name ILIKE $1
-	OR ct.first_name ILIKE $1
-	OR ct.badge_title ILIKE $1
+    (ct.badge_title ILIKE $1
+    OR ct.last_name ILIKE $1
+    OR ct.first_name ILIKE $1
+    OR ct.badge_title ILIKE $1
     OR ct.preferred_first_name ILIKE $1
     OR ct.preferred_last_name ILIKE $1)
 ORDER BY
 	ct.last_name, ct.first_name
 EOD;
     }
-    error_log("query = '" . $query . "'");
+    //error_log("query = '" . $query . "'");
 
     $param_arr = array($searchString);
     $result = pg_query_params($pgconn, $query, $param_arr);
@@ -203,9 +282,19 @@ EOD;
         exit();
     }
 
+    // fetch all existing users in Zambia
+    $badgeids = [];
+    $sql = "SELECT badgeid FROM CongoDump;";
+    $results = mysqli_query_with_error_handling($sql);
+    while ($row = mysqli_fetch_assoc($results))
+        $badgeids[$row["badgeid"]] = 1;
+
+    mysqli_free_result($results);
+
     $results = [];
     while ($row = pg_fetch_assoc($result))
-        $results[] = $row;
+        if (array_key_exists($row["id"], $badgeids) == false)
+            $results[] = $row;
 
     $xml = ObjecttoXML("searchReg", $results);
     pg_free_result($result);
