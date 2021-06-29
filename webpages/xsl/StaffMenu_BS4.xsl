@@ -86,7 +86,7 @@
                             <a class="dropdown-item" href='staffReportsInCategory.php'>All Reports</a>
                         </div>
                     </li>
-                    <li class="nav-item dropdown mr-4 py-0">
+                    <li class="nav-item dropdown mr-2 py-0">
                         <a class="nav-link dropdown-toggle py-1" href="#" id="navbarSchedulingDropdown" role="button"
                            data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
@@ -97,8 +97,11 @@
                             <a class="dropdown-item" href="StaffMaintainSchedule.php">Grid Scheduler</a>
                         </div>
                     </li>
-                    <li class="nav-item py-0">
+                    <li class="nav-item py-0 mr-2">
                         <a class="nav-link py-1" href="StaffPage.php">Overview</a>
+                    </li>
+                    <li class="nav-item py-0 mr-4">
+                        <a class="nav-link py-1" href="Tools.php">Tools</a>
                     </li>
                 </ul>
                 <form method="post" action="ShowSessions.php" class="form-inline my-0 my-lg-0 mr-4">
