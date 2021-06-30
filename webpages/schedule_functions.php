@@ -140,31 +140,18 @@ EOD;
     }
 
     $sessionsByBadgeId = array();
-    foreach ($sessions as $s) {
+    for ($i = (count($sessions) - 1); $i >=0 ; $i--) {
+
+        $s = $sessions[$i];
+
         foreach ($s->participants as $p) {
-
-            if (!array_key_exists($p->badgeid, $sessionsByBadgeId)) {
-                $tmp = array();
-                $sessionsByBadgeId[$p->badgeid] = $tmp;
+            if (array_key_exists($p->badgeid, $sessionsByBadgeId)) {
+                $next = $sessionsByBadgeId[$p->badgeid];
+                $p->nextSession = $next;
             }
-            $tmp = $sessionsByBadgeId[$p->badgeid];
-            $tmp[] = $s;
-            $sessionsByBadgeId[$p->badgeid] = $tmp;
+            $sessionsByBadgeId[$p->badgeid] = $s;
         }
     }
-
-    foreach ($sessionsByBadgeId as $key => $val) {
-
-        for ($i = 0; $i < (count($val) - 1); $i++) {
-            $s = $val[$i];
-            $next = $val[$i+1];
-
-            $p = $s->participantById($key);
-
-            $p->nextSession = $next;
-        }
-    }
-
 
     return $sessions;
 }
