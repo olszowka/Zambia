@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "My Schedule";
 require('PartCommonCode.php'); // initialize db; check login;
@@ -84,13 +84,22 @@ if (!$regmessage) {
         $regmessage = "not registered.</span><span> " . fetchCustomText("not_enough_panels");
     }
 }
-participant_header($title);
-echo "<p>Below is the list of all the panels for which you are scheduled.  If you need any changes";
-echo " to this schedule please contact <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>.</p>\n";
+participant_header($title, false, 'Normal', true);
+echo "<div class=\"alert alert-primary mt-2\"><p>Below is the list of all the panels for which you are scheduled.  If you need any changes";
+echo " to this schedule please contact <a class=\"alert-link\" href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>.</p>\n";
 echo fetchCustomText("all_panelists_1");
 echo fetchCustomText("all_panelists_2");
 echo "<p>Your registration status is <span class=\"hilit\">$regmessage</span>\n";
-echo "<p>Thank you -- <a href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>\n";
+echo "<p>Thank you -- <a class=\"alert-link\" href=\"mailto:$PROGRAM_EMAIL\"> Programming </a></div>\n";
+?>
+
+<div class="card">
+    <div class="card-body">
+<?php
 RenderXSLT('my_schedule.xsl', array(), $resultXML);
+?>
+    </div>
+</div>
+<?php
 participant_footer();
 ?>

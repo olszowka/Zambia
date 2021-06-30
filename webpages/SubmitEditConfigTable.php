@@ -114,8 +114,8 @@ function update_table($tablename) {
         }
         $sql = substr($sql, 0, -1) . ");";
 
-        $paramarray = array();
         foreach ($rows as $row) {
+            $paramarray = array();
             $id = (int) $row->$indexcol;
             if ($id < 0) {
                 foreach($schema as $col) {
