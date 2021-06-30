@@ -62,14 +62,14 @@ $stylesheet =<<<'EOD'
     <xsl:template match="doc/session">
         <section>
             <div class="page">
-                <div class="hashfront"><xsl:value-of select="@title" /></div>
-                <div class="hashback"><xsl:value-of select="@title" /></div>
+                <div class="hashfront"><xsl:value-of select="@title" disable-output-escaping="yes"/></div>
+                <div class="hashback"><xsl:value-of select="@title" disable-output-escaping="yes"/></div>
             </div>
             <xsl:for-each select="participant">
                 <div class="page">
                     <h1 class="panelist"><xsl:value-of select="@pubsname" /></h1>
                     <div class="backside">
-                        <p class="panelname">This is Session: &quot;<span><xsl:value-of select="../@title" /></span>&quot;</p>
+                        <p class="panelname">This is Session: &quot;<span><xsl:value-of select="../@title" disable-output-escaping="yes"/></span>&quot;</p>
                         <p><xsl:value-of select="../@roomname" /> &#8226; <xsl:value-of select="../@starttime" /> &#8226; <xsl:value-of select="../@trackname" /></p>
                         <p class="panelists">
                             <xsl:for-each select="../participant">
@@ -78,10 +78,10 @@ $stylesheet =<<<'EOD'
                                 <xsl:if test="not(position() = last())">, </xsl:if>
                             </xsl:for-each>
                         </p>
-                        <p class="paneldescribe"><xsl:value-of select="../@progguiddesc" /></p>
+                        <p class="paneldescribe"><xsl:value-of select="../@progguiddesc" disable-output-escaping="yes"/></p>
                         <xsl:choose>
                         <xsl:when test="./nextSession[@title != '']">
-                            <p class="lastnote">Your next session is &quot;<xsl:value-of select="./nextSession/@title" />&quot; on <xsl:value-of select="./nextSession/@starttime" /></p>
+                            <p class="lastnote">Your next session is &quot;<xsl:value-of select="./nextSession/@title"  disable-output-escaping="yes"/>&quot; on <xsl:value-of select="./nextSession/@starttime" /></p>
                         </xsl:when>
                         <xsl:otherwise>
                             <p class="lastnote">This is your last scheduled session.</p>
