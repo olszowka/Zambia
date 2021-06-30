@@ -132,6 +132,10 @@
                 <a href="StaffPage.php">Overview</a>
               </li>
               <li>
+                  <a href="Tools.php">Tools</a>
+              </li>
+              <li class="divider-vertical"/>
+              <li>
                 <form method="post" action="ShowSessions.php" class="navbar-search pull-left">
                   <input type="text" name="searchtitle" class="search-query" placeholder="Search for sessions by title"/>
                   <input type="hidden" value="ANY" name="track"/>

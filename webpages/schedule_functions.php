@@ -7,17 +7,31 @@ class ScheduledSession {
     public $sessionid;
     public $progguiddesc;
     public $starttime;
+    public $starttime_unformatted;
     public $duration;
     public $roomname;
     public $roomid;
     public $trackname;
     public $participants;
+
+    function participantById($badgeid) {
+        $result = null;
+        foreach ($this->participants as $p) {
+            if ($p->badgeid == $badgeid) {
+                $result = $p;
+                break;
+            }
+        }
+        return $result;
+    }
 }
 
 class ScheduledParticipant {
     public $pubsname;
     public $badgeid;
     public $moderator;
+
+    public $nextSession;
 }
 
 function render_sessions_as_xml($sessions) {
@@ -40,6 +54,16 @@ function render_sessions_as_xml($sessions) {
             $particpant->setAttribute("moderator", $p->moderator);
 
             $panel -> appendChild($particpant);
+
+            if (!is_null($p->nextSession)) {
+                $next = $xml -> createElement("nextSession");
+                $next->setAttribute("title", $p->nextSession->title);
+                $next->setAttribute("progguiddesc", $p->nextSession->progguiddesc);
+                $next->setAttribute("roomname", $p->nextSession->roomname);
+                $next->setAttribute("trackname", $p->nextSession->trackname);
+                $next->setAttribute("starttime", $p->nextSession->starttime);
+                $particpant -> appendChild($next);
+            }
         }
 
         $doc -> appendChild($panel);
@@ -56,6 +80,7 @@ function get_scheduled_events_with_participants() {
 SELECT
         S.sessionid, S.title, S.progguiddesc, R.roomname, SCH.roomid, PS.pubstatusname,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
+        ADDTIME('$ConStartDatim$',SCH.starttime) as starttimeraw,
         DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
 		T.trackname, KC.kidscatname
     FROM
@@ -81,6 +106,7 @@ EOD;
         $session->roomname = $row["roomname"];
         $session->trackname = $row["trackname"];
         $session->starttime = $row["starttime"];
+        $session->starttime_unformatted = DateTime::createFromFormat ( "Y-m-d H:i:s", $row["starttimeraw"] );
         $session->participants = array();
 
 
@@ -112,6 +138,34 @@ EOD;
 
         $session->participants[] = $participant;
     }
+
+    $sessionsByBadgeId = array();
+    foreach ($sessions as $s) {
+        foreach ($s->participants as $p) {
+
+            if (!array_key_exists($p->badgeid, $sessionsByBadgeId)) {
+                $tmp = array();
+                $sessionsByBadgeId[$p->badgeid] = $tmp;
+            }
+            $tmp = $sessionsByBadgeId[$p->badgeid];
+            $tmp[] = $s;
+            $sessionsByBadgeId[$p->badgeid] = $tmp;
+        }
+    }
+
+    foreach ($sessionsByBadgeId as $key => $val) {
+
+        for ($i = 0; $i < (count($val) - 1); $i++) {
+            $s = $val[$i];
+            $next = $val[$i+1];
+
+            $p = $s->participantById($key);
+
+            $p->nextSession = $next;
+        }
+    }
+
+
     return $sessions;
 }
 

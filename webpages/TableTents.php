@@ -79,6 +79,14 @@ $stylesheet =<<<'EOD'
                             </xsl:for-each>
                         </p>
                         <p class="paneldescribe"><xsl:value-of select="../@progguiddesc" /></p>
+                        <xsl:choose>
+                        <xsl:when test="./nextSession[@title != '']">
+                            <p class="lastnote">Your next session is &quot;<xsl:value-of select="./nextSession/@title" />&quot; on <xsl:value-of select="./nextSession/@starttime" /></p>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <p class="lastnote">This is your last scheduled session.</p>
+                        </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                 </div>
             </xsl:for-each>
