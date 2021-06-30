@@ -88,7 +88,7 @@ SELECT
     ct.country AS postcountry,
 	m.name AS regtype
 FROM public.reservations r
-JOIN public.claims cl ON cl.reservation_id = r.id
+JOIN public.claims cl ON (cl.reservation_id = r.id AND cl.active_to IS NULL)
 JOIN public.dc_contacts ct ON (cl.id = ct.claim_id)
 JOIN public.users u ON (cl.user_id = u.id)
 JOIN public.orders o ON (r.id = o.reservation_id AND o.active_to IS NULL)
@@ -139,7 +139,7 @@ EOD;
         $ids = 0;
         foreach ($rolesToAddArr as $id) {
             if ($ids > 0)
-                $sqlpart .= ",\n ";
+                $sqlrole .= ",\n ";
             $ids++;
 
             $sqlrole .= "('"
@@ -180,7 +180,7 @@ EOD;
      mysqli_query_with_error_handling($sqlrole);
      $rows = mysqli_affected_rows($linki);
 
-    if (is_null($rows) || $rows !== $usercnt) {
+    if (is_null($rows) || $rows < $usercnt) {
         mysqli_query_with_error_handling("ROLLBACK;");
         RenderErrorAjax("Error: adding permission roles from reg import");
         exit();
@@ -242,7 +242,7 @@ SELECT
 	ct.city, ct.province AS state, ct.postal AS zip,
 	m.name AS regtype
 FROM public.reservations r
-JOIN public.claims cl ON cl.reservation_id = r.id
+JOIN public.claims cl ON (cl.reservation_id = r.id AND cl.active_to IS NULL)
 JOIN public.dc_contacts ct ON (cl.id = ct.claim_id)
 JOIN public.users u ON (cl.user_id = u.id)
 JOIN public.orders o ON (r.id = o.reservation_id AND o.active_to IS NULL)
