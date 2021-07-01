@@ -5,8 +5,8 @@
     <xsl:param name="subject_line" select="''" />
     <xsl:param name="from_address" select="''" />
     <xsl:template match="/">
-        <p class="alert alert-success mt-2">Email sent</p>
         <div class="container">
+            <p class="alert alert-success mt-2">Email sent</p>
             <div class="card mt-2">
                 <div class="card-header">
                     <h2>Email Sent</h2>
