@@ -13,7 +13,7 @@ if (RESET_PASSWORD_SELF !== true) {
     exit;
 }
 participant_header($title, true, 'Login', true);
-$params = array("USER_ID_PROMPT" => get_user_id_prompt(), "RECAPTCHA_SITE_KEY" => RECAPTCHA_SITE_KEY);
+$params = array("USER_ID_PROMPT" => get_user_id_prompt(), "RECAPTCHA_SITE_KEY" => RECAPTCHA_SITE_KEY, "EMAIL_LOGIN_SUPPORT" => is_email_login_supported());
 RenderXSLT('ForgotPassword.xsl', $params);
 participant_footer();
 ?>

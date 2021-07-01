@@ -8,71 +8,174 @@ require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('external/guzzlehttp-guzzle-6.5.3/vendor/autoload.php');
 require_once('login_functions.php');
+
+use GuzzleHttp\Client;
+
+function validate_recaptcha($recaptchaResponse) {
+    $userIP = $_SERVER['REMOTE_ADDR'];
+    $client = new Client([
+        'base_uri' => 'https://www.google.com',
+        'timeout'  => 7.5,
+    ]);
+    $guzzleRepsonse = $client->request('PUT', '/recaptcha/api/siteverify', [
+        'form_params' => [
+            'secret' => RECAPTCHA_SERVER_KEY,
+            'response' => $recaptchaResponse,
+            'remoteip' => $userIP
+        ]
+    ]);
+    $recaptchaConf = json_decode($guzzleRepsonse->getBody()->getContents(), true);
+    return $recaptchaConf["success"];
+}
+
+function send_reset_password_email($firstname, $lastname, $badgename, $email, $subjectLine, $url) {
+    $conName = CON_NAME;
+    $fromAddress = PASSWORD_RESET_FROM_EMAIL;
+
+    $mailer = get_swift_mailer();
+
+    //Create the message and set subject
+    $message = (new Swift_Message($subjectLine));
+    
+    //Define from address
+    $message->setFrom($fromAddress);
+    
+    //Define body
+    $urlLink = sprintf('<a href="%s">%s</a>', $url, $url);
+    if (!empty($badgename)) {
+        $username = $badgename;
+    } elseif (!empty($pubsname)) {
+        $username = $pubsname;
+    } else {
+        $comboname = "$firstname $lastname";
+        if (!empty($comboname)) {
+            $username = $comboname;
+        } else {
+            $username = "unknown";
+        }
+    }
+    $link_lifetime = PASSWORD_RESET_LINK_TIMEOUT_DISPLAY;
+    $emailBody = <<<EOD
+    <p>
+        Hello $username,
+    </p>
+    <p>
+        We received a request to reset your password for the Zambia scheduling system for $conName.
+        If you did not make this request, you can ignore this email.
+    </p>
+    <p>
+        Here is your password reset link:
+    </p>
+    <p>
+        $urlLink
+    </p>
+    <p>
+        The link is good for $link_lifetime from when you originally requested it and can be used to change
+        your password only once.  If it has expired just request another link.
+    </p>
+    <p>
+        Thanks!
+    </p>
+    EOD;
+    $message->setBody($emailBody,'text/html');
+    $ok = true;
+    try {
+        $message->addTo($email);
+    } catch (Swift_SwiftException $e) {
+        $ok = FALSE;
+        error_log("Email address $email failed.");
+    }
+    if ($ok) {
+        try {
+            $sendMailResult = $mailer->send($message);
+        } catch (Swift_TransportException $e) {
+            $ok = FALSE;
+            error_log("Swift transport exception: send email failed.");
+        } catch (Swift_SwiftException $e) {
+            $ok = FALSE;
+            error_log("Swift exception: send email failed.");
+        }
+    }
+}
+
+
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
+    participant_header($title, true, 'Login', true);
+    echo "<p class='alert alert-danger mt-2'>You have reached this page in error.</p>";
     participant_footer();
     exit;
 }
 $recaptchaResponse = getString('g-recaptcha-response');
 if (empty($recaptchaResponse)) {
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
+    participant_header($title, true, 'Login', true);
+    echo "<p class='alert alert-danger mt-2'>Error with reCAPTCHA.</p>";
     participant_footer();
     exit;
 }
-$userIP = $_SERVER['REMOTE_ADDR'];
-use GuzzleHttp\Client;
-$client = new Client([
-    'base_uri' => 'https://www.google.com',
-    'timeout'  => 7.5,
-]);
-$guzzleRepsonse = $client->request('PUT', '/recaptcha/api/siteverify', [
-    'form_params' => [
-        'secret' => RECAPTCHA_SERVER_KEY,
-        'response' => $recaptchaResponse,
-        'remoteip' => $userIP
-    ]
-]);
-$recaptchaConf = json_decode($guzzleRepsonse->getBody()->getContents(), true);
-if (!$recaptchaConf["success"]) {
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
+
+if (!validate_recaptcha($recaptchaResponse)) {
+    participant_header($title, true, 'Login', true);
+    echo "<p class='alert alert-danger mt-2'>Error with reCAPTCHA.</p>";
     participant_footer();
     exit;
 }
-participant_header($title, true, 'Login');
+
+participant_header($title, true, 'Login', true);
 $badgeid = getString('badgeid');
 $email = getString('emailAddress');
-if (empty($badgeid) || empty($email)) {
-    $params = array();
-    $params["USER_ID_PROMPT"] = get_user_id_prompt();
+if ((empty($badgeid) || empty($email)) && !is_email_login_supported()) {
+    $params = array("USER_ID_PROMPT" => get_user_id_prompt(), 
+        "RECAPTCHA_SITE_KEY" => RECAPTCHA_SITE_KEY, 
+        "EMAIL_LOGIN_SUPPORT" => is_email_login_supported());
     $params["error_message"] = "Both ${params['USER_ID_PROMPT']} and email address are required.";
     RenderXSLT('ForgotPassword.xsl', $params);
     participant_footer();
     exit;
+} else if (empty($email) && is_email_login_supported()) {
+    $params = array("USER_ID_PROMPT" => get_user_id_prompt(), 
+        "RECAPTCHA_SITE_KEY" => RECAPTCHA_SITE_KEY, 
+        "EMAIL_LOGIN_SUPPORT" => is_email_login_supported());
+    $params["error_message"] = "Bemail address is required.";
+    RenderXSLT('ForgotPassword.xsl', $params);
+    participant_footer();
+    exit;
 }
+
 
 $conName = CON_NAME;
 $subjectLine = "Zambia Password Reset for $conName";
 $fromAddress = PASSWORD_RESET_FROM_EMAIL;
 $responseParams = array("subject_line" => $subjectLine, "from_address" => $fromAddress);
 
-$badgeid = mysqli_real_escape_string($linki, $badgeid);
+$badgeidSQL = mysqli_real_escape_string($linki, $badgeid);
 $emailSQL = mysqli_real_escape_string($linki, $email);
 $query = <<<EOD
-SELECT P.pubsname, CD.badgename, CD.firstname, CD.lastname
+SELECT P.pubsname, CD.badgename, CD.firstname, CD.lastname, P.badgeid
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
     WHERE
-            P.badgeid = '$badgeid'
+            P.badgeid = '$badgeidSQL'
         AND CD.email = '$emailSQL';
 EOD;
+
+if (is_email_login_supported()) {
+    $badgeidSQL = '';
+    $query = <<<EOD
+SELECT P.pubsname, CD.badgename, CD.firstname, CD.lastname, P.badgeid
+    FROM
+             Participants P
+        JOIN CongoDump CD USING (badgeid)
+    WHERE
+            CD.email = '$emailSQL';
+EOD;
+}
+
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
+
 $ipaddressSQL = mysqli_real_escape_string($linki, $userIP);
 $selector = bin2hex(random_bytes(8));
 if (mysqli_num_rows($result) !== 1) {
@@ -80,7 +183,7 @@ if (mysqli_num_rows($result) !== 1) {
     $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
     (badgeidentered, email, ipaddress, cancelled, selector)
-    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', 2, '$selector');
+    VALUES ('$badgeidSQL', '$emailSQL', '$ipaddressSQL', 2, '$selector');
 EOD;
     if (!$result = mysqli_query_exit_on_error($query)) {
         exit;
@@ -90,7 +193,8 @@ EOD;
     participant_footer();
     exit;
 }
-list($pubsname, $badgename, $firstname, $lastname) = mysqli_fetch_array($result);
+
+list($pubsname, $badgename, $firstname, $lastname, $badgeid) = mysqli_fetch_array($result);
 mysqli_free_result($result);
 // Create tokens
 $token = random_bytes(32);
@@ -108,7 +212,7 @@ $tokenSQL = hash('sha256', $token);
 $query = <<<EOD
 UPDATE ParticipantPasswordResetRequests
     SET cancelled = 1
-    WHERE badgeidentered = '$badgeid';
+    WHERE badgeidentered = '$badgeidSQL';
 EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
@@ -116,76 +220,13 @@ if (!$result = mysqli_query_exit_on_error($query)) {
 $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
     (badgeidentered, email, ipaddress, expirationdatetime, selector, token)
-    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', '$expirationSQL', '$selector', '$tokenSQL');
+    VALUES ('$badgeidSQL', '$emailSQL', '$ipaddressSQL', '$expirationSQL', '$selector', '$tokenSQL');
 EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
 
-$mailer = get_swift_mailer();
-
-//Create the message and set subject
-$message = (new Swift_Message($subjectLine));
-
-//Define from address
-$message->setFrom($fromAddress);
-
-//Define body
-$urlLink = sprintf('<a href="%s">%s</a>', $url, $url);
-if (!empty($badgename)) {
-    $username = $badgename;
-} elseif (!empty($pubsname)) {
-    $username = $pubsname;
-} else {
-    $comboname = "$firstname $lastname";
-    if (!empty($comboname)) {
-        $username = $comboname;
-    } else {
-        $username = "unknown";
-    }
-}
-$link_lifetime = PASSWORD_RESET_LINK_TIMEOUT_DISPLAY;
-$emailBody = <<<EOD
-<p>
-    Hello $username,
-</p>
-<p>
-    We received a request to reset your password for the Zambia scheduling system for $conName.
-    If you did not make this request, you can ignore this email.
-</p>
-<p>
-    Here is your password reset link:
-</p>
-<p>
-    $urlLink
-</p>
-<p>
-    The link is good for $link_lifetime from when you originally requested it and can be used to change
-    your password only once.  If it has expired just request another link.
-</p>
-<p>
-    Thanks!
-</p>
-EOD;
-$message->setBody($emailBody,'text/html');
-$ok = true;
-try {
-    $message->addTo($email);
-} catch (Swift_SwiftException $e) {
-    $ok = FALSE;
-    error_log("Email address $email failed.");
-}
-if ($ok) {
-    try {
-        $sendMailResult = $mailer->send($message);
-    } catch (Swift_TransportException $e) {
-        $ok = FALSE;
-        error_log("Swift transport exception: send email failed.");
-    } catch (Swift_SwiftException $e) {
-        $ok = FALSE;
-        error_log("Swift exception: send email failed.");
-    }
-}
+send_reset_password_email($firstname, $lastname, $badgename, $email, $subjectLine, $url);
 
 // regular response is name as error response above
 RenderXSLT('ForgotPasswordResponse.xsl', $responseParams);

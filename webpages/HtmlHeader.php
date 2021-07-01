@@ -54,7 +54,7 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
         var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
     </script>
 <?php
-    $isRecaptcha = $title == 'Forgot Password';
+    $isRecaptcha = ($title == 'Forgot Password') || ($title == 'Send Reset Password Link');
     /* "external" means 3rd party library */
     load_external_javascript($isDataTables, $isRecaptcha, $bootstrap4);
     load_internal_javascript($title, $isDataTables);
