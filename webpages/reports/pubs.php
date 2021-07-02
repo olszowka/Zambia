@@ -128,9 +128,7 @@ $report['xsl'] =<<<'EOD'
                                 <xsl:with-param name="badgeid" select = "@badgeid" />
                                 <xsl:with-param name="pubsname" select = "@pubsname" />
                             </xsl:call-template>
-                            <xsl:if test="@moderator='1'">
-                                (MOD)
-                            </xsl:if>
+                            <xsl:if test="@moderator='1'"> (MOD)</xsl:if>
                         </xsl:for-each>
                     </xsl:when>
                     <xsl:otherwise>

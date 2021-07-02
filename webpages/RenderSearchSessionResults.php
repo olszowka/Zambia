@@ -6,7 +6,7 @@ function RenderSearchSessionResults($sessionSearchArray) {
     $title = 'Precis Search Results';
     // retrieveSessions() will exit on error
     if ($result = retrieveSessions($sessionSearchArray)) {
-        staff_header($title);
+        staff_header($title, true);
         $showlinks = true; // Show links to edit sessions
         RenderPrecis($result, $showlinks);
         staff_footer();

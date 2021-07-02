@@ -4,7 +4,7 @@ $report['name'] = 'Session Hashtag Maintenance Report';
 $report['output_filename'] = 'hashtagMaintenance.csv';
 $report['description'] = 'List all scheduled sessions that need some hashtag editing, either because the current hashtag is empty or because it\'s too long.';
 $report['categories'] = array(
-    'Publication Reports' => 880,
+    'Programming Reports' => 750
 );
 $report['multi'] = 'true';
 $report['queries'] = [];

@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Sessions with under 4 people assigned';
+$report['multi'] = 'true';
+$report['output_filename'] = 'fewPeopleAssigned.csv';
 $report['description'] = 'Lists all public sessions which are either on the schedule or have anyone assigned and have 3 or fewer participants assigned.  Excludes Dropped, Cancelled, and Duplicate Sessions.';
 $report['categories'] = array(
     'Conflict Reports' => 330,

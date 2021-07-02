@@ -80,6 +80,13 @@ EOB;
             $query .= " AND S.title like \"%$searchTitle%\"";
         }
     }
+    if (isset($sessionSearchArray['hashtag'])) {
+        $hashtag = $sessionSearchArray['hashtag'];
+        if ($hashtag != '') {
+            $hashtag = strtolower(mysqli_real_escape_string($linki, $hashtag));
+            $query .= " AND LOWER(S.hashtag) like \"%$hashtag%\"";
+        }
+    }
     $query .= "\n";
     $query .= "GROUP BY S.sessionid\n";
     return(mysqli_query_exit_on_error($query));

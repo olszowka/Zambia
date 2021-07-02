@@ -61,20 +61,33 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
         $download = $is_multi_report ? getString("download") == 'csv' : false;
         $html = render_report_to_html($report, $resultXML);
         if (!$download) {
-            staff_header($report['name'], true, true, $reportColumns, $reportAdditionalOptions);
+            staff_header("Reports", true, true, $reportColumns, $reportAdditionalOptions);
             $reportDescription = htmlspecialchars(str_replace('$CON_NAME', CON_NAME, $report['description']), ENT_NOQUOTES);
-            echo "<div class=\"alert alert-info mt-2\">$reportDescription</div>\n";
-            echo "<div class=\"card mt-2\"><div class=\"card-header\"><div class=\"row\">\n";
-            echo "<div class=\"col-md-10\"><h5 class=\"mb-0\">".$report['name']."</h5>\n";
-            echo "<div><small class=\"text-muted\">Generated: " . date("D M j G:i:s T Y") . "</small></div>\n";
-            echo "</div><div class=\"col-md-2\">";
-            echo "<p class=\"text-right\"><a class=\"btn btn-secondary btn-sm\" href=\"generateReport.php?reportName=".$reportName."&download=csv\">Download CSV</a></p>";
-            echo "</div>";
-            echo "</div></div><div class=\"card-body\">";
+?>
+    <div class="card mt-2">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-10">
+                    <h5 class="mb-0"><?php echo $report['name'] ?></h5>
+                    <div>
+                        <small class="text-muted">Generated: <?php echo date("D M j G:i:s T Y"); ?></small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <p class="text-right"><a class="btn btn-secondary btn-sm" href="<?php echo "generateReport.php?reportName=".$reportName."&download=csv"; ?>">Download CSV</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <p><?php echo $reportDescription; ?></p>
+<?php
             // some browsers do not support empty div, iframe, script and textarea tags
             echo(mb_ereg_replace("<(div|span|b|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
-            echo "</div></div>";
+?>
 
+        </div>
+    </div>
+<?php
             staff_footer();
         } else {
             require_once('csv_report_functions.php');
