@@ -210,6 +210,7 @@ function get_session_from_post() {
     $session["servnotes"] = getString('servnotes');
     $session["status"] = getInt('status');
     $session["notesforprog"] = getString('notesforprog');
+    $session["hashtag"] = getString('hashtag');
 }
 
 // Function set_session_defaults()
@@ -244,6 +245,7 @@ function set_session_defaults() {
     $session["servnotes"] = "";
     $session["status"] = 6; // default to "Edit Me"
     $session["notesforprog"] = "";
+    $session["hashtag"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
 }
 
