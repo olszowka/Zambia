@@ -54,13 +54,13 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
         exit();
     }
     $is_multi_report = array_key_exists("multi", $report);
+    $_SESSION['return_to_page'] = "generateReport.php?reportName=$reportName";
+    $reportColumns = isset($report['columns']) ? $report['columns'] : false;
+    $reportAdditionalOptions = isset($report['additionalOptions']) ? $report['additionalOptions'] : false;
     if ($is_multi_report) {
         $download = $is_multi_report ? getString("download") == 'csv' : false;
-        $_SESSION['return_to_page'] = "generateReport.php?reportName=$reportName";
         $html = render_report_to_html($report, $resultXML);
         if (!$download) {
-            $reportColumns = isset($report['columns']) ? $report['columns'] : false;
-            $reportAdditionalOptions = isset($report['additionalOptions']) ? $report['additionalOptions'] : false;
             staff_header($report['name'], true, true, $reportColumns, $reportAdditionalOptions);
             $reportDescription = htmlspecialchars(str_replace('$CON_NAME', CON_NAME, $report['description']), ENT_NOQUOTES);
             echo "<div class=\"alert alert-info mt-2\">$reportDescription</div>\n";
@@ -88,9 +88,6 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
             render_html_table_as_csv($html);
         }
     } else {
-        $_SESSION['return_to_page'] = "generateReport.php?reportName=$reportName";
-        $reportColumns = isset($report['columns']) ? $report['columns'] : false;
-        $reportAdditionalOptions = isset($report['additionalOptions']) ? $report['additionalOptions'] : false;
         staff_header($report['name'], false, true, $reportColumns, $reportAdditionalOptions);
         if (!$download) {
             $reportDescription = htmlspecialchars(str_replace('$CON_NAME', CON_NAME, $report['description']), ENT_NOQUOTES);

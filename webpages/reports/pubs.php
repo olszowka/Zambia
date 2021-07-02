@@ -9,12 +9,14 @@ $report['categories'] = array(
     'Publication Reports' => 880,
 );
 $report['queries'] = [];
+$report['additionalOptions'] = array( "order" => array(array( 4,  "asc"  )));
 $report['queries']['sessions'] =<<<'EOD'
 SELECT
         S.sessionid, S.title, S.progguiddesc, R.roomname, SCH.roomid, PS.pubstatusname,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%Y-%m-%d %H:%i') AS starttimefull,
         DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
-		T.trackname, KC.kidscatname
+		T.trackname, KC.kidscatname, S.hashtag
     FROM
              Sessions S
         JOIN Schedule SCH USING (sessionid)
@@ -46,23 +48,28 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="table table-sm table-bordered">
-                    <tr class="table-primary">
-                        <th>Session ID</th>
-                        <th>Title</th>
-                        <th>Track</th>
-                        <th>Room</th>
-                        <th>StartTime</th>
-                        <th>Duration</th>
-                        <th>
-                            <div>Publication</div>
-                            <div>Status</div>
-                        </th>
-                        <th>Suitability for Children</th>
-                        <th>Description</th>
-                        <th>Participants</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                <table id="reportTable" class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Track</th>
+                            <th>Room</th>
+                            <th>StartTime</th>
+                            <th>Duration</th>
+                            <th>
+                                Publication
+                                Status
+                            </th>
+                            <th>Suitability for Children</th>
+                            <th>Hashtag</th>
+                            <th>Description</th>
+                            <th>Participants</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -92,7 +99,14 @@ $report['xsl'] =<<<'EOD'
 					<xsl:with-param name="roomname" select="@roomname" />
 				</xsl:call-template>
 			</td>
-            <td class="text-nowrap"><xsl:value-of select="@starttime" /></td>
+            <td class="text-nowrap">
+                <time>
+                    <xsl:attribute name="datetime">
+                        <xsl:value-of select="@starttimefull" />
+                    </xsl:attribute>
+                    <xsl:value-of select="@starttime" />
+                </time>
+            </td>
             <td class="text-nowrap">
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
@@ -101,6 +115,7 @@ $report['xsl'] =<<<'EOD'
             </td>
             <td><xsl:value-of select="@pubstatusname" /></td>
             <td><xsl:value-of select="@kidscatname" /></td>
+            <td><small><xsl:value-of select="@hashtag" /></small></td>
             <td><xsl:value-of select="@progguiddesc" /></td>
             <td>
                 <xsl:choose>

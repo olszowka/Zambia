@@ -22,9 +22,7 @@ SELECT
     WHERE
              S.hashtag IS NULL
           OR S.hashtag = ''
-          OR LENGTH(S.hashtag) > 26
-    ORDER BY
-        SCH.starttime, S.sessionid;
+          OR LENGTH(S.hashtag) > 26;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -34,17 +32,21 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="table table-sm table-bordered">
-                    <tr class="table-primary">
-                        <th class="text-nowrap">Session ID</th>
-                        <th>Title</th>
-                        <th>Hashtag</th>
-                        <th>Issue</th>
-                        <th>Track</th>
-                        <th>Suitability for Children</th>
-                        <th>Description</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                <table id="reportTable" class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-nowrap">Session ID</th>
+                            <th>Title</th>
+                            <th>Hashtag</th>
+                            <th>Issue</th>
+                            <th>Track</th>
+                            <th>Suitability for Children</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>

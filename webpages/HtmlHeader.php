@@ -35,7 +35,12 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
 <?php } ?>
     <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
 <?php if ($isDataTables) {
-    echo "    <link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
+    if ($bootstrap4) {
+        echo "    <link rel=\"stylesheet\" href=\"//cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css\" type=\"text/css\" />\n";
+    } else {
+        echo "    <link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
+    }
+    
     if ($reportColumns) {
         echo "<meta id=\"reportColumns\" data-report-columns=\"";
         echo htmlentities(json_encode($reportColumns));
