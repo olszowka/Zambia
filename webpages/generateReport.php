@@ -78,7 +78,11 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
             staff_footer();
         } else {
             require_once('csv_report_functions.php');
-            header("Content-disposition: attachment; filename={$report['output_filename']}");
+            $filename = array_key_exists('output_filename', $report) ? $report['output_filename'] : 'report';
+            if (strpos($filename, ".csv") !== false) {
+                $filename = str_replace(".csv", "", $filename);
+            }
+            header("Content-disposition: attachment; filename={$filename}-".date(DATE_ISO8601).".csv");
             header('Content-type: text/csv');
         
             render_html_table_as_csv($html);
