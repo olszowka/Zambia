@@ -32,3 +32,34 @@ function echo_if_zero_rows_and_exit($result) {
         exit();
     }
 }
+
+function render_html_table_as_csv($htmlString) {
+    require_once("ext/simple_html_dom.php");
+
+    $html = str_get_html($htmlString);
+    foreach  ($html->find('table') as $table) {
+        foreach  ($table->find('tr') as $tr) {
+            $first = true;
+            foreach ($tr->childNodes() as $child) {
+                $value = $child->plaintext;
+                if (!$first) {
+                    echo ",";
+                }
+                if (strpos($value, "\"") !== false) {
+                    $value = str_replace("\"", "\"\"", $value);
+                }
+                $value = preg_replace("(\\s+)", " ", $value);
+                if (strpos($value, "&lt;") !== false) {
+                    $value = str_replace("&lt;", "<", $value);
+                }
+                if (strpos($value, "&gt;") !== false) {
+                    $value = str_replace("&gt;", ">", $value);
+                }
+                echo "\"$value\"";
+                $first = false;
+            }
+
+            echo "\n";
+        }
+    }
+}
