@@ -50,17 +50,19 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
-                        <tr style="height:2.6rem">
-                            <th class="report">Track</th>
-                            <th class="report">Type</th>
-                            <th class="report">Session ID</th>
-                            <th class="report">Title</th>
-                            <th class="report">How Many Assigned</th>
+                        <tr class="table-primary">
+                            <th>Track</th>
+                            <th>Type</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>How Many Assigned</th>
                         </tr>
                     </thead>
-                    <xsl:apply-templates select="/doc/query[@queryName='sessions']/row"/>
+                    <tbody>
+                        <xsl:apply-templates select="/doc/query[@queryName='sessions']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -71,16 +73,16 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="/doc/query[@queryName='sessions']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@trackname"/></td>
-            <td class="report"><xsl:value-of select="@typename"/></td>
-            <td class="report"><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select="@sessionid"/></xsl:call-template></td>
-            <td class="report">
+            <td><xsl:value-of select="@trackname"/></td>
+            <td><xsl:value-of select="@typename"/></td>
+            <td><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select="@sessionid"/></xsl:call-template></td>
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@assigned"/></td>
+            <td><xsl:value-of select="@assigned"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

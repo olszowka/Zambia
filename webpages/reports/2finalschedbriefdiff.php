@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Schedule - recent edits';
+$report['multi'] = 'true';
+$report['output_filename'] = 'finalScheduleBriefDiff.csv';
 $report['description'] = 'The most recent edit to every session if it was within the last 10 days.';
 $report['categories'] = array(
     'Programming Reports' => 70,
@@ -59,22 +61,22 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
-                        <tr>
-                            <th class="report">When</th>
-                            <th class="report">Session ID</th>
-                            <th class="report">Title</th>
-                            <th class="report">Track</th>
-                            <th class="report">Tags</th>
-                            <th class="report">
+                        <tr class="table-primary">
+                            <th>When</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Track</th>
+                            <th>Tags</th>
+                            <th>
                                 <div>Current</div>
                                 <div>Status</div>
                             </th>
-                            <th class="report">Who Edited</th>
-                            <th class="report">Edit Summary</th>
-                            <th class="report">Notes</th>
-                            <th class="report">Full History</th>
+                            <th>Who Edited</th>
+                            <th>Edit Summary</th>
+                            <th>Notes</th>
+                            <th>Full History</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,29 +91,34 @@ $report['xsl'] =<<<'EOD'
     </xsl:template>
     <xsl:template match="doc/query[@queryName='sessions']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@timestamp" /></td>
-            <td class="report">
+            <td>
+                <time>
+                    <xsl:attribute name="datetime"><xsl:value-of select="@timestamp" /></xsl:attribute>
+                    <xsl:value-of select="@timestamp" />
+                </time>
+            </td>
+            <td>
                 <xsl:call-template name="showSessionid">
                     <xsl:with-param name="sessionid" select="@sessionid" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select="@sessionid" />
                     <xsl:with-param name="title" select="@title" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@trackname" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@trackname" /></td>
+            <td>
                 <xsl:call-template name="tags">
                     <xsl:with-param name="sessionid" select="@sessionid" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@statusname" /></td>
-            <td class="report"><xsl:value-of select="@name" /></td>
-            <td class="report"><xsl:value-of select="@description" /></td>
-            <td class="report"><xsl:value-of select="@editdescription" /></td>
-            <td class="report"><a href="SessionHistory.php?selsess={@sessionid}">History</a></td>
+            <td><xsl:value-of select="@statusname" /></td>
+            <td><xsl:value-of select="@name" /></td>
+            <td><xsl:value-of select="@description" /></td>
+            <td><xsl:value-of select="@editdescription" /></td>
+            <td><a href="SessionHistory.php?selsess={@sessionid}">History</a></td>
         </tr>
     </xsl:template>
     
