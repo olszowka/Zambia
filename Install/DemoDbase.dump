@@ -854,7 +854,8 @@ INSERT INTO `PatchLog` (patchname) VALUES
     ('53_data_retention.sql'),
     ('57_create_user_permission.sql'),
     ('58_roomhasset_key.sql'),
-    ('59_config_edit_tables.sql');
+    ('59_config_edit_tables.sql'),
+    ('60_session_hashtag.sql');
 /*!40000 ALTER TABLE `PatchLog` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -898,7 +899,7 @@ INSERT INTO `PermissionAtoms` (permatomid, permatomtag, elementid, page, notes) 
     (13,'public_login',NULL,'Login','Brainstorm user can log in'),
     (14,'SendEmail',NULL,'StaffManageParticipants','Access to Send email set of pages'),
     (15,'postcon',NULL,'renderWelcome','Forces participant welcome page to display only post con message.'),
-    (16,'EditSesNtsAsgnPartPg',NULL,'StaffAssignParticipants','Edit «Notes for Program Staff» on «Assign Participants» page.'),
+    (16,'EditSesNtsAsgnPartPg',NULL,'StaffAssignParticipants','Edit ï¿½Notes for Program Staffï¿½ on ï¿½Assign Participantsï¿½ page.'),
     (17,'ConfigureReports',NULL,'ConfigureReports','Enable menu option'),
     (18,'ResetUserPassword',NULL,'AdminParticipants','No one needs this permission once password overhaul is implemented and system has email integration.'),
     (19,'AdminPhases',NULL,'AdminPhases','Change phase of Zambia use, allowing which sections are current.'),
@@ -1195,6 +1196,7 @@ CREATE TABLE `PreviousSessions` (
     `signupreq` tinyint(1) DEFAULT NULL,
     `notesforpart` text,
     `notesforprog` text,
+    `hashtag` varchar(50) DEFAULT NULL,
     `invitedguest` tinyint(1) DEFAULT NULL,
     `importedsessionid` int(11) DEFAULT NULL,
     PRIMARY KEY (`previousconid`,`previoussessionid`),
@@ -1797,6 +1799,7 @@ CREATE TABLE `Sessions` (
     `notesforprog` text,
     `warnings` tinyint(1) DEFAULT NULL,
     `invitedguest` tinyint(1) DEFAULT '0',
+    `hashtag` varchar(50) DEFAULT NULL,
     `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`sessionid`),
     KEY `trackid` (`trackid`),
