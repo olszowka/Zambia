@@ -52,14 +52,14 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
-                        <tr style="height:3.2em;">
-                            <th class="report">Badge ID</th>
-                            <th class="report">Pubsname</th>
-                            <th class="report">Pubsnamesort</th>
-                            <th class="report">Reg Type</th>
-                            <th class="report">Number of Sessions Assigned</th>
+                        <tr class="table-primary">
+                            <th>Badge ID</th>
+                            <th>Pubsname</th>
+                            <th>Pubsnamesort</th>
+                            <th>Reg Type</th>
+                            <th>Number of Sessions Assigned</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
@@ -73,11 +73,11 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='participants']/row">
         <tr>
-            <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
-            <td class="report"><xsl:value-of select="@pubsname"/></td>
-            <td class="report"><xsl:value-of select="@pubsnamesort"/></td>
-            <td class="report"><xsl:value-of select="@regtype"/></td>
-            <td class="report"><xsl:value-of select="@assigned"/></td>
+            <td><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
+            <td><xsl:value-of select="@pubsname"/></td>
+            <td><xsl:value-of select="@pubsnamesort"/></td>
+            <td><xsl:value-of select="@regtype"/></td>
+            <td><xsl:value-of select="@assigned"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>
