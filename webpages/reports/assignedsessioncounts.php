@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Assigned Session by Session (counts)';
+$report['multi'] = 'true';
+$report['output_filename'] = 'assignedSessionCounts.csv';
 $report['description'] = 'How many people are assinged to each session? (Sorted by track then sessionid; Shows scheduled and unscheduled sessions which have anyone assigned)';
 $report['categories'] = array(
     'Events Reports' => 155,
@@ -32,18 +34,20 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Track</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">Status</th>
-                        <th class="report">Type</th>
-                        <th class="report">
-                            <div>Number of </div>
-                            <div>Participants</div>
-                        </th>
-                    </tr>
+                <table id="reportTable" class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>Track</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                            <th>
+                                <div>Number of </div>
+                                <div>Participants</div>
+                            </th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='sessions']/row" />
                 </table>
             </xsl:when>
@@ -54,28 +58,28 @@ $report['xsl'] =<<<'EOD'
     </xsl:template>
     
     <xsl:template match="doc/query[@queryName='sessions']/row">
-        <tr class="report">
-            <td class="report" >
+        <tr>
+            <td >
                 <xsl:value-of select="@trackname" />
             </td>
-            <td class="report" >
+            <td >
                 <xsl:call-template name="showSessionid">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                 </xsl:call-template>
             </td>
-            <td class="report" >
+            <td >
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report" >
+            <td >
                 <xsl:value-of select="@statusname" />
             </td>
-            <td class="report" >
+            <td >
                 <xsl:value-of select="@typename" />
             </td>
-            <td class="report" >
+            <td >
                 <xsl:value-of select="@numAssigned" />
             </td>
         </tr>
