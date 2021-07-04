@@ -8,6 +8,7 @@ $statusid = getInt("status", "");
 $sessionid = getInt("sessionid", "");
 $divisionid = getInt("divisionid", "");
 $searchTitle = getString("searchtitle");
+$hashtag = getString("hashtag");
 if ($searchTitle === NULL) {
     $searchTitle = "";
 }
@@ -22,6 +23,7 @@ $sessionSearchArray['statusidList'] = strval($statusid);
 $sessionSearchArray['sessionid'] = strval($sessionid);
 $sessionSearchArray['divisionid'] = strval($divisionid);
 $sessionSearchArray['searchTitle'] = $searchTitle;
+$sessionSearchArray['hashtag'] = $hashtag;
 $sessionSearchArray['tagmatch'] = getString("tagmatch");
 $sessionSearchArray['tagidArray'] = $tags;
 RenderSearchSessionResults($sessionSearchArray);

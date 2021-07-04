@@ -123,6 +123,8 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <select name="status" class="span2">
                     <?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?>
                 </select>
+                <label class="control-label"  for="hashtag">Hashtag:</label>
+                <input type="text" class="span2" size="20" name="hashtag" id="hashtag" value="<?php echo htmlspecialchars($session["hashtag"],ENT_COMPAT);?>" />
             </div>
         </div>
         <div class="row-fluid">

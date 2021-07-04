@@ -219,3 +219,9 @@ input[type='text'].disabled {
 .session-status-definitions dd {
   margin-left: 4rem;
 }
+table.dataTable.table-sm thead th {
+  padding: 0.3rem 18px 0.3rem 0.3rem;
+}
+table.dataTable.table-sm tbody th, table.dataTable.table-sm tbody td {
+  padding: 0.3rem;
+}

@@ -1,5 +1,5 @@
 //	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-$(document).on("ready", function() {
+$(document).ready(function() {
     var $reportTable = $("#reportTable");
     if ($reportTable.length === 1) {
         var options = {

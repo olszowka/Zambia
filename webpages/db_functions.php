@@ -529,6 +529,7 @@ UPDATE Sessions SET
         notesforpart="{$sessionf["notesforpart"]}",
         servicenotes="{$sessionf["servnotes"]}",
         statusid="{$sessionf["status"]}",
+        hashtag="{$sessionf["hashtag"]}",
         notesforprog="{$sessionf["notesforprog"]}"
     WHERE
         sessionid = $id;
@@ -630,6 +631,7 @@ INSERT INTO Sessions SET
         notesforpart="{$sessionf["notesforpart"]}",
         servicenotes="{$sessionf["servnotes"]}",
         statusid="{$sessionf["status"]}",
+        hashtag="{$sessionf["hashtag"]}",
         notesforprog="{$sessionf["notesforprog"]}"
 EOD;
     if (!mysqli_query_with_error_handling($query)) {
@@ -701,6 +703,7 @@ function filter_session() {
     $session2["servnotes"] = mysqli_real_escape_string($linki, $session["servnotes"]);
     $session2["status"] = filter_var($session["status"], FILTER_SANITIZE_NUMBER_INT);
     $session2["notesforprog"] = mysqli_real_escape_string($linki, $session["notesforprog"]);
+    $session2["hashtag"] = mysqli_real_escape_string($linki, $session["hashtag"]);
     $session2["id"] = filter_var($session["sessionid"], FILTER_SANITIZE_NUMBER_INT);
 
     if (!empty($session["featdest"])) {
@@ -738,7 +741,7 @@ SELECT
         sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
         title, secondtitle, pocketprogtext, progguiddesc, persppartinfo, duration,
         estatten, kidscatid, signupreq, roomsetid, notesforpart, servicenotes,
-        statusid, notesforprog, warnings, invitedguest, ts
+        statusid, notesforprog, warnings, invitedguest, hashtag, ts
     FROM
         Sessions
     WHERE
@@ -781,6 +784,7 @@ EOD;
     $session["status"] = $sessionarray["statusid"];
     $session["notesforprog"] = $sessionarray["notesforprog"];
     $session["invguest"] = $sessionarray["invitedguest"];
+    $session["hashtag"] = $sessionarray["hashtag"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";
     if (!$result = mysqli_query_with_error_handling($query)) {

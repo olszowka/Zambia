@@ -163,6 +163,7 @@ $previousSessionsCols = array(
     'notesforpart',
     'notesforprog',
     'invitedguest',
+    'hashtag',
     /* 'importedsessionid' -- do not copy, default to NULL */
 );
 
@@ -194,6 +195,7 @@ $sessionsCols = array(
     'notesforpart',
     'notesforprog',
     'invitedguest',
+    'hashtag',
 );
 /* These Sessions columns are not used by PreviousSessions so we don't bother loading them */
 $sessionsColsNotUsed = array(
