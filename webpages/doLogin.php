@@ -2,14 +2,31 @@
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $headerErrorMessage, $link, $linki, $title;
 require_once('CommonCode.php');
-$userIdPrompt = USER_ID_PROMPT;
+require_once('login_functions.php');
+$userIdPrompt = get_user_id_prompt();
 if (!isset($_SESSION['badgeid'])) {
     $title = "Submit Password";
     $badgeid = getString('badgeid');
     $password = getString('passwd');
-    $query = "SELECT password, data_retention FROM Participants WHERE badgeid = ?;";
     $query_param_arr = array($badgeid);
-    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
+    $query = "SELECT password, data_retention, badgeid FROM Participants WHERE badgeid = ?;";
+    $query_definition = 's';
+    if (is_email_login_supported()) {
+        $query = <<<EOD
+SELECT 
+       P.password, P.data_retention, P.badgeid 
+  FROM 
+       Participants P 
+  JOIN CongoDump C USING (badgeid)
+ WHERE 
+        P.badgeid = ?
+     OR 
+        C.email = ?;
+EOD;
+        $query_param_arr = array($badgeid, $badgeid);
+        $query_definition = 'ss';
+    }
+    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, $query_definition, $query_param_arr)) {
         exit(); // Should have exited already
     }
     if (mysqli_num_rows($result) != 1) {
@@ -19,6 +36,8 @@ if (!isset($_SESSION['badgeid'])) {
     }
     $dbobject = mysqli_fetch_object($result);
     mysqli_free_result($result);
+    $query_param_arr = array($dbobject->badgeid);
+    $badgeid = $dbobject->badgeid;
     $dbpassword = $dbobject->password;
     $_SESSION['data_consent'] = $dbobject->data_retention;
     if (!password_verify($password, $dbpassword)) {

@@ -1,4 +1,5 @@
 <?php
+require_once('login_functions.php');
 //	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "", $bootstrap4 = false) {
     global $header_rendered;
@@ -17,7 +18,7 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     if (defined('CON_HEADER_IMG_ALT') && CON_HEADER_IMG_ALT !== "") {
         $paramArray["headerimgalt"] = CON_HEADER_IMG_ALT;
     }
-    $paramArray["USER_ID_PROMPT"] = USER_ID_PROMPT;
+    $paramArray["USER_ID_PROMPT"] = get_user_id_prompt();
     $paramArray["header_error_message"] = $headerErrorMessage;
     $paramArray["no_user_required"] = $noUserRequired;
     $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;

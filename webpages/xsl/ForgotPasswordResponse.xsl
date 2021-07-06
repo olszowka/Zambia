@@ -5,13 +5,20 @@
     <xsl:param name="subject_line" select="''" />
     <xsl:param name="from_address" select="''" />
     <xsl:template match="/">
-        <p class="alert alert-success vert-sep-above">Email sent</p>
-        <p class="vert-sep-above">
-            <xsl:text>Look for an email with subject "</xsl:text>
-            <xsl:value-of select="$subject_line" />
-            <xsl:text>" sent from </xsl:text>
-            <xsl:value-of select="$from_address" />
-            <xsl:text> for a link to reset your password. If you don't see it in a few minutes, remember to check your junk or spam folder.</xsl:text>
-        </p>
+        <div class="container">
+            <p class="alert alert-success mt-2">Email sent</p>
+            <div class="card mt-2">
+                <div class="card-header">
+                    <h2>Email Sent</h2>
+                </div>
+                <div class="card-body">
+                    <xsl:text>Look for an email with subject "</xsl:text>
+                    <xsl:value-of select="$subject_line" />
+                    <xsl:text>" sent from </xsl:text>
+                    <xsl:value-of select="$from_address" />
+                    <xsl:text> for a link to reset your password. If you don't see it in a few minutes, remember to check your junk or spam folder.</xsl:text>
+                </div>
+            </div>
+        </div>
     </xsl:template>
 </xsl:stylesheet>

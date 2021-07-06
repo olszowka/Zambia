@@ -4,6 +4,7 @@
 global $linki, $title;
 $title = "Submit Reset Password";
 require ('PartCommonCode.php');
+require_once('login_functions.php');
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
     participant_header($title, true, 'Login');
@@ -103,5 +104,5 @@ if (!$result = mysqli_query_exit_on_error($query)) {
 }
 // Show login page with password reset confirmation
 $title = "Login";
-participant_header($title, false, 'Password_Reset');
+participant_header($title, false, 'Password_Reset', true);
 participant_footer();
