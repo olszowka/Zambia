@@ -17,12 +17,12 @@ function is_email_login_supported() {
  *  but generally we should favour the text that the support team put in the db_name.php file.
  */
 function get_user_id_prompt() {
-    if (!is_email_login_supported()) {
+    if (defined('LOGIN_PAGE_USER_ID_PROMPT') && LOGIN_PAGE_USER_ID_PROMPT !== '') {
+        return LOGIN_PAGE_USER_ID_PROMPT;
+    } else if (!is_email_login_supported()) {
         return USER_ID_PROMPT;
-    } else if (strcasecmp(USER_ID_PROMPT, "User ID") == 0 || strcasecmp(USER_ID_PROMPT, "Badge ID") == 0) {
-        return USER_ID_PROMPT." or Email address";
     } else {
-        return USER_ID_PROMPT;
+        return USER_ID_PROMPT." or Email address";
     }
 }
 ?>
