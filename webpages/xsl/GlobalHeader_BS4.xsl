@@ -136,16 +136,14 @@
                     <div class="card-body">
                         <div class="row">
                         <form id="login-form" class="col-md-6" name="loginform" method="post" action="doLogin.php" data-pbo="GlobalHeader_BS4.xsl:60">
-                            <fieldset id="login-box">
+                            <fieldset id="login-box mt-3">
                                 <div class="form-group">
-                                    <div class="mt-3">
-                                        <input type="text" name="badgeid" id="badgeid" class="form-control" placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
-                                    </div>
+                                    <label for="badgeid" class="sr-only"><xsl:value-of select="$USER_ID_PROMPT" /></label>
+                                    <input type="text" name="badgeid" id="badgeid" class="form-control" placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
                                 </div>
                                 <div class="form-group">
-                                    <div>
-                                        <input type="password" id="passwd" name="passwd" class="form-control" placeholder="Password" title="Enter your password" />
-                                    </div>
+                                    <label for="passwd" class="sr-only">Password</label>
+                                    <input type="password" id="passwd" name="passwd" class="form-control" placeholder="Password" title="Enter your password" />
                                 </div>
                                 <div class="form-group text-center">
                                     <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
