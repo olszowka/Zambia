@@ -56,8 +56,9 @@ function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
         $stmt = mysqli_prepare($linki, $query);
         mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
         mysqli_stmt_execute($stmt);
-        // $foo = mysqli_info($linki);
-		$rows = $rows + mysqli_affected_rows($linki);
+        var_error_log(mysqli_info($linki));
+        $affected_rows = mysqli_affected_rows($linki);
+		$rows = $rows + 
         mysqli_stmt_close($stmt);
     }
     catch (Exception $e) {

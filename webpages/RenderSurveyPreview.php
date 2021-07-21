@@ -11,78 +11,74 @@ function render_question() {
     $doc = $xml -> createElement("doc");
     $doc = $xml -> appendChild($doc);
 
-    $questions = getString("questions");
+    $questions = getParam("questions");
     //error_log("\n\nquestion:\n");
     //var_error_log($questions);
-    $questions = json_decode($questions);
-    foreach ($questions as $question) {
-        $jsonstring = base64_decode($question->data);
-        $json = json_decode($jsonstring);
+    //$questions = json_decode($questions);
+    foreach ($questions as &$question) {
+        // $jsonstring = base64_decode($question->data);
+        // $json = json_decode($jsonstring);
         //var_error_log($json);
         $numberquery = "years";
-        switch($json[0]->typename) {
+        switch($question['typename']) {
             case "openend":
-                 $size = $json[0]->max_value;
-                 $json[0]->size = $size > 100 ? 100 : ($size < 50 ? 50 : $size);
+                $size = $question['max_value'];
+                $question['size'] = $size > 100 ? 100 : ($size < 50 ? 50 : $size);
                 break;
             case "text":
             case "html-text":
-                $size = $json[0]->max_value / 4;
-                $json[0]->size = $size > 100 ? 100 : ($size < 50 ? 50 : $size);
-                $json[0]->rows = $json[0]->max_value > 500 ? 8 : 4;
+                $size = $question['max_value'] / 4;
+                $question['size'] = $size > 100 ? 100 : ($size < 50 ? 50 : $size);
+                $question['rows'] = $question['max_value'] > 500 ? 8 : 4;
                 break;
             case "numberselect":
                 $numberquery = "options";   // fall into monthyear
             case "monthyear":
                 // build xml array from begin to end
                 $options = [];
-                $question_id = $json[0]->questionid;
-                if ($json[0]->ascending == 1) {
-                    $next = $json[0]->min_value;
-                    $end = $json[0]->max_value;
+                $question_id = $question['questionid'];
+                if ($question['ascending'] == 1) {
+                    $next = $question['min_value'];
+                    $end = $question['max_value'];
                     while ($next <= $end) {
-                        $ojson = new stdClass();
-                        $ojson->questionid = $question_id;
-                        $ojson->value = $next;
-                        $ojson->optionshort = $next;
-                        $options[] = $ojson;
+                        $options['questionid'] = $question_id;
+                        $options['value'] = $next;
+                        $options['optionshort'] = $next;
                         $next = $next + 1;
                     }
-                }
-                else {
-                    $next = $json[0]->max_value;
-                    $end = $json[0]->min_value;
+                } else {
+                    $next = $question['max_value'];
+                    $end = $question['min_value'];
                     while ($next >= $end) {
-                        $ojson = new stdClass();
-                        $ojson->questionid = $question_id;
-                        $ojson->value = $next;
-                        $ojson->optionshort = $next;
-                        $options[] = $ojson;
+                        $options['questionid'] = $question_id;
+                        $options['value'] = $next;
+                        $options['optionshort'] = $next;
                         $next = $next - 1;
                     }
                 }
                 //var_error_log($options);
-                $xml = ObjecttoXML($numberquery, $options, $xml);
+                $xml = ArraytoXML($numberquery, $options, $xml);
                 break;
         }
         //var_error_log($json);
-        $xml = ObjecttoXML("questions", $json, $xml);
+        
     }
+    $xml = ArraytoXML("questions", $questions, $xml);
     //error_log("\n\nxml after questions\n");
     //var_error_log($xml->saveXML());
 
-    $options = getString("options");
+    $options = getParam("options");
     if ($options) {
         //error_log("\n\noptions: '" . $options . "'\n");
-        $options = json_decode($options);
+        //$options = json_decode($options);
         //var_error_log($options);
-        foreach ($options as $opt) {
-            $opt->value = base64_decode($opt->value);
-            $opt->optionshort = base64_decode($opt->optionshort);
-            $opt->optionhover = base64_decode($opt->optionhover);
-        }
+        //foreach ($options as $opt) {
+        //    $opt->value = base64_decode($opt->value);
+        //    $opt->optionshort = base64_decode($opt->optionshort);
+        //    $opt->optionhover = base64_decode($opt->optionhover);
+        //}
         //var_error_log($options);
-        $xml = ObjecttoXML("options", $options, $xml);
+        $xml = ArrayToXML("options", $options, $xml);
     }
     //error_log("\n\nxml after options\n");
     //var_error_log($xml->saveXML());

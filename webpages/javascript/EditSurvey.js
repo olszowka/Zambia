@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 var configtable;
 var optiontable;
 var message = "";
@@ -19,20 +19,44 @@ var EditSurvey = function () {
     var newoptionid = -1;
     var curoptionid = -99999;
 
-    function escapeQuotesAccessor(value, data, type, params, column, row) {
+    function stripslashes (str) {
+        // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+        // +   improved by: Ates Goral (http://magnetiq.com)
+        // +      fixed by: Mick@el
+        // +   improved by: marrtins
+        // +   bugfixed by: Onno Marsman
+        // +   improved by: rezna
+        // +   input by: Rick Waldron
+        // +   reimplemented by: Brett Zamir (http://brett-zamir.me)
+        // +   input by: Brant Messenger (http://www.brantmessenger.com/)
+        // +   bugfixed by: Brett Zamir (http://brett-zamir.me)
+        // *     example 1: stripslashes('Kevin\'s code');
+        // *     returns 1: "Kevin's code"
+        // *     example 2: stripslashes('Kevin\\\'s code');
+        // *     returns 2: "Kevin\'s code"
+        return (str + '').replace(/\\(.?)/g, function (s, n1) {
+            switch (n1) {
+                case '\\':
+                    return '\\';
+                case '0':
+                    return '\u0000';
+                case '':
+                    return '';
+                default:
+                    return n1;
+            }
+        });
+    }
+
+    function accessor(value, data, type, params, column, row) {
         //value - original value of the cell
         //data - the data for the row
-        //type - the type of access occurring  (data|download|clipboard)
+        //type - the type of access occurring (data|download|clipboard)
         //params - the accessorParams object passed from the column definition
         //column - column component for the column this accessor is bound to
-        //row - row component for the row
-        //val = value.replace(/\\/g, '\\\\');
-        //return val.replace(/"/g, '\\"');
-        //console.log("value: " + value);
-        val = btoa(value);
-        //console.log("becomes: " + val);
-        return val;
-    };
+        var foo = stripslashes(value);
+        return foo;
+    }
 
     function editor_init() {
         //console.log("editor_init: tinyMCE.init('input#prompt')");
@@ -98,7 +122,7 @@ var EditSurvey = function () {
         var description = document.getElementById("description").value;
         var prompt = document.getElementById("prompt").value;
         var hover = document.getElementById("hover").value;
-        var typeselect = document.getElementById("typename")
+        var typeselect = document.getElementById("typename");
         var typeid = typeselect.selectedOptions.item(0).getAttribute("data-typeid");
         var typename = typeselect.value;
         var required = document.getElementById("required-1").checked ? 1 : 0;
@@ -112,7 +136,7 @@ var EditSurvey = function () {
 
         // remove paragraph tags from prompt tag added by tinymce
         if (prompt.substring(0, 3) == '<p>') {
-            prompt = prompt.substring(3, prompt.length-4);
+            prompt = prompt.substring(3, prompt.length - 4);
         }
 
         if (curid == -99999) {
@@ -120,28 +144,57 @@ var EditSurvey = function () {
         }
         //console.log("add/update " + curid);
 
+        // if (opttable) {
+        //     options = opttable.getData();
+        //     for (i = 0; i < options.length; i++) {
+        //         options[i].questionid = curid;
+        //     }
+        //     // option = btoa(JSON.stringify(options));
+        //     // option = options
+        //     option = JSON.stringify(options);
+        //     //console.log("-used opttable");
+        // } else if (questionoptions.length > 0) {
+        //     // option = btoa(JSON.stringify(questionoptions));
+        //     // option = questionoptions;
+        //     option = JSON.stringify(questionoptions);
+        //     //console.log("-used question options: " + questionoptions.length);
+        // } else {
+        //     option = {};
+        //     //console.log("-no options");
+        // }
+        var rowData;
+        var option = [];
         if (opttable) {
-            options = opttable.getData();
-            for (i = 0; i < options.length; i++) {
-                options[i].questionid = curid;
+            var numRows = opttable.getDataCount();
+            if (numRows > 0) {
+                for (i = 0; i < numRows; i++) {
+                    rowData = opttable.getRowFromPosition(i).getData();
+                    rowData.questionid = curid;
+                    option.push(rowData);
+                }
             }
-            option = btoa(JSON.stringify(options));
-            //console.log("-used opttable");
-        } else if (questionoptions.length > 0) {
-            option = btoa(JSON.stringify(questionoptions));
-            //console.log("-used question options: " + questionoptions.length);
-        } else {
-            option = "";
-            //console.log("-no options");
         }
-        
-       //console.log("options-save");
+
+        //console.log("options-save");
         //console.log(option);
         table.updateOrAddData([{
-            questionid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
-            typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user,
-            searchable: searchable, ascending: ascending, display_only: display_only, min_value: minvalue, max_value: maxvalue, options: option
-           }, 
+            questionid: curid,
+            shortname: shortname,
+            description: description,
+            prompt: prompt,
+            hover: hover,
+            typeid: typeid,
+            typename: typename,
+            required: required,
+            publish: publish,
+            privacy_user: privacy_user,
+            searchable: searchable,
+            ascending: ascending,
+            display_only: display_only,
+            min_value: minvalue,
+            max_value: maxvalue,
+            options: option
+        },
         ]);
         newid = newid - 1;
         curid = -99999;
@@ -159,7 +212,7 @@ var EditSurvey = function () {
             opttable = null;
         }
         questiondivshown = false;
-    };
+    }
 
     function addnewquestion() {
         if (questionDirtyCheck(null))
@@ -392,14 +445,14 @@ var EditSurvey = function () {
         el.setAttribute('default-value', el.value);
         el.style.backgroundColor = null;
 
-        options = row.getCell("options").getValue();
+        questionoptions = row.getCell("options").getValue();
 
-        questionoptions = [];
-        if (options.length > 3)
-            options = atob(options);
-        if (options.length > 3)
-            questionoptions = JSON.parse(options);
-        optiontable = null;
+        // questionoptions = [];
+        // if (options.length > 3)
+        //     options = atob(options);
+        // if (options.length > 3)
+        //     questionoptions = JSON.parse(options);
+        // optiontable = null;
 
         ////loop over options decoding every value, optionshortname and optionhover
         //for (i = 0; i < questionoptions.length; i++) {
@@ -418,9 +471,9 @@ var EditSurvey = function () {
         questiondivshown = true;
     };
 
-   function addnewoption(optiontable) {
+    function addnewoption(optiontable) {
         newoptionid = newoptionid - 1;
-        optiontable.addRow({questionid: curid, ordinal: newoptionid }, false);
+        optiontable.addRow({questionid: curid, ordinal: newoptionid}, false);
     }
 
     function edit_typechange(colorchange) {
@@ -485,8 +538,8 @@ var EditSurvey = function () {
                 show_asc_desc = true;
                 show_options = true;
                 default_options = true;
-                break; 
-        };
+                break;
+        }
         document.getElementById("range-label").innerHTML = range_text;
         document.getElementById("asc_desc").style.display = show_asc_desc ? 'block' : 'none';
         document.getElementById("prompt-div").style.display = show_prompt ? 'block' : 'none';
@@ -520,33 +573,33 @@ var EditSurvey = function () {
                 data: questionoptions,
                 index: "ordinal",
                 initialSort: [
-                    { column: "display_order", dir: "asc" } //sort by this first
+                    {column: "display_order", dir: "asc"} //sort by this first
                 ],
                 layout: "fitDataTable",
                 cellEdited: optionCellChanged,
                 columns: [
-                    { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-                    { title: "ID", field: "questionid", visible: false },
-                    { title: "Order", field: "display_order", visible: false },
-                    { title: "Ordinal", field: "ordinal", visible: false },
+                    {rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30},
+                    {title: "ID", field: "questionid", visible: false},
+                    {title: "Order", field: "display_order", visible: false},
+                    {title: "Ordinal", field: "ordinal", visible: false},
                     {
-                        title: "Value", field: "value", accessorData: escapeQuotesAccessor, width: 120,
+                        title: "Value", field: "value", /* accessorData: escapeQuotesAccessor, */ width: 120,
                         editor: "input",
-                        editorParams: { editorAttributes: { maxlength: 512 } },
+                        editorParams: {editorAttributes: {maxlength: 512}},
                     },
                     {
-                        title: "Label", field: "optionshort", accessorData: escapeQuotesAccessor, width: 200,
+                        title: "Label", field: "optionshort", /* accessorData: escapeQuotesAccessor, */ width: 200,
                         editor: "input",
-                        editorParams: { editorAttributes: { maxlength: 64 } },
+                        editorParams: {editorAttributes: {maxlength: 64}},
                     },
                     {
-                        title: "Hover Text", field: "optionhover", accessorData: escapeQuotesAccessor, width: 300,
-                        editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
+                        title: "Hover Text", field: "optionhover", /* accessorData: escapeQuotesAccessor, */ width: 300,
+                        editor: "input", editorParams: {editorAttributes: {maxlength: 512}}
                     },
                     {
                         title: "Other", field: "allowothertext", formatter: "tickCross",
                         editor: "select", editorParams: {
-                            values: { 1: "Yes", 0: "No" },
+                            values: {1: "Yes", 0: "No"},
                         }
                     },
                     {
@@ -586,147 +639,155 @@ var EditSurvey = function () {
     function deleteicon(cell, formattParams, onRendered) {
         return "&#x1F5D1;";
     }
+
     function deleteQuestion(e, row, questiontable) {
         document.getElementById("message").style.display = 'none';
         row.delete();
     }
 
     this.initialize = function () {
-       //called when EditSurvey page has loaded
+        //called when EditSurvey page has loaded
         configtable = new Tabulator("#surveyconfig", {
-        maxHeight: "250px",
-        movableRows: true,
-        tooltips: false,
-        history: true,
-        headerSort: false,
-        initialSort: [
-            { column: "display_order", dir: "asc" } //sort by this first
-        ],
-        data: survey,
-        index: "questionid",
-        layout: "fitDataTable",
-        cellEdited: surveyCellChanged,
-        columns: [
-            { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
-            { title: "ID", field: "questionid", visible: false },
-            { title: "Order", field: "display_order", visible: false },
-            {
-                title: "Name", field: "shortname", width: 120,
-                cellClick: function (e, cell) {
-                    if (!in_editconfig)
-                        editconfig(cell.getRow());
+            maxHeight: "250px",
+            movableRows: true,
+            history: true,
+            headerSort: false,
+            initialSort: [
+                {column: "display_order", dir: "asc"} //sort by this first
+            ],
+            data: survey,
+            index: "questionid",
+            layout: "fitDataTable",
+            cellEdited: surveyCellChanged,
+            columns: [
+                {rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30},
+                {title: "ID", field: "questionid", visible: false},
+                {title: "Order", field: "display_order", visible: false},
+                {
+                    title: "Name", field: "shortname", width: 120,
+                    cellClick: function (e, cell) {
+                        if (!in_editconfig)
+                            editconfig(cell.getRow());
+                    },
                 },
-            },
-            {
-                title: "Description", field: "description", accessorData: escapeQuotesAccessor,
-                formatter: "textarea", visible: false
-            },
-            {
-                title: "Prompt", field: "prompt", accessorData: escapeQuotesAccessor, width: 180,
-                editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
-            },
-            {
-                title: "Hover Text", field: "hover", accessorData: escapeQuotesAccessor, width: 180,
-                editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }
-            },
-            { title: "Type", field: "typename", width: 140 },
-            { title: "Type-ID", field: "typeid", visible: false },
-            {
-                title: "Display Only", field: "display_only", formatter: "tickCross",
-                editor: "select", editorParams: {
-                    values: { 1: "Yes", 0: "No" },
-                }
-            },
-            {
-                title: "Required", field: "required", formatter: "tickCross",
-                editor: "select", editorParams: {
-                    values: { 1: "Yes", 0: "No" },
-                }
-            },
-            {
-                title: "Publish", field: "publish", formatter: "tickCross",
-                editor: "select", editorParams: {
-                    values: { 1: "Yes", 0: "No" },
-                }
-            },
-            {
-                title: "Privacy", field: "privacy_user", formatter: "tickCross",
-                editor: "select", editorParams: {
-                    values: { 1: "Yes", 0: "No" },
-                }
-            },
-            {
-                title: "Searchable", field: "searchable", formatter: "tickCross",
-                editor: "select", editorParams: {
-                    values: { 1: "Yes", 0: "No" },
-                }
-            },  
-            {
-                title: "Asc/Desc", field: "ascending",
-                formatter: "lookup", formatterParams: {
-                    1: "Ascending", 0: "Descending", "": "N/A"
+                {
+                    title: "Description", field: "description", /* accessorData: accessor, */
+                    formatter: "textarea", visible: false
                 },
-                editor: "select", editorParams: {
-                    values: { 1: "Ascending", 0: "Descending" },
+                {
+                    title: "Prompt", field: "prompt", /* accessorData: accessor, */ width: 180,
+                    editor: "input", editorParams: {editorAttributes: {maxlength: 512}}
+                },
+                {
+                    title: "Hover Text", field: "hover", /* accessorData: accessor, */ width: 180,
+                    editor: "input", editorParams: {editorAttributes: {maxlength: 8192}}
+                },
+                {title: "Type", field: "typename", width: 140},
+                {title: "Type-ID", field: "typeid", visible: false},
+                {
+                    title: "Display Only", field: "display_only", formatter: "tickCross",
+                    editor: "select", editorParams: {
+                        values: {1: "Yes", 0: "No"},
+                    }
+                },
+                {
+                    title: "Required", field: "required", formatter: "tickCross",
+                    editor: "select", editorParams: {
+                        values: {1: "Yes", 0: "No"},
+                    }
+                },
+                {
+                    title: "Publish", field: "publish", formatter: "tickCross",
+                    editor: "select", editorParams: {
+                        values: {1: "Yes", 0: "No"},
+                    }
+                },
+                {
+                    title: "Privacy", field: "privacy_user", formatter: "tickCross",
+                    editor: "select", editorParams: {
+                        values: {1: "Yes", 0: "No"},
+                    }
+                },
+                {
+                    title: "Searchable", field: "searchable", formatter: "tickCross",
+                    editor: "select", editorParams: {
+                        values: {1: "Yes", 0: "No"},
+                    }
+                },
+                {
+                    title: "Asc/Desc", field: "ascending",
+                    formatter: "lookup", formatterParams: {
+                        1: "Ascending", 0: "Descending", "": "N/A"
+                    },
+                    editor: "select", editorParams: {
+                        values: {1: "Ascending", 0: "Descending"},
+                    }
+                },
+                {title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right"},
+                {title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right"},
+                {title: "Options", field: "options", width: 75, visible: false},
+                {
+                    title: "Delete", formatter: deleteicon, hozAlign: "center",
+                    cellClick: function (e, cell) {
+                        deleteQuestion(e, cell.getRow(), configtable);
+                    },
+                },
+            ],
+            rowMoved: function (row) {
+                document.getElementById("message").style.display = 'none';
+                //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
+                if (this.getHistoryUndoSize() > 0) {
+                    document.getElementById("undo").disabled = false;
                 }
             },
-            { title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right" },
-            { title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right" },
-            { title: "Options", field: "options", width: 75, visible: false },
-            {
-                title: "Delete", formatter: deleteicon, hozAlign: "center",
-                cellClick: function (e, cell) {
-                    deleteQuestion(e, cell.getRow(), configtable);
-                },
+            tooltips: function (cell) {
+                switch (cell.getField()) {
+                    case "shortname":
+                        return cell.getData().description;
+                    case "hover":
+                        return cell.getData().hover;
+                    case "prompt":
+                        return cell.getData().prompt;
+                }
+                return false;
             },
-        ],
-        rowMoved: function (row) {
-            document.getElementById("message").style.display = 'none';
-            //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
-            if (this.getHistoryUndoSize() > 0) {
-                document.getElementById("undo").disabled = false;
-            }
-        },
-        tooltips: function (cell) {
-            switch (cell.getField()) {
-                case "shortname":
-                    return cell.getData().description;
-                case "hover":
-                    return cell.getData().hover;
-                case "prompt":
-                    return cell.getData().prompt;
-            }
-            return false;
-        },
-        dataChanged: function (data) {
-            //data - the updated table data
-            document.getElementById("submitbtn").innerHTML = "Save*";
-            document.getElementById("previewbtn").style.display = "none";
-            if (this.getHistoryUndoSize() > 0) {
-                questionsdirty = true;
-                document.getElementById("undo").disabled = false;
-            }
-        },
-    });
+            dataChanged: function (data) {
+                //data - the updated table data
+                document.getElementById("submitbtn").innerHTML = "Save*";
+                document.getElementById("previewbtn").style.display = "none";
+                if (this.getHistoryUndoSize() > 0) {
+                    questionsdirty = true;
+                    document.getElementById("undo").disabled = false;
+                }
+            },
+        });
         var addnewrowbut = document.getElementById("add-row");
-        addnewrowbut.addEventListener('click', function () { addupdaterow(configtable, optiontable); });
+        addnewrowbut.addEventListener('click', function () {
+            addupdaterow(configtable, optiontable);
+        });
         var addnewbut = document.getElementById("add-question");
-        addnewbut.addEventListener('click', function () { addnewquestion(configtable); });
+        addnewbut.addEventListener('click', function () {
+            addnewquestion(configtable);
+        });
         var addoptbut = document.getElementById("add-option");
-        addoptbut.addEventListener('click', function () { addnewoption(optiontable); });
-       document.getElementById("typename").onchange = function () { edit_typechange(true); };
-       //console.log("Setting up options in table");
+        addoptbut.addEventListener('click', function () {
+            addnewoption(optiontable);
+        });
+        document.getElementById("typename").onchange = function () {
+            edit_typechange(true);
+        };
+        //console.log("Setting up options in table");
         for (option in survey_options) {
             //console.log("question: " + option + " = ");
             //console.log(survey_options[option]);
             //console.log(atob(survey_options[option]));
-            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
-       };
-       document.getElementById("submitbtn").innerHTML = "Save";
-       document.getElementById("previewbtn").style.display = "block";
-       configtable.clearHistory();
-   };
-
+            configtable.updateOrAddData([{questionid: option, options: survey_options[option]}]);
+        }
+        document.getElementById("submitbtn").innerHTML = "Save";
+        document.getElementById("previewbtn").style.display = "block";
+        configtable.clearHistory();
+    };  
+        
 };
 
 var editSurvey = new EditSurvey();
@@ -875,44 +936,22 @@ function cleanupSave(message, classtext) {
     } else {
         el.style.display = 'none';
     }
-};
+}
 
 function saveComplete(data, textStatus, jqXHR) {
-    message = "";
-    //console.log(data);
-    try {
-        data_json = JSON.parse(data);
-    } catch (error) {
-        console.log(error);
-    }
-
-    //console.log(data_json);
-    if (data_json.hasOwnProperty("message"))
-        message = data_json.message;
-
-    if (data_json.hasOwnProperty("survey")) {
-        survey = atob(data_json.survey);
-        //console.log("post atob");
-        //console.log(survey);
-        try {
-            survey = JSON.parse(survey);
-        } catch (error) {
-            console.log(error);
-        }
+    message = data.message;
+    survey = data.survey;
+    survey_options = [];
+    if (survey) {
+        survey.forEach(function(question) {
+            if (question.options) {
+                options.foreach(function(option) {
+                    survey_options.push(option)
+                });
+            }
+        });
         configtable.replaceData(survey);
     }
-
-    if (data_json.hasOwnProperty("survey_options")) {
-        survey_options = data_json.survey_options;
-        //console.log(survey_options);
-
-        for (option in survey_options) {
-            //console.log(option);
-            //console.log(survey_options[option]);
-            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
-        };
-    }
-
     document.getElementById("previewbtn").style.display = "block";
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
@@ -949,17 +988,17 @@ function SaveSurvey() {
 
     var postdata = {
         ajax_request_action: "update_survey",
-        survey: btoa(JSON.stringify(configtable.getData()))
+        survey: configtable.getData()
     };
     $.ajax({
         url: "SubmitEditSurvey.php",
-        dataType: "html",
+        dataType: "json",
         data: postdata,
         success: saveComplete,
         error: saveError,
         type: "POST"
     }); 
-};
+}
 
 function FetchSurvey() {
     var postdata = {
@@ -969,13 +1008,13 @@ function FetchSurvey() {
     document.getElementById("message").style.display = 'none';
     $.ajax({
         url: "SubmitEditSurvey.php",
-        dataType: "html",
+        dataType: "json",
         data: postdata,
         success: saveComplete,
         error: saveError,
         type: "POST"
     });
-};
+}
 function PreviewSurvey() {
     window.open("PreviewSurvey.php", '_blank');
 }
@@ -991,7 +1030,7 @@ function Undo() {
     if (redoCount > 0) {
         document.getElementById("redo").disabled = false;
     }
-};
+}
 
 function Redo() {
     configtable.redo();
@@ -1005,7 +1044,7 @@ function Redo() {
     if (redoCount <= 0) {
         document.getElementById("redo").disabled = true;
     }
-};
+}
 
 function OptUndo() {
     optiontable.undo();
@@ -1019,7 +1058,7 @@ function OptUndo() {
     if (redoCount > 0) {
         document.getElementById("optredo").disabled = false;
     }
-};
+}
 
 function OptRedo() {
     optiontable.redo();
@@ -1033,11 +1072,10 @@ function OptRedo() {
     if (redoCount <= 0) {
         document.getElementById("optredo").disabled = true;
     }
-};
+}
 
 function RefreshComplete(data, textStatus, jqXHR) {
-    var preview = "<br/><h4>Preview</h4>" + data;
-    document.getElementById("preview").innerHTML = preview;
+    document.getElementById("preview").innerHTML = "<br/><h4>Preview</h4>" + data;
     fieldname = document.getElementById("shortname").value.replace(/ /g, '_'); 
     id = fieldname + "-prompt";
     hoverelement = document.getElementById(id);
@@ -1068,11 +1106,11 @@ function RefreshComplete(data, textStatus, jqXHR) {
 
     if (typename == 'html-text') {
         maxlength = document.getElementById("max_value").value;
-        if (maxlength == "" || maxlength <= 0) {
+        if (maxlength === "" || maxlength <= 0) {
             maxlength = 8192;
         }
 
-        if (previewmce == false) {
+        if (!previewmce) {
             //console.log("RefreshComplete: tinyMCE.init(textarea#" + fieldname + '-input)');
             tinyMCE.init({
                 selector: 'textarea#' + fieldname + '-input',
@@ -1101,13 +1139,12 @@ function RefreshComplete(data, textStatus, jqXHR) {
 
 function RefreshError(xhdr, status, error) {
     var message = '<div class="alert alert-danger mt-4">Preview error: ' + xhdr.status + ': ' + xhdr.statusText + "</div>";
-    var preview = "<br/><h4>Preview</h4>" + message;
-    document.getElementById("preview").innerHTML = preview;
-
+    document.getElementById("preview").innerHTML = "<br/><h4>Preview</h4>" + message;
     in_editconfig = false;
 }
 
 function RefreshPreview() {
+    var i;
     //console.log("In RefreshPreview");
     //console.trace();
     if (previewmce) {
@@ -1115,7 +1152,7 @@ function RefreshPreview() {
         tinyMCE.remove(fieldname);
         previewmce = false;
     }
-    var questionid = document.getElementById("questionid").value
+    var questionid = document.getElementById("questionid").value;
     //console.log(questionid);
     var shortname = document.getElementById("shortname").value;
     var typename = document.getElementById("typename").value;
@@ -1148,22 +1185,20 @@ function RefreshPreview() {
         //console.log("from optiontable");
         var options = optiontable.getData();
         var allowothertext = false;
-        var i;
         for (i = 0; i < options.length; i++) {
             options[i].questionid = questionid;
             allowothertext = allowothertext || options[i].allowothertext;
         }
         surveyData[0].allowothertext = allowothertext;
-        optionsjson = JSON.stringify(options);
+        // optionsjson = JSON.stringify(options);
         //console.log("optiontable:");
         //console.log(optionsjson);
     } else if (questionoptions.length > 0) {
         //console.log("from questionoptions");
-        var i;
         for (i = 0; i < questionoptions.length; i++) {
             questionoptions[i].questionid = questionid;
         }
-        optionsjson = JSON.stringify(questionoptions);
+        // optionsjson = JSON.stringify(questionoptions);
         //console.log("questionoptions:");
         //console.log(optionsjson);
     }
@@ -1172,15 +1207,15 @@ function RefreshPreview() {
     
     //console.log("questions");
     //console.log(surveyData);
-    json = JSON.stringify(surveyData);
+    //json = JSON.stringify(surveyData);
     //console.log("json: '" + json + "'");
-    questions = [{ id: questionid, data: btoa(json)}];
+    //questions = [{ id: questionid, data: surveyData}];
     //console.log(questions);
 
     var postdata = {
         ajax_request_action: "renderquestion",
-        questions: JSON.stringify(questions),
-        options: optionsjson
+        questions: surveyData,
+        options: options
     };
     $.ajax({
         url: "RenderSurveyPreview.php",
@@ -1190,4 +1225,4 @@ function RefreshPreview() {
         error: RefreshError,
         type: "POST"
     });
-};
+}

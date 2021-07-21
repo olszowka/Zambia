@@ -4,7 +4,7 @@
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-require_once('StaffCommonCode.php'); // will check for staff privileges
+require_once('StaffCommonCode.php'); // will check if logged in and for staff privileges
 require('EditPermRoles_FNC.php');
 // skip to below all functions
 
@@ -19,7 +19,7 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+        P.badgeid, P.pubsname, P.interested, P.bio,
         P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
         CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry
     FROM
@@ -49,8 +49,6 @@ function update_participant() {
     $participantBadgeId = getString("badgeid");
     $password = getString("password");
     $bio = getString("bio");
-    if (HTML_BIO === TRUE)
-        $htmlbio = getString("htmlbio");
     $pubsname = getString("pubsname");
     $staffnotes = getString("staffnotes");
     $interested = getInt("interested", NULL);
@@ -63,8 +61,6 @@ function update_participant() {
         if (!is_null($password)) {
             push_query_arrays(password_hash($password, PASSWORD_DEFAULT), 'password', 's', 254, $query_portion_arr, $query_param_arr, $query_param_type_str);
         }
-        if (HTML_BIO === true)
-            push_query_arrays($htmlbio, 'htmlbio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($bio, 'bio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($pubsname, 'pubsname', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($staffnotes, 'staff_notes', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
@@ -112,6 +108,24 @@ EOD;
         $rows = mysql_cmd_with_prepare($query, "ss", array($loggedInUserBadgeId, $participantBadgeId));
         if (is_null($rows)) {
             exit();
+        }
+        if ($rows == 0) {   // no record existed with old values, add one
+            $query = <<<EOD
+INSERT INTO CongoDumpHistory
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
+    SELECT
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
+        FROM
+            CongoDump
+        WHERE
+            badgeid = ?;
+EOD;
+            $rows = mysql_cmd_with_prepare($query, "ss", array($loggedInUserBadgeId, $participantBadgeId));
+            if ($rows != 1) {
+                $message_error = "Error updating db. (insert history record)";
+                Render500ErrorAjax($message_error);
+                exit();
+            }
         }
 
         $query_preable = "UPDATE CongoDump SET ";
@@ -257,66 +271,32 @@ function perform_search() {
         exit();
     if (is_numeric($searchString)) {
         $searchString =  mysqli_real_escape_string($linki, $searchString);
-        if (DBVER >= "8") {
             $query["searchParticipants"] = <<<EOD
-WITH AnsweredSurvey(participantid, answercount) AS (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-    WHERE participantid = "$searchString"
-)
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+			        P.badgeid, P.pubsname, P.interested, P.bio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
+                    CD.postcountry, CD.regtype
 FROM
     Participants P
 	JOIN CongoDump CD ON P.badgeid = CD.badgeid
-    LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
 WHERE
 	P.badgeid = "$searchString"
 ORDER BY
 	CD.lastname, CD.firstname
 EOD;
-        } else {
-            $query["searchParticipants"] = <<<EOD
-SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
-    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
-FROM
-    Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
-        LEFT OUTER JOIN (
-            SELECT participantid, COUNT(*) AS answercount
-                FROM ParticipantSurveyAnswers
-                WHERE participantid = "$searchString"
-    ) A ON (P.badgeid = A.participantid)
-WHERE
-	P.badgeid = "$searchString"
-ORDER BY
-	CD.lastname, CD.firstname
-EOD;
-        }
         $xml = mysql_query_XML($query);
     } else {
         $searchString = '%' . $searchString . '%';
-        if (DBVER >= "8") {
             $query = <<<EOD
-WITH AnsweredSurvey(participantid, answercount) AS (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-)
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+			        P.badgeid, P.pubsname, P.interested, P.bio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
+                    CD.postcountry, CD.regtype
 FROM
 	Participants P
 	JOIN CongoDump CD ON P.badgeid = CD.badgeid
-    LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
 WHERE
 		P.pubsname LIKE ?
 	OR CD.lastname LIKE ?
@@ -325,29 +305,6 @@ WHERE
 ORDER BY
 	CD.lastname, CD.firstname
 EOD;
-        } else {
-             $query = <<<EOD
-SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
-    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount
-FROM
-	Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
-    LEFT OUTER JOIN (
-         SELECT participantid, COUNT(*) AS answercount
-            FROM ParticipantSurveyAnswers
-) A ON (P.badgeid = A.participantid)
-WHERE
-		P.pubsname LIKE ?
-	OR CD.lastname LIKE ?
-	OR CD.firstname LIKE ?
-	OR CD.badgename LIKE ?
-ORDER BY
-	CD.lastname, CD.firstname
-EOD;
-        }
         $param_arr = array($searchString,$searchString,$searchString,$searchString);
         $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
         $xml = mysql_result_to_XML("searchParticipants", $result);
@@ -457,7 +414,7 @@ EOD;
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-if (!isLoggedIn() || !may_I('Staff')) {
+if (!isLoggedIn()) {
     $message_error = "You are not logged in or your session has expired.";
     RenderErrorAjax($message_error);
     exit();

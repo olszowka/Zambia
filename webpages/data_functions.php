@@ -109,34 +109,54 @@ function getArrayOfInts($name, $default = false) {
     }
 }
 
-// Function getString("name")
-// gets a parameter from $_GET[] or $_POST[] of name
-// and strips slashes
-// Safe from referencing nonexisting array index
+/**
+ * Function getString("name")
+ * gets a parameter from $_GET[] or $_POST[] of name
+ * Safe from referencing nonexisting array index
+ */
 function getString($name) {
     if (array_key_exists($name, $_GET)) {
-        $string = $_GET[$name];
+        return $_GET[$name];
     } elseif (array_key_exists($name, $_POST)) {
-        $string = $_POST[$name];
+        return $_POST[$name];
     } else {
         return NULL;
     }
-    return stripslashes($string);
 }
 
-// Function getArrayOfStrings("name")
-// gets a parameter from $_GET[] or $_POST[] of name
-// in form of array and strips slashes from each element
-// Safe from referencing nonexisting array index
+/**
+ * Function getParam("name")
+ * gets a parameter from $_GET[] or $_POST[] of name
+ * Safe from referencing nonexisting array index
+ */
+function getParam($name) {
+    if (array_key_exists($name, $_GET)) {
+        return $_GET[$name];
+    } elseif (array_key_exists($name, $_POST)) {
+        return $_POST[$name];
+    } else {
+        return NULL;
+    }
+}
+
+/**
+ * This function is deprecated and can be replaced with getParam() unless you need empty array returned for
+ * missing query param.
+ * Use of stripslashes is no longer necessary
+ *
+ * Function getArrayOfStrings("name")
+ * gets a parameter from $_GET[] or $_POST[] of name
+ * in form of array
+ * Safe from referencing nonexisting array index
+ */
 function getArrayOfStrings($name) {
     if (array_key_exists($name, $_GET)) {
-        $array = $_GET[$name];
+        return $_GET[$name];
     } elseif (array_key_exists($name, $_POST)) {
-        $array = $_POST[$name];
+        return $_POST[$name];
     } else {
         return array();
     }
-    return array_map(function($str) { return stripslashes($str); }, $array);
 }
 
 // Function get_nameemail_from_post($name, $email)
@@ -145,8 +165,8 @@ function getArrayOfStrings($name) {
 // SESSION variables.
 //
 function get_nameemail_from_post(&$name, &$email) {
-    $name = stripslashes($_POST['name']);
-    $email = stripslashes($_POST['email']);
+    $name = array_key_exists('name', $_POST) ? $_POST['name'] : "";
+    $email = array_key_exists('email', $_POST) ? $_POST['email'] : "";
     $_SESSION['name'] = $name;
     $_SESSION['email'] = $email;
     return;
@@ -441,12 +461,22 @@ function interpretControlString($control, $controliv) {
 // Function var_error_log()
 // $object = object to be dumped to the PHP error log
 // the object is walked and written to the PHP error log using var_dump and a redirect of the output buffer.
-function var_error_log( $object=null ){
-    ob_start();                    // start buffer capture
-    var_dump( $object );           // dump the values
+function var_error_log($object = null) {
+    // ob_start();                    // start buffer capture
+    var_dump($object);             // dump the values
     $contents = ob_get_contents(); // put the buffer into a variable
-    ob_end_clean();                // end capture
-    error_log( $contents );        // log contents of the result of var_dump( $object )
+    // ob_end_clean();                // end capture
+    error_log($contents);          // log contents of the result of var_dump( $object )
+}
+
+// Function var_dump_and_exit()
+// $object = object to be dumped to the PHP output
+// the object is walked and written to the output and then execution is halted.
+function var_dump_and_exit($object = null) {
+    echo "<pre>";
+    var_dump($object);
+    echo "</pre>";
+    exit();
 }
 
 // Function ArrayToXML()
@@ -490,10 +520,16 @@ function ArrayToXML($queryname, $array, $xml = null) {
         $queryNode->setAttribute("queryName", $queryname);
     }
     // add the elements to the node
-    foreach($array as $element) {
+    foreach($array as $row) {
         $rowNode = $xml->createElement("row");
         $rowNode = $queryNode->appendChild($rowNode);
-        $rowNode->setAttribute("value", $element);
+        if (gettype($row) == 'array') {
+            foreach($row as $key => $value) {
+                $rowNode->setAttribute($key, $value);
+            }
+        } else {
+            $rowNode->setAttribute("value", $row);
+        }
     }
     // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
     return $xml;
