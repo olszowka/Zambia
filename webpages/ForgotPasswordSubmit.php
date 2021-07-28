@@ -176,6 +176,7 @@ if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
 
+$userIP = $_SERVER['REMOTE_ADDR'];
 $ipaddressSQL = mysqli_real_escape_string($linki, $userIP);
 $selector = bin2hex(random_bytes(8));
 if (mysqli_num_rows($result) !== 1) {
