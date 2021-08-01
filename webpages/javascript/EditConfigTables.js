@@ -133,7 +133,8 @@ function tceEditor(e, cell) {
     cellname = cell.getField();        
     // initialize the starting value from the current value of the cell
     curcell = cell;
-    txtel.value = cell.getValue().replace(/\n/g, "<br/>");
+    cellValue = cell.getValue();
+    txtel.value = (cellValue ? cellValue.replace(/\n/g, "<br/>") : "");
 
     el = document.getElementById("tceedit-div");
     el.style.display = "block";
