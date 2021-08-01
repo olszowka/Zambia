@@ -168,6 +168,13 @@ function tceEditor(e, cell) {
     document.getElementById("redo").disabled = true;
 };
 
+function tceEditorBlur(e, cell) {
+    txtel = document.getElementById("tceedit-textarea");
+    if (cell != curcell) {
+        savetceEdit(true);
+    }
+}
+
 function deleteicon(cell, formattParams, onRendered) {
     var value = cell.getValue();
     if (value == 0)
@@ -226,12 +233,14 @@ function opentable(tabledata) {
                 editorParams: editor_params,
                 formatter: "lookup",
                 formatterParams: selectlist,
-                minWidth: 200
+                minWidth: 200,
+                cellClick: tceEditorBlur
             });
         } else if (column.DATA_TYPE == 'int')
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
-                editor: "number", minWidth: 50, hozAlign: "right", 
+                editor: "number", minWidth: 50, hozAlign: "right",
+                cellClick: tceEditorBlur
             });
         else if (column.DATA_TYPE == 'text') {
             width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
@@ -248,6 +257,7 @@ function opentable(tabledata) {
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
                 editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
+                cellClick: tceEditorBlur
             });
         }
     });
