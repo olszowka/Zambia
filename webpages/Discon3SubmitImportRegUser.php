@@ -57,7 +57,7 @@ function import_users() {
     // get the array of users to add to CongoDump
     $sql = <<<EOD
 SELECT
-	r.id AS badgeid,
+	r.membership_number AS badgeid,
 	CASE
 		WHEN COALESCE(ct.preferred_first_name, '') <> '' THEN ct.preferred_first_name
 		ELSE ct.first_name
@@ -94,7 +94,7 @@ JOIN public.users u ON (cl.user_id = u.id)
 JOIN public.orders o ON (r.id = o.reservation_id AND o.active_to IS NULL)
 JOIN public.memberships m ON (o.membership_id = m.id)
 WHERE
-	r.id IN ($idstr);
+	r.membership_number IN ($idstr);
 EOD;
     $result = pg_query($pgconn, $sql);
     if (!$result) {
@@ -217,7 +217,7 @@ function perform_search() {
         exit();
            $query = <<<EOD
 SELECT
-	r.id,
+	r.membership_number AS id,
 	CASE
 		WHEN COALESCE(ct.preferred_last_name, '') <> '' THEN ct.preferred_last_name
 		ELSE ct.last_name
@@ -254,9 +254,9 @@ EOD;
         $query .= <<<EOD
 
 WHERE
-	r.id = $1
+	r.membership_number = $1
 ORDER BY
-	P.last_name, P.first_name
+	last_name, first_name
 EOD;
     } else {
         //error_log("non numberic string");
@@ -273,7 +273,7 @@ ORDER BY
 	ct.last_name, ct.first_name
 EOD;
     }
-    //error_log("query = '" . $query . "'");
+    error_log("query = '" . $query . "'");
 
     $param_arr = array($searchString);
     $result = pg_query_params($pgconn, $query, $param_arr);
