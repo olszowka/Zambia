@@ -359,15 +359,6 @@ EOD;
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
 }
 
-function convert_bio() {
-    $htmlbio = getString("htmlbio");
-    $bio = html_to_text($htmlbio);
-    $results = [];
-    $results["bio"] = $bio;
-    $results["len"] = mb_strlen($bio);
-    echo json_encode($results);
-}
-
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
