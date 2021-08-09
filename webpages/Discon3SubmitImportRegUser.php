@@ -273,7 +273,7 @@ ORDER BY
 	ct.last_name, ct.first_name
 EOD;
     }
-    error_log("query = '" . $query . "'");
+    //error_log("query = '" . $query . "'");
 
     $param_arr = array($searchString);
     $result = pg_query_params($pgconn, $query, $param_arr);
