@@ -173,7 +173,7 @@ function validate_session() {
         return ($flag);
     }
     $i = mb_strlen($session["title"]);
-    if ($i < 10 || $i > 48) {
+    if ($i < 10 || $i > 99) {
         $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>48</b> characters.<br>\n";
         $flag = false;
     }
