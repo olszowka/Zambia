@@ -81,6 +81,9 @@ define("PHOTO_PUBLIC_DIRECTORY", "/participant_photos"); // inside of web server
 define("PHOTO_FILE_TYPES", "jpg,png"); // comma separated list of allowed file types/suffixes (will be verified by PHP)
 define("PHOTO_DIMENSIONS", "200,200,800,800,1048576"); // comma separated list min width/height, max width/height, file size
 define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participants without photo
+
+define("USING_SURVEYS", FALSE); // enable the survey feature
+
 define("CON_THEME", "");
 // if con-specific theming should be applied, you can reference a theme css here.
 // for example: define("CON_THEME", "themes/reallybigcon/main.css");

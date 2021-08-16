@@ -39,7 +39,8 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
         (may_I("Participant") || may_I("Staff"))) {
     // check if survey is defined to set Survey Menu item in paramArray
         if (!isset($_SESSION['survey_exists'])) {
-            $_SESSION['survey_exists'] = survey_programmed();
+            //$_SESSION['survey_exists'] = survey_programmed();
+            $_SESSION['survey_exists'] = USING_SURVEYS === TRUE ? survey_programmed() : FALSE;
         }
         if ($bootstrap4) {
             $paramArray = array();
