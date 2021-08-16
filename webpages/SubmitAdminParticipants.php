@@ -6,6 +6,7 @@ $returnAjaxErrors = true;
 $return500errors = true;
 require_once('StaffCommonCode.php'); // will check for staff privileges
 require('EditPermRoles_FNC.php');
+require_once("ConRegMember.php");
 // skip to below all functions
 
 // gets data for a participant to be displayed.  Returns as XML
@@ -103,6 +104,22 @@ function update_participant() {
             RenderErrorAjax($message_error);
             exit();
         }
+
+        // Update ConReg member before Zambia member details.
+        $conn = new ConRegMember();
+        $conn->updateMember($fbadgeid, [
+          'first_name' => $fname,
+          'last_name' => $lname,
+          'badge_name' => $badgename,
+          'phone' => $phone,
+          'email' => $email,
+          'street' => $postaddress1,
+          'street2' => $postaddress2,
+          'city' => $postcity,
+          'county' => $poststate,
+          'postcode' => $postzip,
+        ]);
+
 
         $query = <<<EOD
 UPDATE CongoDumpHistory

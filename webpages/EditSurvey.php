@@ -12,121 +12,85 @@ staff_header($title, $bootstrap4);
 if (isLoggedIn() && may_I("Administrator")) {
 // get default data options javascript
         $sql = <<<EOD
-        SELECT t.shortname, d.display_order, JSON_OBJECT(
-            'ordinal', -d.ordinal,
-            'value', TO_BASE64(d.value),
-            'display_order', d.display_order,
-            'optionshort', TO_BASE64(d.optionshort),
-            'optionhover', TO_BASE64(d.optionhover),
-            'allowothertext', d.allowothertext
-            ) AS config
+        SELECT t.shortname, d.ordinal, d.value, d.display_order, d.optionshort, d.optionhover, d.allowothertext
         FROM SurveyQuestionTypeDefaults d
-		JOIN SurveyQuestionTypes t USING (typeid)
-		ORDER BY t.typeid, d.display_order;
+        JOIN SurveyQuestionTypes t USING (typeid)
+        ORDER BY t.typeid, d.display_order;
 EOD;
-        $result = mysqli_query_exit_on_error($sql);
-		echo '<script type="text/javascript">' . "\n";
-		
-		$do = "defaultOptions = {\n";
-		$cur_typename = "";
-		$cur_config = "[";
-		$rowcount = 0;
-        while ($row = mysqli_fetch_assoc($result)) {
-			$typename = $row["shortname"];
-            $config = $row["config"];
-			$rowcount++;
+    $result = mysqli_query_exit_on_error($sql);
 
-			if ($typename != $cur_typename) {
-                if ($cur_typename != "") {
-                    $do .= $cur_typename . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
-                }
-				$cur_config = "[";
-                $cur_typename = $typename;
+    $default_options = [];
+    $cur_shortname = "";
+    $cur_defaults = [];
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $shortname = $row["shortname"];
+
+        if ($shortname != $cur_shortname) {
+            if ($cur_shortname != "") {
+                $default_options[$cur_shortname] = $cur_defaults;
             }
-			$cur_config = $cur_config . $config . ",\n";
+            $cur_defaults = [];
+            $cur_shortname = $shortname;
         }
-        mysqli_free_result($result);
-		if ($rowcount > 0)
-			$do .= $typename . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '"' . "\n};\n";
-		else
-			$do .= "};\n";
-		echo $do;
+        unset($row['shortname']);
+        $cur_defaults[] = $row;
+    }
+    mysqli_free_result($result);
+
+    $default_options[$cur_shortname] = $cur_defaults;
+		echo "<script type=\"text/javascript\">\n";
+    echo "var defaultOptions = " . json_encode($default_options) . ";\n";
+
 
 // json of current questions and question options
 	$paramArray = array();
 
-	$query=<<<EOD
-		SELECT JSON_OBJECT(
-			'questionid', d.questionid,
-			'shortname', d.shortname,
-			'description', d.description,
-			'prompt', prompt,
-			'hover', hover,
-			'display_order', d.display_order,
-			'typeid', d.typeid,
-			'typename', t.shortname,
-			'required', required,
-			'publish', publish,
-			'privacy_user', privacy_user,
-			'searchable', searchable,
-			'ascending', ascending,
-			'display_only', display_only,
-			'min_value', min_value,
-			'max_value', max_value,
-			'options', ""
-			) AS config
-		FROM SurveyQuestionConfig d
-		JOIN SurveyQuestionTypes t USING (typeid)
-		ORDER BY d.display_order ASC;
+    $query=<<<EOD
+        SELECT d.questionid, d.shortname, d.description, prompt, hover, d.display_order, d.typeid, t.shortname AS typename, required, publish, privacy_user, searchable, ascending, display_only, min_value, max_value
+        FROM SurveyQuestionConfig d
+        JOIN SurveyQuestionTypes t USING (typeid)
+        ORDER BY d.display_order ASC;
 EOD;
 
-	$result = mysqli_query_exit_on_error($query);
-	$Config = "var survey = [\n\t";
+    $result = mysqli_query_exit_on_error($query);
+    $Config = [];
     while ($row = mysqli_fetch_assoc($result)) {
-        $Config = $Config . "\t" . $row["config"] . ",\n";
+        $Config[] = $row;
     }
-	$Config = $Config . "\n];\n";
-	mysqli_free_result($result);
-	echo $Config;
+    mysqli_free_result($result);
+    echo "var survey = " . json_encode($Config) . ";\n";
 
     $query = <<<EOD
-	SELECT questionid, display_order, JSON_OBJECT(
-		'questionid', questionid,
-        'ordinal', ordinal,
-        'value', TO_BASE64(value),
-		'optionshort', TO_BASE64(optionshort),
-		'optionhover', TO_BASE64(optionhover),
-		'allowothertext', allowothertext,
-		'display_order', display_order
-		) AS optionconfig
-	FROM SurveyQuestionOptionConfig
-	GROUP BY questionid, ordinal
-	ORDER BY questionid, display_order;
+        SELECT questionid, display_order, ordinal, value, optionshort, optionhover, allowothertext, display_order
+        FROM SurveyQuestionOptionConfig
+        GROUP BY questionid, ordinal
+        ORDER BY questionid, display_order;
 EOD;
-	$result = mysqli_query_exit_on_error($query);
-	echo "var survey_options = {\n";
+    $result = mysqli_query_exit_on_error($query);
 
-	$cur_qid = "";
-    $cur_config = "[";
-	$rowcount = 0;
+    $survey_options = [];
+    $cur_qid = "";
+    $cur_config = [];
+
     while ($row = mysqli_fetch_assoc($result)) {
         $qid = $row["questionid"];
-        $config = $row["optionconfig"];
-		$rowcount++;
 
         if ($qid != $cur_qid) {
             if ($cur_qid != "") {
-                echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '",' . "\n";
+                $survey_options[$cur_qid] = $cur_config;
             }
-            $cur_config = "[";
+            $cur_config = [];
             $cur_qid = $qid;
         }
-        $cur_config = $cur_config . $config . ",\n";
+        $cur_config[] = $row;
     }
     mysqli_free_result($result);
-	if ($rowcount > 0)
-		echo $cur_qid . ': "' . base64_encode(mb_substr($cur_config, 0, -2) . "]") . '"' . "\n";
-	echo "};\n</script>\n";
+
+    $survey_options[$cur_qid] = $cur_config;
+    echo "var survey_options = " . json_encode($survey_options) . ";\n";
+    echo "</script>";
+
 
 	// start of display portion
 	$query=<<<EOD

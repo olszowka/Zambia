@@ -57,7 +57,7 @@ function import_users() {
     // get the array of users to add to CongoDump
     $sql = <<<EOD
 SELECT
-	r.membership_number AS badgeid,
+	r.id AS badgeid,
 	CASE
 		WHEN COALESCE(ct.preferred_first_name, '') <> '' THEN ct.preferred_first_name
 		ELSE ct.first_name
@@ -94,7 +94,7 @@ JOIN public.users u ON (cl.user_id = u.id)
 JOIN public.orders o ON (r.id = o.reservation_id AND o.active_to IS NULL)
 JOIN public.memberships m ON (o.membership_id = m.id)
 WHERE
-	r.membership_number IN ($idstr);
+	r.id IN ($idstr);
 EOD;
     $result = pg_query($pgconn, $sql);
     if (!$result) {
@@ -217,7 +217,7 @@ function perform_search() {
         exit();
            $query = <<<EOD
 SELECT
-	r.membership_number AS id,
+	r.id,
 	CASE
 		WHEN COALESCE(ct.preferred_last_name, '') <> '' THEN ct.preferred_last_name
 		ELSE ct.last_name
@@ -254,9 +254,9 @@ EOD;
         $query .= <<<EOD
 
 WHERE
-	r.membership_number = $1
+	r.id = $1
 ORDER BY
-	last_name, first_name
+	P.last_name, P.first_name
 EOD;
     } else {
         //error_log("non numberic string");
@@ -357,6 +357,15 @@ EOD;
     }
     // $foo = mb_ereg_replace("<(row|query)([^>]*)/[ ]*>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"); //for debugging only
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
+}
+
+function convert_bio() {
+    $htmlbio = getString("htmlbio");
+    $bio = html_to_text($htmlbio);
+    $results = [];
+    $results["bio"] = $bio;
+    $results["len"] = mb_strlen($bio);
+    echo json_encode($results);
 }
 
 // Start here.  Should be AJAX requests only

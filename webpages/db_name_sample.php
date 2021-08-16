@@ -93,4 +93,9 @@ define("CON_HEADER_IMG", "");
 define("CON_HEADER_IMG_ALT", "");
 // to improve the con branding, you can specify the alt-text of the header image. For example:
 // define("CON_HEADER_IMG_ALT", "Really Big Con Logo);
+// Define DB Connection to ConReg Database.
+define("CONREG_DBHOSTNAME", "localhost");
+define("CONREG_DBUSERID", "");
+define("CONREG_DBPASSWORD", "");
+define("CONREG_DBDB", "");
 ?>

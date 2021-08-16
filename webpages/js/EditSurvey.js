@@ -32,7 +32,7 @@ var EditSurvey = function () {
         val = btoa(value);
         //console.log("becomes: " + val);
         return val;
-    };
+    }
 
     function editor_init() {
         //console.log("editor_init: tinyMCE.init('input#prompt')");
@@ -117,18 +117,25 @@ var EditSurvey = function () {
 
         if (curid == -99999) {
             curid = newid;
+            newid -= 1;
         }
         //console.log("add/update " + curid);
 
         if (opttable) {
-            options = opttable.getData();
-            for (i = 0; i < options.length; i++) {
-                options[i].questionid = curid;
-            }
-            option = btoa(JSON.stringify(options));
+            options = []; // opttable.getData();
+            opttable.rowManager.rows.forEach(function (row, index) {
+                options[index] = { questionid: curid, 
+                                   ordinal: row.data.ordinal,
+                                   value: row.data.value,
+                                   display_order: row.data.display_order,
+                                   optionshort: row.data.optionshort,
+                                   optionhover: row.data.optionhover,
+                                   allowothertext: row.data.allowothertext };
+            });
+            option = options;
             //console.log("-used opttable");
         } else if (questionoptions.length > 0) {
-            option = btoa(JSON.stringify(questionoptions));
+            option = questionoptions;
             //console.log("-used question options: " + questionoptions.length);
         } else {
             option = "";
@@ -140,10 +147,10 @@ var EditSurvey = function () {
         table.updateOrAddData([{
             questionid: curid, shortname: shortname, description: description, prompt: prompt, hover: hover,
             typeid: typeid, typename: typename, required: required, publish: publish, privacy_user: privacy_user,
-            searchable: searchable, ascending: ascending, display_only: display_only, min_value: minvalue, max_value: maxvalue, options: option
+            searchable: searchable, ascending: ascending, display_only: display_only, min_value: minvalue, max_value: maxvalue
            }, 
         ]);
-        newid = newid - 1;
+        survey_options[curid] = option;
         curid = -99999;
         questionoptions = [];
 
@@ -392,22 +399,9 @@ var EditSurvey = function () {
         el.setAttribute('default-value', el.value);
         el.style.backgroundColor = null;
 
-        options = row.getCell("options").getValue();
+        questionoptions = (typeof(survey_options[curid]) === 'undefined' ? [] : survey_options[curid]);
 
-        questionoptions = [];
-        if (options.length > 3)
-            options = atob(options);
-        if (options.length > 3)
-            questionoptions = JSON.parse(options);
         optiontable = null;
-
-        ////loop over options decoding every value, optionshortname and optionhover
-        //for (i = 0; i < questionoptions.length; i++) {
-        //    questionoptions[i].value = atob(questionoptions[i].value);
-        //    questionoptions[i].optionshort = atob(questionoptions[i].optionshort);
-        //    questionoptions[i].optionhover = atob(questionoptions[i].optionhover);
-        //}
-        //console.log(questionoptions);
 
         // now show the block
         document.getElementById("add-row").innerHTML = "Update Survey Table";
@@ -496,17 +490,11 @@ var EditSurvey = function () {
         document.getElementById("add-option-div").style.display = show_options ? 'block' : 'none';
         document.getElementById("optlegend-div").style.display = show_options ? 'block' : 'none';
         if (default_options) {
-            if ((questionoptions.length == 0) || colorchange) {
-                defaults = defaultOptions[typename];
-                defaultjson = atob(defaults);
-                //console.log(defaultjson);
-                try {
-                    questionoptions = JSON.parse(defaultjson);
-                    //console.log(questionoptions);
-                } catch (error) {
-                    console.log(error);
-                }
-                questionoptions.forEach(assign_questionid);
+            if (questionoptions.length == 0 || colorchange) {
+                questionoptions = defaultOptions[typename];
+                questionoptions.forEach(function (option) {
+                    option.questionid = curid;
+                });
                 //console.log("added default options");
             }
         }
@@ -579,10 +567,6 @@ var EditSurvey = function () {
         }
     }
 
-    function assign_questionid(option) {
-        option.questionid = curid;
-    }
-
     function deleteicon(cell, formattParams, onRendered) {
         return "&#x1F5D1;";
     }
@@ -618,15 +602,15 @@ var EditSurvey = function () {
                 },
             },
             {
-                title: "Description", field: "description", accessorData: escapeQuotesAccessor,
+                title: "Description", field: "description",
                 formatter: "textarea", visible: false
             },
             {
-                title: "Prompt", field: "prompt", accessorData: escapeQuotesAccessor, width: 180,
+                title: "Prompt", field: "prompt", width: 180,
                 editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
             },
             {
-                title: "Hover Text", field: "hover", accessorData: escapeQuotesAccessor, width: 180,
+                title: "Hover Text", field: "hover", width: 180,
                 editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }
             },
             { title: "Type", field: "typename", width: 140 },
@@ -672,7 +656,6 @@ var EditSurvey = function () {
             },
             { title: "Min", field: "min_value", editor: "number", minWidth: 50, hozAlign: "right" },
             { title: "Max", field: "max_value", editor: "number", minWidth: 50, hozAlign: "right" },
-            { title: "Options", field: "options", width: 75, visible: false },
             {
                 title: "Delete", formatter: deleteicon, hozAlign: "center",
                 cellClick: function (e, cell) {
@@ -720,7 +703,7 @@ var EditSurvey = function () {
             //console.log("question: " + option + " = ");
             //console.log(survey_options[option]);
             //console.log(atob(survey_options[option]));
-            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
+            configtable.updateOrAddData([{ questionid: option, options: JSON.stringify(survey_options[option]) }]);
        };
        document.getElementById("submitbtn").innerHTML = "Save";
        document.getElementById("previewbtn").style.display = "block";
@@ -891,26 +874,13 @@ function saveComplete(data, textStatus, jqXHR) {
         message = data_json.message;
 
     if (data_json.hasOwnProperty("survey")) {
-        survey = atob(data_json.survey);
-        //console.log("post atob");
-        //console.log(survey);
-        try {
-            survey = JSON.parse(survey);
-        } catch (error) {
-            console.log(error);
-        }
+        survey = data_json.survey;
         configtable.replaceData(survey);
     }
 
     if (data_json.hasOwnProperty("survey_options")) {
         survey_options = data_json.survey_options;
         //console.log(survey_options);
-
-        for (option in survey_options) {
-            //console.log(option);
-            //console.log(survey_options[option]);
-            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
-        };
     }
 
     document.getElementById("previewbtn").style.display = "block";
@@ -949,7 +919,8 @@ function SaveSurvey() {
 
     var postdata = {
         ajax_request_action: "update_survey",
-        survey: btoa(JSON.stringify(configtable.getData()))
+        survey: configtable.getData(),
+        survey_options: survey_options
     };
     $.ajax({
         url: "SubmitEditSurvey.php",
@@ -1157,19 +1128,10 @@ function RefreshPreview() {
         optionsjson = JSON.stringify(options);
         //console.log("optiontable:");
         //console.log(optionsjson);
-    } else if (questionoptions.length > 0) {
-        //console.log("from questionoptions");
-        var i;
-        for (i = 0; i < questionoptions.length; i++) {
-            questionoptions[i].questionid = questionid;
-        }
-        optionsjson = JSON.stringify(questionoptions);
-        //console.log("questionoptions:");
-        //console.log(optionsjson);
     }
-    //console.log("options");
-    //console.log(options);
-    
+    else if (questionoptions.length > 0) {
+        optionsjson = JSON.stringify(questionoptions);
+    }
     //console.log("questions");
     //console.log(surveyData);
     json = JSON.stringify(surveyData);
@@ -1190,4 +1152,5 @@ function RefreshPreview() {
         error: RefreshError,
         type: "POST"
     });
+    optionsdirty = false;
 };

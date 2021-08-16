@@ -4,6 +4,8 @@ global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
 $title = "My Profile";
 require('PartCommonCode.php'); // initialize db; check login;
 //                                  set $badgeid from session
+require_once("ConRegMember.php");
+
 $returnAjaxErrors = true;
 $return500errors = true;
 function update_participant($badgeid) {
@@ -89,7 +91,7 @@ function update_participant($badgeid) {
 
     $query2 = "REPLACE ParticipantHasCredential (badgeid, credentialid) VALUES ";
     $valuesClause2 = "";
-    $query3 = "DELETE FROM ParticipantHasCredential WHERE badgeid = '$badgeid' AND credentialid in (";
+    $query3 = "DELETE FROM ParticipantHasCredential WHERE badgeid = $badgeid AND credentialid in (";
     $credentialClause3 = "";
     foreach ($_POST as $name => $value) {
         if (mb_substr($name, 0, 13) != "credentialCHK") {
@@ -98,7 +100,7 @@ function update_participant($badgeid) {
         $ccid = mb_substr($name, 13);
         switch ($value) {
             case "1":
-                $valuesClause2 .= ($valuesClause2 ? ", " : "") . "('$badgeid', $ccid)";
+                $valuesClause2 .= ($valuesClause2 ? ", " : "") . "($badgeid, $ccid)";
                 break;
             case "0":
                 $credentialClause3 .= ($credentialClause3 ? ", " : "") . $ccid;
@@ -109,6 +111,8 @@ function update_participant($badgeid) {
                 exit();
         }
     }
+
+
     if ($updateClause) {
         mysqli_query_with_error_handling(($query . mb_substr($updateClause, 0, -2) . $query_end), true, true);
         $ParticipantsUpdated = true;
@@ -139,6 +143,21 @@ function update_participant($badgeid) {
             Render500ErrorAjax($message_error);
             exit();
         }
+
+        // Update ConReg member before Zambia member details.
+        $conn = new ConRegMember();
+        $conn->updateMember($badgeid, [
+          'first_name' => $fname,
+          'last_name' => $lname,
+          'badge_name' => $badgename,
+          'phone' => $phone,
+          'email' => $email,
+          'street' => $postaddress1,
+          'street2' => $postaddress2,
+          'city' => $postcity,
+          'county' => $poststate,
+          'postcode' => $postzip,
+        ]);
 
         $query = <<<EOD
 UPDATE CongoDumpHistory
