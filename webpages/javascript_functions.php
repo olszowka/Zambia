@@ -20,7 +20,7 @@ function load_external_javascript($isDataTables = false, $isRecaptcha = false, $
 
 function load_internal_javascript($title, $isDataTables = false) {
     ?>
-    <script src="javascript/main.js"></script>
+    <script src="js/main.js"></script>
     <?php
     /**
      * These js files initialize themselves and therefore should be included only on the relevant pages.
@@ -37,86 +37,86 @@ function load_internal_javascript($title, $isDataTables = false) {
      */
     switch ($title) {
         case "Assign Participants":
-            echo "<script src=\"javascript/StaffAssignParticipants.js\"></script>\n";
+            echo "<script src=\"js/StaffAssignParticipants.js\"></script>\n";
             break;
         case "Forgot Password":
-            echo "<script src=\"javascript/ForgotPassword.js\"></script>\n";
+            echo "<script src=\"js/ForgotPassword.js\"></script>\n";
             break;
         case "Invite Participants":
-            echo "<script src=\"javascript/InviteParticipants.js\"></script>\n";
+            echo "<script src=\"js/InviteParticipants.js\"></script>\n";
             break;
         case "Maintain Room Schedule":
-            echo "<script src=\"javascript/MaintainRoomSched.js\"></script>\n";
+            echo "<script src=\"js/MaintainRoomSched.js\"></script>\n";
             break;
         case "Reset Password":
-            echo "<script src=\"javascript/ForgotPasswordResetForm.js\"></script>\n";
+            echo "<script src=\"js/ForgotPasswordResetForm.js\"></script>\n";
             break;
         case "Session History":
-            echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
+            echo "<script src=\"js/SessionHistory.js\"></script>\n";
             break;
         case "Administer Phases":
-            echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
+            echo "<script src=\"js/AdminPhases.js\"></script>\n";
             break;
         case "Edit Custom Text":
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
+            echo "<script src=\"js/EditCustomText.js\"></script>\n";
             break;
         case "Edit Survey":
             echo "<script src=\"external/tabulator-4.9.3/js/tabulator.js\"></script>\n";
-            echo "<script src=\"javascript/EditSurvey.js\"></script>\n";
-            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"js/EditSurvey.js\"></script>\n";
+            echo "<script src=\"js/RenderSurvey.js\"></script>\n";
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
             break;
         case "Participant Survey":
-            echo "<script src=\"javascript/PartSurvey.js\"></script>\n";
-            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"js/PartSurvey.js\"></script>\n";
+            echo "<script src=\"js/RenderSurvey.js\"></script>\n";
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
         case "Preview Survey":
-            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"js/RenderSurvey.js\"></script>\n";
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
             break;
         case "Session Search Results":
-            echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
+            echo "<script src=\"js/PartSearchSessionsSubmit.js\"></script>\n";
             break;
         case "Administer Participants":
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
+            echo "<script src=\"js/AdminParticipants.js\"></script>\n";
             break;
         case "Administer Photos":
             echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
-            echo "<script src=\"javascript/AdminPhotos.js\"></script>\n";
+            echo "<script src=\"js/AdminPhotos.js\"></script>\n";
             break;
         case "My Profile":
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/myProfile.js\"></script>";
+            echo "<script src=\"js/myProfile.js\"></script>";
             break;
         case "My Photo":
             echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
-            echo "<script src=\"javascript/myPhoto.js\"></script>";
+            echo "<script src=\"js/myPhoto.js\"></script>";
             break;
         case "Edit Session":
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
+            echo "<script src=\"js/editCreateSession.js\"></script>\n";
         case "Create New Session":
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
+            echo "<script src=\"js/editCreateSession.js\"></script>\n";
             break;
         case "Edit Configuration Tables":
             echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"external/tabulator-4.9.3/js/tabulator.js\"></script>\n";
-            echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
+            echo "<script src=\"js/EditConfigTables.js\"></script>\n";
             break;
         case "Import Reg User":
-            echo "<script src=\"javascript/Discon3ImportRegUser.js\"></script>\n";
+            echo "<script src=\"js/Discon3ImportRegUser.js\"></script>\n";
             break;
         default:
             if ($isDataTables) {
-                echo "<script src=\"javascript/Reports.js\"></script>\n";
+                echo "<script src=\"js/Reports.js\"></script>\n";
             }
     }
 ?>
-<script src="javascript/staffMaintainSchedule.js"></script>
-<script src="javascript/partPanelInterests.js"></script>
+<script src="js/staffMaintainSchedule.js"></script>
+<script src="js/partPanelInterests.js"></script>
 <?php
 }
 ?>
