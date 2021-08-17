@@ -18,4 +18,9 @@ echo fetchCustomText("staff_overview");
 Number of con days: <?php echo CON_NUM_DAYS; ?><br />
 Con name: <?php echo CON_NAME; ?><br />
 
+<?php
+// echo '<pre>'; print_r($_SESSION['permission_set']); echo '</pre>';  //to show the permissions of the logged in staff member for debugging purposes
+// echo phpinfo();
+?>
+
 <?php staff_footer(); ?>
