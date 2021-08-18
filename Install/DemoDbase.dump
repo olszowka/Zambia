@@ -4,6 +4,8 @@
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
@@ -39,6 +41,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `CongoDump`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `CongoDump` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `firstname` varchar(30) DEFAULT NULL,
@@ -55,6 +59,7 @@ CREATE TABLE `CongoDump` (
   `regtype` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Contains user information from registration system.';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `CongoDump`
@@ -155,7 +160,27 @@ INSERT INTO `CustomText` VALUES
   (5,'My Schedule','all_panelists_1','<p>In order to put together the entire schedule, we had to schedule some panels outside of the times that certain panelists requested.  If this happened to you, we would love to have you on the panel, but understand if you cannot make it.  Please let us know if you cannot.</p>'),
   (6,'My Schedule','all_panelists_2','<p>Several of the panels we are running this year were extremely popular with over 20 potential panelists signing up.  Choosing whom to place on those panels was difficult.  There is always a possibility that one of the panelists currently scheduled will be unavailable so feel free to check with us to see if a space has opened up on a panel on which you would still like to participate.</p>'),
   (7,'Data Retention Consent', 'consent', '<div><p>We collect your personal data to allow us to schedule you into programming items, to publish data about your participation in programming items, and to administer the convention.  We retain this data for the duration of this convention and to assist in planning future conventions.</p><p>We do not share this data with other conventions outside of what is published for our program guides, website, and other sites we use to publish the schedule for the convention.</p><p>We transfer this data as required to print the guides, and to provide any online guides to the programming for our convention including but not limited to our website and any other on-line programing guides we may use from time to time.</p><p>Without your consent we are unable to have you as a program participant.</p></div>'),
-  (8, 'My Profile', 'registration_data', '<p>Please confirm your contact information.  If it is not correct, please log into Zambia Demo\'s <a href="https://reg.arisia.org" target="_blank">on-line registration system</a> and correct it there. Please note that the password there is <b>not the same</b> as the one you use in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>');
+  (8,'My Profile', 'registration_data', '<p>Please confirm your contact information.  If it is not correct, please log into Zambia Demo\'s <a href="https://reg.arisia.org" target="_blank">on-line registration system</a> and correct it there. Please note that the password there is <b>not the same</b> as the one you use in Zambia. This data is downloaded periodically from the registration database, and should be correct within an hour.</p>'),
+  (9,'My Profile', 'photo_note', 'Note: Photos should be of type JPEG (.jpg) or PNG (.png) and should be about 800x800. You will be able to crop and rotate the image. To upload a photo, either drag the file to be uploaded to the upload photo area or click the upload photo button to use a file picker to select the file to upload. All photos uploaded will be reviewed for approval. The approved photo will be available to publications and on-line guides. If you have an approved photo, the new photo uploaded will be added to the review queue and it will replace the approved photo once reviewed and accepted.'),
+  (10,'Participant View', 'part_overview', ''),
+  (11,'Staff Overview', 'staff_overview', "<p>Please note the tabs above. One of them will take you to your participant view. Another will allow you to manage Sessions. Note that Sessions is the generic term we are using for all Events, Films, Panels, Anime, Video, etc.</p>
+<p>The general flow of sessions over time is: </p>
+<ul>
+<li>Brainstorm - New session idea put in to the system by one of our brainstorm users. The idea may or may not be sane or good. It could be too big or too small or duplicative.</li>
+<li>Edit Me - New session idea that a participant or staff member entered. An idea entered by a brainstorm user that is non-offensive should be moved to this status. These are still rough and may well have issues. Still could be duplicates.</li>
+<li>Vetted - A real session that we'd like to see happen. At this point the language should be fairly close to final in the description. Spell checking and grammar checking should have happened. It needs have publication status, a type, kid category, division and a room set. Please check the duration (defaults to 1 hour) and the various things the session might need (like power, mirrors, etc.) This is the minimal status that participants are allowed to sign up for. Avoid duplicates (however the list is still approximately 3 times what will actually run)</li>
+<li>Assigned - Session has participants assigned to it.</li>
+<li>Scheduled - Session is in the schedule (don't set this by hand as the tool actually sets this for you when you schedule it in a room!) The language needs to match what you want to see <strong>published</strong>.</li>
+<li>Occurred - It Happened! Fill in the estimated attendance and update any other needed information when moving the session to this status.</li>
+</ul>
+<p>There are 2 other statuses that a session can have:</p>
+<ul>
+<li>Dropped - The bit bucket. This idea is no longer under consideration. Nor will it ever be again. The most frequent reason for this is identical data to another session.</li>
+<li>Cancelled - Over all a good idea, but it isn't going to happen this year. Maybe it is too close to another idea, maybe it was dependent on a particular person attending, maybe there were scheduling complications. You should probably still say why it was cancelled. This is a category we can mine for ideas in future years.</li>
+</ul>
+<p>For your reference there are several statuses pulled over from previous years. They are here for your reference and in general should be mined for information. Feel free to import a session from a previous year into the workflow for this year if you want to see it happen this year.</p>"),
+  (12,'Participant Survey', 'survey_displayonly', '<p>Note: Some questions may no longer allow you to enter/change their answers. The time has passed for when you can change them and they have been changed from answerable to display only.</p>
+<p>If you need to have an display only answer changed, please reach out to programming at the email address below.</p>');
 /*!40000 ALTER TABLE `CustomText` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,12 +189,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Divisions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Divisions` (
-  `divisionid` int(11) NOT NULL auto_increment,
-  `divisionname` varchar(30) character set utf8 collate utf8_general_ci default NULL,
-  `display_order` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`divisionid`)
+  `divisionid` int(11) NOT NULL AUTO_INCREMENT,
+  `divisionname` varchar(30) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`divisionid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Configuration table.  A division is a property of a session.';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Divisions`
@@ -242,6 +270,26 @@ INSERT INTO `EmailFrom` VALUES (1,'Arisia Programming',2,'programming@arisia.org
 UNLOCK TABLES;
 
 --
+-- Table structure for table `EmailHistory`
+--
+
+DROP TABLE IF EXISTS `EmailHistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EmailHistory` (
+  `emailqueueid` int(11) NOT NULL AUTO_INCREMENT,
+  `emailto` varchar(255) DEFAULT NULL,
+  `emailfrom` varchar(255) DEFAULT NULL,
+  `emailcc` varchar(255) DEFAULT NULL,
+  `emailsubject` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `emailtimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`emailqueueid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
 -- Table structure for table `EmailQueue`
 --
 
@@ -301,12 +349,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Features`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Features` (
-  `featureid` int(11) NOT NULL auto_increment,
-  `featurename` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  PRIMARY KEY  (`featureid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Configuration table.  Rooms and Sessions have multiple featu';
+  `featureid` int(11) NOT NULL AUTO_INCREMENT,
+  `featurename` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`featureid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Configuration table.  Rooms and Sessions have multiple features.';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Features`
@@ -323,12 +374,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `KidsCategories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `KidsCategories` (
-  `kidscatid` int(11) NOT NULL auto_increment,
-  `kidscatname` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  PRIMARY KEY  (`kidscatid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Configuration Table.  A KidsCategory is a property of a sess';
+  `kidscatid` int(11) NOT NULL AUTO_INCREMENT,
+  `kidscatname` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`kidscatid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Configuration Table.  A KidsCategory is a property of a session.';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `KidsCategories`
@@ -370,6 +424,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ParticipantAvailability`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ParticipantAvailability` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `maxprog` int(11) DEFAULT NULL,
@@ -379,6 +435,7 @@ CREATE TABLE `ParticipantAvailability` (
   PRIMARY KEY (`badgeid`),
   CONSTRAINT `ParticipantAvailability_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ParticipantAvailability`
@@ -419,14 +476,17 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ParticipantAvailabilityTimes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ParticipantAvailabilityTimes` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `availabilitynum` int(11) NOT NULL default '0',
-  `starttime` time default NULL,
-  `endtime` time default NULL,
-  PRIMARY KEY  (`badgeid`,`availabilitynum`),
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `availabilitynum` int(11) NOT NULL DEFAULT '0',
+  `starttime` time DEFAULT NULL,
+  `endtime` time DEFAULT NULL,
+  PRIMARY KEY (`badgeid`,`availabilitynum`),
   CONSTRAINT `ParticipantAvailabilityTimes_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ParticipantAvailabilityTimes`
@@ -469,14 +529,17 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ParticipantHasRole`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ParticipantHasRole` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `roleid` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`badgeid`,`roleid`),
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `roleid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`badgeid`,`roleid`),
   KEY `roleid` (`roleid`),
   CONSTRAINT `ParticipantHasRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantHasRole_ibfk_2` FOREIGN KEY (`roleid`) REFERENCES `Roles` (`roleid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ParticipantHasRole`
@@ -493,16 +556,19 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ParticipantInterests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ParticipantInterests` (
-  `badgeid` varchar(15) NOT NULL default '',
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
   `yespanels` text,
   `nopanels` text,
   `yespeople` text,
   `nopeople` text,
   `otherroles` text,
-  PRIMARY KEY  (`badgeid`),
+  PRIMARY KEY (`badgeid`),
   CONSTRAINT `ParticipantInterests_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ParticipantInterests`
@@ -519,6 +585,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ParticipantOnSession`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ParticipantOnSession` (
   `participantonsessionid` int(11) NOT NULL AUTO_INCREMENT,
   `badgeid` varchar(15) NOT NULL DEFAULT '',
@@ -530,6 +598,7 @@ CREATE TABLE `ParticipantOnSession` (
   CONSTRAINT `ParticipantOnSession_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantOnSession_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.  Set by staff.';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ParticipantOnSession`
@@ -617,13 +686,13 @@ DELIMITER ;;
             NOT(NEW.createdts <=> OLD.createdts) OR
             NOT(NEW.createdbybadgeid <=> OLD.createdbybadgeid) THEN
             SIGNAL sqlstate '45000' SET message_text = 'Update field other than inactivated... in table ParticipantOnSessionHistory.';
-        END IF;	
+        END IF;
         DELETE FROM ParticipantOnSession
             WHERE
                     badgeid = OLD.badgeid
                 AND sessionid = OLD.sessionid
                 AND moderator = OLD.moderator;
-	END */;;
+    END */;;
 /*!50003 SET SESSION SQL_MODE="NO_AUTO_VALUE_ON_ZERO" */;;
 /*!50003 CREATE */ /*!50003 TRIGGER `POSH_delete_trig` BEFORE DELETE ON `ParticipantOnSessionHistory` FOR EACH ROW SIGNAL sqlstate '45000' SET MESSAGE_TEXT = 'May only insert and update table ParticipantOnSessionHistory.' */;;
 DELIMITER ;
@@ -635,7 +704,7 @@ DELIMITER ;
 DROP TABLE IF EXISTS ParticipantPasswordResetRequests;
 
 CREATE TABLE ParticipantPasswordResetRequests (
-    badgeidentered varchar(15) NOT NULL DEFAULT '' COMMENT 'Not necessary a valid badgeid, so no Foreign Key',
+    badgeidentered varchar(15) NOT NULL DEFAULT '' COMMENT 'Not necessarily a valid badgeid, so no Foreign Key',
     email varchar(255) NOT NULL DEFAULT '',
     ipaddress varchar(225) NOT NULL DEFAULT '',
     creationdatetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -652,19 +721,22 @@ CREATE TABLE ParticipantPasswordResetRequests (
 --
 
 DROP TABLE IF EXISTS `ParticipantSessionInterest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ParticipantSessionInterest` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `sessionid` int(11) NOT NULL default '0',
-  `rank` int(11) default NULL,
-  `willmoderate` tinyint(1) default NULL,
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `rank` int(11) DEFAULT NULL,
+  `willmoderate` tinyint(1) DEFAULT NULL,
   `comments` text,
-  PRIMARY KEY  (`badgeid`,`sessionid`),
+  PRIMARY KEY (`badgeid`,`sessionid`),
   KEY `sessionid` (`sessionid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_2` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_3` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `ParticipantSessionInterest_ibfk_4` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ParticipantSessionInterest`
@@ -681,14 +753,17 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ParticipantSuggestions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ParticipantSuggestions` (
-  `badgeid` varchar(15) NOT NULL default '',
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
   `paneltopics` text,
   `otherideas` text,
   `suggestedguests` text,
-  PRIMARY KEY  (`badgeid`),
+  PRIMARY KEY (`badgeid`),
   CONSTRAINT `ParticipantSuggestions_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant info captured by Zambia.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ParticipantSuggestions`
@@ -705,19 +780,30 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Participants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Participants` (
   `badgeid` varchar(15) NOT NULL DEFAULT '',
   `password` varchar(255) DEFAULT NULL,
   `bestway` varchar(12) DEFAULT NULL,
   `interested` tinyint(1) DEFAULT NULL,
   `bio` text,
+  `htmlbio` text,
   `pubsname` varchar(50) DEFAULT NULL,
+  `uploadedphotofilename` varchar(64) DEFAULT NULL,
+  `approvedphotofilename` varchar(64) DEFAULT NULL,
+  `photodenialreasonothertext` varchar(512) DEFAULT NULL,
+  `photodenialreasonid` int(11) DEFAULT NULL,
+  `photouploadstatus` INT(11) DEFAULT NULL,
   `share_email` tinyint(1) DEFAULT '1',
   `staff_notes` text,
   `use_photo` tinyint(1) DEFAULT NULL,
   `data_retention` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`badgeid`)
+  PRIMARY KEY (`badgeid`),
+  CONSTRAINT `Participants_photodeny` FOREIGN KEY (`photodenialreasonid`) REFERENCES `PhotoDenialReasons` (`photodenialreasonid`),
+  CONSTRAINT `participantphotostatus_fk` FOREIGN KEY (`photouploadstatus`) REFERENCES `PhotoUploadStatus` (`photouploadstatus`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Participants`
@@ -732,6 +818,29 @@ VALUES
 	('unrecorded','12345678901234567890123456789012',NULL,NULL,NULL,'unrecorded',1,NULL,NULL, 0);
 /*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Table structure for table `ParticipantSurveyAnswers`
+--
+
+DROP TABLE IF EXISTS `ParticipantSurveyAnswers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ParticipantSurveyAnswers` (
+  `participantid` varchar(15) NOT NULL,
+  `questionid` int(11) NOT NULL,
+  `privacy_setting` tinyint(1) NOT NULL DEFAULT '0',
+  `value` varchar(8192),
+  `othertext` varchar(512),
+  `lastupdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updatedby` varchar(15) NOT NULL,
+  PRIMARY KEY (`participantid`, `questionid`),
+  FOREIGN KEY (`participantid`) REFERENCES `Participants` (`badgeid`) ON DELETE CASCADE,
+  FOREIGN KEY (`questionid`) REFERENCES `SurveyQuestionConfig` (`questionid`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant Survey Info.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `PatchLog`
@@ -798,7 +907,16 @@ INSERT INTO `PatchLog` (patchname) VALUES
     ('51_admin_phases.sql'),
     ('52_password_security.sql'),
     ('53_data_retention.sql'),
-    ('57_create_user_permission.sql');
+    ('54_survey.sql'),
+    ('55_record_history.sql'),
+    ('56_html_bio.sql'),
+    ('57_create_user_permission.sql'),
+    ('58_roomhasset_key.sql'),
+    ('59_config_edit_tables.sql'),
+    ('60_photos.sql'),
+    ('61_staff_overview_ct.sql'),
+    ('62_import_session_html.sql'),
+    ('63_add_permission.sql');
 /*!40000 ALTER TABLE `PatchLog` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -811,7 +929,7 @@ DROP TABLE IF EXISTS `PermissionAtoms`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PermissionAtoms` (
   `permatomid` int(11) NOT NULL AUTO_INCREMENT,
-  `permatomtag` varchar(20) NOT NULL DEFAULT '',
+  `permatomtag` varchar(32) NOT NULL DEFAULT '',
   `elementid` int(11) DEFAULT NULL,
   `page` varchar(30) DEFAULT NULL,
   `notes` text,
@@ -849,7 +967,30 @@ INSERT INTO `PermissionAtoms` (permatomid, permatomtag, elementid, page, notes) 
     (20,'CreateUser',NULL,'CreateUser','Manually create user.'),
     (21,'EditUserPermRoles',NULL,'Admin Participants','Control all user permission roles. Also used on create user page.'),
     (22,'EditUserPermRoles',3,'Admin Participants','Control participant user permission role only. Also used on create user page.'),
-    (23,'EditUserPermRoles',2,'Admin Participants','Control staff user permission role only. Also used on create user page.');
+    (23,'EditUserPermRoles',2,'Admin Participants','Control staff user permission role only. Also used on create user page.'),
+    (2000, 'ce_BioEditStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2001, 'ce_Credentials', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2002, 'ce_Roles', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2003, 'ce_KidsCategories', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2004, 'ce_LanguageStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2005, 'ce_PubStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2006, 'ce_SessionStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2007, 'ce_Divisions', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2008, 'ce_RegTypes', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2009, 'ce_Tags', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2010, 'ce_Times', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2011, 'ce_Tracks', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2012, 'ce_Types', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2013, 'ce_Rooms', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2014, 'ce_RoomSets', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2015, 'ce_RoomHasSet', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2016, 'ce_Features', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2017, 'ce_Services', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2018, 'ce_EmailFrom', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2019, 'ce_EmailTo', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2020, 'ce_EmailCC', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2021, 'ce_PhotoDenialReasons', NULL, 'Edit Configuration Tables', 'enables edit'),
+    (2022, 'AdminPhotos', NULL, 'Administer Photos', 'approve/deny photos');
 /*!40000 ALTER TABLE `PermissionAtoms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -858,13 +999,16 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `PermissionRoles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PermissionRoles` (
-  `permroleid` int(11) NOT NULL auto_increment,
-  `permrolename` varchar(100) default NULL,
+  `permroleid` int(11) NOT NULL AUTO_INCREMENT,
+  `permrolename` varchar(100) DEFAULT NULL,
   `notes` text,
   `display_order` int(11),
-  PRIMARY KEY  (`permroleid`)
+  PRIMARY KEY (`permroleid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Configuration info.';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `PermissionRoles`
@@ -893,13 +1037,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Permissions` (
-  `permissionid` int(11) NOT NULL auto_increment,
-  `permatomid` int(11) NOT NULL default '0',
-  `phaseid` int(11) default '0' COMMENT 'null indicates all phases',
-  `permroleid` int(11) default '0' COMMENT 'null indicates not applicable',
-  `badgeid` int(11) default '0' COMMENT 'null indicates not applicable',
-  PRIMARY KEY  (`permissionid`),
+  `permissionid` int(11) NOT NULL AUTO_INCREMENT,
+  `permatomid` int(11) NOT NULL DEFAULT '0',
+  `phaseid` int(11) DEFAULT '0' COMMENT 'null indicates all phases',
+  `permroleid` int(11) DEFAULT '0' COMMENT 'null indicates not applicable',
+  `badgeid` int(11) DEFAULT '0' COMMENT 'null indicates not applicable',
+  PRIMARY KEY (`permissionid`),
   UNIQUE KEY `unique1` (`permatomid`,`phaseid`,`permroleid`,`badgeid`),
   KEY `FK_Permissions` (`phaseid`),
   KEY `FK_PRoles` (`permroleid`),
@@ -907,6 +1053,7 @@ CREATE TABLE `Permissions` (
   CONSTRAINT `Permissions_ibfk_2` FOREIGN KEY (`phaseid`) REFERENCES `Phases` (`phaseid`),
   CONSTRAINT `Permissions_ibfk_3` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Configuration info.';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Permissions`
@@ -965,6 +1112,7 @@ INSERT INTO Permissions
     (12, 7, 4, NULL),
     (13, 7, 4, NULL),
     (1, NULL, 2, NULL),
+    (2, NULL, 1, NULL),
     (16, NULL, 2, NULL),
     (18, NULL, 2, NULL),
     (1, NULL, 1, NULL),
@@ -981,7 +1129,30 @@ INSERT INTO Permissions
     (20, NULL, 12, NULL),
     (21, NULL, 1, NULL),
     (22, NULL, 12, NULL),
-    (23, NULL, 12, NULL);
+    (23, NULL, 12, NULL),
+    (2001, NULL, 1, NULL),
+    (2002, NULL, 1, NULL),
+    (2003, NULL, 1, NULL),
+    (2004, NULL, 1, NULL),
+    (2005, NULL, 1, NULL),
+    (2006, NULL, 1, NULL),
+    (2007, NULL, 1, NULL),
+    (2008, NULL, 1, NULL),
+    (2009, NULL, 1, NULL),
+    (2010, NULL, 1, NULL),
+    (2011, NULL, 1, NULL),
+    (2012, NULL, 1, NULL),
+    (2013, NULL, 1, NULL),
+    (2014, NULL, 1, NULL),
+    (2015, NULL, 1, NULL),
+    (2016, NULL, 1, NULL),
+    (2017, NULL, 1, NULL),
+    (2018, NULL, 1, NULL),
+    (2019, NULL, 1, NULL),
+    (2020, NULL, 1, NULL),
+    (2021, NULL, 1, NULL),
+    (2022, NULL, 1, NULL),
+    (2022, NULL, 12, NULL);
 /*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1014,6 +1185,57 @@ INSERT INTO `Phases` VALUES
   (9,'Events Show Schedule',1,'Event organizers may view schedule.',0,450);
 /*!40000 ALTER TABLE `Phases` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Table structure for table `PhotoDenialReasons`
+--
+
+DROP TABLE IF EXISTS `PhotoDenialReasons`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PhotoDenialReasons` (
+  `photodenialreasonid` int(11) NOT NULL AUTO_INCREMENT,
+  `reasontext` varchar(512) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`photodenialreasonid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+--
+-- Table structure for table `PhotoUploadStatus`
+--
+
+DROP TABLE IF EXISTS `PhotoUploadStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PhotoUploadStatus` (
+  `photouploadstatus` int(11) NOT NULL,
+  `statustext` varchar(64) NOT NULL,
+  PRIMARY KEY (`photouploadstatus`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PhotoUploadStatus``
+--
+
+LOCK TABLES `PhotoUploadStatus` WRITE;
+/*!40000 ALTER TABLE `PhotoUploadStatus` DISABLE KEYS */;
+INSERT INTO `PhotoUploadStatus` (`photouploadstatus`, `statustext`)
+VALUES (0, "No photo uploaded"),
+(1, "Photo waiting for approval"),
+(2, "Denied - see denial reason"),
+(3, "Denied photo replaced, waiting for approval"),
+(4, "Photo approved"),
+(5, "Updated photo waiting for approval"),
+(6, "Updated photo denied and deleted, existing photo still available"),
+(7, "Updated photo denied, existing photo still available");
+/*!40000 ALTER TABLE `PhotoUploadStatus` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Table structure for table `PreviousConTracks`
@@ -1108,6 +1330,7 @@ CREATE TABLE `PreviousSessions` (
   `secondtitle` varchar(100) DEFAULT NULL,
   `pocketprogtext` text,
   `progguiddesc` text,
+  `progguidhtml` text DEFAULT NULL,
   `persppartinfo` text,
   `duration` time DEFAULT NULL,
   `estatten` int(11) DEFAULT NULL,
@@ -1149,12 +1372,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `PubStatuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PubStatuses` (
-  `pubstatusid` int(11) NOT NULL auto_increment,
-  `pubstatusname` varchar(12) default NULL,
-  `display_order` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`pubstatusid`)
+  `pubstatusid` int(11) NOT NULL AUTO_INCREMENT,
+  `pubstatusname` varchar(12) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pubstatusid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `PubStatuses`
@@ -1171,11 +1397,16 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `RegTypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `RegTypes` (
-  `regtype` varchar(40) NOT NULL default '',
-  `message` varchar(100) default NULL,
-  PRIMARY KEY  (`regtype`)
+  `regtypeid` int(11) NOT NULL AUTO_INCREMENT,
+  `display_order` int(11) NULL DEFAULT 0,
+  `regtype` varchar(40) NOT NULL DEFAULT '',
+  `message` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`regtypeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `RegTypes`
@@ -1183,7 +1414,8 @@ CREATE TABLE `RegTypes` (
 
 LOCK TABLES `RegTypes` WRITE;
 /*!40000 ALTER TABLE `RegTypes` DISABLE KEYS */;
-INSERT INTO `RegTypes` VALUES ('Adult-RolloverC','Registered and Comp\'ed'),('Adult-YearAhead','Registered'),('AdultFull','Registered'),('AdultFull-Comp','Registered and Comp\'ed'),('AdultFull-Pre-1','Registered'),('AdultFull-Pre-2','Registered'),('ProgramComp','Registered and Comp\'ed'),('Promotional','Registered'),('Student','Registered');
+INSERT INTO `RegTypes` (`regtype`, `message`)
+VALUES ('Adult-RolloverC','Registered and Comp\'ed'),('Adult-YearAhead','Registered'),('AdultFull','Registered'),('AdultFull-Comp','Registered and Comp\'ed'),('AdultFull-Pre-1','Registered'),('AdultFull-Pre-2','Registered'),('ProgramComp','Registered and Comp\'ed'),('Promotional','Registered'),('Student','Registered');
 /*!40000 ALTER TABLE `RegTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1192,12 +1424,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Roles` (
-  `roleid` int(11) NOT NULL auto_increment,
-  `rolename` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  PRIMARY KEY  (`roleid`)
+  `roleid` int(11) NOT NULL AUTO_INCREMENT,
+  `rolename` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`roleid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Roles`
@@ -1214,15 +1449,21 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `RoomHasSet`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `RoomHasSet` (
-  `roomid` int(11) NOT NULL default '0',
-  `roomsetid` int(11) NOT NULL default '0',
-  `capacity` int(11) default NULL,
-  PRIMARY KEY  (`roomid`,`roomsetid`),
+  `roomhassetid` int(11) NOT NULL AUTO_INCREMENT,
+  `roomid` int(11) NOT NULL DEFAULT '0',
+  `roomsetid` int(11) NOT NULL DEFAULT '0',
+  `capacity` int(11) DEFAULT NULL,
+  `display_order` int(11) NULL DEFAULT 0,
+  PRIMARY KEY (`roomhassetid`),
+  KEY `roomid` (`roomid`),
   KEY `roomsetid` (`roomsetid`),
   CONSTRAINT `RoomHasSet_ibfk_1` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`),
   CONSTRAINT `RoomHasSet_ibfk_2` FOREIGN KEY (`roomsetid`) REFERENCES `RoomSets` (`roomsetid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `RoomHasSet`
@@ -1230,7 +1471,8 @@ CREATE TABLE `RoomHasSet` (
 
 LOCK TABLES `RoomHasSet` WRITE;
 /*!40000 ALTER TABLE `RoomHasSet` DISABLE KEYS */;
-INSERT INTO `RoomHasSet` VALUES (2,10,20),(3,2,20),(3,3,24),(3,5,40),(3,10,26),(4,2,50),(4,3,48),(4,5,89),(4,10,40),(5,10,10),(6,10,10),(7,2,20),(7,3,21),(7,5,50),(7,10,22),(8,2,50),(8,3,47),(8,5,91),(8,10,34),(9,2,20),(9,3,21),(9,5,50),(9,10,22),(10,2,20),(10,3,23),(10,5,45),(10,10,22),(11,2,10),(11,3,6),(11,5,14),(11,10,10),(12,2,20),(12,3,12),(12,5,38),(12,10,16),(13,2,30),(13,3,30),(13,5,63),(13,10,28),(14,2,20),(14,3,15),(14,5,44),(14,10,22),(15,2,10),(15,3,9),(15,5,32),(15,10,16),(16,2,20),(16,3,24),(16,5,49),(16,10,22),(17,2,10),(17,3,9),(17,5,20),(17,10,10),(18,2,40),(18,3,27),(18,5,65),(18,10,40),(19,3,18),(19,5,30),(19,10,16),(20,10,8),(21,2,30),(21,3,32),(21,5,80),(21,10,34),(22,2,20),(22,3,24),(22,5,55),(22,10,28),(23,10,8),(24,2,60),(24,3,60),(24,5,115),(24,10,58),(25,2,60),(25,3,60),(25,5,108),(25,10,54),(26,2,20),(26,3,23),(26,5,47),(26,10,22);
+INSERT INTO `RoomHasSet` (`roomid`, `roomsetid`, `capacity`)
+VALUES (2,10,20),(3,2,20),(3,3,24),(3,5,40),(3,10,26),(4,2,50),(4,3,48),(4,5,89),(4,10,40),(5,10,10),(6,10,10),(7,2,20),(7,3,21),(7,5,50),(7,10,22),(8,2,50),(8,3,47),(8,5,91),(8,10,34),(9,2,20),(9,3,21),(9,5,50),(9,10,22),(10,2,20),(10,3,23),(10,5,45),(10,10,22),(11,2,10),(11,3,6),(11,5,14),(11,10,10),(12,2,20),(12,3,12),(12,5,38),(12,10,16),(13,2,30),(13,3,30),(13,5,63),(13,10,28),(14,2,20),(14,3,15),(14,5,44),(14,10,22),(15,2,10),(15,3,9),(15,5,32),(15,10,16),(16,2,20),(16,3,24),(16,5,49),(16,10,22),(17,2,10),(17,3,9),(17,5,20),(17,10,10),(18,2,40),(18,3,27),(18,5,65),(18,10,40),(19,3,18),(19,5,30),(19,10,16),(20,10,8),(21,2,30),(21,3,32),(21,5,80),(21,10,34),(22,2,20),(22,3,24),(22,5,55),(22,10,28),(23,10,8),(24,2,60),(24,3,60),(24,5,115),(24,10,58),(25,2,60),(25,3,60),(25,5,108),(25,10,54),(26,2,20),(26,3,23),(26,5,47),(26,10,22);
 /*!40000 ALTER TABLE `RoomHasSet` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1239,12 +1481,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `RoomSets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `RoomSets` (
-  `roomsetid` int(11) NOT NULL auto_increment,
-  `roomsetname` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  PRIMARY KEY  (`roomsetid`)
+  `roomsetid` int(11) NOT NULL AUTO_INCREMENT,
+  `roomsetname` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`roomsetid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `RoomSets`
@@ -1261,25 +1506,28 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Rooms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Rooms` (
-  `roomid` int(11) NOT NULL auto_increment,
-  `roomname` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  `height` varchar(100) default NULL,
-  `dimensions` varchar(100) default NULL,
-  `area` varchar(100) default NULL,
-  `function` varchar(100) default NULL,
-  `floor` varchar(50) default NULL,
+  `roomid` int(11) NOT NULL AUTO_INCREMENT,
+  `roomname` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `height` varchar(100) DEFAULT NULL,
+  `dimensions` varchar(100) DEFAULT NULL,
+  `area` varchar(100) DEFAULT NULL,
+  `function` varchar(100) DEFAULT NULL,
+  `floor` varchar(50) DEFAULT NULL,
   `notes` text,
-  `opentime1` time default NULL,
-  `closetime1` time default NULL,
-  `opentime2` time default NULL,
-  `closetime2` time default NULL,
-  `opentime3` time default NULL,
-  `closetime3` time default NULL,
+  `opentime1` time DEFAULT NULL,
+  `closetime1` time DEFAULT NULL,
+  `opentime2` time DEFAULT NULL,
+  `closetime2` time DEFAULT NULL,
+  `opentime3` time DEFAULT NULL,
+  `closetime3` time DEFAULT NULL,
   `is_scheduled` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY  (`roomid`)
+  PRIMARY KEY (`roomid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Rooms`
@@ -1337,17 +1585,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Schedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Schedule` (
-  `scheduleid` int(11) NOT NULL auto_increment,
-  `sessionid` int(11) NOT NULL default '0',
-  `roomid` int(11) NOT NULL default '0',
-  `starttime` time NOT NULL default '00:00:00',
-  PRIMARY KEY  (`scheduleid`),
+  `scheduleid` int(11) NOT NULL AUTO_INCREMENT,
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `roomid` int(11) NOT NULL DEFAULT '0',
+  `starttime` time NOT NULL DEFAULT '00:00:00',
+  PRIMARY KEY (`scheduleid`),
   KEY `sessionid` (`sessionid`),
   KEY `roomid` (`roomid`),
   CONSTRAINT `Schedule_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `Schedule_ibfk_2` FOREIGN KEY (`roomid`) REFERENCES `Rooms` (`roomid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Schedule`
@@ -1364,12 +1615,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Services`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Services` (
-  `serviceid` int(11) NOT NULL auto_increment,
-  `servicename` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  PRIMARY KEY  (`serviceid`)
+  `serviceid` int(11) NOT NULL AUTO_INCREMENT,
+  `servicename` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`serviceid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Services`
@@ -1447,14 +1701,17 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `SessionHasFeature`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SessionHasFeature` (
-  `sessionid` int(11) NOT NULL default '0',
-  `featureid` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`sessionid`,`featureid`),
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `featureid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`sessionid`,`featureid`),
   KEY `featureid` (`featureid`),
   CONSTRAINT `SessionHasFeature_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `SessionHasFeature_ibfk_2` FOREIGN KEY (`featureid`) REFERENCES `Features` (`featureid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `SessionHasFeature`
@@ -1493,14 +1750,17 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `SessionHasService`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SessionHasService` (
-  `sessionid` int(11) NOT NULL default '0',
-  `serviceid` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`sessionid`,`serviceid`),
+  `sessionid` int(11) NOT NULL DEFAULT '0',
+  `serviceid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`sessionid`,`serviceid`),
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `SessionHasService_ibfk_1` FOREIGN KEY (`sessionid`) REFERENCES `Sessions` (`sessionid`),
   CONSTRAINT `SessionHasService_ibfk_2` FOREIGN KEY (`serviceid`) REFERENCES `Services` (`serviceid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `SessionHasService`
@@ -1516,6 +1776,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `SessionStatuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SessionStatuses` (
   `statusid` int(11) NOT NULL AUTO_INCREMENT,
   `statusname` varchar(50) DEFAULT NULL,
@@ -1524,6 +1786,7 @@ CREATE TABLE `SessionStatuses` (
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`statusid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `SessionStatuses`
@@ -1540,6 +1803,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Sessions` (
   `sessionid` int(11) NOT NULL AUTO_INCREMENT,
   `trackid` int(11) NOT NULL DEFAULT '0',
@@ -1552,7 +1817,9 @@ CREATE TABLE `Sessions` (
   `secondtitle` varchar(100) DEFAULT NULL,
   `pocketprogtext` text,
   `progguiddesc` text,
+  `progguidhtml` text,
   `persppartinfo` text,
+  `meetinglink` VARCHAR(512),
   `duration` time DEFAULT NULL,
   `estatten` int(11) DEFAULT NULL,
   `kidscatid` int(11) NOT NULL DEFAULT '0',
@@ -1585,6 +1852,7 @@ CREATE TABLE `Sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
 --
 -- Dumping data for table `Sessions`
 --
@@ -1601,17 +1869,505 @@ VALUES
 /*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `SurveyQuestionOptionConfig`
+--
+
+DROP TABLE IF EXISTS `SurveyQuestionOptionConfig`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SurveyQuestionOptionConfig` (
+  `questionid` int(11) NOT NULL,
+  `ordinal` int(11) NOT NULL,
+  `value` varchar(512) NOT NULL,
+  `display_order` int(11) NOT NULL,
+  `optionshort` varchar(64) NOT NULL,
+  `optionhover` varchar(512) DEFAULT NULL,
+  `allowothertext` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`questionid`, `ordinal`),
+  FOREIGN KEY (`questionid`) REFERENCES `SurveyQuestionConfig` (`questionid`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Option Info.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SurveyQuestionConfig`
+--
+
+DROP TABLE IF EXISTS `SurveyQuestionConfig`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SurveyQuestionConfig` (
+  `questionid` int(11) NOT NULL AUTO_INCREMENT,
+  `shortname` varchar(100) NOT NULL,
+  `description` varchar(1024) DEFAULT NULL,
+  `prompt` varchar(512) NOT NULL,
+  `hover` varchar(8192) DEFAULT NULL,
+  `display_order` int(11) NOT NULL,
+  `typeid` int(11) NOT NULL,
+  `required` tinyint(1) NOT NULL DEFAULT '0',
+  `publish` tinyint(1) NOT NULL DEFAULT '0',
+  `privacy_user` tinyint(1) NOT NULL DEFAULT '0',
+  `searchable` tinyint(1) NOT NULL DEFAULT '0',
+  `ascending` tinyint(1) NOT NULL DEFAULT '1',
+  `display_only` tinyint(1) NOT NULL DEFAULT '0',
+  `min_value` int DEFAULT NULL,
+  `max_value` int DEFAULT NULL,
+  PRIMARY KEY (`questionid`),
+  UNIQUE KEY `SurveyQuestionConfig_shortname` (`shortname`),
+  FOREIGN KEY (`typeid`) REFERENCES `SurveyQuestionTypes` (`typeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Info.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SurveyQuestionTypeDefaults`
+--
+
+DROP TABLE IF EXISTS `SurveyQuestionTypeDefaults`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SurveyQuestionTypeDefaults` (
+  `typeid` int(11) NOT NULL,
+  `ordinal` int(11) NOT NULL,
+  `value` varchar(512) NOT NULL,
+  `display_order` int(11) NOT NULL,
+  `optionshort` varchar(64) NOT NULL,
+  `optionhover` varchar(512) DEFAULT NULL,
+  `allowothertext` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`typeid`, `ordinal`),
+  FOREIGN KEY (`typeid`) REFERENCES `SurveyQuestionTypes` (`typeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Type Default options';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SurveyQuestionTypeDefaults`
+--
+
+LOCK TABLES `SurveyQuestionTypeDefaults` WRITE;
+/*!40000 ALTER TABLE `SurveyQuestionTypeDefaults` DISABLE KEYS */;
+INSERT INTO `SurveyQuestionTypeDefaults` (`typeid`, `ordinal`, `value`, `display_order`, `optionshort`, `optionhover`, `allowothertext`)
+VALUES
+  (100, 1, '1', 1, 'Jan', 'January', 0),
+  (100, 2, '2', 2, 'Feb', 'February', 0),
+  (100, 3, '3', 3, 'Mar', 'March', 0),
+  (100, 4, '4', 4, 'Apr', 'April', 0),
+  (100, 5, '5', 5, 'May', 'May', 0),
+  (100, 6, '6', 6, 'Jun', 'June', 0),
+  (100, 7, '7', 7, 'Jul', 'July', 0),
+  (100, 8, '8', 8, 'Aug', 'August', 0),
+  (100, 9, '9', 9, 'Sep', 'September', 0),
+  (100, 10, '10', 10, 'Oct', 'October', 0),
+  (100, 11, '11', 11, 'Nov', 'November', 0),
+  (100, 12, '12', 12, 'Dec', 'December', 0),
+  (110, 1, 'Jan', 1, 'Jan', 'January', 0),
+  (110, 2, 'Feb', 2, 'Feb', 'February', 0),
+  (110, 3, 'Mar', 3, 'Mar', 'March', 0),
+  (110, 4, 'Apr', 4, 'Apr', 'April', 0),
+  (110, 5, 'May', 5, 'May', 'May', 0),
+  (110, 6, 'Jun', 6, 'Jun', 'June', 0),
+  (110, 7, 'Jul', 7, 'Jul', 'July', 0),
+  (110, 8, 'Aug', 8, 'Aug', 'August', 0),
+  (110, 9, 'Sep', 9, 'Sep', 'September', 0),
+  (110, 10, 'Oct', 10, 'Oct', 'October', 0),
+  (110, 11, 'Nov', 11, 'Nov', 'November', 0),
+  (110, 12, 'Dec', 12, 'Dec', 'December', 0),
+  (120, 1, 'Jan', 1, 'Jan', 'January', 0),
+  (120, 2, 'Feb', 2, 'Feb', 'February', 0),
+  (120, 3, 'Mar', 3, 'Mar', 'March', 0),
+  (120, 4, 'Apr', 4, 'Apr', 'April', 0),
+  (120, 5, 'May', 5, 'May', 'May', 0),
+  (120, 6, 'Jun', 6, 'Jun', 'June', 0),
+  (120, 7, 'Jul', 7, 'Jul', 'July', 0),
+  (120, 8, 'Aug', 8, 'Aug', 'August', 0),
+  (120, 9, 'Sep', 9, 'Sep', 'September', 0),
+  (120, 10, 'Oct', 10, 'Oct', 'October', 0),
+  (120, 11, 'Nov', 11, 'Nov', 'November', 0),
+  (120, 12, 'Dec', 12, 'Dec', 'December', 0),
+  (130, 1, 'US', 1, 'United States', NULL, 0),
+  (130,2,'CA',2,'Canada',NULL,0),
+  (130,3,'AF',3,'Afghanistan',NULL,0),
+  (130,4,'AX',4,'Aland Islands',NULL,0),
+  (130,5,'AL',5,'Albania',NULL,0),
+  (130,6,'DZ',6,'Algeria',NULL,0),
+  (130,7,'AS',7,'American Samoa',NULL,0),
+  (130,8,'AD',8,'Andorra',NULL,0),
+  (130,9,'AO',9,'Angola',NULL,0),
+  (130,10,'AI',10,'Anguilla',NULL,0),
+  (130,11,'AQ',11,'Antarctica',NULL,0),
+  (130,12,'AG',12,'Antigua and Barbuda',NULL,0),
+  (130,13,'AR',13,'Argentina',NULL,0),
+  (130,14,'AM',14,'Armenia',NULL,0),
+  (130,15,'AW',15,'Aruba',NULL,0),
+  (130,16,'AU',16,'Australia',NULL,0),
+  (130,17,'AT',17,'Austria',NULL,0),
+  (130,18,'AZ',18,'Azerbaijan',NULL,0),
+  (130,19,'BS',19,'Bahamas',NULL,0),
+  (130,20,'BH',20,'Bahrain',NULL,0),
+  (130,21,'BD',21,'Bangladesh',NULL,0),
+  (130,22,'BB',22,'Barbados',NULL,0),
+  (130,23,'BY',23,'Belarus',NULL,0),
+  (130,24,'BE',24,'Belgium',NULL,0),
+  (130,25,'BZ',25,'Belize',NULL,0),
+  (130,26,'BJ',26,'Benin',NULL,0),
+  (130,27,'BM',27,'Bermuda',NULL,0),
+  (130,28,'BT',28,'Bhutan',NULL,0),
+  (130,29,'BO',29,'Bolivia',NULL,0),
+  (130,30,'BA',30,'Bosnia and Herzegovina',NULL,0),
+  (130,31,'BW',31,'Botswana',NULL,0),
+  (130,32,'BV',32,'Bouvet Island',NULL,0),
+  (130,33,'BR',33,'Brazil',NULL,0),
+  (130,34,'VG',34,'British Virgin Islands',NULL,0),
+  (130,35,'IO',35,'British Indian Ocean Territory',NULL,0),
+  (130,36,'BN',36,'Brunei Darussalam',NULL,0),
+  (130,37,'BG',37,'Bulgaria',NULL,0),
+  (130,38,'BF',38,'Burkina Faso',NULL,0),
+  (130,39,'BI',39,'Burundi',NULL,0),
+  (130,40,'KH',40,'Cambodia',NULL,0),
+  (130,41,'CM',41,'Cameroon',NULL,0),
+  (130,42,'CV',42,'Cape Verde',NULL,0),
+  (130,43,'KY',43,'Cayman Islands',NULL,0),
+  (130,44,'CF',44,'Central African Republic',NULL,0),
+  (130,45,'TD',45,'Chad',NULL,0),
+  (130,46,'CL',46,'Chile',NULL,0),
+  (130,47,'CN',47,'China',NULL,0),
+  (130,48,'HK',48,'Hong Kong, SAR China',NULL,0),
+  (130,49,'MO',49,'Macao, SAR China',NULL,0),
+  (130,50,'CX',50,'Christmas Island',NULL,0),
+  (130,51,'CC',51,'Cocos (Keeling Islands)',NULL,0),
+  (130,52,'CO',52,'Colombia',NULL,0),
+  (130,53,'KM',53,'Comoros',NULL,0),
+  (130,54,'CG',54,'Congo (Brazzaville)',NULL,0),
+  (130,55,'CD',55,'Congo, (Kinshasa)',NULL,0),
+  (130,56,'CK',56,'Cook Islands',NULL,0),
+  (130,57,'CR',57,'Costa Rica',NULL,0),
+  (130,58,'CI',58,'Côte dNULLIvoire','',0),
+  (130,59,'HR',59,'Croatia',NULL,0),
+  (130,60,'CU',60,'Cuba',NULL,0),
+  (130,61,'CY',61,'Cyprus',NULL,0),
+  (130,62,'CZ',62,'Czech Republic',NULL,0),
+  (130,63,'DK',63,'Denmark',NULL,0),
+  (130,64,'DJ',64,'Djibouti',NULL,0),
+  (130,65,'DM',65,'Dominica',NULL,0),
+  (130,66,'DO',66,'Dominican Republic',NULL,0),
+  (130,67,'EC',67,'Ecuador',NULL,0),
+  (130,68,'EG',68,'Egypt',NULL,0),
+  (130,69,'SV',69,'El Salvador',NULL,0),
+  (130,70,'GQ',70,'Equatorial Guinea',NULL,0),
+  (130,71,'ER',71,'Eritrea',NULL,0),
+  (130,72,'EE',72,'Estonia',NULL,0),
+  (130,73,'ET',73,'Ethiopia',NULL,0),
+  (130,74,'FK',74,'Falkland Islands (Malvinas)',NULL,0),
+  (130,75,'FO',75,'Faroe Islands',NULL,0),
+  (130,76,'FJ',76,'Fiji',NULL,0),
+  (130,77,'FI',77,'Finland',NULL,0),
+  (130,78,'FR',78,'France',NULL,0),
+  (130,79,'GF',79,'French Guiana',NULL,0),
+  (130,80,'PF',80,'French Polynesia',NULL,0),
+  (130,81,'TF',81,'French Southern Territories',NULL,0),
+  (130,82,'GA',82,'Gabon',NULL,0),
+  (130,83,'GM',83,'Gambia',NULL,0),
+  (130,84,'GE',84,'Georgia',NULL,0),
+  (130,85,'DE',85,'Germany',NULL,0),
+  (130,86,'GH',86,'Ghana',NULL,0),
+  (130,87,'GI',87,'Gibraltar',NULL,0),
+  (130,88,'GR',88,'Greece',NULL,0),
+  (130,89,'GL',89,'Greenland',NULL,0),
+  (130,90,'GD',90,'Grenada',NULL,0),
+  (130,91,'GP',91,'Guadeloupe',NULL,0),
+  (130,92,'GU',92,'Guam',NULL,0),
+  (130,93,'GT',93,'Guatemala',NULL,0),
+  (130,94,'GG',94,'Guernsey',NULL,0),
+  (130,95,'GN',95,'Guinea',NULL,0),
+  (130,96,'GW',96,'Guinea-Bissau',NULL,0),
+  (130,97,'GY',97,'Guyana',NULL,0),
+  (130,98,'HT',98,'Haiti',NULL,0),
+  (130,99,'HM',99,'Heard and Mcdonald Islands',NULL,0),
+  (130,100,'VA',100,'Holy See (Vatican City State)',NULL,0),
+  (130,101,'HN',101,'Honduras',NULL,0),
+  (130,102,'HU',102,'Hungary',NULL,0),
+  (130,103,'IS',103,'Iceland',NULL,0),
+  (130,104,'IN',104,'India',NULL,0),
+  (130,105,'ID',105,'Indonesia',NULL,0),
+  (130,106,'IR',106,'Iran, Islamic Republic of',NULL,0),
+  (130,107,'IQ',107,'Iraq',NULL,0),
+  (130,108,'IE',108,'Ireland',NULL,0),
+  (130,109,'IM',109,'Isle of Man',NULL,0),
+  (130,110,'IL',110,'Israel',NULL,0),
+  (130,111,'IT',111,'Italy',NULL,0),
+  (130,112,'JM',112,'Jamaica',NULL,0),
+  (130,113,'JP',113,'Japan',NULL,0),
+  (130,114,'JE',114,'Jersey',NULL,0),
+  (130,115,'JO',115,'Jordan',NULL,0),
+  (130,116,'KZ',116,'Kazakhstan',NULL,0),
+  (130,117,'KE',117,'Kenya',NULL,0),
+  (130,118,'KI',118,'Kiribati',NULL,0),
+  (130,119,'KP',119,'Korea (North)',NULL,0),
+  (130,120,'KR',120,'Korea (South)',NULL,0),
+  (130,121,'KW',121,'Kuwait',NULL,0),
+  (130,122,'KG',122,'Kyrgyzstan',NULL,0),
+  (130,123,'LA',123,'Lao PDR',NULL,0),
+  (130,124,'LV',124,'Latvia',NULL,0),
+  (130,125,'LB',125,'Lebanon',NULL,0),
+  (130,126,'LS',126,'Lesotho',NULL,0),
+  (130,127,'LR',127,'Liberia',NULL,0),
+  (130,128,'LY',128,'Libya',NULL,0),
+  (130,129,'LI',129,'Liechtenstein',NULL,0),
+  (130,130,'LT',130,'Lithuania',NULL,0),
+  (130,131,'LU',131,'Luxembourg',NULL,0),
+  (130,132,'MK',132,'Macedonia, Republic of',NULL,0),
+  (130,133,'MG',133,'Madagascar',NULL,0),
+  (130,134,'MW',134,'Malawi',NULL,0),
+  (130,135,'MY',135,'Malaysia',NULL,0),
+  (130,136,'MV',136,'Maldives',NULL,0),
+  (130,137,'ML',137,'Mali',NULL,0),
+  (130,138,'MT',138,'Malta',NULL,0),
+  (130,139,'MH',139,'Marshall Islands',NULL,0),
+  (130,140,'MQ',140,'Martinique',NULL,0),
+  (130,141,'MR',141,'Mauritania',NULL,0),
+  (130,142,'MU',142,'Mauritius',NULL,0),
+  (130,143,'YT',143,'Mayotte',NULL,0),
+  (130,144,'MX',144,'Mexico',NULL,0),
+  (130,145,'FM',145,'Micronesia, Federated States of',NULL,0),
+  (130,146,'MD',146,'Moldova, Republic of',NULL,0),
+  (130,147,'MC',147,'Monaco',NULL,0),
+  (130,148,'MN',148,'Mongolia',NULL,0),
+  (130,149,'ME',149,'Montenegro',NULL,0),
+  (130,150,'MS',150,'Montserrat',NULL,0),
+  (130,151,'MA',151,'Morocco',NULL,0),
+  (130,152,'MZ',152,'Mozambique',NULL,0),
+  (130,153,'MM',153,'Myanmar',NULL,0),
+  (130,154,'NA',154,'Namibia',NULL,0),
+  (130,155,'NR',155,'Nauru',NULL,0),
+  (130,156,'NP',156,'Nepal',NULL,0),
+  (130,157,'NL',157,'Netherlands',NULL,0),
+  (130,158,'AN',158,'Netherlands Antilles',NULL,0),
+  (130,159,'NC',159,'New Caledonia',NULL,0),
+  (130,160,'NZ',160,'New Zealand',NULL,0),
+  (130,161,'NI',161,'Nicaragua',NULL,0),
+  (130,162,'NE',162,'Niger',NULL,0),
+  (130,163,'NG',163,'Nigeria',NULL,0),
+  (130,164,'NU',164,'Niue',NULL,0),
+  (130,165,'NF',165,'Norfolk Island',NULL,0),
+  (130,166,'MP',166,'Northern Mariana Islands',NULL,0),
+  (130,167,'NO',167,'Norway',NULL,0),
+  (130,168,'OM',168,'Oman',NULL,0),
+  (130,169,'PK',169,'Pakistan',NULL,0),
+  (130,170,'PW',170,'Palau',NULL,0),
+  (130,171,'PS',171,'Palestinian Territory',NULL,0),
+  (130,172,'PA',172,'Panama',NULL,0),
+  (130,173,'PG',173,'Papua New Guinea',NULL,0),
+  (130,174,'PY',174,'Paraguay',NULL,0),
+  (130,175,'PE',175,'Peru',NULL,0),
+  (130,176,'PH',176,'Philippines',NULL,0),
+  (130,177,'PN',177,'Pitcairn',NULL,0),
+  (130,178,'PL',178,'Poland',NULL,0),
+  (130,179,'PT',179,'Portugal',NULL,0),
+  (130,180,'PR',180,'Puerto Rico',NULL,0),
+  (130,181,'QA',181,'Qatar',NULL,0),
+  (130,182,'RE',182,'Réunion',NULL,0),
+  (130,183,'RO',183,'Romania',NULL,0),
+  (130,184,'RU',184,'Russian Federation',NULL,0),
+  (130,185,'RW',185,'Rwanda',NULL,0),
+  (130,186,'BL',186,'Saint-Barthélemy',NULL,0),
+  (130,187,'SH',187,'Saint Helena',NULL,0),
+  (130,188,'KN',188,'Saint Kitts and Nevis',NULL,0),
+  (130,189,'LC',189,'Saint Lucia',NULL,0),
+  (130,190,'MF',190,'Saint-Martin (French)',NULL,0),
+  (130,191,'PM',191,'Saint Pierre and Miquelon',NULL,0),
+  (130,192,'VC',192,'Saint Vincent and Grenadines',NULL,0),
+  (130,193,'WS',193,'Samoa',NULL,0),
+  (130,194,'SM',194,'San Marino',NULL,0),
+  (130,195,'ST',195,'Sao Tome and Principe',NULL,0),
+  (130,196,'SA',196,'Saudi Arabia',NULL,0),
+  (130,197,'SN',197,'Senegal',NULL,0),
+  (130,198,'RS',198,'Serbia',NULL,0),
+  (130,199,'SC',199,'Seychelles',NULL,0),
+  (130,200,'SL',200,'Sierra Leone',NULL,0),
+  (130,201,'SG',201,'Singapore',NULL,0),
+  (130,202,'SK',202,'Slovakia',NULL,0),
+  (130,203,'SI',203,'Slovenia',NULL,0),
+  (130,204,'SB',204,'Solomon Islands',NULL,0),
+  (130,205,'SO',205,'Somalia',NULL,0),
+  (130,206,'ZA',206,'South Africa',NULL,0),
+  (130,207,'GS',207,'South Georgia and the South Sandwich Islands',NULL,0),
+  (130,209,'SS',209,'South Sudan',NULL,0),
+  (130,210,'ES',210,'Spain',NULL,0),
+  (130,211,'LK',211,'Sri Lanka',NULL,0),
+  (130,212,'SD',212,'Sudan',NULL,0),
+  (130,213,'SR',213,'Suriname',NULL,0),
+  (130,214,'SJ',214,'Svalbard and Jan Mayen Islands',NULL,0),
+  (130,215,'SZ',215,'Swaziland',NULL,0),
+  (130,216,'SE',216,'Sweden',NULL,0),
+  (130,217,'CH',217,'Switzerland',NULL,0),
+  (130,218,'SY',218,'Syrian Arab Republic (Syria)',NULL,0),
+  (130,219,'TW',219,'Taiwan, Republic of China',NULL,0),
+  (130,220,'TJ',220,'Tajikistan',NULL,0),
+  (130,221,'TZ',221,'Tanzania, United Republic of',NULL,0),
+  (130,222,'TH',222,'Thailand',NULL,0),
+  (130,223,'TL',223,'Timor-Leste',NULL,0),
+  (130,224,'TG',224,'Togo',NULL,0),
+  (130,225,'TK',225,'Tokelau',NULL,0),
+  (130,226,'TO',226,'Tonga',NULL,0),
+  (130,227,'TT',227,'Trinidad and Tobago',NULL,0),
+  (130,228,'TN',228,'Tunisia',NULL,0),
+  (130,229,'TR',229,'Turkey',NULL,0),
+  (130,230,'TM',230,'Turkmenistan',NULL,0),
+  (130,231,'TC',231,'Turks and Caicos Islands',NULL,0),
+  (130,232,'TV',232,'Tuvalu',NULL,0),
+  (130,233,'UG',233,'Uganda',NULL,0),
+  (130,234,'UA',234,'Ukraine',NULL,0),
+  (130,235,'AE',235,'United Arab Emirates',NULL,0),
+  (130,236,'GB',236,'United Kingdom',NULL,0),
+  (130,237,'UM',237,'US Minor Outlying Islands',NULL,0),
+  (130,238,'UY',238,'Uruguay',NULL,0),
+  (130,239,'UZ',239,'Uzbekistan',NULL,0),
+  (130,240,'VU',240,'Vanuatu',NULL,0),
+  (130,241,'VE',241,'Venezuela (Bolivarian Republic)',NULL,0),
+  (130,242,'VN',242,'Viet Nam',NULL,0),
+  (130,243,'VI',243,'Virgin Islands, US',NULL,0),
+  (130,244,'WF',244,'Wallis and Futuna Islands',NULL,0),
+  (130,245,'EH',245,'Western Sahara',NULL,0),
+  (130,246,'YE',246,'Yemen',NULL,0),
+  (130,247,'ZM',247,'Zambia',NULL,0),
+  (130,248,'ZW',248,'Zimbabwe',NULL,0),
+  (140, 1, 'AL', 1, 'AL', 'Alabama',0),
+  (140, 2, 'AK', 2, 'AK', 'Alaska',0),
+  (140, 3, 'AB', 3, 'AB', 'Alberta',0),
+  (140, 4, 'AS', 4, 'AS', 'American Samoa',0),
+  (140, 5, 'AZ', 5, 'AZ', 'Arizona',0),
+  (140, 6, 'AR', 6, 'AR', 'Arkansas',0),
+  (140, 7, 'BC', 7, 'BC', 'British Columbia',0),
+  (140, 8, 'CA', 8, 'CA', 'California',0),
+  (140, 9, 'CO', 9, 'CO', 'Colorado',0),
+  (140, 10, 'CT', 10, 'CT', 'Connecticut',0),
+  (140, 11, 'DE', 11, 'DE', 'Delaware',0),
+  (140, 12, 'DC', 12, 'DC', 'District of Columbia',0),
+  (140, 13, 'FL', 13, 'FL', 'Florida',0),
+  (140, 14, 'GA', 14, 'GA', 'Georgia',0),
+  (140, 15, 'GU', 15, 'GU', 'Guam',0),
+  (140, 16, 'HI', 16, 'HI', 'Hawaii',0),
+  (140, 17, 'ID', 17, 'ID', 'Idaho',0),
+  (140, 18, 'IL', 18, 'IL', 'Illinois',0),
+  (140, 19, 'IN', 19, 'IN', 'Indiana',0),
+  (140, 20, 'IA', 20, 'IA', 'Iowa',0),
+  (140, 21, 'KS', 21, 'KS', 'Kansas',0),
+  (140, 22, 'KY', 22, 'KY', 'Kentucky',0),
+  (140, 23, 'LA', 23, 'LA', 'Louisiana',0),
+  (140, 24, 'ME', 24, 'ME', 'Maine',0),
+  (140, 25, 'MB', 25, 'MB', 'Manitoba',0),
+  (140, 26, 'MH', 26, 'MH', 'Marshall Islands',0),
+  (140, 27, 'MD', 27, 'MD', 'Maryland',0),
+  (140, 28, 'MA', 28, 'MA', 'Massachusetts',0),
+  (140, 29, 'MI', 29, 'MI', 'Michigan',0),
+  (140, 30, 'FM', 30, 'FM', 'Micronesia',0),
+  (140, 31, 'MN', 31, 'MN', 'Minnesota',0),
+  (140, 32, 'MS', 32, 'MS', 'Mississippi',0),
+  (140, 33, 'MO', 33, 'MO', 'Missouri',0),
+  (140, 34, 'MT', 34, 'MT', 'Montana',0),
+  (140, 35, 'NE', 35, 'NE', 'Nebraska',0),
+  (140, 36, 'NV', 36, 'NV', 'Nevada',0),
+  (140, 37, 'NB', 37, 'NB', 'New Brunswick',0),
+  (140, 38, 'NH', 38, 'NH', 'New Hampshire',0),
+  (140, 39, 'NJ', 39, 'NJ', 'New Jersey',0),
+  (140, 40, 'NM', 40, 'NM', 'New Mexico',0),
+  (140, 41, 'NY', 41, 'NY', 'New York',0),
+  (140, 42, 'NL', 42, 'NL', 'Newfoundland and Labrador',0),
+  (140, 43, 'NC', 43, 'NC', 'North Carolina',0),
+  (140, 44, 'ND', 44, 'ND', 'North Dakota',0),
+  (140, 45, 'MP', 45, 'MP', 'Northern Marianas',0),
+  (140, 46, 'NT', 46, 'NT', 'Northwest Territories',0),
+  (140, 47, 'NS', 47, 'NS', 'Nova Scotia',0),
+  (140, 48, 'NU', 48, 'NU', 'Nunavut',0),
+  (140, 49, 'OH', 49, 'OH', 'Ohio',0),
+  (140, 50, 'OK', 50, 'OK', 'Oklahoma',0),
+  (140, 51, 'ON', 51, 'ON', 'Ontario',0),
+  (140, 52, 'OR', 52, 'OR', 'Oregon',0),
+  (140, 53, 'PW', 53, 'PW', 'Palau',0),
+  (140, 54, 'PA', 54, 'PA', 'Pennsylvania',0),
+  (140, 55, 'PE', 55, 'PE', 'Prince Edward Island',0),
+  (140, 56, 'PR', 56, 'PR', 'Puerto Rico',0),
+  (140, 57, 'QC', 57, 'QC', 'Quebec',0),
+  (140, 58, 'RI', 58, 'RI', 'Rhode Island',0),
+  (140, 59, 'SK', 59, 'SK', 'Saskatchewan',0),
+  (140, 60, 'SC', 60, 'SC', 'South Carolina',0),
+  (140, 61, 'SD', 61, 'SD', 'South Dakota',0),
+  (140, 62, 'TN', 62, 'TN', 'Tennessee',0),
+  (140, 63, 'TX', 63, 'TX', 'Texas',0),
+  (140, 64, 'UT', 64, 'UT', 'Utah',0),
+  (140, 65, 'VT', 65, 'VT', 'Vermont',0),
+  (140, 66, 'VI', 66, 'VI', 'Virgin Islands',0),
+  (140, 67, 'VA', 67, 'VA', 'Virginia',0),
+  (140, 68, 'WA', 68, 'WA', 'Washington',0),
+  (140, 69, 'WV', 69, 'WV', 'West Virginia',0),
+  (140, 70, 'WI', 70, 'WI', 'Wisconsin',0),
+  (140, 71, 'WY', 71, 'WY', 'Wyoming',0),
+  (140, 72, 'YT', 72, 'YT', 'Yukon',0);
+/*!40000 ALTER TABLE `SurveyQuestionTypeDefaults` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
+-- Table structure for table `SurveyQuestionTypes`
+--
+
+DROP TABLE IF EXISTS `SurveyQuestionTypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SurveyQuestionTypes` (
+  `typeid` int(11) NOT NULL AUTO_INCREMENT,
+  `shortname` varchar(100) NOT NULL,
+  `description` varchar(1024) DEFAULT NULL,
+  `current` tinyint(1) DEFAULT '0',
+  `display_order` int(11) NOT NULL,
+  PRIMARY KEY (`typeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Type info.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Dumping data for table `SurveyQuestionTypes`
+--
+
+LOCK TABLES `SurveyQuestionTypes` WRITE;
+/*!40000 ALTER TABLE `SurveyQuestionTypes` DISABLE KEYS */;
+INSERT INTO `SurveyQuestionTypes` (`typeid`, `shortname`, `description`, `current`, `display_order`)
+VALUES
+  (5, 'heading', 'HTML heading/prompt without input field', 1, 5),
+  (10, 'hor-radio', 'Radio button list, select one of many-horizontal output', 1, 10),
+  (15, 'vert-radio', 'Radio button list, select one of many-vertical output', 1, 15),
+  (20, 'single-pulldown', 'Select list, select one of many', 1, 20),
+  (30, 'multi-select list', 'Select list, select multiple of many with Ctrl/click', 1, 30),
+  (40, 'multi-checkbox list', 'Checkbox list, check multiple of many', 1, 31),
+  (50, 'multi-display', 'left<-->right select boxes, move selected options to right box', 1, 32),
+  (60, 'openend', 'Single line of text', 1, 40),
+  (70, 'text', 'Multi-line text box', 1, 50),
+  (71, 'html-text', 'HTML editor based multi-line text box', 1, 55),
+  (80, 'numberselect', 'Number from min to max, ascending or descending', 1, 60),
+  (90, 'number', 'Integer fill in the blank', 1, 61),
+  (100, 'monthnum', 'Months by number (1-12)', 1, 140),
+  (110, 'monthabv', 'Months by abbreviation (Jan-Dec)', 1, 150),
+  (120, 'monthyear', 'Months by abbreviation (Jan-Dec, current year-1900)', 1, 160),
+  (130, 'country', 'Country List', 1, 170),
+  (140, 'states', 'State/Province List', 1, 180);
+/*!40000 ALTER TABLE `SurveyQuestionTypes` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `Tags`
 --
 
 DROP TABLE IF EXISTS `Tags`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Tags` (
     `tagid` int(11) NOT NULL auto_increment,
     `tagname` varchar(30) character set utf8 collate utf8_general_ci default NULL,
     `display_order` int(11) NOT NULL default '0',
     PRIMARY KEY  (`tagid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Tags`
@@ -1689,13 +2445,16 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Tracks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Tracks` (
-  `trackid` int(11) NOT NULL auto_increment,
-  `trackname` varchar(50) default NULL,
-  `display_order` int(11) default NULL,
-  `selfselect` tinyint(1) default NULL,
-  PRIMARY KEY  (`trackid`)
+  `trackid` int(11) NOT NULL AUTO_INCREMENT,
+  `trackname` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `selfselect` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`trackid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Tracks`
@@ -1712,6 +2471,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Types` (
   `typeid` int(11) NOT NULL AUTO_INCREMENT,
   `typename` varchar(50) DEFAULT NULL,
@@ -1719,6 +2480,7 @@ CREATE TABLE `Types` (
   `selfselect` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`typeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Types`
@@ -1760,14 +2522,17 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `UserHasPermissionRole`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `UserHasPermissionRole` (
-  `badgeid` varchar(15) NOT NULL default '',
-  `permroleid` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`badgeid`,`permroleid`),
+  `badgeid` varchar(15) NOT NULL DEFAULT '',
+  `permroleid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`badgeid`,`permroleid`),
   KEY `FK_UserHasPermissionRole` (`permroleid`),
   CONSTRAINT `UserHasPermissionRole_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `UserHasPermissionRole_ibfk_2` FOREIGN KEY (`permroleid`) REFERENCES `PermissionRoles` (`permroleid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `UserHasPermissionRole`
@@ -1778,6 +2543,7 @@ LOCK TABLES `UserHasPermissionRole` WRITE;
 INSERT INTO `UserHasPermissionRole` VALUES ('1',2),('2',3);
 /*!40000 ALTER TABLE `UserHasPermissionRole` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
