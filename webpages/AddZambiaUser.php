@@ -162,20 +162,20 @@ if (array_key_exists("PostCheck", $_POST)) {
 
 // Start of display portion
 
-	$prefix_len = mb_strlen(REG_PART_PREFIX) + 1;
-	$query=<<<EOD
+$prefix_len = mb_strlen(REG_PART_PREFIX) + 1;
+$query=<<<EOD
 SELECT
-		MAX(CONVERT(SUBSTRING(badgeid, $prefix_len), UNSIGNED)) M
-	FROM
-		CongoDump
-	WHERE badgeid LIKE '
+        MAX(CONVERT(SUBSTRING(badgeid, $prefix_len), UNSIGNED)) M
+    FROM
+        CongoDump
+    WHERE badgeid LIKE '
 EOD;
 $query .= REG_PART_PREFIX . "%'";
 $last_badgeid = "";
 
 $result = mysqli_query_exit_on_error($query);
 while ($row = mysqli_fetch_assoc($result)) {
-   $last_badgeid = $row["M"];
+   $last_badgeid = REG_PART_PREFIX . $row["M"];
 }
 mysqli_free_result($result);
 if ($last_badgeid == "") {
