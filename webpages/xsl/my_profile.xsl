@@ -228,8 +228,7 @@
                     </div>
                     <xsl:if test="$enableBioEdit!='1'">
                         <div class="row">
-                            <h3 class="noteWLfPad">At this time, you may not edit either your biography or your name for
-                                publication. They have already gone to print.
+                            <h3 class="noteWLfPad">At this time, you may not edit either your biography or your name for publication.
                             </h3>
                         </div>
                     </xsl:if>
@@ -252,8 +251,7 @@
                       <div class="row">
                         <div class="col-sm-12">
                           <label for="htmlbio">
-                            Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
-                            spaces):
+                            Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including spaces):
                           </label>
                         </div>
                       </div>
@@ -290,8 +288,7 @@
                       <div class="row">
                         <div class="col-sm-12">
                           <label for="bio">
-                            Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
-                            spaces):
+                            Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including spaces):
                           </label>
                         </div>
                       </div>

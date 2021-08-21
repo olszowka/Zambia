@@ -72,10 +72,10 @@ function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
 }
 
 function mysql_prepare_query_XML($query_array, $parmtype_array, $param_array) {
-	global $linki, $message_error;
-	$xml = new DomDocument("1.0", "UTF-8");
-	$doc = $xml -> createElement("doc");
-	$doc = $xml -> appendChild($doc);
+    global $linki, $message_error;
+    $xml = new DomDocument("1.0", "UTF-8");
+    $doc = $xml -> createElement("doc");
+    $doc = $xml -> appendChild($doc);
     foreach ($query_array as $name=>$query) {
         $query = trim($query);
         $parama = $param_array[$name];
@@ -97,7 +97,7 @@ function mysql_prepare_query_XML($query_array, $parmtype_array, $param_array) {
         }
         mysqli_free_result($result);
     }
-	return $xml;
+    return $xml;
 }
 
 function mysql_query_XML($query_array) {
@@ -754,12 +754,32 @@ function retrieve_session_from_db($sessionid) {
     $session = array();
     $query = <<<EOD
 SELECT
-        sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
-        title, secondtitle, pocketprogtext,
+        sessionid,
+        trackid,
+        typeid,
+        divisionid,
+        pubstatusid,
+        languagestatusid,
+        pubsno,
+        title,
+        secondtitle,
+        pocketprogtext,
         CASE WHEN ISNULL(progguiddesc) THEN progguidhtml ELSE progguiddesc END AS progguiddesc,
         CASE WHEN ISNULL(progguidhtml) THEN progguiddesc ELSE progguidhtml END AS progguidhtml,
-        persppartinfo, duration, estatten, kidscatid, signupreq, roomsetid, notesforpart,
-        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink
+        persppartinfo,
+        duration,
+        estatten,
+        kidscatid,
+        signupreq,
+        roomsetid,
+        notesforpart,
+        servicenotes,
+        statusid,
+        notesforprog,
+        warnings,
+        invitedguest,
+        ts,
+        meetinglink
     FROM
         Sessions
     WHERE
@@ -898,7 +918,12 @@ function retrieveParticipant($badgeid) {
     }
     $query = <<<EOD
 SELECT
-        pubsname, password, bestway, interested, bio, share_email
+        pubsname,
+        password,
+        bestway,
+        interested,
+        bio,
+        share_email
     FROM
         Participants
     WHERE
