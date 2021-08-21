@@ -224,7 +224,8 @@ if (USE_REG_SYSTEM === FALSE) {
         </div>
         <div class="row">
 <?php
-if (may_I("ResetUserPassword")) {
+if (RESET_PASSWORD == true) {
+    if (may_I("ResetUserPassword")) {
 ?>
             <div class="col-sm-3">
                 <div class="">
@@ -244,6 +245,7 @@ if (may_I("ResetUserPassword")) {
                 </div>
             </div>     
 <?php
+    };
 };
 ?>
             <div class="col-sm-3">
