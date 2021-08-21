@@ -23,4 +23,30 @@ Con name: <?php echo CON_NAME; ?><br />
 // echo phpinfo();
 ?>
 
+<?php
+$query = "SELECT * FROM Phases WHERE current=1 AND implemented=1 ORDER BY display_order";
+if (!$result = mysqli_query_exit_on_error($query)) {
+    exit(); // Should have exited already
+}
+echo "<hr>\n";
+echo "Phases that are on: <br /> \n";
+while ($row = mysqli_fetch_assoc($result)) {
+    echo '<div class="pl-4">' . $row["phasename"] . '</div>' . "\n";
+}
+mysqli_free_result($result);
+echo "<br /> \n";
+
+$query = "SELECT * FROM Phases WHERE current=0 AND implemented=1 ORDER BY display_order";
+if (!$result = mysqli_query_exit_on_error($query)) {
+    exit(); // Should have exited already
+}
+echo "Phases that are off: <br /> \n";
+while ($row = mysqli_fetch_assoc($result)) {
+    echo '<div class="pl-4">' . $row["phasename"] . '</div>' . "\n";
+}
+mysqli_free_result($result);
+
+?>
+</p>
+
 <?php staff_footer(); ?>
