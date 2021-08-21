@@ -21,6 +21,7 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $paramArray["header_error_message"] = $headerErrorMessage;
     $paramArray["no_user_required"] = $noUserRequired;
     $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
+    $paramArray["LOGIN_PHP"] = LOGIN_PHP;
     if ($bootstrap4) {
         RenderXSLT('GlobalHeader_BS4.xsl', $paramArray);
     } else {

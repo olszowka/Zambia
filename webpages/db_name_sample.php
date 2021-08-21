@@ -15,8 +15,8 @@ define("PHP_DEFAULT_TIMEZONE", "AMERICA/NEW_YORK"); // must be valid argument to
 define("DB_DEFAULT_TIMEZONE", "US/Eastern"); // must be valid argument to set time_zone,  Should correspond with PHP configuration
 define("CON_START_DATIM", "2009-08-06 00:00:00"); // Broadly used.  Must be in mysql format: "YYYY-MM-DD HH:MM:SS" (HH:00-23) HH:MM:SS probably should be 00:00:00
 define("DAY_CUTOFF_HOUR", 8); // times before this hour (of 0-23) are considered previous day
-		// used for Participant Availability only
-define("FIRST_DAY_START_TIME", "17:30"); // next 5 are for grid scheduler
+        // used for Participant Availability only
+define("FIRST_DAY_START_TIME", "15:00"); // next 5 are for grid scheduler
 define("OTHER_DAY_STOP_TIME", "25:00");
 define("OTHER_DAY_START_TIME", "8:30");
 define("LAST_DAY_STOP_TIME", "16:00");
@@ -50,30 +50,31 @@ define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires e
 define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
 define("PASSWORD_RESET_LINK_TIMEOUT", "PT01H"); // How long until password reset link expires See https://www.php.net/manual/en/dateinterval.construct.php for format.
 define("PASSWORD_RESET_LINK_TIMEOUT_DISPLAY", "1 hour"); // Text description of PASSWORD_RESET_LINK_TIMEOUT
-// Self service reset of password via email link requires use of reCAPTCHA to prevent bad actors from using page to send email
+        // Self service reset of password via email link requires use of reCAPTCHA to prevent bad actors from using page to send email
 define("RECAPTCHA_SITE_KEY", ""); // Register the domain you use for Zambia with Google reCAPTCHA to acquire site key ...
 define("RECAPTCHA_SERVER_KEY", ""); // ... and server key
 define("PASSWORD_RESET_FROM_EMAIL", "admin@somewhere.net"); // From address to be used for password reset emails
 define("ENCRYPT_KEY", "jowigQuT9ruM287LEG9M4GuCfRcjpPr9ABA5ZhSj5QFYUv5VV3HLLVSuinBjrcCg"); // used for encrypting hidden inputs; I suggest finding a random password generator and putting in a 64 character alphanumeric only password
 define("DEFAULT_USER_PASSWORD", "changeme"); // Note, Zambia will never directly set a user's password to this default nor will it
-// create users with a default password, but some external integrations to create users do so.  In that case, Zambia can
-// identify users with this default password and prompt them to change it as well as report to staff. If your installation
-// does not use a default password, leave this empty ''.
+        // create users with a default password, but some external integrations to create users do so.  In that case, Zambia can
+        // identify users with this default password and prompt them to change it as well as report to staff. If your installation
+        // does not use a default password, leave this empty ''.
 define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag fields are used -- one of 4 following values:
-// "TAG_ONLY" : Track field is not used and will be hidden where possible.
-//      NOTE: TAG_ONLY requires that trackid 1 exist in Tracks, be the hidden track for TAG_ONLY and have selfselect be set to 1 (1, "Tag Based", 10, 1)
-// "TAG_OVER_TRACK" : Both fields are used, but primary sorting and filtering is by Tag.
-// "TRACK_OVER_TAG" : Both fields are used, but primary sorting and filtering is by Track.
-// "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
+        // "TAG_ONLY" : Track field is not used and will be hidden where possible.
+        //      NOTE: TAG_ONLY requires that trackid 1 exist in Tracks, be the hidden track for TAG_ONLY and have selfselect be set to 1 (1, "Tag Based", 10, 1)
+        // "TAG_OVER_TRACK" : Both fields are used, but primary sorting and filtering is by Tag.
+        // "TRACK_OVER_TAG" : Both fields are used, but primary sorting and filtering is by Track.
+        // "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
 define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all users
 define("USE_REG_SYSTEM", FALSE);
-// True -> Zambia users loaded from reg system into CongoDump; staff users cannot edit them
-// False -> Zambia users created and edited by staff users in Zambia
+        // True -> Zambia users loaded from reg system into CongoDump; staff users cannot edit them
+        // False -> Zambia users created and edited by staff users in Zambia
 define("REG_PART_PREFIX", "");
-// only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
+        // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
 define("MEETING_LINK", TRUE); // Add support for Meetinglink in sessions
+
 // Items for Photo Upload/Approval
 define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
 define("PHOTO_UPLOAD_DIRECTORY", "../upload_photos");  // outside of web server path, only served by PHP
@@ -85,17 +86,27 @@ define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participa
 define("USING_SURVEYS", FALSE); // enable the survey feature
 
 define("CON_THEME", "");
-// if con-specific theming should be applied, you can reference a theme css here.
-// for example: define("CON_THEME", "themes/reallybigcon/main.css");
+        // if con-specific theming should be applied, you can reference a theme css here.
+        // for example: define("CON_THEME", "themes/reallybigcon/main.css");
 define("CON_HEADER_IMG", "");
-// to improve the con branding, you can define a con-specific header image that will take the place of the 
-// Zambia illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
+        // to improve the con branding, you can define a con-specific header image that will take the place of the 
+        // Zambia illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
 define("CON_HEADER_IMG_ALT", "");
-// to improve the con branding, you can specify the alt-text of the header image. For example:
-// define("CON_HEADER_IMG_ALT", "Really Big Con Logo);
+        // to improve the con branding, you can specify the alt-text of the header image. For example:
+        // define("CON_HEADER_IMG_ALT", "Really Big Con Logo);
+
 // Define DB Connection to ConReg Database.
 define("CONREG_DBHOSTNAME", "localhost");
 define("CONREG_DBUSERID", "");
 define("CONREG_DBPASSWORD", "");
 define("CONREG_DBDB", "");
+
+// Define DB Connection to Capricon Registration Database.
+define("USE_CAPREG_SYSTEM", FALSE);
+define("CAPREG_DBHOSTNAME", "");
+define("CAPREG_DBUSERID", "");
+define("CAPREG_DBPASSWORD", "");
+define("CAPREG_DBDB", "");
+define("LOGIN_PHP", "");
+define("CAP_REG_CON_YEAR", "");
 ?>

@@ -273,6 +273,9 @@ if (file_exists ('../db_name.php')) {
 } else {
     include ('./db_name.php');
 };
+if (USE_CAPREG_SYSTEM === TRUE) {
+    require_once ('./cap_reg.php'); // Calls an extra file which contains authentication methods for interfacing with Capricon's Registration. By Chris Dundon.
+}
 
 function prepare_db_and_more() {
     global $con_start_php_timestamp, $linki, $fatalError;
@@ -870,9 +873,13 @@ EOD;
 /* check login script, included in db_connect.php. */
 
 function isLoggedIn() {
-    global $message_error;
+    global $message_error, $message2, $reg_link;
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['hashedPassword'])) {
         return false;
+    }
+
+    if (USE_CAPREG_SYSTEM === true) {
+        return custom_isLoggedIn();
     }
 
     $query = "SELECT password FROM Participants WHERE badgeid = '{$_SESSION['badgeid']}';";
@@ -1167,4 +1174,90 @@ function survey_programmed() {
            return $questions > 0;
     return false;
 }
+
+
+function custom_log_mysqli_error($reg_link, $query, $additional_error_message) {
+    $result = "";
+    error_log("mysql query error in {$_SERVER["SCRIPT_FILENAME"]}");
+    if (!empty($query)) {
+        error_log($query);
+        $result = $query . "<br>\n";
+    }
+    $query_error = mysqli_error($reg_link);
+    if (!empty($query_error)) {
+        error_log($query_error);
+        $result .= $query_error . "<br>\n";
+    }
+    if (!empty($additional_error_message)) {
+        error_log($additional_error_message);
+        $result .= $additional_error_message . "<br>\n";
+    }
+    return $result;
+}
+
+function custom_mysqli_query_with_error_handling($reg_link, $query, $exit_on_error = false, $ajax = false) {
+    global $message_error;
+    $result = mysqli_query($reg_link, $query);
+
+    if (!$result) {
+        $message_error = custom_log_mysqli_error($reg_link, $query, "");
+        if ($exit_on_error) {
+            RenderError($message_error, $ajax); // will exit script
+        }
+    }
+    return $result;
+}
+
+
+
+// Function custom_isLoggedIn()
+// Reads the session variables and checks password in db to see if user is
+// logged in.  Returns true if logged in or false if not.  Assumes db already
+// connected on $reg_link.
+function custom_isLoggedIn() {
+    global $message_error, $message2, $reg_link;
+    $message2 = "";
+    $message_error = "";
+    //if (!isset($_SESSION['badgeid']) || !isset($_SESSION['password'])) {
+    //if (!isset($_SESSION['badgeid']) || !isset($_SESSION['hashedPassword'])) {
+    //    return false;
+    //}
+
+    $query = "SELECT Password FROM People WHERE PeopleID = '{$_SESSION['badgeid']}';";
+    if (!$result = custom_mysqli_query_with_error_handling($reg_link, $query)) {
+        unset($_SESSION['badgeid']);
+        // unset($_SESSION['password']);
+        unset($_SESSION['hashedPassword']);
+        // kill incorrect session variables.
+        return ""; //falsy
+    }
+
+    if (mysqli_num_rows($result) != 1) {
+        unset($_SESSION['badgeid']);
+        // unset($_SESSION['password']);
+        unset($_SESSION['hashedPassword']);
+        // kill incorrect session variables.
+        $message_error = "Incorrect number of rows returned when fetching password from db. $message_error";
+        return ""; //falsy
+    }
+
+    $row = mysqli_fetch_array($result, MYSQLI_NUM);
+    mysqli_free_result($result);
+
+    $db_pass = $row[0];
+
+    // if ($_SESSION['password'] != $db_pass) {
+    if (!hash_equals($_SESSION['hashedPassword'], $db_pass)) {
+    // kill incorrect session variables.
+        unset($_SESSION['badgeid']);
+        // unset($_SESSION['password']);
+        unset($_SESSION['hashedPassword']);
+        $message2 = "Incorrect userid or password.";
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
 ?>

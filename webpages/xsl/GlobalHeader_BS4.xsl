@@ -13,6 +13,7 @@
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
     <xsl:param name="header_error_message" select="''" />
     <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
+    <xsl:param name="LOGIN_PHP" select="'doLogin.php'" />
     <xsl:template match="/">
         <header class="header-wrapper" data-pbo="GlobalHeader_BS4.xsl:15">
             <div id="reg-header-container" class="collapsible-wrapper">
@@ -62,7 +63,7 @@
                         </xsl:when>
                         <xsl:when test="not($no_user_required)">
                             <div>
-                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="doLogin.php" data-pbo="GlobalHeader_BS4.xsl:60">
+                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="{$LOGIN_PHP}" data-pbo="GlobalHeader_BS4.xsl:60">
                                     <fieldset id="login-box">
                                         <xsl:choose>
                                             <xsl:when test="$login_page_status='Normal'">
