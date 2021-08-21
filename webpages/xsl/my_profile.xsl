@@ -14,6 +14,7 @@
     <xsl:param name="enableBioEdit" select="'0'"/>
     <xsl:param name="htmlbio" select="'0'"/>
     <xsl:param name="userIdPrompt" select="''"/>
+    <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
         <xsl:variable name="use_photo" select="/doc/query[@queryName='participant_info']/row/@use_photo" />
@@ -193,35 +194,37 @@
                         <input name="bestway" id="bestway" type="hidden" value="{$bestway}"/>
                     </xsl:otherwise>
                 </xsl:choose>
-                <div class="row mt-3">
-                    <legend>Change password</legend>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-auto">Leave passwords fields blank to leave password unchanged.</div>
-                </div>
-                <fieldset id="passGroup" class="control-group">
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="password">New Password:</label>
-                        </div>
-                        <div class="col-4">
-                            <input type="password" size="40" maxlength="40" name="password" id="password"
-                                class="form-control mycontrol mb-2" />
-                        </div>
+                <xsl:if test="$RESET_PASSWORD_SELF">
+                    <div class="row mt-3">
+                        <legend>Change password</legend>
                     </div>
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="cpassword">Confirm Password:</label>
-                        </div>
-                        <div class="col-4 mb-2">
-                            <input type="password" size="40" maxlength="40" name="cpassword" id="cpassword"
-                                class="form-control mycontrol mb-2" />
-                            <div class="invalid-feedback">
-                                Passwords don't match!
+                    <div class="row mb-3">
+                        <div class="col-auto">Leave passwords fields blank to leave password unchanged.</div>
+                    </div>
+                    <fieldset id="passGroup" class="control-group">
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="password">New Password:</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="password" size="40" maxlength="40" name="password" id="password"
+                                    class="form-control mycontrol mb-2" />
                             </div>
                         </div>
-                    </div>
-                </fieldset>
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="cpassword">Confirm Password:</label>
+                            </div>
+                            <div class="col-4 mb-2">
+                                <input type="password" size="40" maxlength="40" name="cpassword" id="cpassword"
+                                    class="form-control mycontrol mb-2" />
+                                <div class="invalid-feedback">
+                                    Passwords don't match!
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </xsl:if>
                 <fieldset>
                     <div class="row mt-3">
                         <legend>Published Information</legend>
