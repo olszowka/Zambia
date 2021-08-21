@@ -8,6 +8,7 @@
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
   <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
+  <xsl:param name="emailAvailable" select="'0'"/>
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
@@ -78,7 +79,7 @@
                   <li>
                     <a href="StaffAssignParticipants.php">Assign to a Session</a>
                   </li>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
+                  <xsl:if test="emailAvailable = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
                     <li>
                       <a href="StaffSendEmailCompose.php">Send email</a>
                     </li>

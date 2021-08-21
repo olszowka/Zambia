@@ -43,6 +43,7 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
         $paramArray = array();
         $paramArray["title"] = $title;
         $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
+        $paramArray["emailAvailable"] = SMTP_ADDRESS == '' ? 0 : 1;
         try {
             $reportMenuIncludeFilName = $bootstrap4 ? 'ReportMenuBS4Include.php' : 'ReportMenuInclude.php';
             $reportMenuIncludeFilHand = fopen ($reportMenuIncludeFilName,  'r');
