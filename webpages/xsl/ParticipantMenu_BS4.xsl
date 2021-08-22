@@ -24,6 +24,9 @@
           <li class="nav-item py-0">
             <a class="nav-link py-1" href="my_contact.php">Profile</a>
           </li>
+          <li class="nav-item py-0">
+            <a class="nav-link py-1" href="my_details.php">Personal Details</a>
+          </li>
           <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
             <li class="nav-item py-0">
               <a class="nav-link py-1" href="my_photo.php">Photo</a>

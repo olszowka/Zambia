@@ -105,6 +105,16 @@
                   <a href="#interests" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Interests">Interests</a>
                 </li>
               </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_AgeRanges']">
+                <li class="nav-item">
+                  <a href="#ageranges" class="nav-link" data-toggle="tab" data-top="part-top" id="t-AgeRanges">Age Ranges</a>
+                </li>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Pronouns']">
+                <li class="nav-item">
+                  <a href="#pronouns" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Pronouns">Pronouns</a>
+                </li>
+              </xsl:if>
             </ul>
             <div class="tab-content">
               <div class="tab-pane mt-4 fade show active" id="partdesc">
@@ -126,6 +136,14 @@
                     <li>Interests</li>
                     <p>Interests of the participant</p>
                   </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_AgeRanges']">
+                    <li>Age Ranges</li>
+                    <p>Age Ranges of the participant</p>
+                  </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Pronouns']">
+                    <li>Pronouns</li>
+                    <p>Pronouns of the participant</p>
+                  </xsl:if>
                 </ul>
               </div>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses']">
@@ -139,6 +157,12 @@
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Interests']">
                 <div class="tab-pane mt-4 fade" id="interests"/>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_AgeRanges']">
+                <div class="tab-pane mt-4 fade" id="ageranges"/>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Pronouns']">
+                <div class="tab-pane mt-4 fade" id="pronouns"/>
               </xsl:if>
             </div>
           </div>
