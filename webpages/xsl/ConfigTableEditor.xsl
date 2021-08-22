@@ -100,6 +100,11 @@
                   <a href="#roles" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Roles">Roles</a>
                 </li>
               </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Interests']">
+                <li class="nav-item">
+                  <a href="#interests" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Interests">Interests</a>
+                </li>
+              </xsl:if>
             </ul>
             <div class="tab-content">
               <div class="tab-pane mt-4 fade show active" id="partdesc">
@@ -117,6 +122,10 @@
                     <li>Roles</li>
                     <p>"Roles I'm willing to take on" in Particpant General Interests</p>
                   </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Interests']">
+                    <li>Interests</li>
+                    <p>Interests of the participant</p>
+                  </xsl:if>
                 </ul>
               </div>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses']">
@@ -127,6 +136,9 @@
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles']">
                 <div class="tab-pane mt-4 fade" id="roles"/>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Interests']">
+                <div class="tab-pane mt-4 fade" id="interests"/>
               </xsl:if>
             </div>
           </div>

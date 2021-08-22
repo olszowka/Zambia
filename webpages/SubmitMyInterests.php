@@ -1,15 +1,19 @@
 <?php
 // Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+
 global $congoinfo, $linki, $message2, $message_error, $participant, $title;
 $title = "My Interests";
 require('PartCommonCode.php'); // initialize db; check login;
 require_once('renderMyInterests.php');
+
 if (!may_I('my_gen_int_write')) {
     $message = "Currently, you do not have write access to this page.\n";
     RenderError($message);
     exit();
 }
+
 $rolerows = $_POST["rolerows"];
+$interestrows = $_POST["interestrows"];
 $newrow = $_POST["newrow"];
 $yespanels = stripslashes($_POST["yespanels"]);
 $nopanels = stripslashes($_POST["nopanels"]);
@@ -27,6 +31,19 @@ for ($i = 0; $i < $rolerows; $i++) {
     $rolearray[$i]["diddorole"] = $_POST["diddorole" . $i];
 }
 $rolearray['count'] = $rolerows;
+
+$interestarray = array();
+for ($i = 1; $i < $interestrows; $i++) {
+    $interestarray[$i] = array();
+    if (isset($_POST["willdointerest" . $i])) {
+        $interestarray[$i]["badgeid"] = $badgeid;
+    }
+    $interestarray[$i]["interestid"] = $_POST["interestid" . $i];
+    $interestarray[$i]["interestname"] = $_POST["interestname" . $i];
+    $interestarray[$i]["diddointerest"] = $_POST["diddointerest" . $i];
+}
+$interestarray['count'] = $interestrows;
+
 if ($newrow) {
     $query = "INSERT INTO ParticipantInterests SET badgeid='$badgeid',";
     $query .= "yespanels=\"" . mysqli_real_escape_string($linki, $yespanels);
@@ -72,10 +89,34 @@ for ($i = 0; $i < $rolerows; $i++) {
         }
     }
 }
+
+for ($i = 1; $i < $interestrows; $i++) {
+    if (isset($interestarray[$i]["badgeid"]) && ($interestarray[$i]["diddointerest"] == 0)) {
+        $query = "INSERT INTO ParticipantHasInterest set badgeid=\"" . $badgeid . "\", interestid=" . $interestarray[$i]["interestid"] . "";
+        if (!mysqli_query($linki, $query)) {
+            $message = $query . "<br>Error inserting into database.  Database not updated.";
+            RenderError($message);
+            exit();
+        }
+    }
+    if ((!isset($interestarray[$i]["badgeid"])) && ($interestarray[$i]["diddointerest"] == 1)) {
+        $query = "DELETE FROM ParticipantHasInterest WHERE badgeid=\"" . $badgeid . "\" AND ";
+        $query .= "interestid=" . $interestarray[$i]["interestid"];
+        if (!mysqli_query($linki, $query)) {
+            $message = $query . "<br>Error deleting from database.  Database not updated.";
+            RenderError($message);
+            exit();
+        }
+    }
+}
+
+
 $message = "Database updated successfully.";
 $newrow = false;
 $error = false;
-renderMyInterests($title, $error, $message, $rolearray);
+renderMyInterests($title, $error, $message, $rolearray, $interestarray);
+
 participant_footer();
+
 exit(0);
-?>        
+?>

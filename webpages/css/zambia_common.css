@@ -155,3 +155,7 @@ select {
   column-count: 3;
   max-width: 70rem;
 }
+.interests-list-container {
+  column-count: 4;
+  max-width: 70rem;
+}

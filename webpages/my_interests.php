@@ -30,7 +30,9 @@ if ($rows == 0) {
 mysqli_free_result($result);
 $query = <<<EOD
 SELECT
-        PHR.badgeid, R.roleid, R.rolename
+        PHR.badgeid,
+        R.roleid,
+        R.rolename
     FROM
             Roles R
             LEFT JOIN (
@@ -55,8 +57,41 @@ while ($rolearray[$i] = mysqli_fetch_assoc($result)) {
 }
 $rolearray['count'] = $i--;
 mysqli_free_result($result);
+
+
+$query = <<<EOD
+SELECT
+        PHI.badgeid,
+        I.interestid,
+        I.interestname
+    FROM
+            Interests as I
+        LEFT JOIN (
+                SELECT
+                        badgeid, interestid
+                    FROM
+                        ParticipantHasInterest
+                    WHERE
+                        badgeid='$badgeid'
+                    ) as PHI USING (interestid)
+    ORDER BY
+        I.display_order
+EOD;
+if (!$result = mysqli_query_exit_on_error($query)) {
+    exit(); // Should have exited already
+}
+$i = 0;
+$interestarray = array();
+while ($interestarray[$i] = mysqli_fetch_assoc($result)) {
+    $i++;
+}
+$interestarray['count'] = $i--;
+mysqli_free_result($result);
+
+
+
 $error = false;
 $message = "";
-renderMyInterests($title, $error, $message, $rolearray);
+renderMyInterests($title, $error, $message, $rolearray, $interestarray);
 participant_footer();
 ?>
