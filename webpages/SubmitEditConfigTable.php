@@ -290,7 +290,7 @@ EOD;
             if (DBVER >= "8")
                 $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
             else
-                $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
+                $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $curfield\n";
             $union = "UNION ALL";
         }        
         if (DBVER >= "8") {
@@ -343,12 +343,12 @@ EOD;
         $query = $query . "ORDER BY " . $prikey . ";";
 
     //error_log($query);
-	$result = mysqli_query_exit_on_error($query);
+    $result = mysqli_query_exit_on_error($query);
     $rows = array();
     while ($row = $result->fetch_assoc()) {
         $rows[] = $row;
     }
-	mysqli_free_result($result);
+    mysqli_free_result($result);
     $json_return["tabledata"] = $rows;
 
     if ($message != "")
