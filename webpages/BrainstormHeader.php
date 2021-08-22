@@ -10,7 +10,7 @@ function brainstorm_header($title) {
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Zambia &ndash; <?php echo $title ?></title>
     <link rel="stylesheet" href="css/Common.css" type="text/css">
-    <link rel="stylesheet" href="css/Zambia.css" type="text/css">
+    <link rel="stylesheet" href="css/zambia.css" type="text/css">
     <link rel="stylesheet" href="css/BrainstormSection.css" type="text/css">
     <meta name="keywords" content="Questionnaire">
 </head>
