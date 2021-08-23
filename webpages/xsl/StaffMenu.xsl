@@ -79,7 +79,7 @@
                   <li>
                     <a href="StaffAssignParticipants.php">Assign to a Session</a>
                   </li>
-                  <xsl:if test="emailAvailable = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
+                  <xsl:if test="$emailAvailable = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
                     <li>
                       <a href="StaffSendEmailCompose.php">Send email</a>
                     </li>

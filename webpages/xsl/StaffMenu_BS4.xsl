@@ -52,7 +52,7 @@
               </xsl:if>
               <a class="dropdown-item" href="InviteParticipants.php">Invite to a Session</a>
               <a class="dropdown-item" href="StaffAssignParticipants.php">Assign to a Session</a>
-              <xsl:if test="emailAvailable = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
+              <xsl:if test="$emailAvailable = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
                 <a class="dropdown-item" href="StaffSendEmailCompose.php">Send email</a>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='CreateUser']">

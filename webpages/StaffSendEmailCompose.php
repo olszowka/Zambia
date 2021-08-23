@@ -25,10 +25,8 @@ if (empty($_POST['navigate']) || $_POST['navigate']!='send') {
 // render_send_email_engine($email,$message_warning);
 $title = "Staff Send Email";
 $timeLimitSuccess = set_time_limit(600);
-if (SMTP_QUEUEONLY === TRUE) {
-    $bootstrap4 = true;
-    staff_header($title, $bootstrap4);
-}
+$bootstrap4 = true;
+staff_header($title, $bootstrap4);
 if (!$timeLimitSuccess) {
 	RenderError("Error extending time limit.");
 	exit(0);
@@ -154,7 +152,6 @@ for ($i=0; $i<$recipient_count; $i++) {
 }
 //$log =& Swift_LogContainer::getLog();
 //echo $log->dump(true);
-if (SMTP_QUEUEONLY === TRUE) {
-    staff_footer();
-}
+staff_footer();
+
 ?>
