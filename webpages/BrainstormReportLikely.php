@@ -13,18 +13,21 @@ SELECT
                 if(left(date_format(S.duration,'%i'),1)=0, concat(right(date_format(S.duration,'%i'),1),'min'), 
                 concat(date_format(S.duration,'%i'),'min')))) Duration,
         S.estatten, S.progguiddesc, S.persppartinfo, 
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
-		R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+        R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist,
+        NULL notesforprog, NULL notesforpart, NULL servicenotes, NULL pubstatusname,
+        concat('Made by: ', SEH.name, ' Email: ', SEH.email_address) sessionhistory
     FROM
                   Sessions S
              JOIN Tracks T USING (trackid)
              JOIN SessionStatuses SS USING (statusid)
-		LEFT JOIN Schedule SCH USING (sessionid)
-		LEFT JOIN Rooms R USING (roomid)
-		LEFT JOIN SessionHasTag SHT USING (sessionid)
-		LEFT JOIN Tags TA USING (tagid)
+             JOIN SessionEditHistory SEH USING (sessionid)
+        LEFT JOIN Schedule SCH USING (sessionid)
+        LEFT JOIN Rooms R USING (roomid)
+        LEFT JOIN SessionHasTag SHT USING (sessionid)
+        LEFT JOIN Tags TA USING (tagid)
     WHERE
-        SS.statusname IN ('Vetted', 'Assigned', 'Scheduled')
+        SS.statusid IN (2, 7, 3)  ##2=Vetted, 7=Assigned, 3=Scheduled
     GROUP BY
         S.sessionid
     ORDER BY

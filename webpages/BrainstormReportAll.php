@@ -13,16 +13,22 @@ SELECT
                 if(left(date_format(S.duration,'%i'),1)=0, concat(right(date_format(S.duration,'%i'),1),'min'), 
                 concat(date_format(S.duration,'%i'),'min')))) Duration,
         S.estatten, S.progguiddesc, S.persppartinfo, 
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
-		R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+        R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist,
+        NULL notesforprog, NULL notesforpart, NULL servicenotes, NULL pubstatusname,
+        concat('Made by: ', SEH.name, ' Email: ', SEH.email_address) sessionhistory
     FROM
                   Sessions S
              JOIN Tracks T USING (trackid)
              JOIN SessionStatuses SS USING (statusid)
+             JOIN SessionEditHistory SEH USING (sessionid)
              JOIN Schedule SCH USING (sessionid)
              JOIN Rooms R USING (roomid)
-		LEFT JOIN SessionHasTag SHT USING (sessionid)
-		LEFT JOIN Tags TA USING (tagid)
+        LEFT JOIN SessionHasTag SHT USING (sessionid)
+        LEFT JOIN Tags TA USING (tagid)
+    WHERE
+            SS.statusid IN (6, 1, 2, 7, 3)  ##6=Edit Me, 1=Brainstorm, 2=Vetted, 7=Assigned, 3=Scheduled
+            AND SEH.sessioneditcode IN (1, 2)   # 1-Created in brainstorm , 2-Created in staff create session
     GROUP BY
         S.sessionid
     ORDER BY

@@ -15,12 +15,14 @@ SELECT
                 IF(LEFT(DATE_FORMAT(S.duration,'%i'),1)=0, CONCAT(RIGHT(DATE_FORMAT(S.duration,'%i'),1),'min'), 
                 CONCAT(DATE_FORMAT(S.duration,'%i'),'min')))) Duration,
         S.estatten, S.progguiddesc, S.persppartinfo, NULL starttime, NULL roomname, SS.statusname,
-        NULL taglist
+        NULL taglist, NULL notesforprog, NULL notesforpart, NULL servicenotes, NULL pubstatusname,
+        concat('Made by: ', SEH.name, ' Email: ', SEH.email_address) sessionhistory
     FROM
              Sessions S
         JOIN Tracks TR USING (trackid)
         JOIN SessionStatuses SS USING (statusid)
-    WHERE SS.statusname = 'Brainstorm'
+        JOIN SessionEditHistory SEH USING (sessionid)
+    WHERE SS.statusid = 1  ##1=Brainstorm
     ORDER BY trackname, title;
 EOD;
 if (($result = mysqli_query_exit_on_error($query)) === false) {

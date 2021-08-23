@@ -15,18 +15,21 @@ SELECT
                 IF(LEFT(DATE_FORMAT(S.duration,'%i'),1)=0, CONCAT(RIGHT(DATE_FORMAT(S.duration,'%i'),1),'min'), 
             CONCAT(DATE_FORMAT(S.duration,'%i'),'min')))) Duration,
         S.estatten, S.progguiddesc, S.persppartinfo, 
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
-		R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+        R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist,
+        NULL notesforprog, NULL notesforpart, NULL servicenotes, NULL pubstatusname,
+        concat('Made by: ', SEH.name, ' Email: ', SEH.email_address) sessionhistory
     FROM
-    	          Sessions S
-    	     JOIN Tracks TR USING (trackid)
-    	     JOIN SessionStatuses SS USING (statusid)
-		LEFT JOIN Schedule SCH USING (sessionid)
-		LEFT JOIN Rooms R USING (roomid)
-		LEFT JOIN SessionHasTag SHT USING (sessionid)
-		LEFT JOIN Tags TA USING (tagid)
+                  Sessions S
+             JOIN Tracks TR USING (trackid)
+             JOIN SessionStatuses SS USING (statusid)
+             JOIN SessionEditHistory SEH USING (sessionid)
+        LEFT JOIN Schedule SCH USING (sessionid)
+        LEFT JOIN Rooms R USING (roomid)
+        LEFT JOIN SessionHasTag SHT USING (sessionid)
+        LEFT JOIN Tags TA USING (tagid)
     WHERE
-        SS.statusname IN ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled')
+        SS.statusid IN (6, 1, 2, 7, 3)  ##6=Edit Me, 1=Brainstorm, 2=Vetted, 7=Assigned, 3=Scheduled
 EOD;
 if ($trackid != 0) {
     $query .= " and S.trackid=" . $trackid;
