@@ -83,7 +83,7 @@
         <div class="row mt-4">
           <div class="col col-2">Name:</div>
           <div class="col col-4">
-            <input type="text" id="shortname" maxlength="100" size="50" data-dirty="q" onchange="qfChange(this,false);"/>
+            <input type="text" id="shortname" maxlength="100" size="50" data-dirty="q" onchange="snChange(this,false);"/>
           </div>
         </div>
         <div class="row">

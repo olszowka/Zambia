@@ -817,6 +817,16 @@ function surveyCellChanged(cell) {
     cell.getElement().style.backgroundColor = warningcolor;
 }
 
+function snChange(el, mce) {
+    snValue = el.value;
+    if (snValue.match("[\"'<>/#?\$]")) {
+        alert("Invalid characters found in name, name cannot contain \" ' < > / # ? or $, restoring the original value");
+        el.value = el.getAttribute("default-value");
+        return;
+    }
+qfChange(el, mce);
+}
+
 function qfChange(el, mce) {
     if (mce) {
         el = document.getElementById(el);
