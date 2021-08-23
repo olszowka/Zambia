@@ -401,12 +401,12 @@ var EditSurvey = function () {
             questionoptions = JSON.parse(options);
         optiontable = null;
 
-        ////loop over options decoding every value, optionshortname and optionhover
-        //for (i = 0; i < questionoptions.length; i++) {
-        //    questionoptions[i].value = atob(questionoptions[i].value);
-        //    questionoptions[i].optionshort = atob(questionoptions[i].optionshort);
-        //    questionoptions[i].optionhover = atob(questionoptions[i].optionhover);
-        //}
+        //loop over options decoding every value, optionshortname and optionhover
+        for (i = 0; i < questionoptions.length; i++) {
+            questionoptions[i].value = atob(questionoptions[i].value);
+            questionoptions[i].optionshort = atob(questionoptions[i].optionshort);
+            questionoptions[i].optionhover = atob(questionoptions[i].optionhover);
+        }
         //console.log(questionoptions);
 
         // now show the block
