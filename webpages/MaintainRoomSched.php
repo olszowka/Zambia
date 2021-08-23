@@ -78,7 +78,7 @@ if ($conflict==true) {
 }
 $query = <<<EOD
 SELECT
-        roomid, roomname, opentime1, closetime1, opentime2, closetime2, opentime3, closetime3,
+        roomid, roomname, opentime1, closetime1, opentime2, closetime2, opentime3, closetime3, opentime4, closetime4,
         `function`, floor, height, dimensions, area, notes
     FROM
         Rooms
@@ -101,6 +101,9 @@ if ($row["opentime2"] != "") {
 }
 if ($row["opentime3"] != "") {
     echo time_description($row["opentime3"]) . " through " . time_description($row["closetime3"]) . "<br />\n";
+}
+if ($row["opentime4"] != "") {
+    echo time_description($row["opentime4"]) . " through " . time_description($row["closetime4"]) . "<br />\n";
 }
 echo "</div>\n";
 echo "<h4 class=\"label\">Characteristics</H4>\n";

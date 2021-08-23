@@ -11,14 +11,16 @@ $report['queries'] = [];
 $report['queries']['rooms'] =<<<'EOD'
 SELECT
            R.roomid, R.roomname, R.height, R.dimensions, R.area, R.function, R.floor, R.notes,
-		DATE_FORMAT(ADDTIME('$ConStartDatim$',R.opentime1),'%a %l:%i %p') opentime1,
-		DATE_FORMAT(ADDTIME('$ConStartDatim$',R.closetime1),'%a %l:%i %p') closetime1,
-		DATE_FORMAT(ADDTIME('$ConStartDatim$',R.opentime2),'%a %l:%i %p') opentime2,
-		DATE_FORMAT(ADDTIME('$ConStartDatim$',R.closetime2),'%a %l:%i %p') closetime2,
-		DATE_FORMAT(ADDTIME('$ConStartDatim$',R.opentime3),'%a %l:%i %p') opentime3,
-		DATE_FORMAT(ADDTIME('$ConStartDatim$',R.closetime3),'%a %l:%i %p') closetime3,
-		IF(R.is_scheduled,'Yes','No') AS is_scheduled,
-		IF(EXISTS (SELECT * FROM Schedule SCH WHERE SCH.roomid = R.roomid),'Yes','No') AS scheduled
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',R.opentime1),'%a %l:%i %p') opentime1,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',R.closetime1),'%a %l:%i %p') closetime1,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',R.opentime2),'%a %l:%i %p') opentime2,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',R.closetime2),'%a %l:%i %p') closetime2,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',R.opentime3),'%a %l:%i %p') opentime3,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',R.closetime3),'%a %l:%i %p') closetime3,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',R.opentime4),'%a %l:%i %p') opentime4,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',R.closetime4),'%a %l:%i %p') closetime4,
+        IF(R.is_scheduled,'Yes','No') AS is_scheduled,
+        IF(EXISTS (SELECT * FROM Schedule SCH WHERE SCH.roomid = R.roomid),'Yes','No') AS scheduled
     FROM
            Rooms R
     ORDER BY
@@ -26,10 +28,10 @@ SELECT
 EOD;
 $report['queries']['roomsets'] =<<<'EOD'
 SELECT R.roomid, RS.roomsetname, RHS.capacity
-	FROM
-			 Rooms R
-		JOIN RoomHasSet RHS using (roomid)
-		JOIN RoomSets RS using (roomsetid)
+    FROM
+             Rooms R
+        JOIN RoomHasSet RHS using (roomid)
+        JOIN RoomSets RS using (roomsetid)
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -95,6 +97,12 @@ $report['xsl'] =<<<'EOD'
                 <xsl:choose>
                     <xsl:when test="@opentime3 or @closetime3">
                         <xsl:value-of select="@opentime3"/><xsl:text> - </xsl:text><xsl:value-of select="@closetime3"/><br />
+                    </xsl:when>
+                    <xsl:otherwise><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:otherwise>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="@opentime4 or @closetime4">
+                        <xsl:value-of select="@opentime4"/><xsl:text> - </xsl:text><xsl:value-of select="@closetime4"/><br />
                     </xsl:when>
                     <xsl:otherwise><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:otherwise>
                 </xsl:choose>
