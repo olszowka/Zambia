@@ -337,6 +337,11 @@
                   <a href="#roomhasset" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-RoomHasSet">RoomHasSet</a>
                 </li>
               </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomColors']">
+                <li class="nav-item">
+                  <a href="#roomcolors" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-RoomColors">RoomColors</a>
+                </li>
+              </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features']">
                 <li class="nav-item">
                   <a href="#features" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Features">Features</a>
@@ -364,6 +369,10 @@
                     <li>RoomHasSet</li>
                     <p>Which rooms can have which RoomSets</p>
                   </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomColors']">
+                    <li>RoomColors</li>
+                    <p>Define colors used by rooms on the color grid</p>
+                  </xsl:if>
                   <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features']">
                     <li>Features</li>
                     <p>Features available in a room for use by sessions</p>
@@ -380,6 +389,9 @@
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet']">
                 <div class="tab-pane mt-4 fade" id="roomhasset"/>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomColors']">
+                <div class="tab-pane mt-4 fade" id="roomcolors"/>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features']">
                 <div class="tab-pane mt-4 fade" id="features"/>
