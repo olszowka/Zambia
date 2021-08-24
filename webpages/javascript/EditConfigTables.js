@@ -62,6 +62,7 @@ var EditConfigTable = function () {
     }
 
     this.initialize = function () {
+        $('.nav-tabs a').on('click.bs.tab', tceEditorBlur);
        $('.nav-tabs a').on('shown.bs.tab', function (event) {
            var x = event.target.id;         // active tab
             tabshown(x);
