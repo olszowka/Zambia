@@ -1,5 +1,6 @@
 <?php
-//	Copyright (c) 2010-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2010-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+
 function SetSessionSearchParameterDefaults() {
     global $SessionSearchParameters;
     $SessionSearchParameters['currenttrack'] = 0;
@@ -18,7 +19,7 @@ function RenderSearchPreviousSessions() {
     } elseif ($message != "") {
         echo "<p class=\"alert alert-success\">$message</p>\n";
     }
-    ?>
+?>
 
     <form method="POST" action="ShowPreviousSessions.php" class="well form-inline">
         <fieldset>
@@ -36,11 +37,12 @@ function RenderSearchPreviousSessions() {
                     <select name="previoustrack" class="xspan2">
                         <?php $query = <<<EOD
 SELECT
-        CONCAT(PC.previousconid,"a",PCT.previoustrackid), CONCAT(PC.previousconname,": ",PCT.trackname)
+        CONCAT(PC.previousconid,"a",PCT.previoustrackid),
+        CONCAT(PC.previousconname,": ",PCT.trackname)
     FROM
-        PreviousCons PC JOIN
-	PreviousConTracks PCT USING (previousconid) LEFT JOIN
-	TrackCompatibility TC USING (previousconid, previoustrackid)
+                  PreviousCons PC
+             JOIN PreviousConTracks PCT USING (previousconid)
+        LEFT JOIN TrackCompatibility TC USING (previousconid, previoustrackid)
     WHERE
         TC.currenttrackid IS NULL
     ORDER BY
@@ -66,7 +68,8 @@ EOD;
                     <select name="status" class="xspan2">
                         <?php $query = <<<EOD
 SELECT
-        ST.statusid, ST.statusname
+        ST.statusid,
+        ST.statusname
     FROM
         SessionStatuses ST
     WHERE
@@ -87,9 +90,8 @@ EOD;
             <br/>
             <div class="row-fluid">
                 <label class="checkbox">
-                    <input type="checkbox"
-                           name="showimported" <?php echo $SessionSearchParameters['showimported'] ? 'checked' : ''; ?>>
-                    Include in results sessions which have been imported already.
+                    <input type="checkbox" name="showimported" <?php echo $SessionSearchParameters['showimported'] ? 'checked' : ''; ?>>
+                    Include in results the sessions which have been imported already.
                 </label>
             </div>
             <br/>
@@ -98,7 +100,8 @@ EOD;
             </div>
         </fieldset>
     </form>
-<?php } // End of RenderSearchPreviousSessions()
+<?php
+} // End of RenderSearchPreviousSessions()
 
 function HandleSearchParameters() {
     // parse parameters for Search of previous sessions and validate them
@@ -154,13 +157,20 @@ function HandleSearchParameters() {
     $message_error = '';
     return (true);
 } // End of HandleSearchParameters()
-
+    
 function PerformPrevSessionSearch () {
     global $SessionSearchParameters, $message_error,$message,$result,$linki;
     $query= <<<EOD
 SELECT
-        PS.title, PS.progguiddesc, PS.previousconid, PS.previoussessionid, PS.importedsessionid, TY.typename,
-        PC.previousconname, SS.statusname, PCT.trackname
+        PS.title,
+        PS.progguiddesc,
+        PS.previousconid,
+        PS.previoussessionid,
+        PS.importedsessionid,
+        TY.typename,
+        PC.previousconname,
+        SS.statusname,
+        PCT.trackname
     FROM
                   PreviousSessions PS
              JOIN PreviousCons PC USING (previousconid)
@@ -272,8 +282,8 @@ SELECT
     PS.signupreq, 99 roomsetid, NULL notesforpart, NULL servicenotes, 6 statusid,
     PS.notesforprog, NULL warnings, PS.invitedguest, CURRENT_TIMESTAMP ts
 FROM
-    PreviousSessions PS LEFT JOIN
-    TrackCompatibility TC USING (previousconid, previoustrackid)
+              PreviousSessions PS
+    LEFT JOIN TrackCompatibility TC USING (previousconid, previoustrackid)
 WHERE
     previousconid=$previousconid AND
     previoussessionid=$previoussessionid
