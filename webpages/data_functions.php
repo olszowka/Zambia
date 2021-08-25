@@ -214,6 +214,7 @@ function get_session_from_post() {
     $session["servnotes"] = getString('servnotes');
     $session["status"] = getInt('status');
     $session["notesforprog"] = getString('notesforprog');
+    $session["participantlabel"] = getString('participantlabel');
     if (MEETING_LINK === TRUE)
         $session["mlink"] = getString('mlink');
     else
@@ -254,6 +255,7 @@ function set_session_defaults() {
     $session["status"] = 6; // default to "Edit Me"
     $session["notesforprog"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
+    $session["participantlabel"] = "Panelists";  //default label to "Panelists"
     $session["mlink"] = "";
 }
 

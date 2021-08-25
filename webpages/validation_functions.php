@@ -48,7 +48,7 @@ function validate_session_interests($max_si_row) {
 //$mode is ParticipantAddSession or StaffInviteSession
 //First checks that $sessionid is a valid integer which could be a session
 //Then checks db that it is a session which is eligible for participant to sign up.
-
+//
 function validate_add_session_interest($sessionid, $badgeid, $mode) {
     global $message, $title;
     if (!($mode == ParticipantAddSession or $mode == StaffInviteSession)) {
@@ -99,7 +99,7 @@ EOD;
 }
 
 // Tracy's old version
-
+//
 function is_email($email) {
     $x = '\d\w!\#\$%&\'*+\-/=?\^_`{|}~';    //just for clarity
     return count($email = explode('@', $email, 3)) == 2
@@ -108,32 +108,33 @@ function is_email($email) {
         && preg_match("#^[$x]+(\.?([$x]+\.)*[$x]+)?$#", $email[0])
         && preg_match('#^(([a-z0-9]+-*)?[a-z0-9]+\.)+[a-z]{2,6}.?$#', $email[1]);
 }
-//
+
 // Version based on regex from www.regular-expressions.info. PHP doesn't like the regex syntax.
 //
 //function is_email($email) {
 //    $pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b";
 //    if (strlen($email)==0) return 0;
 //    return preg_match($pattern,$email);
-//    }
+//}
 
 function validate_name_email($name, $email) {
     global $messages;
     $status=true;
-// only perform test for brainstorm user
+    // only perform test for brainstorm user
     if (may_I("Staff") || may_I("Participant")) {
         return ($status);
-        }
+    }
     if (strlen($name)<3) {
         $status=false;
         $messages.="Please enter a name of at least 3 characters.<BR>\n";
-        }
+    }
     if (!(is_email($email))) {
         $status=false;
         $messages.="Please enter a valid email address.<BR>\n";
-        }
-    return ($status);
     }
+    return ($status);
+}
+
 // Function validate_integer($input,$min,$max)
 // Return true if input is integer within range (inclusive)
 // otherwise false
@@ -169,12 +170,12 @@ function validate_session() {
         $flag = false;
     }
     if (!($sstatus[$session["status"]]['validate'])) {
-//don't validate further those not marked with 'validate' such as "dropped" or "cancelled"
+        //don't validate further those not marked with 'validate' such as "dropped" or "canceled"
         return ($flag);
     }
     $i = mb_strlen($session["title"]);
     if ($i < 10 || $i > 99) {
-        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>48</b> characters.<br>\n";
+        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>99</b> characters.<br>\n";
         $flag = false;
     }
     $i = mb_strlen($session["progguiddesc"]);
@@ -183,11 +184,11 @@ function validate_session() {
         $messages .= " <b>10</b> and <b>500</b> characters long.<br>\n";
         $flag = false;
     }
+    //don't validate further those not marked with 'may_be_scheduled'.
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {
-//don't validate further those not marked with 'may_be_scheduled'.
         return ($flag);
     }
-//most stringent validation for those which may be scheduled.
+    //most stringent validation for those which may be scheduled.
     if ($session["pubstatusid"] == 0) {
         $messages .= "Please select a publication status.<br>\n";
         $flag = false;
@@ -210,6 +211,11 @@ function validate_session() {
     }
     if (($session["track"] == 0 || $session["track"] == 99) && TRACK_TAG_USAGE !== "TAG_ONLY") { // don't allow "Unspecified"
         $messages .= "Please select a track.<br>\n";
+        $flag = false;
+    }
+    $i = mb_strlen($session["participantlabel"]);
+    if ($i < 4 || $i > 50) {
+        $messages .= "Participant Label is $i characters long.  Please edit it to between <b>4</b> and <b>50</b> characters.<br>\n";
         $flag = false;
     }
     return ($flag);

@@ -29,7 +29,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     }
     if (isset($debug)) {
         echo $debug."<br>\n";
-    }  
+    }
 ?>
 <div class="row-fluid">
     <form name="sessform" class="form-inline form-more-whitespace" method="POST" action="SubmitEditCreateSession.php">
@@ -123,6 +123,8 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <select name="status" class="span2">
                     <?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?>
                 </select>
+                <label class="control-label"  for="participantlabel">Participant Label:</label>
+                <input type="text" class="span2" size="3" name="participantlabel" value="<?php echo htmlspecialchars($session["participantlabel"],ENT_COMPAT);?>" />
             </div>
         </div>
         <div class="row-fluid">

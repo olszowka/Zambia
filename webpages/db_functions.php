@@ -538,6 +538,7 @@ UPDATE Sessions
         kidscatid="{$sessionf["kidscatid"]}",
         signupreq={$sessionf["signupreq"]},
         invitedguest={$sessionf["invitedguest"]},
+        participantlabel="{$sessionf["participantlabel"]}",
         roomsetid="{$sessionf["roomsetid"]}",
         notesforpart="{$sessionf["notesforpart"]}",
         servicenotes="{$sessionf["servnotes"]}",
@@ -643,6 +644,7 @@ INSERT INTO Sessions
         kidscatid="{$sessionf["kidscatid"]}",
         signupreq={$sessionf["signupreq"]},
         invitedguest={$sessionf["invitedguest"]},
+        participantlabel="{$sessionf["participantlabel"]}",
         roomsetid="{$sessionf["roomsetid"]}",
         notesforpart="{$sessionf["notesforpart"]}",
         servicenotes="{$sessionf["servnotes"]}",
@@ -717,6 +719,7 @@ function filter_session() {
     $session2["kidscatid"] = filter_var($session["kids"], FILTER_SANITIZE_NUMBER_INT);
     $session2["signupreq"] = empty($session["signup"]) ? "0" : "1";
     $session2["invitedguest"] = empty($session["invguest"]) ? "0" : "1";
+    $session2["participantlabel"] = mysqli_real_escape_string($linki, $session["participantlabel"]);
     $session2["roomsetid"] = filter_var($session["roomset"], FILTER_SANITIZE_NUMBER_INT);
     $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
     $session2["notesforpart"] = mysqli_real_escape_string($linki, $session["notesforpart"]);
@@ -782,6 +785,7 @@ SELECT
         warnings,
         invitedguest,
         ts,
+        participantlabel,
         meetinglink
     FROM
         Sessions
@@ -826,6 +830,7 @@ EOD;
     $session["status"] = $sessionarray["statusid"];
     $session["notesforprog"] = $sessionarray["notesforprog"];
     $session["invguest"] = $sessionarray["invitedguest"];
+    $session["participantlabel"] = $sessionarray["participantlabel"];
     $session["mlink"] = $sessionarray["meetinglink"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";
