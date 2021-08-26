@@ -75,7 +75,7 @@ function SubmitAssignParticipants() {
         }
         $badgeidQueryString = join(',', $badgeidQueryArray);
         $queryArray = array();
-        $queryArray["participants"] = "SELECT DISTINCT P.badgeid, P.pubsname FROM Participants P WHERE P.badgeid in ($badgeidQueryString);";
+        $queryArray["participants"] = "SELECT DISTINCT P.badgeid, P.pubsname, P.sortedpubsname FROM Participants P WHERE P.badgeid in ($badgeidQueryString);";
         if (($resultXML = mysql_query_XML($queryArray)) === false) {
             $message = $query . "<br>Error querying database. Unable to continue.<br>";
             echo "<p class\"alert alert-error\">" . $message . "\n";
@@ -172,15 +172,19 @@ function SubmitAssignParticipants() {
             $result = mysqli_query_exit_on_error($query);
             $query = <<<EOD
 INSERT INTO SessionEditHistory
-		(sessionid, badgeid, name, email_address, sessioneditcode, editdescription, statusid)
-	SELECT
-			$selsessionid, CD.badgeid, CONCAT(CD.firstName, " ", CD.lastname), CD.email, 3,
-				"Edit notes for program committee",
-				(SELECT statusid FROM Sessions WHERE sessionid = $selsessionid)
-		FROM
-			CongoDump CD
-		WHERE
-			badgeid = "{$_SESSION['badgeid']}";
+        (sessionid, badgeid, name, email_address, sessioneditcode, editdescription, statusid)
+    SELECT
+            $selsessionid,
+            CD.badgeid,
+            CONCAT(CD.firstName, " ", CD.lastname),
+            CD.email,
+            3,
+            "Edit notes for program committee",
+            (SELECT statusid FROM Sessions WHERE sessionid = $selsessionid)
+        FROM
+            CongoDump CD
+        WHERE
+            badgeid = "{$_SESSION['badgeid']}";
 EOD;
             $result = mysqli_query_exit_on_error($query);
             $message .= "Notes for program staff updated. ";
@@ -191,4 +195,5 @@ EOD;
         echo "<p class=\"alert alert-success\">$message</p>\n";
     } // close of timestamps match -- update db
 } // end of function SubmitAssignParticipants()
-?>    
+
+?>

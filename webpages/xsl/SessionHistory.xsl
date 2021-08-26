@@ -86,7 +86,7 @@
 									<xsl:value-of select="$inactivateParticipantRow/@inactivatedtsformat" />
 								</xsl:when>
 								<xsl:when test="count($editSessionRow) > 0">
-									<xsl:value-of select="$editSessionRow/@name"/> (<xsl:value-of select="$editSessionRow/@badgeid" />)
+									<xsl:value-of select="$editSessionRow/@name"/> (<xsl:value-of select="$editSessionRow/@fullname" /> - <xsl:value-of select="$editSessionRow/@badgeid" />)
 									<xsl:value-of select="$editSessionRow/@tsformat" />
 								</xsl:when>
 							</xsl:choose>

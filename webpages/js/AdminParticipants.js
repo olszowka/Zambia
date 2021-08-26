@@ -15,6 +15,7 @@ var postcountryDirty = false;
 var poststateDirty = false;
 var postzipDirty = false;
 var pubsnameDirty = false;
+var sortedpubsnameDirty = false;
 var rolesDirty = false;
 var staffnotesDirty = false;
 var originalInterested = "0";
@@ -31,6 +32,7 @@ var $password;
 var $cpassword;
 var $staffnotes;
 var $pubsname;
+var $sortedpubsname;
 var $lastname;
 var $firstname;
 var $badgename;
@@ -60,7 +62,7 @@ function isDirty(override) {
     }
     if (!override && (badgenameDirty || bioDirty || emailDirty || firstnameDirty || interestedDirty || lastnameDirty ||
         $password.val() || phoneDirty || postaddress1Dirty || postaddress2Dirty || postcityDirty || poststateDirty ||
-        postzipDirty || postcountryDirty || pubsnameDirty || rolesDirty || staffnotesDirty)) {
+        postzipDirty || postcountryDirty || pubsnameDirty || sortedpubsnameDirty || rolesDirty || staffnotesDirty)) {
         $("#unsavedWarningModal").modal('show');
         $("#cancelOpenSearchBUTN").blur();
         return true;
@@ -132,6 +134,8 @@ function chooseParticipant(badgeid, override) {
     $badgename.val(badgename).prop("defaultValue", badgename).prop("readOnly", false);
     var pubsname = $("#pnameSPAN_" + badgeidJQSel).text();
     $pubsname.val(pubsname).prop("defaultValue", pubsname).prop("readOnly", false);
+    var sortedpubsname = $("#spnameHID_" + badgeidJQSel).val();
+    $sortedpubsname.val(sortedpubsname).prop("defaultValue", sortedpubsname).prop("readOnly", false);
     var regtype = $("#regtypeHID_" + badgeidJQSel).val();
     $('#regtype').html(regtype);
     $('#warnName').html(pubsname);
@@ -168,6 +172,7 @@ function chooseParticipant(badgeid, override) {
     poststateDirty = false;
     postzipDirty = false;
     pubsnameDirty = false;
+    sortedpubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
     $('#resultsDiv').show();
@@ -284,6 +289,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     $postcountry.val(node.getAttribute("postcountry")).prop("defaultValue", node.getAttribute("postcountry")).prop("readOnly", false);
     $badgename.val(node.getAttribute("badgename")).prop("defaultValue", node.getAttribute("badgename")).prop("readOnly", false);
     $pubsname.val(node.getAttribute("pubsname")).prop("defaultValue", node.getAttribute("pubsname")).prop("readOnly", false);
+    $sortedpubsname.val(node.getAttribute("sortedpubsname")).prop("defaultValue", node.getAttribute("sortedpubsname")).prop("readOnly", false);
     originalInterested = node.getAttribute("interested");
     if (!originalInterested)
         originalInterested = 0;
@@ -314,6 +320,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     poststateDirty = false;
     postzipDirty = false;
     pubsnameDirty = false;
+    sortedpubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
     $('#resultsDiv').show();
@@ -381,6 +388,7 @@ function initializeAdminParticipants() {
     $cpassword = $("#cpassword");
     $staffnotes = $("#staffnotes");
     $pubsname = $("#pubsname");
+    $sortedpubsname = $("#sortedpubsname");
     $lastname = $("#lastname");
     $firstname = $("#firstname");
     $badgename = $("#badgename");
@@ -456,6 +464,9 @@ function processChange() {
         case 'pubsname':
             pubsnameDirty = ($pubsname.val() !== $pubsname.prop("defaultValue"));
             break;
+        case 'sortedpubsname':
+            sortedpubsnameDirty = ($sortedpubsname.val() !== $sortedpubsname.prop("defaultValue"));
+            break;
         case 'lastname':
             lastnameDirty = ($lastname.val() !== $lastname.prop("defaultValue"));
             break;
@@ -505,7 +516,7 @@ function processChange() {
 }
 
 function checkDirty() {
-    if (passwordDirtyAndReady || interestedDirty || bioDirty || staffnotesDirty || pubsnameDirty || lastnameDirty ||
+    if (passwordDirtyAndReady || interestedDirty || bioDirty || staffnotesDirty || pubsnameDirty || sortedpubsnameDirty || lastnameDirty ||
         firstnameDirty || badgenameDirty || phoneDirty || emailDirty || postaddress1Dirty || postaddress2Dirty ||
         postcityDirty || poststateDirty || postzipDirty || postcountryDirty || rolesDirty) {
 
@@ -558,6 +569,7 @@ function showUpdateResults(data, textStatus, jqXHR) {
     poststateDirty = false;
     postzipDirty = false;
     pubsnameDirty = false;
+    sortedpubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
     $password.val("");
@@ -582,6 +594,7 @@ function showUpdateResults(data, textStatus, jqXHR) {
     $("#postzipHID_" + badgeidJQSel).val(node.getAttribute("postzip"));
     $("#postcountryHID_" + badgeidJQSel).val(node.getAttribute("postcountry"));
     $("#pnameSPAN_" + badgeidJQSel).html(node.getAttribute("pubsname"));
+    $("#spnameHID_" + badgeidJQSel).val(node.getAttribute("sortedpubsname"));
     $("#bnameSPAN_" + badgeidJQSel).html(node.getAttribute("badgename"));
     $("#interestedHID_" + badgeidJQSel).originalInterested = node.getAttribute("interested");
     $("#bioHID_" + badgeidJQSel).val(node.getAttribute("bio"));
@@ -622,6 +635,9 @@ function updateBUTTON() {
     }
     if (pubsnameDirty) {
         postdata.pubsname = $pubsname.val();
+    }
+    if (sortedpubsnameDirty) {
+        postdata.sortedpubsname = $sortedpubsname.val();
     }
     if (staffnotesDirty) {
         postdata.staffnotes = $staffnotes.val();

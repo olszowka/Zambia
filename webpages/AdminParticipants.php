@@ -115,11 +115,11 @@ if (USE_REG_SYSTEM === TRUE) {
 ?>
                 </div>
             </div>
+        </div>
+        <div class="row mt-3">
 <?php
 if (USE_REG_SYSTEM === FALSE) {
 ?> 
-        </div>
-        <div class="row mt-3">
             <div class="col-sm-3 offset-sm-2 offset-xl-1">
                 <div class="">
                     <label for="phone" class="mb-1">Phone number:</label>
@@ -145,6 +145,14 @@ if (USE_REG_SYSTEM === FALSE) {
                 </div>
                 <div>
                     <input class="col-text-input mycontrol" id="pubsname" type="text" readonly="readonly" maxlength="50" />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="">
+                    <label for="sortedpubsname" class="mb-1">Sorted Name for publications:</label>
+                </div>
+                <div>
+                    <input class="col-text-input mycontrol" id="sortedpubsname" type="text" readonly="readonly" maxlength="50" />
                 </div>
             </div>
         </div>

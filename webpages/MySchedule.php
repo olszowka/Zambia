@@ -40,18 +40,22 @@ SELECT
 EOD;
 $queryArr["participants"] = <<<EOD
 SELECT
-        POS.sessionid, CD.badgename, P.pubsname, 
+        POS.sessionid,
+        CD.badgename,
+        P.pubsname,
+        P.sortedpubsname,
         IF (P.share_email=1, CD.email, NULL) AS email,
-        POS.moderator, PSI.comments
+        POS.moderator,
+        PSI.comments
     FROM
-				ParticipantOnSession POS
-		   JOIN CongoDump CD USING(badgeid)
-		   JOIN Participants P USING(badgeid)
-	  LEFT JOIN ParticipantSessionInterest PSI USING(sessionid, badgeid)
+                  ParticipantOnSession POS
+             JOIN CongoDump CD USING(badgeid)
+             JOIN Participants P USING(badgeid)
+        LEFT JOIN ParticipantSessionInterest PSI USING(sessionid, badgeid)
     WHERE
         POS.sessionid IN (
             SELECT sessionid FROM ParticipantOnSession WHERE badgeid='$badgeid'
-			)
+        )
     ORDER BY sessionid, moderator DESC;
 EOD;
 $resultXML = mysql_query_XML($queryArr);

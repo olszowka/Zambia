@@ -931,6 +931,7 @@ function retrieveParticipant($badgeid) {
     $query = <<<EOD
 SELECT
         pubsname,
+        sortedpubsname,
         password,
         bestway,
         interested,

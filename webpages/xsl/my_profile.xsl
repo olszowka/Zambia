@@ -249,6 +249,20 @@
                             </input>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="sortedpubsname">Your published name as it should be sorted:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="text" size="20" maxlength="50" name="sortedpubsname"
+                                value="{/doc/query[@queryName='participant_info']/row/@sortedpubsname}"
+                                id="sortedpubsname" class="mycontrol userFormINPTXT">
+                                <xsl:if test="$enableBioEdit!='1'">
+                                    <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                </xsl:if>
+                            </input>
+                        </div>
+                    </div>
                   <xsl:choose>
                     <xsl:when test="$htmlbio = '1'">
                       <div class="row">

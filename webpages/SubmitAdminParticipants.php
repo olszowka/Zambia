@@ -20,18 +20,40 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-    P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
-    P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
-    CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM Participants P
-JOIN CongoDump CD ON P.badgeid = CD.badgeid
-LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE P.badgeid = ?
-ORDER BY CD.lastname, CD.firstname
+    P.badgeid,
+    P.pubsname,
+    P.sortedpubsname,
+    P.interested,
+    P.bio,
+    P.htmlbio,
+    P.staff_notes,
+    CD.firstname,
+    CD.lastname,
+    CD.badgename,
+    CD.phone,
+    CD.email,
+    CD.postaddress1,
+    CD.postaddress2,
+    CD.postcity,
+    CD.poststate,
+    CD.postzip,
+    CD.postcountry,
+    P.uploadedphotofilename,
+    P.approvedphotofilename,
+    P.photodenialreasonothertext,
+    CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+    R.statustext,
+    D.reasontext
+FROM
+                    Participants P
+               JOIN CongoDump CD ON P.badgeid = CD.badgeid
+    LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
+    LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+WHERE
+    P.badgeid = ?
+ORDER BY
+    CD.lastname,
+    CD.firstname
 EOD;
     $param_arr = array($fbadgeid);
     $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
@@ -55,10 +77,11 @@ function update_participant() {
     if (HTML_BIO === TRUE)
         $htmlbio = getString("htmlbio");
     $pubsname = getString("pubsname");
+    $sortedpubsname = getString("sortedpubsname");
     $staffnotes = getString("staffnotes");
     $interested = getInt("interested", NULL);
 
-    if (!is_null($password) || !is_null($bio) || !is_null($pubsname) || !is_null($staffnotes) || !is_null($interested)) {
+    if (!is_null($password) || !is_null($bio) || !is_null($pubsname) || !is_null($sortedpubsname) || !is_null($staffnotes) || !is_null($interested)) {
         $query_preable = "UPDATE Participants SET ";
         $query_portion_arr = array();
         $query_param_arr = array();
@@ -70,6 +93,7 @@ function update_participant() {
             push_query_arrays($htmlbio, 'htmlbio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($bio, 'bio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($pubsname, 'pubsname', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($sortedpubsname, 'sortedpubsname', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($staffnotes, 'staff_notes', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($interested, 'interested', 'i', NULL, $query_portion_arr, $query_param_arr, $query_param_type_str);
         $query_param_arr[] = $participantBadgeId;
@@ -258,9 +282,9 @@ EOD;
         $query = <<<EOD
 UPDATE ParticipantOnSessionHistory
     SET inactivatedts = NOW(), inactivatedbybadgeid = ?
-	WHERE
-	        badgeid = ?
-		AND inactivatedts IS NULL;
+    WHERE
+            badgeid = ?
+        AND inactivatedts IS NULL;
 EOD;
         $update_arr = array($_SESSION['badgeid'], $participantBadgeId);
         $updateStr = "ss";
@@ -302,37 +326,37 @@ WITH AnsweredSurvey(participantid, answercount) AS (
     WHERE participantid = ?
 )
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
+    CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+    R.statustext, D.reasontext
 FROM
     Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
+    JOIN CongoDump CD ON P.badgeid = CD.badgeid
     LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
     LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
     LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
 WHERE
-	P.badgeid = ?
+    P.badgeid = ?
 ORDER BY
-	CD.lastname, CD.firstname
+    CD.lastname, CD.firstname
 EOD;
         } else {
             $query = <<<EOD
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
+    CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+    R.statustext, D.reasontext
 FROM
     Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
+    JOIN CongoDump CD ON P.badgeid = CD.badgeid
         LEFT OUTER JOIN (
             SELECT participantid, COUNT(*) AS answercount
                 FROM ParticipantSurveyAnswers
@@ -341,9 +365,9 @@ FROM
 LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
 LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
 WHERE
-	P.badgeid = ?
+    P.badgeid = ?
 ORDER BY
-	CD.lastname, CD.firstname
+    CD.lastname, CD.firstname
 EOD; 
         }
         $param_arr = array($searchString, $searchString);
@@ -357,40 +381,40 @@ WITH AnsweredSurvey(participantid, answercount) AS (
     FROM ParticipantSurveyAnswers
 )
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
+    CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+    R.statustext, D.reasontext
 FROM
-	Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
+    Participants P
+    JOIN CongoDump CD ON P.badgeid = CD.badgeid
     LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
     LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
     LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
 WHERE
-		P.pubsname LIKE ?
-	OR CD.lastname LIKE ?
-	OR CD.firstname LIKE ?
-	OR CD.badgename LIKE ?
+        P.pubsname LIKE ?
+    OR CD.lastname LIKE ?
+    OR CD.firstname LIKE ?
+    OR CD.badgename LIKE ?
 ORDER BY
-	CD.lastname, CD.firstname
+    CD.lastname, CD.firstname
 EOD;
         } else {
             $query = <<<EOD
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
+    CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+    R.statustext, D.reasontext
 FROM
-	Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
+    Participants P
+    JOIN CongoDump CD ON P.badgeid = CD.badgeid
     LEFT OUTER JOIN (
          SELECT participantid, COUNT(*) AS answercount
             FROM ParticipantSurveyAnswers
@@ -398,12 +422,12 @@ FROM
     LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
     LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
 WHERE
-		P.pubsname LIKE ?
-	OR CD.lastname LIKE ?
-	OR CD.firstname LIKE ?
-	OR CD.badgename LIKE ?
+        P.pubsname LIKE ?
+    OR CD.lastname LIKE ?
+    OR CD.firstname LIKE ?
+    OR CD.badgename LIKE ?
 ORDER BY
-	CD.lastname, CD.firstname
+    CD.lastname, CD.firstname
 EOD;
         }
         $param_arr = array($searchString,$searchString,$searchString,$searchString);
@@ -426,19 +450,19 @@ EOD;
         exit();
     }
     $xpath = new DOMXpath($xml);
-	$searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
+    $searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
     foreach ($searchParticipantsResultRowElements as $resultRowElement) {
-    	$badgeid = $resultRowElement -> getAttribute("badgeid");
-    	$jsEscapedBadgeid = addslashes($badgeid);
-		$resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
-	}
+        $badgeid = $resultRowElement -> getAttribute("badgeid");
+        $jsEscapedBadgeid = addslashes($badgeid);
+        $resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
+    }
     header("Content-Type: text/html");
     $paramArray = array("userIdPrompt" => USER_ID_PROMPT);
     //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xml->saveXML(), "i")); //for debugging only
     $json_return["HTML"] = RenderXSLT('AdminParticipants.xsl', $paramArray, $xml, true);
     $json_return["rowcount"] = $rows;
     echo json_encode($json_return);
-	exit();
+    exit();
 }
 
 function fetch_user_perm_roles() {

@@ -70,6 +70,15 @@ function update_participant($badgeid) {
             Render500ErrorAjax($message_error);
             exit();
         }
+    if (isset($_POST['sortedpubsname']))
+        if ($may_edit_bio) {
+            $sortedpubsname = stripslashes($_POST['sortedpubsname']);
+            $updateClause .= "sortedpubsname=\"" . mysqli_real_escape_string($linki, $sortedpubsname) . "\", ";
+        } else {
+            $message_error = "You may not update your sorted name for publications at this time.  Database not updated.";
+            Render500ErrorAjax($message_error);
+            exit();
+        }
     if (isset($_POST['htmlbio'])) {
         if ($may_edit_bio) {
             $updateClause .= "htmlbio=\"" . mysqli_real_escape_string($linki, $_POST['htmlbio']) . "\", ";
