@@ -349,7 +349,17 @@
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Services']">
                 <li class="nav-item">
-                  <a href="#Services" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Services">Services</a>
+                  <a href="#services" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Services">Services</a>
+                </li>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_ServiceTypes']">
+                <li class="nav-item">
+                  <a href="#servicetypes" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-ServiceTypes">ServiceTypes</a>
+                </li>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Locations']">
+                <li class="nav-item">
+                  <a href="#locations" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Locations">Locations</a>
                 </li>
               </xsl:if>
             </ul>
@@ -377,8 +387,18 @@
                     <li>Features</li>
                     <p>Features available in a room for use by sessions</p>
                   </xsl:if>
-                  <li>Services</li>
-                  <p>Services available in a room for use by sessions</p>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Services']">
+                    <li>Services</li>
+                    <p>Services available in a room for use by sessions</p>
+                  </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_ServiceTypes']">
+                    <li>ServiceTypes</li>
+                    <p>Service Types used by services</p>
+                  </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Locations']">
+                    <li>Locations</li>
+                    <p>Locations that have hours</p>
+                  </xsl:if>
                 </ul>
               </div>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Rooms']">
@@ -398,6 +418,12 @@
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Services']">
                 <div class="tab-pane mt-4 fade" id="services"/>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_ServiceTypes']">
+                <div class="tab-pane mt-4 fade" id="servicetypes"/>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Locations']">
+                <div class="tab-pane mt-4 fade" id="locations"/>
               </xsl:if>
             </div>
           </div>
