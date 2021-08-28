@@ -116,6 +116,7 @@ function update_table($tablename) {
                 foreach($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
                         $name = $col['COLUMN_NAME'];
+                        // If uploaded data has column property, and it's not an empty string, add to paramarray. Otherwise add a null (null is needed to prevent error inserting non-char fields).
                         $paramarray[] = (property_exists($row, $name) && trim($row->$name) !== '' ? trim($row->$name) : null);
                     }
                 }
@@ -185,10 +186,6 @@ function update_table($tablename) {
     else
         $message = "";
 
-    if (isset($errmessage)) {
-        $message .= "<p>Database error: " . $errmessage . "</p>";
-    }
-    
     // get updated survey now with the id's in it
     fetch_table($tablename, $message);
 }
