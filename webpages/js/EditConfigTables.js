@@ -223,18 +223,19 @@ function opentable(tabledata) {
             columns.push({ title: "Order", field: "display_order", visible: false });
             display_order = true;
         } else if (fetch_json.hasOwnProperty(column.COLUMN_NAME + "_select")) {
-            selectlistname = column.COLUMN_NAME + "_select";
-            editor_type = 'select';
             selectlist = new Array();
-            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) { selectlist[entry.id] = entry.name; });
-            editor_params = { values: selectlist };
+            formatlist = new Array();
+            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) { 
+                selectlist.push({ label: entry.name, value: entry.id });
+                formatlist[entry.id] = entry.name;
+            });
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
                 visible: true,
-                editor: editor_type,
-                editorParams: editor_params,
+                editor: 'select',
+                editorParams: { values: selectlist },
                 formatter: "lookup",
-                formatterParams: selectlist,
+                formatterParams: formatlist,
                 minWidth: 200,
                 cellClick: tceEditorBlur
             });
