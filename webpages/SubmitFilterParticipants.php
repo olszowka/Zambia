@@ -172,13 +172,12 @@ if ($ajax_request_action == "" || !isLoggedIn() || !may_I("Staff")) {
     exit();
 }
 
-error_log("\Request action: $ajax_request_action\n\n");
 switch ($ajax_request_action) {
     case "filter":
         filter_participants();
         break;
     default:
-        $message_error = "Internal error: $ajax_request_action.";
+        $message_error = "Internal error.";
         RenderErrorAjax($message_error);
         exit();
 }
