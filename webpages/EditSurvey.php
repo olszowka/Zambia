@@ -12,7 +12,7 @@ staff_header($title, $bootstrap4);
 if (isLoggedIn() && may_I("Administrator")) {
 // get default data options javascript
         $sql = <<<EOD
-        SELECT t.shortname, d.ordinal, d.value, d.display_order, d.optionshort, d.optionhover, d.allowothertext
+        SELECT t.shortname, -d.ordinal, d.value, d.display_order, d.optionshort, d.optionhover, d.allowothertext
         FROM SurveyQuestionTypeDefaults d
         JOIN SurveyQuestionTypes t USING (typeid)
         ORDER BY t.typeid, d.display_order;
