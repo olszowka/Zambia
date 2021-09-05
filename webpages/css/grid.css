@@ -1,0 +1,139 @@
+.grid{
+    font-family:arial;
+    font-size:12px;
+    /* width:400px; */
+    empty-cells: show;
+}
+
+.grid th{
+    margin:0px;
+    padding:2px;
+    empty-cells: show;
+    border-bottom:1px solid black; /* Border bottom of table data cells */
+    border-right:1px solid black;  /* Border bottom of table data cells */
+    border-left:1px solid black;  /* Border bottom of table data cells */
+    border-top:1px solid black;  /* Border bottom of table data cells */
+    max-height:10px;
+}
+
+.grid td{
+    margin:0px;
+    padding:2px;
+    empty-cells: show;
+    border-bottom:1px solid black; /* Border bottom of table data cells */
+    border-right:1px solid black;  /* Border bottom of table data cells */
+    border-left:1px solid black;  /* Border bottom of table data cells */
+    border-top:1px solid black;  /* Border bottom of table data cells */
+    max-height:10px;
+}
+
+.grid tbody{
+    background-color:#FFF;
+}
+
+.grid thead{
+    /*position:relative; */ ;
+}
+
+.grid thead tr{
+    /*position:relative; */
+    top:0px;
+    bottom:0px;
+}
+
+TH.setup, TD.setup{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: red;
+}
+
+TH.teardown, TD.teardown{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: red;
+}
+
+TH.white, TD.white{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: white;
+}
+
+th.room_ravinia, td.room_ravinia{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #87CEFA;
+}
+
+th.room_willow, td.room_willow{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #00BFFF;
+}
+
+th.room_birch, td.room_birch{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #DA70D6;
+}
+
+th.room_anime, td.room_anime{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #6495ED;
+}
+
+th.room_cafezoom, td.room_cafezoom{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #FF00FF;
+}
+
+th.room_film, td.room_film{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #6495ED;
+}
+
+th.room_gamingzoom, td.room_gamingzoom{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #E9967A;
+}
+
+th.room_kidsroom, td.room_kidsroom{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #F5F5DC;
+}
+
+th.room_workshops, td.room_workshops{
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    background: #D8BFD8;
+}
+
