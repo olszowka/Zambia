@@ -266,7 +266,7 @@ WHERE
     (ct.badge_title ILIKE $1
     OR ct.last_name ILIKE $1
     OR ct.first_name ILIKE $1
-    OR ct.badge_title ILIKE $1
+    OR ct.badge_subtitle ILIKE $1
     OR ct.preferred_first_name ILIKE $1
     OR ct.preferred_last_name ILIKE $1)
 ORDER BY
