@@ -88,6 +88,7 @@ EOD;
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY participantid
 ), R2(badgeid, sessionid) AS (
     SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
     UNION
@@ -153,6 +154,7 @@ LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 
 LEFT JOIN (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY participantid
 ) A ON (A.participantid = P.badgeid)
 WHERE
 		POS.sessionid = $selsessionid
@@ -236,6 +238,7 @@ EOD;
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY participantid
 ), SessionParticipants(badgeid) AS (
     SELECT badgeid
     FROM ParticipantSessionInterest
@@ -287,6 +290,7 @@ SELECT
     LEFT OUTER JOIN (
         SELECT participantid, COUNT(*) AS answercount
         FROM ParticipantSurveyAnswers
+        GROUP BY participantid
     ) A ON (P.badgeid = A.participantid)
     WHERE P.interested = 1 AND S.badgeid IS NULL
 ORDER BY
