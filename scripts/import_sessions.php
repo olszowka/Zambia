@@ -151,9 +151,11 @@ foreach ($SessionRawArr as $datarow) {
             echo "Error inserting line $lineNum: " . mysqli_error($linki) . "\n";
         } else {
             $sessionid = mysqli_insert_id($linki);
+
      //
      //add all the tags
      //
+
      //first area tags
 
             $tags = explode(',', $datarow['areatag']);
@@ -169,19 +171,22 @@ foreach ($SessionRawArr as $datarow) {
                     }
                 }
             }
+
     //
     // now topic tags
     //
-            $tags = explode(',', $datarow['topictag']);
-            foreach ($tags as $tag) {
-                $match = strtolower(trim($tag));
-                $tagid = $taglist[$match];
-                if ($tagid === null)
-                    echo "invalid topic tag $tag on line $lineNum\n";
-                else {
-                    $rows = mysql_cmd_with_prepare($sessionTagsQuery, $sessionTagParamsType, array($sessionid, $tagid));
-                    if ($rows !== 1) {
-                        echo "Error inserting topic tag $tag ($tagid) for line $lineNum: " . mysqli_error($linki) . "\n";
+            if (strlen(trim($datarow['topictag'])) > 0) {
+                $tags = explode(',', $datarow['topictag']);
+                foreach ($tags as $tag) {
+                    $match = strtolower(trim($tag));
+                    $tagid = $taglist[$match];
+                    if ($tagid === null)
+                        echo "invalid topic tag $tag on line $lineNum\n";
+                    else {
+                        $rows = mysql_cmd_with_prepare($sessionTagsQuery, $sessionTagParamsType, array($sessionid, $tagid));
+                        if ($rows !== 1) {
+                            echo "Error inserting topic tag $tag ($tagid) for line $lineNum: " . mysqli_error($linki) . "\n";
+                        }
                     }
                 }
             }
