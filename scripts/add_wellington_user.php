@@ -4,7 +4,7 @@
 //	firstname
 //	lastname
 //	permroleids
-// 
+//
 // optional fields parsed
 // 	badgename (defaults to 'firstname lastname'
 // 	address1
@@ -34,7 +34,7 @@
 // 		UserHasPermissionRoles
 // 			badgeid
 // 			permroleids
-// 
+//
 // Expects reg sync to pick up other wellington data to Zambia
 global $linki;
 if (!file_exists('../db_name.php')) {
@@ -173,26 +173,42 @@ foreach ($userRawArr as $row) {
 	$country = trim($row['country']);
     else
 	$country = '';
-
-// now the users table insert
-    $pginsert = 'INSERT INTO public.users(email, created_at, updated_at, sign_in_count, hugo_download_counter) values($1, now(), now(), 0, 0) RETURNING id;';
-    $result = pg_prepare($pgconn, "users", $pginsert);
+// check if the user is in the usres table
+    $sql = 'SELECT id, email FROM public.users WHERE email = $1;';
+    $result = pg_prepare($pgconn, "userssel", $sql);
     //echo "user prepare from $pginsert='" . $result . "'\n\n";
-    pg_free_result($result);
 
+    pg_free_result($result);
 // execute the insert statement
-    $result = pg_execute($pgconn, "users", array($email));
+    $result = pg_execute($pgconn, "userssel", array($email));
     //echo "user execute from $pginsert='" . $result . "'\n\n";
-    $userid = -1;
+    $userid = -99999;
     while ($row = pg_fetch_assoc($result)) {
 	$userid = $row["id"];
     }
-    if ($userid <= 0) {
-	echo "error inserting user " . $email . ", skipping row " . $lineNum . "\n";
-	continue;
+    if ($userid == -99999) {
+        // now the users table insert
+        $pginsert = 'INSERT INTO public.users(email, created_at, updated_at, sign_in_count, hugo_download_counter) values($1, now(), now(), 0, 0) RETURNING id;';
+        $result = pg_prepare($pgconn, "users", $pginsert);
+        //echo "user prepare from $pginsert='" . $result . "'\n\n";
+        pg_free_result($result);
+
+        // execute the insert statement
+        $result = pg_execute($pgconn, "users", array($email));
+        //echo "user execute from $pginsert='" . $result . "'\n\n";
+        $userid = -1;
+        while ($row = pg_fetch_assoc($result)) {
+            $userid = $row["id"];
+        }
+        if ($userid <= 0) {
+            echo "error inserting user " . $email . ", skipping row " . $lineNum . "\n";
+            continue;
+        }
+        echo "User id " . $userid . " added\n\n";
+        pg_free_result($result);
+    } else {
+        echo "Using existing user id $userid\n\n";
     }
-    echo "User id " . $userid . " added\n\n";
-    pg_free_result($result);
 
 // now for the reservation, which sets the membership number (badgeid)
     $pginsert = <<<EOD
@@ -268,7 +284,7 @@ EOD;
 // now for contact (dc_contact)
     $pginsert = "INSERT INTO public.dc_contacts(claim_id, first_name, last_name, preferred_first_name, preferred_last_name, badge_title, publication_format, created_at, updated_at";
     $args = array($claimid, $firstname, $lastname, $firstname, $lastname, $badgename);
-    if ($address1 <> '') 
+    if ($address1 <> '')
     	$pginsert .= ",address_line_1";
     if ($address2 <> '')
     	$pginsert .= ",address_line_2";
