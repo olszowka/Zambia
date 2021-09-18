@@ -26,13 +26,19 @@ if ($pgconn == null) {
         exit();
     }
 }
+function print_rpre($element) {
+    echo "<pre>";
+    echo print_r($element);
+    echo "</pre>";
+}
+
 // perform the run-off test vs no-award
 function runofftest($winners, $place) {
     global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $catvotes, $winningvotes, $total_votes, $total_rank1, $roundwinners;
 
     if ($debuglevel & 1) {
         echo "In runofftest(winners, $place)<br>";
-        echo print_r($winners);
+        echo print_rpre($winners);
         echo "<br>";
     }
     $runoffwinners = array();
@@ -93,8 +99,9 @@ function runofftest($winners, $place) {
         }
     }
     if ($winnercount > 1)
-        echo " (tie)";
+        echo " (tie) ";
     echo "</strong></i><br>";
+    return true;
 }
 
 function run_rank($rankpass, $place) {
@@ -105,7 +112,7 @@ function run_rank($rankpass, $place) {
     }
     if ($debuglevel & 2) {
             echo "starting rank pass $rankpass<br>";
-            echo "votes before elimination " . count($rankballots) . ", in " . count($rankfinalists) . " categories<br>";
+            echo "votes before elimination " . count($rankballots) . ", for " . count($rankfinalists) . " finalists<br>";
     }
     if ($rankpass > 1) {
         // find the lowest rank person and delete that one, look for ties
@@ -123,7 +130,7 @@ function run_rank($rankpass, $place) {
             // break ties as who has the minimim number of first place votes
             if ($debuglevel & 32) {
                 echo "prior to tiebreak eliminating ($minvotes): ";
-                echo print_r($eliminate);
+                echo print_rpre($eliminate);
                 echo "&nbsp;<br>";
             }
             $new_eliminate = array();
@@ -143,7 +150,7 @@ function run_rank($rankpass, $place) {
         }
         if ($debuglevel & 32) {
             echo "eliminating ($minvotes): ";
-            echo print_r($eliminate);
+            echo print_rpre($eliminate);
             echo "&nbsp;<br>";
         }
 
@@ -153,9 +160,9 @@ function run_rank($rankpass, $place) {
             return true;
         }
 
-        if ($debuglevel & 128) {
+        if ($debuglevel & 256) {
             echo "rank ballots before elimination:<br>";
-            echo print_r($rankballots);
+            echo print_rpre($rankballots);
             echo "&nbsp;<br>";
         }
 
@@ -177,16 +184,16 @@ function run_rank($rankpass, $place) {
         }
 
         if ($debuglevel & 1)
-            echo "votes after elimination " . count($rankballots) . ", in " . count($rankfinalists) . " categories<br>";
+            echo "votes after elimination " . count($rankballots) . ", for " . count($rankfinalists) . " finalists<br>";
 
         if ($debuglevel & 32) {
-            echo "rankfinalists after elimination:<br>";
-            echo print_r($rankfinalists);
-            echo "&nbsp;<br>";
+            echo "rankfinalists after elimination:<br><pre>";
+            echo print_rpre($rankfinalists);
+            echo "&nbsp;<br></pre>";
         }
-        if ($debuglevel & 128) {
+        if ($debuglevel & 256) {
             echo "rank ballots after elimination:<br>";
-            echo print_r($rankballots);
+            echo print_rpre($rankballots);
             echo "&nbsp;<br>";
         }
     }
@@ -194,7 +201,7 @@ function run_rank($rankpass, $place) {
     // now count the highest (lowest position) rank for each ballot
     $votes = array();
     foreach ($rankballots as $pos => $ballot) {
-        if (array_key_exists($ballot['short_name'], $votes)) {
+        if (array_key_exists($ballot['reservation_id'], $votes)) {
             if ($ballot['position'] < $votes[$ballot['short_name']])
                 $votes[$ballot['reservation_id']] = $ballot['position'];
         } else {
@@ -203,8 +210,8 @@ function run_rank($rankpass, $place) {
     }
 
     if ($debuglevel & 128) {
-        echo "votes aray<br>";
-        echo print_r($votes);
+        echo "votes array<br>";
+        echo print_rpre($votes);
         echo "&nbsp;";
     }
 
@@ -223,7 +230,7 @@ function run_rank($rankpass, $place) {
     arsort($rankwinner, 1);
     $winningvotes = floor($total_toprank/ 2) + 1;
 
-    if ($debuglevel & 16) {
+    if ($debuglevel & 32) {
         echo "&nbsp;<br>Rank $rankpass votes to win: $winningvotes<br>";
         foreach ($rankwinner as $name => $count) {
             $percent = round( 100 * ($count / $total_rank1), 1);
@@ -246,6 +253,7 @@ function run_rank($rankpass, $place) {
         runofftest(array($leader), $place);
         return true;
      }
+     return false;
 }
 
 function process_cat($place) {
@@ -323,8 +331,8 @@ while ($row = pg_fetch_assoc($result)) {
 }
 pg_free_result($result);
 
-foreach ($categories as $category_id => $name) {
-    echo "<h4>Category: $name</h4>\n";
+foreach ($categories as $category_id => $catname) {
+    echo "<h4>Category: $catname</h4>\n";
     $sql = <<<EOD
 select count(*) as cast_ballots
 from ranks r
@@ -351,7 +359,7 @@ EOD;
     //3.12.2: “No Award” shall be given whenever the total number of valid ballots cast for a specific category
     //(excluding those cast for “No Award” in first place) is less than twenty-five percent (25%)
     //of the total number of final Award ballots received.
-    if ($percentcast < 25) {
+    if ($percentcast < 25 && ($debuglevel & 512) == 1) {
         echo "<i>Too few ballots cast: No Award</i><br>\n";
         continue;
     }
@@ -378,7 +386,7 @@ EOD;
 
     if ($debuglevel & 16) {
         echo "&nbsp;<br>Finalists: <br>";
-        echo print_r($finalists);
+        echo print_rpre($finalists);
         echo "&nbsp;<br>";
     }
 
@@ -414,6 +422,12 @@ EOD;
     }
     pg_free_result($result);
 
+    if ($debuglevel & 256) {
+        echo "Category $catname votes:<br>";
+        echo print_rpre($catvotes);
+        echo "&nbsp;<br>";
+    }
+
     $winningvotes = floor($total_rank1/ 2) + 1;
 
     process_cat($place);
@@ -440,15 +454,15 @@ EOD;
             }
         }
 
-        // ok, no direct winner, loop over the ballots
+        // ok, now process this place.
         $rankfinalists = $finalists;
         $rankballots = $catvotes;
         $rankwinner = array();
         $rankpass = 1;
-        run_rank($rankpass, $place);
-        $exactwinner = $rankwinner;
-
-        process_cat($place);
+        if (run_rank($rankpass, $place) == false) {
+            $exactwinner = $rankwinner;
+            process_cat($place);
+        }
     }
 }
 
