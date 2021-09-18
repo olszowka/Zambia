@@ -3,7 +3,7 @@ use CommonMark\Node;
 //	Copyright (c) 2021 Syd Weinstein. All rights reserved. See copyright document for more details.
 //  This page is NOT part of Zambia, but piggybacks on its verification system for convenience
 global $title;
-global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $catvotes, $winningvotes, $total_votes, $total_rank1, $finalists, $roundwinners;
+global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $catvotes, $winningvotes, $total_votes, $total_rank1, $finalists, $roundwinners, $catanalysis, $runoffanal;
 $title = "Hugo Voting";
 $bootstrap4 = true;
 require_once('StaffCommonCode.php');
@@ -32,9 +32,43 @@ function print_rpre($element) {
     echo "</pre>";
 }
 
+function output_analysis($data, $runoffdata) {
+    // build analysis output
+    // first the headings
+    $pass1 = array_shift($data);
+    echo "<table border=\"1\"><tr><th>&nbsp;Finalist</th><th>&nbsp;Pass 1&nbsp;</th>";
+    $passnum = 1;
+    foreach ($data as $index => $pass) {
+        $passnum++;
+        echo "<th>&nbsp;Pass $passnum" . "&nbsp;</th>";
+    }
+    foreach ($runoffdata as $index => $runoff_pass) {
+        echo "<th>&nbsp;Runoff&nbsp;</th>";
+    }
+    echo "</tr>\n<tr>";
+    // now the data columns
+    foreach ($pass1 as $name => $votes) {
+        echo "<tr><td>&nbsp;$name" . "&nbsp;</td><td align=\"right\">$votes&nbsp;</td>";
+        foreach ($data as $index => $pass) {
+            echo "<td align=\"right\">";
+            if (array_key_exists($name, $pass))
+                echo $pass[$name];
+            echo '&nbsp;</td>';
+        }
+        foreach($runoffdata as $index => $runoff_pass) {
+            echo "<td align=\"right\">";
+            if (array_key_exists($name, $runoff_pass))
+                echo $runoff_pass[$name];
+            echo "&nbsp;</td>";
+        }
+        echo "</tr>";
+    }
+    echo "</table><br>";
+}
+
 // perform the run-off test vs no-award
 function runofftest($winners, $place) {
-    global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $catvotes, $winningvotes, $total_votes, $total_rank1, $roundwinners;
+    global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $catvotes, $winningvotes, $total_votes, $total_rank1, $roundwinners, $runoffanal;
 
     if ($debuglevel & 1) {
         echo "In runofftest(winners, $place)<br>";
@@ -72,6 +106,10 @@ function runofftest($winners, $place) {
                     else if (array_key_exists($reservation_id, $leaderrank))
                         $leaderfirst++;
                 }
+                $runoff_leader = array();
+                $runoff_leader[$leader] = $leaderfirst;
+                $runoff_leader['No Award'] = $noawardfirst;
+                array_push($runoffanal, $runoff_leader);
                 if ($debuglevel & 32) {
                     echo "$leader: noawardfirst: $noawardfirst, leaderfirst: $leaderfirst<br>";
                 }
@@ -82,12 +120,18 @@ function runofftest($winners, $place) {
         }
     $runoffwinners = array_unique($runoffwinners);
     if (count($runoffwinners) == 1) {
-        echo "<i><strong>$place Winner: " . current($runoffwinners) . "</strong></i><br>";
+        echo "<i><strong>$place";
+        if ($place != 'Winner')
+            echo ' Place';
+        echo ": " . current($runoffwinners) . "</strong></i><br>";
         $roundwinners = $runoffwinners;
-        return true;
+
+        if ($debuglevel & 1)
+            echo "runofftest: return 1<br>&nbsp;<br>\n";
+        return 1;
     }
     $winnercount = 0;
-    echo "<i><strong>$place Winner: ";
+    echo "<i><strong>$place Place: ";
     $delim = "";
     $roundwinners = array();
     foreach ($runoffwinners as $name) {
@@ -101,11 +145,14 @@ function runofftest($winners, $place) {
     if ($winnercount > 1)
         echo " (tie) ";
     echo "</strong></i><br>";
-    return true;
+
+    if ($debuglevel & 1)
+            echo "runofftest: return $winnercount<br>&nbsp;<br>\n";
+    return $winnercount;
 }
 
 function run_rank($rankpass, $place) {
-    global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $winningvotes, $total_votes, $total_rank1;
+    global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $winningvotes, $total_votes, $total_rank1, $catanalysis;
 
     if ($debuglevel & 1) {
         echo "In run_rank($rankpass, $place)<br>";
@@ -128,11 +175,13 @@ function run_rank($rankpass, $place) {
         }
         if (count($eliminate) > 1) {
             // break ties as who has the minimim number of first place votes
+
             if ($debuglevel & 32) {
                 echo "prior to tiebreak eliminating ($minvotes): ";
                 echo print_rpre($eliminate);
                 echo "&nbsp;<br>";
             }
+
             $new_eliminate = array();
             $minvotes = $total_votes;
             foreach ($eliminate as $name) {
@@ -156,8 +205,10 @@ function run_rank($rankpass, $place) {
 
         // if the number to eliminate == the numnber of ballots number left in ranking we have a tie, all in eliminate are winners
         if (count($eliminate) == count($rankfinalists)) {
-            runofftest($rankfinalists, $place);
-            return true;
+            $retval = runofftest($rankfinalists, $place);
+            if ($debuglevel & 1)
+                echo "run_rank: return $retval<br>&nbsp;<br>\n";
+            return $retval;
         }
 
         if ($debuglevel & 256) {
@@ -202,7 +253,7 @@ function run_rank($rankpass, $place) {
     $votes = array();
     foreach ($rankballots as $pos => $ballot) {
         if (array_key_exists($ballot['reservation_id'], $votes)) {
-            if ($ballot['position'] < $votes[$ballot['short_name']])
+            if ($ballot['position'] < $votes[$ballot['reservation_id']])
                 $votes[$ballot['reservation_id']] = $ballot['position'];
         } else {
             $votes[$ballot['reservation_id']] = $ballot['position'];
@@ -228,6 +279,7 @@ function run_rank($rankpass, $place) {
         }
     }
     arsort($rankwinner, 1);
+    array_push($catanalysis, $rankwinner);
     $winningvotes = floor($total_toprank/ 2) + 1;
 
     if ($debuglevel & 32) {
@@ -250,14 +302,19 @@ function run_rank($rankpass, $place) {
 
     if ($votes >= $winningvotes) {
     // special check for no award if winner is not noaward
-        runofftest(array($leader), $place);
-        return true;
+        $retval = runofftest(array($leader), $place);
+        if ($debuglevel & 1)
+            echo "run_rank: return $retval<br>&nbsp;<br>\n";
+        return $retval;
      }
-     return false;
+
+     if ($debuglevel & 1)
+            echo "run_rank: return 0<br>&nbsp;<br>\n";
+     return 0;
 }
 
 function process_cat($place) {
-    global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $catvotes, $winningvotes, $total_votes, $total_rank1, $finalists, $runoffwinners;
+    global $rankballots, $rankfinalists, $debuglevel, $exactwinner, $rankwinner, $catvotes, $winningvotes, $total_votes, $total_rank1, $finalists, $runoffwinners, $catanalysis, $runoffanal;
 
     if ($debuglevel & 1) {
         echo "In process_cat($place)<br>";
@@ -275,6 +332,8 @@ function process_cat($place) {
         }
     }
 
+    if ($place == 'Winner')
+        array_push($catanalysis, $exactwinner);
     // see if the raw vote gets a winner
     $leader = array_key_first($exactwinner);
     $votes = $exactwinner[$leader];
@@ -283,9 +342,15 @@ function process_cat($place) {
     }
 
     if ($votes >= $winningvotes) {
-        echo "<i><strong>$place Winner: $leader</strong></i><br>";
+        echo "<i><strong>$place";
+         if ($place != ' Winner')
+            echo 'Place';
+        echo ": $leader</strong></i><br>";
         $runoffwinners = array($leader);
-        return;
+
+        if ($debuglevel & 1)
+            echo "process_cat: return 1<br>&nbsp;<br>\n";
+        return 1;
     }
 
     // ok, no direct winner, loop over the ballots
@@ -297,9 +362,18 @@ function process_cat($place) {
         $rankpass++;
         if ($rankpass > 10)  // emergency exit for now, find bug
             break;
-        if (run_rank($rankpass, $place))
-            break;
+        $winners = run_rank($rankpass, $place);
+
+        if ($winners > 0) {
+            if ($debuglevel & 1)
+                echo "process_cat: return $winners<br>&nbsp;<br>\n";
+            return $winners;
+        }
     }
+
+    if ($debuglevel & 1)
+        echo "process_cat: return 0<br>&nbsp;<br>\n";
+    return 0;
 }
 
 //error_log("postgress connection good");
@@ -364,7 +438,7 @@ EOD;
         continue;
     }
 
-    $place = "1st";
+    $place = "Winner";
     // load the finalists for this category
     $finalists = array();
 
@@ -391,6 +465,8 @@ EOD;
     }
 
     // load the votes for this category
+    $catanalysis = array();
+    $runoffanal = array();
     $catvotes = array();
     $exactwinner = array();
     foreach ($finalists as $id => $name) {
@@ -430,13 +506,29 @@ EOD;
 
     $winningvotes = floor($total_rank1/ 2) + 1;
 
-    process_cat($place);
-    $places = array("2nd", "3rd", "4th", "5th");
+    $num_winners = process_cat($place) - 1;
+    output_analysis($catanalysis, $runoffanal);
+    // can't skip more than 4 places
+    $skip = array(false, false, false, false, false);
+    $places = array("2nd", "3rd", "4th", "5th", "6th");
+    if ($num_winners > count($places))
+        $num_winners = count($places);  // skip n places
+    // skip the places that were ties
+     while ($num_winners > 0) {
+            $num_winners--;
+            $skip[$num_winners] = true;
+    }
     // now for 2nd through 5th place
-    foreach ($places as $place) {
+    foreach ($places as $place_index => $place) {
         if ($debuglevel & 16) {
             echo "Starting $place place<br>";
             echo "Starting count ballots = " . count($catvotes) . "<br>";
+        }
+
+        if ($skip[$place_index]) {
+            if ($debuglevel & 1)
+                echo "Skpping $place<br>";
+            continue;
         }
 
         // first delete all the votes for the prior round winner
@@ -455,14 +547,25 @@ EOD;
         }
 
         // ok, now process this place.
+        $catanalysis = array();
+        $runoffanal = array();
         $rankfinalists = $finalists;
         $rankballots = $catvotes;
         $rankwinner = array();
         $rankpass = 1;
-        if (run_rank($rankpass, $place) == false) {
+        $winners = run_rank($rankpass, $place);
+        if ($winners == 0) {
             $exactwinner = $rankwinner;
-            process_cat($place);
+            $winners = process_cat($place);
         }
+        // skip the nubmer of ties
+        if ($winners + $place_index > count($places))
+            $winners = count($places) - $place_index;
+        while ($winners > 0) {
+            $winners--;
+            $skip[$place_index + $winners] = true;
+        }
+        output_analysis($catanalysis, $runoffanal);
     }
 }
 
