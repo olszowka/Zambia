@@ -433,7 +433,7 @@ EOD;
     //3.12.2: “No Award” shall be given whenever the total number of valid ballots cast for a specific category
     //(excluding those cast for “No Award” in first place) is less than twenty-five percent (25%)
     //of the total number of final Award ballots received.
-    if ($percentcast < 25 && ($debuglevel & 512) == 1) {
+    if ($percentcast < 25 && ($debuglevel & 512) == 0) {
         echo "<i>Too few ballots cast: No Award</i><br>\n";
         continue;
     }
