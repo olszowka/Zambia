@@ -16,7 +16,7 @@ participant_header($title, false, 'Normal', true);
     <form name="constrform" method=POST action="SubmitMySchedConstr.php">
 
         <div class="row mt-2">
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header"><h5>Maximum Number of Sessions</h5></div>
                     <div class="card-body">
@@ -52,7 +52,7 @@ participant_header($title, false, 'Normal', true);
             </div>
 
     <!-- SCHEDULE availability times -->
-    <div class="col-md-8">
+    <div class="col-lg-8">
         <div class="card">
             <div class="card-header">
                 <h5>Times I Am Available</h5>
@@ -138,12 +138,12 @@ participant_header($title, false, 'Normal', true);
     <div class="card mt-2">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6 form-group">
+                <div class="col-lg-6 form-group">
                     <label>Please don't schedule me for a session that conflicts with:</label>
                     <textarea class="form-control" name="preventconflict" rows=3><?php
                         echo htmlspecialchars($partAvail["preventconflict"], ENT_NOQUOTES); ?></textarea>
                 </div>
-                <div class="col-md-6 form-group">
+                <div class="col-lg-6 form-group">
                     <label>Other constraints or conflicts that we should know about?</label>
                     <textarea class="form-control" name="otherconstraints" rows=3><?php
                         echo htmlspecialchars($partAvail["otherconstraints"], ENT_NOQUOTES); ?></textarea>
