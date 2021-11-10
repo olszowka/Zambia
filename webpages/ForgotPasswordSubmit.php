@@ -196,6 +196,7 @@ EOD;
 }
 
 list($pubsname, $badgename, $firstname, $lastname, $badgeid) = mysqli_fetch_array($result);
+$badgeidSQL = mysqli_real_escape_string($linki, $badgeid);
 mysqli_free_result($result);
 // Create tokens
 $token = random_bytes(32);
