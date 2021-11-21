@@ -102,7 +102,5 @@ EOD;
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
-// Show login page with password reset confirmation
-$title = "Login";
-participant_header($title, false, 'Password_Reset', true);
-participant_footer();
+
+header('Location: ./');
