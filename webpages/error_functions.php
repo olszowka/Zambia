@@ -86,10 +86,10 @@ function RenderError($message_error, $ajax = false) {
                 BrainstormRenderErrorPage($title, $message_error);
                 break;
             case HEADER_PARTICIPANT:
-                PartRenderErrorPage($title, $message_error);
+                PartRenderErrorPage($title, $message_error, true);
                 break;
             case HEADER_STAFF:
-                StaffRenderErrorPage($title, $message_error);
+                StaffRenderErrorPage($title, $message_error, true);
                 break;
         }
         exit(0);
