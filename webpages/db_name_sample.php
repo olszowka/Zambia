@@ -72,9 +72,9 @@ define("REG_PART_PREFIX", "");
 define("CON_THEME", "");
 // if con-specific theming should be applied, you can reference a theme css here.
 // for example: define("CON_THEME", "themes/reallybigcon/main.css");
-define("CON_FAVICON", "");
+define("CON_THEME_FAVICON", "");
 // if you want a con-specific favicon , you can reference an image file here.
-// for example: define("CON_FAVICON", "themes/reallybigcon/myfavicon.png");
+// for example: define("CON_THEME_FAVICON", "themes/reallybigcon/myfavicon.png");
 define("CON_HEADER_IMG", "");
 // to improve the con branding, you can define a con-specific header image that will take the place of the 
 // Zambia illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
