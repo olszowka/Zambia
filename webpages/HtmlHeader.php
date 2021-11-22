@@ -13,11 +13,9 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
 <?php
     if (defined('CON_THEME_FAVICON') && CON_THEME_FAVICON !== "") {
 ?>
-    <link rel="shortcut icon" href="<?php echo CON_THEME_FAVICON ?>" />
     <link rel="shortcut icon" href="<?php echo CON_THEME_FAVICON ?>">
 <?php } else { ?>
     <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link rel="shortcut icon" href="images/favicon.ico">
 <?php } ?><?php if ($bootstrap4) { ?>
     <link rel="stylesheet" href="external/bootstrap4.5.0/bootstrap.min.css" type="text/css" >
 <?php } else { ?>
