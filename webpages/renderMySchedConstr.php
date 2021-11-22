@@ -27,8 +27,8 @@ participant_header($title, false, 'Normal', true);
                             total sessions and <?php echo PREF_DLY_SESNS_LMT; ?> each day. There is no need for the numbers to add up. We'll
                             use this for guidance when assigning and scheduling sessions.</small></p>
                         <div class="form-group row">                            
-                            <label class="col-sm-8 col-form-label text-right" for="maxprog">Preferred total number of sessions:</label>
-                            <div class="col-sm-4">
+                            <label class="col-md-7 offset-md-1 col-form-label" for="maxprog">Preferred total number of sessions:</label>
+                            <div class="col-md-3">
                                 <input class="form-control" type="text" size=3 name="maxprog" value="<?php echo $partAvail["maxprog"]; ?>">
                             </div>
                         </div>
@@ -39,9 +39,9 @@ participant_header($title, false, 'Normal', true);
                                 for ($i = 1; $i <= CON_NUM_DAYS; $i++) {
                                     echo "<div class=\"form-group row\">\n";
                                     $D = longDayNameFromInt($i);
-                                    echo "<label class=\"col-sm-8 col-form-label text-right\" for=\"maxprogday$i\">$D maximum:</label>\n";
+                                    echo "<label class=\"col-md-7 offset-md-1 col-form-label\" for=\"maxprogday$i\">$D maximum:</label>\n";
                                     $N = isset($partAvail["maxprogday$i"]) ? $partAvail["maxprogday$i"] : '';
-                                    echo "<div class=\"col-sm-4\"><input type=\"text\" class=\"form-control\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N></div>\n";
+                                    echo "<div class=\"col-md-3\"><input type=\"text\" class=\"form-control\" id=\"maxprogday$i\" size=3 name=\"maxprogday$i\" value=$N></div>\n";
                                     echo "</div>\n";
                                 }
                             }
