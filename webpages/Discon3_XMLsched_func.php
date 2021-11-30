@@ -71,7 +71,7 @@ EOD;
 SELECT
 	s.sessionid, s.title, s.progguidhtml as description, s.meetinglink, s.duration,
 	DATE_FORMAT(ADDTIME('$ConStartDatim',sch.starttime),'%Y-%m-%d %H:%i:%s') as date,
-	r.roomname, t.typename, IFNULL(f.featurename, '') AS virtualacc
+	r.roomname, t.typename, IFNULL(f.featurename, 'On Site Only') AS virtualacc
 FROM Sessions s
 JOIN Schedule sch USING (sessionid)
 JOIN Rooms r USING (roomid)
