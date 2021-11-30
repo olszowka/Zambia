@@ -532,8 +532,8 @@ UPDATE Sessions SET
         servicenotes="{$sessionf["servnotes"]}",
         statusid="{$sessionf["status"]}",
         notesforprog="{$sessionf["notesforprog"]}",
-        meetinglink="{$sessionf["mlink"]}"
-        participantlink="{$sessionf["plink"]}"
+        meetinglink="{$sessionf["mlink"]}",
+        panelistlink="{$sessionf["plink"]}",
         captionlink="{$sessionf["clink"]}"
     WHERE
         sessionid = $id;
@@ -627,7 +627,7 @@ INSERT INTO Sessions SET
         progguiddesc="{$sessionf["progguiddesc"]}",
         progguidhtml="{$sessionf["progguidhtml"]}",
         meetinglink="{$sessionf["mlink"]}",
-        participantlink="{$sessionf["plink"]}",
+        panelistlink="{$sessionf["plink"]}",
         captionlink="{$sessionf["clink"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
@@ -760,7 +760,7 @@ SELECT
         CASE WHEN ISNULL(progguidhtml) THEN progguiddesc ELSE progguidhtml END AS progguidhtml,
         persppartinfo, duration, estatten, kidscatid, signupreq, roomsetid, notesforpart,
         servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink,
-        participantlink, captionlink
+        panelistlink, captionlink
     FROM
         Sessions
     WHERE
@@ -805,7 +805,7 @@ EOD;
     $session["notesforprog"] = $sessionarray["notesforprog"];
     $session["invguest"] = $sessionarray["invitedguest"];
     $session["mlink"] = $sessionarray["meetinglink"];
-    $session["plink"] = $sessionarray["participantlink"];
+    $session["plink"] = $sessionarray["panelistlink"];
     $session["clink"] = $sessionarray["captionlink"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";
