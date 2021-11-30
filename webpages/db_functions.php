@@ -533,6 +533,8 @@ UPDATE Sessions SET
         statusid="{$sessionf["status"]}",
         notesforprog="{$sessionf["notesforprog"]}",
         meetinglink="{$sessionf["mlink"]}"
+        participantlink="{$sessionf["plink"]}"
+        captionlink="{$sessionf["clink"]}"
     WHERE
         sessionid = $id;
 EOD;
@@ -625,6 +627,8 @@ INSERT INTO Sessions SET
         progguiddesc="{$sessionf["progguiddesc"]}",
         progguidhtml="{$sessionf["progguidhtml"]}",
         meetinglink="{$sessionf["mlink"]}",
+        participantlink="{$sessionf["plink"]}",
+        captionlink="{$sessionf["clink"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
         estatten={$sessionf["estatten"]},
@@ -691,10 +695,15 @@ function filter_session() {
     $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
     $session2["progguiddesc"] = mysqli_real_escape_string($linki, $session["progguiddesc"]);
     $session2["progguidhtml"] = mysqli_real_escape_string($linki, $session["progguidhtml"]);
-    if (MEETING_LINK === TRUE)
+    if (MEETING_LINK === TRUE) {
         $session2["mlink"] = mysqli_real_escape_string($linki, $session["mlink"]);
-    else
+        $session2["plink"] = mysqli_real_escape_string($linki, $session["plink"]);
+        $session2["clink"] = mysqli_real_escape_string($linki, $session["clink"]);
+    } else {
         $session2["mlink"] = "";
+        $session2["plink"] = "";
+        $session2["clink"] = "";
+    }
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
     if (DURATION_IN_MINUTES === TRUE) {
         $session2["duration"] = conv_min2hrsmin($session["duration"]);
@@ -750,7 +759,8 @@ SELECT
         CASE WHEN ISNULL(progguiddesc) THEN progguidhtml ELSE progguiddesc END AS progguiddesc,
         CASE WHEN ISNULL(progguidhtml) THEN progguiddesc ELSE progguidhtml END AS progguidhtml,
         persppartinfo, duration, estatten, kidscatid, signupreq, roomsetid, notesforpart,
-        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink
+        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink,
+        participantlink, captionlink
     FROM
         Sessions
     WHERE
@@ -795,6 +805,8 @@ EOD;
     $session["notesforprog"] = $sessionarray["notesforprog"];
     $session["invguest"] = $sessionarray["invitedguest"];
     $session["mlink"] = $sessionarray["meetinglink"];
+    $session["plink"] = $sessionarray["participantlink"];
+    $session["clink"] = $sessionarray["captionlink"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";
     if (!$result = mysqli_query_with_error_handling($query)) {

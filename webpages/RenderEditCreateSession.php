@@ -279,11 +279,23 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     if (MEETING_LINK === TRUE) {
 ?>
         <div class="row-fluid vert-sep vert-sep-above">
-                    <div class="control-group">
-                        <label class="control-label" for="meetinglink">Meeting Link:</label>
-                        <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"],ENT_COMPAT);?>" />
-                    </div>
-                </div>
+            <div class="control-group">
+                <label class="span1 control-label" for="mlink">Meeting Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"],ENT_COMPAT);?>" />
+            </div>
+        </div>
+        <div class="row-fluid vert-sep vert-sep-above">
+            <div class="control-group">
+                <label class="span1 control-label" for="plink">Participant Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="plink" id="plink" value="<?php echo htmlspecialchars($session["plink"],ENT_COMPAT);?>" />
+            </div>
+        </div>
+        <div class="row-fluid vert-sep vert-sep-above">
+            <div class="control-group">
+                <label class="span1 control-label" for="clink">Caption Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="clink" id="clink" value="<?php echo htmlspecialchars($session["clink"],ENT_COMPAT);?>" />
+            </div>
+        </div>
 <?php
     }
 ?>

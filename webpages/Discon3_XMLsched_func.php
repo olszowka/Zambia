@@ -71,11 +71,13 @@ EOD;
 SELECT
 	s.sessionid, s.title, s.progguidhtml as description, s.meetinglink, s.duration,
 	DATE_FORMAT(ADDTIME('$ConStartDatim',sch.starttime),'%Y-%m-%d %H:%i:%s') as date,
-	r.roomname, t.typename
+	r.roomname, t.typename, IFNULL(f.featurename, '') AS virtualacc
 FROM Sessions s
 JOIN Schedule sch USING (sessionid)
 JOIN Rooms r USING (roomid)
 JOIN Types t USING (typeid)
+LEFT OUTER JOIN SessionHasFeature sf ON (sf.sessionid = s.sessionid and sf.featureid in (20,21,22))
+LEFT OUTER JOIN Features f USING (featureid)
 WHERE pubstatusid = 2
 ORDER BY starttime, title, roomname;
 EOD;
@@ -89,6 +91,7 @@ EOD;
 			$roomname = $row["roomname"];
 			$typename = $row["typename"];
 			$meetinglink = $row["meetinglink"];
+			$virtualacc = $row["virtualacc"];
 			echo <<<EOD
 <Session>
 <ID>$session</ID>
@@ -96,6 +99,7 @@ EOD;
 <Content><![CDATA[$description]]></Content>
 <Starttime>$date</Starttime>
 <Location><![CDATA[$roomname]]></Location>
+<VirtualAccess>$virtualacc</VirtualAccess>
 <SessionType><![CDATA[$typename]]></SessionType>
 <Virtualink><![CDATA[$meetinglink]]></Virtualink>
 <SessionTags>
