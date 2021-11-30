@@ -233,7 +233,8 @@ function generateSchedules($status, $recipientinfo) {
     $query = <<<EOD
 SELECT
         POS.badgeid, RM.roomname, S.title, DATE_FORMAT(ADDTIME('$ConStartDatim$', SCH.starttime),'%a %l:%i %p') as starttime,
-        DATE_FORMAT(S.duration, '%i') as durationmin, DATE_FORMAT(S.duration, '%k') as durationhrs, SCH.sessionid
+        DATE_FORMAT(S.duration, '%i') as durationmin, DATE_FORMAT(S.duration, '%k') as durationhrs, SCH.sessionid,
+        IFNULL(S.panelistlink,'') AS panelistlink
     FROM
              Schedule SCH
         JOIN Rooms RM USING (roomid)
@@ -243,7 +244,7 @@ SELECT
             POS.badgeid IN ($badgeidList)
 $extraWhereClause
     ORDER BY
-        POS.badgeid, 
+        POS.badgeid,
         SCH.starttime;
 EOD;
     $result = mysqli_query_exit_on_error($query);
@@ -254,6 +255,8 @@ EOD;
         $scheduleRow .= str_pad(substr($rowArr["roomname"], 0, 25), 27); // Commonwealth Ballroom ABC (plus 2 spaces)
         $scheduleRow .= str_pad($rowArr["sessionid"], 12); // Session ID (plus 2 spaces)
         $scheduleRow .= str_pad($rowArr["title"], 50); // Video 201: Advanced Live Television Production
+        if ($rowArr["panelistlink"] != '')
+            $scheduleRow .= "\nParticipant link: " . $rowArr["panelistlink"];
         if (!isset($returnResult[$rowArr["badgeid"]])) {
             $returnResult[$rowArr["badgeid"]] = array();
         }
