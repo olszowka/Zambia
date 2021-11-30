@@ -8,6 +8,9 @@
         if ($_GET['type'] == 'p') {
             $results = retrieveD3XMLDataParticipants();
         }
+        if ($_GET['type'] == 'ps') {
+            $results = retrieveD3XMLDataPocketProgram();
+        }
     }
 	exit();
 ?>
