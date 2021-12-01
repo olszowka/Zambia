@@ -11,6 +11,9 @@
         if ($_GET['type'] == 'ps') {
             $results = retrieveD3XMLDataPocketProgram();
         }
+        if ($_GET['type'] == 'a') {
+            $results = retrieveD3XMLDataAttendees();
+        }
     }
 	exit();
 ?>

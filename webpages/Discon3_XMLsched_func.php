@@ -303,4 +303,56 @@ EOD;
 		mysqli_free_result($result);
 		echo "</Sessions>\n";
     }
+	function retrieveD3XMLDataAttendees() {
+		$pgconn = pg_connect(WELLINGTONPROD);
+		if (!$pgconn) {
+			echo "Unable to connect to Wellington\n";
+			exit();
+		}
+
+		// query: users with an attending/virtual membership and the earliest reservation/claim for that user
+		$query = <<<EOD
+SELECT membership_number, email,
+CASE WHEN COALESCE(preferred_first_name, '')  = '' THEN first_name ELSE preferred_first_name END AS first_name,
+CASE WHEN COALESCE (preferred_last_name, '')  = '' THEN last_name ELSE preferred_last_name END AS last_name
+FROM (
+	SELECT u.id, u.email, r.membership_number, m.name, dc.first_name, dc.last_name, dc.preferred_first_name, dc.preferred_last_name,
+	ROW_NUMBER()  OVER (PARTITION BY u.id ORDER BY c.created_at) AS seq
+	FROM users u
+	JOIN claims c ON (c.user_id = u.id AND c.active_to IS NULL)
+	JOIN reservations r ON (c.reservation_id = r.id)
+	JOIN orders o ON (r.id = o.reservation_id AND o.active_to IS NULL)
+	JOIN memberships m ON (o.membership_id = m.id)
+	JOIN dc_contacts dc ON (dc.claim_id = c.id)
+	WHERE (m.can_attend = true OR m.name LIKE '%virtual%')
+	ORDER BY u.id, r.membership_number
+	) s
+where seq = 1
+ORDER BY membership_number;
+EOD;
+		$result = pg_query($pgconn, $query);
+		if (!$result) {
+			echo "Wellington query error" . pg_result_error($result, PGSQL_STATUS_STRING) . "\n";
+			exit();
+		}
+		echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+		echo "<Attendees>\n";
+		while ($row = pg_fetch_assoc($result)) {
+			$id = $row["membership_number"];
+			$email = $row["email"];
+			$firstname = $row["first_name"];
+			$lastname = $row["last_name"];
+			echo <<<EOD
+<Attendee>
+<MembershipNumber>$id</MembershipNumber>
+<Email><![CDATA[$email]]></Email>
+<FirstName><![CDATA[$firstname]]></FirstName>
+<LastName><![CDATA[$lastname]]></LastName>
+</Attendee>
+
+EOD;
+        }
+		pg_free_result($result);
+		echo "</Attendees>\n";
+    }
 ?>
