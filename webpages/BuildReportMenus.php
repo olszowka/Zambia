@@ -6,7 +6,7 @@ require_once('StaffCommonCode.php'); // Checks for staff permission among other 
 
 
 function process_all_files_in_directory($basePath, $subDirectoryName, &$allReports) {
-    $path = $basePath . $subDirectoryName;
+    $path = $basePath . "/" . $subDirectoryName;
     $dirHandle = opendir($path);
     if (!$dirHandle) {
         throw new Exception("Cannot open directory: $path");
@@ -17,7 +17,8 @@ function process_all_files_in_directory($basePath, $subDirectoryName, &$allRepor
                 // do nothing
             } else if (is_dir("$path/$reportFileName")) {
                 try {
-                    process_all_files_in_directory($basePath, $subDirectoryName . "/" . $reportFileName, $allReports);
+                    $nextDirectory = $subDirectoryName == "" ? $reportFileName : ($subDirectoryName . "/" . $reportFileName);
+                    process_all_files_in_directory($basePath, $nextDirectory, $allReports);
                 } catch (Exception $e) {
                     // ignore errors opening subdirectories? Is this really what we want, here?
                     // It's closest to the existing behaviour.
@@ -60,18 +61,7 @@ function build_report_menus($path) {
     $reportMenuBS4FilHand = fopen('ReportMenuBS4Include.php', 'wb');
     $staffReportsICIFilHand = fopen('staffReportsInCategoryInclude.php', 'wb');
     if ($reportMenuFilHand === false || $reportMenuBS4FilHand === false || $staffReportsICIFilHand === false) {
-        staff_header($title, true);
-    ?>
-        <div class="row mt-3">
-            <div class="col-12">
-                <div class="alert alert-danger" role="alert">
-                    Build Reports Failed: invalid permissions, check installation of Zambia.
-                </div>
-            </div>
-        </div>
-    <?php
-        staff_footer();
-        return false;
+        throw new Exception("One of the files we're trying to generate cannot be opened.");
     }
     fwrite($staffReportsICIFilHand, "<?php\n");
     fwrite($staffReportsICIFilHand, "\$reportCategories = array();\n");
@@ -143,8 +133,8 @@ if ($areYouSure !== 1) {
 ?>
 <?php
 $path = './reports';
-$allReports = build_report_menus($path);
-if ($allReports) {
+try {
+    $allReports = build_report_menus($path);
     $reportCount = count($allReports);
     staff_header($title, true);
     ?>
@@ -158,6 +148,17 @@ if ($allReports) {
     </div>
     <?php
     staff_footer();
+} catch (Exception $e) {
+    staff_header($title, true);
+    ?>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    Build Reports Failed: Invalid permissions, check installation of Zambia.
+                </div>
+            </div>
+        </div>
+    <?php
+    staff_footer();
 }
-
 ?>
