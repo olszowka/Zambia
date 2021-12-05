@@ -304,12 +304,21 @@ EOD;
 		echo "</Sessions>\n";
     }
 	function retrieveD3XMLDataAttendees() {
+		global $linki;
+
 		$pgconn = pg_connect(WELLINGTONPROD);
 		if (!$pgconn) {
 			echo "Unable to connect to Wellington\n";
 			exit();
 		}
+		if (prepare_db_and_more() === false) {
+			$results["message_error"] = "Unable to connect to database.<br />No further execution possible.";
+			return $results;
+        };
 
+		$badgeids = array();
+		$emails = array();
+		// Wellington first
 		// query: users with an attending/virtual membership and the earliest reservation/claim for that user
 		$query = <<<EOD
 SELECT membership_number, email,
@@ -342,7 +351,9 @@ EOD;
 			$email = $row["email"];
 			$firstname = $row["first_name"];
 			$lastname = $row["last_name"];
-			echo <<<EOD
+			// must be unique by id and email, so check if it exists, to output it, and then add those to the check arrays
+			if ((!array_key_exists($id, $badgeids)) && (!array_key_exists($email, $emails))) {
+				echo <<<EOD
 <Attendee>
 <MembershipNumber>$id</MembershipNumber>
 <Email><![CDATA[$email]]></Email>
@@ -351,8 +362,48 @@ EOD;
 </Attendee>
 
 EOD;
+				$badgeids{$id} = $id;
+				$emails{$email} = $email;
+            }
         }
 		pg_free_result($result);
+
+		$query = <<<EOD
+SELECT DISTINCT p.id as membership_number, p.email_addr as email, p.first_name, p.last_name
+FROM d3_reg.perinfo p
+JOIN d3_reg.reg r ON (r.perid = p.id)
+JOIN d3_reg.atcon_badge a ON (a.badgeId = r.id)
+ORDER BY membership_number;
+
+EOD;
+		$result = mysqli_query_with_error_handling($query);
+		if (!$result) {
+			echo "AT-CON query error" . mysqli_error($linki) . "\n";
+			exit();
+		}
+		while($row = mysqli_fetch_assoc($result)) {
+			$id = $row["membership_number"];
+			$email = $row["email"];
+			$firstname = $row["first_name"];
+			$lastname = $row["last_name"];
+			// must be unique by id and email, so check if it exists, to output it, and then add those to the check arrays
+			if ((!array_key_exists($id, $badgeids)) && (!array_key_exists($email, $emails)) && (mb_strpos($email, '@', 0) > 0)) {
+				echo <<<EOD
+<Attendee>
+<MembershipNumber>$id</MembershipNumber>
+<Email><![CDATA[$email]]></Email>
+<FirstName><![CDATA[$firstname]]></FirstName>
+<LastName><![CDATA[$lastname]]></LastName>
+</Attendee>
+
+EOD;
+				$badgeids{$id} = $id;
+				$emails{$email} = $email;
+            }
+        }
+		mysqli_free_result($result);
+
+
 		echo "</Attendees>\n";
     }
 ?>
