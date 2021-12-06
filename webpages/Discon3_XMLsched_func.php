@@ -351,6 +351,7 @@ EOD;
 			$email = $row["email"];
 			$firstname = $row["first_name"];
 			$lastname = $row["last_name"];
+			$discordauth = D3_Discord_Hash($id, $email);
 			// must be unique by id and email, so check if it exists, to output it, and then add those to the check arrays
 			if ((!array_key_exists($id, $badgeids)) && (!array_key_exists($email, $emails))) {
 				echo <<<EOD
@@ -359,6 +360,7 @@ EOD;
 <Email><![CDATA[$email]]></Email>
 <FirstName><![CDATA[$firstname]]></FirstName>
 <LastName><![CDATA[$lastname]]></LastName>
+<DiscordAuth><![CDATA[$discordauth]]></DiscordAuth>
 </Attendee>
 
 EOD;
@@ -386,6 +388,7 @@ EOD;
 			$email = $row["email"];
 			$firstname = $row["first_name"];
 			$lastname = $row["last_name"];
+			$discordauth = D3_Discord_Hash($id, $email);
 			// must be unique by id and email, so check if it exists, to output it, and then add those to the check arrays
 			if ((!array_key_exists($id, $badgeids)) && (!array_key_exists($email, $emails)) && (mb_strpos($email, '@', 0) > 0)) {
 				echo <<<EOD
@@ -394,6 +397,7 @@ EOD;
 <Email><![CDATA[$email]]></Email>
 <FirstName><![CDATA[$firstname]]></FirstName>
 <LastName><![CDATA[$lastname]]></LastName>
+<DiscordAuth><![CDATA[$discordauth]]></DiscordAuth>
 </Attendee>
 
 EOD;
@@ -406,4 +410,84 @@ EOD;
 
 		echo "</Attendees>\n";
     }
+function D3_Discord_Hash($id, $email) {
+    $genp='';
+    $checkd = 9;
+    $rgx = '-';
+
+    if (!is_numeric($id)) {
+        #echo "ID ($id) must be a number\n";
+        return("");
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        #echo "invalid email address: $email\n";
+        return("");
+    }
+
+    # zero fill $id
+    $id = sprintf("%05d", $id);
+    $checkd = (mb_substr($id, 4, 1) + mb_substr($id, 3, 1)) % 8;
+
+    # accomodate single-char usernames with a simple transform, the log will
+    # still look fine
+    if (mb_strpos($email, '@') == 1) {
+        $email = "-" . $email;
+    }
+    # get 9 random bytes in base64 format
+    $base = preg_replace('[\+/=]', '', base64_encode(random_bytes(9)));
+    $idx = random_int(1,3);
+    $email2ndchar = mb_convert_case(mb_substr($email, 1, 1), MB_CASE_UPPER);
+
+    switch ($idx) {
+        case 1:
+            $flet = 'S';
+            if (mb_strpos('ABCDE', $email2ndchar) !== false)
+                $rgx = 'u';
+            if (mb_strpos('FGHIJ', $email2ndchar) !== false)
+                $rgx = 'z';
+            if (mb_strpos('.KLMNO', $email2ndchar) !== false)
+                $rgx = 'P';
+            if (mb_strpos('-PQRST', $email2ndchar) !== false)
+                $rgx = 'J';
+            if (mb_strpos('_UVWXY', $email2ndchar) !== false)
+                $rgx = 'c';
+            if (mb_strpos('Z0123456789', $email2ndchar) !== false)
+                $rgx = 'm';
+            break;
+        case 2:
+            $flet = 'C';
+            if (mb_strpos('ABCDE', $email2ndchar) !== false)
+                $rgx = 'W';
+            if (mb_strpos('FGHIJ', $email2ndchar) !== false)
+                $rgx = '4';
+            if (mb_strpos('.KLMNO', $email2ndchar) !== false)
+                $rgx = 's';
+            if (mb_strpos('-PQRST', $email2ndchar) !== false)
+                $rgx = 'i';
+            if (mb_strpos('_UVWXY', $email2ndchar) !== false)
+                $rgx = 'E';
+            if (mb_strpos('Z0123456789', $email2ndchar) !== false)
+                $rgx = 'O';
+            break;
+        case 3:
+            $flet = 'h';
+            if (mb_strpos('ABCDE', $email2ndchar) !== false)
+                $rgx = 'y';
+            if (mb_strpos('FGHIJ', $email2ndchar) !== false)
+                $rgx = '7';
+            if (mb_strpos('.KLMNO', $email2ndchar) !== false)
+                $rgx = 'q';
+            if (mb_strpos('-PQRST', $email2ndchar) !== false)
+                $rgx = 'F';
+            if (mb_strpos('_UVWXY', $email2ndchar) !== false)
+                $rgx = 'D';
+            if (mb_strpos('Z0123456789', $email2ndchar) !== false)
+                $rgx = 'K';
+            break;
+    }
+    $genp = mb_substr($base, 0, 2) . $flet . mb_substr($base, 4, 1) . $checkd . $rgx . substr($base, 6, 2);
+
+    return("auth $genp $id $email");
+}
 ?>
