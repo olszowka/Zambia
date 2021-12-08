@@ -8,7 +8,7 @@ $(function() {
         $.ajax({
             url: url,
             type: 'POST',
-            success: function(data) {
+            success: function(data, response) {
                 $('#build-report-btn .spinner-border').hide();
                 showMessage(data);
             },
@@ -20,10 +20,15 @@ $(function() {
     });
 
     function showMessage(data) {
-        try {
-            data = JSON.parse(data);
-        } catch {
-            data = { "severity": "danger", "text": data};
+        if (typeof user === 'string') {
+            try {
+                data = JSON.parse(data);
+            } catch {
+                if (data.indexOf('<div') == 0) {
+                    data = $(data).text();
+                }
+                data = { "severity": "danger", "text": data};
+            }
         }
         let alert = $('<div class="mt-3 alert"></div>');
         alert.addClass('alert-' + data.severity);

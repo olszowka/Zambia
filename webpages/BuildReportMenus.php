@@ -138,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (!may_I('ConfigureReports')) {
         $result = array("severity" => "danger", "text" => "You do not have access to perform this function. Perhaps your session timed out?");
         http_response_code(401);
+        header('Content-type: application/json');
         echo "\n\n";
         echo json_encode($result);
     } else {
@@ -146,10 +147,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         try {
             $allReports = build_report_menus($path);
             $reportCount = count($allReports);
+            header('Content-type: application/json');
+            echo "\n\n";
             $result = array("severity" => "success", "text" => "Done. $reportCount report(s) processed.");
             echo json_encode($result);
         } catch (Exception $e) {
             http_response_code(409);
+            header('Content-type: application/json');
             echo "\n\n";
             $result = array("severity" => "danger", "text" => "We've encountered an error.Check the file system permissions on your server?");
             echo json_encode($result);
