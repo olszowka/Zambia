@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         <form name="confform" method="POST" action="BuildReportMenus.php">
             <div class="card mt-3">
                 <div class="card-header">
-                    <h5>Rebuild Report Menus</h5>
+                    <h2>Rebuild Report Menus</h2>
                 </div>
                 <div class="card-body">
                     <p class="text-danger">This Admin tool will overwrite your current list of reports and generate a new list.</p>
