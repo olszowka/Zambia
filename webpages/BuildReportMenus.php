@@ -2,7 +2,6 @@
 // Copyright (c) 2019-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Build Report Menus";
-require_once('StaffCommonCode.php'); // Checks for staff permission among other things
 
 
 function process_all_files_in_directory($basePath, $subDirectoryName, &$allReports) {
@@ -98,67 +97,63 @@ function build_report_menus($path) {
 }
 
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-if (!may_I('ConfigureReports')) {
-    $message_error = "You do not currently have permission to view this page.<br>\n";
-    StaffRenderErrorPage($title, $message_error, true);
-    exit();
-}
-$areYouSure = getInt("areYouSure");
-if ($areYouSure !== 1) {
-    staff_header($title, true);
-?>
-<div class="container">
-    <form name="confform" method="GET" action="BuildReportMenus.php">
-        <div class="card mt-3">
-            <div class="card-header">
-                <h5>Rebuild Report Menus</h5>
-            </div>
-            <div class="card-body">
-                <p class="text-danger">This Admin tool will overwrite your current list of reports and generate a new list.</p>
-                <p>Please be sure that you know what you're doing before you hit 'Continue'.</p>
-            </div>
-            <div class="card-footer text-right">
-                <input type="hidden" name="areYouSure" value="1" />
-                <a class="btn btn-link text-muted" href="StaffPage.php">Cancel</a>
-                <button type="submit" class="btn btn-danger mr-3">Continue</button>
-            </div>
-        </div>
-    </form>
-</div>
-    <?php
-    staff_footer();
-    exit();
-}
-?>
-<?php
-$path = './reports';
-try {
-    $allReports = build_report_menus($path);
-    $reportCount = count($allReports);
-    staff_header($title, true);
+    require_once('StaffCommonCode.php'); // Checks for staff permission among other things
+    if (!may_I('ConfigureReports')) {
+        $message_error = "You do not currently have permission to view this page.<br>\n";
+        StaffRenderErrorPage($title, $message_error, true);
+        exit();
+    }
+    $areYouSure = getInt("areYouSure");
+    if ($areYouSure !== 1) {
+        staff_header($title, true);
     ?>
-    <div class="row mt-3">
-        <div class="col-12">
-            <div class="alert alert-success" role="alert">
-                Done.<br />
-                <?php echo $reportCount; ?> report(s) processed.
-            </div>
-        </div>
-    </div>
-    <?php
-    staff_footer();
-} catch (Exception $e) {
-    staff_header($title, true);
-    ?>
-        <div class="row mt-3">
-            <div class="col-12">
-                <div class="alert alert-danger" role="alert">
-                    Build Reports Failed: Invalid permissions, check installation of Zambia.
+    <div class="container">
+        <form name="confform" method="POST" action="BuildReportMenus.php">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Rebuild Report Menus</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-danger">This Admin tool will overwrite your current list of reports and generate a new list.</p>
+                    <p>Please be sure that you know what you're doing before you hit 'Continue'.</p>
+                </div>
+                <div class="card-footer text-right">
+                    <input type="hidden" name="areYouSure" value="1" />
+                    <a class="btn btn-link text-muted" href="StaffPage.php">Cancel</a>
+                    <button id="build-report-btn" type="button" class="btn btn-danger mr-3"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span> Continue</button>
                 </div>
             </div>
-        </div>
-    <?php
-    staff_footer();
+        </form>
+    </div>
+    <script type="text/javascript" src="./javascript/BuildReportMenus.js"></script>
+        <?php
+        staff_footer();
+        exit();
+    }
+} else {
+    $returnAjaxErrors = true;
+    require_once('StaffCommonCode.php'); // Checks for staff permission among other things
+    if (!may_I('ConfigureReports')) {
+        $result = array("severity" => "danger", "text" => "You do not have access to perform this function. Perhaps your session timed out?");
+        http_response_code(401);
+        echo "\n\n";
+        echo json_encode($result);
+    } else {
+
+        $path = './reports';
+        try {
+            $allReports = build_report_menus($path);
+            $reportCount = count($allReports);
+            $result = array("severity" => "success", "text" => "Done. $reportCount report(s) processed.");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            http_response_code(409);
+            echo "\n\n";
+            $result = array("severity" => "danger", "text" => "We've encountered an error.Check the file system permissions on your server?");
+            echo json_encode($result);
+        }
+    }
 }
 ?>
