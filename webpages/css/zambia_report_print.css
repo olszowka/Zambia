@@ -1,0 +1,51 @@
+@media print {
+  header,
+  nav,
+  div.alert,
+  p.text-success,
+  div.form,
+  div.clearboth {
+    display: none;
+  }
+}
+
+div.form-element {
+  display: inline-block;
+}
+
+div.form-element select {
+  width: 5em;
+  height: 1.5em;
+}
+
+div.form-element input {
+  width: 5em;
+  height: 1.5em;
+  margin-bottom: 10px;
+}
+
+div.form-element input#badgenumbers {
+  width: 20em;
+}
+
+div.badge-sticker {
+  width: 9cm;
+  height: 5cm;
+  overflow: hidden;
+  font-size: 8pt;
+  line-height: 1.2em;
+  display: inline-block;
+  margin: 0;
+}
+
+div.badge-sticker .participant {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+div.badge-sticker .program-item {
+  margin: 0;
+  margin-left: 2em;
+  text-indent: -2em;
+}
+
