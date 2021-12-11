@@ -69,7 +69,7 @@ EOD;
 		// third query - Session data - output as XML
 		$query = <<<EOD
 SELECT
-	s.sessionid, s.title, s.progguidhtml as description, s.meetinglink, s.duration,
+	s.sessionid, s.title, s.progguidhtml as description, s.meetinglink, s.duration, s.captionlink,
 	DATE_FORMAT(ADDTIME('$ConStartDatim',sch.starttime),'%Y-%m-%d %H:%i:%s') as date,
 	r.roomname, t.typename, IFNULL(f.featurename, 'On Site Only') AS virtualacc
 FROM Sessions s
@@ -91,6 +91,7 @@ EOD;
 			$roomname = $row["roomname"];
 			$typename = $row["typename"];
 			$meetinglink = $row["meetinglink"];
+			$captionlink = $row["captionlink"];
 			$virtualacc = $row["virtualacc"];
 			echo <<<EOD
 <Session>
@@ -102,6 +103,7 @@ EOD;
 <VirtualAccess>$virtualacc</VirtualAccess>
 <SessionType><![CDATA[$typename]]></SessionType>
 <Virtualink><![CDATA[$meetinglink]]></Virtualink>
+<Captionlink>$captionlink</Captionlink>
 <SessionTags>
 
 EOD;
@@ -255,7 +257,7 @@ EOD;
 		// third query - Session data - output as XML
 		$query = <<<EOD
 SELECT
-	s.sessionid, s.title, s.progguidhtml as description, s.meetinglink, s.duration,
+	s.sessionid, s.title, s.progguidhtml as description, s.meetinglink, s.duration, s.captionlink,
 	DATE_FORMAT(ADDTIME('$ConStartDatim',sch.starttime),'%Y-%m-%d %H:%i:%s') as date,
 	r.roomname, t.typename
 FROM Sessions s
@@ -275,6 +277,7 @@ EOD;
 			$roomname = $row["roomname"];
 			$typename = $row["typename"];
 			$meetinglink = $row["meetinglink"];
+			$captionlink = $row["captionlink"];
 			echo <<<EOD
 <Session>
 <ID>$session</ID>
@@ -284,6 +287,7 @@ EOD;
 <Location>$roomname</Location>
 <SessionType>$typename</SessionType>
 <Virtualink>$meetinglink</Virtualink>
+<Captionlink>$captionlink</Captionlink>
 <SessionTags>
 
 EOD;
