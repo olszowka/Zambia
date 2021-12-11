@@ -28,6 +28,7 @@ SELECT
          IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),
          CD.firstname;
 EOD;
+
 $report['queries']['sessions'] =<<<'EOD'
 SELECT
         POS.badgeid, POS.moderator, POS.sessionid, R.roomname, S.title,
@@ -42,24 +43,7 @@ SELECT
     ORDER BY
         POS.badgeid, POS.sessionid;
 EOD;
-/*
-$report['queries']['sessions'] =<<<'EOD'
-SELECT
-        S.sessionid, S.title, S.progguiddesc, R.roomname, SCH.roomid, PS.pubstatusname,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
-        DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
-		T.trackname, KC.kidscatname
-    FROM
-             Sessions S
-        JOIN Schedule SCH USING (sessionid)
-        JOIN Rooms R USING (roomid)
-        JOIN PubStatuses PS USING (pubstatusid)
-        JOIN Tracks T USING (trackid)
-		JOIN KidsCategories KC USING (kidscatid)
-    ORDER BY
-        SCH.starttime, R.roomname;
-EOD;
-*/
+
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -70,6 +54,9 @@ $report['xsl'] =<<<'EOD'
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
                 <div class="form">
+                    <p>This report produces print ready program summary labels for member badges. Specify label size and gaps between labels. Use margins on print settings to position on page. Recommend turning headers and footers off. Label borders may be helpful for positioning on page, but not recommended for final print run.</p>
+                    <p>To print specific labels, enter badge numbers or ranges separated by commas. E.g. &quot;A0004, A0050-A0059, M1001&quot;.</p>
+                    <p>Specify "Skip labels" to skip initial number of labels on a partially used label sheet.</p>
                     <div class="form-element">
                         <label for="units">Units</label>
                         <select name="units" id="units">
@@ -87,6 +74,14 @@ $report['xsl'] =<<<'EOD'
                         <input type="number" name="height" id="height" value="5" min="1" max="300" step="0.1"></input>
                     </div>
                     <div class="form-element">
+                        <label for="horgap">Horizontal gap</label>
+                        <input type="number" name="horgap" id="horgap" value="0.5" min="0" max="300" step="0.1"></input>
+                    </div>
+                    <div class="form-element">
+                        <label for="vergap">Vertical gap</label>
+                        <input type="number" name="vergap" id="vergap" value="0.5" min="0" max="300" step="0.1"></input>
+                    </div>
+                    <div class="form-element">
                         <label for="fontsize">Font size (pt)</label>
                         <input type="number" name="fontsize" id="fontsize" value="8" min="1" max="18" step="0.1"></input>
                     </div>
@@ -94,8 +89,16 @@ $report['xsl'] =<<<'EOD'
                         <label for="badgenumbers">Badge numbers</label>
                         <input name="badgenumbers" id="badgenumbers"></input>
                     </div>
+                    <div class="form-element">
+                        <label for="skip">Skip labels</label>
+                        <input type="number" name="skip" id="skip" value="0" min="0" max="30" step="1"></input>
+                    </div>
+                    <div class="form-element">
+                        <label for="borders">Show label borders</label>
+                        <input type="checkbox" name="borders" id="borders"></input>
+                    </div>
                 </div>
-                <div>
+                <div id="stickers" class="badge-sticker-container">
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
                 </div>
                 <script src="javascript/ReportBadgeStickers.js"></script>

@@ -4,8 +4,13 @@
   div.alert,
   p.text-success,
   div.form,
-  div.clearboth {
+  div.clearboth,
+  footer {
     display: none;
+  }
+  
+  div.container-fluid {
+    padding: 0;
   }
 }
 
@@ -26,6 +31,11 @@ div.form-element input {
 
 div.form-element input#badgenumbers {
   width: 20em;
+}
+
+div.badge-sticker-container {
+  font-size: 0;
+  line-height: 0;
 }
 
 div.badge-sticker {
