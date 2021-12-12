@@ -26,10 +26,10 @@
                         </xsl:when>
                     </xsl:choose>
                     <div class="header-contents">
-			    <img class="d-none d-lg-block" >
-				    <xsl:attribute name="src"><xsl:value-of select="$headerimg" /></xsl:attribute>
-				    <xsl:attribute name="alt"><xsl:value-of select="$headerimgalt" /></xsl:attribute>
-			    </img>
+                        <img class="d-none d-lg-block" >
+                          <xsl:attribute name="src"><xsl:value-of select="$headerimg" /></xsl:attribute>
+                          <xsl:attribute name="alt"><xsl:value-of select="$headerimgalt" /></xsl:attribute>
+                        </img>
                         <h1 class="d-none d-md-block">
                             <xsl:text>Zambia</xsl:text>
                             <span class="d-none d-lg-inline">
