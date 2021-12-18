@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Gaming Schedule';
+$report['multi'] = 'true';
+$report['output_filename'] = 'gamingsched.csv';
 $report['description'] = 'Full schedule of everything in track gaming (with participants).';
 $report['categories'] = array(
     'Gaming Reports' => 550,
@@ -61,19 +63,19 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='schedule']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
-                        <tr style="height:2.6rem">
-                            <th class="report">Room name</th>
-                            <th class="report">Start time</th>
+                        <tr>
+                            <th>Room name</th>
+                            <th>Start time</th>
                             <th></th>
-                            <th class="report">Duration</th>
+                            <th>Duration</th>
                             <th></th>
-                            <th class="report">Type</th>
-                            <th class="report">Tags</th>
-                            <th class="report">Session ID</th>
-                            <th class="report">Title</th>
-                            <th class="report">Participants</th>
+                            <th>Type</th>
+                            <th>Tags</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Participants</th>
                         </tr>
 
                     </thead>
@@ -83,7 +85,7 @@ $report['xsl'] =<<<'EOD'
                 </table>
             </xsl:when>
             <xsl:otherwise>
-                <div class="alert alert-danger">No results found.</div>
+                <div class="text-info">>No results found.</div>
             </xsl:otherwise>                    
         </xsl:choose>
     </xsl:template>
@@ -91,31 +93,31 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='schedule']/row">
         <xsl:variable name="sessionid" select="@sessionid" />
         <tr>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showRoomName">
                     <xsl:with-param name="roomid" select = "@roomid" />
                     <xsl:with-param name="roomname" select = "@roomname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@starttime" /></td>
+            <td><xsl:value-of select="@starttime" /></td>
             <td><xsl:value-of select="@starttimeraw" /></td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
             <td><xsl:value-of select="@duration" /></td>
-            <td class="report"><xsl:value-of select="@typename" /></td>
-            <td class="report"><xsl:value-of select="@taglist" /></td>
-            <td class="report"><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
-            <td class="report">
+            <td><xsl:value-of select="@typename" /></td>
+            <td><xsl:value-of select="@taglist" /></td>
+            <td><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:choose>
                     <xsl:when test="/doc/query[@queryName='participants']/row[@sessionid=$sessionid]">
                         <xsl:for-each select="/doc/query[@queryName='participants']/row[@sessionid=$sessionid]">

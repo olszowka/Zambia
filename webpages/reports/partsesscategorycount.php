@@ -55,7 +55,7 @@ $report['xsl'] =<<<'EOD'
                 </table>
             </xsl:when>
             <xsl:otherwise>
-                <div class="alert alert-danger">No results found.</div>
+                <div class="text-info">No results found.</div>
             </xsl:otherwise>                    
         </xsl:choose>
     </xsl:template>
