@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'OK to Photograph Report -- Sessions';
+$report['multi'] = 'true';
+$report['output_filename'] = 'oktophoto2.csv';
 $report['description'] = 'List of all sessions with participants and whether each participant granted permission for their photo to be used';
 $report['categories'] = array(
     'Programming Reports' => 110,
@@ -48,17 +50,21 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='schedule']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Title</th>
-                        <th class="report">Track</th>
-                        <th class="report">Room Name</th>
-                        <th class="report">Start Time</th>
-                        <th class="report">Pubsname</th>
-                        <th class="report">Badgeid</th>
-                        <th class="report">Ok to Photo</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='schedule']/row" />
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Track</th>
+                            <th>Room Name</th>
+                            <th>Start Time</th>
+                            <th>Pubsname</th>
+                            <th>Badgeid</th>
+                            <th>Ok to Photo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='schedule']/row" />
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -71,7 +77,7 @@ $report['xsl'] =<<<'EOD'
         <xsl:variable name="sessionid" select="@sessionid" />
         <xsl:variable name="partCount" select="count(/doc/query[@queryName='participants']/row[@sessionid=$sessionid])" />
         <xsl:variable name="firstSchedRow" select="/doc/query[@queryName='participants']/row[@sessionid=$sessionid][1]" />
-        <tr class="report">
+        <tr>
             <td rowspan="{$partCount}" class="report za-report-firstRowCell za-report-lastRowCell za-report-firstColCell">
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
@@ -154,13 +160,13 @@ $report['xsl'] =<<<'EOD'
                     </td>
                 </xsl:when>
                 <xsl:otherwise>
-                    <td class="report">
+                    <td>
                         <xsl:call-template name="showPubsname">
                             <xsl:with-param name="badgeid" select = "@badgeid" />
                             <xsl:with-param name="pubsname" select = "@pubsname" />
                         </xsl:call-template>
                     </td>
-                    <td class="report">
+                    <td>
                         <xsl:call-template name="showBadgeid">
                             <xsl:with-param name="badgeid" select = "@badgeid" />
                         </xsl:call-template>
