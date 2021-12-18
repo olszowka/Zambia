@@ -1,36 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:param name="additionalCss" select="''" />
+    <xsl:param name="paper" select="'letter'" />
     <xsl:output encoding="UTF-8" indent="yes" method="html" />
     <xsl:template match="/">
         <html>
             <head>
-                <style type='text/css'>
-                .panelname { font-weight: bold; font-size: 18pt } 
-                .paneldescribe { font-size: 14pt; margin-top: 10pt; } 
-                .panelists { font-size: 12pt; font-style: italic } 
-                .panelists b { font-size: 12pt; font-style: normal } 
-                .lastnote { font-size: 10pt } 
-                .hashfront { height:2.5in; x-width:8in; display:block; line-height:72pt;
-                    text-align:center; margin-bottom:1.5in; font-size: 52pt; font-weight: bold;
-                    -webkit-transform: rotate(-180deg);
-                    -moz-transform: rotate(-180deg); }
-                    .hashback { height:2.5in; x-width:8in; font-size: 52pt; font-weight: bold; display:block; line-height:72pt;
-                    text-align:center; margin-bottom:1.5in; }
-                .backside { height:2.5in; x-width:8in; }
-                p { margin-top: 2px; margin-bottom: 2px; }
-                body { width: 9.5in; margin-left:auto; font-family:"Futura Condensed",sans-serif;
-                    margin-right:auto; }
-                h1 { display:block; line-height:72pt; font-size: 80pt;
-                    text-align:center; height:2.25in; margin-bottom:2in;
-                    -webkit-transform: rotate(-180deg); 
-                    -moz-transform: rotate(-180deg); 
-                }
-                .page {
-                    page-break-after: always; 
-                }
-                </style> 
+                <link rel="stylesheet" href="css/zambia_print.css" type="text/css" />
+                <xsl:if test="not($additionalCss = '')">
+                    <link rel="stylesheet" type="text/css">
+                        <xsl:attribute name="href"> 
+                            <xsl:value-of select="$additionalCss" />
+                        </xsl:attribute>
+                    </link>
+                </xsl:if>
             </head>
-            <body>
+            <body class="table-tent-body">
             <xsl:apply-templates select="doc/session"/>
             </body>
         </html>
@@ -38,14 +23,20 @@
 
     <xsl:template match="doc/session">
         <section>
+            <xsl:attribute name="class">
+                <xsl:value-of select="'table-tent paper-'" /> 
+                <xsl:value-of select="$paper" />
+            </xsl:attribute>
             <div class="page">
-                <div class="hashfront"><xsl:value-of select="@title" disable-output-escaping="yes"/></div>
-                <div class="hashback"><xsl:value-of select="@title" disable-output-escaping="yes"/></div>
+                <div class="front"><h1 class="title"><xsl:value-of select="@title" disable-output-escaping="yes"/></h1></div>
+                <div class="back"><h1 class="title"><xsl:value-of select="@title" disable-output-escaping="yes"/></h1></div>
             </div>
             <xsl:for-each select="participant">
                 <div class="page">
-                    <h1 class="panelist"><xsl:value-of select="@pubsname" /></h1>
-                    <div class="backside">
+                    <div class="front">
+                        <h1 class="panelist"><xsl:value-of select="@pubsname" /></h1>
+                    </div>
+                    <div class="back">
                         <p class="panelname">This is Session: &quot;<span><xsl:value-of select="../@title" disable-output-escaping="yes"/></span>&quot;</p>
                         <p><xsl:value-of select="../@roomname" /> &#8226; <xsl:value-of select="../@starttime" /> &#8226; <xsl:value-of select="../@trackname" /></p>
                         <p class="panelists">

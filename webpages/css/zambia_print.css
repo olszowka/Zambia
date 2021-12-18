@@ -1,0 +1,60 @@
+.table-tent .panelname { font-weight: bold; font-size: 18pt } 
+.table-tent .paneldescribe { font-size: 14pt; margin-top: 10pt; } 
+.table-tent .panelists { font-size: 12pt; font-style: italic } 
+.table-tent .panelists b { font-size: 12pt; font-style: normal } 
+.table-tent .lastnote { font-size: 10pt } 
+.table-tent.paper-letter .front { 
+    height:2.5in; 
+    x-width:8in; 
+    margin-bottom:1.5in; 
+}
+.table-tent.paper-a4 .front { 
+    height:70mm; 
+    x-width:8in; 
+    margin-bottom:40mm; 
+}
+.table-tent .front { 
+    display:block; 
+    text-align:center; 
+    font-weight: bold;
+    -webkit-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg); 
+}
+.table-tent.paper-letter .back { 
+    height:2.5in; 
+    x-width:8in; 
+    margin-bottom:1.5in; 
+}
+.table-tent.paper-a4 .back { 
+    height:70mm; 
+    x-width:180mm; 
+    margin-bottom:40mm; 
+}
+.table-tent h1.title { 
+    font-size: 52pt; 
+    font-weight: bold; 
+    display:block; 
+    line-height:72pt;
+    text-align:center; 
+}
+.table-tent p { margin-top: 2px; margin-bottom: 2px; }
+.table-tent.paper-letter { 
+    width: 9.5in; 
+}
+.table-tent.paper-a4 { 
+    width: 227mm; 
+}
+.table-tent { 
+    margin-left:auto; 
+    font-family:"Futura Condensed",sans-serif;
+    margin-right:auto; 
+}
+.table-tent h1.panelist { 
+    display:block; 
+    line-height:72pt; 
+    font-size: 80pt;
+    margin-bottom: 5pt;
+}
+.table-tent .page {
+    page-break-after: always; 
+}
