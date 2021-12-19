@@ -1,60 +1,66 @@
+@page {
+    margin-top: 0in;
+    margin-bottom: 0in;
+    margin-left: 0in;
+    margin-right: 0in;    
+}
+
 .table-tent .panelname { font-weight: bold; font-size: 18pt } 
 .table-tent .paneldescribe { font-size: 14pt; margin-top: 10pt; } 
 .table-tent .panelists { font-size: 12pt; font-style: italic } 
 .table-tent .panelists b { font-size: 12pt; font-style: normal } 
 .table-tent .lastnote { font-size: 10pt } 
-.table-tent.paper-letter .front { 
-    height:2.5in; 
-    x-width:8in; 
-    margin-bottom:1.5in; 
+.table-tent-body {
+    margin: 0px;
 }
-.table-tent.paper-a4 .front { 
-    height:70mm; 
-    x-width:8in; 
-    margin-bottom:40mm; 
+.table-tent.paper-letter .page {
+    height: 8.5in;
+    width: 11in;
 }
-.table-tent .front { 
-    display:block; 
+.table-tent.paper-a4 .page {
+    height: 210mm;
+    width: 297mm;
+}
+.table-tent .front {
+    box-sizing: border-box;
+    height: 50%;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
     text-align:center; 
     font-weight: bold;
     -webkit-transform: rotate(-180deg);
     -moz-transform: rotate(-180deg); 
+    overflow: hidden;
+    padding: 0.75in;
 }
-.table-tent.paper-letter .back { 
-    height:2.5in; 
-    x-width:8in; 
-    margin-bottom:1.5in; 
+.table-tent .back {
+    box-sizing: border-box;
+    height: 50%;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 0.75in;
 }
-.table-tent.paper-a4 .back { 
-    height:70mm; 
-    x-width:180mm; 
-    margin-bottom:40mm; 
-}
-.table-tent h1.title { 
+.table-tent .title { 
     font-size: 52pt; 
     font-weight: bold; 
-    display:block; 
     line-height:72pt;
-    text-align:center; 
+    text-align:center;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 .table-tent p { margin-top: 2px; margin-bottom: 2px; }
-.table-tent.paper-letter { 
-    width: 9.5in; 
-}
-.table-tent.paper-a4 { 
-    width: 227mm; 
-}
 .table-tent { 
     margin-left:auto; 
     font-family:"Futura Condensed",sans-serif;
     margin-right:auto; 
 }
-.table-tent h1.panelist { 
-    display:block; 
+.table-tent .panelist { 
+    text-align:center; 
     line-height:72pt; 
     font-size: 80pt;
-    margin-bottom: 5pt;
-}
-.table-tent .page {
-    page-break-after: always; 
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
