@@ -81,7 +81,7 @@ EOB;
         }
     }
     $query .= "\n";
-    $query .= "GROUP BY S.sessionid\n";
+    $query .= "GROUP BY S.sessionid, TR.trackname, TY.typename, S.title, SCH.starttime, S.estatten, S.progguiddesc, S.persppartinfo, R.roomname, SS.statusname\n";
     return(mysqli_query_exit_on_error($query));
 }
 

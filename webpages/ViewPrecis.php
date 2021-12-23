@@ -29,7 +29,7 @@ SELECT
 	WHERE 
 		S.statusid IN (1, 6, 2) /* Brainstorm, Edit Me, Vetted (Respectively)  */
     GROUP BY
-        S.sessionid;
+        S.sessionid, TR.trackname, TY.typename, S.title, SCH.starttime, S.estatten, S.progguiddesc, S.persppartinfo, S.duration, R.roomname, SS.statusname;
 EOD;
 if (($resultXML = mysql_query_XML($queryArray)) === false) {
     $message="Error querying database. Unable to continue.<br>";
