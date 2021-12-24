@@ -164,8 +164,8 @@
 .tag-match-label {
   padding-right: 1.5rem;
 }
-input[type='text'],
-input[type='password'] {
+input[type='text']:not(.form-control),
+input[type='password']:not(.form-control) {
   padding-left: 4px;
   padding-right: 4px;
 }

@@ -139,8 +139,8 @@ body:not(.full-page) {
   color: #22ee22;
 }
 /* General Form Defaults */
-input[type="text"],
-input[type="password"],
+input[type="text"]:not(.form-control),
+input[type="password"]:not(.form-control),
 input:not([type]),
 select {
   height: 1.8rem;
