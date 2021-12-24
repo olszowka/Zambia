@@ -13,7 +13,7 @@
                     is scheduled to begin.</p>
 
                     <p>To use these, you'll need a prism-shaped stand. The stands are reusable, and can remain in a room. When a new group of
-                    session participants come in, they can fold the tents in half and lay them over the stand, with the name portion visible to
+                    session participants comes in, they can fold the tents in half and lay them over the stand, with the name portion visible to
                     the audience.</p>
 
                     <div class="text-center">
