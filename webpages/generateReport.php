@@ -14,7 +14,8 @@ function render_report_to_html($report, $resultXML) {
             $xslt->setParameter('', $paramName, $paramValue);
         }
     }
-    return $xslt->transformToXML($resultXML);
+    $dom = $xslt->transformToDoc($resultXML);
+    return $dom->saveHTML();
 }
 
 
@@ -81,8 +82,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
         <div class="card-body">
             <p><?php echo $reportDescription; ?></p>
 <?php
-            // some browsers do not support empty div, iframe, script and textarea tags
-            echo(mb_ereg_replace("<(div|span|b|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
+            echo($html);
 ?>
 
         </div>
@@ -108,9 +108,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
             echo "<p class=\"text-success center\"> Generated: " . date("D M j G:i:s T Y") . "</p>\n";
         }
         $html = render_report_to_html($report, $resultXML);
-        // some browsers do not support empty div, iframe, script and textarea tags
-        echo(mb_ereg_replace("<(div|span|b|textarea)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $html, "i"));
-        // echo "<div pbo=\"{$report['columns']}\"></div>\n";
+        echo($html);
         staff_footer();
     }
 }
