@@ -4,14 +4,14 @@ global $title;
 $title = "Administer Participants";
 $bootstrap4 = true;
 require_once('StaffCommonCode.php');
-$fbadgeid = getInt("badgeid");
+$fbadgeid = getString("badgeid");
 staff_header($title, $bootstrap4);
 if (!isLoggedIn() || !may_I('Staff')) {
     staff_footer();
     exit();
 }
 if ($fbadgeid) {
-    echo "<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
+    echo "<script type=\"text/javascript\">fbadgeid = '$fbadgeid';</script>\n";
 }
 ?>
 <form id="adminParticipantsForm" class="form-row">
