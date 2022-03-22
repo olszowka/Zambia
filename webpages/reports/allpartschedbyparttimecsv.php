@@ -22,7 +22,7 @@ SELECT
 			CONCAT(RIGHT(DATE_FORMAT(duration,'%i'),1),'min'), 
 			CONCAT(DATE_FORMAT(DURATION,'%i'),'min')))) AS Duration,
 		R.roomname,
-		function, 
+		R.function, 
 		trackname,
 		S.sessionid,
 		S.title
