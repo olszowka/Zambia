@@ -14,7 +14,7 @@ $report['queries']['master'] =<<<'EOD'
 SELECT
         R.roomname,
         R.function,
-        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') as 'Start Time', 
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%a %l:%i %p') as 'Start Time', 
         CASE
             WHEN HOUR(S.duration) < 1 THEN CONCAT(DATE_FORMAT(S.duration,'%i'),'min')
             WHEN MINUTE(S.duration)=0 THEN CONCAT(DATE_FORMAT(S.duration,'%k'),'hr')

@@ -15,7 +15,7 @@ $report['queries']['master'] =<<<'EOD'
 SELECT 
 		IF ((P.pubsname IS NULL), ' ', CONCAT(' ',P.pubsname,' (',P.badgeid,')')) AS 'Participant', 
 		IF ((moderator=1),'moderator', ' ') AS Moderator,
-		DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a %l:%i %p') AS 'Start Time', 
+		DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%a %l:%i %p') AS 'Start Time', 
 		CONCAT(IF(LEFT(duration,2)=00, '', IF(LEFT(duration,1)=0, 
 			CONCAT(RIGHT(LEFT(duration,2),1),'hr '), CONCAT(LEFT(duration,2),'hr '))), 
 			IF(DATE_FORMAT(duration,'%i')=00, '', IF(LEFT(DATE_FORMAT(duration,'%i'),1)=0, 

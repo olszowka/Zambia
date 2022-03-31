@@ -13,8 +13,8 @@ $report['queries'] = [];
 $report['queries']['master'] =<<<'EOD'
 SELECT
         S.sessionid, 
-        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a') as Day, 
-        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%l:%i %p') as 'Time', 
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%a') as Day, 
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%l:%i %p') as 'Time', 
         concat(if(left(duration,2)=00, '', 
                   if(left(duration,1)=0, 
                      concat(right(left(duration,2),1), 'hr '),

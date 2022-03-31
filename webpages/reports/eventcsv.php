@@ -14,7 +14,7 @@ $report['queries']['master'] =<<<'EOD'
 SELECT
         S.sessionid,
         S.title,
-        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS when2,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS when2,
         R.roomname,
         GROUP_CONCAT(
             P.pubsname

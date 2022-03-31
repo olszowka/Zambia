@@ -12,8 +12,8 @@ $report['group_concat_expand'] = true;
 $report['queries'] = [];
 $report['queries']['master'] =<<<'EOD'
 SELECT
-        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%a') as 'Day',
-        DATE_FORMAT(ADDTIME('$ConStartDatim',starttime),'%l:%i %p') as 'Start Time',
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%a') as 'Day',
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%l:%i %p') as 'Start Time',
         left(duration,5) Length,
         Roomname,
         trackname as Track,
