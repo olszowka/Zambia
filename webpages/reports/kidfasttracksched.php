@@ -1,8 +1,8 @@
 <?php
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
-$report['name'] = 'FastTrack Schedule (easy troubleshooting)';
-$report['description'] = 'What is happening in FastTrack';
+$report['name'] = 'Dragon\'s Lair Schedule (easy troubleshooting)';
+$report['description'] = 'What is happening in Dragon\'s Lair';
 $report['categories'] = array(
     'Fast Track Reports' => 650,
 );
@@ -17,7 +17,7 @@ SELECT
 	JOIN Schedule SCH USING (sessionid)
 	JOIN Rooms R USING (roomid)
     WHERE
-            S.trackid = 5 /* Fasttrack */
+            S.trackid = 5 /* Dragon's Lair (correct value needs to be set) */
         and S.pubstatusid = 2 /* public */
     ORDER BY
         SCH.starttime, R.roomname;
