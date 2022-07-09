@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'Dragon\'s Lair Schedule (easy troubleshooting)';
 $report['description'] = 'What is happening in Dragon\'s Lair';
 $report['categories'] = array(
-    'Dragon\'s Lair Reports' => 650,
+    'Dragons Lair Reports' => 650,
 );
 $report['queries'] = [];
 $report['queries']['schedule'] =<<<'EOD'
