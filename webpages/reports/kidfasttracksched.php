@@ -1,10 +1,10 @@
 <?php
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
-$report['name'] = 'Dragon\'s Lair Schedule (easy troubleshooting)';
-$report['description'] = 'What is happening in Dragon\'s Lair';
+$report['name'] = 'Dragon&apos;s Lair Schedule (easy troubleshooting)';
+$report['description'] = 'What is happening in Dragon&apos;s Lair';
 $report['categories'] = array(
-    'Dragons Lair Reports' => 650,
+    'Dragon&apos;s Lair Reports' => 650,
 );
 $report['queries'] = [];
 $report['queries']['schedule'] =<<<'EOD'
