@@ -495,6 +495,10 @@
                         <xsl:with-param name="maxlength" select="25" />
                         <xsl:with-param name="fieldsize" select="25" />
                     </xsl:call-template>
+					<xsl:call-template name="regRowContentsRO">
+                        <xsl:with-param name="label">Registration Type</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@regtype" /> 
+                    </xsl:call-template>
                 </fieldset>
                 <xsl:if test="($useRegSystem != 1) or ($updateRegSystem = 1)"><!-- show button here if not using reg system -->
                     <div class="row mt-3">
@@ -541,6 +545,22 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </div>
+        </div>
+    </xsl:template>
+	<xsl:template name="regRowContentsRO">
+        <xsl:param name="label" />
+        <xsl:param name="value" />
+        <div class="row">
+            <div class="col-sm-3p5 col-md-3 col-lg-2">
+                <h5>
+					<div class="badge badge-secondary badge-full-width">
+						<xsl:value-of select="$label" />
+					</div>                     
+                </h5>
+            </div>
+            <div class="col">
+				<xsl:value-of select="$value" />
+		    </div>
         </div>
     </xsl:template>
 </xsl:stylesheet>
