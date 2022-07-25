@@ -134,7 +134,7 @@ function update_participant($badgeid) {
     $postcountry = getString('postcountry');
     if (!is_null($fname) || !is_null($lname) || !is_null($badgename) || !is_null($phone) || !is_null($email) || !is_null($postaddress1)
         || !is_null($postaddress2) || !is_null($postcity) || !is_null($poststate) || !is_null($postzip) || !is_null($postcountry)) {
-        if (USE_REG_SYSTEM) {
+        if (USE_REG_SYSTEM && !UPDATE_REG_SYSTEM) {
             $message_error = "Zambia configuration error.  Editing contact data is not permitted.";
             Render500ErrorAjax($message_error);
             exit();
@@ -172,8 +172,8 @@ EOD;
         }
     }
 // for Balticon update perinfo then congodump so if the congodump fails, it gets it from reginfo, and if the cron job runs, congodump is the same either way
-    if (is_numeric($badgeid)) {
-        $query_preable = "UPDATE balticonReg.perinfo SET ";
+    if (is_numeric($badgeid) && UPDATE_REG_SYSTEM) {
+        $query_preable = "UPDATE " . REG_DBNAME . ".perinfo SET ";
         $query_portion_arr = array();
         $query_param_arr = array();
         $query_param_type_str = "";
@@ -226,7 +226,7 @@ EOD;
 
         $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, loginid)
     SELECT
             badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, ?
         FROM

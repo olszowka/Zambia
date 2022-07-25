@@ -10,6 +10,7 @@
     <xsl:param name="enableUsePhotoQuestion" select="'0'"/>
     <xsl:param name="enableBestwayQuestion" select="'0'"/>
     <xsl:param name="useRegSystem" select="0"/>
+    <xsl:param name="updateRegSystem" select="0"/>
     <xsl:param name="maxBioLen" select="500"/>
     <xsl:param name="enableBioEdit" select="'0'"/>
     <xsl:param name="htmlbio" select="'0'"/>
@@ -356,7 +357,7 @@
                         </div>
                     </fieldset>
                 </xsl:if>
-                <xsl:if test="$useRegSystem = 1"><!-- show button here if using reg system because data below not editable in that case -->
+                <xsl:if test="($useRegSystem = 1) and ($updateRegSystem = 0)"><!-- show button here if using reg system because data below not editable in that case -->
                     <div class="row mt-3">
                         <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN"
                             data-loading-text="Updating..." onclick="myProfile.updateBUTN();">
@@ -365,7 +366,7 @@
                     </div>
                 </xsl:if>
                 <xsl:choose>
-                    <xsl:when test="$useRegSystem = 1">
+                    <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 0)">
                         <div class="row mt-3">
                             <legend>Data from Registration System</legend>
                         </div>
@@ -377,6 +378,14 @@
                             </div>
                         </xsl:if>
                     </xsl:when>
+					<xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 1)">
+						<div class="row mt-3">
+							<legend>Contact Informatio from Registration System</legend>
+						</div>
+						<div class="row">
+							<div class="col">Please confirm your contact information. Please provide missing information or correct what has changed. This will also update the registration system.</div>
+						</div>
+					</xsl:when>
                     <xsl:otherwise>
                         <div class="row mt-3">
                             <legend>Contact Information</legend>
@@ -487,7 +496,7 @@
                         <xsl:with-param name="fieldsize" select="25" />
                     </xsl:call-template>
                 </fieldset>
-                <xsl:if test="$useRegSystem != 1"><!-- show button here if not using reg system -->
+                <xsl:if test="($useRegSystem != 1) or ($updateRegSystem = 1)"><!-- show button here if not using reg system -->
                     <div class="row mt-3">
                         <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN"
                             data-loading-text="Updating..." onclick="myProfile.updateBUTN();">
@@ -508,7 +517,7 @@
             <div class="col-sm-3p5 col-md-3 col-lg-2">
                 <h5>
                     <xsl:choose>
-                        <xsl:when test="$useRegSystem = 1">
+                        <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 0)">
                             <div class="badge badge-secondary badge-full-width">
                                 <xsl:value-of select="$label" />
                             </div>
@@ -523,7 +532,7 @@
             </div>
             <div class="col">
                 <xsl:choose>
-                    <xsl:when test="$useRegSystem = 1">
+                    <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 0)">
                         <xsl:value-of select="$value" />
                     </xsl:when>
                     <xsl:otherwise>
