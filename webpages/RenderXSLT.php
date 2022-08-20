@@ -19,7 +19,9 @@ function RenderXSLT($xslFilename, $paramArray = [], $xmlDoc = false, $noecho = f
     $xslt->importStylesheet($xsl);
     if (is_array($paramArray) && count($paramArray) > 0) {
         foreach ($paramArray as $paramName => $paramValue) {
-            $xslt->setParameter('', $paramName, $paramValue);
+            if (!is_null($paramValue)) {
+                $xslt->setParameter('', $paramName, $paramValue);
+            }
         }
     }
     $html = $xslt->transformToXML($xmlDoc);
