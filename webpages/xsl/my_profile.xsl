@@ -15,6 +15,7 @@
     <xsl:param name="enableBioEdit" select="'0'"/>
     <xsl:param name="htmlbio" select="'0'"/>
     <xsl:param name="userIdPrompt" select="''"/>
+    <xsl:param name="participant" select="'0'"/><!-- boolean representing whether user is participant -->
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
         <xsl:variable name="use_photo" select="/doc/query[@queryName='participant_info']/row/@use_photo" />
@@ -40,20 +41,24 @@
                         </div>
                         <div class="col-auto">
                             <select id="interested" name="interested" class="mb-2 pl-2 pr-4 mycontrol">
+                                <!-- if user is not participant, force this select to be "No" -->
+                                <xsl:if test="not ($participant='1')">
+                                    <xsl:attribute name="disabled">disabled</xsl:attribute>
+                                </xsl:if>
                                 <option value="0">
-                                    <xsl:if test="$interested=0 or not ($interested)">
+                                    <xsl:if test="($interested=0 or not ($interested)) and $participant='1'">
                                         <xsl:attribute name="selected">selected</xsl:attribute>
                                     </xsl:if>
                                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                                 </option>
                                 <option value="1">
-                                    <xsl:if test="$interested=1">
+                                    <xsl:if test="$interested=1 and $participant='1'">
                                         <xsl:attribute name="selected">selected</xsl:attribute>
                                     </xsl:if>
                                     Yes
                                 </option>
                                 <option value="2">
-                                    <xsl:if test="$interested=2">
+                                    <xsl:if test="$interested=2 or not ($participant='1')">
                                         <xsl:attribute name="selected">selected</xsl:attribute>
                                     </xsl:if>
                                     No

@@ -21,17 +21,11 @@ function update_participant($badgeid) {
     $updateClause = "";
     $query_end = " WHERE badgeid = '$badgeid';";
     if (may_I('Participant')) {
-        $x =  getInt('interested', 0);
-    } else {
-        $x = 2;
-    }
-
-    if ($x == 1 || $x == 2) {
+        $x = getInt('interested', 0);
         $updateClause .= "interested=$x, ";
     } else {
-        $updateClause .= "interested=0, ";
+        $updateClause .= "interested=2, "; // force non participants to not interested
     }
-
     if (isset($_POST['share_email'])) {
         $x = $_POST['share_email'];
         if ($x == 0 || $x == 1) {
@@ -545,7 +539,7 @@ if (!isLoggedIn()) {
     RenderErrorAjax($message_error);
     exit();
 }
-if (!may_I('Participant')) {
+if (!may_I('edit_my_contact')) {
     $message_error = "You do not have permission to perform this function.";
     RenderErrorAjax($message_error);
     exit();
