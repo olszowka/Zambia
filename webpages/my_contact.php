@@ -43,6 +43,7 @@ $paramArray['maxBioLen'] = MAX_BIO_LEN;
 $paramArray['enableBioEdit'] = may_I('EditBio');
 $paramArray['htmlbio'] = HTML_BIO ? 1 : 0;
 $paramArray['userIdPrompt'] = USER_ID_PROMPT;
+$paramArray['participant'] = may_I('Participant');
 participant_header($title, false, 'Normal', true);
 $resultXML = appendCustomTextArrayToXML($resultXML);
 RenderXSLT('my_profile.xsl', $paramArray, $resultXML);
