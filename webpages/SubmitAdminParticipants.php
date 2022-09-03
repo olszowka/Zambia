@@ -359,7 +359,7 @@ EOD;
         $param_arr = array($searchString, $searchString);
         $result = mysqli_query_with_prepare_and_exit_on_error($query, "ss", $param_arr);
     } else {
-        $searchString = '%' . $searchString . '%';
+        $searchString = '%' . strtolower($searchString) . '%';
         if (DBVER >= "8") {
             $query = <<<EOD
 WITH AnsweredSurvey(participantid, answercount) AS (
@@ -391,29 +391,33 @@ EOD;
         } else {
             $query = <<<EOD
 SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
-    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM
-	Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
-    LEFT OUTER JOIN (
-         SELECT participantid, COUNT(*) AS answercount
-            FROM ParticipantSurveyAnswers
-    ) A ON (P.badgeid = A.participantid)
-    LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-    LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE
-		P.pubsname LIKE ?
-	OR CD.lastname LIKE ?
-	OR CD.firstname LIKE ?
-	OR CD.badgename LIKE ?
-ORDER BY
-	CD.lastname, CD.firstname
+        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+        P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+        CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+        CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
+        P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+        CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+        R.statustext, D.reasontext
+    FROM
+                  Participants P
+             JOIN CongoDump CD ON P.badgeid = CD.badgeid
+        LEFT JOIN (
+                SELECT
+                        participantid, COUNT(*) AS answercount
+                    FROM
+                        ParticipantSurveyAnswers
+                    GROUP BY
+                        participantid
+                ) A ON (P.badgeid = A.participantid)
+        LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
+        LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
+    WHERE
+           LOWER(P.pubsname) LIKE ?
+        OR LOWER(CD.lastname) LIKE ?
+        OR LOWER(CD.firstname) LIKE ?
+        OR LOWER(CD.badgename) LIKE ?
+    ORDER BY
+        CD.lastname, CD.firstname;
 EOD;
         }
         $param_arr = array($searchString,$searchString,$searchString,$searchString);
