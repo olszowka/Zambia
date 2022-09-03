@@ -325,6 +325,11 @@ function prepare_db_and_more() {
         $fatalError = true;
         return false;
     }
+    $mysqli = new mysqli(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
+    if (mysqli_connect_errno()) {
+        $fatalError = true;
+        return false;
+    }
     date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
     // for mysql with non standard sql_mode (from zambia point of view) temporarily force ours
     $sql = "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';";
