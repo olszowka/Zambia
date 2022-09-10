@@ -156,9 +156,9 @@ EOD;
     if ($rows == 0) {   // no record existed with old values, add one
          $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
         FROM
             CongoDump
         WHERE
@@ -226,13 +226,13 @@ EOD;
 
         $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, loginid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, ?
-        FROM
-            CongoDump
-        WHERE
-            badgeid = ?;
+        badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, ?, CURRENT_TIMESTAMP
+    FROM
+        CongoDump
+    WHERE
+        badgeid = ?;
 EOD;
     $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
     if ($rows != 1) {
