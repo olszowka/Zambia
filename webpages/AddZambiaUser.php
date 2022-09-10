@@ -162,14 +162,23 @@ if (array_key_exists("PostCheck", $_POST)) {
 
 // Start of display portion
 
+if (defined("REG_PART_PREFIX") && REG_PART_PREFIX != '') {
+
 	$query=<<<EOD
 SELECT
-		MAX(badgeid) M
-	FROM
-		CongoDump
-	WHERE badgeid LIKE '
+	MAX(badgeid) M
+FROM CongoDump
+WHERE badgeid LIKE '
 EOD;
-$query .= REG_PART_PREFIX . "%'";
+    $query .= REG_PART_PREFIX . "%'";
+} else {
+    $query=<<<EOD
+SELECT
+	MAX(badgeid) M
+FROM CongoDump
+WHERE badgeid REGEXP '^[0-9]+$';
+EOD;
+}
 $last_badgeid = "";
 
 $result = mysqli_query_exit_on_error($query);
@@ -178,11 +187,21 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 mysqli_free_result($result);
 if ($last_badgeid == "") {
-    $last_badgeid = REG_PART_PREFIX . "1000";
+    if (defined("REG_PART_PREFIX")) {
+        $last_badgeid = REG_PART_PREFIX . "1000";
+    } else {
+        $last_badgeid = 1000;
+    }
 }
 
-$id = mb_substr($last_badgeid, mb_strlen(REG_PART_PREFIX));
-$new_badgeid = REG_PART_PREFIX . strval(intval($id) + 1);
+if (defined("REG_PART_PREFIX")) {
+    $id = mb_substr($last_badgeid, mb_strlen(REG_PART_PREFIX));
+    $new_badgeid = REG_PART_PREFIX . strval(intval($id) + 1);
+} else {
+    $id = $last_badgeid;
+    $new_badgeid = $id + 1;
+}
+
 
 $PriorArray["new_badgeid"] = $new_badgeid;
 
