@@ -77,7 +77,7 @@ EOB;
         $searchTitle = $sessionSearchArray['searchTitle'];
         if ($searchTitle != '') {
             $searchTitle = mysqli_real_escape_string($linki, strtolower($searchTitle));
-            $query .= " AND LOWER(S.title) like \"%$searchTitle%\"";
+            $query .= " AND LOWER(S.title) LIKE \"%$searchTitle%\"";
         }
     }
     $query .= "\n";
