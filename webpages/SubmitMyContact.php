@@ -169,33 +169,6 @@ EOD;
             exit();
         }
     }
-// for Balticon update perinfo then congodump so if the congodump fails, it gets it from reginfo, and if the cron job runs, congodump is the same either way
-    if (is_numeric($badgeid)) {
-        $query_preable = "UPDATE balticonReg.perinfo SET ";
-        $query_portion_arr = array();
-        $query_param_arr = array();
-        $query_param_type_str = "";
-        push_query_arrays($fname, 'first_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($lname, 'last_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($badgename, 'badge_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($phone, 'phone', 's', 15, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($email, 'email_addr', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postaddress1, 'address', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postaddress2, 'addr_2', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postcity, 'city', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($poststate, 'state', 's', 2, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postzip, 'zip', 's', 10, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($postcountry, 'country', 's', 20, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        $query_param_arr[] = $badgeid;
-        $query_param_type_str .= 's';
-        $query = $query_preable . implode(', ', $query_portion_arr) . " WHERE id = ?";
-        $rows = mysql_cmd_with_prepare($query, $query_param_type_str, $query_param_arr);
-        if ($rows != 1) {
-            $message_error = "Error updating db. (reg update)";
-            Render500ErrorAjax($message_error);
-            exit();
-        }
-    }
 
     $query_preable = "UPDATE CongoDump SET ";
     $query_portion_arr = array();
