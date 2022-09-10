@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 function retrieveSessions($sessionSearchArray) {
     global $linki;
     $ConStartDatim = CON_START_DATIM; // make it a variable so it can be substituted
@@ -52,7 +52,7 @@ EOB;
     if (isset($sessionSearchArray['statusidList'])) {
         $statusidList = $sessionSearchArray['statusidList'];
         if (($statusidList != 0) and ($statusidList != '')) {
-            $query .= " AND SS.statusid in ($statusidList)";
+            $query .= " AND SS.statusid IN ($statusidList)";
         }
     }
     if (isset($sessionSearchArray['sessionid'])) {
@@ -70,14 +70,14 @@ EOB;
     if (isset($sessionSearchArray['typeidList'])) {
         $typeidList = $sessionSearchArray['typeidList'];
         if (($typeidList != 0) and ($typeidList != '')) {
-            $query .= " AND S.typeid in ($typeidList)";
+            $query .= " AND S.typeid IN ($typeidList)";
         }
     }
     if (isset($sessionSearchArray['searchTitle'])) {
         $searchTitle = $sessionSearchArray['searchTitle'];
         if ($searchTitle != '') {
-            $searchTitle = mysqli_real_escape_string($linki, $searchTitle);
-            $query .= " AND S.title like \"%$searchTitle%\"";
+            $searchTitle = mysqli_real_escape_string($linki, strtolower($searchTitle));
+            $query .= " AND LOWER(S.title) LIKE \"%$searchTitle%\"";
         }
     }
     $query .= "\n";

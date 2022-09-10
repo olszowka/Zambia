@@ -41,7 +41,7 @@ function mysql_cmd_with_prepare_multi($query, $type_string, $param_repeat_arr) {
     }
     catch (Exception $e) {
         $mysqli->rollback(); //remove all queries from queue if error (undo)
-        $message_error = log_mysqli_error_new($query, "");
+        $message_error = log_mysqli_error_new($query, $e->getMessage());
         RenderError($message_error);
     }
     $mysqli->autocommit(TRUE); //turn off transactions
@@ -61,20 +61,27 @@ function mysql_cmd_with_prepare_multi($query, $type_string, $param_repeat_arr) {
  *  param_arr = array of elements per ? in the update statement, datatype based on type_string value
  */
 function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
-    global $linki;
+    global $mysqli;
 
 	$rows = 0;
 	$message_error = "";
     try {
-        $stmt = mysqli_prepare($linki, $query);
-        mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-        mysqli_stmt_execute($stmt);
-        // $foo = mysqli_info($linki);
-		$rows = $rows + mysqli_affected_rows($linki);
-        mysqli_stmt_close($stmt);
+        if (!$mysqli_stmt = $mysqli->prepare($query)) {
+            throw new ErrorException("DB prepare statement failed.");
+        }
+        if (!$mysqli_stmt->bind_param($type_string, ...$param_arr)) {
+            throw new ErrorException("DB bind param statement failed.");
+        }
+        if (!$mysqli_stmt->execute()) {
+            throw new ErrorException("DB execute statement failed.");
+        }
+        $rows = $rows + $mysqli_stmt->affected_rows;
+        if (!$mysqli_stmt->close()) {
+            throw new ErrorException("DB close statement failed.");
+        }
     }
     catch (Exception $e) {
-        $message_error = log_mysqli_error($query, "");
+        $message_error = log_mysqli_error_new($query, $e->getMessage());
         RenderError($message_error);
     }
 
