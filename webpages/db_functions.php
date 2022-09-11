@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 /*
  * mysql_cmd_with_prepare_multi:
@@ -11,27 +11,40 @@
  *          each row contains one element per ? in the update statement, datatype based on type_string value
  */
 function mysql_cmd_with_prepare_multi($query, $type_string, $param_repeat_arr) {
-    global $linki;
+    global $mysqli;
 
 	$rows = 0;
 	$message_error = "";
-    mysqli_autocommit($linki, FALSE); //turn on transactions
+    $mysqli->autocommit(FALSE); //turn on transactions
     try {
-        $stmt = mysqli_prepare($linki, $query);
-        foreach ($param_repeat_arr as $param_arr) {
-            mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-            mysqli_stmt_execute($stmt);
-			$rows = $rows + mysqli_affected_rows($linki);
+        if (!$mysqli->begin_transaction()) {
+            throw new ErrorException("DB begin transaction statement failed.");
         }
-        mysqli_stmt_close($stmt);
-        mysqli_commit($linki);
+        if (!$mysqli_stmt = $mysqli->prepare($query)) {
+            throw new ErrorException("DB prepare statement failed.");
+        }
+        foreach ($param_repeat_arr as $param_arr) {
+            if (!$mysqli_stmt->bind_param($type_string, ...$param_arr)) {
+                throw new ErrorException("DB bind param statement failed.");
+            }
+            if (!$mysqli_stmt->execute()) {
+                throw new ErrorException("DB execute statement failed.");
+            }
+			$rows = $rows + $mysqli_stmt->affected_rows;
+        }
+        if (!$mysqli_stmt->close()) {
+            throw new ErrorException("DB close statement failed.");
+        }
+        if (!$mysqli->commit()) {
+            throw new ErrorException("DB commit transaction statement failed.");
+        }
     }
     catch (Exception $e) {
-        mysqli_rollback($linki); //remove all queries from queue if error (undo)
-        $message_error = log_mysqli_error($query, "");
+        $mysqli->rollback(); //remove all queries from queue if error (undo)
+        $message_error = log_mysqli_error_new($query, $e->getMessage());
         RenderError($message_error);
     }
-    mysqli_autocommit($linki, TRUE); //turn off transactions + commit queued queries
+    $mysqli->autocommit(TRUE); //turn off transactions
 
 	if ($message_error != "") {
         return NULL;
@@ -48,20 +61,27 @@ function mysql_cmd_with_prepare_multi($query, $type_string, $param_repeat_arr) {
  *  param_arr = array of elements per ? in the update statement, datatype based on type_string value
  */
 function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
-    global $linki;
+    global $mysqli;
 
 	$rows = 0;
 	$message_error = "";
     try {
-        $stmt = mysqli_prepare($linki, $query);
-        mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-        mysqli_stmt_execute($stmt);
-        // $foo = mysqli_info($linki);
-		$rows = $rows + mysqli_affected_rows($linki);
-        mysqli_stmt_close($stmt);
+        if (!$mysqli_stmt = $mysqli->prepare($query)) {
+            throw new ErrorException("DB prepare statement failed.");
+        }
+        if (!$mysqli_stmt->bind_param($type_string, ...$param_arr)) {
+            throw new ErrorException("DB bind param statement failed.");
+        }
+        if (!$mysqli_stmt->execute()) {
+            throw new ErrorException("DB execute statement failed.");
+        }
+        $rows = $rows + $mysqli_stmt->affected_rows;
+        if (!$mysqli_stmt->close()) {
+            throw new ErrorException("DB close statement failed.");
+        }
     }
     catch (Exception $e) {
-        $message_error = log_mysqli_error($query, "");
+        $message_error = log_mysqli_error_new($query, $e->getMessage());
         RenderError($message_error);
     }
 
@@ -73,7 +93,6 @@ function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
 }
 
 function mysql_prepare_query_XML($query_array, $parmtype_array, $param_array) {
-	global $linki, $message_error;
 	$xml = new DomDocument("1.0", "UTF-8");
 	$doc = $xml -> createElement("doc");
 	$doc = $xml -> appendChild($doc);
@@ -192,6 +211,26 @@ function log_mysqli_error($query, $additional_error_message) {
     return $result;
 }
 
+function log_mysqli_error_new($query, $additional_error_message) {
+    global $mysqli;
+    $result = "";
+    error_log("mysql query error in {$_SERVER["SCRIPT_FILENAME"]}");
+    if (!empty($query)) {
+        error_log($query);
+        $result = $query . "<br>\n";
+    }
+    $query_error = $mysqli->error;
+    if (!empty($query_error)) {
+        error_log($query_error);
+        $result .= $query_error . "<br>\n";
+    }
+    if (!empty($additional_error_message)) {
+        error_log($additional_error_message);
+        $result .= $additional_error_message . "<br>\n";
+    }
+    return $result;
+}
+
 function mysqli_query_exit_on_error($query) {
     return mysqli_query_with_error_handling($query, true);
 }
@@ -214,28 +253,31 @@ function mysqli_query_with_prepare_and_exit_on_error($query, $type_string, $para
 }
 
 function mysqli_query_with_prepare_and_error_handling($query, $type_string, $param_arr, $exit_on_error = false, $ajax = false) {
-    global $linki, $message_error;
+    global $message_error, $mysqli;
 
-     try {
-         $stmt = mysqli_prepare($linki, $query);
-         mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-         if (!mysqli_stmt_execute($stmt)) {
-             $message_error = log_mysqli_error($query, "");
-             if ($exit_on_error) {
-                 RenderError($message_error, $ajax);
-             }
+    try {
+        $statement = $mysqli->stmt_init();
+        if (!$statement->prepare($query)) {
+            //$message_error = $mysqli->error;
+            throw new ErrorException("DB prepare statement failed.");
+        };
+        $statement->bind_param($type_string, ...$param_arr);
+        if (!$statement->execute()) {
+            $message_error = log_mysqli_error_new($query, "");
+            if ($exit_on_error) {
+                RenderError($message_error, $ajax);
+            }
             return false;
-         };
-         $result = mysqli_stmt_get_result($stmt);
-         mysqli_stmt_close($stmt);
-     }
-     catch (Exception $e) {
-         $message_error = log_mysqli_error($query, "");
-         if ($exit_on_error) {
-             RenderError($message_error, $ajax);
-         }
-         return false;
-     }
+        };
+        $result = $statement->get_result();
+        $statement->close();
+    } catch (Exception $e) {
+        $message_error = log_mysqli_error_new($query, "");
+        if ($exit_on_error) {
+            RenderError($message_error, $ajax);
+        }
+        return false;
+    }
     return $result;
 }
 
@@ -265,18 +307,27 @@ function populateCustomTextArray() {
 }
 
 // Function prepare_db_and_more()
-// Opens database channel
+// Opens database channel; Do both procedural and class versions populating both global variables
 if (!include ('../db_name.php'))
 	include ('./db_name.php'); // scripts which rely on this file (db_functions.php) may run from a different directory
 function prepare_db_and_more() {
-    global $con_start_php_timestamp, $linki, $fatalError;
+    global $con_start_php_timestamp, $linki, $fatalError, $mysqli;
     $linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
     if (!$linki) {
         $fatalError = true;
         return false;
     }
+    $mysqli = new mysqli(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
+    if (mysqli_connect_errno()) {
+        $fatalError = true;
+        return false;
+    }
     date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
-    if (mysqli_set_charset($linki, "utf8") === false) {
+    if (!mysqli_set_charset($linki, "utf8mb4")) {
+        $fatalError = true;
+        return false;
+    }
+    if (!$mysqli->set_charset("utf8mb4")) {
         $fatalError = true;
         return false;
     };
@@ -290,8 +341,6 @@ function prepare_db_and_more() {
         $query = "SET time_zone = '" . DB_DEFAULT_TIMEZONE . "';";
         mysqli_query_exit_on_error($query);
     }
-
-
     return true;
 }
 
@@ -1131,5 +1180,11 @@ function survey_programmed() {
     if (isset($questions))
            return $questions > 0;
     return false;
+}
+
+function my_escape_string($str_to_esc) {
+    global $mysqli;
+
+    return $mysqli->real_escape_string($str_to_esc);
 }
 ?>
