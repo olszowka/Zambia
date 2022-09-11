@@ -126,7 +126,6 @@ EOD;
         if (!$result) {
             exit(); // should have exited already
         }
-        $updatePerformed = true;
     }
     if (is_null($rows) || $rows !== 1) {
         $message_error .= "Failed adding Program Participant Role - get help.<br />\n";
@@ -163,7 +162,6 @@ if (array_key_exists("PostCheck", $_POST)) {
 // Start of display portion
 
 if (defined("REG_PART_PREFIX") && REG_PART_PREFIX != '') {
-
 	$query=<<<EOD
 SELECT
 	MAX(badgeid) M

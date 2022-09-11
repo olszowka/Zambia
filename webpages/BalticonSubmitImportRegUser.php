@@ -12,7 +12,6 @@ require('EditPermRoles_FNC.php');
 
 function import_users() {
     global $linki, $message_error, $message;
-    $importPerformed = false;
     $loggedInUserBadgeId = $_SESSION["badgeid"];
     $idsToAddarr = getArrayOfInts("idsToAdd");
     $rolesToAddArr = getArrayOfInts("rolesToAdd");
