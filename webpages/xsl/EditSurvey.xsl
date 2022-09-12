@@ -71,7 +71,8 @@
         <p>
           Click question name to edit the configuration of that question.<br/>
           Drag slider icon to reorder the questions.<br/>
-          Use the Add New button to add a question to the survey, then click the name from the table to further edit the configuration.
+          Use the Add New button to add a question to the survey, then click the name from the table to further edit the configuration.<br/>
+		  Question names must be unique for the survey.
         </p>
       </div>
       

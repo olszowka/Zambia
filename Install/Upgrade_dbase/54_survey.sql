@@ -145,7 +145,7 @@ VALUES
 	(130,55,'CD',55,'Congo, (Kinshasa)',NULL,0),
 	(130,56,'CK',56,'Cook Islands',NULL,0),
 	(130,57,'CR',57,'Costa Rica',NULL,0),
-	(130,58,'CI',58,'Côte dNULLIvoire','',0),
+	(130,58,'CI',58,'Côte d''Ivoire','',0),
 	(130,59,'HR',59,'Croatia',NULL,0),
 	(130,60,'CU',60,'Cuba',NULL,0),
 	(130,61,'CY',61,'Cyprus',NULL,0),

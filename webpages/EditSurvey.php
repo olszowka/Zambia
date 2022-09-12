@@ -14,10 +14,10 @@ if (isLoggedIn() && may_I("Administrator")) {
         $sql = <<<EOD
         SELECT t.shortname, d.display_order, JSON_OBJECT(
             'ordinal', -d.ordinal,
-            'value', TO_BASE64(d.value),
+            'value', d.value,
             'display_order', d.display_order,
-            'optionshort', TO_BASE64(d.optionshort),
-            'optionhover', TO_BASE64(d.optionhover),
+            'optionshort', d.optionshort,
+            'optionhover', d.optionhover,
             'allowothertext', d.allowothertext
             ) AS config
         FROM SurveyQuestionTypeDefaults d
@@ -93,9 +93,9 @@ EOD;
 	SELECT questionid, display_order, JSON_OBJECT(
 		'questionid', questionid,
         'ordinal', ordinal,
-        'value', TO_BASE64(value),
-		'optionshort', TO_BASE64(optionshort),
-		'optionhover', TO_BASE64(optionhover),
+        'value', value,
+		'optionshort', optionshort,
+		'optionhover', optionhover,
 		'allowothertext', allowothertext,
 		'display_order', display_order
 		) AS optionconfig
