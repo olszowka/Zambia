@@ -19,21 +19,6 @@ var EditSurvey = function () {
     var newoptionid = -1;
     var curoptionid = -99999;
 
-    function escapeQuotesAccessor(value, data, type, params, column, row) {
-        //value - original value of the cell
-        //data - the data for the row
-        //type - the type of access occurring  (data|download|clipboard)
-        //params - the accessorParams object passed from the column definition
-        //column - column component for the column this accessor is bound to
-        //row - row component for the row
-        //val = value.replace(/\\/g, '\\\\');
-        //return val.replace(/"/g, '\\"');
-        //console.log("value: " + value);
-        val = btoa(value);
-        //console.log("becomes: " + val);
-        return val;
-    };
-
     function editor_init() {
         //console.log("editor_init: tinyMCE.init('input#prompt')");
         hoverdirty = false;
@@ -116,6 +101,18 @@ var EditSurvey = function () {
         }
 
         if (curid == -99999) {
+            // new question, check for duplicate shortname (question name)
+            //console.log("looging for '" + shortname + "'");
+            var data = table.getData();//searchRows didn't work, so get entire array of data and loop over that.
+            //console.log(data);
+            for (var row in data) {
+                //console.log("checking '" + data[row].shortname + "' vs '" + shortname + "'");
+                if (data[row].shortname == shortname) {
+                    alert(shortname + " already exists, it must be unique");
+                    return;
+                }
+            }
+            // ok not found, proceeed.
             curid = newid;
         }
         //console.log("add/update " + curid);
@@ -401,14 +398,6 @@ var EditSurvey = function () {
             questionoptions = JSON.parse(options);
         optiontable = null;
 
-        ////loop over options decoding every value, optionshortname and optionhover
-        //for (i = 0; i < questionoptions.length; i++) {
-        //    questionoptions[i].value = atob(questionoptions[i].value);
-        //    questionoptions[i].optionshort = atob(questionoptions[i].optionshort);
-        //    questionoptions[i].optionhover = atob(questionoptions[i].optionhover);
-        //}
-        //console.log(questionoptions);
-
         // now show the block
         document.getElementById("add-row").innerHTML = "Update Survey Table";
         document.getElementById("general-question-div").style.display = "block";
@@ -530,17 +519,17 @@ var EditSurvey = function () {
                     { title: "Order", field: "display_order", visible: false },
                     { title: "Ordinal", field: "ordinal", visible: false },
                     {
-                        title: "Value", field: "value", accessorData: escapeQuotesAccessor, width: 120,
+                        title: "Value", field: "value", width: 120,
                         editor: "input",
                         editorParams: { editorAttributes: { maxlength: 512 } },
                     },
                     {
-                        title: "Label", field: "optionshort", accessorData: escapeQuotesAccessor, width: 200,
+                        title: "Label", field: "optionshort", width: 200,
                         editor: "input",
                         editorParams: { editorAttributes: { maxlength: 64 } },
                     },
                     {
-                        title: "Hover Text", field: "optionhover", accessorData: escapeQuotesAccessor, width: 300,
+                        title: "Hover Text", field: "optionhover", width: 300,
                         editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
                     },
                     {
@@ -611,22 +600,21 @@ var EditSurvey = function () {
             { title: "ID", field: "questionid", visible: false },
             { title: "Order", field: "display_order", visible: false },
             {
-                title: "Name", field: "shortname", width: 120,
+                title: "Name", field: "shortname", width: 120, validator: "unique",
                 cellClick: function (e, cell) {
                     if (!in_editconfig)
                         editconfig(cell.getRow());
                 },
             },
             {
-                title: "Description", field: "description", accessorData: escapeQuotesAccessor,
-                formatter: "textarea", visible: false
+                title: "Description", field: "description", formatter: "textarea", visible: false
             },
             {
-                title: "Prompt", field: "prompt", accessorData: escapeQuotesAccessor, width: 180,
+                title: "Prompt", field: "prompt", width: 180,
                 editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
             },
             {
-                title: "Hover Text", field: "hover", accessorData: escapeQuotesAccessor, width: 180,
+                title: "Hover Text", field: "hover", width: 180,
                 editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }
             },
             { title: "Type", field: "typename", width: 140 },

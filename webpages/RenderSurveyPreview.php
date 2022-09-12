@@ -77,9 +77,9 @@ function render_question() {
         $options = json_decode($options);
         //var_error_log($options);
         foreach ($options as $opt) {
-            $opt->value = base64_decode($opt->value);
-            $opt->optionshort = base64_decode($opt->optionshort);
-            $opt->optionhover = base64_decode($opt->optionhover);
+            $opt->value = $opt->value;
+            $opt->optionshort = $opt->optionshort;
+            $opt->optionhover = $opt->optionhover;
         }
         //var_error_log($options);
         $xml = ObjecttoXML("options", $options, $xml);
