@@ -16,7 +16,7 @@ CREATE TABLE SurveyQuestionTypes (
 	current tinyint DEFAULT '0',
 	display_order int NOT NULL,
 	PRIMARY KEY (typeid)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Type info.';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Type info.';
 
 INSERT INTO SurveyQuestionTypes (typeid, shortname, description, current, display_order)
 VALUES
@@ -48,7 +48,7 @@ CREATE TABLE SurveyQuestionTypeDefaults (
 	allowothertext bool DEFAULT '0',
 	PRIMARY KEY (typeid, ordinal),
 	FOREIGN KEY (typeid) REFERENCES SurveyQuestionTypes(typeid)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Type Default options';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Type Default options';
 
 INSERT INTO SurveyQuestionTypeDefaults (typeid, ordinal, value, display_order, optionshort, optionhover, allowothertext)
 VALUES
@@ -426,7 +426,7 @@ CREATE TABLE SurveyQuestionConfig (
 	max_value int DEFAULT NULL,
 	PRIMARY KEY (questionid),
 	FOREIGN KEY (typeid) REFERENCES SurveyQuestionTypes(typeid)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Info.';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Info.';
 
 CREATE UNIQUE INDEX SurveyQuestionConfig_shortname ON SurveyQuestionConfig(shortname);
 
@@ -440,10 +440,10 @@ CREATE TABLE SurveyQuestionOptionConfig (
 	allowothertext bool DEFAULT '0',
 	PRIMARY KEY (questionid, ordinal),
 	FOREIGN KEY (questionid) REFERENCES SurveyQuestionConfig(questionid) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Option Info.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='Survey Question Option Info.';
 
 CREATE TABLE ParticipantSurveyAnswers (
-	participantid varchar(15) NOT NULL,
+	participantid varchar(15) NOT NULL DEFAULT '',
 	questionid int NOT NULL,
 	privacy_setting bool NOT NULL DEFAULT '0',
 	value varchar(8192),
@@ -451,9 +451,13 @@ CREATE TABLE ParticipantSurveyAnswers (
 	lastupdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	updatedby varchar(15) NOT NULL,
 	PRIMARY KEY (participantid, questionid),
-	FOREIGN KEY (participantid) REFERENCES Participants(badgeid) ON DELETE CASCADE,
+	/* KEY (participantid),
+	KEY (questionid), */
+	FOREIGN KEY fk_partid (participantid) REFERENCES Participants(badgeid) ON DELETE CASCADE,
 	FOREIGN KEY (questionid) REFERENCES SurveyQuestionConfig(questionid) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Participant Survey Info.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='Participant Survey Info.';
+
+DELETE FROM CustomText WHERE page='Participant Survey' AND tag='survey_displayonly';
 
 INSERT INTO CustomText(page, tag, textcontents)
 VALUES('Participant Survey', 'survey_displayonly', '<p>Note: Some questions may no longer allow you to enter/change their answers. The time has passed for when you can change them and they have been changed from answerable to display only.</p>
