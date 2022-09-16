@@ -6,7 +6,7 @@ $return500errors = true;
 require_once('StaffCommonCode.php');
 
 function update_survey() {
-    global $linki, $message_error;
+    global $linki, $mysqli, $message_error;
     //error_log("\n\nin update surver:\n");
     //error_log("string loaded: " . getString("survey"));
     $questions = json_decode(base64_decode(getString("survey")));
@@ -53,7 +53,6 @@ function update_survey() {
     // insert new rows (those with id < 0)
     $inserted = 0;
     $optinserted = 0;
-    $useoptatob = false;
     $sql = <<<EOD
         INSERT INTO SurveyQuestionConfig (shortname, description, prompt,
             hover, display_order, typeid, required, publish, privacy_user, searchable, ascending, display_only, min_value, max_value)
@@ -88,11 +87,10 @@ EOD;
             //error_log($sql);
             //var_error_log($paramarray);
             $inserted = $inserted + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiii", $paramarray);
-            $questionid = mysqli_insert_id($linki);
+            $questionid = $mysqli->insert_id;
             $options = [];
             if (property_exists($quest, "options")) {
                 $optstring = base64_decode($quest->options);
-                $optstring = mb_substr($optstring, 7);
                 if ($optstring != "")
                     $options  = json_decode($optstring);
             }
@@ -101,26 +99,16 @@ EOD;
             //var_error_log($options);
             $optord = 1;
             $optdisplayorder = 10;
-            foreach ($options as $opt) {
-                if ($useoptatob) {
-                    $optparamarray = array(
-                        $questionid, $optord,
-                        property_exists($opt, "value") ? $opt->value : "",
-                        $optdisplayorder,
-                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
-                    );
-                } else {
-                    $optparamarray = array(
-                        $questionid, $optord,
-                        property_exists($opt, "value") ? $opt->value : "",
-                        $optdisplayorder,
-                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
-                    );
-                }
+            foreach ($options as $opt) {              
+                $optparamarray = array(
+                    $questionid, $optord,
+                    property_exists($opt, "value") ? $opt->value : "",
+                    $optdisplayorder,
+                    property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                    property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                    property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
+                );
+
                 $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $optparamarray);
                 //error_log("options inserted now " . $optinserted);
                 $optord = $optord + 1;
@@ -182,7 +170,6 @@ EOD;
             //var_error_log($paramarray);
             $updated = $updated + mysql_cmd_with_prepare($sql, "ssssiiiiiiiiiii", $paramarray);
             $options = [];
-            $useoptatob = true;
             if (property_exists($quest, "options")) {
                 $optstring = $quest->options;
                 //error_log("\n\nquestion options = '" . $optstring . "'\n\n");
@@ -232,26 +219,16 @@ EOD;
 
             // Update existing options
             foreach ($options as $opt) {
-                if ($opt->ordinal >= 0) {
-                    if ($useoptatob) {
-                        $paramarray = array(
-                            property_exists($opt, "value") ? $opt->value : "",
-                            $opt->display_order,
-                            property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                            property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                            property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
-                            $id, $opt->ordinal
-                        );
-                    } else {
-                        $paramarray = array(
-                            property_exists($opt, "value") ? $opt->value : "",
-                            $opt->display_order,
-                            property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                            property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                            property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
-                            $id, $opt->ordinal
-                        );
-                    }
+                if ($opt->ordinal >= 0) {                   
+                    $paramarray = array(
+                        property_exists($opt, "value") ? $opt->value : "",
+                        $opt->display_order,
+                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0,
+                        $id, $opt->ordinal
+                    );
+
                     //error_log("\n\n" . $optsql);
                     //var_error_log($paramarray);
                     $optupdated = $optupdated + mysql_cmd_with_prepare($optsql, "sisssii", $paramarray);
@@ -260,26 +237,16 @@ EOD;
 
             // Insert new options
             foreach ($options as $opt) {
-                if ($opt->ordinal < 0) {
-                    if ($useoptatob) {
-                        $paramarray = array(
-                            $id, $optord,
-                            property_exists($opt, "value") ? $opt->value : "",
-                            $opt->display_order,
-                            property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                            property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                            property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
-                            );
-                    } else {
-                        $paramarray = array(
-                           $id, $optord,
-                           property_exists($opt, "value") ? $opt->value : "",
-                           $opt->display_order,
-                           property_exists($opt, "optionshort") ? $opt->optionshort : "",
-                           property_exists($opt, "optionhover") ? $opt->optionhover : "",
-                           property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
-                           );
-                    }
+                if ($opt->ordinal < 0) {                  
+                    $paramarray = array(
+                        $id, $optord,
+                        property_exists($opt, "value") ? $opt->value : "",
+                        $opt->display_order,
+                        property_exists($opt, "optionshort") ? $opt->optionshort : "",
+                        property_exists($opt, "optionhover") ? $opt->optionhover : "",
+                        property_exists($opt, "allowothertext") ? $opt->allowothertext : 0
+                        );                  
+
                     //error_log("\n\n" . $optinssql);
                     //var_error_log($paramarray);
                     $optinserted = $optinserted + mysql_cmd_with_prepare($optinssql, "iisissi", $paramarray);
