@@ -20,14 +20,18 @@ function update_participant($badgeid) {
     $query = "UPDATE Participants SET ";
     $updateClause = "";
     $query_end = " WHERE badgeid = '$badgeid';";
-    if (isset($_POST['interested'])) {
-        $x = $_POST['interested'];
-        if ($x == 1 || $x == 2) {
-            $updateClause .= "interested=$x, ";
-        } else {
-            $updateClause .= "interested=0, ";
-        }
+    if (may_I('Participant')) {
+        $x =  getInt('interested', 0);
+    } else {
+        $x = 2;
     }
+
+    if ($x == 1 || $x == 2) {
+        $updateClause .= "interested=$x, ";
+    } else {
+        $updateClause .= "interested=0, ";
+    }
+
     if (isset($_POST['share_email'])) {
         $x = $_POST['share_email'];
         if ($x == 0 || $x == 1) {
