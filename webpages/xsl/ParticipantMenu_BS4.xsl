@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!--
     Created by Peter Olszowka on 2020-07-27;
-    Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="title" select="''" />
@@ -39,9 +39,11 @@
               <a class="nav-link py-1" href="my_sched_constr.php">Availability</a>
             </li>
           </xsl:if>
-          <li class="nav-item py-0">
-            <a class="nav-link py-1" href="my_interests.php">General Interests</a>
-          </li>
+          <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='general_interests']">
+            <li class="nav-item py-0">
+              <a class="nav-link py-1" href="my_interests.php">General Interests</a>
+            </li>
+          </xsl:if>
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='search_panels']">
             <li class="nav-item py-0">
               <a class="nav-link py-1" href="PartSearchSessions.php">Search Sessions</a>
