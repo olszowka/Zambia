@@ -109,10 +109,10 @@ function update_table($tablename) {
             $sql .= "?,";
         $sql = substr($sql, 0, -1) . ");";
 
-        $paramarray = array();
         foreach ($rows as $row) {
             $id = (int) $row->$indexcol;
             if ($id < 0) {
+                $paramarray = array();
                 foreach($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
                         $name = $col['COLUMN_NAME'];
@@ -288,11 +288,11 @@ EOD;
                 $curfield = $reffield;
             }
             if (DBVER >= "8")
-                $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
+                $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $reffield\n";
             else
-                $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
+                $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $reffield\n";
             $union = "UNION ALL";
-        }        
+        }
         if (DBVER >= "8") {
             $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
             $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
