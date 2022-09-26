@@ -173,14 +173,14 @@ function validate_session() {
         return ($flag);
     }
     $i = mb_strlen($session["title"]);
-    if ($i < 10 || $i > 48) {
-        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>48</b> characters.<br>\n";
+    if ($i < 10 || $i > 80) {
+        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>80</b> characters.<br>\n";
         $flag = false;
     }
     $i = mb_strlen($session["progguiddesc"]);
-    if ($i < 10 || $i > 500) {
+    if ($i < 10 || $i > 2000) {
         $messages .= "Description is $i characters long.  Please edit it to between";
-        $messages .= " <b>10</b> and <b>500</b> characters long.<br>\n";
+        $messages .= " <b>10</b> and <b>2000</b> characters long.<br>\n";
         $flag = false;
     }
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {

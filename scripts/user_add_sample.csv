@@ -1,0 +1,3 @@
+badgeid, password, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, permroleids
+1001, initialPW, Peter, Olszowka, PeterO, 781-555-1212, someone@somewhere.com, 123 First Street, , Arlington, MA, 02474, USA, staffComp, "1,2,12"
+1002, initialPW, Peter, Brown, Brownie, 781-555-2323, someoneelse@somewhereelse.com, 123 Second Street, , Medford, MA, 02475, USA, participantComp, "3"

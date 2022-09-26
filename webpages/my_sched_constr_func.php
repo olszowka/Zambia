@@ -31,7 +31,7 @@ function retrieve_timesXML() {
     $result = array();
     $query = array();
 	$query["times"] = "SELECT timeid, DATE_FORMAT(timevalue,'%T') AS timevalue, timedisplay, next_day, avail_start, avail_end FROM Times ";
-	$query["times"] .= "WHERE avail_start = 1 or avail_end = 1";
+	$query["times"] .= "WHERE avail_start = 1 or avail_end = 1 ORDER BY display_order";
 	if (!$result["XML"] = mysql_query_XML($query)) {
         RenderError($message_error);
         exit();

@@ -81,4 +81,13 @@ define("PHOTO_PUBLIC_DIRECTORY", "/participant_photos"); // inside of web server
 define("PHOTO_FILE_TYPES", "jpg,png"); // comma separated list of allowed file types/suffixes (will be verified by PHP)
 define("PHOTO_DIMENSIONS", "200,200,800,800,1048576"); // comma separated list min width/height, max width/height, file size
 define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participants without photo
+define("CON_THEME", "");
+// if con-specific theming should be applied, you can reference a theme css here.
+// for example: define("CON_THEME", "themes/reallybigcon/main.css");
+define("CON_HEADER_IMG", "");
+// to improve the con branding, you can define a con-specific header image that will take the place of the 
+// Zambia illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
+define("CON_HEADER_IMG_ALT", "");
+// to improve the con branding, you can specify the alt-text of the header image. For example:
+// define("CON_HEADER_IMG_ALT", "Really Big Con Logo);
 ?>

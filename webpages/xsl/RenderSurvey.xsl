@@ -21,7 +21,7 @@
       <xsl:value-of select="$UpdateMessage" disable-output-escaping="yes"/>
     </div>
     <form name="partsurveyform" method="POST">
-      <xsl:if test="buttons != '' and buttons != 'close'">
+      <xsl:if test="$buttons != '' and $buttons != 'close'">
         <xsl:attribute name="action">
           <xsl:text>PartSurvey.php</xsl:text>
         </xsl:attribute>

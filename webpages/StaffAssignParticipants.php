@@ -41,10 +41,8 @@ EOD;
 <?php
     echo "     <option value=0" . (($selsessionid == 0) ? "selected" : "") . ">Select Session</option>\n";
     while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
-        echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "") .  ">";
-        if (TRACK_TAG_USAGE !== "TAG_ONLY") {
-            echo htmlspecialchars($trackname) . " - ";
-        }
+        echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "");
+        echo ">" . htmlspecialchars($trackname) . " - ";
         echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
     }
     mysqli_free_result($Sresult);
@@ -55,8 +53,9 @@ EOD;
         <button id='sessionBtn' type='submit' name='submit' class='btn btn-primary'>Select Session</button>
     </div>
 <?php
-    if (isset($_SESSION['return_to_page']))
+    if (isset($_SESSION['return_to_page'])) {
         echo "<div class='col col-auto'><a href=\"" . $_SESSION['return_to_page'] . "\">Return to report</a></div>";
+    }
     echo "</div></form>\n";
     if ($topsectiononly) {
         staff_footer();
@@ -89,6 +88,7 @@ EOD;
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY participantid
 ), R2(badgeid, sessionid) AS (
     SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
     UNION
@@ -154,6 +154,7 @@ LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 
 LEFT JOIN (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY participantid
 ) A ON (A.participantid = P.badgeid)
 WHERE
 		POS.sessionid = $selsessionid
@@ -237,6 +238,7 @@ EOD;
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY participantid
 ), SessionParticipants(badgeid) AS (
     SELECT badgeid
     FROM ParticipantSessionInterest
@@ -288,6 +290,7 @@ SELECT
     LEFT OUTER JOIN (
         SELECT participantid, COUNT(*) AS answercount
         FROM ParticipantSurveyAnswers
+        GROUP BY participantid
     ) A ON (P.badgeid = A.participantid)
     WHERE P.interested = 1 AND S.badgeid IS NULL
 ORDER BY

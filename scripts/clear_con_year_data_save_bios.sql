@@ -3,22 +3,25 @@
    for use in following year.  Note, table PreviousParticipants is used by Congo interface script, but
    not by Zambia per se.*/
 TRUNCATE TABLE PreviousParticipants;
-INSERT INTO PreviousParticipants (badgeid, bio) SELECT badgeid, bio FROM Participants;
 TRUNCATE TABLE Schedule;
 TRUNCATE TABLE ParticipantAvailabilityDays;
 TRUNCATE TABLE ParticipantAvailabilityTimes;
 TRUNCATE TABLE ParticipantAvailability;
-TRUNCATE TABLE ParticipantHasRole;
+TRUNCATE TABLE ParticipantHasCredential;
 TRUNCATE TABLE ParticipantInterests;
 TRUNCATE TABLE ParticipantOnSession;
 TRUNCATE TABLE ParticipantSessionInterest;
+TRUNCATE TABLE ParticipantOnSessionHistory;
 TRUNCATE TABLE ParticipantSuggestions;
+TRUNCATE TABLE ParticipantPasswordResetRequests;
+TRUNCATE TABLE ParticipantSurveyAnswers;
 TRUNCATE TABLE SessionEditHistory;
+TRUNCATE TABLE SessionHasTag;
 TRUNCATE TABLE SessionHasFeature;
-TRUNCATE TABLE SessionHasPubChar;
 TRUNCATE TABLE SessionHasService;
 TRUNCATE TABLE Sessions;
 TRUNCATE TABLE EmailQueue;
-TRUNCATE TABLE UserHasPermissionRole;
+TRUNCATE TABLE EmailHistory;
+/*TRUNCATE TABLE UserHasPermissionRole;
 TRUNCATE TABLE Participants;
-TRUNCATE TABLE CongoDump;
+TRUNCATE TABLE CongoDump; */

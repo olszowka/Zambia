@@ -125,13 +125,15 @@ function chooseParticipant(badgeid, override) {
     $poststate.val(poststate).prop("defaultValue", poststate).prop("readOnly", false);
     var postzip = $("#postzipHID_" + badgeidJQSel).val();
     $postzip.val(postzip).prop("defaultValue", postzip).prop("readOnly", false);
-    var postcountry = $("#postcountryHID_" + badgeidJQSel).val();
+    var postcountry = $("#postcountryHID_" + badgeidJQSel).val();-
     $postcountry.val(postcountry).prop("defaultValue", postcountry).prop("readOnly", false);
     $("#lname_fname").val($("#lnameSPAN_" + badgeidJQSel).text());
     var badgename = $("#bnameSPAN_" + badgeidJQSel).text();
     $badgename.val(badgename).prop("defaultValue", badgename).prop("readOnly", false);
     var pubsname = $("#pnameSPAN_" + badgeidJQSel).text();
     $pubsname.val(pubsname).prop("defaultValue", pubsname).prop("readOnly", false);
+    var regtype = $("#regtypeHID_" + badgeidJQSel).val();
+    $('#regtype').html(regtype);
     $('#warnName').html(pubsname);
     $('#warnNewBadgeID').html(badgeid);
     originalInterested = $("#interestedHID_" + badgeidJQSel).val();
@@ -288,7 +290,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     $interested.val(originalInterested);
     $interested.prop("disabled", false);
     $bio.val(node.getAttribute("bio")).prop("defaultValue", node.getAttribute("bio"));
-    if (htmlused) {
+    if (htmlbioused) {
         $htmlbio.val(node.getAttribute("htmlbio")).prop("defaultValue", node.getAttribute("htmlbio"));
         startTinymce();
     }

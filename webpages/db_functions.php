@@ -312,17 +312,34 @@ if (!include ('../db_name.php'))
 	include ('./db_name.php'); // scripts which rely on this file (db_functions.php) may run from a different directory
 function prepare_db_and_more() {
     global $con_start_php_timestamp, $linki, $fatalError, $mysqli;
-    $linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
-    if (!$linki) {
+    //$linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
+    $linki = mysqli_init();
+    //error_log("--" . DBHOSTNAME . "::" . DBUSERID . "::" . DBPORT . "::" . MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT);
+    $success = mysqli_real_connect($linki, DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB, DBPORT);
+    if (!$success) {
         $fatalError = true;
         return false;
     }
-    $mysqli = new mysqli(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
+    $mysqli = new mysqli(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB, DBPORT);
     if (mysqli_connect_errno()) {
         $fatalError = true;
         return false;
     }
     date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
+    // for mysql with non standard sql_mode (from zambia point of view) temporarily force ours
+    $sql = "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';";
+    $success = mysqli_query($linki, $sql);
+    if (!$success) {
+        error_log("failed setting sql mode on linki");
+	$fatalError = true;
+	return false;
+    }
+    $success = $mysqli -> query($sql);
+    if (!$success) {
+        error_log("failed setting sql mode on mysqli");
+	$fatalError = true;
+	return false;
+    }
     if (!mysqli_set_charset($linki, "utf8mb4")) {
         $fatalError = true;
         return false;

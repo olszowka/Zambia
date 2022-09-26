@@ -103,7 +103,7 @@ if (USE_REG_SYSTEM === TRUE) {
                     <label for="badgename" class="mb-1">Badge name:</label>
                 </div>
                 <div>
-<?php if (USE_REG_SYSTEM === TRUE) { 
+<?php if (USE_REG_SYSTEM === TRUE && UPDATE_REG_SYSTEM === FALSE) { 
 ?>
                     <input type="text" id="badgename" class="col-text-input disabled" readonly="readonly" maxlength="50" />
 <?php
@@ -116,7 +116,7 @@ if (USE_REG_SYSTEM === TRUE) {
                 </div>
             </div>
 <?php
-if (USE_REG_SYSTEM === FALSE) {
+if (USE_REG_SYSTEM === FALSE || UPDATE_REG_SYSTEM === TRUE) {
 ?> 
         </div>
         <div class="row mt-3">
@@ -149,7 +149,7 @@ if (USE_REG_SYSTEM === FALSE) {
             </div>
         </div>
 <?php
-if (USE_REG_SYSTEM === FALSE) {
+if (USE_REG_SYSTEM === FALSE || UPDATE_REG_SYSTEM === TRUE) {
 ?>
         <div class="row mt-3">
             <div class="col-sm-3 offset-sm-2 offset-xl-1">
