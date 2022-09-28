@@ -6,7 +6,7 @@ $bootstrap4 = true;
 require_once('StaffCommonCode.php');
 $fbadgeid = getInt("badgeid");
 staff_header($title, $bootstrap4);
-if (!isLoggedIn() || !may_I('Staff') || !may_I('philcon_ImportUsers')) {
+if (!isLoggedIn() || !may_I('Staff') || !may_I('reg_ImportUsers')) {
     staff_footer();
     exit();
 }

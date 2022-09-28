@@ -15,6 +15,7 @@ function import_users() {
     $loggedInUserBadgeId = $_SESSION["badgeid"];
     $idsToAddarr = getArrayOfInts("idsToAdd");
     $rolesToAddArr = getArrayOfInts("rolesToAdd");
+    $regdbname = REG_DBNAME;
 
     if ($idsToAddarr === false || count($idsToAddarr) === 0) {
         RenderErrorAjax("No users selected to import");
@@ -57,9 +58,9 @@ FROM (
     FROM (
         SELECT P.id, first_name, last_name, badge_name, phone, email_addr,
         address, addr_2, city, state, zip, country, M.label
-        FROM balticonReg.perinfo P
-        JOIN balticonReg.reg R ON (R.perid = P.id)
-        JOIN balticonReg.memList M ON (R.memID = M.id AND R.conid = M.conid)
+        FROM $regdbname.perinfo P
+        JOIN $regdbname.reg R ON (R.perid = P.id)
+        JOIN $regdbname.memList M ON (R.memID = M.id AND R.conid = M.conid)
         WHERE P.id IN ($idstr)
         ORDER BY P.id, M.conid desc
     ) T, (SELECT @id:=0,@row_number:=0) as ID
@@ -78,7 +79,7 @@ EOD;
      $sql = <<<EOD
 INSERT INTO Participants (badgeid, password, pubsname)
 SELECT  id, "invalid", badge_name
-FROM balticonReg.perinfo
+FROM $regdbname.perinfo
 WHERE id IN ($idstr);
 EOD;
      mysqli_query_with_error_handling($sql);
@@ -92,7 +93,7 @@ EOD;
     $sql = <<<EOD
 INSERT INTO UserHasPermissionRole (badgeid, permroleid)
 SELECT  id, ?
-FROM balticonReg.perinfo
+FROM $regdbname.perinfo
 WHERE id IN ($idstr);
 EOD;
     $paramarray = array();
@@ -121,6 +122,8 @@ EOD;
 
 function perform_search() {
     global $linki, $message_error;
+
+    $regdbname = REG_DBNAME;
     $searchString = getString("searchString");
     if ($searchString == "")
         exit();
@@ -130,7 +133,7 @@ function perform_search() {
 SELECT
 	id, last_name, first_name, email_addr, badge_name, city, state, zip
 FROM
-    balticonReg.perinfo P
+    $regdbname.perinfo P
 	LEFT OUTER JOIN CongoDump CD ON P.id = CD.badgeid
 WHERE
 	P.id = "$searchString" AND CD.badgeid IS NULL AND P.active = 'Y' and P.banned = 'N'
@@ -144,7 +147,7 @@ EOD;
 SELECT
 	id, last_name, first_name, email_addr, badge_name, city, state, zip
 FROM
-    balticonReg.perinfo P
+    $regdbname.perinfo P
 	LEFT OUTER JOIN CongoDump CD ON P.id = CD.badgeid
 WHERE
 		(P.badge_name LIKE ?
@@ -233,7 +236,8 @@ function convert_bio() {
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-if (!isLoggedIn() || !may_I('balt_ImportUsers')) {
+
+if (!isLoggedIn() || !may_I('reg_ImportUsers')) {
     $message_error = "You are not logged in or your session has expired.";
     RenderErrorAjax($message_error);
     exit();
