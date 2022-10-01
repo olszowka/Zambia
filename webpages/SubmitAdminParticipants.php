@@ -345,14 +345,15 @@ SELECT
 	R.statustext, D.reasontext
 FROM
     Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
-        LEFT OUTER JOIN (
+	JOIN CongoDump CD USING (badgeid)
+        LEFT JOIN (
             SELECT participantid, COUNT(*) AS answercount
                 FROM ParticipantSurveyAnswers
                 WHERE participantid = ?
+                GROUP BY participantid
     ) A ON (P.badgeid = A.participantid)
-LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
+LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
 WHERE
 	P.badgeid = ?
 ORDER BY
