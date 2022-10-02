@@ -7,6 +7,7 @@
     <xsl:param name="CON_NAME" select="''" />
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
+    <xsl:param name="header_error_message" select="''" />
     <!-- TRUE/FALSE --><xsl:param name="RESET_PASSWORD_SELF" select="true()" />
     <xsl:template match="/">
         <header class="header-wrapper">
@@ -57,6 +58,14 @@
                             <div>
                                 <form id="login-form" name="loginform" class="form-horizontal" method="post" action="doLogin.php">
                                     <fieldset id="login-box">
+                                        <xsl:if test="$header_error_message = '' and not($top_section_behavior = 'SESSION_EXPIRED' and $top_section_behavior = 'LOGOUT' and $top_section_behavior = 'PASSWORD_RESET_COMPLETE')">
+                                            <xsl:attribute name="class">extended</xsl:attribute>
+                                        </xsl:if>
+                                        <xsl:if test="not($header_error_message = '')">
+                                            <div class="login-alert-container">
+                                                <span class="alert alert-danger"><xsl:value-of select="$header_error_message" /></span>
+                                            </div>
+                                        </xsl:if>
                                         <xsl:choose>
                                             <xsl:when test="$top_section_behavior = 'SESSION_EXPIRED'">
                                                 <div class="login-alert-container">
@@ -73,9 +82,6 @@
                                                     <span class="alert alert-success">You have changed your password successfully.</span>
                                                 </div>
                                             </xsl:when>
-                                            <xsl:otherwise>
-                                                <xsl:attribute name="class">extended</xsl:attribute>
-                                            </xsl:otherwise>
                                         </xsl:choose>
                                         <div class="control-group">
                                             <label class="control-label vert-sep vert-sep-above" for="badgeid">

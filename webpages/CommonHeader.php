@@ -1,6 +1,6 @@
 <?php
 //	Copyright (c) 2020-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
-function commonHeader($headerVersion, $topSectionBehavior, $bootstrap4) {
+function commonHeader($headerVersion, $topSectionBehavior, $bootstrap4, $headerErrorMessage='') {
     /**
      * Top section behavior
      * LOGIN:
@@ -24,6 +24,7 @@ function commonHeader($headerVersion, $topSectionBehavior, $bootstrap4) {
     $paramArray["badgename"] = isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '';
     $paramArray["USER_ID_PROMPT"] = USER_ID_PROMPT;
     $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
+    $paramArray["header_error_message"] = $headerErrorMessage;
     if ($bootstrap4) {
         RenderXSLT('GlobalHeader_BS4.xsl', $paramArray);
     } else {

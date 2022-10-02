@@ -21,6 +21,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
     //          don't show menu; show dataConsent page; show normal header (with welcome)
     //      all other pages should be "Normal"
     //          show menu; show page; show normal header (with welcome)
+    global $headerErrorMessage;
     $displayDataConsentPage = false;
     $isLoggedIn = isLoggedIn();
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
@@ -72,7 +73,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
      * NORMAL:
      *      No login form, welcome message with logout button
      */
-    commonHeader('Participant', $topSectionBehavior, $bootstrap4);
+    commonHeader('Participant', $topSectionBehavior, $bootstrap4, $headerErrorMessage);
     // below: authenticated and authorized to see a menu
     if ($isLoggedIn && $pageHeaderFamily === 'Normal' &&
         (may_I("Participant") || may_I("Staff"))) {
