@@ -24,12 +24,12 @@
           <li class="nav-item py-0">
             <a class="nav-link py-1" href="my_contact.php">Profile</a>
           </li>
-          <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
+          <xsl:if test="$PARTICIPANT_PHOTOS = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='photos']">
             <li class="nav-item py-0">
               <a class="nav-link py-1" href="my_photo.php">Photo</a>
             </li>
           </xsl:if>
-          <xsl:if test="$survey">
+          <xsl:if test="$survey and /doc/query[@queryname='permission_set']/row[@permatomtag='survey']">
             <li class="nav-item py-0">
               <a class="nav-link py-1" href="PartSurvey.php">Survey</a>
             </li>
