@@ -3,39 +3,78 @@
 global $header_section;
 $header_section = HEADER_PARTICIPANT;
 
-function participant_header($title, $noUserRequired = false, $loginPageStatus = 'Normal', $bootstrap4 = false) {
+function participant_header($title, $noUserRequired = false, $pageHeaderFamily = 'Normal', $bootstrap4 = false) {
     // $noUserRequired is true if user not required to be logged in to access this page
-    // $loginPageStatus is "Login", "Logout", "Normal", "No_Permission", "Password_Reset"
-    //      login page should be "Login"
+    // $pageHeaderFamily is "Login", "Logout", "No_Menu", "PASSWORD_RESET_COMPLETE", "Consent", "Normal"
+    //      "Login":
     //          don't show menu; show login form in header
-    //      logout page should be "Logout"
+    //          login page and password reset pages
+    //      "Logout":
     //          don't show menu; show logout confirmation in header
-    //      logged in user who reached page for which he does not have permission is "No_Permission"
-    //          show menu; don't show page; show "No permission" where?
-    //      pages for user to reset password are "Password_Reset"
-    //          don't show menu; show header without welcome; show page
+    //          logout page only
+    //      "No_Menu":
+    //          don't show menu; show welcome if user required and populated; show page
+    //          declined participant pages
+    //      "PASSWORD_RESET_COMPLETE":
+    //          don't show menu; show login form in header (just like login, but with password change message)
     //      override page to gather user data retention consent is "Consent"
     //          don't show menu; show dataConsent page; show normal header (with welcome)
     //      all other pages should be "Normal"
     //          show menu; show page; show normal header (with welcome)
-    global $headerErrorMessage;
+    $displayDataConsentPage = false;
     $isLoggedIn = isLoggedIn();
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
         $title = "Data Retention Consent";
-        $loginPageStatus = 'Consent';
+        $pageHeaderFamily = 'No_Menu';
         $bootstrap4 = true;
+        $displayDataConsentPage = true;
     }
     html_header($title, $bootstrap4);
-    if ($bootstrap4) { ?>
-<body class="bs4">
-<?php } else { ?>
-<body>
-<?php } ?>
-    <div class="container-fluid">
-<?php
-    commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage, $bootstrap4);
+    if ($bootstrap4) {
+        echo "<body class=\"bs4\">\n";
+    } else {
+        echo "<body>\n";
+    }
+    echo "<div class=\"container-fluid\">\n";
+    switch ($pageHeaderFamily) {
+        case 'Login':
+            $topSectionBehavior = 'LOGIN';
+            break;
+        case 'Logout':
+            $topSectionBehavior = 'LOGOUT';
+            break;
+        case 'Normal':
+        case 'No_Menu':
+            if ($isLoggedIn) {
+                $topSectionBehavior = 'NORMAL';
+            } elseif ($noUserRequired) {
+                $topSectionBehavior = 'NO_USER';
+            } else {
+                $topSectionBehavior = 'SESSION_EXPIRED';
+            }
+            break;
+        case 'PASSWORD_RESET_COMPLETE':
+            $topSectionBehavior = 'PASSWORD_RESET_COMPLETE';
+            break;
+    }
+    /**
+     * Top section behavior
+     * LOGIN:
+     *      Login form, no message
+     * SESSION_EXPIRED:
+     *      Login form, session expired message (error)
+     * LOGOUT:
+     *      Login form, logout success message (success)
+     * PASSWORD_RESET_COMPLETE:
+     *      Login form, password changed message (success)
+     * NO_USER:
+     *      No login form, just title and logo
+     * NORMAL:
+     *      No login form, welcome message with logout button
+     */
+    commonHeader('Participant', $topSectionBehavior, $bootstrap4);
     // below: authenticated and authorized to see a menu
-    if ($isLoggedIn && $loginPageStatus != 'Login' && $loginPageStatus != 'Consent' &&
+    if ($isLoggedIn && $pageHeaderFamily === 'Normal' &&
         (may_I("Participant") || may_I("Staff"))) {
     // check if survey is defined to set Survey Menu item in paramArray
         if (!isset($_SESSION['survey_exists'])) {
@@ -82,12 +121,12 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                 </div>
             </div>
         </nav>
-<?php       }
+<?php       } // end of bootstrap 2
     } else { // couldn't show menu
-        if ($loginPageStatus === 'Consent') {
+        if ($displayDataConsentPage) {
             require('dataConsent.php');
             exit();
-        } elseif (!$noUserRequired) { // not authenticated and authorized to see a menu
+        } elseif (!$noUserRequired && !$isLoggedIn) { // not authenticated and authorized to see a menu
             participant_footer();
             exit();
         }
