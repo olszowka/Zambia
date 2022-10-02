@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 var badgenameDirty = false;
 var bioDirty = false;
 var htmlbioused = false;
@@ -288,7 +288,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     $interested.val(originalInterested);
     $interested.prop("disabled", false);
     $bio.val(node.getAttribute("bio")).prop("defaultValue", node.getAttribute("bio"));
-    if (htmlused) {
+    if (htmlbioused) {
         $htmlbio.val(node.getAttribute("htmlbio")).prop("defaultValue", node.getAttribute("htmlbio"));
         startTinymce();
     }
