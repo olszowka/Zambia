@@ -1,6 +1,6 @@
 <?php
 // Created by Peter Olszowka on 2020-04-19;
-// Copyright (c) 2020 The Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2022 The Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Send Reset Password Link";
 require ('PartCommonCode.php');
@@ -9,14 +9,14 @@ require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('external/guzzlehttp-guzzle-6.5.3/vendor/autoload.php');
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
-    participant_header($title, true, 'Login');
+    participant_header($title, true, 'Normal');
     echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
     participant_footer();
     exit;
 }
 $recaptchaResponse = getString('g-recaptcha-response');
 if (empty($recaptchaResponse)) {
-    participant_header($title, true, 'Login');
+    participant_header($title, true, 'Normal');
     echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
     participant_footer();
     exit;
@@ -36,7 +36,7 @@ $guzzleRepsonse = $client->request('PUT', '/recaptcha/api/siteverify', [
 ]);
 $recaptchaConf = json_decode($guzzleRepsonse->getBody()->getContents(), true);
 if (!$recaptchaConf["success"]) {
-    participant_header($title, true, 'Login');
+    participant_header($title, true, 'Normal');
     echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
     participant_footer();
     exit;

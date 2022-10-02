@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $headerErrorMessage, $link, $linki, $title;
 require_once('CommonCode.php');
 $userIdPrompt = USER_ID_PROMPT;
@@ -63,6 +63,8 @@ if (may_I('Staff')) {
     } else {
         require('renderWelcome.php');
     }
+} elseif (may_I('declined_participant')) {
+    require('DeclinedParticipant.php');
 } elseif (may_I('public_login')) {
     require('renderBrainstormWelcome.php');
 } else {

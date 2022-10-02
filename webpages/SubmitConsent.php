@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 require('PartCommonCode.php');
 $title = "Submit Consent";
@@ -32,6 +32,8 @@ if (may_I('Staff')) {
     } else {
         require('renderWelcome.php');
     }
+} elseif (may_I('declined_part_login')) {
+    require('DeclinedParticipant.php');
 } elseif (may_I('public_login')) {
     require('renderBrainstormWelcome.php');
 } else {

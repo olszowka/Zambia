@@ -1,20 +1,17 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!-- File created by Peter Olszowka July 17, 2020
-     Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details. -->
+     Copyright (c) 2020-2022 Peter Olszowka. All rights reserved. See copyright document for more details. -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-    <xsl:param name="header_version" select="'Participant'"/><!-- "Staff" or "Participant" -->
-    <xsl:param name="logged_in" select="false()" /><!-- TRUE/FALSE -->
-    <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "No_Permission", "Password_Reset" -->
-    <xsl:param name="no_user_required" select="false()" /><!-- TRUE/FALSE -->
+    <!-- "Staff" or "Participant" --><xsl:param name="header_version" select="'Participant'"/>
+    <!-- "LOGIN", "SESSION_EXPIRED", "LOGOUT", "PASSWORD_RESET_COMPLETE", "NO_USER", "NORMAL" --><xsl:param name="top_section_behavior" select="'NORMAL'" />
     <xsl:param name="CON_NAME" select="''" />
     <xsl:param name="headerimg" select="'images/Z_illuminated.jpg'" />
     <xsl:param name="headerimgalt" select="'Zambia &quot;Z&quot; logo'" />
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
-    <xsl:param name="header_error_message" select="''" />
-    <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
+    <!-- TRUE/FALSE --><xsl:param name="RESET_PASSWORD_SELF" select="true()" />
     <xsl:template match="/">
-        <header class="header-wrapper" data-pbo="GlobalHeader_BS4.xsl:15">
+        <header class="header-wrapper">
             <div id="reg-header-container" class="collapsible-wrapper">
                 <div id="reg-header">
                     <xsl:choose>
@@ -40,7 +37,7 @@
                         </h1>
                     </div>
                     <xsl:choose>
-                        <xsl:when test="$logged_in and not($login_page_status = 'Login')">
+                        <xsl:when test="$top_section_behavior = 'NORMAL'">
                             <div id="welcome">
                                 <p>
                                     <xsl:text>Welcome, </xsl:text>
@@ -60,34 +57,25 @@
                                 <a href="logout.php" class="btn btn-primary float-right mr-2" title="Click to log out">Log out</a>
                             </div>
                         </xsl:when>
-                        <xsl:when test="not($no_user_required)">
+                        <xsl:when test="$top_section_behavior = 'LOGIN' or $top_section_behavior = 'SESSION_EXPIRED'
+                            or $top_section_behavior = 'LOGOUT' or $top_section_behavior = 'PASSWORD_RESET_COMPLETE'">
                             <div>
-                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="doLogin.php" data-pbo="GlobalHeader_BS4.xsl:60">
+                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="doLogin.php">
                                     <fieldset id="login-box">
                                         <xsl:choose>
-                                            <xsl:when test="$login_page_status='Normal'">
+                                            <xsl:when test="$top_section_behavior = 'SESSION_EXPIRED'">
                                                 <div class="login-alert-container">
                                                     <span class="alert alert-danger">Session expired. Please log in again.</span>
                                                 </div>
                                             </xsl:when>
-                                            <xsl:when test="$login_page_status='Logout'">
+                                            <xsl:when test="$top_section_behavior = 'LOGOUT'">
                                                 <div class="login-alert-container">
                                                     <span class="alert alert-success">You have logged out successfully.</span>
                                                 </div>
                                             </xsl:when>
-                                            <xsl:when test="$login_page_status='Password_Reset'">
+                                            <xsl:when test="$top_section_behavior = 'PASSWORD_RESET_COMPLETE'">
                                                 <div class="login-alert-container">
                                                     <span class="alert alert-success">You have changed your password successfully.</span>
-                                                </div>
-                                            </xsl:when>
-                                            <xsl:when test="$login_page_status='No_Permission'">
-                                                <div class="login-alert-container">
-                                                    <span class="alert alert-danger">You do not have permission to access this page.</span>
-                                                </div>
-                                            </xsl:when>
-                                            <xsl:when test="$header_error_message != ''">
-                                                <div class="login-alert-container">
-                                                    <span class="alert alert-danger"><xsl:value-of select="$header_error_message" /></span>
                                                 </div>
                                             </xsl:when>
                                             <xsl:otherwise>
@@ -126,7 +114,7 @@
                     </xsl:choose>
                 </div><!-- End of reg-header -->
             </div><!-- End of reg-header-container -->
-            <xsl:if test="$logged_in and not($login_page_status = 'Login')">
+            <xsl:if test="$top_section_behavior = 'NORMAL'">
                 <div id="alt-header-container" class="collapsible-wrapper hidden">
                     <div id="alt-header" class="collapsible">
                         <div>

@@ -11,7 +11,7 @@ if (RESET_PASSWORD_SELF !== true) {
     participant_footer();
     exit;
 }
-participant_header($title, true, 'Login');
+participant_header($title, true, 'Normal');
 $params = array("USER_ID_PROMPT" => USER_ID_PROMPT, "RECAPTCHA_SITE_KEY" => RECAPTCHA_SITE_KEY);
 RenderXSLT('ForgotPassword.xsl', $params);
 participant_footer();

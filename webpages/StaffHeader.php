@@ -21,13 +21,14 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
     } else if ($bootstrap4) {
         $bodyClass = 'class="bs4"';
     }
+    $topSectionBehavior = $isLoggedIn ? 'NORMAL' : 'SESSION_EXPIRED';
     if ($fullPage) {
 ?>
 <body <?php echo $bodyClass; ?>>
     <div id="myhelper"></div><!-- used for drag-and-drop operations -->
     <div id="headerContainer">
 <?php
-    commonHeader('Staff', $isLoggedIn, false, 'Normal', "", $bootstrap4);
+    commonHeader('Staff', $topSectionBehavior, $bootstrap4);
 ?>
     </div>
 <?php
@@ -36,7 +37,7 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
 <body <?php echo $bodyClass; ?>>
     <div class="container-fluid">
 <?php
-        commonHeader('Staff', $isLoggedIn, false, 'Normal', "", $bootstrap4);
+        commonHeader('Staff', $topSectionBehavior, $bootstrap4);
     }
     /* Render Staff Menu */
     if ($isLoggedIn) {
