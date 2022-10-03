@@ -8,6 +8,7 @@ $title = "Participant Survey";
 require_once('PartCommonCode.php');
 $message = "";
 $rows = 0;
+$rows_modified = 0;
 
 // Now that title is set, get common text
 if (!populateCustomTextArray()) {
@@ -43,14 +44,22 @@ ON DUPLICATE KEY UPDATE
 	othertext = ?,
 	updatedby = ?;
 EOD;
+			$delsql = <<<EOD
+DELETE FROM ParticipantSurveyAnswers WHERE participantid = ? and questionid = ?;
+EOD;
 			$parms = [];
 			$types = "";
 			$inserted = 0;
 			$updated = 0;
+			$deleted = 0;
 			$errors = 0;
 			$types = "siisssisss";
 			foreach ($shortname_types as $obj) {
 				if ($obj->typename != "heading") {
+					if (!isset($_POST[$obj->id])) {
+                        $deleted += mysql_cmd_with_prepare($delsql, "si", array($badgeid, $obj->questionid));
+						continue;
+                    }
                     $separator = ',';
 					$othertextname = $obj->id . "-othertext";
 					if (isset($_POST[$othertextname]))
@@ -72,8 +81,9 @@ EOD;
                         case "multi-select list":
                         case "multi-checkbox list":
                         case "multi-display":
-                            //echo "processing " . $obj->typename . "<br/>";
-                            //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
+							// error_log("processing " . $obj->typename );
+							//  error_log("shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id);
+							// var_dump($_POST[$obj->id]);
                             $ans = implode($separator, $_POST[$obj->id]);
                             $parms= array($badgeid, $obj->questionid, $privacyuser, $ans, $othertext, $badgeid, $privacyuser, $ans, $othertext, $badgeid);
                             break;
@@ -101,10 +111,13 @@ EOD;
 				$message = $message . $inserted . " answers inserted, ";
 			if ($updated > 0)
 				$message = $message . $updated . " answers updated, ";
+			if ($deleted > 0)
+				$message = $message . $deleted . " answers deleted, ";
 			if ($message == "")
 				$message = "No changes made to survey";
-			else
-				$message = "Survey updated: " . $message;
+			else {
+				$message = "Survey updated: " . preg_replace('/, $/', "", $message);
+            }
 
     }
 
