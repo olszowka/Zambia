@@ -78,7 +78,7 @@ EOD;
      // now build the participants
      $sql = <<<EOD
 INSERT INTO Participants (badgeid, password, pubsname)
-SELECT  id, "invalid", badge_name
+SELECT  id, 'invalid', badge_name
 FROM $regdbname.perinfo
 WHERE id IN ($idstr);
 EOD;
@@ -90,6 +90,9 @@ EOD;
          exit();
      }
      // and add the permissions
+     // commit before perms due to foreign key constraint lock on insert on some Mysql implimentations
+     mysqli_query_with_error_handling("COMMIT;");
+
     $sql = <<<EOD
 INSERT INTO UserHasPermissionRole (badgeid, permroleid)
 SELECT  id, ?
@@ -101,13 +104,13 @@ EOD;
         $paramarray[0] = $id;
         $rows = mysql_cmd_with_prepare($sql, 'i', $paramarray);
         if (is_null($rows) || $rows !== $usercnt) {
-            mysqli_query_with_error_handling("ROLLBACK;");
+            // mysqli_query_with_error_handling("ROLLBACK;");
             RenderErrorAjax("Error: adding permission roles from reg import");
             exit();
         }
     }
-    // all done commit the sequence
-    mysqli_query_with_error_handling("COMMIT;");
+    // all done commit the sequence - move commit up, due to locking error on some MYSQL implimentations
+    // mysqli_query_with_error_handling("COMMIT;");
     $message = "<p>Users imported successfully.</p>";
 ?>
 <div class="row mt-3">
