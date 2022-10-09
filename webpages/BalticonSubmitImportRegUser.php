@@ -16,6 +16,7 @@ function import_users() {
     $idsToAddarr = getArrayOfInts("idsToAdd");
     $rolesToAddArr = getArrayOfInts("rolesToAdd");
     $regdbname = REG_DBNAME;
+    $conid = REG_CONID;
 
     if ($idsToAddarr === false || count($idsToAddarr) === 0) {
         RenderErrorAjax("No users selected to import");
@@ -50,7 +51,7 @@ function import_users() {
     // MySQL 5.x doesn't support ROW_NUMBER(), so it has to be faked with this kludg
     $sql = <<<EOD
 INSERT INTO CongoDump (badgeid,firstname,lastname,badgename,phone,email,postaddress1,postaddress2,postcity,poststate,postzip,postcountry,regtype)
-SELECT id, first_name, last_name, badge_name, phone, email_addr, address, addr_2, city, state, zip, country, label
+SELECT id, first_name, last_name, badge_name, phone, email_addr, address, addr_2, city, state, zip, country,  IFNULL(label, 'Not Registered') AS label
 FROM (
     SELECT @row_number := CASE WHEN @id = id THEN @row_number + 1 ELSE 1 END AS num,
     @id := id AS id, first_name, last_name, badge_name, phone, email_addr,
@@ -59,10 +60,10 @@ FROM (
         SELECT P.id, first_name, last_name, badge_name, phone, email_addr,
         address, addr_2, city, state, zip, country, M.label
         FROM $regdbname.perinfo P
-        JOIN $regdbname.reg R ON (R.perid = P.id)
-        JOIN $regdbname.memList M ON (R.memID = M.id AND R.conid = M.conid)
+        LEFT OUTER JOIN $regdbname.reg R ON (R.perid = P.id  AND R.conid = $conid)
+        LEFT OUTER JOIN $regdbname.memList M ON (R.memID = M.id AND M.conid = $conid)
         WHERE P.id IN ($idstr)
-        ORDER BY P.id, M.conid desc
+        ORDER BY P.id, M.conid desc, M.price desc
     ) T, (SELECT @id:=0,@row_number:=0) as ID
 ) T2
 WHERE num = 1;
@@ -71,6 +72,7 @@ EOD;
      $rows = mysqli_affected_rows($linki);
 
      if (is_null($rows) || $rows !== $usercnt) {
+         error_log("CongoDump Insert: Rows !== usercount: rows=$rows, usercnt=$usercnt, idstr=$idstr");
          mysqli_query_with_error_handling("ROLLBACK;");
          RenderErrorAjax("Error: Some of the users to be imported already exist or error importing users");
          exit();
@@ -85,6 +87,7 @@ EOD;
      mysqli_query_with_error_handling($sql);
      $rows = mysqli_affected_rows($linki);
      if (is_null($rows) || $rows !== $usercnt) {
+         error_log("Participants Insert: Rows !== usercount: rows=$rows, usercnt=$usercnt, idstr=$idstr");
          mysqli_query_with_error_handling("ROLLBACK;");
          RenderErrorAjax("Error: creating participants from reg import");
          exit();
