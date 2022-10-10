@@ -373,7 +373,7 @@ function prepare_db_and_more() {
  *  $query_param_type_str -- string of parameter types to be sent to prepared statement executor
  */
 function push_query_arrays($value, $field_name, $param_type, $max_len, &$query_portion_arr, &$query_param_arr, &$query_param_type_str) {
-    if (!empty($value) || $value === '') {
+    if (!empty($value) || $value === '' || $value === 0) {
         if ($param_type === 's' && mb_strlen($value) > $max_len && $max_len !== 0) {
             $message_error = "$field_name field is greater than maximum length of $max_len.  Db not updated.";
             RenderErrorAjax($message_error);

@@ -74,7 +74,7 @@ function getInt($name, $default = false) {
         return $default;
     }
     $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
-    if (empty($t) && $t !== 0) {
+    if (strlen($t) == 0) {
         return $default;
     } else {
         return(intval($t));
