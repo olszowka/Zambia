@@ -10,18 +10,18 @@ $report['categories'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        X.pubsname, X.badgeid, X.trackname, X.sessionid, X.title, X.rank, X.assigned,
+        X.pubsname, X.badgeid, X.trackname, X.sessionid, X.title, X.`rank`, X.assigned,
         IF(moderator IS NULL OR moderator=0,0,1) AS moderator,
         Y.roomid, Y.roomname,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',Y.starttime),'%a %l:%i %p') AS startTime
     FROM (
         SELECT
                 PI.badgeid, PI.pubsname, PI.sessionid, POS.sessionid AS assigned,
-                moderator, title, trackname, rank
+                moderator, title, trackname, `rank`
             FROM (
                         SELECT
                                 T.trackname, S.title, S.sessionid, P.badgeid,
-                                P.pubsname, PSI.rank
+                                P.pubsname, PSI.`rank`
                             FROM
                                      Sessions S
                                 JOIN Tracks T USING(trackid)
