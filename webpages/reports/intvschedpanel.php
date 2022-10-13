@@ -14,7 +14,7 @@ SELECT
         X.trackname, 
         X.sessionid,
         X.title,
-        X.rank,
+        X.`rank`,
         X.assigned,
         IF(moderator IS NULL OR moderator=0,0,1) AS moderator,
         Y.roomid,
@@ -29,7 +29,7 @@ SELECT
                 moderator,
                 title,
                 trackname,
-                rank
+                `rank`
             FROM (
                         SELECT
                                 T.trackname,
@@ -37,7 +37,7 @@ SELECT
                                 S.sessionid,
                                 P.badgeid,
                                 P.pubsname,
-                                PSI.rank
+                                PSI.`rank`
                             FROM
                                      Sessions S
                                 JOIN Tracks T USING(trackid)
