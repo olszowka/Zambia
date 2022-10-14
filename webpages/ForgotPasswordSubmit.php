@@ -42,8 +42,8 @@ if (!$recaptchaConf["success"]) {
     exit;
 }
 participant_header($title, true, 'Login');
-$badgeid = getString('badgeid');
-$email = getString('emailAddress');
+$badgeid = trim(getString('badgeid'));
+$email = trim(getString('emailAddress'));
 if (empty($badgeid) || empty($email)) {
     $params = array();
     $params["USER_ID_PROMPT"] = USER_ID_PROMPT;
@@ -58,30 +58,27 @@ $subjectLine = "Zambia Password Reset for $conName";
 $fromAddress = PASSWORD_RESET_FROM_EMAIL;
 $responseParams = array("subject_line" => $subjectLine, "from_address" => $fromAddress);
 
-$badgeid = mysqli_real_escape_string($linki, $badgeid);
-$emailSQL = mysqli_real_escape_string($linki, $email);
 $query = <<<EOD
 SELECT P.pubsname, CD.badgename, CD.firstname, CD.lastname
-    FROM
-             Participants P
-        JOIN CongoDump CD USING (badgeid)
+    FROM Participants P
+    JOIN CongoDump CD USING (badgeid)
     WHERE
-            P.badgeid = '$badgeid'
-        AND CD.email = '$emailSQL';
+        P.badgeid = ?
+        AND CD.email = ?;
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
+if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 'ss', array($badgeid, $email))) {
     exit;
 }
-$ipaddressSQL = mysqli_real_escape_string($linki, $userIP);
 $selector = bin2hex(random_bytes(8));
 if (mysqli_num_rows($result) !== 1) {
     // record a non-valid request to help track issues
     $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
     (badgeidentered, email, ipaddress, cancelled, selector)
-    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', 2, '$selector');
+    VALUES (?,?,?, 2,?);
 EOD;
-    if (!$result = mysqli_query_exit_on_error($query)) {
+    $rows = mysql_cmd_with_prepare($query, 'ssss', array($badgeid, $email, $userIP, $selector));
+    if ($rows !==1) {
         exit;
     }
     // don't tell user anything went wrong -- just give regular response.
@@ -107,17 +104,19 @@ $tokenSQL = hash('sha256', $token);
 $query = <<<EOD
 UPDATE ParticipantPasswordResetRequests
     SET cancelled = 1
-    WHERE badgeidentered = '$badgeid';
+    WHERE badgeidentered = ?;
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
+$rows = mysql_cmd_with_prepare($query, 's', array($badgeid));
+if ($rows !== 1) {
     exit;
 }
 $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
     (badgeidentered, email, ipaddress, expirationdatetime, selector, token)
-    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', '$expirationSQL', '$selector', '$tokenSQL');
+    VALUES (?,?,?,?,?,?);
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
+$rows = mysql_cmd_with_prepare($query, 'ssssss', array($badgeid, $email, $userIP, $expirationSQL, $selector, $tokenSQL));
+if ($rows !==1) {
     exit;
 }
 
