@@ -107,7 +107,8 @@ UPDATE ParticipantPasswordResetRequests
     WHERE badgeidentered = ?;
 EOD;
 $rows = mysql_cmd_with_prepare($query, 's', array($badgeid));
-if ($rows !== 1) {
+if ($rows === false) {
+    error_log("forget password submit: cancelled update failed");
     exit;
 }
 $query = <<<EOD
@@ -117,6 +118,7 @@ INSERT INTO ParticipantPasswordResetRequests
 EOD;
 $rows = mysql_cmd_with_prepare($query, 'ssssss', array($badgeid, $email, $userIP, $expirationSQL, $selector, $tokenSQL));
 if ($rows !==1) {
+    error_log("forget password submit: insert request failed");
     exit;
 }
 
