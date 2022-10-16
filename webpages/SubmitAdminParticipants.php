@@ -21,7 +21,7 @@ function fetch_participant() {
 SELECT
     P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
-    CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry,
+    CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry, CD.regtype,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
 	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
 	R.statustext, D.reasontext

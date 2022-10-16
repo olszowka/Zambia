@@ -133,7 +133,7 @@ function chooseParticipant(badgeid, override) {
     var pubsname = $("#pnameSPAN_" + badgeidJQSel).text();
     $pubsname.val(pubsname).prop("defaultValue", pubsname).prop("readOnly", false);
     var regtype = $("#regtypeHID_" + badgeidJQSel).val();
-    $('#regtype').html(regtype);
+    $('#regtype').val(regtype);
     $('#warnName').html(pubsname);
     $('#warnNewBadgeID').html(badgeid);
     originalInterested = $("#interestedHID_" + badgeidJQSel).val();
@@ -272,6 +272,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     var node = data.firstChild.firstChild.firstChild;
     $("#badgeid").val(node.getAttribute("badgeid"));
     $("#lname_fname").val(node.getAttribute("lastname") + ", " + node.getAttribute("firstname"));
+    $("#regtype").val(node.getAttribute("regtype"));
     $lastname.val(node.getAttribute("lastname")).prop("defaultValue", node.getAttribute("lastname")).prop("readOnly", false);
     $firstname.val(node.getAttribute("firstname")).prop("defaultValue", node.getAttribute("firstname")).prop("readOnly", false);
     $phone.val(node.getAttribute("phone")).prop("defaultValue", node.getAttribute("phone")).prop("readOnly", false);
