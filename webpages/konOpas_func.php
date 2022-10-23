@@ -65,7 +65,7 @@ EOD;
 			}
 		$query = <<<EOD
 SELECT
-		P.badgeid, P.pubsname, P.bio
+		P.badgeid, P.pubsname, IFNULL(IFNULL(P.htmlbio, P.bio) , "") AS bio, IFNULL(P.approvedphotofilename, "") AS photo
 	FROM
 		Participants P
 	WHERE
@@ -80,17 +80,22 @@ EOD;
 		$result = mysqli_query_with_error_handling($query);
 		$people = array();
 		while($row = mysqli_fetch_assoc($result)) {
+			$bio = $row["bio"];
+			if ($row["photo"] != "") {
+				$bio = '<img style="width: 400px; height: 400px; object-fit: scale-down; margin-top:0; margin-right: auto; margin-left: auto;" src="' . ROOT_URL . PHOTO_PUBLIC_DIRECTORY . "/" .  $row["photo"] . '" alt="Photo"><br/>' . $bio;
+			}
 			$peopleRow = array(
 				"id" => $row["badgeid"],
 				"name" => array($row["pubsname"]),
 				"prog" => $participantOnSession[$row["badgeid"]],
-				"bio" => $row["bio"]
+				"bio" => $bio
 				);
 			$people[] = $peopleRow;
 			}
 		//header('Content-type: application/json');
 		$results["json"] = "var program = ".json_encode($program).";\n";
 		$results["json"] .= "var people = ".json_encode($people).";\n";
+		$results["json"] .= "var last_update = " . json_encode(date("D M j G:i:s T Y")) . ";\n";
 		return $results;
 	}
 ?>
