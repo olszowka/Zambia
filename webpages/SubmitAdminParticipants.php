@@ -462,11 +462,14 @@ function fetch_user_perm_roles() {
         RenderErrorAjax($message_error);
         exit();
     }
+    $queryarray = array();
+    $paramarray = array();
+    $argarray = array();
     if (may_I('EditUserPermRoles')) {
         $loggedInUserBadgeId = $_SESSION['badgeid'];
         ['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
         if ($mayIEditAllRoles) {
-            $query = <<<EOD
+            $queryarray["permroles"] = <<<EOD
 SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 1 AS mayedit
     FROM
@@ -477,12 +480,10 @@ SELECT
     ORDER BY
         IF(ISNULL(UHPR.badgeid), 1, 0), PR.display_order;
 EOD;
-            $resultXML = mysql_prepare_query_XML(
-                    array("permroles" => $query),
-                    array("permroles" => "s"),
-                    array("permroles" => array($fetchedUserBadgeId)));
+            $paramarray["permroles"] = "s";
+            $argarray["permroles"] =  array($fetchedUserBadgeId);
         } else { // has permission to edit only specific perm roles
-            $query = <<<EOD
+            $queryarray["permroles"] = <<<EOD
 SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid,
         IF(ISNULL(SQ.elementid), 0, 1) AS mayedit
@@ -506,13 +507,11 @@ SELECT
     ORDER BY
         IF(ISNULL(UHPR.badgeid), 1, 0), mayedit DESC, PR.display_order;
 EOD;
-            $resultXML = mysql_prepare_query_XML(
-                array("permroles" => $query),
-                array("permroles" => "ss"),
-                array("permroles" => array($fetchedUserBadgeId, $loggedInUserBadgeId)));
+            $paramarray["permroles"] = "ss";
+            $argarray["permroles"] =  array($fetchedUserBadgeId, $loggedInUserBadgeId);
         }
     } else { // has no permission to edit user perm roles
-        $query = <<<EOD
+        $queryarray["permroles"] = <<<EOD
 SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 0 AS mayedit
     FROM
@@ -523,16 +522,31 @@ SELECT
     ORDER BY
         IF(ISNULL(UHPR.badgeid), 1, 0), PR.display_order;
 EOD;
-        $resultXML = mysql_prepare_query_XML(
-            array("permroles" => $query),
-            array("permroles" => "s"),
-            array("permroles" => array($fetchedUserBadgeId)));
+         $paramarray["permroles"] = "s";
+         $argarray["permroles"] =  array($fetchedUserBadgeId);
     }
+
+    $ConStartDatim = CON_START_DATIM;
+    $sessionquery = <<<EOD
+SELECT POS.badgeid, POS.sessionid, POS.moderator, S.title, R.roomname, R.roomid,
+	DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') as starttime
+FROM ParticipantOnSession POS
+JOIN Sessions S ON (S.sessionid = POS.sessionid)
+LEFT OUTER JOIN Schedule SCH ON (POS.sessionid = SCH.sessionid)
+LEFT OUTER JOIN Rooms R ON (SCH.roomid = R.roomid)
+WHERE badgeid = ?;
+EOD;
+    $queryarray["sessionlist"] = $sessionquery;
+    $paramarray["sessionlist"] = "s";
+    $argarray["sessionlist"] =  array($fetchedUserBadgeId);
+    $resultXML = mysql_prepare_query_XML($queryarray, $paramarray, $argarray);
+
     if (!$resultXML) {
         RenderErrorAjax($message_error);
         exit();
     }
-    // $foo = mb_ereg_replace("<(row|query)([^>]*)/[ ]*>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"); //for debugging only
+    //$foo = mb_ereg_replace("<(row|query)([^>]*)/[ ]*>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"); //for debugging only
+    //var_error_log($foo);
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
 }
 

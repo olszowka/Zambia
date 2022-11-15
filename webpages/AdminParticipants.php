@@ -303,17 +303,7 @@ if (HTML_BIO === TRUE) {
 ?>
             </div>
         </div>
-        <div class="row mt-3">
-            <div class="col-sm-4">
-                <div class="pb-1">
-                    User Permission Roles:
-                </div>
-                <div>
-                    <div class="tag-chk-container" id="role-container">
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="row mt-3" id="role-container"></div>
         <div class="row mt-3">
             <div class="col col-auto">
                 <button type="button" class="btn btn-primary" data-loading-text="Updating..." id="updateBUTN"
