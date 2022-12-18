@@ -19,16 +19,12 @@
                 </thead>
                 <tbody>
                   <xsl:for-each select="/doc/query[@queryName='searchParticipants']/row">
-                      <tr class="action" id="actionDIV_{@badgeid}" onclick="chooseParticipant('{@jsEscapedBadgeid}', false);">
-                          <td class="action" id='lnameSPAN_{@badgeid}'><xsl:value-of select="@lastname"/>, <xsl:value-of select="@firstname"/></td>
-                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-                          <td class="actionB" id="pnameSPAN_{@badgeid}"><xsl:value-of select="@pubsname"/></td>
-                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>                
-                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-                          <td class="action" id="bnameSPAN_{@badgeid}"><xsl:value-of select="@badgename"/></td>
-                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-                          <td class="action" id="bidSPAN_{@badgeid}"><xsl:value-of select="@badgeid"/></td>
+                      <tr class="action" id="actionDIV_{@badgeid}">
+                          <td class="action" id='lnameSPAN_{@badgeid}' onclick="chooseParticipant('{@jsEscapedBadgeid}', false);"><xsl:value-of select="@lastname"/>, <xsl:value-of select="@firstname"/></td>
+                          <td class="actionB" id="pnameSPAN_{@badgeid}" onclick="chooseParticipant('{@jsEscapedBadgeid}', false);"><xsl:value-of select="@pubsname"/></td>
+                          <td class="action" id="bnameSPAN_{@badgeid}" onclick="chooseParticipant('{@jsEscapedBadgeid}', false);"><xsl:value-of select="@badgename"/></td>
+                          <td class="action" id="bidSPAN_{@badgeid}" onclick="chooseParticipant('{@jsEscapedBadgeid}', false);"><xsl:value-of select="@badgeid"/></td>
+                          <td><button class="btn btn-primary btn-small" onclick="window.open('StaffViewSurveyResults.php?badgeid={@jsEscapedBadgeid}', '_blank');">View Survey Results</button></td>
                           <input type="hidden" id="interestedHID_{@badgeid}">
                               <xsl:attribute name="value"><xsl:value-of select="@interested"/></xsl:attribute>
                           </input>
