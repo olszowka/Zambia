@@ -21,7 +21,6 @@ var originalInterested = "0";
 var fbadgeid;
 var curbadgeid;
 var resultsHidden = true;
-var max_bio_len = 500;
 var mce_running = false;
 var bio_updated = false;
 var $interested;
@@ -180,7 +179,7 @@ function chooseParticipant(badgeid, override) {
         $showSurveyDiv.hide();
         $showSurveyBtn.prop("disabled", true);
     }
-    max_bio_len = document.getElementById("bio").dataset.maxLength;
+    max_bio_len = parseInt(document.getElementById("bio").getAttribute('maxlength'), 10);
     if (htmlbioused) {
         startTinymce();
     }
@@ -402,20 +401,32 @@ function initializeAdminParticipants() {
     $toggleSearchResultsBUTN.click(toggleSearchResultsBUTN);
     $toggleSearchResultsBUTN.prop("disabled", true).prop("hidden", true);
     resultsHidden = true;
-    $("#searchPartsBUTN").on('click', doSearchPartsBUTN);
+    document.getElementById('searchPartsBUTN').addEventListener('click', doSearchPartsBUTN);
     $("#searchResultsDIV").html("").hide('fast');
     if (fbadgeid) { // signal from page initializer that page was requested to
         // to be preloaded with a participant
         fetchParticipant(fbadgeid);
     }
     $("#adminParticipantsForm").on("input", ".mycontrol", processChange);
+    document.getElementById('adminParticipantsForm').addEventListener('submit', onSubmit);
+    document.getElementById('searchPartsINPUT').addEventListener('keydown', searchKeypr);
     $prevBTN = document.getElementById("prevSearchResultBUTN");
     $nextBTN = document.getElementById("nextSearchResultBUTN");
+}
+
+function searchKeypr(event) {
+    if (event.code === "Enter") {
+        doSearchPartsBUTN();
+    }
 }
 
 function loadNewParticipant() {
     chooseParticipant(saveNewBadgeId, true);
     return true;
+}
+
+function onSubmit(event) {
+    event.preventDefault();
 }
 
 function processChange() {
@@ -744,8 +755,7 @@ function writeSearchResults(data, textStatus, jqXHR) {
     } catch (error) {
         console.log(error);
     }
-    console.log(data_json);
- 
+
     $("#searchResultsDIV").html(data_json["HTML"]).show('fast');
     $('#searchPartsBUTN').button('reset');
     searchCount = data_json["rowcount"];
