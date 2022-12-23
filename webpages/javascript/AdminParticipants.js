@@ -23,7 +23,6 @@ var curbadgeid;
 var resultsHidden = true;
 var max_bio_len = 500;
 var mce_running = false;
-var bio_updated = false;
 var $interested;
 var $bio;
 var $htmlbio;
@@ -182,7 +181,6 @@ function chooseParticipant(badgeid, override) {
         $showSurveyDiv.hide();
         $showSurveyBtn.prop("disabled", true);
     }
-    max_bio_len = document.getElementById("bio").dataset.maxLength;
     if (htmlbioused) {
         startTinymce();
     }
@@ -376,7 +374,7 @@ function initializeAdminParticipants() {
     $interested = $("#interested");
     $bio = $("#bio");
     $htmlbio = $("#htmlbio");
-    if ($htmlbio)
+    if ($htmlbio.length > 0)
         htmlbioused = true;
     $password = $("#password");
     $cpassword = $("#cpassword");
@@ -414,6 +412,7 @@ function initializeAdminParticipants() {
     $("#adminParticipantsForm").on("input", ".mycontrol", processChange);
     $prevBTN = document.getElementById("prevSearchResultBUTN");
     $nextBTN = document.getElementById("nextSearchResultBUTN");
+    max_bio_len = $bio.data("maxLength");
 }
 
 function loadNewParticipant() {
@@ -516,9 +515,18 @@ function checkDirty() {
     }
 }
 
+
+function updatePlainText() {
+    tinymce.triggerSave();
+    var tempDivElement = document.createElement("div");
+    tempDivElement.innerHTML = $htmlbio.val();
+    $bio.val(tempDivElement.textContent || tempDivElement.innerText || "");
+    tempDivElement.remove();
+}
+
 function textChange(id) {
     if (htmlbioused) {
-        tinymce.triggerSave();
+        updatePlainText();
         bioDirty = ($htmlbio.val() !== $htmlbio.prop("defaultValue"));
         checkDirty();
     }
@@ -693,48 +701,13 @@ function updateBUTTON() {
     });
 }
 
-function getLength(data, textStatus, jqXHR) {
-    //console.log(data);
-    try {
-        jsondata = JSON.parse(data);
-    } catch (error) {
-        console.log(error);
-        return;
-    }
-    $bio.val(jsondata["bio"]);
-    bio_updated = true;
-    updateBUTTON();
-}
-
 function validateBioCharacterLength() {
-    if ((!htmlbioused) || bio_updated) {
-        bio_updated = false;
-        count = $bio.val().length;
-        if (count > max_bio_len) {
-            alert("Bio too long at " + count + "; " + max_bio_len + " characters allowed.");
-            return false;
-        }
-        return true;
+    count = $bio.val().length;
+    if (count > max_bio_len) {
+        alert("Bio too long at " + count + "; " + max_bio_len + " characters allowed.");
+        return false;
     }
-    if (bioDirty)
-        tinymce.triggerSave();
-
-    count = $htmlbio.val().length;
-    if (count <= max_bio_len) // skip the ajax, it can't be longer than the html version
-        return true;
-
-    var postdata = {
-        ajax_request_action: "convert_bio",
-        htmlbio: $htmlbio.val()
-    };
-    $.ajax({
-        url: "SubmitAdminParticipants.php",
-        dataType: "html",
-        data: postdata,
-        success: getLength,
-        error: showAjaxError,
-        type: "POST"
-    });
+    return true;
 }
 
 function writeSearchResults(data, textStatus, jqXHR) {

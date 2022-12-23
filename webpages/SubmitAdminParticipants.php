@@ -550,15 +550,6 @@ EOD;
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
 }
 
-function convert_bio() {
-    $htmlbio = getString("htmlbio");
-    $bio = html_to_text($htmlbio);
-    $results = [];
-    $results["bio"] = $bio;
-    $results["len"] = mb_strlen($bio);
-    echo json_encode($results);
-}
-
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
@@ -588,9 +579,6 @@ switch ($ajax_request_action) {
         break;
     case "fetch_user_perm_roles":
         fetch_user_perm_roles();
-        break;
-    case "convert_bio":
-        convert_bio();
         break;
     default:
         $message_error = "Internal error.";
