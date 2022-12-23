@@ -69,13 +69,13 @@ function update_participant($badgeid) {
     if (isset($_POST['htmlbio'])) {
         if ($may_edit_bio) {
             $updateClause .= "htmlbio=\"" . mysqli_real_escape_string($linki, $_POST['htmlbio']) . "\", ";
-            $updateClause .= "bio=\"" . mysqli_real_escape_string($linki, html_to_text($_POST['htmlbio'])) . "\", ";
         } else {
             $message_error = "You may not update your biography at this time.  Database not updated.";
             Render500ErrorAjax($message_error);
             exit();
         }
-    } else if (isset($_POST['bio'])) {
+    } 
+    if (isset($_POST['bio'])) {
         if ($may_edit_bio) {
             $updateClause .= "bio=\"" . mysqli_real_escape_string($linki, stripslashes($_POST['bio'])) . "\", ";
         } else {
@@ -506,28 +506,6 @@ EOD;
     echo json_encode($json_return) . "\n";
 };
 
-function fetch_bio($badgeid) {
-    global $linki, $message_error, $returnAjaxErrors, $return500errors;
-    $result = mysqli_query_with_prepare_and_exit_on_error("SELECT P.bio FROM Participants P WHERE P.badgeid=?;", "s", array($badgeid));
-    $row = mysqli_fetch_assoc($result);
-    if (!$row) {
-        $message_error = "Error retrieving updated bio";
-        RenderErrorAjax($message_error);
-        exit();
-    }
-    echo json_encode($row);
-    exit();
-}
-
-function convert_bio() {
-    $htmlbio = getString("htmlbio");
-    $bio = html_to_text($htmlbio);
-    $results = [];
-    $results["bio"] = $bio;
-    $results["len"] = mb_strlen($bio);
-    echo json_encode($results);
-}
-
 // start of AJAX dispatch
 if (!isLoggedIn()) {
     $message_error = "You are not logged in or your session has expired.";
@@ -552,12 +530,6 @@ $badgeid = isset($_SESSION['badgeid']) ? $_SESSION['badgeid'] : null;
 switch ($action) {
     case 'update_participant':
         update_participant($badgeid);
-        break;
-    case "fetch_bio":
-        fetch_bio($badgeid);
-        break;
-    case "convert_bio":
-        convert_bio();
         break;
     case 'uploadPhoto':
         uploadphoto($badgeid);

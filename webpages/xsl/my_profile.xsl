@@ -282,10 +282,11 @@
                       </div>
                       <div class="row mt-2">
                         <div class="col-sm-12">
-                          <label for="bio">Plain Text Version (Automatically derived from HTML version on pressing UPDATE):</label>
-                          <textarea rows="5" cols="72" name="bio" id="bioTXTA">
+                          <label for="bio">Plain Text Version (Automatically updates while typing changes or on press of Update button):</label>
+                          <textarea rows="5" cols="72" name="bio" id="bioTXTA" data-max-length="{$maxBioLen}">
+							<xsl:attribute name="class">col-sm-12 userFormTXT readonly mycontrol form-control</xsl:attribute>
                             <xsl:attribute name="readonly">readonly</xsl:attribute>
-                            <xsl:attribute name="class">col-sm-12 userFormTXT readonly</xsl:attribute>
+							<xsl:attribute name="updatealso">true</xsl:attribute>      
                             <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
                           </textarea>
                         </div>
