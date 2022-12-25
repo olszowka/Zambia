@@ -85,7 +85,6 @@ function prevParticipant() {
 }
 
 function chooseParticipant(badgeid, override) {
-    //debugger;
     if (isDirty(override)) {
         saveNewBadgeId = badgeid;
         return;
@@ -264,7 +263,6 @@ function fetchParticipant(badgeid) {
 }
 
 function fetchParticipantCallback(data, textStatus, jqXHR) {
-    //debugger;
     var node = data.firstChild.firstChild.firstChild;
     $("#badgeid").val(node.getAttribute("badgeid"));
     $("#lname_fname").val(node.getAttribute("lastname") + ", " + node.getAttribute("firstname"));
@@ -367,7 +365,6 @@ function hideSearchResults() {
 
 function initializeAdminParticipants() {
     //called when JQuery says AdminParticipants page has loaded
-    //debugger;
     $interested = $("#interested");
     $bio = $("#bio");
     $htmlbio = $("#htmlbio");
@@ -619,7 +616,6 @@ function toggleSearchResultsBUTN() {
 }
 
 function updateBUTTON() {
-    //debugger;
     if (!validateBioCharacterLength()) {
         return;
     }
@@ -756,7 +752,6 @@ function writeSearchResults(data, textStatus, jqXHR) {
 }
 
 function showSurveyBUTTON() {
-    //console.log("In showSurveyBUTTON()");
     if (curbadgeid != '') {
         window.open('StaffViewSurveyResults.php?badgeid=' + curbadgeid, "_blank");
     }
