@@ -24,7 +24,6 @@ if ($fbadgeid) {
             </div>
         </div>
         <div style="margin-top: 0.5em">
-             <!-- onkeypress = "if (event.keyCode === 13) {console.log('event.keycode 13');doSearchPartsBUTN();}"  -->
             <input type="text" id="searchPartsINPUT" />
             <input type="hidden" id="searchPhotoApproval" value=""/>
             <div class="btn-group" role="group" aria-label="search actions">
@@ -312,7 +311,7 @@ if (HTML_BIO === TRUE) {
                 </button>
             </div>
             <div class="col col-auto" id="showsurveydiv" style="display: none;">
-                <button type="button" class="btn btn-info" id="showsurveyBTN" disabled="disabled"                     onclick="showSurveyBUTTON();">Show Survey Responses
+                <button type="button" class="btn btn-info" id="showsurveyBTN" disabled="disabled" onclick="showSurveyBUTTON();">Show Survey Responses
                 </button>
             </div>
         </div>
