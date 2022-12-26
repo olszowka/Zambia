@@ -1,10 +1,22 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Interest v Schedule - sorted by track, then title';
 $report['description'] = 'Show who is interested in each panel and if they are assigned to it. Also show the scheduling information';
 $report['categories'] = array(
     'Programming Reports' => 610,
+);
+$report['columns'] = array(
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array("orderData" => 9),
+    array("visible" => false)
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
@@ -19,7 +31,8 @@ SELECT
         IF(moderator IS NULL OR moderator=0,0,1) AS moderator,
         Y.roomid,
         Y.roomname,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',Y.starttime),'%a %l:%i %p') AS startTime
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',Y.starttime),'%a %l:%i %p') AS startTime,
+        ADDTIME('$ConStartDatim$',Y.starttime) AS startTimeSort
     FROM (
         SELECT
                 PI.badgeid,
@@ -29,7 +42,7 @@ SELECT
                 moderator,
                 title,
                 trackname,
-                rank
+                `rank`
             FROM (
                         SELECT
                                 T.trackname,
@@ -37,7 +50,7 @@ SELECT
                                 S.sessionid,
                                 P.badgeid,
                                 P.pubsname,
-                                PSI.rank
+                                PSI.`rank`
                             FROM
                                      Sessions S
                                 JOIN Tracks T USING(trackid)
@@ -69,18 +82,21 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Pubsname</th>
-                        <th class="report">Track Name</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">Rank</th>
-                        <th class="report">Assigned ?</th>
-                        <th class="report">Moderator ?</th>
-                        <th class="report">Room Name</th>
-                        <th class="report">Start Time</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:2.6rem">
+                            <th class="report">Pubsname</th>
+                            <th class="report">Track Name</th>
+                            <th class="report">Session ID</th>
+                            <th class="report">Title</th>
+                            <th class="report">Rank</th>
+                            <th class="report">Assigned ?</th>
+                            <th class="report">Moderator ?</th>
+                            <th class="report">Room Name</th>
+                            <th class="report">Start Time</th>
+                            <th></th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
                 </table>
             </xsl:when>
@@ -123,7 +139,14 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="roomname" select = "@roomname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@startTime" /></td>
+            <td class="report">
+                <xsl:value-of select="@startTime" />
+                <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+            </td>
+            <td class="report">
+                <xsl:value-of select="@startTimeSort" />
+                <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text> 
+            </td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>
