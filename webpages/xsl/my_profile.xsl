@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Peter Olszowka on 2011-07-24;
-	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved.
+	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved.
 	See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -23,6 +23,26 @@
         <xsl:variable name="bestway" select="/doc/query[@queryName='participant_info']/row/@bestway" />
         <xsl:variable name="bioNote" select="/doc/customText/@biography_note" />
         <xsl:variable name="regDataNote" select="/doc/customText/@registration_data" />
+        <div id="confNotAttModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm No Longer Attending</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><xsl:text disable-output-escaping="yes">&amp;times;</xsl:text></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are currently scheduled to participate in sessions at <xsl:value-of select="$conName" /> but
+                            are now changing your status to not attending.  Please confirm.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelNotAtt" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="confNotAtt" class="btn btn-secondary">Confirm Not Attending</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="resultBoxDIV">
             <span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span>
         </div>
@@ -44,6 +64,9 @@
                                 <xsl:if test="not ($participant='1')">
                                     <xsl:attribute name="disabled">disabled</xsl:attribute>
                                 </xsl:if>
+                                <xsl:attribute name="data-schedule-count">
+                                    <xsl:value-of select="/doc/query[@queryName='schedule_count']/row/@scheduleCount"/>
+                                </xsl:attribute>
                                 <option value="0">
                                     <xsl:if test="($interested=0 or not ($interested)) and $participant='1'">
                                         <xsl:attribute name="selected">selected</xsl:attribute>

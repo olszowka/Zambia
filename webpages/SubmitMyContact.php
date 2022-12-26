@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
 $title = "My Profile";
 require('PartCommonCode.php'); // initialize db; check login;
@@ -21,8 +21,10 @@ function update_participant($badgeid) {
     $updateClause = "";
     $query_end = " WHERE badgeid = '$badgeid';";
     if (may_I('Participant')) {
-        $x = getInt('interested', 0);
-        $updateClause .= "interested=$x, ";
+        $x = getInt('interested', -1);
+        if ($x != -1) {
+            $updateClause .= "interested=$x, ";
+        }
     } else {
         $updateClause .= "interested=2, "; // force non participants to not interested
     }

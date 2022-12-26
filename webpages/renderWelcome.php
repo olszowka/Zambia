@@ -6,6 +6,28 @@ $title = "Participant View";
 require_once('PartCommonCode.php');
 populateCustomTextArray(); // title changed above, reload custom text with the proper page title
 participant_header($title, false, 'Normal', true);
+?>
+<div id="confNotAttModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm No Longer Attending</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>You are currently scheduled to participate in sessions at <?php echo CON_NAME; ?> but
+                    are now changing your status to not attending.  Please confirm.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelNotAtt" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                <button type="button" id="confNotAtt" class="btn btn-secondary">Confirm Not Attending</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
 if ($message_error != "") {
     echo "<P class=\"alert alert-error\">$message_error</P>\n";
 }
@@ -39,7 +61,7 @@ if (may_I('postcon')) { ?>
         <div id="update_section">
             <label for="interested" style="margin-right: 5px;">Are you interested?</label>
             <?php $int=$participant_array['interested']; ?>
-            <select id="interested" name="interested">
+            <select id="interested" name="interested" data-schedule-count="<?php echo $participant_array['scheduleCount'];?>">
                 <option value=0 <?php if ($int==0) {echo "selected=\"selected\"";} ?> >&nbsp;</option>
                 <option value=1 <?php if ($int==1) {echo "selected=\"selected\"";} ?> >Yes</option>
                 <option value=2 <?php if ($int==2) {echo "selected=\"selected\"";} ?> >No</option>

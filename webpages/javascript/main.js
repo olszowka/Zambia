@@ -1,4 +1,4 @@
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 document.addEventListener( "DOMContentLoaded", function () {
     //this function is run whenever any page finishes loading if JQuery has been loaded
     //debugger;
@@ -48,7 +48,10 @@ document.addEventListener( "DOMContentLoaded", function () {
 			break;
 		case "Import Reg User":
 			initializeImportRegUser();
-			break
+			break;
+		case "Participant View":
+			ParticipantView.initialize();
+			break;
 		default:
 			window.status="Ready.";
 		/**

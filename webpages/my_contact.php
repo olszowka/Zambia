@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $participant, $message, $message_error, $message2, $congoinfo, $title;
 $title="My Profile";
 require ('PartCommonCode.php'); // initialize db; check login;
@@ -18,6 +18,7 @@ SELECT
 EOD;
 $param_array["participant_info"] = array($badgeid);
 $type_array["participant_info"] = "s";
+
 $queryArray["credentials"] = <<<EOD
 SELECT
 		CR.credentialid, CR.credentialname, CR.display_order, PHC.badgeid
@@ -28,6 +29,18 @@ SELECT
 EOD;
 $param_array["credentials"] = array($badgeid);
 $type_array["credentials"] = "s";
+
+$queryArray["schedule_count"] = <<<EOD
+SELECT
+        COUNT(*) AS `scheduleCount`
+    FROM
+             ParticipantOnSession POS
+        JOIN Schedule SCH USING (sessionid)
+    WHERE
+        POS.badgeid = ?;
+EOD;
+$param_array["schedule_count"] = array($badgeid);
+$type_array["schedule_count"] = "s";
 
 if (($resultXML=mysql_prepare_query_XML($queryArray, $type_array, $param_array))===false) {
 	RenderError($message_error);
