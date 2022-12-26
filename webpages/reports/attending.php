@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Attending Query (all info)';
 $report['description'] = 'Shows who (of program participants only) has responded and if they are attending.';
@@ -10,18 +10,20 @@ $report['columns'] = array(
     null,
     null,
     null,
+    null,
     null
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        CD.firstname, CD.lastname, P.pubsname, P.badgeid, P.interested
+        CD.firstname, CD.lastname, P.pubsname, P.badgeid, P.interested, PR.permrolename
 	FROM
 	         Participants P
 	    JOIN CongoDump CD USING (badgeid)
         JOIN UserHasPermissionRole UHPR USING (badgeid)
+        JOIN PermissionRoles PR USING (permroleid)
     WHERE
-        UHPR.permroleid = 3 ## Program Participant
+        UHPR.permroleid IN (3,4) ## Potential and Confirmed Program Participants
     ORDER BY
         P.pubsname;
 EOD;
@@ -40,6 +42,7 @@ $report['xsl'] =<<<'EOD'
                             <th class="report">Pubs Name</th>
                             <th class="report">Badge Id</th>
                             <th class="report"><xsl:text disable-output-escaping="yes">Interested &amp;amp; Attending</xsl:text></th>
+                            <th class="report">Permission Role</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='participants']/row"/>
@@ -64,6 +67,7 @@ $report['xsl'] =<<<'EOD'
                     <xsl:when test="@interested='2'">No</xsl:when>
                     <xsl:otherwise>Didn't log in</xsl:otherwise>
                 </xsl:choose>
+            <td class="report"><xsl:value-of select="@permrolename"/></td>
             </td>
         </tr>
     </xsl:template>
