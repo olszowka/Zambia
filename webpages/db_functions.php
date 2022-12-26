@@ -955,7 +955,7 @@ function isLoggedIn() {
 //
 function retrieveParticipant($badgeid) {
     global $message_error;
-    if (empty($message_error)) {
+    if (!isset($message_error)) {
         $message_error = "";
     }
     $query = <<<EOD
@@ -964,10 +964,10 @@ SELECT
     FROM
         Participants
     WHERE
-        badgeid='$badgeid';
+        badgeid = ?;
 EOD;
-    if (!$result = mysqli_query_with_error_handling($query)) {
-        return false;
+    if (!$result = mysqli_query_with_prepare_and_error_handling($query, 's', array($badgeid), true, true)) {
+        exit(); // should have exited already
     }
     $rows = mysqli_num_rows($result);
     if ($rows != 1) {
@@ -984,7 +984,7 @@ EOD;
 // to return combined results
 function retrieveFullParticipant($badgeid) {
     global $message_error;
-    if (empty($message_error)) {
+    if (!isset($message_error)) {
         $message_error = "";
     }
     $query = <<<EOD
@@ -1004,10 +1004,10 @@ SELECT
     FROM
         CongoDump
     WHERE
-        badgeid = '$badgeid';
+        badgeid = ?;
 EOD;
-    if (!$result = mysqli_query_with_error_handling($query)) {
-        return false;
+    if (!$result = mysqli_query_with_prepare_and_error_handling($query, 's', array($badgeid), true, true)) {
+        exit(); // should have exited already
     };
     $rows = mysqli_num_rows($result);
     if ($rows != 1) {
@@ -1023,6 +1023,25 @@ EOD;
         $participant_array["chpw"] = password_verify(DEFAULT_USER_PASSWORD, $participant_array["password"]);
     }
     $participant_array["password"] = "";
+    $participant_array = array_merge($participant_array, mysqli_fetch_array($result, MYSQLI_ASSOC));
+    mysqli_free_result($result);
+    $query = <<<EOD
+SELECT
+        COUNT(*) AS `scheduleCount`
+    FROM
+             ParticipantOnSession POS
+        JOIN Schedule SCH USING (sessionid)
+    WHERE
+        POS.badgeid = ?;
+EOD;
+    if (!$result = mysqli_query_with_prepare_and_error_handling($query, 's', array($badgeid), true, true)) {
+        exit(); // should have exited already
+    };
+    $rows = mysqli_num_rows($result);
+    if ($rows != 1) {
+        $message_error = "$rows rows returned for badgeid: $badgeid when 1 expected. $message_error";
+        return false;
+    };
     $participant_array = array_merge($participant_array, mysqli_fetch_array($result, MYSQLI_ASSOC));
     mysqli_free_result($result);
     return $participant_array;

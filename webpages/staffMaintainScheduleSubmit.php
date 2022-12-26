@@ -667,6 +667,7 @@ function retrieveSessions() {
     $sessionId = getInt("sessionId");
     $title = mysqli_real_escape_string($linki, getString("title"));
     $tagmatch = getString("tagmatch");
+    $personsAssigned = getInt('personsAssigned', 0);
     $query["sessions"] = <<<EOD
 SELECT
         S.sessionid, S.title, S.progguiddesc, TR.trackname, TY.typename, D.divisionname,

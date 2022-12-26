@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrap4 = false) {
     if ($bootstrap4) { ?>
     <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
@@ -108,6 +108,9 @@ function load_internal_javascript($title, $isDataTables = false) {
             break;
         case "Import Reg User":
             echo "<script src=\"javascript/BalticonImportRegUser.js\"></script>\n";
+            break;
+        case "Participant View":
+            echo "<script src=\"javascript/ParticipantView.js\"></script>\n";
             break;
         default:
             if ($isDataTables) {
