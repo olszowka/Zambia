@@ -153,12 +153,24 @@ th.report {
   padding-right: 0.2em;
   padding-left: 0.2em;
 }
-div.reportPageContent table td,
+div.reportPageContent table td {
+  border: 1px solid #000000;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
 td.report {
   border: 1px solid #000000;
   vertical-align: top;
   padding-left: 0.2em;
   padding-right: 0.2em;
+}
+td.report.report-spacious {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+td.report.report-align-right {
+  text-align: right;
 }
 div.reportPageContent table td a,
 .report A {
@@ -449,10 +461,6 @@ table.multcol-list td {
 .error-container {
   line-height: 2;
 }
-.hidden {
-  display: none !important;
-  visibility: hidden !important;
-}
 .roles-list-container {
   column-count: 3;
   max-width: 70rem;
@@ -648,4 +656,14 @@ table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
 .za-table-striped tbody > tr:nth-child(odd) > td,
 .za-table-striped tbody > tr:nth-child(odd) > th {
   background-color: #c9c9c9;
+}
+.input-error-message {
+  display: none;
+}
+.input-container.field-error .input-error-message {
+  display: initial;
+  color: #d05b5e;
+}
+.input-container.field-error textarea {
+  border: 2px solid #d05b5e;
 }
