@@ -136,7 +136,7 @@
                       <xsl:text>1</xsl:text>
                     </xsl:attribute>
                   </xsl:if>
-                  <xsl:value-of select="@prompt"/>
+                  <xsl:value-of select="@prompt" disable-output-escaping="yes"/>
                   <xsl:if test="@required = 1">
                     <span style="color: #990012; font-weight: bold; font-size: 125%;">
                       <xsl:text>*</xsl:text>
