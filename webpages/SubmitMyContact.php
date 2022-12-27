@@ -154,11 +154,11 @@ EOD;
         exit();
     }
     if ($rows == 0) {   // no record existed with old values, add one
-         $query = <<<EOD
+        $query = <<<EOD
 INSERT INTO CongoDumpHistory
     (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 SECOND), CURRENT_TIMESTAMP, ?
         FROM
             CongoDump
         WHERE
