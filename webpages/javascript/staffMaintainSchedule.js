@@ -989,9 +989,10 @@ function StaffMaintainSchedule() {
 
 	this.retrieveSessionsCallback = function retrieveSessionsCallback(responseData, returnString, jqXHR) {
 		var $sessionsToBeScheduled = $("#sessions-to-be-scheduled-container");
-		var $noSessionsFoundMSG = $("#noSessionsFoundMSG");
+		var $noSessionsFoundMSG = document.getElementById("noSessionsFoundMSG");
 		if (responseData === "noNewSessionsFound") {
-			$noSessionsFoundMSG.show();
+			$noSessionsFoundMSG.classList.remove('hidden');
+			$noSessionsFoundMSG.scrollIntoView(false); // align bottom
 			return true;
 		}
 		if ($sessionsToBeScheduled.find("[id^='sessionBlockDIV_']").length > 0) {
@@ -1014,7 +1015,7 @@ function StaffMaintainSchedule() {
 		$sessionsToBeScheduled.find("[id^='sessionBlockDIV_']").each(function () {
 			sessionMasterArray.push($(this).attr("id").substring(16, 999));
 		});
-		$noSessionsFoundMSG.hide();
+		$noSessionsFoundMSG.classList.add('hidden');
 		// make all the ? (info) icons on the session blocks work
 		$getSessionInfoP.on("click", staffMaintainSchedule.onClickInfo);
 		$getSessionInfoP.addClass("getSessionInfo");
