@@ -684,13 +684,13 @@ SELECT
             SELECT * FROM Schedule SCH WHERE S.sessionid = SCH.sessionid
         )
 EOD;
-    if ($trackId !== false) {
+    if ($trackId !== 0) {
         $query["sessions"] .= " AND S.trackid = $trackId";
     }
-    if ($typeId !== false) {
+    if ($typeId !== 0) {
         $query["sessions"] .= " AND S.typeid = $typeId";
     }
-    if ($divisionId !== false) {
+    if ($divisionId !== 0) {
         $query["sessions"] .= " AND S.divisionid = $divisionId";
     }
     if ($sessionId !== false) {
