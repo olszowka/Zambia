@@ -88,7 +88,8 @@ EOD;
     }
     echo "<table class=\"schedulerGrid\">\n";
     echo "<tr>";
-    echo $htmlTimesArray[0]["html"];
+//    echo $htmlTimesArray[0]["html"];
+    echo "<th>Time</th>";
     echo $roomsHtml;
     echo "</tr>\n";
     for ($i = 1; $i < count($htmlTimesArray); $i++) {
