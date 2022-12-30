@@ -111,7 +111,7 @@ staff_header($title);
 			</div>
 		</div>
 	</div>
-	<div id="scheduleGridContainer" class="flex-column-remainder" style="margin: 2px 2px 2px 1px; border: 1px solid black">
+	<div id="scheduleGridContainer" class="flex-column-remainder">
 		<!--<div class = "fullBlockContainer" style="margin: 2px; overflow:auto">&nbsp;</div>-->
 	</div>
 </div>
