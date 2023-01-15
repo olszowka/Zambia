@@ -403,21 +403,33 @@ function initializeAdminParticipants() {
     $toggleSearchResultsBUTN.click(toggleSearchResultsBUTN);
     $toggleSearchResultsBUTN.prop("disabled", true).prop("hidden", true);
     resultsHidden = true;
-    $("#searchPartsBUTN").on('click', doSearchPartsBUTN);
+    document.getElementById('searchPartsBUTN').addEventListener('click', doSearchPartsBUTN);
     $("#searchResultsDIV").html("").hide('fast');
     if (fbadgeid) { // signal from page initializer that page was requested to
         // to be preloaded with a participant
         fetchParticipant(fbadgeid);
     }
     $("#adminParticipantsForm").on("input", ".mycontrol", processChange);
+    document.getElementById('adminParticipantsForm').addEventListener('submit', onSubmit);
+    document.getElementById('searchPartsINPUT').addEventListener('keydown', searchKeypr);
     $prevBTN = document.getElementById("prevSearchResultBUTN");
     $nextBTN = document.getElementById("nextSearchResultBUTN");
     max_bio_len = $bio.data("maxLength");
 }
 
+function searchKeypr(event) {
+    if (event.code === "Enter") {
+        doSearchPartsBUTN();
+    }
+}
+
 function loadNewParticipant() {
     chooseParticipant(saveNewBadgeId, true);
     return true;
+}
+
+function onSubmit(event) {
+    event.preventDefault();
 }
 
 function processChange() {
@@ -720,7 +732,7 @@ function writeSearchResults(data, textStatus, jqXHR) {
     } catch (error) {
         console.log(error);
     }
-    console.log(data_json);
+    //console.log(data_json);
  
     $("#searchResultsDIV").html(data_json["HTML"]).show('fast');
     $('#searchPartsBUTN').button('reset');
