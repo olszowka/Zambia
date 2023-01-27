@@ -1,6 +1,6 @@
 <?php
-// Copyright (c) 2018-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message_error, $title;
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $message_error, $title, $report;
 $title = "Run Report";
 require_once('StaffCommonCode.php');
 $reportName = getString("reportName");
