@@ -1,11 +1,15 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function render_query_result_as_csv($result) {
+    global $report;
     while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
         $betweenValues = false;
-        foreach ($row as $value) {
+        foreach ($row as $index => $value) {
             if ($betweenValues) {
                 echo ",";
+            }
+            if (isset($report['map_functions'][$index]) && is_callable($report['map_functions'][$index])) {
+                $value = $report['map_functions'][$index]($value);
             }
             if (strpos($value, "\"") !== false) {
                 $value = str_replace("\"", "\"\"", $value);
