@@ -298,6 +298,16 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         </div>
 <?php
     }
+    if (RECORDING_LINK === TRUE) {
+        ?>
+        <div class="row-fluid vert-sep vert-sep-above">
+            <div class="control-group">
+                <label class="control-label" for="rlink">Recording Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="rlink" id="rlink" value="<?php echo htmlspecialchars($session["rlink"],ENT_COMPAT);?>" />
+            </div>
+        </div>
+        <?php
+    }
 ?>
                 <div id="buttonBox" class="clearfix">
                     <div class="pull-right">
