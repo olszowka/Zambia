@@ -214,10 +214,16 @@ function get_session_from_post() {
     $session["servnotes"] = getString('servnotes');
     $session["status"] = getInt('status');
     $session["notesforprog"] = getString('notesforprog');
-    if (MEETING_LINK === TRUE)
+    if (MEETING_LINK === TRUE) {
         $session["mlink"] = getString('mlink');
-    else
+    } else {
         $session["mlink"] = "";
+    }
+    if (RECORDING_LINK === TRUE) {
+        $session["rlink"] = getString('rlink');
+    } else {
+        $session["rlink"] = "";
+    }
 }
 
 // Function set_session_defaults()
@@ -255,6 +261,7 @@ function set_session_defaults() {
     $session["notesforprog"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
     $session["mlink"] = "";
+    $session["rlink"] = "";
 }
 
 // Function set_brainstorm_session_defaults

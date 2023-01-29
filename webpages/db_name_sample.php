@@ -73,7 +73,8 @@ define("REG_PART_PREFIX", "");
 // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
-define("MEETING_LINK", TRUE); // Add support for Meetinglink in sessions
+define("MEETING_LINK", TRUE); // Add support for Meeting Link in sessions
+define("RECORDING_LINK", TRUE); // Add support for Recording Link in sessions
 // Items for Photo Upload/Approval
 define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
 define("PHOTO_UPLOAD_DIRECTORY", "../upload_photos");  // outside of web server path, only served by PHP
