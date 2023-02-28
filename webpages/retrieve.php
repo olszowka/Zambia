@@ -18,7 +18,7 @@ SELECT
 		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
 		R.roomname,
 		SS.statusname,
-        GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        TAG_SQ.taglist
 	FROM 
                   Sessions S
              JOIN Tracks TR USING (trackid)
@@ -26,8 +26,16 @@ SELECT
              JOIN SessionStatuses SS USING (statusid)
         LEFT JOIN Schedule SCH USING (sessionid)
         LEFT JOIN Rooms R USING (roomid)
-        LEFT JOIN SessionHasTag SHT USING (sessionid)
-        LEFT JOIN Tags TA USING (tagid)
+        LEFT JOIN (
+            SELECT
+                    S2.sessionid, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+                FROM
+                              Sessions S2
+                    LEFT JOIN SessionHasTag SHT USING (sessionid)
+                    LEFT JOIN Tags TA USING (tagid)
+                GROUP BY
+                    S2.sessionid
+            ) AS TAG_SQ USING (sessionid)
 	WHERE 
 		1 = 1
 EOB;
@@ -81,7 +89,6 @@ EOB;
         }
     }
     $query .= "\n";
-    $query .= "GROUP BY S.sessionid\n";
     return(mysqli_query_exit_on_error($query));
 }
 
