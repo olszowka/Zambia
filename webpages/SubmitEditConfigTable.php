@@ -48,7 +48,7 @@ function update_table($tablename) {
 
     //error_log("\n\nin update table:\n");
     //error_log("string loaded: " . getString("tabledata"));
-    $rows = json_decode(base64_decode(getString("tabledata")));
+    $rows = json_decode(getString("tabledata"));
     $tablename = getString("tablename");
 
     if (!may_I("ce_$tablename")) {
