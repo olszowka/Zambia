@@ -222,13 +222,16 @@ function opentable(tabledata) {
             selectlistname = column.COLUMN_NAME + "_select";
             editor_type = 'select';
             selectlist = new Array();
-            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) { selectlist[entry.id] = entry.name; });
-            editor_params = { values: selectlist };
+            editorlist = new Array();
+            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) {
+                selectlist[entry.id] = entry.name;
+                editorlist.push( { label: entry.name,  value: entry.id } );
+            });
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
                 visible: true,
                 editor: editor_type,
-                editorParams: editor_params,
+                editorParams: editorlist,
                 formatter: "lookup",
                 formatterParams: selectlist,
                 minWidth: 200
@@ -346,7 +349,7 @@ function saveComplete(data, textStatus, jqXHR) {
         } else {
             el.class = "alert alert-success mt-4";
         }
-        el.innerHTML = fetch_json.message;;
+        el.innerHTML = fetch_json.message;
         el.style.display = 'block';
     }
 

@@ -1,5 +1,16 @@
+﻿/.vs
 /db_name.php
 /ZambiaPrimaryRepo.iml
 /webpages/ReportMenuBS4Include.php
 /webpages/ReportMenuInclude.php
 /webpages/staffReportsInCategoryInclude.php
+/webpages/.vs
+/crons
+*.swp
+*.sav
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/php.xml
+/.idea/vcs.xml
+/.idea/Zambia.iml
+/.idea/dataSources.xml
