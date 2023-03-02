@@ -67,7 +67,14 @@ function may_edit_table($tablename) {
 function update_table($tablename) {
     global $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
 
-    $rows = json_decode(base64_decode(getString("tabledata")));
+    if (!isLoggedIn() ||  !may_I("Administrator")) {
+        fetch_table("No Permission to run Configuration Table Editor", "");
+        return;
+    }
+
+    //error_log("\n\nin update table:\n");
+    //error_log("string loaded: " . getString("tabledata"));
+    $rows = json_decode(getString("tabledata"));
     $tablename = getString("tablename");
     if (!may_edit_table($tablename)) {
         exit(0);
