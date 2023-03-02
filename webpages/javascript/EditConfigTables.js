@@ -3,7 +3,6 @@
 var table = null;
 var tablename = '';
 var message = "";
-var previewmce = false;
 var indexcol = 'display_order';
 var selectlist = null;
 var newid = -99;
@@ -166,7 +165,7 @@ function tceEditor(e, cell) {
     document.getElementById("submitbtn").disabled = true; 
     document.getElementById("undo").disabled = true;
     document.getElementById("redo").disabled = true;
-};
+}
 
 function deleteicon(cell, formattParams, onRendered) {
     var value = cell.getValue();
@@ -217,13 +216,16 @@ function opentable(tabledata) {
             selectlistname = column.COLUMN_NAME + "_select";
             editor_type = 'select';
             selectlist = new Array();
-            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) { selectlist[entry.id] = entry.name; });
-            editor_params = { values: selectlist };
+            editorlist = new Array();
+            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) {
+                selectlist[entry.id] = entry.name;
+                editorlist.push( { label: entry.name,  value: entry.id } );
+            });
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
                 visible: true,
                 editor: editor_type,
-                editorParams: editor_params,
+                editorParams: editorlist,
                 formatter: "lookup",
                 formatterParams: selectlist,
                 minWidth: 200
@@ -298,7 +300,7 @@ function opentable(tabledata) {
     //console.log("Setting up options in table");
     document.getElementById("submitbtn").innerHTML = "Save";
     table.clearHistory();
-};
+}
 
 function saveComplete(data, textStatus, jqXHR) {
     message = "";
@@ -334,7 +336,7 @@ function saveComplete(data, textStatus, jqXHR) {
         } else {
             el.class = "alert alert-success mt-4";
         }
-        el.innerHTML = fetch_json.message;;
+        el.innerHTML = fetch_json.message;
         el.style.display = 'block';
     }
 
@@ -355,7 +357,7 @@ function saveComplete(data, textStatus, jqXHR) {
     dirty = false;
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
-};
+}
 
 function SaveTable() {
     document.getElementById("saving_div").style.display = "block";
@@ -375,7 +377,7 @@ function SaveTable() {
         success: saveComplete,
         type: "POST"
     }); 
-};
+}
 
 function FetchTable() {
     var postdata = {
@@ -389,7 +391,7 @@ function FetchTable() {
         success: saveComplete,
         type: "POST"
     });
-};
+}
 
 function Undo() {
     table.undo();
@@ -403,7 +405,7 @@ function Undo() {
     if (redoCount > 0) {
         document.getElementById("redo").disabled = false;
     }
-};
+}
 
 function Redo() {
     table.redo();
@@ -417,4 +419,4 @@ function Redo() {
     if (redoCount <= 0) {
         document.getElementById("redo").disabled = true;
     }
-};
+}
