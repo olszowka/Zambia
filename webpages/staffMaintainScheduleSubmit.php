@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
@@ -666,7 +666,7 @@ function retrieveSessions() {
     $typeId = getInt("typeId");
     $divisionId = getInt("divisionId");
     $sessionId = getInt("sessionId");
-    $title = mysqli_real_escape_string($linki, getString("title"));
+    $title = mysqli_real_escape_string($linki, mb_strtolower(getString("title")));
     $tagmatch = getString("tagmatch");
     $personsAssigned = getInt('personsAssigned', 0);
     $query["sessions"] = <<<EOD
@@ -698,7 +698,7 @@ EOD;
         $query["sessions"] .= " AND S.sessionid = $sessionId";
     }
     if ($title !== "") {
-        $query["sessions"] .= " AND S.title LIKE '%$title%'";
+        $query["sessions"] .= " AND LOWER(S.title) LIKE '%$title%'";
     }
     if (count($currSessionIdArray) > 0) {
         $currSessionIdList = implode(",", $currSessionIdArray);
@@ -714,13 +714,14 @@ EOD;
             $query["sessions"] .= " AND EXISTS (SELECT * FROM SessionHasTag WHERE sessionid = S.sessionid AND tagid IN ($tagidList))";
         }
     }
+    if ($personsAssigned === 1) {
+        $query["sessions"] .= " AND EXISTS (SELECT * FROM ParticipantOnSession WHERE sessionid = S.sessionid)";
+    }
     $resultXML = mysql_query_XML($query);
     if (!$resultXML) {
         RenderErrorAjax($message_error);
         exit();
     }
-    //echo($resultXML->saveXML());
-    //exit();
     $xpath = new DOMXpath($resultXML);
     $numRows = $xpath->evaluate("count(/doc/query/row)");
     // signal found no new sessions
