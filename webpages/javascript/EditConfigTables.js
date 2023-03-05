@@ -1,5 +1,5 @@
 // Created by Syd Weinstein on 2021-01-04;
-// Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 var table = null;
 var tablename = '';
 var message = "";
@@ -213,13 +213,19 @@ function opentable(tabledata) {
             selectlistname = column.COLUMN_NAME + "_select";
             editor_type = 'select';
             selectlist = [];
-            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) { selectlist[entry.id] = entry.name; });
-            editor_params = { values: selectlist };
+            editorlist = [];
+            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) {
+                selectlist[entry.id] = entry.name;
+                editorlist.push({
+                    label: entry.name,
+                    value: entry.id
+                });
+            });
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
                 visible: true,
                 editor: editor_type,
-                editorParams: editor_params,
+                editorParams: editorlist,
                 formatter: "lookup",
                 formatterParams: selectlist,
                 minWidth: 200
@@ -363,7 +369,7 @@ function SaveTable() {
     // table.getData() provides data in the order it was loaded, not order it is currently displayed.
     var postdata = {
         ajax_request_action: "updatetable",
-        tabledata: btoa(JSON.stringify(table.getData())),
+        tabledata: JSON.stringify(table.getData()),
         tablename: tablename,
         indexcol: indexcol
     };
@@ -434,4 +440,3 @@ function showAjaxError(data, textStatus, jqXHR) {
     $mesageDIV.classList.add('alert-danger');
     window.scrollTo(0, 0);
 }
-
