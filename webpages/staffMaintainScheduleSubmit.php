@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
@@ -665,7 +665,7 @@ function retrieveSessions() {
     $typeId = getInt("typeId");
     $divisionId = getInt("divisionId");
     $sessionId = getInt("sessionId");
-    $title = mysqli_real_escape_string($linki, getString("title"));
+    $title = mysqli_real_escape_string($linki, mb_strtolower(getString("title")));
     $tagmatch = getString("tagmatch");
     $query["sessions"] = <<<EOD
 SELECT
@@ -683,20 +683,20 @@ SELECT
             SELECT * FROM Schedule SCH WHERE S.sessionid = SCH.sessionid
         )
 EOD;
-    if ($trackId !== false) {
+    if ($trackId !== 0) {
         $query["sessions"] .= " AND S.trackid = $trackId";
     }
-    if ($typeId !== false) {
+    if ($typeId !== 0) {
         $query["sessions"] .= " AND S.typeid = $typeId";
     }
-    if ($divisionId !== false) {
+    if ($divisionId !== 0) {
         $query["sessions"] .= " AND S.divisionid = $divisionId";
     }
     if ($sessionId !== false) {
         $query["sessions"] .= " AND S.sessionid = $sessionId";
     }
     if ($title !== "") {
-        $query["sessions"] .= " AND S.title LIKE '%$title%'";
+        $query["sessions"] .= " AND LOWER(S.title) LIKE '%$title%'";
     }
     if (count($currSessionIdArray) > 0) {
         $currSessionIdList = implode(",", $currSessionIdArray);

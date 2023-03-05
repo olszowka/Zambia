@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
@@ -19,15 +19,9 @@ function fetch_schema($tablename) {
         //error_log("table = " . $tablename);
         // json of schema and table contents
         $query=<<<EOD
-SELECT
-        COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY, EXTRA
-    FROM
-        INFORMATION_SCHEMA.COLUMNS
-    WHERE
-            TABLE_SCHEMA = '$db'
-        AND TABLE_NAME = '$tablename'
-    ORDER BY
-        ORDINAL_POSITION;
+            SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH,  COLUMN_KEY, EXTRA FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = '$db' and TABLE_NAME = '$tablename'
+            ORDER BY ORDINAL_POSITION;
 EOD;
         $result = mysqli_query_exit_on_error($query);
         $schema = array();
@@ -59,7 +53,7 @@ function update_table($tablename) {
         exit();
     }
 
-    $rows = json_decode(base64_decode(getString("tabledata")));
+    $rows = json_decode(getString("tabledata"));
     // $json_return['debug'] = print_r($rows, true);
     $tablename = getString("tablename");
 
@@ -70,9 +64,11 @@ function update_table($tablename) {
     $idsFound = "";
     $display_order = 10;
     foreach ($rows as $row) {
-        if ($row->display_order >= 0) {
-            $row->display_order = $display_order;
-            $display_order = $display_order + 10;
+        if (property_exists($row, 'display_order')) {
+            if ($row->display_order >= 0) {
+                $row->display_order = $display_order;
+                $display_order = $display_order + 10;
+            }
         }
         $id = (int) $row->$indexcol;
         if ($id) {
@@ -115,9 +111,9 @@ function update_table($tablename) {
         $sql = substr($sql, 0, -1) . ");";
 
         foreach ($rows as $row) {
-            $paramarray = array();
             $id = (int) $row->$indexcol;
             if ($id < 0) {
+                $paramarray = array();
                 foreach($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
                         $name = $col['COLUMN_NAME'];
