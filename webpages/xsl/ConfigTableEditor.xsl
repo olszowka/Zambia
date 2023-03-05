@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Syd Weinstein on 2021-01-04;
-	Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+	Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:param name="UpdateMessage" select="''"/>
@@ -110,7 +110,7 @@
             <div class="mt-4">
                 <h1 style="text-align: center;">Configuration Table Editor</h1>
                 <ul class="nav nav-tabs">
-                    <li class="nav-item">
+                    <li class="nav-item ml-3">
                         <a href="#overview" class="nav-link active" data-toggle="tab" id="overview-top">Overview</a>
                     </li>
                     <xsl:if test="$editAnyParticipant">
@@ -176,7 +176,7 @@
                         <div class="tab-pane fade show mt-4" id="part">
                             <h2>Participant Configuration Tables</h2>
                             <ul class="nav nav-tabs">
-                                <li class="nav-item">
+                                <li class="nav-item ml-3">
                                     <a href="#partdesc" class="nav-link active" data-toggle="tab" id="part-overview">
                                         Participant Configuration Tables
                                     </a>
@@ -265,7 +265,7 @@
                         <div class="tab-pane mt-4 fade" id="session">
                             <h2>Session Configuration Tables</h2>
                             <ul class="nav nav-tabs">
-                                <li class="nav-item">
+                                <li class="nav-item ml-3">
                                     <a href="#sessiondesc" class="nav-link active" data-toggle="tab">Session
                                         Configuration
                                         Tables
@@ -395,7 +395,7 @@
                         <div class="tab-pane mt-4 fade" id="facility">
                             <h2>Facility Configuration Tables</h2>
                             <ul class="nav nav-tabs">
-                                <li class="nav-item">
+                                <li class="nav-item ml-3">
                                     <a href="#facilitydesc" class="nav-link active" data-toggle="tab">Facility Configuration
                                         Tables
                                     </a>
@@ -484,7 +484,7 @@
                         <div class="tab-pane mt-4 fade" id="emails">
                             <h2>Email Configuration Tables</h2>
                             <ul class="nav nav-tabs">
-                                <li class="nav-item">
+                                <li class="nav-item ml-3">
                                     <a href="#emaildesc" class="nav-link active" data-toggle="tab">Email Configuration
                                         Tables
                                     </a>
@@ -545,7 +545,7 @@
                         <div class="tab-pane mt-4 fade" id="misc">
                             <h2>Miscellaneous Tables</h2>
                             <ul class="nav nav-tabs">
-                                <li class="nav-item">
+                                <li class="nav-item ml-3">
                                     <a href="#miscdesc" class="nav-link active" data-toggle="tab">Miscellaneous
                                         Configuration Tables
                                     </a>

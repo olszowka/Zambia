@@ -1,4 +1,4 @@
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 document.addEventListener( "DOMContentLoaded", function () {
     //this function is run whenever any page finishes loading if JQuery has been loaded
     //debugger;
@@ -21,8 +21,10 @@ document.addEventListener( "DOMContentLoaded", function () {
 			break;
 		case "Edit Custom Text":
 			editCustomText.initialize();
+			break;
 		case "Edit Configuration Tables":
 			editConfigTable.initialize();
+			break;
 		default:
 			window.status="Ready.";
 		/**

@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
 	$startTimeUnits = $startTimeHour * 2;
 	if ($startTimeMin >= 30) {
@@ -74,6 +74,24 @@ function getInt($name, $default = false) {
         return $default;
     }
     $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
+    if (mb_strlen($t) == 0) {
+        return $default;
+    } else {
+        return(intval($t));
+    }
+}
+
+// Function getIntFromData("name", "data", default)
+// gets a parameter from $data[] of name
+// and confirms it is an integer.
+// Safe from referencing nonexisting array index
+function getIntFromData($name, $data, $default = false) {
+    if (array_key_exists($name, $data)) {
+        $int = $data[$name];
+    } else {
+        return $default;
+    }
+    $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
     if (empty($t) && $t !== 0) {
         return $default;
     } else {
@@ -96,6 +114,38 @@ function getArrayOfInts($name, $default = false) {
     $retVal = array();
     if ($intArr === "null") {
         return $retVal;
+    }
+    if (gettype($intArr) === "string") {
+        $intArr = array($intArr);
+    }
+    forEach ($intArr as $int) {
+        if (!empty($t = filter_var($int, FILTER_SANITIZE_NUMBER_INT))) {
+            $retVal[] = $t;
+        }
+    }
+    if (count($retVal) == 0) {
+        return $default;
+    } else {
+        return $retVal;
+    }
+}
+
+// Function getArrayOfIntsFromData("name", data, default)
+// gets a parameter from $data[] of name
+// and confirms it is an integer.
+// Safe from referencing nonexisting array index
+function getArrayOfIntsFromData($name, $data, $default = false) {
+    if (array_key_exists($name, $data)) {
+        $intArr = $data[$name];
+    } else {
+        return $default;
+    }
+    $retVal = array();
+    if ($intArr === "null") {
+        return $retVal;
+    }
+    if (gettype($intArr) === "string") {
+        $intArr = array($intArr);
     }
     forEach ($intArr as $int) {
         if (!empty($t = filter_var($int, FILTER_SANITIZE_NUMBER_INT))) {
@@ -122,6 +172,17 @@ function getString($name) {
         return NULL;
     }
     return stripslashes($string);
+}
+
+// Function getStringFromData("name", $data)
+// gets a parameter from $data[] of name
+// Safe from referencing nonexisting array index
+function getStringFromData($name, $data) {
+    if (array_key_exists($name, $data)) {
+        return $data[$name];
+    } else {
+        return NULL;
+    }
 }
 
 // Function getArrayOfStrings("name")
@@ -508,7 +569,7 @@ function ArrayToXML($queryname, $array, $xml = null) {
 function ObjecttoXML($queryname, $object, $xml = null) {
     // Create the XML object if needed, else use the existing doc
     if (is_null($xml)) {
-        error_log("object to xml - creating new xml object");
+        //error_log("object to xml - creating new xml object");
         $xml = new DomDocument("1.0", "UTF-8");
         $doc = $xml -> createElement("doc");
         $doc = $xml -> appendChild($doc);
