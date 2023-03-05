@@ -21,7 +21,7 @@ mysqli_query_exit_on_error($sql);
 
 $sql = <<<EOD
 UPDATE $regdb.perinfo r
-JOIN Participants P ON (P.badgeid = r.id AND r.active='N')
+JOIN Participants P ON (P.badgeid = CAST(r.id AS CHAR) AND r.active='N')
 SET r.active = 'Y'
 WHERE r.active = 'N';
 EOD;
