@@ -8,16 +8,17 @@ participants, and rooms.
 * Comprehensive conflict checking
 * Participants log in to enter availability, provide biography, etc.
 * Reports for various departments such as technical services and hotel liaison
-* Includes interface to KonOpas (https://github.com/eemeli/konopas), a free tool for publishing the schedule to mobile devices
+* Includes interface to KonOpas/ConClár, free tools for publishing the schedule
 
 ## Requirements
-* PHP 7.1 or greater (Tested on 7.2 and 7.4)
+* PHP 8.0 or greater (Tested on 8.0 and 8.1)
   * XSLT library
   * Multibyte library
 * Apache (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
-* MySQL (Tested on 5.6 & 8.0)
+* MySQL (Tested on 5.7 & 8.0)
 * SMTP connection for use as mail relay (only if you want to send email from Zambia)
   * Note, many hosts limit use of their mail relays in ways not compatible with Zambia
+* Google reCAPTCHA account (If you want to allow users to reset their own passwords via email)
 
 ## Built In Dependencies
 These libraries are included in the repo and should just work if you leave as is
@@ -35,8 +36,12 @@ These libraries are included in the repo and should just work if you leave as is
 
 ## Integrations
 Other software which can work with Zambia
-* https://github.com/pselkirk/conguide, a tool for producing a printable pocket program in InDesign from Zambia, including a schedule grid
-* KonOpas (https://github.com/eemeli/konopas), a free tool for publishing the schedule to mobile devices
+* ConClár [(repo)](https://github.com/lostcarpark/conclar) a free tool for publishing the schedule
+* conguide [(repo)](https://github.com/pselkirk/conguide), a tool for producing a printable pocket program in InDesign from Zambia, including a schedule grid
+* KonOpas [(repo)](https://github.com/eemeli/konopas) a non-longer-supported free tool for publishing the schedule
+
+## Installation
+See [Installation](Install/INSTALL)
 
 ## More Information
 Check out the [wiki](https://github.com/olszowka/Zambia/wiki)
