@@ -41,7 +41,7 @@ Other software which can work with Zambia
 * KonOpas [(repo)](https://github.com/eemeli/konopas) a non-longer-supported free tool for publishing the schedule
 
 ## Installation
-See [Installation](Install/INSTALL)
+See [Installation](Install/INSTALL.md)
 
 ## More Information
 Check out the [wiki](https://github.com/olszowka/Zambia/wiki)
