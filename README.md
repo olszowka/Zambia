@@ -38,7 +38,7 @@ These libraries are included in the repo and should just work if you leave as is
 Other software which can work with Zambia
 * ConClár [(repo)](https://github.com/lostcarpark/conclar) a free tool for publishing the schedule
 * conguide [(repo)](https://github.com/pselkirk/conguide), a tool for producing a printable pocket program in InDesign from Zambia, including a schedule grid
-* KonOpas [(repo)](https://github.com/eemeli/konopas) a non-longer-supported free tool for publishing the schedule
+* KonOpas [(repo)](https://github.com/dpmott/konopas) a free tool for publishing the schedule
 
 ## Installation
 See [Installation](Install/INSTALL.md)
