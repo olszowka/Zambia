@@ -247,9 +247,11 @@ function validate_participant_availability() {
             }
         }
     }
-    if (!($partAvail["numkidsfasttrack"] >= 0 and $partAvail["numkidsfasttrack"] <= 8)) {
-        $messages .= "For the number of kids for fastrack, enter a number between 0 and 8.<BR>\n";
-        $flag = false;
+    if (MY_AVAIL_KIDS === TRUE) {
+        if (!($partAvail["numkidsfasttrack"] >= 0 and $partAvail["numkidsfasttrack"] <= 8)) {
+            $messages .= "For the number of kids for fastrack, enter a number between 0 and 8.<BR>\n";
+            $flag = false;
+        }
     }
     for ($i = 1; $i <= AVAILABILITY_ROWS; $i++) {
         if (CON_NUM_DAYS > 1) {
