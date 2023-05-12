@@ -361,7 +361,7 @@ function SaveTable() {
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
     document.getElementById("message").style.display = 'none';
-    console.log(table.getData());
+    //console.log(table.getData());
     var postdata = {
         ajax_request_action: "updatetable",
         tabledata: btoa(JSON.stringify(table.getData())),
