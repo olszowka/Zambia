@@ -116,14 +116,15 @@ function update_table($tablename) {
                 foreach($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
                         $name = $col['COLUMN_NAME'];
-                        $paramarray[] = $row->$name;
+                        // If uploaded data has column property, and it's not an empty string, add to paramarray. Otherwise add a null (null is needed to prevent error inserting non-char fields).
+                        $paramarray[] = (property_exists($row, $name) && trim($row->$name) !== '' ? trim($row->$name) : null);
                     }
                 }
 
                 //error_log("\n\nInsert of '$id' with datatype of '$datatype'");
                 //error_log($sql);
                 //var_error_log($paramarray);
-                $inserted = $inserted + mysql_cmd_with_prepare($sql, $datatype, $paramarray);
+                $inserted += mysql_cmd_with_prepare($sql, $datatype, $paramarray);
             }
         }
     }
@@ -165,7 +166,7 @@ function update_table($tablename) {
             $paramarray[] = $id;
             //error_log("\n\nupdate of '$id' with '$datatype'\n" . $sql);
             //var_error_log($paramarray);
-            $updated = $updated + mysql_cmd_with_prepare($sql, $datatype, $paramarray);
+            $updated += mysql_cmd_with_prepare($sql, $datatype, $paramarray);
         }
     }
 
