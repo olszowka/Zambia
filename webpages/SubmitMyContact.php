@@ -158,7 +158,7 @@ EOD;
 INSERT INTO CongoDumpHistory
     (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 SECOND), CURRENT_TIMESTAMP, ?
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, badgeid, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 SECOND), CURRENT_TIMESTAMP, ?
         FROM
             CongoDump
         WHERE
