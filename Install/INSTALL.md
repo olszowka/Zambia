@@ -16,6 +16,7 @@ You need a server with:
     - version 5.7.X or 8.0.X
     - server property `ONLY_FULL_GROUP_BY` is disabled
 [(notes)](https://github.com/olszowka/Zambia/wiki/MySQL-Issue----ONLY_FULL_GROUP_BY)
+    - should work with corresponding versins of MariaDB, but hasn't been tested
   - a mail relay to accept mail for sending via smtp
        (optional; needed only if you want to send email from Zambia)
 Please test them and make sure they work.  
@@ -24,7 +25,7 @@ You need to decide on:
   - database name          (`zambiademo` is used herein)
   - database user name     (`zambiademo` is used herein)
   - database user password (`4fandom` is used herein)
-  - web install location   (`/home/petero/public_html/zambiademo` is used herein)
+  - web install location   (`/home/petero/zambiademo` is used herein)
 
 ## 1 -  Create a database and a user
 
@@ -74,18 +75,20 @@ use DemoDbase.dump or SampleDbase.dump.
 
 Checking out the html and php code. 
 
-    cd /home/petero/public_html
+    cd /home/petero/
     git clone https://github.com/olszowka/Zambia.git zambiademo
+
+Configure your webserver to serve the `webpages` directory within the repo as the root of your server/domain.
 
 ## 4 - Tweak the configuration to use your database and specify other preferences
 
 You want to copy `db_name_sample.php` to `../db_name.php` and edit it as needed.  In other words, `db_name.php` should be in the parent
-directory of Zambia, a directory which is not served by apache.  The file
+directory of Zambia(webpages), a directory which is not served by apache(or your other web server).  The file
 `db_functions.php` loads this file, so you may edit the location if necessary.
 
 ## 5 -  Check it all out
 
-    http://zambia.dreamhosters.com/~petero/zambiademo 
+    http://zambia.dreamhosters.com/ 
 
 or whatever your URL is... 
 
