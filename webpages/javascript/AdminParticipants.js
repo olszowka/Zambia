@@ -283,6 +283,17 @@ function fetchParticipant(badgeid) {
         error: showAjaxError,
         type: "GET"
     });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_user_perm_roles"
+        }),
+        success: fetchUserPermRolesCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
 }
 
 function fetchParticipantCallback(data, textStatus, jqXHR) {
