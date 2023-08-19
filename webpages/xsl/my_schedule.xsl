@@ -2,7 +2,7 @@
 <!--
 	my_schedule
 	Created by Peter Olszowka on 2013-12-09.
-	Copyright (c) 2013 Peter Olszowka. All rights reserved.
+	Copyright (c) 2013-2023 Peter Olszowka. All rights reserved.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -31,7 +31,7 @@
 			<td>
 				<span class="badge badge-info"><xsl:value-of select="@sessionid" /></span>
 			</td>
-			<td colspan="7"></td>
+			<td colspan="7"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -52,10 +52,10 @@
 			<td>
 				<span class="label label-info">Duration: <xsl:value-of select="@duration" /></span>
 			</td>
-			<td></td>
+			<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
 		</tr>
 		<tr>
-			<td></td>
+			<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
 			<td colspan="7">
 				<span class="label">Description</span>
 				<span><xsl:text> </xsl:text><xsl:value-of select="@progguiddesc" /></span>
@@ -63,7 +63,7 @@
 		</tr>
 		<xsl:if test="@persppartinfo">
 			<tr>
-				<td></td>
+				<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
 				<td colspan="7">
 					<span class="label">Prospective participant information</span>
 					<span><xsl:text> </xsl:text><xsl:value-of select="@persppartinfo" /></span>
@@ -72,7 +72,7 @@
 		</xsl:if>
 		<xsl:if test="@notesforpart">
 			<tr>
-				<td></td>
+				<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
 				<td colspan="7">
 					<span class="label">Notes for participants</span>
 					<span><xsl:text> </xsl:text><xsl:value-of select="@notesforpart" /></span>
@@ -80,7 +80,7 @@
 			</tr>
 		</xsl:if>
 		<tr>
-			<td></td>
+			<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
 			<td>
 				<span class="label">Panelists' Publication Names (Badge Names)</span>
 			</td>
@@ -97,7 +97,7 @@
 
 	<xsl:template match="/doc/query[@queryName='participants']/row">
 		<tr>
-			<td></td>
+			<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
 			<td>
 				<span><xsl:value-of select="@pubsname" /></span>
 				<span><xsl:text> (</xsl:text><xsl:value-of select="@badgename" /><xsl:text>)</xsl:text></span>
@@ -109,7 +109,7 @@
 				<span><xsl:value-of select="@email" /></span>
 			</td>
 			<td colspan="4">
-				<span><xsl:value-of select="@comments" /></span>
+				<span><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
 			</td>
 		</tr>
 	</xsl:template>

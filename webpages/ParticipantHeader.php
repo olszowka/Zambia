@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section;
 $header_section = HEADER_PARTICIPANT;
 
@@ -30,13 +30,6 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
         $bootstrap4 = true;
         $displayDataConsentPage = true;
     }
-    html_header($title, $bootstrap4);
-    if ($bootstrap4) {
-        echo "<body class=\"bs4\">\n";
-    } else {
-        echo "<body>\n";
-    }
-    echo "<div class=\"container-fluid\">\n";
     switch ($pageHeaderFamily) {
         case 'Login':
             $topSectionBehavior = 'LOGIN';
@@ -52,12 +45,20 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
                 $topSectionBehavior = 'NO_USER';
             } else {
                 $topSectionBehavior = 'SESSION_EXPIRED';
+                $bootstrap4 = false;
             }
             break;
         case 'PASSWORD_RESET_COMPLETE':
             $topSectionBehavior = 'PASSWORD_RESET_COMPLETE';
             break;
     }
+    html_header($title, $bootstrap4);
+    if ($bootstrap4) {
+        echo "<body class=\"bs4\">\n";
+    } else {
+        echo "<body>\n";
+    }
+    echo "<div class=\"container-fluid\">\n";
     /**
      * Top section behavior
      * LOGIN:

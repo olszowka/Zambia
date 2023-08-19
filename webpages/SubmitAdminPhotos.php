@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2006-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2006-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
@@ -46,89 +46,62 @@ function perform_search() {
     global $linki, $message_error;
     $searchString = getString("searchString");
     $photosApproval = getString("photosApproval");
-    if ($searchString == "" && $photosApproval == false)
+    if ($searchString == "" && $photosApproval === "false") {
         exit();
-    $mask = PHOTO_NEED_APPROVAL_MASK;
-    $needs = PHOTO_NEED_APPROVAL;
-    $json_return = array ();
-    if ($photosApproval == "true") {
-        $needswhere = " AND (P.photouploadstatus & $mask) = $needs ";
-    } else {
-        $needswhere = "";
     }
-    if ($photosApproval == "true" && $searchString == "") {
-
-        $query = <<<EOD
+    $query_wo_where = <<<EOD
 SELECT
-	P.badgeid, CD.firstname, CD.lastname, CD.badgename,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM Participants P
-JOIN CongoDump CD ON P.badgeid = CD.badgeid
-LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE
-	(P.photouploadstatus & $mask) = $needs
-ORDER BY
-	CD.lastname, CD.firstname
+        P.badgeid, CD.firstname, CD.lastname, CD.badgename,
+        P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+        IFNULL(P.photouploadstatus, 0) AS photouploadstatus,
+        R.statustext, D.reasontext
+    FROM
+                  Participants P
+             JOIN CongoDump CD USING (badgeid)
+        LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
+        LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
+    WHERE
 EOD;
-        $result = mysqli_query_exit_on_error($query);
-    } else if (is_numeric($searchString)) {
-        $query = <<<EOD
-SELECT
-	P.badgeid, CD.firstname, CD.lastname, CD.badgename,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM Participants P
-JOIN CongoDump CD ON P.badgeid = CD.badgeid
-LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE P.badgeid = ? $needswhere
-ORDER BY CD.lastname, CD.firstname
-EOD;
-        $param_arr = array($searchString);
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
-    } else {
-        $searchString = '%' . $searchString . '%';
-        $query = <<<EOD
-SELECT
-	P.badgeid, CD.firstname, CD.lastname, CD.badgename,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM Participants P
-JOIN CongoDump CD ON P.badgeid = CD.badgeid
-LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE
-	    (P.pubsname LIKE ?
-    OR CD.lastname LIKE ?
-    OR CD.firstname LIKE ?
-    OR CD.badgename LIKE ?
-    OR P.badgeid LIKE ?) $needswhere
-ORDER BY CD.lastname, CD.firstname
-EOD;
-        $param_arr = array($searchString,$searchString,$searchString,$searchString,$searchString);
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, "sssss", $param_arr);
+    $query_where = '';
+    $param_arr = array();
+    $param_type_list = '';
+    if ($photosApproval === "true") {
+        $query_where = 'P.photouploadstatus IN (1, 3, 5) AND ';
     }
+    if (is_numeric($searchString)) {
+        $query_where .= 'P.badgeid = ?';
+        $param_arr[] = $searchString;
+        $param_type_list .= 's';
+    } else {
+        $searchString = '%' . strtolower($searchString) . '%';
+        $query_where .= '(LOWER(P.pubsname) LIKE ? OR LOWER(CD.lastname) LIKE ? OR LOWER(CD.firstname) LIKE ? ';
+        $query_where .= 'OR LOWER(CD.badgename) LIKE ? OR LOWER(P.badgeid) LIKE ?) ';
+        $param_arr[] = $searchString;
+        $param_arr[] = $searchString;
+        $param_arr[] = $searchString;
+        $param_arr[] = $searchString;
+        $param_arr[] = $searchString;
+        $param_type_list .= 'sssss';
+    }
+    $query_orderby = 'ORDER BY CD.lastname, CD.firstname;';
+    $query = $query_wo_where . $query_where . $query_orderby;
+    $result = mysqli_query_with_prepare_and_exit_on_error($query, $param_type_list, $param_arr);
     $xml = mysql_result_to_XML("searchParticipants", $result);
+    if (!$xml) {
+        echo $message_error;
+        exit();
+    }
     $rows = mysqli_num_rows($result);
+    $json_return = array();
     if ($rows > 1) {
         mysqli_data_seek($result, 0);
-        $bidarray = array ();
+        $bidarray = array();
         while ($row = mysqli_fetch_assoc($result)) {
             $bidarray[] = $row["badgeid"];
         }
         $json_return["badgeids"] = $bidarray;
     }
-
     mysqli_free_result($result);
-    if (!$xml) {
-        echo $message_error;
-        exit();
-    }
     $xpath = new DOMXpath($xml);
 	$searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
     foreach ($searchParticipantsResultRowElements as $resultRowElement) {

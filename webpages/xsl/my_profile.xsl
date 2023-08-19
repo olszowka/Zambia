@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Peter Olszowka on 2011-07-24;
-	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved.
+	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved.
 	See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -305,11 +305,10 @@
                       </div>
                       <div class="row mt-2">
                         <div class="col-sm-12">
-                          <label for="bio">Plain Text Version (Automatically updates while typing changes or on press of Update button):</label>
+                          <label for="bio">Plain Text Version (Automatically derived from HTML version on pressing UPDATE):</label>
                           <textarea rows="5" cols="72" name="bio" id="bioTXTA" data-max-length="{$maxBioLen}">
-							<xsl:attribute name="class">col-sm-12 userFormTXT readonly mycontrol form-control</xsl:attribute>
                             <xsl:attribute name="readonly">readonly</xsl:attribute>
-							<xsl:attribute name="updatealso">true</xsl:attribute>      
+                            <xsl:attribute name="class">col-sm-12 userFormTXT readonly</xsl:attribute>
                             <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
                           </textarea>
                         </div>

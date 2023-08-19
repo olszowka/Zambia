@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2015-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant Schedule';
 $report['description'] = 'Export CSV file of full participant schedule by participant, time';

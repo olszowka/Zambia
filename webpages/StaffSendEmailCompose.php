@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 // This page has two completely different entry points from a user flow standpoint:
 //   1) Beginning of send email flow -- start to specify parameters
 //   2) After verify -- 'back' can change parameters -- 'send' fire off email sending code
@@ -111,7 +111,7 @@ for ($i=0; $i<$recipient_count; $i++) {
 	    $ok=FALSE;
     }
     if ($emailcc != "") {
-        $message->addBcc($emailcc);
+        $message->addCc($emailcc);
     }
     if (SMTP_QUEUEONLY === TRUE) {
         $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailcc, emailsubject, body, status) VALUES(?, ?, ?, ?, ?, ?);";

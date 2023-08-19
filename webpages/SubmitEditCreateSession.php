@@ -1,6 +1,6 @@
 <?php
-//	Copyright (c) 2011-2019 The Zambia Group. All rights reserved. See copyright document for more details.
-    $action=$_POST["action"]; // "create" or "edit" or "brainstorm"
+//	Copyright (c) 2011-2023 The Zambia Group. All rights reserved. See copyright document for more details.
+    $action=isset($_POST["action"]) ? $_POST["action"] : ""; // "create" or "edit" or "brainstorm"
     if ($action=="brainstorm") {
             require_once ('BrainstormCommonCode.php');
             }
@@ -93,5 +93,3 @@
             }
     exit();
 ?>
-
-

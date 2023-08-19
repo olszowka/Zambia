@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!--
     Created by Peter Olszowka on 2020-07-27;
-    Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="title" select="''" />
@@ -29,7 +29,7 @@
               <a class="nav-link py-1" href="my_photo.php">Photo</a>
             </li>
           </xsl:if>
-          <xsl:if test="$survey and /doc/query[@queryname='permission_set']/row[@permatomtag='survey']">
+          <xsl:if test="$survey and count(/doc/query[@queryname='permission_set']/row[@permatomtag='survey']) > 0">
             <li class="nav-item py-0">
               <a class="nav-link py-1" href="PartSurvey.php">Survey</a>
             </li>

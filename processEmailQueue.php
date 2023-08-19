@@ -1,7 +1,9 @@
 #!/usr/local/bin/php -q
 <?php
+// Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 //This page is intended to be hit from a cron job only.
 //Need to add some code to prevent it from being accessed any other way, but leave it exposed for now for testing.
+//File location is one that is not intended to be served.
 error_reporting(E_ERROR);
 require_once('webpages/db_functions.php'); //reset connection to db and check if logged in
 require_once('webpages/email_functions.php');
@@ -33,7 +35,7 @@ while($row = mysqli_fetch_assoc($result)) {
 		$message = (new Swift_Message($row['emailsubject']));
 		$message->setFrom($row["emailfrom"]);
 		if ($row["emailcc"] != "") {
-            $message->addBcc($emailcc);
+            $message->addCcc($row["emailcc"]);
         }
 		$message->setBody($row["body"],'text/plain');
         $emailto = $row["emailto"];
@@ -68,7 +70,7 @@ while($row = mysqli_fetch_assoc($result)) {
         }
         catch (Swift_SwiftException $e) {
             error_log("Email address $emailto failed, invalid, dropped from queue.");
-            echo "$email is invalid\n";
+            echo "$emailto is invalid\n";
             $action = "delete";
         }
         if ($action == "leave") {

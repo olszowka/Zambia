@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Peter Olszowka on 2015-10-16;
-	Copyright (c) 2011-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
+	Copyright (c) 2011-2023 The Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:import href="renderSurveySearch.xsl"/>
@@ -131,7 +131,7 @@
 		</form>
 	</xsl:template>
 	<xsl:template match="doc/query[@queryName='participantInterest']/row">
-    <xsl:if test="preceding-sibling::*[1]/@attending='1' and @attending='0'">
+    <xsl:if test="(preceding-sibling::*[1]/@attending='1' or not(preceding-sibling::*[1])) and @attending='0'">
       <div class="row mt-1 bs4-alert-danger">
         <div class="col col-12">
           <span style="font-weight: bold;">Not Attending</span>

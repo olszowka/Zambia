@@ -31,13 +31,13 @@ SELECT
         progguiddesc AS 'Long Text', 
         SUBQ.participants AS 'PARTIC'
     FROM
-                Sessions S
-           JOIN Schedule SCH USING (sessionid)
-           JOIN Rooms R USING (roomid)
-           JOIN Tracks T USING (trackid)
-           JOIN Types Ty USING (typeid)
-           JOIN KidsCategories K USING (kidscatid)
-      LEFT JOIN (SELECT
+                  Sessions S
+             JOIN Schedule SCH USING (sessionid)
+             JOIN Rooms R USING (roomid)
+             JOIN Tracks T USING (trackid)
+             JOIN Types Ty USING (typeid)
+             JOIN KidsCategories K USING (kidscatid)
+        LEFT JOIN (SELECT
                          SCH2.sessionid, group_concat(' ',P.pubsname, if (POS.moderator=1,' (m)','')) AS 'participants'
                      FROM
                                    Schedule SCH2
@@ -54,9 +54,12 @@ SELECT
 EOD;
 $report['output_filename'] = 'pocketprogram.csv';
 $report['column_headings'] = 'sessionid,day,time,duration,room,track,type,"kids category",title,description,participants';
+$report['map_functions'][8] = function($inp) : string {
+    return(trim($inp));
+};
 $report['map_functions'][9] = function($inp) : string {
-    while (mb_ereg("[\n\r]", $inp)) {
-        $inp = mb_ereg_replace("[\n\r]", " ", $inp);
+    while (mb_ereg("[\n\r\x{00a0}]", $inp)) {
+        $inp = mb_ereg_replace("[\n\r\x{00a0}]", " ", $inp);
     }
     while (mb_ereg("  +", $inp)) {
         $inp = mb_ereg_replace("  +", " ", $inp);

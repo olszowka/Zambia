@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2009-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function render_session_interests($session_interest_count,$message,$message_error, $pageIsDirty, $showNotAttendingWarning) {
     global $session_interests, $title;
     participant_header($title);
@@ -78,7 +78,8 @@ function render_session_interests($session_interest_count,$message,$message_erro
         echo "        <label class=\"span11 control-label\">Use this space to convince us why you would be fabulous on this session: </label>";
         echo "    </div>\n";
         echo "    <div class=\"controls controls-row padded\">\n";
-        echo "        <textarea id=\"commentsTXTA_$j\" class=\"span12 sessionWhyMe\" cols=\"80\" name=\"comments$j\" $disabled>". htmlspecialchars( $session_interests[$i]['comments'],ENT_COMPAT)."</textarea>\n";
+        $s_i_c = is_null($session_interests[$i]['comments']) ? "" : htmlspecialchars( $session_interests[$i]['comments'],ENT_COMPAT);
+        echo "        <textarea id=\"commentsTXTA_$j\" class=\"span12 sessionWhyMe\" cols=\"80\" name=\"comments$j\" $disabled>$s_i_c</textarea>\n";
         echo "    </div>\n";
         echo "    <div class=\"controls controls-row padded\">\n";
         echo "        <span class=\"span1\"></span>\n";
