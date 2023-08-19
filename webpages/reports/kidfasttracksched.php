@@ -1,7 +1,7 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
-$report['name'] = 'Dragon&apos;s Lair Schedule (easy troubleshooting)';
+$report['name'] = 'Kids Programming Schedule (easy troubleshooting)';
 $report['description'] = 'What is happening in Dragon&apos;s Lair';
 $report['categories'] = array(
     'Dragon&apos;s Lair Reports' => 650,
@@ -17,7 +17,7 @@ SELECT
 	JOIN Schedule SCH USING (sessionid)
 	JOIN Rooms R USING (roomid)
     WHERE
-            S.trackid = 5 /* Dragon's Lair (correct value needs to be set) */
+            S.trackid = 7 /* Kid's programming */
         and S.pubstatusid = 2 /* public */
     ORDER BY
         SCH.starttime, R.roomname;
@@ -32,7 +32,7 @@ SELECT
         JOIN Participants P USING (badgeid)
         JOIN CongoDump C USING (badgeid)
     WHERE
-            S.trackid = 5 /* Fasttrack */
+            S.trackid = 7 /* Kid's programming */
         and S.pubstatusid = 2 /* public */
     ORDER BY
 		SCH.sessionid, POS.moderator DESC, 

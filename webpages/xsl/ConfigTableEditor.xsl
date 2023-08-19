@@ -85,17 +85,17 @@
               <li class="nav-item">
                 <a href="#partdesc" class="nav-link active" data-toggle="tab" id="part-overview">Participant Configuration Tables</a>
               </li>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#bioeditstatuses" class="nav-link" data-toggle="tab" data-top="part-top" id="t-BioEditStatuses">BioEditStatuses</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Credentials']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Credentials' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#credentials" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Credentials">Credentials</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#roles" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Roles">Roles</a>
                 </li>
@@ -110,11 +110,11 @@
               <div class="tab-pane mt-4 fade show active" id="partdesc">
                 <H3>Participant Configuration Table Usage</H3>
                 <ul>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses' or @permatomtag='EditAnyConfigurationTable']">
                     <li>BioEditStatuses:</li>
                     <p>(currently unused) Participant Biography Editing</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Credentials']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Credentials' or @permatomtag='EditAnyConfigurationTable']">
                     <li>Credentials:</li>
                     <p>Credentials list for Professions in Participant Profile</p>
                   </xsl:if>
@@ -128,13 +128,13 @@
                   </xsl:if>
                 </ul>
               </div>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_BioEditStatuses' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="bioeditstatuses"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Credentials']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Credentials' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="credentials"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="roles"/>
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_ParticipantTags' or @permatomtag='EditAnyConfigurationTable']">
@@ -148,22 +148,22 @@
               <li class="nav-item">
                 <a href="#sessiondesc" class="nav-link active" data-toggle="tab">Session Configuration Tables</a>
               </li>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_KidsCategories']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_KidsCategories' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#kidscategories" class="nav-link" data-toggle="tab" data-top="session-top" id="t-KidsCategories">KidsCategories</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_LanguageStatuses']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_LanguageStatuses' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#languagestatuses" class="nav-link" data-toggle="tab" data-top="session-top" id="t-LanguageStatuses">LanguageStatuses</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_PubStatuses']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_PubStatuses' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#pubstatuses" class="nav-link" data-toggle="tab" data-top="session-top" id="t-PubStatuses">PubStatuses</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_SessionStatuses']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_SessionStatuses' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#sessionstatuses" class="nav-link" data-toggle="tab" data-top="session-top" id="t-SessionStatuses">SessionStatuses</a>
                 </li>
@@ -173,34 +173,34 @@
               <div class="tab-pane mt-4 fade show active" id="sessiondesc">
                 <H3>Session Configuration Table Usage</H3>
                 <ul>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_KidsCategories']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_KidsCategories' or @permatomtag='EditAnyConfigurationTable']">
                     <li>KidsCategories</li>
                     <p>Entries in the Kids pulldown on the session pages/reports</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_LanguageStatuses']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_LanguageStatuses' or @permatomtag='EditAnyConfigurationTable']">
                     <li>LanguageStatuses</li>
                     <p>Language list for "Session Language"</p>
                   </xsl:if> 
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_PubStatuses']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_PubStatuses' or @permatomtag='EditAnyConfigurationTable']">
                     <li>PubStatuses</li>
                     <p>Publication Statuses of Sessions</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_SessionStatuses']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_SessionStatuses' or @permatomtag='EditAnyConfigurationTable']">
                     <li>SessionStatuses</li>
                     <p>Session Status List</p>
                   </xsl:if>
                 </ul>
               </div>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_KidsCategories']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_KidsCategories' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="kidscategories"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_LanguageStatuses']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_LanguageStatuses' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="languagestatuses"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_PubStatuses']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_PubStatuses' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="pubstatuses"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_SessionStatuses']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_SessionStatuses' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="sessionstatuses"/>
               </xsl:if>
             </div>
@@ -211,32 +211,32 @@
               <li class="nav-item">
                 <a href="#layoutdesc" class="nav-link active" data-toggle="tab">Convention Layout Configuration Tables</a>
               </li>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Divisions']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Divisions' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#divisions" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Divisions">Divisions</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RegTypes']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RegTypes' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#regtypes" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-RegTypes">RegTypes</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tags']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tags' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#tags" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Tags">Tags</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Times']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Times' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#times" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Times">Times</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tracks']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tracks' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#tracks" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Tracks">Tracks</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Types']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Types' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#Types" class="nav-link" data-toggle="tab" data-top="layout-top" id="t-Types">Types</a>
                 </li>
@@ -246,48 +246,48 @@
               <div class="tab-pane mt-4 fade show active" id="layoutdesc">
                 <H3>Convention Layout Configuration Table Usage</H3>
                 <ul>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Divisions']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Divisions' or @permatomtag='EditAnyConfigurationTable']">
                     <li>Divisions</li>
                     <p>Groups responsible for parts of the convention (Programming, Events, ...)"</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RegTypes']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RegTypes' or @permatomtag='EditAnyConfigurationTable']">
                     <li>RegTypes</li>
                     <p>Registration System types imported or entered in add new participant</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tags']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tags' or @permatomtag='EditAnyConfigurationTable']">
                     <li>Tags</li>
                     <p>The list of potential tags assignable to a session</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Times']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Times' or @permatomtag='EditAnyConfigurationTable']">
                     <li>Times</li>
                     <p>Times sessions can start for use in the grid scheduler</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tracks']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tracks' or @permatomtag='EditAnyConfigurationTable']">
                     <li>Tracks</li>
                     <p>The lists of tracks that for sessions</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Types']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Types' or @permatomtag='EditAnyConfigurationTable']">
                     <li>Types</li>
                     <p>The list of Session Types (Panel, Workshop, ...)</p>
                   </xsl:if>
                 </ul>
               </div>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Divisions']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Divisions' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="divisions"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RegTypes']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RegTypes' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="regtypes"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tags']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tags' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="tags"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Times']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Times' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="times"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tracks']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Tracks' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="tracks"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Types']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Types' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="types"/>
               </xsl:if>
             </div>
@@ -298,27 +298,27 @@
               <li class="nav-item">
                 <a href="#facilitydesc" class="nav-link active" data-toggle="tab">Facility Configuration Tables</a>
               </li>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Rooms']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Rooms' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#rooms" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Rooms">Rooms</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomSets']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomSets' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#roomsets" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-RoomSets">RoomSets</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#roomhasset" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-RoomHasSet">RoomHasSet</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#features" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Features">Features</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Services']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Services' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#Services" class="nav-link" data-toggle="tab" data-top="facility-top" id="t-Services">Services</a>
                 </li>
@@ -328,19 +328,19 @@
               <div class="tab-pane mt-4 fade show active" id="facilitydesc">
                 <H3>Facility Configuration Table Usage</H3>
                 <ul>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Rooms']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Rooms' or @permatomtag='EditAnyConfigurationTable']">
                     <li>Rooms</li>
                     <p>List of rooms a session could be scheduled into"</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomSets']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomSets' or @permatomtag='EditAnyConfigurationTable']">
                     <li>RoomSets</li>
                     <p>Types of setups for any room</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet' or @permatomtag='EditAnyConfigurationTable']">
                     <li>RoomHasSet</li>
                     <p>Which rooms can have which RoomSets</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features' or @permatomtag='EditAnyConfigurationTable']">
                     <li>Features</li>
                     <p>Features available in a room for use by sessions</p>
                   </xsl:if>
@@ -348,19 +348,19 @@
                   <p>Services available in a room for use by sessions</p>
                 </ul>
               </div>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Rooms']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Rooms' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="rooms"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomSets']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomSets' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="roomsets"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="roomhasset"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Features' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="features"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Services']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Services' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="services"/>
               </xsl:if>
             </div>
@@ -371,17 +371,17 @@
               <li class="nav-item">
                 <a href="#emaildesc" class="nav-link active" data-toggle="tab">Email Configuration Tables</a>
               </li>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailFrom']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailFrom' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#emailfrom" class="nav-link" data-toggle="tab" data-top="emails-top" id="t-EmailFrom">EmailFrom</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailTo']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailTo' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#emailto" class="nav-link" data-toggle="tab" data-top="emails-top" id="t-EmailTo">EmailTo</a>
                 </li>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailCC']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailCC' or @permatomtag='EditAnyConfigurationTable']">
                 <li class="nav-item">
                   <a href="#emailcc" class="nav-link" data-toggle="tab" data-top="emails-top" id="t-EmailCC">EmailCC</a>
                 </li>
@@ -391,27 +391,27 @@
               <div class="tab-pane mt-4 fade show active" id="emaildesc">
                 <H3>Email Configuration Table Usage</H3>
                 <ul>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailFrom']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailFrom' or @permatomtag='EditAnyConfigurationTable']">
                     <li>EmailFrom</li>
                     <p>List of From: lines for emails sent by Zambia</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailTo']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailTo' or @permatomtag='EditAnyConfigurationTable']">
                     <li>EmailTo</li>
                     <p>List of queries to select emails to be sent by Zambia</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailCC']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailCC' or @permatomtag='EditAnyConfigurationTable']">
                     <li>EmailCC</li>
                     <p>List of potential CC address choices for emails sent by Zambia</p>
                   </xsl:if>
                 </ul>
               </div>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailFrom']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailFrom' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="emailfrom"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailTo']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailTo' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="emailto"/>
               </xsl:if>
-              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailCC']">
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_EmailCC' or @permatomtag='EditAnyConfigurationTable']">
                 <div class="tab-pane mt-4 fade" id="emailcc"/>
               </xsl:if>
             </div>

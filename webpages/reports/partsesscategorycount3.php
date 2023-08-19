@@ -1,11 +1,9 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'New Comps Report ';
-$report['description'] = 'Show count of how many sessions each participant is scheduled for broken down by division (disregarding signings)';
-$report['categories'] = array(
-    'Registration Reports' => 1170,
-);
+$report['description'] = 'Show count of how many sessions each participant is scheduled for broken down by division (disregarding signings) obsolete-needs fixing';
+$report['categories'] = array();
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
@@ -22,15 +20,15 @@ SELECT
         	        POS.badgeid, Count(*) AS total,
         	        SUM(IF((S.divisionid=2 OR S.divisionid=8),1,0)) AS py, /* programming or youth services divisions */
         	        SUM(IF((S.divisionid=3),1,0)) AS ev, /* events divisions */
-        	        SUM(IF((S.divisionid=9 AND S.typeid = 23),1,0)) AS gl, /* gaming division and LARP type */
-        	        SUM(IF((S.divisionid=9 AND S.typeid = 25),1,0)) AS gt, /* gaming division and board game type */
-        	        SUM(IF((S.divisionid=9 AND S.typeid = 26),1,0)) AS grpg /* gaming division and tabletop rpg type */
+        	        SUM(IF((S.divisionid=9 AND S.typeid = 13),1,0)) AS gl, /* gaming division and LARP type */
+        	        SUM(IF((S.divisionid=9 AND S.typeid = 14),1,0)) AS gt, /* gaming division and board game type */
+        	        SUM(IF((S.divisionid=9 AND S.typeid = 15),1,0)) AS grpg /* gaming division and tabletop rpg type */
         		FROM
         		         Schedule SCH
         		    JOIN ParticipantOnSession POS USING (sessionid)
         		    JOIN Sessions S USING (sessionid)
         		WHERE
-        		        S.typeid != 7 /* signing */
+        		        S.typeid != 10 /* signing */
         		    AND S.pubstatusid = 2 /* Public */
         		GROUP BY POS.badgeid    
         	    ) AS subQ USING (badgeid)
@@ -53,7 +51,7 @@ SELECT
         JOIN ParticipantOnSession POS using (sessionid)
     WHERE
             S.pubstatusid = 2 /* Public */
-        AND S.typeid != 7 /* signing */
+        AND S.typeid != 10 /* signing */
     ORDER BY
         SCH.starttime;
 EOD;
@@ -72,7 +70,7 @@ SELECT
            (     S.divisionid IN (1,4,5,6,7)
              OR (S.divisionid = 9 AND S.typeid NOT IN (23, 25, 26))
            ) AND S.pubstatusid = 2 /* Public */
-             AND S.typeid != 7 /* signing */
+             AND S.typeid != 10 /* signing */
     ORDER BY
         SCH.starttime;
 EOD;
