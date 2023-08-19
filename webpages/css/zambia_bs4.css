@@ -1,6 +1,6 @@
-﻿/**
+/**
  * File created by Peter Olszowka July 17, 2020
- * Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 /* Page Header Stuff */
 .header-wrapper {
@@ -40,7 +40,20 @@
 .col-3p25,
 .col-md-2p5,
 .col-lg-2p5,
-.col-xl-2p25 {
+.col-xl-2p25,
+.col-xl-3p5,
+.col-xxl-1,
+.col-xxl-2,
+.col-xxl-3,
+.col-xxl-4,
+.col-xxl-5,
+.col-xxl-6,
+.col-xxl-7,
+.col-xxl-8,
+.col-xxl-9,
+.col-xxl-10,
+.col-xxl-11,
+.col-xxl-12 {
   position: relative;
   width: 100%;
   padding-right: 15px;
@@ -74,6 +87,60 @@
   flex: 0 0 27.083333%;
   max-width: 27.083333%;
 }
+@media (min-width: 2000px) {
+  .col-xxl-1 {
+    flex: 0 0 8.333333%;
+    max-width: 8.333333%;
+  }
+  .col-xxl-2 {
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+  }
+  .col-xxl-2p5 {
+    flex: 0 0 20.833333%;
+    max-width: 20.833333%;
+  }
+  .col-xxl-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  .col-xxl-4 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+  .col-xxl-5 {
+    flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+  }
+  .col-xxl-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .col-xxl-7 {
+    flex: 0 0 58.333333%;
+    max-width: 58.333333%;
+  }
+  .col-xxl-8 {
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+  }
+  .col-xxl-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+  .col-xxl-10 {
+    flex: 0 0 83.333333%;
+    max-width: 83.333333%;
+  }
+  .col-xxl-11 {
+    flex: 0 0 91.666667%;
+    max-width: 91.666667%;
+  }
+  .col-xxl-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
 @media (min-width: 576px) and (max-width: 767px) {
   .col-sm-3p5 {
     flex: 0 0 29.16667%;
@@ -91,6 +158,10 @@
     flex: 0 0 18.75%;
     max-width: 18.75%;
   }
+  .col-xl-3p5 {
+    flex: 0 0 29.166667%;
+    max-width: 29.166667%;
+  }
 }
 .badge.badge-full-width {
   width: 100%;
@@ -101,14 +172,14 @@
 .col-text-input {
   width: 100%;
 }
-.tag-chk-legend {
+.checkbox-list-legend {
   float: left;
   width: 2.5rem;
   width: fit-content;
   font-size: initial;
   margin-right: 0.25rem;
 }
-.tag-chk-container {
+.checkbox-list-container {
   display: inline-block;
   background-color: #ffffff;
   border: 1px solid #606060;
@@ -119,17 +190,17 @@
   overflow-y: scroll;
   width: fit-content;
 }
-.tag-chk-label-wrapper {
+.checkbox-list-label-wrapper {
   padding-bottom: 0.3rem;
   padding-top: 0.3rem;
 }
-.tag-chk-label-wrapper.disabled {
+.checkbox-list-label-wrapper.disabled {
   background-color: #e5e5e5;
 }
-.tag-chk-label-wrapper.disabled .tag-chk-label {
+.checkbox-list-label-wrapper.disabled .checkbox-list-label {
   font-style: italic;
 }
-.tag-chk-label {
+.checkbox-list-label {
   display: block;
   line-height: 1.05;
   width: fit-content;
@@ -137,7 +208,7 @@
   min-width: 8rem;
   margin: 0;
 }
-.tag-chk {
+.checkbox-list-check {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
 }

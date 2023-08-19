@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 var importDirty = false;
 var roleDirty = false;
 var $updateBTN = null;
@@ -117,7 +117,7 @@ function updateBUTTON() {
     };
     
     var rolesToAdd = [];
-    $(".tag-chk").each(function() {
+    $(".role-check").each(function() {
         $check = $(this);
         checked = $check.is(":checked");
         defaultChecked = $check.prop("defaultChecked");

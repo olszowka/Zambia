@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Syd Weinstein on 2021-01-04;
-	Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+	Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="UpdateMessage" select="''"/>
@@ -100,6 +100,11 @@
                   <a href="#roles" class="nav-link" data-toggle="tab" data-top="part-top" id="t-Roles">Roles</a>
                 </li>
               </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_ParticipantTags' or @permatomtag='EditAnyConfigurationTable']">
+                <li class="nav-item">
+                  <a href="#participanttags" class="nav-link" data-toggle="tab" data-top="part-top" id="t-ParticipantTags">ParticipantTags</a>
+                </li>
+              </xsl:if>
             </ul>
             <div class="tab-content">
               <div class="tab-pane mt-4 fade show active" id="partdesc">
@@ -113,9 +118,13 @@
                     <li>Credentials:</li>
                     <p>Credentials list for Professions in Participant Profile</p>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles']">
-                    <li>Roles</li>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles' or @permatomtag='EditAnyConfigurationTable']">
+                    <li>Roles:</li>
                     <p>"Roles I'm willing to take on" in Particpant General Interests</p>
+                  </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_ParticipantTags' or @permatomtag='EditAnyConfigurationTable']">
+                    <li>ParticipantTags:</li>
+                    <p>For use by staff to categorize participants</p>
                   </xsl:if>
                 </ul>
               </div>
@@ -127,6 +136,9 @@
               </xsl:if>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Roles']">
                 <div class="tab-pane mt-4 fade" id="roles"/>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_ParticipantTags' or @permatomtag='EditAnyConfigurationTable']">
+                <div class="tab-pane mt-4 fade" id="participanttags"/>
               </xsl:if>
             </div>
           </div>

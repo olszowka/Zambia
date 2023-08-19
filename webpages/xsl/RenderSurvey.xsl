@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Syd Weinstein on 2020-12-20;
-	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+	Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -624,13 +624,13 @@
     <xsl:param name="allowothertext" select="'0'"/>
     <xsl:param name="othertext" select="''"/>
     <div class="col col-auto">
-      <div class="tag-chk-container">
+      <div class="checkbox-list-container">
         <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
-          <label class="tag-chk-label">
+          <label class="checkbox-list-label">
             <xsl:attribute name="title">
               <xsl:value-of select="@optionhover"/>
             </xsl:attribute>
-            <input type="checkbox" class="tag-chk" value="{@value}">
+            <input type="checkbox" class="checkbox-list-check" value="{@value}">
               <xsl:attribute name="id">
                 <xsl:value-of select="translate($shortname, ' ', '_')"/>
                 <xsl:text>-</xsl:text>

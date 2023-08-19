@@ -1,9 +1,10 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Administer Participants";
 $bootstrap4 = true;
 require_once('StaffCommonCode.php');
+require('ParticipantTags_FNC.php');
 $fbadgeid = getString("badgeid");
 staff_header($title, $bootstrap4);
 if (!isLoggedIn() || !may_I('Staff')) {
@@ -16,24 +17,58 @@ if ($fbadgeid) {
 ?>
 <form id="adminParticipantsForm" class="form-row">
     <div id="resultBoxDIV" class="container-fluid"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
-    <div id="searchPartsDIV" class="container-fluid">
+    <div id="searchPartsDIV" class="container-fluid border-bottom border-dark pb-3">
         <div class="row mt-3">
-            <div class="col-sm-12">
-                <div class="dialog">Enter all or part of first name, last name, badge name, <span style="font-weight:bold">or</span> published name.  If you enter numbers, it will be interpreted as a complete <?php echo USER_ID_PROMPT; ?>.
+            <div class="col-sm-4 col-lg-3 col-xl-3 col-xxl-2">
+                <label for="searchPartsINPUT" class="dialog">Enter all or part of first name, last name, badge name, <span style="font-weight:bold">or</span> published name.  If you enter numbers, it will be interpreted as a complete <?php echo USER_ID_PROMPT; ?>.
+                </label>
+            </div>
+            <div class="col-sm-4 col-lg-3 col-xl-3 col-xxl-2">
+                <div class="pt-4 text-center">Participant Tags</div>
+            </div>
+        </div>
+        <div class="row mt-3" style="row-gap:1rem;">
+            <div class="col-sm-4 col-lg-3 col-xl-3 col-xxl-2">
+                <input type="text" id="searchPartsINPUT" style="width:100%;"/>
+            </div>
+            <div class="col-sm-4 col-lg-3 col-xl-3p5 col-xxl-2p5 d-flex">
+                <div class="checkbox-list-container" id="tag-search-container">
+<?php
+echo fetch_participant_tags(true);
+?>
+                </div>
+                <div class="ml-4 mr-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tagmatchRadio" id="tagMatchAny" value="tagmatchany" checked>
+                        <label class="form-check-label" for="tagMatchAny">
+                            Match any selected
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tagmatchRadio" id="tagMatchAll" value="tagmatchall">
+                        <label class="form-check-label" for="tagMatchAll">
+                            Match all selected
+                        </label>
+                    </div>
+                    <div class="form-check disabled">
+                        <input class="form-check-input" type="radio" name="tagmatchRadio" id="tagMatchNotAll" value="tagmatchnotall">
+                        <label class="form-check-label" for="tagMatchNotAll">
+                            Match not all selected
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-12 col-xl-5 col-xxl-3">
+                <input type="hidden" id="searchPhotoApproval" value=""/>
+                <div class="btn-group" role="group" aria-label="search actions">
+                    <button type="button" class="btn btn-primary mr-3" data-loading-text="Searching..." id="searchPartsBUTN" >Search</button>
+                    <button type="button" class="btn btn-secondary mr-3" id="prevSearchResultBUTN" style="display: none;" disabled onclick="prevParticipant();">Previous</button>
+                    <button type="button" class="btn btn-secondary mr-3" id="nextSearchResultBUTN" style="display: none;" disabled onclick="nextParticipant();">Next</button>
+                    <button type="button" class="btn btn-secondary" id="toggleSearchResultsBUTN"><span id="toggleText">Hide</span> Results</button>
                 </div>
             </div>
         </div>
-        <div style="margin-top: 0.5em">
-            <input type="text" id="searchPartsINPUT" />
-            <input type="hidden" id="searchPhotoApproval" value=""/>
-            <div class="btn-group" role="group" aria-label="search actions">
-                <button type="button" class="btn btn-primary" data-loading-text="Searching..." id="searchPartsBUTN" style="margin-right:10px;">Search</button>
-                <button type="button" class="btn btn-secondary" id="prevSearchResultBUTN" style="display: none; margin-right:10px;" disabled onclick="prevParticipant();">Previous</button>
-                <button type="button" class="btn btn-secondary" id="nextSearchResultBUTN" style="display: none; margin-right:10px;" disabled onclick="nextParticipant();">Next</button>
-                <button type="button" class="btn btn-secondary" id="toggleSearchResultsBUTN"><span id="toggleText">Hide</span> Results</button>
-            </div>
-        </div>
-        <div style="margin-top: 1em; height:250px; overflow:auto; border: 1px solid grey" id="searchResultsDIV">&nbsp;
+        <div class="mt-3" style="height:250px; overflow:auto; border: 1px solid grey" id="searchResultsDIV">&nbsp;
         </div>
     </div>
     <div id="unsavedWarningModal" class="modal" tabindex="-1" role="dialog">
@@ -295,12 +330,21 @@ if (HTML_BIO === TRUE) {
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-sm-4">
+            <div class="col-sm-2">
                 <div class="pb-1">
                     User Permission Roles:
                 </div>
                 <div>
-                    <div class="tag-chk-container" id="role-container">
+                    <div class="checkbox-list-container" id="role-container">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="pb-1">
+                    Participant Tags:
+                </div>
+                <div>
+                    <div class="checkbox-list-container" id="tag-container">
                     </div>
                 </div>
             </div>

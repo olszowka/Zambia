@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Import Reg User";
 $bootstrap4 = true;
@@ -56,7 +56,7 @@ if ($fbadgeid) {
                     User Permission Roles:
                 </div>
                 <div>
-                    <div class="tag-chk-container" id="role-container">
+                    <div class="checkbox-list-container" id="role-container">
                     </div>
                 </div>
             </div>

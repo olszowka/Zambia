@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 var badgenameDirty = false;
 var bioDirty = false;
 var htmlbioused = false;
@@ -17,6 +17,7 @@ var postzipDirty = false;
 var pubsnameDirty = false;
 var rolesDirty = false;
 var staffnotesDirty = false;
+var tagsDirty = false;
 var originalInterested = "0";
 var fbadgeid;
 var curbadgeid;
@@ -59,7 +60,7 @@ function isDirty(override) {
     }
     if (!override && (badgenameDirty || bioDirty || emailDirty || firstnameDirty || interestedDirty || lastnameDirty ||
         $password.val() || phoneDirty || postaddress1Dirty || postaddress2Dirty || postcityDirty || poststateDirty ||
-        postzipDirty || postcountryDirty || pubsnameDirty || rolesDirty || staffnotesDirty)) {
+        postzipDirty || postcountryDirty || pubsnameDirty || rolesDirty || staffnotesDirty || tagsDirty)) {
         $("#unsavedWarningModal").modal('show');
         $("#cancelOpenSearchBUTN").blur();
         return true;
@@ -166,6 +167,7 @@ function chooseParticipant(badgeid, override) {
     pubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
+    tagsDirty = false;
     $('#resultsDiv').show();
     $updateButton.prop("disabled", true);
     $("#resultBoxDIV").html("").hide();
@@ -190,6 +192,17 @@ function chooseParticipant(badgeid, override) {
             ajax_request_action: "fetch_user_perm_roles"
         }),
         success: fetchUserPermRolesCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_participant_tags"
+        }),
+        success: fetchParticipantTagsCallback,
         error: showAjaxError,
         type: "POST"
     });
@@ -229,17 +242,27 @@ function startTinymce() {
 
 function doSearchPartsBUTN() {
     //called when user clicks "Search" within dialog
-    var x = document.getElementById("searchPartsINPUT").value;
-    var p = document.getElementById("searchPhotoApproval").checked;
-    if (!x && !p)
+    let searchString = document.getElementById("searchPartsINPUT").value;
+    let photosApproval = document.getElementById("searchPhotoApproval").checked;
+    let tags = [];
+    document.querySelectorAll('#tag-search-container .tag-check').forEach((checkbox) => {
+        if (checkbox.checked) {
+            tags.push(checkbox.value);
+        }
+    });
+
+    if (!searchString && !photosApproval && tags.length === 0)
         return;
+    let tagSearchType = document.querySelector("[name='tagmatchRadio']:checked").value;
     $('#searchPartsBUTN').button('loading');
     $.ajax({
         url: "SubmitAdminParticipants.php",
         dataType: "html",
         data: ({
-            searchString: x,
-            photosApproval: p,
+            searchString,
+            photosApproval,
+            tags,
+            tagSearchType,
             ajax_request_action: "perform_search"
         }),
         success: writeSearchResults,
@@ -310,6 +333,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     pubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
+    tagsDirty = false;
     $('#resultsDiv').show();
     $('#resultBoxDIV').show();
     $updateButton.prop("disabled", true);
@@ -320,6 +344,11 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
 function fetchUserPermRolesCallback(data, textStatus, jqXHR) {
     //ajax success callback function
     $("#role-container").html(data);
+}
+
+function fetchParticipantTagsCallback(data, textStatus, jqXHR) {
+    //ajax success callback function
+    $("#tag-container").html(data);
 }
 
 function getUpdateResults(data, textStatus, jqXHR) {
@@ -350,6 +379,17 @@ function getUpdateResults(data, textStatus, jqXHR) {
             ajax_request_action: "fetch_user_perm_roles"
         }),
         success: fetchUserPermRolesCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_participant_tags"
+        }),
+        success: fetchParticipantTagsCallback,
         error: showAjaxError,
         type: "POST"
     });
@@ -496,12 +536,22 @@ function processChange() {
             postcountryDirty = ($postcountry.val() !== $postcountry.prop("defaultValue"));
             break;
         default:
-            if ($target.is(".tag-chk")) {
+            if ($target.is(".role-check")) {
                 rolesDirty = false;
-                $(".tag-chk").each(function () {
+                $(".role-check").each(function () {
                     $checkbox = $(this);
                     if ($checkbox.is(":checked") !== $checkbox.prop("defaultChecked")) {
                         rolesDirty = true;
+                        return false;
+                    }
+                });
+            }
+            if ($target.is("#tag-container .tag-check")) {
+                tagsDirty = false;
+                $("#tag-container .tag-check").each(function () {
+                    $checkbox = $(this);
+                    if ($checkbox.is(":checked") !== $checkbox.prop("defaultChecked")) {
+                        tagsDirty = true;
                         return false;
                     }
                 });
@@ -513,7 +563,7 @@ function processChange() {
 function checkDirty() {
     if (passwordDirtyAndReady || interestedDirty || bioDirty || staffnotesDirty || pubsnameDirty || lastnameDirty ||
         firstnameDirty || badgenameDirty || phoneDirty || emailDirty || postaddress1Dirty || postaddress2Dirty ||
-        postcityDirty || poststateDirty || postzipDirty || postcountryDirty || rolesDirty) {
+        postcityDirty || poststateDirty || postzipDirty || postcountryDirty || rolesDirty || tagsDirty) {
 
         $updateButton.prop("disabled", false);
     } else {
@@ -575,6 +625,7 @@ function showUpdateResults(data, textStatus, jqXHR) {
     pubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
+    tagsDirty = false;
     $password.val("");
     $cpassword.val("");
     $('#updateBUTN').button('reset');
@@ -679,7 +730,7 @@ function updateBUTTON() {
     if (rolesDirty) {
         var rolesToAdd = [];
         var rolesToDelete = [];
-        $(".tag-chk").each(function() {
+        $(".role-check").each(function() {
            $check = $(this);
            checked = $check.is(":checked");
            defaultChecked = $check.prop("defaultChecked");
@@ -696,6 +747,27 @@ function updateBUTTON() {
             postdata.rolesToDelete = rolesToDelete;
         }
     }
+    if (tagsDirty) {
+        var tagsToAdd = [];
+        var tagsToDelete = [];
+        $("#tag-container .tag-check").each(function() {
+            $check = $(this);
+            checked = $check.is(":checked");
+            defaultChecked = $check.prop("defaultChecked");
+            if (checked && !defaultChecked) {
+                tagsToAdd.push($check.val());
+            } else if (!checked && defaultChecked) {
+                tagsToDelete.push($check.val());
+            }
+        });
+        if (tagsToAdd.length > 0) {
+            postdata.tagsToAdd = tagsToAdd;
+        }
+        if (tagsToDelete.length > 0) {
+            postdata.tagsToDelete = tagsToDelete;
+        }
+    }
+
     $.ajax({
         url: "SubmitAdminParticipants.php",
         dataType: "html",

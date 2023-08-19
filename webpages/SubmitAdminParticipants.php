@@ -1,11 +1,12 @@
 <?php
-// Copyright (c) 2006-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2006-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
 require_once('StaffCommonCode.php'); // will check for staff privileges
 require('EditPermRoles_FNC.php');
+require('ParticipantTags_FNC.php');
 // skip to below all functions
 
 // gets data for a participant to be displayed.  Returns as XML
@@ -231,6 +232,45 @@ EOD;
             $updatePerformed = true;
         }
     }
+    $tagsToAddArr = getArrayOfInts("tagsToAdd");
+    $tagsToDeleteArr = getArrayOfInts("tagsToDelete");
+    if ($tagsToAddArr !== false || $tagsToDeleteArr !== false) {
+        if (!may_I('edit_participant_tags')) {
+            $message_error = "Server configuration error: You do not have permission to edit participant tags. Seek assistance.";
+            RenderErrorAjax($message_error);
+            exit();
+        }
+        $badgeIdSafe = mysqli_real_escape_string($linki, $participantBadgeId);
+        if ($tagsToAddArr != false && count($tagsToAddArr) > 0) {
+            $tagsToAddList = implode(',', array_map(function ($tag) use ($badgeIdSafe) {
+                return "('$badgeIdSafe', $tag)";
+            }, $tagsToAddArr));
+            $query = "INSERT INTO ParticipantHasTag (badgeid, participanttagid) VALUES $tagsToAddList;";
+            $result = mysqli_query_exit_on_error($query);
+            if (!$result) {
+                exit(); // should have exited already
+            }
+            $updatePerformed = true;
+        }
+        if ($tagsToDeleteArr != false && count($tagsToDeleteArr) > 0) {
+            $tagsToDeleteList = implode(',', $tagsToDeleteArr);
+            $query = <<<EOD
+    DELETE
+            PHT
+        FROM
+            ParticipantHasTag PHT
+        WHERE
+                PHT.badgeid = ?
+            AND PHT.participanttagid IN ($tagsToDeleteList);
+EOD;
+            $rows = mysql_cmd_with_prepare($query, "s", array($participantBadgeId));
+            if (is_null($rows)) {
+                // query should have already rendered error
+                exit();
+            }
+            $updatePerformed = true;
+        }
+    }
     if (!$updatePerformed) {
         $message_error = "Server error: nothing found to update. Seek assistance.";
         RenderErrorAjax($message_error);
@@ -273,108 +313,24 @@ EOD;
 function perform_search() {
     global $linki, $message_error;
     $searchString = getString("searchString");
-    if ($searchString == "")
+    $searchString = is_null($searchString) ? "" : $searchString;
+    $tagsArr = getArrayOfInts("tags", array());
+    $tagSearchType = getString("tagSearchType");
+    if ($searchString == "" && count($tagsArr) == 0) {
         exit();
-    $json_return = array ();
-    if (is_numeric($searchString)) {
-        if (DBVER >= "8") {
-            $query = <<<EOD
-WITH AnsweredSurvey(participantid, answercount) AS (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-    WHERE participantid = ?
-)
-SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
-    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM
-    Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
-    LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
-    LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-    LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE
-	P.badgeid = ?
-ORDER BY
-	CD.lastname, CD.firstname
-EOD;
-        } else {
-            $query = <<<EOD
-SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
-    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM
-    Participants P
-	JOIN CongoDump CD USING (badgeid)
-        LEFT JOIN (
-            SELECT participantid, COUNT(*) AS answercount
-                FROM ParticipantSurveyAnswers
-                WHERE participantid = ?
-                GROUP BY participantid
-    ) A ON (P.badgeid = A.participantid)
-LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
-LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE
-	P.badgeid = ?
-ORDER BY
-	CD.lastname, CD.firstname
-EOD; 
-        }
-        $param_arr = array($searchString, $searchString);
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, "ss", $param_arr);
-    } else {
-        $searchString = '%' . strtolower($searchString) . '%';
-        if (DBVER >= "8") {
-            $query = <<<EOD
-WITH AnsweredSurvey(participantid, answercount) AS (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-)
-SELECT
-	P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
-    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM
-	Participants P
-	JOIN CongoDump CD ON P.badgeid = CD.badgeid
-    LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
-    LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-    LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE
-		P.pubsname LIKE ?
-	OR CD.lastname LIKE ?
-	OR CD.firstname LIKE ?
-	OR CD.badgename LIKE ?
-ORDER BY
-	CD.lastname, CD.firstname
-EOD;
-        } else {
-            $query = <<<EOD
+    }
+    $json_return = array();
+    $queryPart1 = <<<EOD
 SELECT
         P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
         P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
         CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
         CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
         P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-        CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-        R.statustext, D.reasontext
+        IFNULL(P.photouploadstatus, 0) AS photouploadstatus, R.statustext, D.reasontext, ? AS foo
     FROM
                   Participants P
-             JOIN CongoDump CD ON P.badgeid = CD.badgeid
+             JOIN CongoDump CD USING (badgeid)
         LEFT JOIN (
                 SELECT
                         participantid, COUNT(*) AS answercount
@@ -382,21 +338,83 @@ SELECT
                         ParticipantSurveyAnswers
                     GROUP BY
                         participantid
-                ) A ON (P.badgeid = A.participantid)
+                ) A ON P.badgeid = A.participantid
         LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
         LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
     WHERE
-           LOWER(P.pubsname) LIKE ?
+EOD;
+    if ($searchString == "") {
+        $queryMainWhere = "";
+        $param_arr = array($searchString);
+        $typeString = "s";
+    } elseif (is_numeric($searchString)) {
+        $queryMainWhere = "            P.badgeid = ?\n";
+        $param_arr = array($searchString, $searchString);
+        $typeString = "ss";
+    } else {
+        $searchString = '%' . strtolower($searchString) . '%';
+        $queryMainWhere = <<<EOD
+           (LOWER(P.pubsname) LIKE ?
         OR LOWER(CD.lastname) LIKE ?
         OR LOWER(CD.firstname) LIKE ?
-        OR LOWER(CD.badgename) LIKE ?
+        OR LOWER(CD.badgename) LIKE ?)
+EOD;
+        $param_arr = array($searchString, $searchString, $searchString, $searchString, $searchString);
+        $typeString = "sssss";
+    }
+    if (count($tagsArr) == 0) {
+        $queryAdditionalWhere = "";
+    } else {
+        switch ($tagSearchType) {
+            case 'tagmatchany':
+                $tagsList = implode(',', $tagsArr);
+                $queryAdditionalWhere = <<<EOD
+                EXISTS (SELECT *
+                            FROM ParticipantHasTag PHT
+                            WHERE
+                                    P.badgeid = PHT.badgeid
+                                AND PHT.participanttagid IN ($tagsList))
+EOD;
+                break;
+            case 'tagmatchall':
+                $queryAdditionalWhere = "";
+                foreach ($tagsArr as $tag) {
+                    if ($queryAdditionalWhere != "") {
+                        $queryAdditionalWhere .= ' AND ';
+                    }
+                    $queryAdditionalWhere .= <<<EOD
+                EXISTS (SELECT *
+                            FROM ParticipantHasTag PHT
+                            WHERE
+                                    P.badgeid = PHT.badgeid
+                                AND PHT.participanttagid = $tag )
+EOD;
+                }
+                break;
+            case 'tagmatchnotall':
+                $tagsList = implode(',', $tagsArr);
+                $queryAdditionalWhere = <<<EOD
+                NOT EXISTS (SELECT *
+                            FROM ParticipantHasTag PHT
+                            WHERE
+                                    P.badgeid = PHT.badgeid
+                                AND PHT.participanttagid IN ($tagsList))
+EOD;
+                break;
+            default:
+                error_log(__FILE__.__LINE__." unrecognized option in switch statement for tagSearchType.");
+                $message_error = "Internal error.";
+                RenderErrorAjax($message_error);
+                exit();
+        }
+    }
+    $queryOrderBy = <<<EOD
     ORDER BY
         CD.lastname, CD.firstname;
 EOD;
-        }
-        $param_arr = array($searchString,$searchString,$searchString,$searchString);
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
-    }
+    $queryConj = ($queryMainWhere != "" && $queryAdditionalWhere != "") ? " AND " : "";
+    $query = $queryPart1 . $queryMainWhere . $queryConj . $queryAdditionalWhere . $queryOrderBy;
+    $result = mysqli_query_with_prepare_and_exit_on_error($query, $typeString, $param_arr);
     $xml = mysql_result_to_XML("searchParticipants", $result);
     $rows = mysqli_num_rows($result);
     if ($rows > 1) {
@@ -414,19 +432,19 @@ EOD;
         exit();
     }
     $xpath = new DOMXpath($xml);
-	$searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
+    $searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
     foreach ($searchParticipantsResultRowElements as $resultRowElement) {
-    	$badgeid = $resultRowElement -> getAttribute("badgeid");
-    	$jsEscapedBadgeid = addslashes($badgeid);
-		$resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
-	}
+        $badgeid = $resultRowElement -> getAttribute("badgeid");
+        $jsEscapedBadgeid = addslashes($badgeid);
+        $resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
+    }
     header("Content-Type: text/html");
     $paramArray = array("userIdPrompt" => USER_ID_PROMPT);
     //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xml->saveXML(), "i")); //for debugging only
     $json_return["HTML"] = RenderXSLT('AdminParticipants.xsl', $paramArray, $xml, true);
     $json_return["rowcount"] = $rows;
     echo json_encode($json_return);
-	exit();
+    exit();
 }
 
 function fetch_user_perm_roles() {
@@ -507,6 +525,7 @@ EOD;
         RenderErrorAjax($message_error);
         exit();
     }
+    // error_log("SubmitAdminParticipants:510: ".$resultXML->saveXML());
     // $foo = mb_ereg_replace("<(row|query)([^>]*)/[ ]*>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"); //for debugging only
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
 }
@@ -519,7 +538,6 @@ if (!isLoggedIn() || !may_I('Staff')) {
     $message_error = "You are not logged in or your session has expired.";
     RenderErrorAjax($message_error);
     exit();
-
 }
 $ajax_request_action = getString("ajax_request_action");
 if (is_null($ajax_request_action)) {
@@ -540,6 +558,9 @@ switch ($ajax_request_action) {
         break;
     case "fetch_user_perm_roles":
         fetch_user_perm_roles();
+        break;
+    case "fetch_participant_tags":
+        fetch_participant_tags();
         break;
     default:
         $message_error = "Internal error.";

@@ -50,9 +50,16 @@ function update_table($tablename) {
     //error_log("string loaded: " . getString("tabledata"));
     $rows = json_decode(base64_decode(getString("tabledata")));
     $tablename = getString("tablename");
-
-    if (!may_I("ce_$tablename")) {
-        fetch_table("No permission to edit $tablename", "");
+    $validTableNameArr = array("BioEditStatuses", "Credentials", "Divisions", "EmailFrom", "EmailTo", "EmailCC",
+        "Features", "KidsCategories", "LanguageStatuses", "ParticipantTags", "PhotoDenialReasons", "PubStatuses",
+        "RegTypes", "Roles", "Rooms", "RoomHasSet", "RoomSets", "Services", "SessionStatuses", "Tags", "Times",
+        "Tracks", "Types");
+    if (!in_array($tablename, $validTableNameArr)) {
+        fetch_table("", "No permission to edit $tablename");
+        return;
+    }
+    if (!may_I("ce_$tablename") && !may_I("EditAnyConfigurationTable")) {
+        fetch_table("", "No permission to edit $tablename");
         return;
     }
 

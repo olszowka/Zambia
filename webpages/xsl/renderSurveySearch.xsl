@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 	Created by Syd Weinstein on 2021-01-12;
-	Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+	Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -260,13 +260,13 @@
   <xsl:template name="selectlist">
     <xsl:param name="questionid" select="''"/>
     <xsl:param name="typename" select="''"/>
-    <div class="tag-chk-container" style="min-width: 2rem;">
+    <div class="checkbox-list-container" style="min-width: 2rem;">
       <xsl:for-each select="/doc/query[@queryName='options']/row[@questionid=$questionid]">
-        <label class="tag-chk-label">
+        <label class="checkbox-list-label">
           <xsl:attribute name="title">
             <xsl:value-of select="@optionhover"/>
           </xsl:attribute>
-          <input type="checkbox" class="tag-chk">
+          <input type="checkbox" class="checkbox-list-check">
             <xsl:choose>
               <xsl:when test="$typename = 'monthnum' or $typename = 'monthabv'">
                 <xsl:attribute name="data-filter">month</xsl:attribute>
