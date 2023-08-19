@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2008-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2008-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message, $message_error, $message2, $title;
 // $participant_array is defined by file including this.
 $title = "Participant View";
@@ -45,21 +45,20 @@ if (may_I('postcon')) { ?>
     exit();
 }
     ?>
-    
-<form name="pwform" method=POST action="SubmitWelcome.php">
+
+<div class="welcome-page-wrapper" style="margin: 0 auto; width:100rem;">
+<form id="pwform" name="pwform" method=POST action="SubmitWelcome.php">
 <div class="row mt-4">
 	<div class="col col-sm-12">
-		<h3>Please check back often as more options will become available as we get closer to the convention.</h3>
 		<p>Dear <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?>,</p>
-		<p>Welcome to the <?php echo CON_NAME; ?> Programming website.</p>
-		<h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming. You will be scheduled only if you say YES.</h4>
+		<p>Welcome to Boskone 60’s program application. To be considered for programming, you must answer “yes” to the below question and then complete the questions on the survey tab of this application.</p>
     </div>
 </div>
 <div class="row mt-2">
     <div class="col col-sm-1"></div>
     <div class="col col-sm-9">
         <div id="update_section">
-            <label for="interested" style="margin-right: 5px;">Are you interested?</label>
+            <label for="interested" style="margin-right: 5px;"><strong>Would you like to be considered for programming?</strong></label>
             <?php $int=$participant_array['interested']; ?>
             <select id="interested" name="interested" data-schedule-count="<?php echo $participant_array['scheduleCount'];?>">
                 <option value=0 <?php if ($int==0) {echo "selected=\"selected\"";} ?> >&nbsp;</option>
@@ -70,8 +69,25 @@ if (may_I('postcon')) { ?>
 	</div>
 </div>
 <div class="row mt-2">
+    <div class="col col-sm-12">
+        <p>
+            Surveys are sent to every person who requests one as well as to people who we think would be interested in being on programming this year.
+            Completing a survey signals your interest in being on programming at Boskone, but it does not guarantee placement. We will issue as many
+            invitations to participate as the program can accommodate, but we may not be able to include everyone. To be considered, we must receive
+            your survey by November 15.
+        </p>
+        <p>
+            After you answer the question above and save your response, you will be able to see the tabs for filling out your survey and profile as
+            well as the current set of sessions that you can volunteer to have on your schedule. New sessions will be added on a regular basis, and
+            you are welcome to return at any time to look for additional items that you may like to volunteer for on the program.
+        </p>
+    </div>
+</div>
+
+    <!--
+<div class="row mt-2">
 	<div class="col col-sm-12">
-        <?php if ($participant_array['chpw']) { ?>
+        <?php // if ($participant_array['chpw']) { ?>
         <h4>Now take a moment and personalize your password.</h4>
     </div>
 </div>
@@ -84,102 +100,60 @@ if (may_I('postcon')) { ?>
             <label for="cpassword" style="margin-left: 20px; margin-right:5px;" >Confirm New Password:</label>
             <input id="cpassword" type="password" size="10" name="cpassword" />
 		</fieldset>
-        <?php } ?>
+        <?php //} ?>
      </div>
 </div>
+-->
  <div class="row mt-2">
     <div class="col col-sm-12">
-        <button class="btn btn-primary" type="submit" name="submit" >Update</button>
+        <button class="btn btn-primary" type="submit" name="submitBtn" >Save Response</button>
 	</div>
 </div>
 </form>
 <div class="row mt-4">
 	<div class="col col-sm-12">
-		<p> Use the "Profile" menu to:</p>
+		<h4>Timeline for New Programming Process:</h4>
         <ul>
-            <li> Check your contact information.</li>
+            <li> Oct 1-Nov 15: Surveys sent to potential program participants.</li>
+            <li> Oct 1-Nov 15: Potential participants fill in surveys, suggest program ideas, and volunteer for sessions.</li>
+            <li> Oct 15-Dec 15: Official Program Participant invitations sent, confirming program
+                participation, on a rolling basis.
+            </li>
+            <li> Nov 15: Survey Due Date.</li>
+            <li> Dec 1: Final cutoff date for all surveys, suggested items, and volunteering for sessions.</li>
+            <li> Dec 15: Draft schedules sent to confirmed program participants.</li>
+            <li> Dec 15-Jan 6: Confirmed participants approve schedules and have a chance to request additional sessions, if openings are available.</li>
+            <li> Jan 8: Final program schedules sent to confirmed participants.</li>
+            <li> Jan 13: Publication of Boskone 60 Program Schedule</li>
+        </ul>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col col-sm-12">
+        <h4>Use the "Profile" menu to:</h4>
+        <ul>
+            <li> Update your contact information.</li>
             <li> Change your password.</li>
-            <li> Indicate whether you will be participating in <?php echo CON_NAME; ?>.</li>
-            <li> Opt out of sharing your email address with other program participants.</li>
-            <li> Edit your name as you want to appear in our publications.</li>
-            <li> Enter a short bio for <?php echo CON_NAME; ?> publications.</li>
+            <li> Add your Bio.</li>
         </ul>
-        <?php if (may_I('my_availability')) { ?>
-        <p> Use the "Availability" menu to:</p>
-        <ul>
-            <li> Number of sessions you are interested in and on which days.</li>
-            <li> List the times during the convention you are availalbe.</li>
-        </ul>
-        <?php } ?>
 
-        <?php if (may_I('my_gen_int_write')) { ?>
-        <p> Use the "General Interests" menu to:</p>
+        <h4 class="mt-2">Use the “Survey” menu to:</h4>
         <ul>
-            <li> Describe the kinds of sessions you are interested in.</li>
-            <li> Suggest the people you would like to work with.</li>
+            <li> Share your programming interests.</li>
         </ul>
-        <?php } else { ?>
-        <p> Use the "General Interests" menu to:</p>
+
+        <h4 class="mt-2">Use the "Availability" menu to:</h4>
         <ul>
-            <li> See what you previously entered as your interests.</li>
-            <li> This is currently read-only as con is approaching.  If you need to make a change here, please email us:  <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
+            <li> List the general times that you are available.</li>
         </ul>
-        <?php } ?>
-        
-        <?php if (may_I('search_panels')) { ?>
-        <p> Use the "Search Sessions" menu to:</p>
+
+        <h4 class="mt-2">Use the "Search Sessions" menu (when available) to:</h4>
         <ul>
-            <li> See suggested topics for <?php echo CON_NAME; ?> programming. </li>
-            <li> Indicate sessions you would like to participate on. </li>
+            <li> Volunteer for sessions that interest you.</li>
+            <li> <em>Note:</em> As the program is developed, we may also add you to items that we think would be a good fit for you based upon your survey responses.</li>
         </ul>
-        <?php } else { ?>
-        <p> The "Search Sessions" menu is currently unavailable.  Check back later.</p>
-        <?php } ?>
-        
-        <?php if (may_I('my_panel_interests')) { ?>
-        <p> Use the "Session Interests" menu to:</p>
-            <ul>
-                <li> See what selections you have made for sessions.</li>
-                <li> Alter or give more information about your selections.</li>
-                <li> Rank the preference of your selections.</li>
-            </ul>
-        <?php } else { ?>
-        <p> The "Session Interests" menu is currently unavailable. Check back later.</p>
-        <?php } ?>        <?php if (may_I('my_schedule')) { ?>
-        <p> Use the "My Schedule" menu to:</p>
-        <ul>
-            <li> See what you have been scheduled to do at con.</li>
-            <li> If there are issues, conflict or questions please email us at 
-                <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
-        </ul>
-        <?php } else { ?>
-        <p> The "My Schedule" menu is currently unavailable.  Check back later.</p>
-        <?php } ?>
-       
-        <?php if (may_I('BrainstormSubmit')) { ?>
-        <p> Use the "Suggest a Session" menu to:</p>  
-        <ul>
-            <li> Enter the brainstorming view where you can submit panel, workshop and presentation ideas.
-            <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner. 
-        </ul>
-        <?php } else { ?>
-        <p> The "Suggest a Session" menu is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></p>
-        <?php } ?>
+
 	</div>
 </div>
-<?php 
-    $add_pert_overview = fetchCustomText("part_overview");
-    if (strlen($add_pert_overview) > 0) { ?>
-<div class="row mt-4">
-	<div class="col col-sm-12">
-        <?php echo fetchCustomText("part_overview"); ?>
-    </div>
-</div>
-<?php } ?>
-<div class="row mt-4">
-	<div class="col col-sm-12">
-        <p>Thank you for your time, and we look forward to seeing you at <?php echo CON_NAME; ?>.</p> 
-        <p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </p>
-    </div>
 </div>
 <?php participant_footer(); ?>
