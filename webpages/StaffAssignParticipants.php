@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Assign Participants";
 $bootstrap4 = true;
@@ -89,6 +89,7 @@ EOD;
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY
 ), R2(badgeid, sessionid) AS (
     SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
     UNION
@@ -154,6 +155,7 @@ LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 
 LEFT JOIN (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY participantid
 ) A ON (A.participantid = P.badgeid)
 WHERE
 		POS.sessionid = $selsessionid
@@ -237,6 +239,7 @@ EOD;
 WITH AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
+    GROUP BY participantid
 ), SessionParticipants(badgeid) AS (
     SELECT badgeid
     FROM ParticipantSessionInterest
@@ -288,6 +291,7 @@ SELECT
     LEFT OUTER JOIN (
         SELECT participantid, COUNT(*) AS answercount
         FROM ParticipantSurveyAnswers
+        GROUP BY participantid
     ) A ON (P.badgeid = A.participantid)
     WHERE P.interested = 1 AND S.badgeid IS NULL
 ORDER BY
