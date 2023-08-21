@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('StaffCommonCode.php');
 
 $schema_loaded = false;
@@ -25,10 +25,12 @@ EOD;
         $prikey = '';
         while ($row = $result->fetch_assoc()) {
             $schema[] = $row;
-            if ($row["COLUMN_NAME"] == 'display_order')
+            if ($row["COLUMN_NAME"] == 'display_order') {
                 $displayorder_found = true;
-            if ($row["COLUMN_KEY"] == 'PRI')
+            }
+            if ($row["COLUMN_KEY"] == 'PRI') {
                 $prikey = $prikey . $row["COLUMN_NAME"] . ",";
+            }
         }
 
         $prikey = substr($prikey, 0, -1);
@@ -38,37 +40,41 @@ EOD;
     }
 }
 
-function update_table($tablename) {
-    global $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
-
-    if (!isLoggedIn() ||  !may_I("Administrator")) {
-        fetch_table("No Permission to run Configuration Table Editor", "");
-        return;
+function may_edit_table($tablename) {
+    global $json_return;
+    if (!isLoggedIn()) {
+        $json_return["message"] = "You are logged out.  Please log in again.";
+        echo json_encode($json_return) . "\n";
+        exit(0);
     }
-
-    //error_log("\n\nin update table:\n");
-    //error_log("string loaded: " . getString("tabledata"));
-    $rows = json_decode(base64_decode(getString("tabledata")));
-    $tablename = getString("tablename");
     $validTableNameArr = array("BioEditStatuses", "Credentials", "Divisions", "EmailFrom", "EmailTo", "EmailCC",
         "Features", "KidsCategories", "LanguageStatuses", "ParticipantTags", "PhotoDenialReasons", "PubStatuses",
         "RegTypes", "Roles", "Rooms", "RoomHasSet", "RoomSets", "Services", "SessionStatuses", "Tags", "Times",
         "Tracks", "Types");
     if (!in_array($tablename, $validTableNameArr)) {
-        fetch_table("", "No permission to edit $tablename");
-        return;
+        $json_return["message"] = "Editing $tablename not supported.  Please report error to developer.";
+        echo json_encode($json_return) . "\n";
+        exit(0);
     }
     if (!may_I("ce_$tablename") && !may_I("EditAnyConfigurationTable")) {
-        fetch_table("", "No permission to edit $tablename");
-        return;
+        $json_return["message"] = "You do not have permission to edit $tablename.  Please contact your administrator.";
+        echo json_encode($json_return) . "\n";
+        exit(0);
     }
+    return true;
+}
 
-    $indexcol = getString("indexcol");
-    //error_log("table: $tablename");
-    //error_log("indexcol: $indexcol");
-    //var_error_log($rows);
+function update_table($tablename) {
+    global $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
 
+    $rows = json_decode(base64_decode(getString("tabledata")));
+    $tablename = getString("tablename");
+    if (!may_edit_table($tablename)) {
+        exit(0);
+    }
     fetch_schema($tablename);
+    $indexcol = getString("indexcol");
+
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
     $display_order = 10;
@@ -105,15 +111,16 @@ function update_table($tablename) {
     foreach($schema as $col) {
         //var_error_log($col);
         if ($col['EXTRA'] != 'auto_increment') {
-                $sql .= $col['COLUMN_NAME'] . ',';
-                $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
+            $sql .= $col['COLUMN_NAME'] . ',';
+            $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
                 $fieldcount++;
         }
     }
     if ($fieldcount > 0) {
         $sql = substr($sql, 0, -1) . ") VALUES (";
-        for ($i = 0; $i < $fieldcount; $i++)
+        for ($i = 0; $i < $fieldcount; $i++) {
             $sql .= "?,";
+        }
         $sql = substr($sql, 0, -1) . ");";
 
         foreach ($rows as $row) {
@@ -187,24 +194,23 @@ function update_table($tablename) {
         $message = $message . ", " . $updated . " rows updated";
     }
 
-    if (mb_strlen($message) > 2)
-        $message = "<p>Database changes: " . mb_substr($message, 2) .  "</p>";
-    else
+    if (mb_strlen($message) > 2) {
+        $message = "<p>Database changes: " . mb_substr($message, 2) . "</p>";
+    } else {
         $message = "";
+    }
 
-    // get updated survey now with the id's in it
-    fetch_table($tablename, $message);
+    fetch_table($tablename, "Table successfully updated.");
 }
 
-function fetch_table($tablename, $message) {
-    global $schema, $displayorder_found, $prikey;
+function fetch_table($tablename, $message = "") {
+    global $schema, $displayorder_found, $json_return, $prikey;
     $db = DBDB;
     $json_return = array();
+    $json_return["message"] = $message;
 
-    if (!isLoggedIn() || !may_I("Administrator")) {
-        $json_return["message"] = "No permission to run Configuration Table Editor";
-        echo json_encode($json_return) . "\n";
-        return;
+    if (!may_edit_table($tablename)) {
+        exit(0);
     }
 
     if (strpos($tablename, ' ', 0) !== false) {
@@ -213,11 +219,6 @@ function fetch_table($tablename, $message) {
         return;
     }
 
-    if (!may_I("ce_$tablename")) {
-        $json_return["message"] = "No permission to edit $tablename";
-        echo json_encode($json_return) . "\n";
-        return;
-    }
     //error_log("table = " . $tablename);
     // json of schema and table contents
     fetch_schema($tablename);
@@ -271,22 +272,24 @@ EOD;
             if ($reffield != $curfield) {
                 $union = "";
                 if (DBVER >= "8") {
-                    if ($withclause == "")
+                    if ($withclause == "") {
                         $withclause = "WITH Ref" . $reffield . " AS (\n";
-                    else {
+                    } else {
                         $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n), Ref" . $reffield . " AS (\n";
                         $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-                        if ($occurs != "")
+                        if ($occurs != "") {
                             $occurs .= "+";
+                        }
                         $occurs .= "SUM$curfield.occurs";
                     }
                 } else {
-                    if ($joinclause == "")
+                    if ($joinclause == "") {
                         $joinclause = "LEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
-                    else {
+                    } else {
                         $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\nLEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
-                        if ($occurs != "")
+                        if ($occurs != "") {
                             $occurs .= "+";
+                        }
                         $occurs .= "SUM$curfield.occurs";
                     }
                 }
@@ -294,10 +297,11 @@ EOD;
                 $mycurname = $mycolname;
                 $curfield = $reffield;
             }
-            if (DBVER >= "8")
+            if (DBVER >= "8") {
                 $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $reffield\n";
-            else
+            } else {
                 $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $reffield\n";
+            }
             $union = "UNION ALL";
         }
         if (DBVER >= "8") {
@@ -310,9 +314,9 @@ EOD;
             $occurs .= "+";
         $occurs .= "SUM$curfield.occurs";
         $occurs = "CASE WHEN $occurs IS NULL THEN 0 ELSE $occurs END AS Usage_Count";
-    }
-    else
+    } else {
         $occurs = "0 AS Usage_Count";
+    }
 
     // table select - get select list for field that is a foreign key to another table
     foreach($referenced_columns as $key) {
@@ -350,16 +354,14 @@ EOD;
         $query = $query . "ORDER BY " . $prikey . ";";
 
     //error_log($query);
-	$result = mysqli_query_exit_on_error($query);
+    $result = mysqli_query_exit_on_error($query);
     $rows = array();
     while ($row = $result->fetch_assoc()) {
         $rows[] = $row;
     }
-	mysqli_free_result($result);
+    mysqli_free_result($result);
     $json_return["tabledata"] = $rows;
 
-    if ($message != "")
-        $json_return["message"] = $message;
     echo json_encode($json_return) . "\n";
 }
 
@@ -369,10 +371,11 @@ if ($ajax_request_action == "") {
     exit();
 }
 
+header('Content-type: application/json');
 switch ($ajax_request_action) {
     case "fetchtable":
         $tablename = getString("tablename");
-        fetch_table($tablename, "");
+        fetch_table($tablename);
         break;
     case "updatetable":
         $tablename = getString("tablename");

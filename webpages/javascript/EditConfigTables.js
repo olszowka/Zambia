@@ -1,13 +1,11 @@
 // Created by Syd Weinstein on 2021-01-04;
-// Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 var table = null;
 var tablename = '';
 var message = "";
-var previewmce = false;
 var indexcol = 'display_order';
 var selectlist = null;
 var newid = -99;
-var newrow = null;
 var fetch_json = {};
 var tableschema = null;
 var curcell = null;
@@ -24,19 +22,17 @@ var EditConfigTable = function () {
             $("a.active").each(function () {
                 attr = $(this).attr("data-top");
                 if (attr == newtabname) {
-                    //console.log(", top=" + $(this).attr("data-top"));
                     tabname = this.id;
                 }
             });
         }
 
         // now with the subtab (clicked or refed by top), see if it needs a table and data fetched
-        if (tabname.substring(0, 2) != 't-')
+        if (tabname.substring(0, 2) != 't-') {
             document.getElementById("table-div").style.display = "none";
-        else {
+        } else {
             document.getElementById("table-div").style.display = "block";
             tablename = tabname.substring(2);
-            //console.log('new table: ' + tablename);
             FetchTable();
         }
     }
@@ -44,8 +40,9 @@ var EditConfigTable = function () {
     // show unsaved data modal popup if dirty
     function tabprehide(tabname, newtab) {
         //console.log('prehide:' + tabname + ", " + newtab + ", dirty: " + dirty);
-        if (!dirty)
+        if (!dirty) {
             return true;
+        }
         nexttab = newtab;
         $("#unsavedWarningModal").modal('show');
         return false;
@@ -57,15 +54,16 @@ var EditConfigTable = function () {
             table = null;
         }
 
-        if (tabname == '')
+        if (tabname == '') {
             return;
+        }
     }
 
     this.initialize = function () {
-       $('.nav-tabs a').on('shown.bs.tab', function (event) {
-           var x = event.target.id;         // active tab
+        $('.nav-tabs a').on('shown.bs.tab', function (event) {
+            var x = event.target.id;         // active tab
             tabshown(x);
-       });
+        });
         $('.nav-tabs a').on('hide.bs.tab', function (event) {
             var x = event.target.id;        // to be hidden tab
             var n = event.relatedTarget.id;    // to be shown tab
@@ -76,23 +74,27 @@ var EditConfigTable = function () {
             var x = event.target.id;        // active tab
             //console.log('act = ' + x);
             tabhide(x);
-        $("#unsavedWarningModal").modal({ show: false });
+            $("#unsavedWarningModal").modal({ show: false });
         });
         var addnewrowbut = document.getElementById("add-row");
         addnewrowbut.addEventListener('click', function () { addnewrow(table); });
-    }
+        const messageBanner = document.getElementById('message');
+        const navSection = document.getElementById('config-table-editor-nav');
+        navSection.addEventListener('click', (event) => {
+            if (event.target.classList.contains('nav-link')) {
+                messageBanner.style.display = 'none';
+            }
+        });
+    };
 };
 
 var editConfigTable = new EditConfigTable();
 
 function discardChanges() {
-    //console.log("in discardChanges(), nexttab = '" + nexttab + "'");
     $("#unsavedWarningModal").modal('hide');
     dirty = false;
     if (nexttab) {
-        //console.log("going to tab: " + nexttab);
         $('#' + nexttab).tab('show');
-        //tabshown(nexttab);
     }
     return true;
 }
@@ -166,19 +168,22 @@ function tceEditor(e, cell) {
     document.getElementById("submitbtn").disabled = true; 
     document.getElementById("undo").disabled = true;
     document.getElementById("redo").disabled = true;
-};
+}
 
 function deleteicon(cell, formattParams, onRendered) {
     var value = cell.getValue();
-    if (value == 0)
+    if (value == 0) {
         return "&#x1F5D1;";
+    }
     return value;
 }
+
 function deleterow(e, row, questiontable) {
     document.getElementById("message").style.display = 'none';
     var count = row.getCell("Usage_Count").getValue();
-    if (count == 0)
+    if (count == 0) {
         row.delete();
+    }
 }
 
 function addnewrow(table) {
@@ -235,16 +240,24 @@ function opentable(tabledata) {
             });
         else if (column.DATA_TYPE == 'text') {
             width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
-            if (width < 80) width = 80;
-            if (width > 500) width = 500;
+            if (width < 80) {
+                width = 80;
+            }
+            if (width > 500) {
+                width = 500;
+            }
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, width: width,
                 cellClick: tceEditor
             });
         } else {
             width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
-            if (width < 80) width = 80;
-            if (width > 500) width = 500;
+            if (width < 80) {
+                width = 80;
+            }
+            if (width > 500) {
+                width = 500;
+            }
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
                 editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
@@ -297,7 +310,7 @@ function opentable(tabledata) {
     //console.log("Setting up options in table");
     document.getElementById("submitbtn").innerHTML = "Save";
     table.clearHistory();
-};
+}
 
 function saveComplete(data, textStatus, jqXHR) {
     message = "";
@@ -341,8 +354,7 @@ function saveComplete(data, textStatus, jqXHR) {
         //console.log(tabledata);
         if (table) {
             table.replaceData(fetch_json.tabledata);
-        }
-        else {
+        } else {
             opentable(fetch_json.tabledata);
         }
     }
@@ -354,7 +366,7 @@ function saveComplete(data, textStatus, jqXHR) {
     dirty = false;
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
-};
+}
 
 function SaveTable() {
     document.getElementById("saving_div").style.display = "block";
@@ -374,7 +386,7 @@ function SaveTable() {
         success: saveComplete,
         type: "POST"
     }); 
-};
+}
 
 function FetchTable() {
     var postdata = {
@@ -388,7 +400,7 @@ function FetchTable() {
         success: saveComplete,
         type: "POST"
     });
-};
+}
 
 function Undo() {
     table.undo();
@@ -402,7 +414,7 @@ function Undo() {
     if (redoCount > 0) {
         document.getElementById("redo").disabled = false;
     }
-};
+}
 
 function Redo() {
     table.redo();
@@ -416,4 +428,4 @@ function Redo() {
     if (redoCount <= 0) {
         document.getElementById("redo").disabled = true;
     }
-};
+}

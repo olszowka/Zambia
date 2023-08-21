@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <div id="config-table-editor-nav" class="mt-3">
         <h1 style="text-align: center;">Configuration Table Editor</h1>
         <ul class="nav nav-tabs">
           <li class="nav-item">
