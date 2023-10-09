@@ -98,7 +98,7 @@ function update_participant() {
 
     if (!is_null($lastname) || !is_null($firstname) || !is_null($badgename) || !is_null($phone) || !is_null($email) || !is_null($postaddress1)
         || !is_null($postaddress2) || !is_null($postcity) || !is_null($poststate) || !is_null($postzip) || !is_null($postcountry)) {
-        if (USE_REG_SYSTEM) {
+        if (USE_REG_SYSTEM && !UPDATE_REG_SYSTEM) {
             $message_error = "Zambia configuration error.  Editing contact data is not permitted.";
             RenderErrorAjax($message_error);
             exit();
