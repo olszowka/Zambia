@@ -400,7 +400,7 @@ function approvephoto() {
 
     $dest = getcwd();
     $oldfilename = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/" . $row["approvedphotofilename"];
-    if (strlen($oldfilename) > 0) {
+    if ($row['approvedphotofilename'] !== null && strlen($row['approvedphotofilename']) > 0) {
         try {
             unlink($oldfilename);
         }
