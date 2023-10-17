@@ -24,7 +24,7 @@ if ($fbadgeid) {
             </div>
         </div>
         <div style="margin-top: 0.5em">
-            <input type="text" id="searchPartsINPUT" />
+            <input type='text' id='searchPartsINPUT' onkeydown='if (event.keyCode === 13) doSearchPartsBUTN();'/>
             <input type="hidden" id="searchPhotoApproval" value=""/>
             <div class="btn-group" role="group" aria-label="search actions">
                 <button type="button" class="btn btn-primary" data-loading-text="Searching..." id="searchPartsBUTN" style="margin-right:10px;">Search</button>
