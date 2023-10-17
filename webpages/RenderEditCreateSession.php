@@ -193,7 +193,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 ?>
         </div>
         <div class="row-fluid vert-sep vert-sep-above">
-            <div class="span5"> <!-- Features Box; -->
+            <div class="span4"> <!-- Features Box; -->
                 <label>Required Room Features:</label>
                 <div class="borderBox">
                     <div class="clearfix">
@@ -201,7 +201,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                         <label for="featdest[]" class="pull-right">Selected Features:</label>
                     </div>
                     <div class="clearfix">
-                        <select class="span5" style="float: left;" id="featsrc" name="featsrc" size=6 multiple>
+                        <select class="span5" style="float: left;" id="featsrc" name="featsrc" size=10 multiple>
                             <?php populate_multisource_from_table("Features", $session["featdest"]); ?>
                         </select>
                         <div class="span2">
@@ -210,13 +210,13 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                             <button class="btn" onclick="fdropitems(document.sessform.featsrc,document.sessform.featdest)"
                                 name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</button>
                         </div>
-                        <select class="span5" style="float: left;" id="featdest" name="featdest[]" size=6 multiple >
+                        <select class="span5" style="float: left;" id="featdest" name="featdest[]" size=10 multiple >
                             <?php populate_multidest_from_table("Features", $session["featdest"]); ?>
                         </select>
                     </div>
                 </div>
             </div> <!-- Features -->
-            <div class="span5" style="float: left;"> <!-- Services Box; -->
+            <div class="span4" style="float: left;"> <!-- Services Box; -->
                 <label>Required Room Services:</label>
                 <div class="borderBox">
                     <div class="clearfix">
@@ -224,7 +224,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                         <label for="servdest[]" class="pull-right">Selected Services:</label>
                     </div>
                     <div class="clearfix">
-                        <select class="span5" style="float: left;" id="servsrc" name="servsrc" size=6 multiple>
+                        <select class="span5" style="float: left;" id="servsrc" name="servsrc" size=10 multiple>
                             <?php populate_multisource_from_table("Services", $session["servdest"]); ?>
                         </select>
                         <div class="span2">
@@ -233,7 +233,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                             <button  class="btn"onclick="fdropitems(document.sessform.servsrc,document.sessform.servdest)"
                                 name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</button>
                         </div>
-                        <select class="span5" style="float: left;" id="servdest" name="servdest[]" size=6 multiple >
+                        <select class="span5" style="float: left;" id="servdest" name="servdest[]" size=10 multiple >
                             <?php populate_multidest_from_table("Services", $session["servdest"]); ?>
                         </select>
                     </div>
@@ -242,11 +242,30 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 <?php
     if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
 ?>
-            <div class="span2" style="float: left;"> 
-                <label class="control-label" for="tagdest">Tags:
-                    <select class="span12" id="tagdest" name="tagdest[]" multiple>
-                        <?php populate_multiselect_from_table("Tags", $session["tagdest"]); ?>
-                    </select>
+            <div class="span4" style="float: left;">
+                <label class="control-label" for="tagdest">Tags:</label>
+                <div class='borderBox'>
+                    <div class='clearfix'>
+                        <label for='tagsrc' class='pull-left'>Possible Tags:</label>
+                        <label for='tagdest[]' class='pull-right'>Selected Tags:</label>
+                    </div>
+                    <div class='clearfix'>
+                        <select class='span5' style='float: left;' id='tagsrc' name='tagsrc' size=10 multiple>
+                            <?php populate_multisource_from_table('Tags', $session['tagdest']); ?>
+                        </select>
+                        <div class="span2">
+                            <button class="btn" onclick="fadditems(document.sessform.tagsrc,document.sessform.tagdest)"
+                                    name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;
+                            </button>
+                            <button class="btn" onclick="fdropitems(document.sessform.tagsrc,document.sessform.tagdest)"
+                                    name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;
+                            </button>
+                        </div>
+                        <select class="span5" style="float: left;" id="tagdest" name="tagdest[]" size=10 multiple>
+                            <?php populate_multidest_from_table('Tags', $session['tagdest']); ?>
+                        </select>
+                    </div>
+                </div>
                 </label>
             </div>
 <?php
@@ -277,33 +296,53 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         </div>
 <?php
     if (MEETING_LINK === TRUE) {
+        if (array_key_exists('mlink', $session)) {
+            $mlink = is_null($session['mlink']) ? "" : $session['mlink'];
+        } else {
+            $mlink = "";
+        }
+        if (array_key_exists('plink', $session)) {
+            $plink = is_null($session['plink']) ? "" : $session['plink'];
+        } else {
+            $plink = "";
+        }
+        if (array_key_exists('clink', $session)) {
+            $clink = is_null($session['clink']) ? "" : $session['clink'];
+        } else {
+            $clink = "";
+        }
 ?>
         <div class="row-fluid vert-sep vert-sep-above">
             <div class="control-group">
                 <label class="span1 control-label" for="mlink">Meeting Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"],ENT_COMPAT);?>" />
+                <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($mlink,ENT_COMPAT);?>" />
             </div>
         </div>
         <div class="row-fluid vert-sep vert-sep-above">
             <div class="control-group">
                 <label class="span1 control-label" for="plink">Participant Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="plink" id="plink" value="<?php echo htmlspecialchars($session["plink"],ENT_COMPAT);?>" />
+                <input type="text" class="span11" size="80" maxlength="510" name="plink" id="plink" value="<?php echo htmlspecialchars($plink,ENT_COMPAT);?>" />
             </div>
         </div>
         <div class="row-fluid vert-sep vert-sep-above">
             <div class="control-group">
                 <label class="span1 control-label" for="clink">Caption Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="clink" id="clink" value="<?php echo htmlspecialchars($session["clink"],ENT_COMPAT);?>" />
+                <input type="text" class="span11" size="80" maxlength="510" name="clink" id="clink" value="<?php echo htmlspecialchars($clink,ENT_COMPAT);?>" />
             </div>
         </div>
 <?php
     }
     if (RECORDING_LINK === TRUE) {
+        if (array_key_exists('rlink', $session)) {
+            $rlink = is_null($session['rlink']) ? '' : $session['rlink'];
+        } else {
+            $rlink = '';
+        }
         ?>
         <div class="row-fluid vert-sep vert-sep-above">
             <div class="control-group">
-                <label class="control-label" for="rlink">Recording Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="rlink" id="rlink" value="<?php echo htmlspecialchars($session["rlink"],ENT_COMPAT);?>" />
+                <label class="span1 control-label" for="rlink">Recording Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="rlink" id="rlink" value="<?php echo htmlspecialchars($rlink,ENT_COMPAT);?>" />
             </div>
         </div>
         <?php

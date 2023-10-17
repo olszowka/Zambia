@@ -37,6 +37,9 @@ function mysubmit() {
     for ( i = 0 ; i < document.sessform.servdest.length ; i++ ) {
         document.sessform.servdest.options[i].selected=true;
     }
+    for ( i = 0 ; i < document.sessform.tagdest.length ; i++ ) {
+        document.sessform.tagdest.options[i].selected=true;
+    }
     tinymce.triggerSave();
 }
 
@@ -63,4 +66,3 @@ function initializeSessionEdit() {
         }
     });
 }
-

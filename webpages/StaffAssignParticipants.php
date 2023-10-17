@@ -312,6 +312,8 @@ EOD;
         $badgeid = $row["badgeid"];
         $rowNode->setAttribute("badgeid", $badgeid);
         $pubsname = $row["pubsname"];
+        if ($pubsname === NULL)
+            $pubsname = "";
         if (mb_ereg_match("\w", $pubsname)) {
             $pattern = "(.*)(\b" . preg_quote($row["lastname"]) . "\b)(.*)";
             if (mb_ereg($pattern, $pubsname, $regexArr)) {
