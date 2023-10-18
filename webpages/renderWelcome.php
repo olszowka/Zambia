@@ -107,8 +107,8 @@ if (may_I('postcon')) { ?>
         <?php if (may_I('my_availability')) { ?>
         <p> Use the "Availability" menu to:</p>
         <ul>
-            <li> Number of sessions you are interested in and on which days.</li>
-            <li> List the times during the convention you are availalbe.</li>
+            <li> Tell us how many sessions you are interested in. (In total and how many on each day)</li>
+            <li> List the times during the convention you are available.</li>
         </ul>
         <?php } ?>
 

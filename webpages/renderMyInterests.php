@@ -2,7 +2,7 @@
 // Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 function renderMyInterests($title, $error, $message, $rolearray) {
     global $link, $yespanels, $nopanels, $yespeople, $nopeople;
-    global $otherroles, $newrow;
+    global $otherroles, $newrow, $customTextArray;
     $rolerows = $rolearray['count'];
     participant_header($title, false, 'Normal', true);
     echo("<div class=\"mt-2\">");
@@ -17,6 +17,13 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "<form name=\"addform\" method=\"POST\" action=\"SubmitMyInterests.php\" >\n";
     echo "<input type=\"hidden\" name=\"newrow\" value=\"" . ($newrow ? 1 : 0) . "\" />\n";
     echo "<input type=\"hidden\" name=\"rolerows\" value=\"" . $rolerows . "\" />\n";
+    if (array_key_exists('intro_text', $customTextArray) && $customTextArray['intro_text'] != '') {
+        echo "<div class=\"row mt-3\">\n";
+        echo "  <div class=\"col-md-12\">\n";
+        echo $customTextArray['intro_text'] . "\n";
+        echo "  <div>\n";
+        echo "<div>\n";
+    }
     echo "<div class=\"row mt-3\">\n";
     echo "  <div class=\"col-md-6\">\n";
     echo "    <label for=\"yespanels\">Workshops or presentations I'd like to run:</label>\n";
