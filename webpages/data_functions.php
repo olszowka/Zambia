@@ -257,10 +257,15 @@ function get_session_from_post() {
     $session["secondtitle"] = getString('secondtitle');
     $session["pocketprogtext"] = getString('pocketprogtext');
     $session["progguidhtml"] = getString('progguidhtml');
-    if (HTML_SESSION === TRUE)
-        $session["progguiddesc"] = html_to_text(getString('progguidhtml'));
-    else
-        $session["progguiddesc"] = getString('progguiddesc');
+    if (HTML_SESSION === TRUE) {
+        $text = getString('progguidhtml');
+        if ($text === null) {
+            $text = getString('progguiddesc');
+            $session['progguidhtml'] = $text;
+            $session["progguiddesc"] = html_to_text($text);
+        } else
+            $session["progguiddesc"] = getString('progguiddesc');
+    }
     $session["persppartinfo"] = getString('persppartinfo');
     $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
@@ -334,7 +339,7 @@ function set_session_defaults() {
 function set_brainstorm_session_defaults() {
     global $session;
     $session["roomset"] = 99; // "Unspecified"
-    if (!may_I('Staff')) {
+    if (!may_I('Staff') || BRAINSTORM_STAFF_STATUS == FALSE) {
         $session["status"] = 1; // brainstorm
     }
 }
