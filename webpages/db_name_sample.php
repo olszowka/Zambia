@@ -45,6 +45,7 @@ define("SECOND_TITLE_CAPTION", "Titre en fran&ccedil;ais");
 define("SECOND_DESCRIPTION_CAPTION", "Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
+define('BRAINSTORM_STAFF_STATUS', FALSE); // if the user has staff role, should the brainstorm suggestion be set to edit_me?
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
 define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and reCAPTCHA integration.
 define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
