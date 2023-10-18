@@ -12,6 +12,7 @@
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
   <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
+  <xsl:variable name="Brainstorm" select="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']"/>
   <xsl:template match="/">
     <nav id="staffNav" class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand py-1" href="#">
@@ -23,6 +24,11 @@
       </button>
       <div class="collapse navbar-collapse flex-wrap" id="navbarSupportedContent">
         <ul class="navbar-nav mr-4">
+          <xsl:if test="$Brainstorm">
+            <li class="nav-item py-0">
+              <a class="nav-link py-1" href="BrainstormWelcome.php">Brainstorming</a>
+            </li>
+          </xsl:if>
           <li class="nav-item dropdown mr-2 py-0">
             <a class="nav-link dropdown-toggle py-1" href="#" id="navbarSessionsDropdown" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
