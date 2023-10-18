@@ -22,6 +22,7 @@
         <xsl:variable name="interested" select="/doc/query[@queryName='participant_info']/row/@interested" />
         <xsl:variable name="bestway" select="/doc/query[@queryName='participant_info']/row/@bestway" />
         <xsl:variable name="bioNote" select="/doc/customText/@biography_note" />
+        <xsl:variable name="policyNote" select="/doc/customText/@policy_block_at_top" />
         <xsl:variable name="regDataNote" select="/doc/customText/@registration_data" />
         <div id="confNotAttModal" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -48,6 +49,13 @@
         </div>
         <div class="container-fluid">
             <form name="partform" class="container mt-2 mb-4">
+                <xsl:if test="$policyNote">
+                    <div class="row mt-1">
+                        <div class="col note">
+                            <xsl:value-of select="$policyNote" disable-output-escaping="yes"/>
+                        </div>
+                    </div>
+                </xsl:if>
                 <div class="row mt-3">
                     <legend>Permissions</legend>
                 </div>
@@ -342,12 +350,12 @@
                     </xsl:otherwise>
                   </xsl:choose>
                   <xsl:if test="$bioNote">
-                        <div class="row mt-1">
-                            <div class="col note">
-                                <xsl:value-of select="$bioNote" disable-output-escaping="yes"/>
-                            </div>
+                    <div class="row mt-1">
+                        <div class="col note">
+                            <xsl:value-of select="$bioNote" disable-output-escaping="yes"/>
                         </div>
-                     </xsl:if> 
+                    </div>
+                  </xsl:if>
                 </fieldset>
                 <xsl:if test="/doc/query[@queryName='credentials']/row">
                     <fieldset>
