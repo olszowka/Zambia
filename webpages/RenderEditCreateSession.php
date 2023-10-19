@@ -135,7 +135,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     id="progguidhtml"><?php echo $session["progguidhtml"]?></textarea>
             </div>
             <div class="span6">
-                <label class="control-label" for="progguiddesc">Plain Text Description (updates on Save):</label>
+                <label class="control-label" for="progguiddesc">Plain Text Description:</label>
                 <textarea class="span12 textlabelarea" rows="4" cols="70" name="progguiddesc" id="progguiddesc"
                     readonly="readonly"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
                 <?php

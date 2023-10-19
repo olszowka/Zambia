@@ -63,6 +63,19 @@ function initializeSessionEdit() {
         placeholder: 'Type custom content here...',
         init_instance_callback: function (editor) {
             $(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
-        }
+        },
+        setup: function (ed) {
+            ed.on('change', function (e) {
+                guiddescChange();
+            });
+        },
     });
+}
+
+function guiddescChange() {
+    tinymce.triggerSave();
+    var tempDivElement = document.createElement("div");
+    tempDivElement.innerHTML = $("#progguidhtml").val();
+    $("#progguiddesc").val(tempDivElement.textContent || tempDivElement.innerText || "");
+    tempDivElement.remove();
 }
