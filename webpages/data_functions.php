@@ -1,11 +1,11 @@
 <?php
-//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
-	$startTimeUnits = $startTimeHour * 2;
-	if ($startTimeMin >= 30) {
+    $startTimeUnits = $startTimeHour * 2;
+    if ($startTimeMin >= 30) {
         $startTimeUnits++;
     }
-	return $startTimeUnits;
+    return $startTimeUnits;
 }
 
 function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
@@ -19,13 +19,13 @@ function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
 }
 
 function convertUnitsToTimeStr($timeUnits) {
-	return floor($timeUnits/2).":00:00";
+    return floor($timeUnits/2).":00:00";
 }
 
 function convertUnitsToHourMin($timeUnits) {
-	$hour = floor($timeUnits/2);
-	$min = ($timeUnits%2) * 30;
-	return array($hour, $min);
+    $hour = floor($timeUnits/2);
+    $min = ($timeUnits%2) * 30;
+    return array($hour, $min);
 }
 
 function fetchCustomText($tag) {
@@ -257,10 +257,12 @@ function get_session_from_post() {
     $session["secondtitle"] = getString('secondtitle');
     $session["pocketprogtext"] = getString('pocketprogtext');
     $session["progguidhtml"] = getString('progguidhtml');
-    if (HTML_SESSION === TRUE)
-        $session["progguiddesc"] = html_to_text(getString('progguidhtml'));
-    else
+    if (HTML_SESSION === TRUE) {
+        $text = getString('progguidhtml');
+        $session["progguiddesc"] = $text !== null ? html_to_text($text) : getString('progguiddesc');
+    } else {
         $session["progguiddesc"] = getString('progguiddesc');
+    }
     $session["persppartinfo"] = getString('persppartinfo');
     $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
