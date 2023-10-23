@@ -1,6 +1,6 @@
 <?php
 // This is an example file.  Please copy to db_name.php and edit as needed.
-// Copyright (c) 2008-2021 Peter Olszowka. All rights reserved.
+// Copyright (c) 2008-2023 Peter Olszowka. All rights reserved.
 // See copyright document for more details.
 define("DBHOSTNAME", "localhost");
 define("DBUSERID", "zambiademo");
@@ -45,6 +45,7 @@ define("SECOND_TITLE_CAPTION", "Titre en fran&ccedil;ais");
 define("SECOND_DESCRIPTION_CAPTION", "Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
+define('BRAINSTORM_STAFF_STATUS', FALSE); // if the user has staff role, should the brainstorm suggestion be set to edit_me?
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
 define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and reCAPTCHA integration.
 define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
@@ -82,4 +83,13 @@ define("PHOTO_PUBLIC_DIRECTORY", "/participant_photos"); // inside of web server
 define("PHOTO_FILE_TYPES", "jpg,png"); // comma separated list of allowed file types/suffixes (will be verified by PHP)
 define("PHOTO_DIMENSIONS", "200,200,800,800,1048576"); // comma separated list min width/height, max width/height, file size
 define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participants without photo
+define("CON_THEME", "");
+// if con-specific theming should be applied, you can reference a theme css here.
+// for example: define("CON_THEME", "themes/reallybigcon/main.css");
+define("CON_HEADER_IMG", "");
+// to improve the con branding, you can define a con-specific header image that will take the place of the
+// Zambia illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
+define("CON_HEADER_IMG_ALT", "");
+// to improve the con branding, you can specify the alt-text of the header image. For example:
+// define("CON_HEADER_IMG_ALT", "Really Big Con Logo);
 ?>
