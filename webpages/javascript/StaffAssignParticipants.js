@@ -1,5 +1,5 @@
-//	Created by Peter Olszowka on 2015-11-21;
-//	Copyright (c) 2015-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Created by Peter Olszowka on 2015-11-21;
+//  Copyright (c) 2015-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
 var participantSelectChoices = null;
 
 var StaffAssignParticipants = function() {

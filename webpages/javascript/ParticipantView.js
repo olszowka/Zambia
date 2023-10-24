@@ -1,5 +1,5 @@
-//	Created by Peter Olszowka on 2022-12-26;
-//	Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Created by Peter Olszowka on 2022-12-26;
+//  Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 const participantview = function() {
     this.initialize = () => {

@@ -1,3 +1,4 @@
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function fadditems(source, dest) {
     var i;
     var itemtext;
@@ -29,7 +30,7 @@ function fdropitems(source, dest) {
     }
 
 function mysubmit() {
-	$("#sessionid").prop("disabled",false);
+    $("#sessionid").prop("disabled",false);
     var i;
     for ( i = 0 ; i < document.sessform.featdest.length ; i++ ) {
         document.sessform.featdest.options[i].selected=true;
@@ -60,7 +61,19 @@ function initializeSessionEdit() {
         placeholder: 'Type custom content here...',
         init_instance_callback: function (editor) {
             $(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
-        }
+        },
+        setup: function (ed) {
+            ed.on('change', function (e) {
+                guiddescChange();
+            });
+        },
     });
 }
 
+function guiddescChange() {
+    tinymce.triggerSave();
+    var tempDivElement = document.createElement("div");
+    tempDivElement.innerHTML = $("#progguidhtml").val();
+    $("#progguiddesc").val(tempDivElement.textContent || tempDivElement.innerText || "");
+    tempDivElement.remove();
+}

@@ -135,7 +135,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     id="progguidhtml"><?php echo $session["progguidhtml"]?></textarea>
             </div>
             <div class="span6">
-                <label class="control-label" for="progguiddesc">Plain Text Description (updates on Save):</label>
+                <label class="control-label" for="progguiddesc">Plain Text Description:</label>
                 <textarea class="span12 textlabelarea" rows="4" cols="70" name="progguiddesc" id="progguiddesc"
                     readonly="readonly"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
                 <?php
@@ -277,21 +277,53 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         </div>
 <?php
     if (MEETING_LINK === TRUE) {
+        if (array_key_exists('mlink', $session)) {
+            $mlink = is_null($session['mlink']) ? "" : htmlspecialchars($session['mlink'],ENT_COMPAT);
+        } else {
+            $mlink = "";
+        }
+        if (array_key_exists('plink', $session)) {
+            $plink = is_null($session['plink']) ? "" : htmlspecialchars($session['plink'],ENT_COMPAT);
+        } else {
+            $plink = "";
+        }
+        if (array_key_exists('clink', $session)) {
+            $clink = is_null($session['clink']) ? "" : htmlspecialchars($session['clink'],ENT_COMPAT);
+        } else {
+            $clink = "";
+        }
 ?>
         <div class="row-fluid vert-sep vert-sep-above">
                     <div class="control-group">
-                        <label class="control-label" for="mlink">Meeting Link:</label>
-                        <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"],ENT_COMPAT);?>" />
+                <label class="span1 control-label" for="mlink">Meeting Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo $mlink;?>" />
+            </div>
+        </div>
+        <div class="row-fluid vert-sep vert-sep-above">
+            <div class="control-group">
+                <label class="span1 control-label" for="plink">Participant Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="plink" id="plink" value="<?php echo $plink;?>" />
+            </div>
+        </div>
+        <div class="row-fluid vert-sep vert-sep-above">
+            <div class="control-group">
+                <label class="span1 control-label" for="clink">Caption Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="clink" id="clink" value="<?php echo $clink;?>" />
                     </div>
                 </div>
 <?php
     }
     if (RECORDING_LINK === TRUE) {
+        if (array_key_exists('rlink', $session)) {
+            $rlink = is_null($session['rlink']) ? '' : htmlspecialchars($session['rlink'],ENT_COMPAT);
+        } else {
+            $rlink = '';
+        }
         ?>
         <div class="row-fluid vert-sep vert-sep-above">
             <div class="control-group">
-                <label class="control-label" for="rlink">Recording Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="rlink" id="rlink" value="<?php echo htmlspecialchars($session["rlink"],ENT_COMPAT);?>" />
+                <label class="span1 control-label" for="rlink">Recording Link:</label>
+                <input type="text" class="span11" size="80" maxlength="510" name="rlink" id="rlink" value="<?php echo $rlink;?>" />
             </div>
         </div>
         <?php
