@@ -20,18 +20,20 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-    P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
-    P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
-    CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry,
-    P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
-FROM Participants P
-JOIN CongoDump CD ON P.badgeid = CD.badgeid
-LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
-LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
-WHERE P.badgeid = ?
-ORDER BY CD.lastname, CD.firstname
+        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+        P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
+        CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry,
+        P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+        IFNULL(P.photouploadstatus, 0) AS photouploadstatus, R.statustext, D.reasontext
+    FROM
+                  Participants P
+             JOIN CongoDump CD ON P.badgeid = CD.badgeid
+        LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
+        LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
+    WHERE
+        P.badgeid = ?
+    ORDER BY
+        CD.lastname, CD.firstname;
 EOD;
     $param_arr = array($fbadgeid);
     $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
@@ -119,9 +121,9 @@ EOD;
         if ($rows == 0) {   // no record existed with old values, add one
             $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
         FROM
             CongoDump
         WHERE
@@ -194,9 +196,9 @@ EOD;
 
         $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, ?
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, ?, CURRENT_TIMESTAMP
         FROM
             CongoDump
         WHERE
@@ -311,9 +313,9 @@ EOD;
         $query = <<<EOD
 UPDATE ParticipantOnSessionHistory
     SET inactivatedts = NOW(), inactivatedbybadgeid = ?
-	WHERE
-	        badgeid = ?
-		AND inactivatedts IS NULL;
+    WHERE
+            badgeid = ?
+        AND inactivatedts IS NULL;
 EOD;
         $update_arr = array($_SESSION['badgeid'], $participantBadgeId);
         $updateStr = "ss";

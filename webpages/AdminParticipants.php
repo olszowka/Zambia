@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Administer Participants";
 $bootstrap4 = true;
@@ -101,7 +101,7 @@ echo fetch_participant_tags(true);
                 </div>
             </div>
 <?php
-if (USE_REG_SYSTEM === TRUE) {
+if (USE_REG_SYSTEM === TRUE && UPDATE_REG_SYSTEM === FALSE) {
 ?>
             <div class="col-sm-3">
                 <div class="">
@@ -138,7 +138,7 @@ if (USE_REG_SYSTEM === TRUE) {
                     <label for="badgename" class="mb-1">Badge name:</label>
                 </div>
                 <div>
-<?php if (USE_REG_SYSTEM === TRUE) { 
+<?php if (USE_REG_SYSTEM === TRUE && UPDATE_REG_SYSTEM === FALSE) {
 ?>
                     <input type="text" id="badgename" class="col-text-input disabled" readonly="readonly" maxlength="50" />
 <?php
@@ -150,8 +150,17 @@ if (USE_REG_SYSTEM === TRUE) {
 ?>
                 </div>
             </div>
+            <div class="col-sm-2">
+                <div class="">
+                    <label for="badgename" class="mb-1">Registration Status</label>
+                </div>
+                <div>
+                    <input class="col-text-input disabled" id="regtype" type="text" readonly="readonly" style="max-width:15rem;" />
+                </div>
+            </div>
+
 <?php
-if (USE_REG_SYSTEM === FALSE) {
+if (USE_REG_SYSTEM === FALSE || UPDATE_REG_SYSTEM === TRUE) {
 ?> 
         </div>
         <div class="row mt-3">
@@ -184,7 +193,7 @@ if (USE_REG_SYSTEM === FALSE) {
             </div>
         </div>
 <?php
-if (USE_REG_SYSTEM === FALSE) {
+if (USE_REG_SYSTEM === FALSE || UPDATE_REG_SYSTEM === TRUE) {
 ?>
         <div class="row mt-3">
             <div class="col-sm-3 offset-sm-2 offset-xl-1">

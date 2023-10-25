@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
 $title = "My Profile";
 require('PartCommonCode.php'); // initialize db; check login;
@@ -134,7 +134,7 @@ function update_participant($badgeid) {
     $postcountry = getString('postcountry');
     if (!is_null($fname) || !is_null($lname) || !is_null($badgename) || !is_null($phone) || !is_null($email) || !is_null($postaddress1)
         || !is_null($postaddress2) || !is_null($postcity) || !is_null($poststate) || !is_null($postzip) || !is_null($postcountry)) {
-        if (USE_REG_SYSTEM) {
+        if (USE_REG_SYSTEM && !UPDATE_REG_SYSTEM) {
             $message_error = "Zambia configuration error.  Editing contact data is not permitted.";
             Render500ErrorAjax($message_error);
             exit();
@@ -156,9 +156,9 @@ EOD;
     if ($rows == 0) {   // no record existed with old values, add one
         $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 SECOND), CURRENT_TIMESTAMP, ?
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, badgeid, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 SECOND), CURRENT_TIMESTAMP, ?
         FROM
             CongoDump
         WHERE
@@ -167,6 +167,33 @@ EOD;
         $rows = mysql_cmd_with_prepare($query, "ss", array($badgeid, $badgeid));
         if ($rows != 1) {
             $message_error = "Error updating db. (insert history record)";
+            Render500ErrorAjax($message_error);
+            exit();
+        }
+    }
+// for Balticon update perinfo then congodump so if the congodump fails, it gets it from reginfo, and if the cron job runs, congodump is the same either way
+    if (is_numeric($badgeid) && UPDATE_REG_SYSTEM) {
+        $query_preable = "UPDATE " . REG_DBNAME . ".perinfo SET ";
+        $query_portion_arr = array();
+        $query_param_arr = array();
+        $query_param_type_str = "";
+        push_query_arrays($fname, 'first_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($lname, 'last_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($badgename, 'badge_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($phone, 'phone', 's', 15, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($email, 'email_addr', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($postaddress1, 'address', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($postaddress2, 'addr_2', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($postcity, 'city', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($poststate, 'state', 's', 2, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($postzip, 'zip', 's', 10, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($postcountry, 'country', 's', 20, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        $query_param_arr[] = $badgeid;
+        $query_param_type_str .= 's';
+        $query = $query_preable . implode(', ', $query_portion_arr) . " WHERE id = ?";
+        $rows = mysql_cmd_with_prepare($query, $query_param_type_str, $query_param_arr);
+        if ($rows != 1) {
+            $message_error = "Error updating db. (reg update)";
             Render500ErrorAjax($message_error);
             exit();
         }
@@ -199,9 +226,9 @@ EOD;
 
         $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, ?
+        badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, ?, CURRENT_TIMESTAMP
         FROM
             CongoDump
         WHERE

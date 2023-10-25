@@ -93,7 +93,7 @@
                       <a href="AddZambiaUser.php">Create User</a>
                     </li>
                   </xsl:if>
-                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='balt_ImportUsers']">
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='reg_ImportUsers']">
                     <li>
                       <a href="BalticonImportRegUser.php">Import User from Reg</a>
                     </li>
