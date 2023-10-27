@@ -3,6 +3,7 @@
 // Copyright (c) 2008-2021 Peter Olszowka. All rights reserved.
 // See copyright document for more details.
 define("DBHOSTNAME", "localhost");
+define("DBPORT". 3306);
 define("DBUSERID", "zambiademo");
 define("DBPASSWORD", "4fandom");
 define("DBDB", "zambiademo");
@@ -46,6 +47,7 @@ define("SECOND_DESCRIPTION_CAPTION", "Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
 define('BRAINSTORM_STAFF_STATUS', FALSE); // if the user has staff role, should the brainstorm suggestion be set to edit_me?
+define('REG_URL', 'https://website/registration'); // URL for logging into user self service portion of registration system -- appears on My Profile page
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
 define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and reCAPTCHA integration.
 define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
@@ -68,10 +70,17 @@ define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag field
 // "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
 define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all users
 define("USE_REG_SYSTEM", FALSE);
-// True -> Zambia users loaded from reg system into CongoDump; staff users cannot edit them
+// True -> Zambia users loaded from reg system into CongoDump; see UPDATE_REG_SYSTEM for edit privs
 // False -> Zambia users created and edited by staff users in Zambia
-define("REG_PART_PREFIX", "");
+define('UPDATE_REG_SYSTEM', TRUE);
+// Only if USE_REG_SYSTEM is TRUE
+// True -> Zambia users/staff changes to Congodump propogate back to reg in real time
+// False -> Zambia users/staff cannot make changes to CongoDump Data
+define('REG_DBNAME', 'reg_db');
+define('REG_CONID', '2023');
+define("REG_PART_PREFIX", "r23");
 // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
+// if USE_REG_SYSTEM = TRUE, prefix must be non numberic (can be alphanumeric) and is used for id's not to sync with reg
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
 define("MEETING_LINK", TRUE); // Add support for Meeting Link in sessions
