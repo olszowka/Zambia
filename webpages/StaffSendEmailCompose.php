@@ -30,8 +30,7 @@ if (SMTP_QUEUEONLY === TRUE) {
     staff_header($title, $bootstrap4);
 }
 if (!$timeLimitSuccess) {
-	RenderError("Error extending time limit.");
-	exit(0);
+	RenderError("Warning: Error extending time limit, continuing anyway.");
 }
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $email = get_email_from_post();
