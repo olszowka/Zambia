@@ -4,8 +4,7 @@ $title = "Generate Report Files";
 require_once('StaffCommonCode.php');
 $timeLimitSuccess = set_time_limit(600);
 if (!$timeLimitSuccess) {
-    RenderError("Error extending time limit.");
-    exit();
+    echo "Warning: Error extending time limit.<br/>\n";
 }
 $query =<<<EOD
 SELECT

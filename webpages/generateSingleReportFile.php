@@ -4,9 +4,7 @@ $title = "Generate Report Files";
 require_once('StaffCommonCode.php');
 $reportName = getString("reportName");
 if ($reportName == '') {
-    $message_error = "Required parameter reportName misssing or invalid.";
-    RenderError($message_error);
-    exit();
+    echo "Warning: Error extending time limit.<br/>\n";
 }
 $reportFileName = $reportName . "report.php";
 $timeLimitSuccess = set_time_limit(600);
