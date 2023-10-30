@@ -325,6 +325,8 @@ if (isset($db_name_path)) {
         include ('./db_name.php'); // scripts which rely on this file (db_functions.php) may run from a different directory
 }
 function prepare_db_and_more() {
+    mysqli_report(MYSQLI_REPORT_OFF); // Set behavior to like PHP < 8.1 in which mysqli errors are reported through
+    // inspection of function results rather than by throwing exceptions
     global $con_start_php_timestamp, $linki, $fatalError, $mysqli;
     $linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
     if (!$linki) {
