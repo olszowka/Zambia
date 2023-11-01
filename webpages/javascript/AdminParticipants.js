@@ -126,6 +126,9 @@ function chooseParticipant(badgeid, override) {
     $postzip.val(postzip).prop("defaultValue", postzip).prop("readOnly", false);
     var postcountry = $("#postcountryHID_" + badgeidJQSel).val();
     $postcountry.val(postcountry).prop("defaultValue", postcountry).prop("readOnly", false);
+    if (regtypeElem) {
+        regtypeElem.value = document.getElementById('regmessageHID_' + badgeidJQSel)?.value;
+    }
     $("#lname_fname").val($("#lnameSPAN_" + badgeidJQSel).text());
     var badgename = $("#bnameSPAN_" + badgeidJQSel).text();
     $badgename.val(badgename).prop("defaultValue", badgename).prop("readOnly", false);
@@ -440,6 +443,7 @@ function initializeAdminParticipants() {
     $updateButton = $("#updateBUTN");
     $showSurveyDiv = $("#showsurveydiv");
     $showSurveyBtn = $("#showsurveyBTN");
+    regtypeElem = document.getElementById('regtype');
     $passwordsDontMatch.hide();
     $('#resultsDiv').hide();
     $('#resultBoxDIV').hide();

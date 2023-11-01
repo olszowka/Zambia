@@ -89,6 +89,11 @@
                               <xsl:value-of select="@postcountry"/>
                             </xsl:attribute>
                           </input>
+                          <input type="hidden" id="regmessageHID_{@badgeid}">
+                              <xsl:attribute name="value">
+                                  <xsl:value-of select="@regmessage"/>
+                              </xsl:attribute>
+                          </input>
                       </tr>
                   </xsl:for-each>
                 </tbody>
