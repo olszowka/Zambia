@@ -8,22 +8,29 @@ $report['categories'] = array(
 );
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'
+WITH
+    PC AS (
+        SELECT
+                sessionid, count(*) AS `count`
+            FROM
+                ParticipantOnSession
+            GROUP BY
+                sessionid
+    )
 SELECT
         S.sessionid, S.title, T.trackname, R.roomname, SCH.roomid,
         DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
-        IFNULL(COUNT(POS.badgeid), 0) AS numAssigned
+        IFNULL(PC.count, 0) AS numAssigned
     FROM
                   Sessions S
              JOIN Schedule SCH USING (sessionid)
              JOIN Tracks T USING (trackid)
              JOIN Rooms R USING (roomid)
-        LEFT JOIN ParticipantOnSession POS USING (sessionid)
+        LEFT JOIN PC USING (sessionid)
     WHERE
             S.statusid IN (1, 2, 3, 6, 7) ## Brainstorm, Vetted, Scheduled, Edit Me, Assigned
         AND S.typeid = 1 ## Panel
-    GROUP BY
-        S.sessionid
     HAVING
         numAssigned < 3
     ORDER BY
@@ -79,8 +86,8 @@ $report['xsl'] =<<<'EOD'
             <td class="report"><xsl:value-of select="@starttime"/></td>
             <td class="report">
                 <xsl:call-template name="showDuration">
-                    <xsl:with-param name="durationHrs" select = "@durationHrs" />
-                    <xsl:with-param name="durationMin" select = "@durationMin" />
+                    <xsl:with-param name="durationhrs" select = "@durationhrs" />
+                    <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
             <td class="report"><xsl:value-of select="@numAssigned"/></td>

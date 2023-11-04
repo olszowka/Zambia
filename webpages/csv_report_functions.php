@@ -11,13 +11,15 @@ function render_query_result_as_csv($result) {
             if (isset($report['map_functions'][$index]) && is_callable($report['map_functions'][$index])) {
                 $value = $report['map_functions'][$index]($value);
             }
-            if (strpos($value, "\"") !== false) {
-                $value = str_replace("\"", "\"\"", $value);
-                echo "\"$value\"";
-            } elseif (strpos($value, ",") !== false or strpos($value, "\n") !== false) {
-                echo "\"$value\"";
-            } else {
-                echo $value;
+            if (!is_null($value)) {
+                if (strpos($value, "\"") !== false) {
+                    $value = str_replace("\"", "\"\"", $value);
+                    echo "\"$value\"";
+                } elseif (strpos($value, ",") !== false or strpos($value, "\n") !== false) {
+                    echo "\"$value\"";
+                } else {
+                    echo $value;
+                }
             }
             $betweenValues = true;
         }

@@ -56,8 +56,8 @@ function RenderPrecis($result, $showlinks) {
         }
         echo "</tr>\n";
         echo "<tr>";
-        echo "    <td colspan=\"2\" class=\"border0010\">" . $taglist == null ? "" : htmlspecialchars($taglist, ENT_NOQUOTES) . "</td>";
-        echo "    <td colspan=\"6\" class=\"border0010\">" . $progguiddesc == null ? "" : htmlspecialchars($progguiddesc, ENT_NOQUOTES) . "</td>";
+        echo "    <td colspan=\"2\" class=\"border0010\">" . is_null($taglist) ? "" : htmlspecialchars($taglist, ENT_NOQUOTES) . "</td>";
+        echo "    <td colspan=\"6\" class=\"border0010\">" . is_null($progguiddesc) ? "" : htmlspecialchars($progguiddesc, ENT_NOQUOTES) . "</td>";
         echo "</tr>\n";
         if ($persppartinfo) {
             echo "<tr><td></td>";

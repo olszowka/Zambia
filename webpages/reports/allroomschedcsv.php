@@ -25,16 +25,16 @@ SELECT
         S.title,
         GROUP_CONCAT(CONCAT(P.pubsname,' (',P.badgeid,')') SEPARATOR '; ') AS 'Participants' 
     FROM
-                Sessions S
-           JOIN Schedule SCH USING (sessionid)
-           JOIN Rooms R USING (roomid)
-      LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
-      LEFT JOIN Participants P ON POS.badgeid=P.badgeid
-      LEFT JOIN Tracks T ON T.trackid=S.trackid
+                  Sessions S
+             JOIN Schedule SCH USING (sessionid)
+             JOIN Rooms R USING (roomid)
+        LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
+        LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+        LEFT JOIN Tracks T ON T.trackid=S.trackid
     GROUP BY
-            SCH.scheduleid 
+        SCH.scheduleid 
     ORDER BY
-            R.roomname, SCH.starttime
+        R.roomname, SCH.starttime;
 EOD;
 $report['output_filename'] = 'allroomsched.csv';
 $report['column_headings'] = 'Room Name, Room Function, Start Time, Duration, Track, Session ID, Title, Participants';

@@ -1,46 +1,34 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Program Participant Thank you note query';
-$report['description'] = 'Name, mailing address, and number of scheduled sessions for programming sessions only.';
+$report['description'] = 'Name, mailing address, and number of scheduled sessions for programming division sessions only.';
 $report['categories'] = array(
     'Programming Reports' => 100,
 );
 $report['queries'] = [];
-$report['queries']['participants'] =<<<'EOD'
+$report['queries']['participants'] = <<<'EOD'
+WITH Sched AS (
+    SELECT
+            POS.badgeid, COUNT(*) AS sessioncount
+        FROM
+                 ParticipantOnSession POS
+            JOIN Schedule SCH USING (sessionid)
+            JOIN Sessions S USING (sessionid)
+        WHERE
+            S.divisionid = 2 ## programming
+        GROUP BY
+            POS.badgeid
+    )
 SELECT
-        P.badgeid,
-        P.pubsname,
-        C.firstname,
-        C.lastname,
-        C.postaddress1,
-        C.postaddress2,
-        C.postcity,
-        C.poststate,
-        C.postzip,
-        C.postcountry,
-        SCH.sessioncount
+       CD.firstname, CD.lastname, P.pubsname, P.badgeid, Sched.sessioncount, CD.postaddress1, CD.postaddress2,
+       CD.postcity, CD.poststate, CD.postzip, CD.postcountry
     FROM
-                  CongoDump C
-             JOIN Participants AS P USING (badgeid)
-        LEFT JOIN (SELECT
-                            POS1.badgeid AS badgeid, COUNT(SCH1.sessionid) AS sessioncount
-                        FROM
-                                 ParticipantOnSession POS1
-                            JOIN Schedule SCH1 USING (sessionid)
-                            JOIN Sessions S USING (sessionid)
-                            JOIN Tracks T USING (trackid)
-                        WHERE
-                            S.divisionid = 2 ## programming
-                        GROUP BY
-                            POS1.badgeid
-                    ) AS SCH USING (badgeid) 
-    WHERE
-        SCH.sessioncount IS NOT NULL
-    GROUP BY 
-        P.badgeid
+             CongoDump CD
+        JOIN Participants AS P USING (badgeid)
+        JOIN Sched USING (badgeid) 
     ORDER BY
-        C.lastname, C.firstname
+        CD.lastname, CD.firstname
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>

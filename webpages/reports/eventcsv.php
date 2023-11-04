@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2017-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2017-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Events CSV Export';
 $report['description'] = 'Export CSV file of Event Division sessions';
@@ -11,25 +11,25 @@ $report['csv_output'] = true;
 $report['group_concat_expand'] = true;
 $report['queries'] = [];
 $report['queries']['master'] =<<<'EOD'
+WITH Parts AS
+    (SELECT
+            POS.sessionid, GROUP_CONCAT(P.pubsname SEPARATOR "\n") AS participants
+        FROM
+                 ParticipantOnSession POS
+            JOIN Participants P USING (badgeid)
+        GROUP BY
+            POS.sessionid
+    )
 SELECT
-        S.sessionid,
-        S.title,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS when2,
-        R.roomname,
-        GROUP_CONCAT(
-            P.pubsname
-            SEPARATOR "\n"
-            ) AS participants
+        S.sessionid, S.title, DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS when2,
+        R.roomname, Parts.participants
     FROM
                   Schedule SCH
-        LEFT JOIN ParticipantOnSession POS USING (sessionid)
              JOIN Sessions S USING (sessionid)
              JOIN Rooms R USING (roomid)
-        LEFT JOIN Participants P USING (badgeid)
+        LEFT JOIN Parts USING (sessionid)
     WHERE 
         S.divisionid = 3 /* Events */
-    GROUP BY
-        S.sessionid
     ORDER BY
         SCH.starttime
 EOD;
