@@ -25,7 +25,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     }
     echo "<div class=\"row-fluid vert-sep-above\">\n";
     echo "  <div class=\"span6\">\n";
-    echo "    <label for=\"yespanels\">Workshops or presentations I'd like to run:</label>\n";
+    echo "    <label for=\"yespanels\"><p>Workshops or presentations I'd like to run:</p></label>\n";
     echo "    <textarea class=\"span12\" id=\"yespanels\" name=\"yespanels\" rows=\"5\" cols=\"72\"";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
