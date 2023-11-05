@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2010-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2010-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function SetSessionSearchParameterDefaults() {
     global $SessionSearchParameters;
     $SessionSearchParameters['currenttrack'] = 0;
@@ -269,7 +269,7 @@ SELECT
     NULL sessionid, COALESCE(TC.currenttrackid, 99), PS.typeid, PS.divisionid, 2 pubstatusid,
     PS.languagestatusid, NULL pubsno, PS.title, PS.secondtitle, PS.pocketprogtext,
     PS.progguiddesc, IFNULL(PS.progguidhtml, PS.progguiddesc), PS.persppartinfo, PS.duration, PS.estatten, PS.kidscatid,
-    PS.signupreq, 99 roomsetid, NULL notesforpart, NULL servicenotes, 6 statusid,
+    PS.signupreq, 1 roomsetid, NULL notesforpart, NULL servicenotes, 6 statusid,
     PS.notesforprog, NULL warnings, PS.invitedguest, CURRENT_TIMESTAMP ts
 FROM
     PreviousSessions PS LEFT JOIN
