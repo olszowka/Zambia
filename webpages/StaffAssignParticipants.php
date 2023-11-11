@@ -84,104 +84,67 @@ SELECT
     WHERE
         sessionid=$selsessionid;
 EOD;
-    if (DBVER >= "8") {
-        $queryArray["participantInterest"] = <<<EOD
-WITH AnsweredSurvey(participantid, answercount) AS (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-    GROUP BY
-), R2(badgeid, sessionid) AS (
-    SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
-    UNION
-    SELECT badgeid, sessionid FROM ParticipantSessionInterest WHERE sessionid=$selsessionid
-), R(badgeid, sessionid) AS (
-    SELECT DISTINCT badgeid, sessionid FROM R2
-)
-SELECT
-		POS.badgeid AS posbadgeid,
-		COALESCE(POS.moderator, 0) AS moderator,
-		P.badgeid,
-		P.pubsname,
-		P.staff_notes,
-		IFNULL(PSI.rank, 99) AS `rank`,
-		PSI.willmoderate,
-		PSI.comments,
-		P.bio,
-		PHR.roleid,
-        IF(P.interested = 1, 1, 0) AS attending,
-        IFNULL(A.answercount, 0) AS answercount
-    FROM Participants AS P
-    JOIN R ON (P.badgeid = R.badgeid)            
-    LEFT JOIN ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
-    LEFT JOIN ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
-    LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10 /* moderator */
-    LEFT JOIN AnsweredSurvey A ON (A.participantid = P.badgeid)
-	WHERE
-			POS.sessionid = $selsessionid
-		OR	POS.sessionid IS NULL
-	ORDER BY
-		attending DESC,
-		moderator DESC,
-		IFNULL(POS.badgeid, "~") ASC,
-		`rank` ASC,
-		P.pubsname ASC;
-EOD;
-    } else {
-        $queryArray["participantInterest"] = <<<EOD
-SELECT
-	POS.badgeid AS posbadgeid,
-	COALESCE(POS.moderator, 0) AS moderator,
-	P.badgeid,
-	P.pubsname,
-	P.staff_notes,
-	IFNULL(PSI.rank, 99) AS `rank`,
-	PSI.willmoderate,
-	PSI.comments,
-	P.bio,
-	PHR.roleid,
-    IF(P.interested = 1, 1, 0) AS attending,
-    IFNULL(A.answercount, 0) AS answercount
-FROM Participants AS P
-JOIN (
-    SELECT DISTINCT badgeid, sessionid FROM (
-        SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
+    $queryArray["participantInterest"] = <<<EOD
+WITH
+    AnsweredSurvey(participantid, answercount) AS (
+        SELECT
+                participantid, COUNT(*) AS answercount
+            FROM
+                ParticipantSurveyAnswers
+            GROUP BY
+                participantid
+        ),
+    R2(badgeid, sessionid) AS (
+            SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
         UNION
-        SELECT badgeid, sessionid FROM ParticipantSessionInterest WHERE sessionid=$selsessionid
-    ) R2
-) R ON (P.badgeid = R.badgeid)            
-LEFT JOIN ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
-LEFT JOIN ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
-LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10 /* moderator */
-LEFT JOIN (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-    GROUP BY participantid
-) A ON (A.participantid = P.badgeid)
-WHERE
-		POS.sessionid = $selsessionid
-	OR	POS.sessionid IS NULL
-ORDER BY
-	attending DESC,
-	moderator DESC,
-	IFNULL(POS.badgeid, "~") ASC,
-	`rank` ASC,
-	P.pubsname ASC;
+            SELECT badgeid, sessionid FROM ParticipantSessionInterest WHERE sessionid=$selsessionid
+        ),
+    R(badgeid, sessionid) AS (
+        SELECT DISTINCT badgeid, sessionid FROM R2
+        )
+SELECT
+        POS.badgeid AS posbadgeid, COALESCE(POS.moderator, 0) AS moderator, P.badgeid, P.pubsname, P.staff_notes,
+        IFNULL(PSI.rank, 99) AS `rank`, PSI.willmoderate, PSI.comments, P.bio, PHR.roleid,
+        IF(P.interested = 1, 1, 0) AS attending, IFNULL(A.answercount, 0) AS answercount
+    FROM
+                  Participants P
+             JOIN R ON (P.badgeid = R.badgeid)            
+        LEFT JOIN ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
+        LEFT JOIN ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
+        LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10 /* moderator */
+        LEFT JOIN AnsweredSurvey A ON (A.participantid = P.badgeid)
+    WHERE
+           POS.sessionid = $selsessionid
+        OR POS.sessionid IS NULL
+    ORDER BY
+        attending DESC,
+        moderator DESC,
+        IFNULL(POS.badgeid, "~") ASC,
+        `rank` ASC,
+        P.pubsname ASC;
 EOD;
-    }
     if ($SurveyUsed) {
         $queryArray['questions'] = <<<EOD
-SELECT s.questionid, s.shortname, s.hover, t.shortname as typename
-FROM SurveyQuestionConfig s
-JOIN SurveyQuestionTypes t USING (typeid)
-WHERE searchable = 1
-ORDER BY s.display_order;
+SELECT
+       s.questionid, s.shortname, s.hover, t.shortname as typename
+    FROM
+             SurveyQuestionConfig s
+        JOIN SurveyQuestionTypes t USING (typeid)
+    WHERE
+          searchable = 1
+    ORDER BY
+             s.display_order;
 EOD;
         $queryArray['options'] = <<<EOD
-SELECT o.questionid, o.ordinal, o.optionshort, o.optionhover, o.value
-FROM SurveyQuestionOptionConfig o
-JOIN SurveyQuestionConfig s USING (questionid)
-WHERE s.searchable = 1
-ORDER by o.questionid, o.display_order
+SELECT
+       o.questionid, o.ordinal, o.optionshort, o.optionhover, o.value
+    FROM
+             SurveyQuestionOptionConfig o
+        JOIN SurveyQuestionConfig s USING (questionid)
+    WHERE
+        s.searchable = 1
+    ORDER by
+         o.questionid, o.display_order;
 EOD;
     }
     if (($resultXML = mysql_query_XML($queryArray)) === false) {
@@ -195,14 +158,17 @@ EOD;
     }
     if ($SurveyUsed) {
         // get any questions that need programically create options
-	    $sql = <<<EOD
-SELECT d.questionid, t.shortname as typename, min_value, max_value, ascending
-FROM SurveyQuestionConfig d
-JOIN SurveyQuestionTypes t USING (typeid)
-WHERE t.shortname = 'monthyear';
+        $sql = <<<EOD
+SELECT
+       d.questionid, t.shortname as typename, min_value, max_value, ascending
+    FROM
+             SurveyQuestionConfig d
+        JOIN SurveyQuestionTypes t USING (typeid)
+    WHERE
+        t.shortname = 'monthyear';
 EOD;
-	    $result = mysqli_query_exit_on_error($sql);
-	    while ($row = mysqli_fetch_assoc($result)) {
+        $result = mysqli_query_exit_on_error($sql);
+        while ($row = mysqli_fetch_assoc($result)) {
             // build xml array from begin to end
             $options = [];
             $question_id = $row["questionid"];
@@ -217,8 +183,7 @@ EOD;
                     $options[] = $ojson;
                     $next = $next + 1;
                 }
-            }
-            else {
+            } else {
                 $next = $row["max_value"];
                 $end = $row["min_value"];
                 while ($next >= $end) {
@@ -234,70 +199,45 @@ EOD;
             $resultXML = ObjecttoXML('years', $options, $resultXML);
         }
     }
-    if (DBVER > "8") {
-        $otherParticipantsQuery = <<<EOD
-WITH AnsweredSurvey(participantid, answercount) AS (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-    GROUP BY participantid
-), SessionParticipants(badgeid) AS (
-    SELECT badgeid
-    FROM ParticipantSessionInterest
-    WHERE sessionid = $selsessionid
-)
+    $otherParticipantsQuery = <<<EOD
+WITH
+    AnsweredSurvey(participantid, answercount) AS (
+        SELECT
+                participantid, COUNT(*) AS answercount
+            FROM
+                ParticipantSurveyAnswers
+            GROUP BY
+                participantid
+        ),
+    SessionParticipants(badgeid) AS (
+        SELECT
+                badgeid
+        FROM
+            ParticipantSessionInterest
+        WHERE
+            sessionid = $selsessionid
+        )
 SELECT
-    CD.lastname,
-    CD.firstname,
-    CD.badgename,
-    P.badgeid,
-    P.pubsname,
-    CONCAT(CASE
-        WHEN P.pubsname != "" THEN P.pubsname
-        WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
-        ELSE CD.firstname
-    END, ' (', CD.badgename, ') - ', P.badgeid) AS name,
+        CD.lastname, CD.firstname, CD.badgename, P.badgeid, P.pubsname,
+        CONCAT(CASE
+            WHEN P.pubsname != "" THEN P.pubsname
+            WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
+            ELSE CD.firstname
+            END,
+            ' (', CD.badgename, ') - ', P.badgeid) AS name,
         IFNULL(A.answercount, 0) as answercount
     FROM
-        Participants P
-    JOIN CongoDump CD USING(badgeid)
-    LEFT OUTER JOIN SessionParticipants S ON (P.badgeid = S.badgeid)
-    LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
-    WHERE P.interested = 1 AND S.badgeid IS NULL
+                  Participants P
+             JOIN CongoDump CD USING(badgeid)
+        LEFT JOIN SessionParticipants S ON (P.badgeid = S.badgeid)
+        LEFT JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
+    WHERE
+            P.interested = 1
+        AND S.badgeid IS NULL
 ORDER BY
-	IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname;
+    IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),
+    CD.firstname;
 EOD;     
-    } else {
-        $otherParticipantsQuery = <<<EOD
-SELECT
-    CD.lastname,
-    CD.firstname,
-    CD.badgename,
-    P.badgeid,
-    P.pubsname,
-    CONCAT(CASE
-        WHEN P.pubsname != "" THEN P.pubsname
-        WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
-        ELSE CD.firstname
-    END, ' (', CD.badgename, ') - ', P.badgeid) AS name,
-        IFNULL(A.answercount, 0) as answercount
-    FROM
-        Participants P
-    JOIN CongoDump CD USING(badgeid)
-    LEFT OUTER JOIN (
-        SELECT badgeid
-        FROM ParticipantSessionInterest
-        WHERE sessionid = $selsessionid
-    ) S ON (P.badgeid = S.badgeid)
-    LEFT OUTER JOIN (
-        SELECT participantid, COUNT(*) AS answercount
-        FROM ParticipantSurveyAnswers
-        GROUP BY participantid
-    ) A ON (P.badgeid = A.participantid)
-    WHERE P.interested = 1 AND S.badgeid IS NULL
-ORDER BY
-	IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname;
-EOD;    
-    }
     $otherParticipantsResult = mysqli_query_exit_on_error($otherParticipantsQuery);
 
     $docNode = $resultXML->getElementsByTagName("doc")->item(0);
@@ -312,9 +252,10 @@ EOD;
         $rowNode = $queryNode->appendChild($rowNode);
         $badgeid = $row["badgeid"];
         $rowNode->setAttribute("badgeid", $badgeid);
-        $pubsname = $row["pubsname"];
+        $pubsname = is_null($row["pubsname"]) ? '' : $row["pubsname"];
+        $lastname = is_null($row["lastname"]) ? '' : $row["lastname"];
         if (mb_ereg_match("\w", $pubsname)) {
-            $pattern = "(.*)(\b" . preg_quote($row["lastname"]) . "\b)(.*)";
+            $pattern = "(.*)(\b" . preg_quote($lastname) . "\b)(.*)";
             if (mb_ereg($pattern, $pubsname, $regexArr)) {
                 $sortableName = $regexArr[2] . ($regexArr[3] ? $regexArr[3] : "") . ", " . $regexArr[1];
             } else {

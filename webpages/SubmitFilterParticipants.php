@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
@@ -20,9 +20,7 @@ function filter_participants() {
     // build question filter clauses
     $andor = $matchall == "true" ? ' AND ' : ' OR ';
     $qcte = survey_filter_prepare_filter($filterlist, $andor);
-    $query = "";
-    if (DBVER >= "8")
-        $query = survey_filter_build_cte($qcte);
+    $query = survey_filter_build_cte($qcte);
 
     if ($source == "invite") {
         $query .= <<<EOD
@@ -57,13 +55,9 @@ EOD;
     }
     if ($source == 'assign') {
         $selsessionid = getString("sessionid");
-        if (DBVER >= "8") {
-            if ($query == '')
-                $query .= "WITH ";
-            else
-                $query .= ", ";
+        $query .= $query == '' ? "WITH " : ", ";
 
-            $query .= <<<EOD
+        $query .= <<<EOD
 AnsweredSurvey(participantid, answercount) AS (
     SELECT participantid, COUNT(*) AS answercount
     FROM ParticipantSurveyAnswers
@@ -86,28 +80,7 @@ SELECT
     IFNULL(A.answercount, 0) as answercount
 FROM Participants P
 JOIN CongoDump CD USING(badgeid)
-
 EOD;
-        } else {
-            $query .= <<<EOD
-SELECT
-    CD.lastname,
-    CD.firstname,
-    CD.badgename,
-    P.badgeid,
-    P.pubsname,
-    CONCAT(CASE
-        WHEN P.pubsname != "" THEN P.pubsname
-        WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
-        ELSE CD.firstname
-    END, ' (', CD.badgename, ') - ', P.badgeid) AS name,
-    IFNULL(A.answercount, 0) as answercount
-FROM Participants P
-JOIN CongoDump CD USING(badgeid)
-
-EOD;
-
-        }
         $query .= survey_filter_build_join_subquery($qcte);
         $query .= <<<EOD
 LEFT OUTER JOIN (
@@ -125,13 +98,13 @@ EOD;
         $query .= survey_filter_build_where($qcte, $andor);
         $query .= <<<EOD
 ORDER BY
-	IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+    IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
 EOD;
     }
     //error_log("\nquery: $query\n\n");
 
     $result = mysqli_query_exit_on_error($query);
-	$participants = array();
+    $participants = array();
     if ($source == 'invite') {
         $select = '<select id="participant-select" name="selpart">' . "\n" .
             '<option value="" selected="selected" disabled="true">Select Participant</option>' . "\n";
@@ -156,8 +129,8 @@ EOD;
         $select .= '<option value="' . $row["badgeid"] . '">' . $sortableName . ' - ' . $row["badgeid"] . "</option>\n";
     }
     $select .= "</select>\n";
-	mysqli_free_result($result);
-	$json_return["participants"] = $participants;
+    mysqli_free_result($result);
+    $json_return["participants"] = $participants;
     $json_return["select"] = $select;
     echo json_encode($json_return);
 }

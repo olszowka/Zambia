@@ -278,45 +278,25 @@ EOD;
             //error_log("reffield: '$reffield'");
             if ($reffield != $curfield) {
                 $union = "";
-                if (DBVER >= "8") {
-                    if ($withclause == "") {
-                        $withclause = "WITH Ref" . $reffield . " AS (\n";
-                    } else {
-                        $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n), Ref" . $reffield . " AS (\n";
-                        $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-                        if ($occurs != "") {
-                            $occurs .= "+";
-                        }
-                        $occurs .= "SUM$curfield.occurs";
-                    }
+                if ($withclause == "") {
+                    $withclause = "WITH Ref" . $reffield . " AS (\n";
                 } else {
-                    if ($joinclause == "") {
-                        $joinclause = "LEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
-                    } else {
-                        $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\nLEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
-                        if ($occurs != "") {
-                            $occurs .= "+";
-                        }
-                        $occurs .= "SUM$curfield.occurs";
+                    $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n), Ref" . $reffield . " AS (\n";
+                    $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
+                    if ($occurs != "") {
+                        $occurs .= "+";
                     }
+                    $occurs .= "SUM$curfield.occurs";
                 }
 
                 $mycurname = $mycolname;
                 $curfield = $reffield;
-            }
-            if (DBVER >= "8") {
-                $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $reffield\n";
-            } else {
-                $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $reffield\n";
-            }
+                }
+            $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $reffield\n";
             $union = "UNION ALL";
         }
-        if (DBVER >= "8") {
-            $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
-            $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-        } else {
-            $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-        }
+        $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
+        $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
         if ($occurs != "")
             $occurs .= "+";
         $occurs .= "SUM$curfield.occurs";
