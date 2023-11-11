@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Edit History Report ';
 $report['description'] = 'Show the most recent edit activity for each session (sorted by time).';
@@ -26,7 +26,8 @@ SELECT
         LEFT JOIN SessionEditHistory SEH ON S.sessionid = SEH.sessionid AND SUBQ1.timestamp = SEH.timestamp
         LEFT JOIN SessionEditCodes SEC USING (sessioneditcode)
     WHERE
-        S.statusid IN (1, 2, 3, 6, 7); ## Brainstorm, Vetted, Scheduled, Edit Me, Assigned
+        ## Brainstorm, Vetted, Scheduled, Edit Me, Assigned
+        S.statusid IN (1, 2, 3, 6, 7);
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>

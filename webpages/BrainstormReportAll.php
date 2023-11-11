@@ -1,10 +1,19 @@
 <?php
-//	Copyright (c) 2006-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2006-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 require_once('BrainstormCommonCode.php');
 $ConStartDatim = CON_START_DATIM;
 $title = "All Suggestions";
 $query = <<<EOD
+WITH SessionTags AS (
+    SELECT
+            SHT.sessionid, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        FROM
+                      SessionHasTag SHT
+            LEFT JOIN Tags TA USING (tagid)
+        GROUP BY
+            SHT.sessionid
+    )
 SELECT
         S.sessionid, T.trackname, NULL typename, S.title, 
         concat( if(left(S.duration,2)=00, '', 
@@ -13,18 +22,15 @@ SELECT
                 if(left(date_format(S.duration,'%i'),1)=0, concat(right(date_format(S.duration,'%i'),1),'min'), 
                 concat(date_format(S.duration,'%i'),'min')))) Duration,
         S.estatten, S.progguiddesc, S.persppartinfo, 
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
-		R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+        R.roomname, SS.statusname, SessionTags.taglist
     FROM
                   Sessions S
              JOIN Tracks T USING (trackid)
              JOIN SessionStatuses SS USING (statusid)
              JOIN Schedule SCH USING (sessionid)
              JOIN Rooms R USING (roomid)
-		LEFT JOIN SessionHasTag SHT USING (sessionid)
-		LEFT JOIN Tags TA USING (tagid)
-    GROUP BY
-        S.sessionid
+        LEFT JOIN SessionTags USING (sessionid)
     ORDER BY
         T.trackname, S.title;
 EOD;
@@ -41,4 +47,3 @@ RenderPrecis($result, false);
 brainstorm_footer();
 exit();
 ?> 
-

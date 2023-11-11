@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2009-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2009-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Palm Calendar';
 $report['description'] = 'Export CSV file for Palm device calendars';
@@ -11,25 +11,27 @@ $report['csv_output'] = true;
 $report['group_concat_expand'] = true;
 $report['queries'] = [];
 $report['queries']['master'] =<<<'EOD'
+WITH Parts AS (
+    SELECT
+            sessionid, GROUP_CONCAT(P.pubsname SEPARATOR ', ') AS participants
+        FROM
+                 ParticipantOnSession POS
+            JOIN Participants P USING (badgeid)
+        GROUP BY
+            sessionid
+    )
 SELECT
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%a') as 'Day',
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%l:%i %p') as 'Start Time',
-        left(duration,5) Length,
-        Roomname,
-        trackname as Track,
-        Title,
-        if(group_concat(pubsname) is NULL,'',group_concat(pubsname SEPARATOR ', ')) as 'Participants'
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%a') as day,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',starttime),'%l:%i %p') as "start time", LEFT(duration,5) AS length,
+        roomname, trackname AS track, title, ifnull(Parts.participants, '') AS participants
     FROM
                 Rooms R
            JOIN Schedule SCH USING (roomid)
            JOIN Sessions S USING (sessionid)
       LEFT JOIN Tracks T USING (trackid)
-      LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
-      LEFT JOIN Participants P ON POS.badgeid=P.badgeid
+      LEFT JOIN Parts USING (sessionid)
     WHERE
         S.pubstatusid = 2
-    GROUP BY
-        SCH.sessionid
     ORDER BY
         SCH.starttime, R.roomname;
 EOD;
