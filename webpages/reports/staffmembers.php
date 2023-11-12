@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Staff Members';
 $report['description'] = 'List Staff Members and their priviliges';
@@ -29,7 +29,11 @@ SELECT
              Participants P
         JOIN UserHasPermissionRole UHPR using (badgeid)
     WHERE
-        UHPR.permroleid = 2 /* staff */;
+        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
+            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
+                    P.badgeid = UHPR2.badgeid
+                AND UHPR2.permroleid IN (1, 2, 3)
+        );
 EOD;
     if (!$result = mysqli_query_exit_on_error($prequery)) {
         exit(0); //should have exited already
@@ -39,11 +43,12 @@ EOD;
             $badPasswordArr[] = "'{$resultObj->badgeid}'";
         }
     }
-    if (count($badPasswordArr) > 0)
+    if (count($badPasswordArr) > 0) {
         $badPasswordList = implode(',', $badPasswordArr);
-    else
+    } else {
         $badPasswordList = '-99999999';
-    
+    }
+
     $report['queries']['bad_password'] = "SELECT badgeid FROM Participants WHERE badgeid IN ($badPasswordList);";
 }
 
@@ -54,9 +59,12 @@ SELECT
     FROM
              Participants P
         JOIN CongoDump CD using (badgeid)
-        JOIN UserHasPermissionRole UHPR using (badgeid)
     WHERE
-        UHPR.permroleid = 2 /* staff */
+        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
+            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
+                    P.badgeid = UHPR2.badgeid
+                AND UHPR2.permroleid IN (1, 2, 3)
+        )
     ORDER BY
         CD.lastname, CD.firstname;
 EOD;
@@ -68,7 +76,11 @@ SELECT
              UserHasPermissionRole UHPR
         JOIN PermissionRoles PR using (permroleid)
     WHERE
-		UHPR.badgeid in (SELECT badgeid FROM UserHasPermissionRole WHERE permroleid = 2);
+        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
+            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
+                    UHPR.badgeid = UHPR2.badgeid
+                AND UHPR2.permroleid IN (1, 2, 3)
+        );
 EOD;
 $report['xsl'] =<<<EOD
 <?xml version="1.0" encoding="UTF-8" ?>
