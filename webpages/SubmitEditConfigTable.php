@@ -74,7 +74,12 @@ function update_table($tablename) {
 
     //error_log("\n\nin update table:\n");
     //error_log("string loaded: " . getString("tabledata"));
-    $rows = json_decode(getString("tabledata"));
+    if (isset($_POST['tabledata'])) {
+        $rows = $_POST['tabledata'];
+    } else {
+        $rows = array();
+    }
+    //$rows = json_decode(getString("tabledata"));
     $tablename = getString("tablename");
     if (!may_edit_table($tablename)) {
         exit(0);
@@ -85,12 +90,12 @@ function update_table($tablename) {
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
     $display_order = 10;
-    foreach ($rows as $row) {
-        if ($row->display_order >= 0) {
-            $row->display_order = $display_order;
+    foreach ($rows as &$row) {
+        if ($row['display_order'] >= 0) {
+            $row['display_order'] = $display_order;
             $display_order = $display_order + 10;
         }
-        $id = (int) $row->$indexcol;
+        $id = (int) $row[$indexcol];
         if ($id) {
             $idsFound = $idsFound . ',' . $id;
         }
@@ -131,13 +136,13 @@ function update_table($tablename) {
         $sql = substr($sql, 0, -1) . ");";
 
         foreach ($rows as $row) {
-            $id = (int) $row->$indexcol;
+            $id = (int) $row[$indexcol];
             if ($id < 0) {
                 $paramarray = array();
                 foreach($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
                         $name = $col['COLUMN_NAME'];
-                        $paramarray[] = $row->$name;
+                        $paramarray[] = $row[$name];
                     }
                 }
 
@@ -171,7 +176,7 @@ function update_table($tablename) {
     //error_log($sql);
     //error_log($datatype);
     foreach ($rows as $row) {
-        $id = $row->$prikey;
+        $id = $row[$prikey];
         //error_log("\n\nUpdate Loop: " . $id);
         if ($id >= 0) {
             $paramarray = array();
@@ -179,7 +184,7 @@ function update_table($tablename) {
                 if ($col['COLUMN_KEY'] != 'PRI') {
                     $colname = $col['COLUMN_NAME'];
                     if ($colname != 'Usage_COUNT') {
-                        $paramarray[] = $row->$colname;
+                        $paramarray[] = $row[$colname];
                     }
                 }
             }

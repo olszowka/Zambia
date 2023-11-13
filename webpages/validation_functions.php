@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2009-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2009-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function validate_suggestions($paneltopics, $otherideas, $suggestedguests) {
     $retval = ""; // return "" means "passed"

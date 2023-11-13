@@ -100,10 +100,12 @@ function chooseParticipant(badgeid, override) {
     hideSearchResults();
     if (badgeList) {
         searchIndex = badgeList.indexOf(badgeid, 0);
-        if ($prevBTN)
+        if ($prevBTN) {
             $prevBTN.disabled = searchIndex < 1;
-        if ($nextBTN)
-            $nextBTN.disabled = searchIndex == (badgeList.length - 1);   
+        }
+        if ($nextBTN) {
+            $nextBTN.disabled = searchIndex == (badgeList.length - 1);
+        }
     }
     $("#badgeid").val($("#bidSPAN_" + badgeidJQSel).text());
     var lastname = $("#lastnameHID_" + badgeidJQSel).val();
@@ -144,10 +146,11 @@ function chooseParticipant(badgeid, override) {
     $interested.prop("disabled", false);
     var bio = $("#bioHID_" + badgeidJQSel).val();
     var htmlbio = $("#htmlbioHID_" + badgeidJQSel).val();
-    if (htmlbioused) 
+    if (htmlbioused) {
         $htmlbio.val(htmlbio);
-    else
+    } else {
         $bio.prop("readOnly", false);
+    }
     $bio.val(bio).prop("defaultValue", bio);
     var staffnotes = $("#staffnotesHID_" + badgeidJQSel).val();
     $("#staffnotes").val(staffnotes).prop("defaultValue", staffnotes).prop("readOnly", false);

@@ -11,18 +11,18 @@ staff_header($title, $bootstrap4);
 if (isLoggedIn() && may_I("Administrator")) {
 // Start of display portion
 
-	$PriorArray["getSessionID"] = session_id();
+    $PriorArray["getSessionID"] = session_id();
 
-	$ControlStrArray = generateControlString($PriorArray);
-	$paramArray["control"] = $ControlStrArray["control"];
-	$paramArray["controliv"] = $ControlStrArray["controliv"];
+    $ControlStrArray = generateControlString($PriorArray);
+    $paramArray["control"] = $ControlStrArray["control"];
+    $paramArray["controliv"] = $ControlStrArray["controliv"];
 
-	$xmlDoc = GeneratePermissionSetXML();
+    $xmlDoc = GeneratePermissionSetXML();
 } else {
     $paramArray["UpdateMessage"] = "Administrator role required";
-	$xmlDoc = null;
+    $xmlDoc = null;
 }
-	// following line for debugging only
+    // following line for debugging only
 echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xmlDoc->saveXML(), "i"));
 RenderXSLT('ConfigTableEditor.xsl', $paramArray, $xmlDoc);
 

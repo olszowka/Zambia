@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2015-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('db_functions.php');
     function retrieveKonOpasData() {
         $results = array();

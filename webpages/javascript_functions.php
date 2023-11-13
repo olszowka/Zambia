@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrap4 = false) {
     if ($bootstrap4) { ?>
     <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>

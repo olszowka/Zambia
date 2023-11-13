@@ -76,14 +76,14 @@ EOD;
 
     if ($SurveyUsed) {
         // get any questions that need programically create options
-	    $sql = <<<EOD
-		SELECT d.questionid, t.shortname as typename, min_value, max_value, ascending
-		FROM SurveyQuestionConfig d
-		JOIN SurveyQuestionTypes t USING (typeid)
-		WHERE t.shortname = 'monthyear';
+        $sql = <<<EOD
+        SELECT d.questionid, t.shortname as typename, min_value, max_value, ascending
+        FROM SurveyQuestionConfig d
+        JOIN SurveyQuestionTypes t USING (typeid)
+        WHERE t.shortname = 'monthyear';
 EOD;
-	    $result = mysqli_query_exit_on_error($sql);
-	    while ($row = mysqli_fetch_assoc($result)) {
+        $result = mysqli_query_exit_on_error($sql);
+        while ($row = mysqli_fetch_assoc($result)) {
             // build xml array from begin to end
             $options = [];
             $question_id = $row["questionid"];

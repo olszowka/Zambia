@@ -21,8 +21,8 @@ function fetch_participant() {
 SELECT
     P.badgeid, CD.firstname, CD.lastname, CD.badgename,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
-	CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
-	R.statustext, D.reasontext
+    CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
+    R.statustext, D.reasontext
 FROM Participants P
 JOIN CongoDump CD ON P.badgeid = CD.badgeid
 LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
@@ -60,7 +60,7 @@ SELECT
              JOIN CongoDump CD USING (badgeid)
         LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
         LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
-    WHERE
+    WHERE 
 EOD;
     $query_where = '';
     $param_arr = array();
@@ -103,19 +103,19 @@ EOD;
     }
     mysqli_free_result($result);
     $xpath = new DOMXpath($xml);
-	$searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
+    $searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
     foreach ($searchParticipantsResultRowElements as $resultRowElement) {
-    	$badgeid = $resultRowElement -> getAttribute("badgeid");
-    	$jsEscapedBadgeid = addslashes($badgeid);
-		$resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
-	}
+        $badgeid = $resultRowElement -> getAttribute("badgeid");
+        $jsEscapedBadgeid = addslashes($badgeid);
+        $resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
+    }
     header("Content-Type: text/html");
     $paramArray = array("userIdPrompt" => USER_ID_PROMPT);
     //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xml->saveXML(), "i")); //for debugging only
     $json_return["HTML"] = RenderXSLT('AdminPhotos.xsl', $paramArray, $xml, true);
     $json_return["rowcount"] = $rows;
     echo json_encode($json_return);
-	exit();
+    exit();
 }
 
 function uploadphoto() {

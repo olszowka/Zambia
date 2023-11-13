@@ -378,7 +378,7 @@ function SaveTable() {
     console.log(table.getData());
     var postdata = {
         ajax_request_action: "updatetable",
-        tabledata: JSON.stringify(table.getData()),
+        tabledata: table.getData(),
         tablename: tablename,
         indexcol: indexcol
     };
