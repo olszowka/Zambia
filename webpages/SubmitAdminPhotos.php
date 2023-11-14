@@ -83,7 +83,7 @@ EOD;
         $param_arr[] = $searchString;
         $param_type_list .= 'sssss';
     }
-    $query_orderby = 'ORDER BY CD.lastname, CD.firstname;';
+    $query_orderby = ' ORDER BY CD.lastname, CD.firstname;';
     $query = $query_wo_where . $query_where . $query_orderby;
     $result = mysqli_query_with_prepare_and_exit_on_error($query, $param_type_list, $param_arr);
     $xml = mysql_result_to_XML("searchParticipants", $result);
