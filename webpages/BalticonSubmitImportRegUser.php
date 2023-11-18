@@ -189,23 +189,31 @@ function fetch_user_perm_roles() {
             $query["permroles"] = "SELECT PR.permrolename, PR.permroleid, 1 AS mayedit FROM PermissionRoles PR ORDER BY PR.display_order;";
             $resultXML = mysql_query_XML($query);
         } else { // has permission to edit only specific perm roles
-            $query["query"] = <<<EOD
+            $query["permroles"] = <<<EOD
+WITH EL AS (
+    SELECT
+             PA.elementid
+        FROM PermissionAtoms PA
+        WHERE
+                PA.permatomtag = 'EditUserPermRoles'
+            AND PA.elementid IS NOT NULL
+            AND EXISTS (
+                    SELECT *
+                        FROM
+                                 UserHasPermissionRole UHPR
+                            JOIN Permissions P USING (permroleid)
+                            JOIN PermissionAtoms PA2 USING (permatomid)
+                        WHERE
+                                PA.permatomid = PA2.permatomid
+                            AND UHPR.badgeid = ?
+                    )
+    )
 SELECT
-        PR.permrolename, PR.permroleid, IF(ISNULL(SQ.elementid), 0, 1) AS mayedit
-    FROM PermissionRoles PR
-    LEFT JOIN (
-            SELECT
-                    PA.elementid
-                FROM
-                         UserHasPermissionRole UHPR
-                    JOIN Permissions P USING (permroleid)
-                    JOIN PermissionAtoms PA USING (permatomid)
-                WHERE
-                        UHPR.badgeid = ?
-                    AND PA.permatomtag = 'EditUserPermRoles'
-                    AND PA.elementid IS NOT NULL
-                    ) AS SQ ON SQ.elementid = PR.permroleid
-    ORDER BY mayedit DESC, PR.display_order;
+              PR.permrolename, PR.permroleid, IF(ISNULL(EL.elementid), 0, 1) AS mayedit
+         FROM PermissionRoles PR
+    LEFT JOIN EL ON PR.permroleid = EL.elementid
+    ORDER BY
+        mayedit DESC, PR.display_order;
 EOD;
             $resultXML = mysql_prepare_query_XML(
                 $query,
