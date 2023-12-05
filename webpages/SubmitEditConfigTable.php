@@ -125,7 +125,7 @@ function update_table($tablename) {
         if ($col['EXTRA'] != 'auto_increment') {
             $sql .= $col['COLUMN_NAME'] . ',';
             $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
-                $fieldcount++;
+            $fieldcount++;
         }
     }
     if ($fieldcount > 0) {
@@ -135,14 +135,14 @@ function update_table($tablename) {
         }
         $sql = substr($sql, 0, -1) . ");";
 
-        foreach ($rows as $row) {
-            $id = (int) $row[$indexcol];
+        foreach ($rows as $this_row) {
+            $id = (int) $this_row[$indexcol];
             if ($id < 0) {
                 $paramarray = array();
                 foreach($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
                         $name = $col['COLUMN_NAME'];
-                        $paramarray[] = $row[$name];
+                        $paramarray[] = $this_row[$name];
                     }
                 }
 
@@ -175,8 +175,8 @@ function update_table($tablename) {
     $datatype .= $keytype;;
     //error_log($sql);
     //error_log($datatype);
-    foreach ($rows as $row) {
-        $id = $row[$prikey];
+    foreach ($rows as $this_row) {
+        $id = $this_row[$prikey];
         //error_log("\n\nUpdate Loop: " . $id);
         if ($id >= 0) {
             $paramarray = array();
@@ -184,7 +184,7 @@ function update_table($tablename) {
                 if ($col['COLUMN_KEY'] != 'PRI') {
                     $colname = $col['COLUMN_NAME'];
                     if ($colname != 'Usage_COUNT') {
-                        $paramarray[] = $row[$colname];
+                        $paramarray[] = $this_row[$colname];
                     }
                 }
             }
