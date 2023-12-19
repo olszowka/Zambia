@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Full Program Participant Schedule ';
 $report['description'] = 'The schedule sorted by participant, then time limited to program participants';
@@ -10,7 +10,7 @@ $report['categories'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT DISTINCT
-        P.badgeid
+        P.badgeid, P.pubsname, C.lastname, C.firstname
     FROM
              Participants P
         JOIN CongoDump C USING (badgeid)
@@ -21,7 +21,7 @@ SELECT DISTINCT
     WHERE
         UHPR.permroleid = 3 /* Program Participant */
     ORDER BY
-        IF(instr(P.pubsname,C.lastname)>0,C.lastname,substring_index(P.pubsname,' ',-1)),
+        IF(instr(P.pubsname, C.lastname)>0, C.lastname, substring_index(P.pubsname,' ',-1)),
         C.firstname;
 EOD;
 $report['queries']['schedule'] =<<<'EOD'
@@ -39,7 +39,7 @@ SELECT
     ORDER BY
         IF(instr(P.pubsname,C.lastname)>0,C.lastname,substring_index(P.pubsname,' ',-1)),
         C.firstname,
-	SCH.starttime;
+    SCH.starttime;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -77,8 +77,8 @@ $report['xsl'] =<<<'EOD'
     
     <xsl:template name="usersSchedule">
         <xsl:param name="badgeid" />
-	    <xsl:param name="rowdata" />
-	    <xsl:for-each select="$rowdata">
+        <xsl:param name="rowdata" />
+        <xsl:for-each select="$rowdata">
             <tr class="report">
                 <xsl:choose>
                     <xsl:when test="position() = 1">
