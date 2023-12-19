@@ -4,12 +4,12 @@
 // Variables
 //     action: "create" or "edit"
 //     session: array with all data of record to edit or defaults for create
-//     message1: a string to display before the form
-//     message2: an urgent string to display before the form and after m1
-function RenderEditCreateSession ($action, $session, $message1, $message2) {
-    global $name, $email, $debug, $title;
-    require_once("StaffHeader.php");
-    require_once("StaffFooter.php");
+//     messageWarning: a string to display before the form in warning format
+//     messageSuccess: a string to display before the form in success format
+//     messageFatal: a string to display instead of the form in warning format
+function RenderEditCreateSession ($action, $session, $messageWarning, $messageFatal, $messageSuccess = '') {
+    global $name, $email, $message_error, $title;
+    require_once('StaffCommonCode.php');
     if ($action === "create") {
         $title = "Create New Session";
     } elseif ($action === "edit") {
@@ -17,328 +17,157 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     } else {
         exit();
     }
-    staff_header($title);
-    
-    // still inside function RenderAddCreateSession
-    if (strlen($message1) > 0) {
-        echo "<p id=\"message1\" class=\"alert\">".$message1."</p>\n";
-    }
-    if (strlen($message2) > 0) {
-        echo "<p id=\"message2\" class=\"alert alert-error\">".$message2."</p>\n";
-        exit(); // If there is a message2, then there is a fatal error.
-    }
-    if (isset($debug)) {
-        echo $debug."<br>\n";
-    }  
-?>
-<div class="row-fluid">
-    <form name="sessform" class="form-inline form-more-whitespace" method="POST" action="SubmitEditCreateSession.php">
-        <input type="hidden" name="name" value="<?php echo htmlspecialchars($name,ENT_COMPAT);?>" />
-        <input type="hidden" name="email" value="<?php echo htmlspecialchars($email,ENT_COMPAT);?>" />
-        <!-- The pubno field is no longer used on the form, but the code expects it.-->
-        <input type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT);?>" />
-        <div id="buttonBox" class="clearfix">
-            <div class="pull-right">
-                <button class="btn" type=reset value="reset">Reset</button>
-                <button class="btn btn-primary" type=submit value="save" onclick="mysubmit()">Save</button>
-            </div>
-        </div>
-        <div class="row-fluid">
-            <div class="control-group">
-                <label class="control-label" for="sessionid">Session #: </label>
-                <input id="sessionid" type="text" class="span1" size=4 name="sessionid" disabled readonly value="<?php echo htmlspecialchars($session["sessionid"],ENT_COMPAT);?>" />
-                <label class="control-label" for="divisionid">Division: </label>
-                <select name="divisionid" class="span2">
-                    <?php populate_select_from_table("Divisions", $session["divisionid"], "SELECT", FALSE); ?>
-                </select>
-<?php
-    if (TRACK_TAG_USAGE !== "TAG_ONLY") {
-?>
-                <label class="control-label" for="track">Track: </label>
-                <select name="track" class="span2">
-                    <?php populate_select_from_table("Tracks", $session["track"], "SELECT", FALSE); ?>
-                </select>
-<?php
-    } else {
-?>
-                <input type="hidden" name="track" value="<?php echo DEFAULT_TAG_ONLY_TRACK?>"/>
-<?php
-    }
-?>
-                <label class="control-label" for="type">Type: </label>
-                <select name="type" class="span2">
-                    <?php populate_select_from_table("Types", $session["type"], "SELECT", FALSE); ?>
-                </select>
-                <label class="control-label" for="pubstatusid">Pub. Status: </label>
-                <select name="pubstatusid" class="span2">
-                    <?php populate_select_from_table("PubStatuses", $session["pubstatusid"], "SELECT", FALSE); ?>
-                </select>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="title">Title:</label>
-            <input type="text" class="span4" size="50" name="title" value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT);?>" />&nbsp;&nbsp;
-            <input class="checkbox adjust" type="checkbox" value="invguest" id="invguest" <?php if ($session["invguest"]) {echo " checked ";} ?> name="invguest" />
-            <label class="checkbox inline" for="invguest"> Invited Guests Only</label>&nbsp;&nbsp;&nbsp;
-            <input class="checkbox adjust" type="checkbox" value="signup" id="signup" <?php if ($session["signup"]) {echo " checked ";} ?> name="signup" />
-            <label class="checkbox inline" for="signup"> Signup Required</label>
-            <label class="control-label span4 pull-right" for="kids"> Kids:
-                <select name="kids" class="span6">
-                    <?php populate_select_from_table("KidsCategories", $session["kids"], "SELECT", FALSE); ?>
-                </select>
-            </label>
-        </div>
-<?php
-    if (BILINGUAL === TRUE) {
-?>
-        <div class="control-group">
-            <label for="secondtitle"><?php echo SECOND_TITLE_CAPTION;?></label>
-            <input type="text" size="50" class="span4" name="secondtitle" value="<?php echo htmlspecialchars($session["secondtitle"],ENT_COMPAT);?>" />
-            <label for="languagestatusid">Session Language: </label>
-            <select class="span2" name="languagestatusid">
-                <?php populate_select_from_table("LanguageStatuses", $session["languagestatusid"], "SELECT", FALSE);?>
-            </select>
-        </div>
-<?php
-    } else {
-?>
-        <input type="hidden" name="secondtitle" value="<?php echo htmlspecialchars($session["secondtitle"],ENT_COMPAT);?>" />
-        <input type="hidden" name="languagestatusid" value="<?php echo htmlspecialchars($session["languagestatusid"],ENT_COMPAT);?>" />
-<?php
-    }
-        // The pocketprogtext field is no longer used on the form, but the code expects it.
-?>
-        <input type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT);?>" />
-        <div class="row-fluid clearfix">
-            <div class="control-group">
-                <label class="control-label"  for="atten">Est. Atten.:</label>
-                <input type="number" class="span2" size="3" name="atten" value="<?php echo htmlspecialchars($session["atten"],ENT_COMPAT);?>" />
-                <label class="control-label"  for="duration">Duration:</label>
-                <input type="text" class="span1" size="5" name="duration" value="<?php echo htmlspecialchars($session["duration"],ENT_COMPAT);?>" />
-                <label class="control-label"  for="roomset">Room Set: </label>
-                <select name="roomset" class="span2">
-                    <?php populate_select_from_table("RoomSets", $session["roomset"], "SELECT", FALSE); ?>
-                </select>
-                <label class="control-label"  for="status">Status:</label>
-                <select name="status" class="span2">
-                    <?php populate_select_from_table("SessionStatuses", $session["status"], "", FALSE); ?>
-                </select>
-            </div>
-        </div>
-        <div class="row-fluid">
-<?php
-    if (HTML_SESSION === TRUE) {
-?>
-            <div class="span6">
-                <label class="control-label" for="progguidhtml">Description:</label>
-                <textarea class="span12 textlabelarea" rows="4" cols="70" name="progguidhtml"
-                    id="progguidhtml"><?php echo $session["progguidhtml"]?></textarea>
-            </div>
-            <div class="span6">
-                <label class="control-label" for="progguiddesc">Plain Text Description:</label>
-                <textarea class="span12 textlabelarea" rows="4" cols="70" name="progguiddesc" id="progguiddesc"
-                    readonly="readonly"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
-                <?php
-        if (BILINGUAL === TRUE) {
-                ?>
-                <label class="control-label vert-sep vert-sep-above" for="pocketprogtext">
-                    <?php echo SECOND_DESCRIPTION_CAPTION;?>:
-                </label>
-                <textarea class="span12 textlabelarea" rows="4" cols="70" 
-                    name="pocketprogtext"><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></textarea>
-                <?php
+    staff_header($title, true);
+    if ($messageFatal == '') {
+        $queryArr = array();
+        $queryArr['divisions'] =<<<EOD
+SELECT
+        divisionid, divisionname
+    FROM
+        Divisions
+    ORDER BY
+        display_order;
+EOD;
+        $queryArr['tracks'] =<<<EOD
+SELECT
+        trackid, trackname
+    FROM
+        Tracks
+    ORDER BY
+        display_order;
+EOD;
+        $queryArr['types'] =<<<EOD
+SELECT
+        typeid, typename
+    FROM
+        Types
+    ORDER BY
+        display_order;
+EOD;
+        $queryArr['pubstatuses'] =<<<EOD
+SELECT
+        pubstatusid, pubstatusname
+    FROM
+        PubStatuses
+    ORDER BY
+        display_order;
+EOD;
+        $queryArr['kidscategories'] =<<<EOD
+SELECT
+        kidscatid, kidscatname
+    FROM
+        KidsCategories
+    ORDER BY
+        display_order;
+EOD;
+        $queryArr['roomsets'] =<<<EOD
+SELECT
+        roomsetid, roomsetname
+    FROM
+        RoomSets
+    ORDER BY
+        display_order;
+EOD;
+        $queryArr['sessionstatuses'] =<<<EOD
+SELECT
+        statusid, statusname
+    FROM
+        SessionStatuses
+    ORDER BY
+        display_order;
+EOD;
+        if (is_array($session['featdest']) && count($session['featdest']) > 0) {
+            $selected = 'if(featureid IN (' . implode(',', $session['featdest']) . '), 1, 0)';
         } else {
-        // The pocketprogtext field is no longer used on the form, but the code expects it.
-                ?>
-                <input type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT);?>" />
-                <?php
+            $selected = '0';
         }
-                ?>
-                <label class="control-label vert-sep vert-sep-above" for="persppartinfo">Prospective Participant Info:</label>
-                <textarea class="span12 textlabelarea" rows="4" cols="70" name="persppartinfo"
-                    id="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></textarea>
-            </div>
-<?php
-    } else {
-?>
-        <div class="span6">
-                <label class="control-label" for="progguiddesc">Description:</label>
-                <textarea class="span12 textlabelarea"
-                    rows="4" cols="70" name="progguiddesc"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
-            </div>
-            <div class="span6">
-                <label class="dense" for="persppartinfo">Prospective Participant Info:</label>
-                <textarea class="span12 textlabelarea"
-                          rows="4" cols="70" name="persppartinfo"><?php echo htmlspecialchars($session["persppartinfo"],ENT_NOQUOTES);?></textarea>
-            </div>
-        </div>
-<?php
-        if (BILINGUAL === TRUE) {
-?>
-        <div class="row-fluid">
-            <div class="span6">
-                <label class="control-label vert-sep vert-sep-above" for="pocketprogtext"><?php echo SECOND_DESCRIPTION_CAPTION;?>: </label>
-                <textarea class="span12 textlabelarea"
-                    rows="4" cols="70" name="pocketprogtext"><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></textarea>
-            </div>
-        </div>
-<?php
+        $queryArr['features'] =<<<EOD
+SELECT
+        featureid, featurename, $selected as "selected"
+    FROM
+        Features
+    ORDER BY
+        selected DESC, display_order;
+EOD;
+        if (is_array($session['servdest']) && count($session['servdest']) > 0) {
+            $selected = 'if(serviceid IN (' . implode(',', $session['servdest']) . '), 1, 0)';
         } else {
-            // The pocketprogtext field is no longer used on the form, but the code expects it.
-?>
-        <input type="hidden" name="pocketprogtext" value="<?php echo htmlspecialchars($session["pocketprogtext"],ENT_COMPAT);?>" />
-<?php
+            $selected = '0';
         }
-     }
-?>
-        </div>
-        <div class="row-fluid vert-sep vert-sep-above">
-            <div class="span5"> <!-- Features Box; -->
-                <label>Required Room Features:</label>
-                <div class="borderBox">
-                    <div class="clearfix">
-                        <label for="featsrc" class="pull-left">Possible Features:</label>
-                        <label for="featdest[]" class="pull-right">Selected Features:</label>
-                    </div>
-                    <div class="clearfix">
-                        <select class="span5" style="float: left;" id="featsrc" name="featsrc" size=6 multiple>
-                            <?php populate_multisource_from_table("Features", $session["featdest"]); ?>
-                        </select>
-                        <div class="span2">
-                            <button class="btn" onclick="fadditems(document.sessform.featsrc,document.sessform.featdest)"
-                                name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</button>
-                            <button class="btn" onclick="fdropitems(document.sessform.featsrc,document.sessform.featdest)"
-                                name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</button>
-                        </div>
-                        <select class="span5" style="float: left;" id="featdest" name="featdest[]" size=6 multiple >
-                            <?php populate_multidest_from_table("Features", $session["featdest"]); ?>
-                        </select>
-                    </div>
-                </div>
-            </div> <!-- Features -->
-            <div class="span5" style="float: left;"> <!-- Services Box; -->
-                <label>Required Room Services:</label>
-                <div class="borderBox">
-                    <div class="clearfix">
-                        <label for="servsrc" class="pull-left">Possible Services:</label>
-                        <label for="servdest[]" class="pull-right">Selected Services:</label>
-                    </div>
-                    <div class="clearfix">
-                        <select class="span5" style="float: left;" id="servsrc" name="servsrc" size=6 multiple>
-                            <?php populate_multisource_from_table("Services", $session["servdest"]); ?>
-                        </select>
-                        <div class="span2">
-                            <button class="btn" onclick="fadditems(document.sessform.servsrc,document.sessform.servdest)"
-                                name="additems" value="additems" type="button">&nbsp;&rarr;&nbsp;</button>
-                            <button  class="btn" onclick="fdropitems(document.sessform.servsrc,document.sessform.servdest)"
-                                name="dropitems" value="dropitems" type="button">&nbsp;&larr;&nbsp;</button>
-                        </div>
-                        <select class="span5" style="float: left;" id="servdest" name="servdest[]" size=6 multiple >
-                            <?php populate_multidest_from_table("Services", $session["servdest"]); ?>
-                        </select>
-                    </div>
-                </div>
-            </div> <!-- Services -->
-<?php
-    if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
-?>
-            <div class="span2" style="float: left;"> 
-                <label class="control-label" for="tagdest">Tags:
-                    <select class="span12" id="tagdest" name="tagdest[]" multiple>
-                        <?php populate_multiselect_from_table("Tags", $session["tagdest"]); ?>
-                    </select>
-                </label>
-            </div>
-<?php
-    } else {
-?>
-            <input type="hidden" name="tagdest[]" value="" />
-<?php
+        $queryArr['services'] =<<<EOD
+SELECT
+        serviceid, servicename, $selected as "selected"
+    FROM
+        Services
+    ORDER BY
+        selected DESC, display_order;
+EOD;
+        if (is_array($session['tagdest']) && count($session['tagdest']) > 0) {
+            $selected = 'if(tagid IN (' . implode(',', $session['tagdest']) . '), 1, 0)';
+        } else {
+            $selected = '0';
+        }
+        $queryArr['tags'] =<<<EOD
+SELECT
+        tagid, tagname, $selected as "selected"
+    FROM
+        Tags
+    ORDER BY
+        selected DESC, display_order;
+EOD;
+        $resultXML = mysql_query_XML($queryArr);
+        if ($resultXML === false) {
+            $resultXML = new DomDocument("1.0", "UTF-8");
+            $messageFatal = $message_error;
+        }
+        $doc = $resultXML -> getElementsByTagName('doc') -> item(0);
+        $sessionNode = $resultXML -> createElement('session');
+        $doc -> appendChild($sessionNode);
+        $sessionNode -> setAttribute('secondtitle', $session['secondtitle']);
+        $sessionNode -> setAttribute('title', $session['title']);
+        $sessionNode -> setAttribute('progguidhtml', $session['progguidhtml']);
+        $sessionNode -> setAttribute('progguiddesc', $session['progguiddesc']);
+        $sessionNode -> setAttribute('persppartinfo', $session['persppartinfo']);
+        $sessionNode -> setAttribute('notesforpart', $session['notesforpart']);
+        $sessionNode -> setAttribute('servnotes', $session['servnotes']);
+        $sessionNode -> setAttribute('notesforprog', $session['notesforprog']);
+        $sessionNode -> setAttribute('mlink', isset($session['mlink']) ? $session['mlink'] : '');
+        $sessionNode -> setAttribute('plink', isset($session['plink']) ? $session['plink'] : '');
+        $sessionNode -> setAttribute('rlink', isset($session['rlink']) ? $session['rlink'] : '');
+        $sessionNode -> setAttribute('clink', isset($session['clink']) ? $session['clink'] : '');
+    } else { // $messageFatal has content
+        $resultXML = new DomDocument("1.0", "UTF-8");
     }
-?>
-        </div>
-        <hr class="nospace" />
-        <div class="row-fluid form-vertical">
-            <div class="span4">
-                <label class="control-label" for="notesforpart">Notes for Participants:</label>
-                <textarea class="textlabelarea span12"
-                    rows="3" cols="70" name="notesforpart" ><?php echo htmlspecialchars($session["notesforpart"],ENT_NOQUOTES);?></textarea>
-            </div>
-            <div class="span4">
-                <label class="control-label" for="servnotes">Notes for Tech and Hotel:</label>
-                <textarea class="textlabelarea span12"
-                    rows="3" cols="70" name="servnotes" ><?php echo htmlspecialchars($session["servnotes"],ENT_NOQUOTES);?></textarea>
-            </div>
-            <div class="span4">
-                <label class="control-label" for="notesforprog">Notes for Programming Committee:</label>
-                <textarea class="textlabelarea span12"
-                    rows="3" cols="70" name="notesforprog" ><?php echo htmlspecialchars($session["notesforprog"],ENT_NOQUOTES);?></textarea>
-            </div>
-        </div>
-<?php
-    if (MEETING_LINK === TRUE) {
-        if (array_key_exists('mlink', $session)) {
-            $mlink = is_null($session['mlink']) ? "" : htmlspecialchars($session['mlink'],ENT_COMPAT);
-        } else {
-            $mlink = "";
-        }
-        if (array_key_exists('plink', $session)) {
-            $plink = is_null($session['plink']) ? "" : htmlspecialchars($session['plink'],ENT_COMPAT);
-        } else {
-            $plink = "";
-        }
-        if (array_key_exists('clink', $session)) {
-            $clink = is_null($session['clink']) ? "" : htmlspecialchars($session['clink'],ENT_COMPAT);
-        } else {
-            $clink = "";
-        }
-?>
-        <div class="row-fluid vert-sep vert-sep-above">
-                    <div class="control-group">
-                <label class="span1 control-label" for="mlink">Meeting Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo $mlink;?>" />
-            </div>
-        </div>
-        <div class="row-fluid vert-sep vert-sep-above">
-            <div class="control-group">
-                <label class="span1 control-label" for="plink">Participant Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="plink" id="plink" value="<?php echo $plink;?>" />
-            </div>
-        </div>
-        <div class="row-fluid vert-sep vert-sep-above">
-            <div class="control-group">
-                <label class="span1 control-label" for="clink">Caption Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="clink" id="clink" value="<?php echo $clink;?>" />
-                    </div>
-                </div>
-<?php
+    $paramArray = array();
+    $paramArray['languagestatusid'] = $session['languagestatusid'];
+    $paramArray['sessionid'] = $session['sessionid'];
+    $paramArray['track'] = $session['track'];
+    $paramArray['divisionid'] = $session['divisionid'];
+    $paramArray['type'] = $session['type'];
+    $paramArray['pubstatusid'] = $session['pubstatusid'];
+    $paramArray['kids'] = $session['kids'];
+    $paramArray['invguest'] = $session['invguest'];
+    $paramArray['atten'] = $session['atten'];
+    $paramArray['duration'] = $session['duration'];
+    $paramArray['roomset'] = $session['roomset'];
+    $paramArray['status'] = $session['status'];
+    $paramArray['signup'] = $session['signup'];
+
+    $paramArray['action'] = $action;
+    $paramArray['messageSuccess'] = $messageSuccess;
+    $paramArray['messageWarning'] = $messageWarning;
+    $paramArray['messageFatal'] = $messageFatal;
+    $paramArray['name'] = $name;
+    $paramArray['email'] = $email;
+    $paramArray['track_tag_usage'] = TRACK_TAG_USAGE;
+    if (TRACK_TAG_USAGE == 'TAG_ONLY') {
+        $paramArray['trackid'] = DEFAULT_TAG_ONLY_TRACK;
     }
-    if (RECORDING_LINK === TRUE) {
-        if (array_key_exists('rlink', $session)) {
-            $rlink = is_null($session['rlink']) ? '' : htmlspecialchars($session['rlink'],ENT_COMPAT);
-        } else {
-            $rlink = '';
-        }
-        ?>
-        <div class="row-fluid vert-sep vert-sep-above">
-            <div class="control-group">
-                <label class="span1 control-label" for="rlink">Recording Link:</label>
-                <input type="text" class="span11" size="80" maxlength="510" name="rlink" id="rlink" value="<?php echo $rlink;?>" />
-            </div>
-        </div>
-        <?php
-    }
-    ?>
-                <div id="buttonBox" class="clearfix">
-                    <div class="pull-right">
-                        <button class="btn" type=reset value="reset">Reset</button>
-                        <button class="btn btn-primary" type=submit value="save" onclick="mysubmit()">Save</button>
-                    </div>
-                </div>
-                <input type="hidden" name="action" value="<?php echo ($action === "create") ? "create" : "edit"; ?>" />
-            </form>
-        </div>
-<?php
+    $paramArray['showmeetinglink'] = defined('MEETING_LINK') ? MEETING_LINK : false;
+    $paramArray['showparticipantlink'] = defined('PARTICIPANT_LINK') ? PARTICIPANT_LINK : false;
+    $paramArray['showrecordinglink'] = defined('RECORDING_LINK') ? RECORDING_LINK : false;
+    $paramArray['showcaptionlink'] = defined('CAPTION_LINK') ? CAPTION_LINK : false;
+    RenderXSLT('EditCreateSession.xsl', $paramArray, $resultXML);
     staff_footer();
 }
 ?>

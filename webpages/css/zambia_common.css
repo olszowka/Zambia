@@ -143,9 +143,20 @@ input[type="text"],
 input[type="password"],
 input:not([type]),
 select {
-  height: 1.8rem;
+  height: 2rem;
   border: 1px solid #606060;
-  border-radius: 2px;
+  border-radius: 4px;
+}
+textarea {
+  border: 1px solid #606060;
+  border-radius: 4px;
+}
+textarea.tall-textarea {
+  height: calc(12rem - 5px);
+}
+.form-group .tox-tinymce {
+  border: 1px solid #606060;
+  border-radius: 4px;
 }
 /* End of General Form Defaults */
 .note {

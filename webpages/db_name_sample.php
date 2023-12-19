@@ -74,7 +74,9 @@ define("REG_PART_PREFIX", "");
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
 define("MEETING_LINK", TRUE); // Add support for Meeting Link in sessions
+define("PARTICIPANT_LINK", TRUE); // Add support for Participant Link in sessions
 define("RECORDING_LINK", TRUE); // Add support for Recording Link in sessions
+define("CAPTION_LINK", TRUE); // Add support for Caption Link in sessions
 // Items for Photo Upload/Approval
 define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
 define("PHOTO_UPLOAD_DIRECTORY", "../upload_photos");  // outside of web server path, only served by PHP

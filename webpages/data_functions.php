@@ -18,10 +18,6 @@ function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
     return $endTimeUnits;
 }
 
-function convertUnitsToTimeStr($timeUnits) {
-    return floor($timeUnits/2).":00:00";
-}
-
 function convertUnitsToHourMin($timeUnits) {
     $hour = floor($timeUnits/2);
     $min = ($timeUnits%2) * 30;
@@ -48,9 +44,11 @@ function appendCustomTextArrayToXML($xmlDoc) {
     return $xmlDoc;
 }
 
-// Function conv_min2hrsmin()
-// Input is unchecked form input in minutes
-// Output is string in MySql time format
+/**
+ * Function conv_min2hrsmin()
+ * Input is unchecked form input in minutes
+ * Output is string in MySql time format
+ */
 function conv_min2hrsmin($mininput) {
     $min = filter_var($mininput, FILTER_SANITIZE_NUMBER_INT);
     if (($min < 1) or ($min > 3000)) {
@@ -75,24 +73,6 @@ function getInt($name, $default = false) {
     }
     $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
     if (mb_strlen($t) == 0) {
-        return $default;
-    } else {
-        return(intval($t));
-    }
-}
-
-// Function getIntFromData("name", "data", default)
-// gets a parameter from $data[] of name
-// and confirms it is an integer.
-// Safe from referencing nonexisting array index
-function getIntFromData($name, $data, $default = false) {
-    if (array_key_exists($name, $data)) {
-        $int = $data[$name];
-    } else {
-        return $default;
-    }
-    $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
-    if (empty($t) && $t !== 0) {
         return $default;
     } else {
         return(intval($t));
@@ -130,35 +110,6 @@ function getArrayOfInts($name, $default = false) {
     }
 }
 
-// Function getArrayOfIntsFromData("name", data, default)
-// gets a parameter from $data[] of name
-// and confirms it is an integer.
-// Safe from referencing nonexisting array index
-function getArrayOfIntsFromData($name, $data, $default = false) {
-    if (array_key_exists($name, $data)) {
-        $intArr = $data[$name];
-    } else {
-        return $default;
-    }
-    $retVal = array();
-    if ($intArr === "null") {
-        return $retVal;
-    }
-    if (gettype($intArr) === "string") {
-        $intArr = array($intArr);
-    }
-    forEach ($intArr as $int) {
-        if (!empty($t = filter_var($int, FILTER_SANITIZE_NUMBER_INT))) {
-            $retVal[] = $t;
-        }
-    }
-    if (count($retVal) == 0) {
-        return $default;
-    } else {
-        return $retVal;
-    }
-}
-
 // Function getString("name")
 // gets a parameter from $_GET[] or $_POST[] of name
 // and strips slashes
@@ -172,17 +123,6 @@ function getString($name) {
         return NULL;
     }
     return stripslashes($string);
-}
-
-// Function getStringFromData("name", $data)
-// gets a parameter from $data[] of name
-// Safe from referencing nonexisting array index
-function getStringFromData($name, $data) {
-    if (array_key_exists($name, $data)) {
-        return $data[$name];
-    } else {
-        return NULL;
-    }
 }
 
 // Function getArrayOfStrings("name")
@@ -341,9 +281,10 @@ function set_brainstorm_session_defaults() {
     }
 }
 
-// Function parse_mysql_time($time)
-// Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
-//
+/**
+ * Function parse_mysql_time($time)
+ * Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
+ */
 function parse_mysql_time($time) {
     $result = array();
     $h = 0 + substr($time, 0, strlen($time) - 6);
@@ -433,35 +374,6 @@ function longDayNameFromInt($daynum) {
     return date_format($netdatetime, "l");
 }
 
-//
-// Function fix_slashes($arg)
-// Takes the string $arg and removes multiple slashes,
-// slash-quote and slash-double quote.
-function fix_slashes($arg) {
-    while (($pos = strpos($arg, "\\\\")) !== false) {
-        if ($pos == 0) {
-            $arg = substr($arg, 1);
-        } else {
-            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
-        }
-    }
-    while (($pos = strpos($arg, "\\'")) !== false) {
-        if ($pos == 0) {
-            $arg = substr($arg, 1);
-        } else {
-            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
-        }
-    }
-    while (($pos = strpos($arg, "\\\"")) !== false) {
-        if ($pos == 0) {
-            $arg = substr($arg, 1);
-        } else {
-            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
-        }
-    }
-    return $arg;
-}
-
 // Function may_I($permatomtag)
 // $permatomtag is a string which designates a permission atom
 // returns TRUE if user has this permission in the current phase(s)
@@ -476,9 +388,10 @@ function may_I($permatomtag) {
     return (in_array($permatomtag, $_SESSION['permission_set']));
 }
 
-// Function GeneratePermissionSetXML()
-// returns an XMLDoc as if from a query with the permission set from the Session.
-//
+/**
+ * Function GeneratePermissionSetXML()
+ * returns an XMLDoc as if from a query with the permission set from the Session.
+ */
 function GeneratePermissionSetXML() {
     $permissionSetXML = new DomDocument("1.0", "UTF-8");
     $doc = $permissionSetXML -> createElement("doc");
@@ -511,16 +424,20 @@ function generateControlString($paramArray, $controliv = '') {
     return array("controliv" => base64_encode($controliv), "control" => $control);
 }
 
-// Function interpretControlString()
-// $control and $controliv were returned from generateControlString() and passed through a form.
-// returns the original associative array sent to generateControlString()
+/**
+ * Function interpretControlString()
+ * $control and $controliv were returned from generateControlString() and passed through a form.
+ * returns the original associative array sent to generateControlString()
+ */
 function interpretControlString($control, $controliv) {
     return json_decode(openssl_decrypt($control, 'aes-128-cbc', ENCRYPT_KEY, 0, base64_decode($controliv)), true);
 }
 
-// Function var_error_log()
-// $object = object to be dumped to the PHP error log
-// the object is walked and written to the PHP error log using var_dump and a redirect of the output buffer.
+/**
+ * Function var_error_log()
+ * $object = object to be dumped to the PHP error log
+ * the object is walked and written to the PHP error log using var_dump and a redirect of the output buffer.
+ */
 function var_error_log( $object=null ){
     ob_start();                    // start buffer capture
     var_dump( $object );           // dump the values

@@ -10,8 +10,8 @@ function log_error_or_stdderr($error_msg) {
     }
 }
 
-/*
- * mysql_cmd_with_prepare_multi:
+/**
+ * Function mysql_cmd_with_prepare_multi()
  *  as a single transaction, prepare an insert/update/delete statement, execute one or more data value sets, and return the number of rows affected
  *  query = valid mysql insert, udpate or delete statement with ? for parameter binding
  *  type_string = datatypes of the specific ? values in the update statement
@@ -62,8 +62,8 @@ function mysql_cmd_with_prepare_multi($query, $type_string, $param_repeat_arr) {
     return $rows;
 }
 
-/*
- * mysql_cmd_with_prepare:
+/**
+ * Function mysql_cmd_with_prepare()
  *  prepare an insert/update/delete statement, execute one data value set, and return the number of rows affected
  *  query = valid mysql insert/udpate/delete statement with ? for parameter binding
  *  type_string = datatypes of the specific ? values in the update statement
@@ -527,49 +527,6 @@ function populate_multiselect_from_table($table_name, $skipset) {
     mysqli_free_result($result);
 }
 
-// Function populate_multisource_from_table(...)
-// Reads parameters (see below) and a specified table from the db.
-// Outputs HTML of the "<OPTION>" values for a Select control associated
-// with the *source* of an active update box.
-//
-function populate_multisource_from_table($table_name, $skipset) {
-    // assumes id's in the table start at 1 '
-    // skipset is array of integers of values of id from table not to include
-    if ($skipset == "") {
-        $skipset = array(-1);
-    }
-    $query = "SELECT * FROM $table_name ORDER BY display_order;";
-    $result = mysqli_query_with_error_handling($query);
-    while (list($option_value, $option_name) = mysqli_fetch_array($result, MYSQLI_NUM)) {
-        if (array_search($option_value, $skipset) === false) {
-            echo "<option value=\"$option_value\" >$option_name</option>\n";
-        }
-    }
-    mysqli_free_result($result);
-}
-
-// Function populate_multidest_from_table(...)
-// Reads parameters (see below) and a specified table from the db.
-// Outputs HTML of the "<OPTION>" values for a Select control associated
-// with the *destination* of an active update box.
-//
-function populate_multidest_from_table($table_name, $skipset) {
-    // assumes id's in the table start at 1                        '
-    // skipset is array of integers of values of id from table to include
-    // in "dest" because they were skipped from "source"
-    if ($skipset == "") {
-        $skipset = array(-1);
-    }
-    $query = "SELECT * FROM $table_name ORDER BY display_order;";
-    $result = mysqli_query_with_error_handling($query);
-    while (list($option_value, $option_name) = mysqli_fetch_array($result, MYSQLI_NUM)) {
-        if (array_search($option_value, $skipset) !== false) {
-            echo "<option value=\"$option_value\" >$option_name</option>\n";
-        }
-    }
-    mysqli_free_result($result);
-}
-
 // Function update_session()
 // Takes data from global $session array and updates
 // the tables Sessions, SessionHasFeature, SessionHasService and SessionHasTag.
@@ -580,30 +537,30 @@ function update_session() {
 
     $query=<<<EOD
 UPDATE Sessions SET
-        trackid="{$sessionf["track"]}",
-        typeid="{$sessionf["type"]}",
-        divisionid="{$sessionf["divisionid"]}",
-        pubstatusid="{$sessionf["pubstatusid"]}",
-        languagestatusid="{$sessionf["languagestatusid"]}",
-        pubsno="{$sessionf["pubno"]}",
-        title="{$sessionf["title"]}",
-        secondtitle="{$sessionf["secondtitle"]}",
-        pocketprogtext="{$sessionf["pocketprogtext"]}",
-        progguidhtml="{$sessionf["progguidhtml"]}",
-        progguiddesc="{$sessionf["progguiddesc"]}",
-        persppartinfo="{$sessionf["persppartinfo"]}",
-        duration="{$sessionf["duration"]}",
+        trackid='{$sessionf["track"]}',
+        typeid='{$sessionf["type"]}',
+        divisionid='{$sessionf["divisionid"]}',
+        pubstatusid='{$sessionf["pubstatusid"]}',
+        languagestatusid='{$sessionf["languagestatusid"]}',
+        pubsno='{$sessionf["pubno"]}',
+        title='{$sessionf["title"]}',
+        secondtitle='{$sessionf["secondtitle"]}',
+        pocketprogtext='{$sessionf["pocketprogtext"]}',
+        progguidhtml='{$sessionf["progguidhtml"]}',
+        progguiddesc='{$sessionf["progguiddesc"]}',
+        persppartinfo='{$sessionf["persppartinfo"]}',
+        duration='{$sessionf["duration"]}',
         estatten={$sessionf["estatten"]},
-        kidscatid="{$sessionf["kidscatid"]}",
+        kidscatid='{$sessionf["kidscatid"]}',
         signupreq={$sessionf["signupreq"]},
         invitedguest={$sessionf["invitedguest"]},
-        roomsetid="{$sessionf["roomsetid"]}",
-        notesforpart="{$sessionf["notesforpart"]}",
-        servicenotes="{$sessionf["servnotes"]}",
-        statusid="{$sessionf["status"]}",
-        notesforprog="{$sessionf["notesforprog"]}",
-        meetinglink="{$sessionf["mlink"]}",
-        recordinglink="{$sessionf["rlink"]}"
+        roomsetid='{$sessionf["roomsetid"]}',
+        notesforpart='{$sessionf["notesforpart"]}',
+        servicenotes='{$sessionf["servnotes"]}',
+        statusid='{$sessionf["status"]}',
+        notesforprog='{$sessionf["notesforprog"]}',
+        meetinglink='{$sessionf["mlink"]}',
+        recordinglink='{$sessionf["rlink"]}'
     WHERE
         sessionid = $id;
 EOD;
@@ -910,13 +867,6 @@ EOD;
 // Reads the session variables and checks password in db to see if user is
 // logged in.  Returns true if logged in or false if not.  Assumes db already
 // connected on $linki.
-
-/* The script will check login status.  If user is logged in
-   it will pass control to script (???) to implement edit my contact info.
-   If user not logged in, it will pass control to script (???) to
-   log user in. */
-/* check login script, included in db_connect.php. */
-
 function isLoggedIn() {
     global $message_error;
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['hashedPassword'])) {
@@ -1192,21 +1142,10 @@ EOD;
     return true;
 }
 
-//function get_idlist_from_db($table_name, $id_col_name, $desc_col_name, $desc_col_match);
-// Returns a string with a list of id's from a configuration table
-
-function get_idlist_from_db($table_name, $id_col_name, $desc_col_name, $desc_col_match) {
-    $query = "SELECT GROUP_CONCAT($id_col_name) from $table_name where ";
-    $query.= "$desc_col_name in ($desc_col_match)";
-    $result = mysqli_query_with_error_handling($query);
-    $retval = mysqli_fetch_row($result)[0];
-    mysqli_free_result($result);
-    return $retval;
-}
-
-// Function get_sstatus()
-// Populates the global sstatus array from the database
-
+/**
+ * Function get_sstatus()
+ * Populates the global sstatus array from the database
+ */
 function get_sstatus() {
     $sstatus = array();
     $query = "SELECT statusid, may_be_scheduled, validate FROM SessionStatuses;";
@@ -1227,11 +1166,5 @@ function survey_programmed() {
     if (isset($questions))
            return $questions > 0;
     return false;
-}
-
-function my_escape_string($str_to_esc) {
-    global $mysqli;
-
-    return $mysqli->real_escape_string($str_to_esc);
 }
 ?>

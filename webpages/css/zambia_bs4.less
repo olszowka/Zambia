@@ -41,9 +41,9 @@
 /* end of bootstrap overrides */
 
 /* Bootstrap 4 extensions */
-.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25, .col-md-2p5, .col-lg-2p5, .col-xl-2p25,
-.col-xl-3p5, .col-xxl-1, .col-xxl-2, .col-xxl-3, .col-xxl-4, .col-xxl-5, .col-xxl-6, .col-xxl-7, .col-xxl-8,
-.col-xxl-9, .col-xxl-10, .col-xxl-11, .col-xxl-12 {
+.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25, .col-md-2p5, .col-md-2p01, .col-lg-2p5,
+.col-xl-2p25, .col-xl-3p5, .col-xxl-1, .col-xxl-2, .col-xxl-3, .col-xxl-4, .col-xxl-5, .col-xxl-6, .col-xxl-7,
+.col-xxl-8, .col-xxl-9, .col-xxl-10, .col-xxl-11, .col-xxl-12 {
     position: relative;
     width: 100%;
     padding-right: 15px;
@@ -153,6 +153,9 @@
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
+}
+
+@media (min-width: 576px) {
     .col-sm-3p5 {
         flex: 0 0 29.16667%;
         max-width: 29.16667%;
@@ -160,10 +163,19 @@
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-    
+}
+
+@media (min-width: 768px) {
+    .col-md-2p01 {
+        flex: 0 0 16.75%;
+        max-width: 16.75%;
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media (min-width: 992px) {
     .col-lg-2p5 {
         flex: 0 0 20.83333%;
         max-width: 20.83333%;
@@ -180,6 +192,10 @@
         flex: 0 0 29.166667%;
         max-width: 29.166667%;
     }
+
+    .container.container-xl {
+        max-width:1800px
+    }
 }
 
 .badge.badge-full-width {
@@ -187,7 +203,33 @@
     text-align: left;
 }
 
+// Make text in span display like a label
+.label {
+    display: inline-block;
+    margin-bottom: .5rem
+}
+
+.form-group.special-col-adjustment {
+    padding-left: calc(16px - 0.25%);
+    padding-right: calc(16px + 0.25%);
+}
 /* End of Bootstrap 4 extensions */
+
+/* Bootstrap 4 overrides */
+
+.custom-select {
+    height: 2rem;
+    padding-top: 3px;
+    border: 1px solid #606060;
+    border-radius: 4px;
+}
+
+textarea.form-control {
+    border: 1px solid #606060;
+    border-radius: 4px;
+}
+
+/* End of Bootstrap 4 overrides */
 
 /* General Form Defaults */
 
@@ -207,13 +249,22 @@
     display: inline-block;
     background-color: @white;
     border: 1px solid @darkest-gray;
-    border-radius: 2px;
+    border-radius: 4px;
     padding: 0;
     height: 8rem;
     min-width: 8rem;
     overflow-y: scroll;
     width: fit-content;
 }
+
+.checkbox-list-container.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    border-radius: 4px;
+    height: calc(12rem - 5px);
+}
+
 .checkbox-list-label-wrapper {
     padding-bottom:0.3rem;
     padding-top:0.3rem;
