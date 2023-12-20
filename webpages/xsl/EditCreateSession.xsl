@@ -174,7 +174,7 @@
                                     </div>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    <input type="hidden" name="divisionid" id="divisionid" value="$divisionid" />
+                                    <input type="hidden" name="divisionid" id="divisionid" value="{$divisionid}" />
                                 </xsl:otherwise>
                             </xsl:choose>
                             <div class="form-group col-md-2p01 special-col-adjustment">
