@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $congoinfo, $linki, $message2, $message_error, $participant, $title;
 $title = "Session Search Results";
 require('PartCommonCode.php'); // initialize db; check login; retrieve $badgeid
@@ -9,10 +9,11 @@ $trackid = getInt('track');
 $tagArr = getArrayOfInts('tags');
 $titlesearch = getString('title');
 $tagmatch = getString('tagmatch');
-if (TRACK_TAG_USAGE !== "TAG_ONLY")
+if (TRACK_TAG_USAGE !== "TAG_ONLY") {
     $addtrack = "T.trackname,";
-else
+} else {
     $addtrack = "";
+}
 // List of sessions that match search criteria
 // Includes sessions in which participant is already interested if they do match match search
 // Use "Session Interests" page to just see everything in which you are interested
@@ -29,8 +30,9 @@ SELECT
     FROM
                   Sessions S
 EOD;
-if (TRACK_TAG_USAGE !== "TAG_ONLY")
+if (TRACK_TAG_USAGE !== "TAG_ONLY") {
     $sql .= "\n JOIN Tracks T USING (trackid)\n";
+}
 $sql .= <<<EOD
              JOIN Types TY USING (typeid)
              JOIN SessionStatuses SST USING (statusid)
@@ -43,8 +45,9 @@ $sql .= <<<EOD
                   ) as PSI USING (sessionid)
         LEFT JOIN SessionHasTag SHT USING (sessionid)
 EOD;
-if (TRACK_TAG_USAGE !== "TRACK_ONLY")
+if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
     $sql .= "\n LEFT JOIN Tags TA USING (tagid)\n";
+}
 $sql .= <<<EOD
     WHERE
             SST.may_be_scheduled=1
@@ -54,16 +57,18 @@ $sql .= <<<EOD
                 FROM
                          Sessions S2
 EOD;
-if (TRACK_TAG_USAGE !== "TAG_ONLY")
+if (TRACK_TAG_USAGE !== "TAG_ONLY") {
     $sql .= "\n JOIN Tracks T USING (trackid)\n";
+}
 $sql .= <<<EOD
                     JOIN Types Y USING (typeid)
                 WHERE
                          S2.invitedguest=0
                      AND Y.selfselect=1
 EOD;
-if (TRACK_TAG_USAGE !== "TAG_ONLY")
+if (TRACK_TAG_USAGE !== "TAG_ONLY") {
     $sql .= "\n     AND T.selfselect=1\n";
+}
 
 $queryArray["sessions"] = $sql;
 if ($trackid !== false && $trackid != 0 && TRACK_TAG_USAGE !== "TRACK_ONLY") {
@@ -95,7 +100,7 @@ EOD;
 if (($resultXML = mysql_query_XML($queryArray)) === false) {
     RenderError($message_error);
     exit();
-    }
+}
 $paramArray = array();
 $paramArray['may_I'] = may_I('my_panel_interests') ? "1" : "0";
 $paramArray['conName'] = CON_NAME;
@@ -103,7 +108,7 @@ $paramArray["trackIsPrimary"] = TRACK_TAG_USAGE === "TRACK_ONLY" || TRACK_TAG_US
 $paramArray["showTrack"] = TRACK_TAG_USAGE !== "TAG_ONLY";
 $paramArray["showTags"] = TRACK_TAG_USAGE !== "TRACK_ONLY";
 participant_header($title, false, 'Normal', true);
-echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
+//echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 RenderXSLT('PartSearchSessionsSubmit.xsl', $paramArray, $resultXML);
 participant_footer();
 ?>
