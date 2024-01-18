@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Created by Peter Olszowka on 2022-12-15
 $report = [];
 $report['name'] = 'All Participants and Assignments';
@@ -24,7 +24,7 @@ SELECT
                             UserHasPermissionRole UHPR
                         WHERE
                                 UHPR.badgeid = P.badgeid
-                            AND UHPR.permroleid IN (3, 4) /* Confirmed Prog. Part., Potential Prog. Part. */
+                            AND UHPR.permroleid IN (4) /* Participant (B61) */
                  )                   
     ORDER BY
         IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),

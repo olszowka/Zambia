@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participants signed up for sessions not coming';
 $report['description'] = 'The list of all participants who have entered interest in a session, but are currently not flagged as intending to attend.';
@@ -16,45 +16,45 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-		CD.badgeid, CD.firstname, CD.lastname, CD.badgename, P.pubsname
-	FROM
-			 Participants P
-		JOIN CongoDump CD USING (badgeid)
-	WHERE
-			NOT (P.interested <=> 1)
-		AND EXISTS (
-			SELECT *
-				FROM
-					ParticipantSessionInterest PSI
-				WHERE
-					PSI.badgeid = P.badgeid
-			)
-		AND EXISTS (
-			SELECT *
-				FROM
-					UserHasPermissionRole UHPR
-				WHERE
-						UHPR.badgeid = P.badgeid
-					AND UHPR.permroleid IN (3,6,9,10,11) /* Participants roles that can log in: Participant, Event Organizer, LARP Part., LARP Org., Tabletop game Part. */
-			);
+        CD.badgeid, CD.firstname, CD.lastname, CD.badgename, P.pubsname
+    FROM
+             Participants P
+        JOIN CongoDump CD USING (badgeid)
+    WHERE
+            NOT (P.interested <=> 1)
+        AND EXISTS (
+            SELECT *
+                FROM
+                    ParticipantSessionInterest PSI
+                WHERE
+                    PSI.badgeid = P.badgeid
+            )
+        AND EXISTS (
+            SELECT *
+                FROM
+                    UserHasPermissionRole UHPR
+                WHERE
+                        UHPR.badgeid = P.badgeid
+                    AND UHPR.permroleid = 4 /* Participants (B61) */
+            );
 EOD;
 $report['queries']['sessions'] =<<<'EOD'
 SELECT
-		PSI.badgeid, PSI.sessionid, S.title
-	FROM
-			 ParticipantSessionInterest PSI
-		JOIN Sessions S USING (sessionid)
-		JOIN Participants P USING (badgeid)
-	WHERE
-			NOT (P.interested <=> 1)
-		AND EXISTS (
-			SELECT *
-				FROM
-					UserHasPermissionRole UHPR
-				WHERE
-						UHPR.badgeid = P.badgeid
-					AND UHPR.permroleid IN (3,6,9,10,11) /* Participants roles that can log in: Participant, Event Organizer, LARP Part., LARP Org., Tabletop game Part. */
-			);
+        PSI.badgeid, PSI.sessionid, S.title
+    FROM
+             ParticipantSessionInterest PSI
+        JOIN Sessions S USING (sessionid)
+        JOIN Participants P USING (badgeid)
+    WHERE
+            NOT (P.interested <=> 1)
+        AND EXISTS (
+            SELECT *
+                FROM
+                    UserHasPermissionRole UHPR
+                WHERE
+                        UHPR.badgeid = P.badgeid
+                    AND UHPR.permroleid = 4 /* Participants (B61) */
+            );
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>

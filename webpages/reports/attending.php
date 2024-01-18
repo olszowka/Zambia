@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Attending Query (all info)';
 $report['description'] = 'Shows who (of program participants only) has responded and if they are attending.';
@@ -17,13 +17,13 @@ $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
         CD.firstname, CD.lastname, P.pubsname, P.badgeid, P.interested, PR.permrolename
-	FROM
-	         Participants P
-	    JOIN CongoDump CD USING (badgeid)
+    FROM
+             Participants P
+        JOIN CongoDump CD USING (badgeid)
         JOIN UserHasPermissionRole UHPR USING (badgeid)
         JOIN PermissionRoles PR USING (permroleid)
     WHERE
-        UHPR.permroleid IN (3,4) ## Potential and Confirmed Program Participants
+        UHPR.permroleid IN (4) /* Participants (B61) */
     ORDER BY
         P.pubsname;
 EOD;

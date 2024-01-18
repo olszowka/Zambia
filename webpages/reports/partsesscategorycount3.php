@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'New Comps Report ';
 $report['description'] = 'Show count of how many sessions each participant is scheduled for broken down by division (disregarding signings) obsolete-needs fixing';
@@ -16,22 +16,22 @@ SELECT
                   Participants P
              JOIN CongoDump CD USING (badgeid)
         LEFT JOIN (
-        	SELECT
-        	        POS.badgeid, Count(*) AS total,
-        	        SUM(IF((S.divisionid=2 OR S.divisionid=8),1,0)) AS py, /* programming or youth services divisions */
-        	        SUM(IF((S.divisionid=3),1,0)) AS ev, /* events divisions */
-        	        SUM(IF((S.divisionid=9 AND S.typeid = 13),1,0)) AS gl, /* gaming division and LARP type */
-        	        SUM(IF((S.divisionid=9 AND S.typeid = 14),1,0)) AS gt, /* gaming division and board game type */
-        	        SUM(IF((S.divisionid=9 AND S.typeid = 15),1,0)) AS grpg /* gaming division and tabletop rpg type */
-        		FROM
-        		         Schedule SCH
-        		    JOIN ParticipantOnSession POS USING (sessionid)
-        		    JOIN Sessions S USING (sessionid)
-        		WHERE
-        		        S.typeid != 10 /* signing */
-        		    AND S.pubstatusid = 2 /* Public */
-        		GROUP BY POS.badgeid    
-        	    ) AS subQ USING (badgeid)
+            SELECT
+                    POS.badgeid, Count(*) AS total,
+                    SUM(IF((S.divisionid=2 OR S.divisionid=8),1,0)) AS py, /* programming or youth services divisions */
+                    SUM(IF((S.divisionid=3),1,0)) AS ev, /* events divisions */
+                    SUM(IF((S.divisionid=9 AND S.typeid = 13),1,0)) AS gl, /* gaming division and LARP type */
+                    SUM(IF((S.divisionid=9 AND S.typeid = 14),1,0)) AS gt, /* gaming division and board game type */
+                    SUM(IF((S.divisionid=9 AND S.typeid = 15),1,0)) AS grpg /* gaming division and tabletop rpg type */
+                FROM
+                         Schedule SCH
+                    JOIN ParticipantOnSession POS USING (sessionid)
+                    JOIN Sessions S USING (sessionid)
+                WHERE
+                        S.typeid != 10 /* signing */
+                    AND S.pubstatusid = 2 /* Public */
+                GROUP BY POS.badgeid    
+                ) AS subQ USING (badgeid)
     WHERE
         P.interested = 1
     ORDER BY
@@ -83,7 +83,7 @@ SELECT
         JOIN PermissionRoles PR using (permroleid)
     WHERE 
             P.interested = 1
-        AND PR.permroleid NOT IN (1,2) /* administrator, staff */
+        AND PR.permroleid = 4 /* Participant (B61) */
         AND EXISTS (
             SELECT *
                 FROM
@@ -193,7 +193,7 @@ $report['xsl'] =<<<'EOD'
                      <xsl:call-template name="showSessionid">
                          <xsl:with-param name="sessionid" select = "@sessionid" />
                      </xsl:call-template>
-				</span>
+                </span>
                  <span class="title">
                       <xsl:call-template name="showSessionTitle">
                           <xsl:with-param name="sessionid" select = "@sessionid" />

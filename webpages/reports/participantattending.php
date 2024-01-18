@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Created by Peter Olszowka on 2022-11-04
 $report = [];
 $report['name'] = 'Participant Attending';
@@ -25,7 +25,7 @@ SELECT
                         UserHasPermissionRole UHPR2
                     WHERE
                             UHPR2.badgeid = P.badgeid
-                        AND UHPR2.permroleid IN (3, 4) /* potential or confirmed partcipant */
+                        AND UHPR2.permroleid = 4 /* partcipant (B61) */
             )
     ORDER BY
         P.pubsname;

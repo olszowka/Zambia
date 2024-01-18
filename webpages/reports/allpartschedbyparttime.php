@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Full Program Participant Schedule ';
 $report['description'] = 'The schedule sorted by participant, then time limited to program participants';
@@ -19,7 +19,7 @@ SELECT DISTINCT
         JOIN Schedule SCH USING (sessionid)
         JOIN UserHasPermissionRole UHPR USING (badgeid)
     WHERE
-        UHPR.permroleid = 3 /* Program Participant */
+        UHPR.permroleid = 4 /* Participant (B61) */
     ORDER BY
         IF(instr(P.pubsname, C.lastname)>0, C.lastname, substring_index(P.pubsname,' ',-1)),
         C.firstname;

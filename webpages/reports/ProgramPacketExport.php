@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2017-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2017-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Program Packet Export';
 $report['description'] = 'Export CSV file of Program Packet Export';
@@ -43,7 +43,7 @@ SELECT
         SELECT * FROM UserHasPermissionRole UHPR
             WHERE 
                     UHPR.badgeid = P.badgeid
-                AND UHPR.permroleid = 3 /* Program Participant */
+                AND UHPR.permroleid = 4 /* Participant (B61) */
         )
     ORDER BY
         P.pubsname;
