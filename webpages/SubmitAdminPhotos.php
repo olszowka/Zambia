@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2006-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2006-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
@@ -413,13 +413,17 @@ function approvephoto() {
 
     if ($move_ok) {
         $filename = $row["uploadedphotofilename"];
-        $upload_path = $dest .  "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $filename;
-        $approved_path = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/pp" . $filename;
-        try {
-            rename($upload_path, $approved_path);
-        } catch (Exception $e) {
-            error_log("Caught: " . $e->getMessage());
-            $json_return["message"] = "Error moving approved photo";
+        if (strlen($filename) > 0) {
+            $upload_path = $dest .  "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $filename;
+            $approved_path = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/pp" . $filename;
+            try {
+                rename($upload_path, $approved_path);
+            } catch (Exception $e) {
+                error_log("Caught: " . $e->getMessage());
+                $json_return["message"] = "Error moving approved photo";
+                $move_ok = false;
+            }
+        } else {
             $move_ok = false;
         }
     }
@@ -480,14 +484,17 @@ function deleteapprovedphoto() {
         exit();
     }
 
-    $fname = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/" . $row["approvedphotofilename"];
-    try {
-        unlink($fname);
-    }
-    catch (Exception $e) {
-        error_log("Caught: " . $e->getMessage());
-        $json_return["message"] = "Error deleting approved photo";
+    if (strlen($row["approvedphotofilename"]) < 1) {
         $do_update = false;
+    } else {
+        $fname = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/" . $row["approvedphotofilename"];
+        try {
+            unlink($fname);
+        } catch (Exception $e) {
+            error_log("Caught: " . $e->getMessage());
+            $json_return["message"] = "Error deleting approved photo";
+            $do_update = false;
+        }
     }
 
     if ($do_update) {
