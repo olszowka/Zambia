@@ -1,98 +1,67 @@
 <?php
 // Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
-$report['name'] = 'New Comps Report ';
-$report['description'] = 'Show count of how many sessions each participant is scheduled for broken down by division (disregarding signings) obsolete-needs fixing';
-$report['categories'] = array();
+$report['name'] = 'New Comps Report';
+$report['description'] = 'Session counts for each participant.  Rewritten for B61';
+$report['categories'] = array(
+    'Registration Reports' => 100,
+);
+$report['columns'] = array(
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array(),
+    array()
+);
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.pubsname, P.badgeid, CD.regtype, CD.email, CD.lastname, CD.firstname, 
-        IFNULL(subQ.total, 0) as total, IFNULL(subQ.py, 0) as py, IFNULL(subQ.ev, 0) as ev,
-        IFNULL(subQ.gl, 0) as gl, IFNULL(subQ.gt, 0) as gt, IFNULL(subQ.grpg, 0) as grpg, 
-        IFNULL(subQ.total, 0) - IFNULL(subQ.py, 0) - IFNULL(subQ.ev, 0) - IFNULL(subQ.gl, 0)
-          - IFNULL(subQ.gt, 0) - IFNULL(subQ.grpg, 0) AS other
+        P.badgeid, CD.regtype, RT.message, CD.firstname, CD.lastname, CD.badgename, P.pubsname, CD.email,
+        CD.phone, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry,
+        IFNULL(subQ.blp, 0) as blp, IFNULL(subQ.ag, 0) as ag, IFNULL(subQ.re, 0) as re, IFNULL(subQ.kk, 0) as kk,
+        IFNULL(subQ.other, 0) AS other, IFNULL(subQ.total, 0) as total
     FROM
                   Participants P
              JOIN CongoDump CD USING (badgeid)
+        LEFT JOIN RegTypes RT USING (regtype) 
         LEFT JOIN (
             SELECT
-                    POS.badgeid, Count(*) AS total,
-                    SUM(IF((S.divisionid=2 OR S.divisionid=8),1,0)) AS py, /* programming or youth services divisions */
-                    SUM(IF((S.divisionid=3),1,0)) AS ev, /* events divisions */
-                    SUM(IF((S.divisionid=9 AND S.typeid = 13),1,0)) AS gl, /* gaming division and LARP type */
-                    SUM(IF((S.divisionid=9 AND S.typeid = 14),1,0)) AS gt, /* gaming division and board game type */
-                    SUM(IF((S.divisionid=9 AND S.typeid = 15),1,0)) AS grpg /* gaming division and tabletop rpg type */
+                    POS.badgeid,
+                    SUM(IF((S.sessionid = 340), 1, 0)) AS blp, /* book launch party */
+                    SUM(IF((S.typeid = 8), 1, 0)) AS ag, /* autographings */
+                    SUM(IF((S.typeid = 7), 1, 0)) AS re, /* reading */
+                    SUM(IF((S.typeid = 1), 1, 0)) AS kk, /* kaffeeklatsches */
+                    SUM(IF((S.sessionid != 340 AND S.typeid != 8 AND S.typeid != 7 AND S.typeid != 1), 1, 0)) AS other, /* see above */
+                    Count(*) AS total
                 FROM
                          Schedule SCH
                     JOIN ParticipantOnSession POS USING (sessionid)
                     JOIN Sessions S USING (sessionid)
                 WHERE
-                        S.typeid != 10 /* signing */
-                    AND S.pubstatusid = 2 /* Public */
+                    S.pubstatusid = 2 /* Public */
                 GROUP BY POS.badgeid    
-                ) AS subQ USING (badgeid)
+            ) AS subQ USING (badgeid)
     WHERE
         P.interested = 1
     ORDER BY
-        CD.regtype, subQ.total;
+        CD.lastname, CD.firstname;
 
-EOD;
-$report['queries']['sessions'] =<<<'EOD'
-SELECT
-        S.title, D.divisionname, TY.typename, TR.trackname, POS.badgeid, S.sessionid,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime
-    FROM
-             Schedule SCH
-        JOIN Sessions S using (sessionid)
-        JOIN Divisions D using (divisionid)
-        JOIN Types TY using (typeid)
-        JOIN Tracks TR using (trackid)
-        JOIN ParticipantOnSession POS using (sessionid)
-    WHERE
-            S.pubstatusid = 2 /* Public */
-        AND S.typeid != 10 /* signing */
-    ORDER BY
-        SCH.starttime;
-EOD;
-$report['queries']['otherSessions'] =<<<'EOD'
-SELECT
-        S.title, D.divisionname, TY.typename, TR.trackname, POS.badgeid, 
-        DATE_FORMAT(ADDDATE('$ConStartDatim$', SCH.starttime), "%a %l:%i %p") AS starttime
-    FROM
-             Schedule SCH
-        JOIN Sessions S using (sessionid)
-        JOIN Divisions D using (divisionid)
-        JOIN Types TY using (typeid)
-        JOIN Tracks TR using (trackid)
-        JOIN ParticipantOnSession POS using (sessionid)
-    WHERE
-           (     S.divisionid IN (1,4,5,6,7)
-             OR (S.divisionid = 9 AND S.typeid NOT IN (23, 25, 26))
-           ) AND S.pubstatusid = 2 /* Public */
-             AND S.typeid != 10 /* signing */
-    ORDER BY
-        SCH.starttime;
-EOD;
-$report['queries']['permissionRoles'] =<<<'EOD'
-SELECT
-        PR.permrolename, P.badgeid
-    FROM
-             Participants P
-        JOIN UserHasPermissionRole UHPR using (badgeid)
-        JOIN PermissionRoles PR using (permroleid)
-    WHERE 
-            P.interested = 1
-        AND PR.permroleid = 4 /* Participant (B61) */
-        AND EXISTS (
-            SELECT *
-                FROM
-                         Schedule SCH
-                    JOIN ParticipantOnSession POS using (sessionid)
-                WHERE
-                    POS.badgeid = P.badgeid
-                )
-     ORDER BY P.badgeid;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -102,51 +71,32 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <style>
-                    td.noborder {
-                        border:none !important;
-                        border-collapse: separate;
-                        }
-                    span.day, span.sessionid {
-                        display: inline-block;
-                        width: 9em;
-                        }
-                    tr.mainrow td {
-                        border-top: 2px solid black;
-                        }
-                    table.noleftborder {
-                        border-left: none !important;
-                        }
-                </style>
-                <table class="report noleftborder">
-                    <col style="width:4.75em;" />
-                    <col style="width:12em;" />
-                    <col style="width:10em;" />
-                    <col style="width:8em;" />
-                    <col style="width:12em;" />
-                    <col style="width:8.5em;" />
-                    <col style="width:7em;" />
-                    <col style="width:4.5em;" />
-                    <col style="width:4.5em;" />
-                    <col style="width:4.5em;" />
-                    <col style="width:4.5em;" />
-                    <col style="width:4.5em;" />
-                    <col style="width:14em;" />
-                    <tr>
-                        <th class="report" >Badge ID</th>
-                        <th class="report" >Publication Name</th>
-                        <th class="report" >Last Name</th>
-                        <th class="report" >First Name</th>
-                        <th class="report" >Email</th>
-                        <th class="report" >Registration Type</th>
-                        <th class="report" >Prog. or Youth</th>
-                        <th class="report" >Events</th>
-                        <th class="report" >LARPs</th>
-                        <th class="report" >Board G's</th>
-                        <th class="report" >TT RPG's</th>
-                        <th class="report" >Other</th>
-                        <th class="report" >Participant Role(s)</th>
-                    </tr>
+                <table id="reportTable" class="report">
+                    <thead>
+                        <tr style="height:4em;">
+                            <th class="report" >Badge ID</th>
+                            <th class="report" >Registration Type</th>
+                            <th class="report" >Registration Description</th>
+                            <th class="report" >First Name</th>
+                            <th class="report" >Last Name</th>
+                            <th class="report" >Badge Name</th>
+                            <th class="report" >Pubs. Name</th>
+                            <th class="report" >Email</th>
+                            <th class="report" >Phone</th>
+                            <th class="report" >Address</th>
+                            <th class="report" >Address 2</th>
+                            <th class="report" >City</th>
+                            <th class="report" >State</th>
+                            <th class="report" >Zip</th>
+                            <th class="report" >Country</th>
+                            <th class="report" >B. Launch P.</th>
+                            <th class="report" >Autogr.</th>
+                            <th class="report" >Reading</th>
+                            <th class="report" >KK's</th>
+                            <th class="report" >Other</th>
+                            <th class="report" >Total</th>
+                        </tr>
+                    </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
                 </table>
             </xsl:when>
@@ -156,51 +106,33 @@ $report['xsl'] =<<<'EOD'
         </xsl:choose>
     </xsl:template>
     <xsl:template match="doc/query[@queryName='participants']/row">
-        <xsl:variable name="badgeid" select="@badgeid" />
         <tr class="mainrow">
             <td class="report"><xsl:value-of select="@badgeid" /></td>
+            <td class="report"><xsl:value-of select="@regtype" /></td>
+            <td class="report"><xsl:value-of select="@message" /></td>
+            <td class="report"><xsl:value-of select="@firstname" /></td>
+            <td class="report"><xsl:value-of select="@lastname" /></td>
+            <td class="report"><xsl:value-of select="@badgename" /></td>
             <td class="report">
                 <xsl:call-template name="showPubsname">
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@lastname" /></td>
-            <td class="report"><xsl:value-of select="@firstname" /></td>
             <td class="report"><xsl:value-of select="@email" /></td>
-            <td class="report"><xsl:value-of select="@regtype" /></td>
-            <td class="report"><xsl:value-of select="@py" /></td>
-            <td class="report"><xsl:value-of select="@ev" /></td>
-            <td class="report"><xsl:value-of select="@gl" /></td>
-            <td class="report"><xsl:value-of select="@gt" /></td>
-            <td class="report"><xsl:value-of select="@grpg" /></td>
+            <td class="report"><xsl:value-of select="@phone" /></td>
+            <td class="report"><xsl:value-of select="@postaddress1" /></td>
+            <td class="report"><xsl:value-of select="@postaddress2" /></td>
+            <td class="report"><xsl:value-of select="@postcity" /></td>
+            <td class="report"><xsl:value-of select="@poststate" /></td>
+            <td class="report"><xsl:value-of select="@postzip" /></td>
+            <td class="report"><xsl:value-of select="@postcountry" /></td>
+            <td class="report"><xsl:value-of select="@blp" /></td>
+            <td class="report"><xsl:value-of select="@ag" /></td>
+            <td class="report"><xsl:value-of select="@re" /></td>
+            <td class="report"><xsl:value-of select="@kk" /></td>
             <td class="report"><xsl:value-of select="@other" /></td>
-            <td class="report"><xsl:apply-templates select="/doc/query[@queryName='permissionRoles']/row[@badgeid=$badgeid]"/></td>
-        </tr>
-        <xsl:if test="@total&gt;0 and @total&lt;3">
-            <xsl:apply-templates select="/doc/query[@queryName='sessions']/row[@badgeid=$badgeid]"/>
-        </xsl:if>
-    </xsl:template>
-    <xsl:template match="/doc/query[@queryName='permissionRoles']/row">
-         <div><xsl:value-of select="@permrolename" /></div>
-    </xsl:template>
-    <xsl:template match="/doc/query[@queryName='sessions']/row">
-        <tr>
-            <td colspan="2" class="noborder"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-            <td colspan="11" class="report">
-                 <span class="day"><xsl:value-of select="@starttime" /></span>
-                 <span class="sessionid">
-                     <xsl:call-template name="showSessionid">
-                         <xsl:with-param name="sessionid" select = "@sessionid" />
-                     </xsl:call-template>
-                </span>
-                 <span class="title">
-                      <xsl:call-template name="showSessionTitle">
-                          <xsl:with-param name="sessionid" select = "@sessionid" />
-                          <xsl:with-param name="title" select = "@title" />
-                      </xsl:call-template>
-                 </span>
-           </td>
+            <td class="report"><xsl:value-of select="@total" /></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>
