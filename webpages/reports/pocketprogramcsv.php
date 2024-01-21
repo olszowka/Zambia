@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2009-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2009-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Pocket Program';
 $report['description'] = 'Export CSV file of public schedule for generating pocket program';
@@ -23,12 +23,13 @@ SELECT
                   if(left(date_format(duration,'%i'),1)=0, 
                      concat(right(date_format(duration,'%i'),1),'min'), 
                      concat(date_format(duration,'%i'),'min')))) AS Duration, 
-        roomname, 
-        trackname AS TRACK, 
-        typename AS TYPE,
-        K.kidscatname,
-        title, 
-        progguiddesc AS 'Long Text', 
+        roomname, trackname AS TRACK,
+        CASE typeid
+            WHEN 8 THEN '' /* Autographing */
+            WHEN 1 THEN '' /* Kaffeeklatsch */
+            WHEN 7 THEN '' /* Reading */
+            ELSE typename END AS TYPE,
+        K.kidscatname, title, progguiddesc AS 'Long Text',
         SUBQ.participants AS 'PARTIC'
     FROM
                   Sessions S
