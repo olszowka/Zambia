@@ -1,6 +1,6 @@
 <?php
 // This is an example file.  Please copy to db_name.php and edit as needed.
-// Copyright (c) 2008-2023 Peter Olszowka. All rights reserved.
+// Copyright (c) 2008-2024 Peter Olszowka. All rights reserved.
 // See copyright document for more details.
 define("DBHOSTNAME", "localhost");
 define("DBUSERID", "zambiademo");
@@ -38,11 +38,11 @@ define("MY_AVAIL_KIDS", FALSE); // Enables questions regarding no. of kids in Fa
 define("ENABLE_SHARE_EMAIL_QUESTION", TRUE); // Enables question regarding sharing participant email address
 define("ENABLE_USE_PHOTO_QUESTION", TRUE); // Enables question regarding using participant photo for promotional purposes
 define("ENABLE_BESTWAY_QUESTION", FALSE); // Enables question regarding best way to contact participant
-define("BILINGUAL", TRUE); // Triggers extra fields in Session and "My General Interests"
+define("BILINGUAL", TRUE); // Triggers extra fields in Session
 define("SECOND_LANG", "FRENCH");
 define("SECOND_TITLE_CAPTION", "Titre en fran&ccedil;ais");
 define("SECOND_DESCRIPTION_CAPTION", "Description en fran&ccedil;ais");
-define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
+define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais"); // not supported
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
 define('BRAINSTORM_STAFF_STATUS', FALSE); // if the user has staff role, should the brainstorm suggestion be set to edit_me?
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID

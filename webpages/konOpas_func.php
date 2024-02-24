@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2015-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('db_functions.php');
     function retrieveKonOpasData() {
         $results = array();
@@ -34,8 +34,16 @@ EOD;
             }
         $query = <<<EOD
 SELECT
-        S.sessionid AS id, S.title, TR.trackname, TY.typename, R.roomname AS loc, SQ.tags,
-        DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins, S.progguiddesc AS `desc`, 
+        S.sessionid AS id, TR.trackname, TY.typename, R.roomname AS loc, SQ.tags,
+        CASE
+            WHEN TRIM(IFNULL(S.secondtitle, '')) = '' THEN S.title
+            ELSE S.secondtitle
+            END AS `title`,
+        CASE
+            WHEN TRIM(IFNULL(S.pocketprogtext, '')) = '' THEN S.progguidhtml
+            ELSE S.pocketprogtext
+            END AS `desc`,
+        DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins, 
         DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
         DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time
     FROM
@@ -113,18 +121,18 @@ EOD;
                 "bio" => mb_ereg_replace('/[\x00-\x1F\x7F]/','',$row["bio"])
                 );
             $links = array();
-            if ($row["website"]) {
-                $links["website"] = trim($row["website"]); // trim is safe for UTF-8, but not other mb encodings
-            }
-            if ($row["facebook"]) {
-                $links["facebook"] = trim($row["facebook"]);
-            }
-            if ($row["twitter"]) {
-                $links["twitter"] = trim($row["twitter"]);
-            }
-            if ($row["instagram"]) {
-                $links["instagram"] = trim($row["instagram"]);
-            }
+//            if ($row["website"]) {
+//                $links["website"] = trim($row["website"]); // trim is safe for UTF-8, but not other mb encodings
+//            }
+//            if ($row["facebook"]) {
+//                $links["facebook"] = trim($row["facebook"]);
+//            }
+//            if ($row["twitter"]) {
+//                $links["twitter"] = trim($row["twitter"]);
+//            }
+//            if ($row["instagram"]) {
+//                $links["instagram"] = trim($row["instagram"]);
+//            }
             if ($row["photo"]) {
                 $links["img"] = ROOT_URL . $photoPublicDirectory . "/" . $row["photo"];
             }

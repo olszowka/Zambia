@@ -2,7 +2,7 @@
 <!--
     EditCreateSession.xsl
     Created by Peter Olszowka on 2023-11-29.
-    Copyright (c) 2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2023-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
     Page intended for BS4
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -13,10 +13,9 @@
     <xsl:param name="action" />
     <xsl:param name="name" />
     <xsl:param name="email" />
-    <!-- The pubno and pocketprogramtext fields are no longer used on the form, but the code expects it.-->
+    <!-- The pubno field is no longer used on the form, but the code expects it.-->
     <xsl:param name="pubno" />
-    <xsl:param name="pocketprogtext" />
-    <!-- The secondtitle and languagestatusid fields are used only for bilingual support which isn't currently implemented.-->
+    <xsl:variable name="pocketprogtext" select="/doc/session/@pocketprogtext" /><!-- used for 2nd description -->
     <xsl:variable name="secondtitle" select="/doc/session/@secondtitle" />
     <xsl:param name="languagestatusid" />
     <xsl:param name="track_tag_usage" />
@@ -47,6 +46,9 @@
     <xsl:param name="showparticipantlink" />
     <xsl:param name="showrecordinglink" />
     <xsl:param name="showcaptionlink" />
+    <xsl:param name="bilingual" />
+    <xsl:param name="secondtitlecaption" />
+    <xsl:param name="seconddescriptioncaption" />
 
     <xsl:template match="/">
         <div class="container container-xl">
@@ -83,11 +85,9 @@
                         <input type="hidden" name="action" value="{$action}" />
                         <input type="hidden" name="name" value="{$name}" />
                         <input type="hidden" name="email" value="{$email}" />
-                        <!-- The pubno and pocketprogramtext fields are no longer used on the form, but the code expects it.-->
+                        <!-- The pubno field is no longer used on the form, but the code expects it.-->
                         <input type="hidden" name="pubno" value="{$pubno}" />
-                        <input type="hidden" name="pocketprogtext" value="{$pocketprogtext}" />
-                        <!-- The secondtitle and languagestatusid fields are used only for bilingual support which isn't currently implemented.-->
-                        <input type="hidden" name="secondtitle" value="{$secondtitle}" />
+                        <!-- The languagestatusid field is used only for bilingual support, but that field isn't currently implemented.-->
                         <input type="hidden" name="languagestatusid" value="{$languagestatusid}" />
                         <div class="row justify-content-end mt-3">
                             <div class="col-1">
@@ -160,6 +160,26 @@
                                 </div>
                             </div>
                         </div><!-- end of 2nd group with "Formatted Description" -->
+                        <xsl:choose>
+                            <xsl:when test="$bilingual">
+                                <div class="row mt-1">
+                                    <div class="form-group col-md-5">
+                                        <label for="secondtitle"><xsl:value-of select="$secondtitlecaption" /></label>
+                                        <input type="text" class="form-control" name="secondtitle" id="secondtitle" value="{$secondtitle}" />
+                                    </div>
+                                    <div class="form-group col-md-6 offset-md-1">
+                                        <label for="pocketprogtext"><xsl:value-of select="$seconddescriptioncaption" /></label>
+                                        <textarea rows="4" cols="70" name="pocketprogtext" id="pocketprogtext" class="form-control">
+                                            <xsl:value-of select="$pocketprogtext" />
+                                        </textarea>
+                                    </div>
+                                </div><!-- end of 3rd (optional) group with "2nd Title" -->
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <input type="hidden" name="pocketprogtext" value="{$pocketprogtext}" />
+                                <input type="hidden" name="secondtitle" value="{$secondtitle}" />
+                            </xsl:otherwise>
+                        </xsl:choose>
                         <div class="row mt-1">
                             <xsl:choose>
                                 <xsl:when test="count(/doc/query[@queryName='divisions']/row) > 1">
@@ -262,7 +282,7 @@
                                     </xsl:if>
                                 </input>
                             </div>
-                        </div><!-- end of 3rd group starting with "Division" -->
+                        </div><!-- end of 3rd(4th) group starting with "Division" -->
                         <div class="row mt-1">
                             <xsl:if test="not($track_tag_usage = 'TRACK_ONLY')">
                                 <div class="form-group col-md-4">
@@ -306,7 +326,7 @@
                                     <xsl:value-of select="$servnotes" />
                                 </textarea>
                             </div>
-                        </div><!-- end of 4th group with "Required Room Features" -->
+                        </div><!-- end of 4th(5th) group with "Required Room Features" -->
                         <div class="row mt-1">
                             <xsl:if test="$showmeetinglink">
                                 <div class="form-group col-md-6">
@@ -332,7 +352,7 @@
                                     <input type="text" class="form-control" name="clink" id="clink" value="{$clink}" maxlength="510" />
                                 </div>
                             </xsl:if>
-                        </div><!-- end of 5th group with "Meeting Link" -->
+                        </div><!-- end of 5th(6th) group with "Meeting Link" -->
                         <div class="row justify-content-end mt-3">
                             <div class="col-1">
                                 <button type="reset" class="btn btn-secondary" id="reset2" name="reset2" value="reset">Reset</button>

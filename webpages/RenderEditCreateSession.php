@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // This function will output the page with the form to add or create a session
 // Variables
 //     action: "create" or "edit"
@@ -124,6 +124,7 @@ EOD;
         $sessionNode = $resultXML -> createElement('session');
         $doc -> appendChild($sessionNode);
         $sessionNode -> setAttribute('secondtitle',  is_null($session['secondtitle']) ? '' :  $session['secondtitle']);
+        $sessionNode -> setAttribute('pocketprogtext',  is_null($session['pocketprogtext']) ? '' :  $session['pocketprogtext']);
         $sessionNode -> setAttribute('title', $session['title']);
         $sessionNode -> setAttribute('progguidhtml', $session['progguidhtml']);
         $sessionNode -> setAttribute('progguiddesc', $session['progguiddesc']);
@@ -167,6 +168,9 @@ EOD;
     $paramArray['showparticipantlink'] = defined('PARTICIPANT_LINK') ? PARTICIPANT_LINK : false;
     $paramArray['showrecordinglink'] = defined('RECORDING_LINK') ? RECORDING_LINK : false;
     $paramArray['showcaptionlink'] = defined('CAPTION_LINK') ? CAPTION_LINK : false;
+    $paramArray['bilingual'] = defined('BILINGUAL') ? BILINGUAL : false;
+    $paramArray['secondtitlecaption'] = defined('SECOND_TITLE_CAPTION') ? SECOND_TITLE_CAPTION : false;
+    $paramArray['seconddescriptioncaption'] = defined('SECOND_DESCRIPTION_CAPTION') ? SECOND_DESCRIPTION_CAPTION : false;
     RenderXSLT('EditCreateSession.xsl', $paramArray, $resultXML);
     staff_footer();
 }
