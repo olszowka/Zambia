@@ -1,11 +1,12 @@
 <?php
-// Copyright (c) 2008-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2008-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message, $message_error, $message2, $title;
 // $participant_array is defined by file including this.
 $title = "Participant View";
 require_once('PartCommonCode.php');
 populateCustomTextArray(); // title changed above, reload custom text with the proper page title
-participant_header($title, false, 'Normal', true);
+$pageHeaderFamily = may_I('postcon') ? 'No_Menu' : 'Normal';
+participant_header($title, false, $pageHeaderFamily, true);
 ?>
 <div id="confNotAttModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -36,6 +37,7 @@ if ($message != "") {
 }
 $chint = ($participant_array["interested"] == 0);
 if (may_I('postcon')) { ?>
+    <div id="no-menu-spacer"></div>
     <p>Thank you for your participation in <?php echo CON_NAME; ?>. With your help it was a great con. We look forward
         to your participation again next year.</p>
     <p>We will post instructions for participating in brainstorming for next year soon.</p>
@@ -49,11 +51,11 @@ if (may_I('postcon')) { ?>
 <div class="welcome-page-wrapper" style="margin: 0 auto; width:100rem;">
 <form id="pwform" name="pwform" method=POST action="SubmitWelcome.php">
 <div class="row mt-4">
-	<div class="col col-sm-12">
-		<h3>Please check back often as more options will become available as we get closer to the convention.</h3>
-		<p>Dear <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?>,</p>
-		<p>Welcome to the <?php echo CON_NAME; ?> Programming website.</p>
-		<h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming. You will be scheduled only if you say YES.</h4>
+    <div class="col col-sm-12">
+        <h3>Please check back often as more options will become available as we get closer to the convention.</h3>
+        <p>Dear <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?>,</p>
+        <p>Welcome to the <?php echo CON_NAME; ?> Programming website.</p>
+        <h4>First, please take a moment to indicate your ability and interest in participating in <?php echo CON_NAME; ?> programming. You will be scheduled only if you say YES.</h4>
     </div>
 </div>
 <div class="row mt-2">
@@ -67,8 +69,8 @@ if (may_I('postcon')) { ?>
                 <option value=1 <?php if ($int==1) {echo "selected=\"selected\"";} ?> >Yes</option>
                 <option value=2 <?php if ($int==2) {echo "selected=\"selected\"";} ?> >No</option>
             </select>
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 <div class="row mt-2">
     <div class="col col-sm-12">
@@ -84,19 +86,19 @@ if (may_I('postcon')) { ?>
             <input id="password" type="password" size="10" name="password" />
             <label for="cpassword" style="margin-left: 20px; margin-right:5px;" >Confirm New Password:</label>
             <input id="cpassword" type="password" size="10" name="cpassword" />
-		</fieldset>
+        </fieldset>
         <?php } ?>
      </div>
 </div>
  <div class="row mt-2">
     <div class="col col-sm-12">
         <button class="btn btn-primary" type="submit" name="submit" >Update</button>
-	</div>
+    </div>
 </div>
 </form>
 <div class="row mt-4">
-	<div class="col col-sm-12">
-		<p> Use the "Profile" menu to:</p>
+    <div class="col col-sm-12">
+        <p> Use the "Profile" menu to:</p>
         <ul>
             <li> Check your contact information.</li>
             <li> Change your password.</li>
@@ -166,19 +168,19 @@ if (may_I('postcon')) { ?>
         <?php } else { ?>
         <p> The "Suggest a Session" menu is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></p>
         <?php } ?>
-	</div>
-	</div>
+    </div>
+    </div>
 <?php
     $add_pert_overview = fetchCustomText("part_overview");
     if (strlen($add_pert_overview) > 0) { ?>
 <div class="row mt-4">
-	<div class="col col-sm-12">
+    <div class="col col-sm-12">
         <?php echo fetchCustomText("part_overview"); ?>
     </div>
 </div>
 <?php } ?>
 <div class="row mt-4">
-	<div class="col col-sm-12">
+    <div class="col col-sm-12">
         <p>Thank you for your time, and we look forward to seeing you at <?php echo CON_NAME; ?>.</p>
         <p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </p>
 </div>

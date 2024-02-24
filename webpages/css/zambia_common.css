@@ -166,3 +166,10 @@ textarea.tall-textarea {
   display: none !important;
   visibility: hidden !important;
 }
+#no-menu-spacer {
+  margin-bottom: 1rem;
+  margin-left: -15px;
+  margin-right: -15px;
+  height: 0.5rem;
+  background-color: black;
+}
