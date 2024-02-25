@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Created by Peter Olszowka on 2020-06-01;
-	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Created by Peter Olszowka on 2020-06-01;
+    Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="UpdateMessage" select="''"/>
@@ -16,12 +16,14 @@
         </div>
       </xsl:when>
     </xsl:choose>
-    <h2>Current Zambia Phase Status</h2>
+    <div class="row justify-content-center mt-4 mb-1">
+      <h2 class="col col-auto">Current Zambia Phase Status</h2>
+    </div>
     <form name="phaseform" class="form-inline form-more-whitespace" method="POST" action="AdminPhases.php">
       <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
       <input type="hidden" id="control" name="control" value="{$control}" />
       <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
-      <table id="phase_table" class="table table-condensed za-table-striped">
+      <table id="phase_table" class="table table-striped zambia-table">
         <thead>
           <tr>
             <th class="y1">ID</th>
@@ -84,9 +86,9 @@
         </tbody>
       </table>
       <div id="buttonBox" class="clearfix">
-        <div class="pull-right">
-          <button class="btn" type="reset" value="reset" onclick="ResetCol1();">Reset</button>
-          <button class="btn btn-primary" type="submit" value="save" onclick="mysubmit()">Save</button>
+        <div class="float-end">
+          <button class="btn btn-secondary mx-2" type="reset" value="reset" onclick="ResetCol1();">Reset</button>
+          <button class="btn btn-primary mx-2" type="submit" value="save" onclick="mysubmit()">Save</button>
         </div>
       </div>
     </form>

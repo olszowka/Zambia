@@ -1,12 +1,12 @@
-// JavaScript source code
+// Copyright (c) 2023-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 function setColor(item, element, match) {
     var options = element.options;
     var sel = options.item(element.selectedIndex).defaultSelected;
     
     if (sel == false) {
-        $(item).addClass("tdChangedHighlight");
+        $(item).addClass("table-dark-danger");
     } else {
-        $(item).removeClass("tdChangedHighlight");
+        $(item).removeClass("table-dark-danger");
     }
 }
 
@@ -44,9 +44,6 @@ function ChangePhase(num, element) {
 }
 
 function ResetCol1() {
-    var table = document.getElementById("phase_table");
-
-    for (var i = 0, row; row = table.rows[i]; i++) {
-        row.cells[0].classList.remove("tdChangedHighlight");
-    }
+    const table = document.getElementById("phase_table");
+    Array.from(table.rows).forEach((row) => { row.cells[0].classList.remove('table-dark-danger'); });
 }

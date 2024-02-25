@@ -1,13 +1,12 @@
 <?php
-// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-09-03
 global $message_error, $title, $linki, $session;
-$bootstrap4 = true;
 $title = "Edit Configuration Tables";
 require_once('StaffCommonCode.php');
 
 $paramArray = array();
-staff_header($title, $bootstrap4);
+staff_header($title, 'bs4');
 if (isLoggedIn() && may_I("Administrator")) {
 // Start of display portion
 

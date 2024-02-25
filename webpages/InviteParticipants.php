@@ -1,10 +1,9 @@
 <?php
-//	Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
-$bootstrap4 = true;
 $title = "Invite Participants";
 require_once('StaffCommonCode.php');
-staff_header($title, $bootstrap4);
+staff_header($title, 'bs4');
 $message = "";
 $alerttype = "success";
 $submittype = "";
