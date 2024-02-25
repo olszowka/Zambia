@@ -1,9 +1,9 @@
 <?php
-//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section;
 $header_section = HEADER_PARTICIPANT;
 
-function participant_header($title, $noUserRequired = false, $pageHeaderFamily = 'Normal', $bootstrap4 = false) {
+function participant_header($title, $noUserRequired = false, $pageHeaderFamily = 'Normal', $bootstrapVersion = 'bs2') {
     // $noUserRequired is true if user not required to be logged in to access this page
     // $pageHeaderFamily is "Login", "Logout", "No_Menu", "PASSWORD_RESET_COMPLETE", "Consent", "Normal"
     //      "Login":
@@ -27,7 +27,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
         $title = "Data Retention Consent";
         $pageHeaderFamily = 'No_Menu';
-        $bootstrap4 = true;
+        $bootstrapVersion = 'bs4';
         $displayDataConsentPage = true;
     }
     switch ($pageHeaderFamily) {
@@ -45,15 +45,16 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
                 $topSectionBehavior = 'NO_USER';
             } else {
                 $topSectionBehavior = 'SESSION_EXPIRED';
-                $bootstrap4 = false;
+                $bootstrapVersion = 'bs2';
             }
             break;
         case 'PASSWORD_RESET_COMPLETE':
             $topSectionBehavior = 'PASSWORD_RESET_COMPLETE';
             break;
     }
-    html_header($title, $bootstrap4);
-    if ($bootstrap4) {
+    html_header($title, $bootstrapVersion);
+    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
+    if ($isBs4or5) {
         echo "<body class=\"bs4\">\n";
     } else {
         echo "<body>\n";
@@ -74,7 +75,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
      * NORMAL:
      *      No login form, welcome message with logout button
      */
-    commonHeader('Participant', $topSectionBehavior, $bootstrap4, $headerErrorMessage);
+    commonHeader('Participant', $topSectionBehavior, $bootstrapVersion, $headerErrorMessage);
     // below: authenticated and authorized to see a menu
     if ($isLoggedIn && $pageHeaderFamily === 'Normal' &&
         (may_I("Participant") || may_I("Staff"))) {
@@ -82,7 +83,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
         if (!isset($_SESSION['survey_exists'])) {
             $_SESSION['survey_exists'] = survey_programmed();
         }
-        if ($bootstrap4) {
+        if ($isBs4or5) {
             $paramArray = array();
             $paramArray["title"] = $title;
             $paramArray["survey"] = $_SESSION['survey_exists'];

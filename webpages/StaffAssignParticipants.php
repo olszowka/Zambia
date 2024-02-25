@@ -1,11 +1,10 @@
 <?php
-// Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Assign Participants";
-$bootstrap4 = true;
 require_once('StaffCommonCode.php');
 require_once('StaffAssignParticipants_FNC.php');
-staff_header($title, $bootstrap4);
+staff_header($title, 'bs4');
 if (may_I('Staff')) {
     $topsectiononly = true; // no room selected -- flag indicates to display only the top section of the page
     if (isset($_POST["numrows"])) {

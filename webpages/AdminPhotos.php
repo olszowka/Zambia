@@ -1,11 +1,10 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Administer Photos";
-$bootstrap4 = true;
 require_once('StaffCommonCode.php');
 $fbadgeid = getInt("badgeid");
-staff_header($title, $bootstrap4);
+staff_header($title, 'bs4');
 if ($fbadgeid) {
     echo "<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
 }
@@ -16,7 +15,7 @@ if (PARTICIPANT_PHOTOS === TRUE && may_I('AdminPhotos')) {
     while ($row = mysqli_fetch_assoc($result)) {
         $denyReasons[$row["photodenialreasonid"]] = $row["reasontext"];
     }
-	mysqli_free_result($result);
+    mysqli_free_result($result);
 ?>
     <div id="resultBoxDIV" class="container-fluid"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
     <div id="searchPartsDIV" class="container-fluid">

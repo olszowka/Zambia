@@ -1,11 +1,10 @@
 <?php
-//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Import Reg User";
-$bootstrap4 = true;
 require_once('StaffCommonCode.php');
 $fbadgeid = getInt("badgeid");
-staff_header($title, $bootstrap4);
+staff_header($title, 'bs4');
 if (!isLoggedIn() || !may_I('Staff') || !may_I('reg_ImportUsers')) {
     staff_footer();
     exit();

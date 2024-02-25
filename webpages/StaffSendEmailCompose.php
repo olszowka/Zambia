@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // This page has two completely different entry points from a user flow standpoint:
 //   1) Beginning of send email flow -- start to specify parameters
 //   2) After verify -- 'back' can change parameters -- 'send' fire off email sending code
@@ -26,12 +26,11 @@ if (empty($_POST['navigate']) || $_POST['navigate']!='send') {
 $title = "Staff Send Email";
 $timeLimitSuccess = set_time_limit(600);
 if (SMTP_QUEUEONLY === TRUE) {
-    $bootstrap4 = true;
-    staff_header($title, $bootstrap4);
+    staff_header($title, 'bs4');
 }
 if (!$timeLimitSuccess) {
-	RenderError("Error extending time limit.");
-	exit(0);
+    RenderError("Error extending time limit.");
+    exit(0);
 }
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $email = get_email_from_post();
@@ -108,7 +107,7 @@ for ($i=0; $i<$recipient_count; $i++) {
         $message->addTo($recipientinfo[$i]['email']);
     } catch (Swift_SwiftException $e) {
         echo $e->getMessage()."<br>\n";
-	    $ok=FALSE;
+        $ok=FALSE;
     }
     if ($emailcc != "") {
         $message->addCc($emailcc);

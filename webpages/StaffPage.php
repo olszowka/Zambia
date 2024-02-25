@@ -1,10 +1,9 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $participant, $message_error, $message2, $congoinfo, $title;
 $title = "Staff Overview";
-$bootstrap4 = true;
 require_once('StaffCommonCode.php');
-staff_header($title,  $bootstrap4);
+staff_header($title, 'bs4');
 
 if (!populateCustomTextArray()) {
     $message_error = "Failed to retrieve custom text. " . $message_error;

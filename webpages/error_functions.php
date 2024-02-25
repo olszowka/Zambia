@@ -1,15 +1,16 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 
-function StaffRenderErrorPage($title, $message, $bootstrap4 = false) {
+function StaffRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
     global $debug;
+    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title, $bootstrap4);
+    staff_header($title, $bootstrapVersion);
     if (isset($debug)) {
         echo $debug . "<br>\n";
     }
-    if ($bootstrap4) {
+    if ($isBs4or5) {
 ?>
         <div class="row mt-3">
             <div class="col-12">
@@ -25,11 +26,12 @@ function StaffRenderErrorPage($title, $message, $bootstrap4 = false) {
     staff_footer();
 }
 
-function PartRenderErrorPage($title, $message, $bootstrap4 = false) {
+function PartRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
+    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     require_once('ParticipantHeader.php');
     require_once('ParticipantFooter.php');
-    participant_header($title, false, 'Normal', $bootstrap4);
-    if ($bootstrap4) {
+    participant_header($title, false, 'Normal', $bootstrapVersion);
+    if ($isBs4or5) {
 ?>
         <div class="row mt-3">
             <div class="col-12">

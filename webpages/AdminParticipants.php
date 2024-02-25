@@ -1,12 +1,11 @@
 <?php
-//  Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Administer Participants";
-$bootstrap4 = true;
 require_once('StaffCommonCode.php');
 require('ParticipantTags_FNC.php');
 $fbadgeid = getString("badgeid");
-staff_header($title, $bootstrap4);
+staff_header($title, 'bs4');
 if (!isLoggedIn() || !may_I('Staff')) {
     staff_footer();
     exit();
