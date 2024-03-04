@@ -51,23 +51,25 @@ function load_internal_javascript($title, $isDataTables = false) {
         case "Assign Participants":
             echo "<script src=\"javascript/StaffAssignParticipants.js\"></script>\n";
             break;
-        case "Forgot Password":
-            echo "<script src=\"javascript/ForgotPassword.js\"></script>\n";
-            break;
-        case "Invite Participants":
-            echo "<script src=\"javascript/InviteParticipants.js\"></script>\n";
-            break;
-        case "Maintain Room Schedule":
-            echo "<script src=\"javascript/MaintainRoomSched.js\"></script>\n";
-            break;
-        case "Reset Password":
-            echo "<script src=\"javascript/ForgotPasswordResetForm.js\"></script>\n";
-            break;
-        case "Session History":
-            echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
+        case "Administer Participants":
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
             break;
         case "Administer Phases":
             echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
+            break;
+        case "Administer Photos":
+            echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
+            echo "<script src=\"javascript/AdminPhotos.js\"></script>\n";
+            break;
+        case "Create New Session":
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
+            break;
+        case "Edit Configuration Tables":
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
+            echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
             break;
         case "Edit Custom Text":
             echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
@@ -79,50 +81,53 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
             echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
             break;
-        case "Participant Survey":
-            echo "<script src=\"javascript/PartSurvey.js\"></script>\n";
-            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+        case "Edit Session":
             echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-        case "Preview Survey":
-            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
             break;
-        case "Session Search Results":
-            echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
+        case "Forgot Password":
+            echo "<script src=\"javascript/ForgotPassword.js\"></script>\n";
             break;
-        case "Administer Participants":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
+        case "Grid Scheduler":
+            echo "<script src=\"javascript/bundle.js\"></script>\n";
             break;
-        case "Administer Photos":
-            echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
-            echo "<script src=\"javascript/AdminPhotos.js\"></script>\n";
+        case "Import Reg User":
+            echo "<script src=\"javascript/BalticonImportRegUser.js\"></script>\n";
             break;
-        case "My Profile":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/myProfile.js\"></script>";
+        case "Invite Participants":
+            echo "<script src=\"javascript/InviteParticipants.js\"></script>\n";
+            break;
+        case "Maintain Room Schedule":
+            echo "<script src=\"javascript/MaintainRoomSched.js\"></script>\n";
             break;
         case "My Photo":
             echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
             echo "<script src=\"javascript/myPhoto.js\"></script>";
             break;
-        case "Edit Session":
+        case "My Profile":
             echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
-        case "Create New Session":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
+            echo "<script src=\"javascript/myProfile.js\"></script>";
             break;
-        case "Edit Configuration Tables":
+        case "Participant Survey":
+            echo "<script src=\"javascript/PartSurvey.js\"></script>\n";
+            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
             echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
-            echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
-            break;
-        case "Import Reg User":
-            echo "<script src=\"javascript/BalticonImportRegUser.js\"></script>\n";
             break;
         case "Participant View":
             echo "<script src=\"javascript/ParticipantView.js\"></script>\n";
+            break;
+        case "Preview Survey":
+            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            break;
+        case "Reset Password":
+            echo "<script src=\"javascript/ForgotPasswordResetForm.js\"></script>\n";
+            break;
+        case "Session History":
+            echo "<script src=\"javascript/SessionHistory.js\"></script>\n";
+            break;
+        case "Session Search Results":
+            echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;
         default:
             if ($isDataTables) {
@@ -130,7 +135,6 @@ function load_internal_javascript($title, $isDataTables = false) {
             }
     }
 ?>
-<script src="javascript/staffMaintainSchedule.js"></script>
 <script src="javascript/partPanelInterests.js"></script>
 <?php
 }

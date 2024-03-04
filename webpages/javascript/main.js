@@ -1,4 +1,4 @@
-//  Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 document.addEventListener( "DOMContentLoaded", function () {
     //this function is run whenever any page finishes loading if JQuery has been loaded
     //debugger;
@@ -7,50 +7,49 @@ document.addEventListener( "DOMContentLoaded", function () {
         case "Administer Participants":
             initializeAdminParticipants();
             break;
-        case "My Profile":
-            myProfile.initialize();
-            break;
         case "Administer Photos":
             initializeAdminPhotos();
-            break;
-        case "My Photo":
-            myPhoto.initialize();
-            break;
-        case "Grid Scheduler":
-            staffMaintainSchedule.initialize();
-            break;
-        case "Session Search Results":
-            partSearchSessionsSubmit.initialize();
-            break;
-        case "Panel Interests":
-            panelInterests.initialize();
-            break;
-        case "Edit Custom Text":
-            editCustomText.initialize();
-            break;
-        case "Edit Survey":
-            editSurvey.initialize();
-            break;
-        case "Participant Survey":
-            partSurvey.initialize();
-            break;
-        case "Invite Participants":
-            inviteParticipants.initialize();
-            break;
-        case "Edit Configuration Tables":
-            editConfigTable.initialize();
-            break;
-        case "Edit Session":
-            initializeSessionEdit();
             break;
         case "Create New Session":
             initializeSessionEdit();
             break;
+        case "Edit Configuration Tables":
+            editConfigTable.initialize();
+            break;
+        case "Edit Custom Text":
+            editCustomText.initialize();
+            break;
+        case "Edit Session":
+            initializeSessionEdit();
+            break;
+        case "Edit Survey":
+            editSurvey.initialize();
+            break;
+        case "Grid Scheduler":
+            break;
         case "Import Reg User":
             initializeImportRegUser();
             break;
+        case "Invite Participants":
+            inviteParticipants.initialize();
+            break;
+        case "My Photo":
+            myPhoto.initialize();
+            break;
+        case "My Profile":
+            myProfile.initialize();
+            break;
+        case "Panel Interests":
+            panelInterests.initialize();
+            break;
+        case "Participant Survey":
+            partSurvey.initialize();
+            break;
         case "Participant View":
             ParticipantView.initialize();
+            break;
+        case "Session Search Results":
+            partSearchSessionsSubmit.initialize();
             break;
         default:
             window.status="Ready.";

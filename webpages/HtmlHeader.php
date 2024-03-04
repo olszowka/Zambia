@@ -38,9 +38,8 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
     <link rel="stylesheet" href="css/zambia_bs4.css" type="text/css" media="screen" />
 <?php } else { ?>
     <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
-<?php } ?>
-    <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
-<?php if ($isDataTables) {
+<?php }
+if ($isDataTables) {
     echo "    <link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
     if ($reportColumns) {
         echo "<meta id=\"reportColumns\" data-report-columns=\"";
@@ -55,6 +54,9 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
 }
 if (PARTICIPANT_PHOTOS === TRUE) {
     echo "    <link rel=\"stylesheet\" href=\"external/croppie.2.6.5/croppie.css\" type=\"text/css\" />\n";
+}
+if ($title === 'Grid Scheduler') {
+    echo "    <link rel=\"stylesheet\" href=\"css/main.css\" type=\"text/css\" />\n";
 }
 ?>
     <link rel="shortcut icon" href="images/favicon.ico">
