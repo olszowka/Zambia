@@ -18,7 +18,7 @@ interface TrackSelectProps {
 function TrackSelect(props: TrackSelectProps) {
     return(
         <Form.Select id="track-sel" size="sm">
-            <option value={0}>Any</option>
+            <option value={0}>ANY</option>
             {props.tracksArr.
                 sort((a, b) => (a.display_order - b.display_order)).
                 map((track) => (<TrackEntry track={track} key={track.trackid} />))

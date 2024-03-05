@@ -16,7 +16,24 @@ interface TagPickerProps {
 }
 
 function TagPicker(props: TagPickerProps) {
-    return(<div></div>);
+    return(
+        <div className={"checkbox-list-container"}>
+            {props.tagsArr.
+                sort((a, b) => (a.display_order - b.display_order)).
+                map((tag) => (<TagEntry tag={tag} key={tag.tagid} />))
+            }
+        </div>
+    );
+}
+
+function TagEntry(props: TagEntryProps) {
+    return (
+        <Form.Check
+            type='checkbox'
+            id={`TAG-check-${props.tag.tagid}`}
+            label={props.tag.tagname}
+        />
+    );
 }
 
 export default TagPicker;

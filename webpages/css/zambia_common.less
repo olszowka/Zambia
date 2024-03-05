@@ -2,6 +2,7 @@
  * File created by Peter Olszowka July 17, 2020
  * Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
+@import (reference) "zambia_include.less";
 /* Header Stuff */
 header h1 {
   flex-grow: 1;
@@ -277,12 +278,81 @@ body.full-page {
 }
 
 .zambia-grid-scheduler {
+  --bs-border-color:#646667;
+
   .nav-link {
-    padding: 8px 8px;
+    padding: 8px 6px;
+  }
+
+  .nav.nav-tabs {
+    padding-top: 4px;
+  }
+
+  .nav-item:first-child {
+    margin-left: 4px;
+  }
+
+  .nav-item:last-child {
+    margin-right: 4px;
   }
 }
 
 #grid-scheduler-tabs-container {
   height: 40%;
   border-bottom: 1px solid black;
+}
+
+.checkbox-list-legend {
+  float: left;
+  width: 2.5rem;
+  width: fit-content;
+  font-size: initial;
+  margin-right:0.25rem;
+}
+
+.checkbox-list-container {
+  display: inline-block;
+  background-color: @white;
+  border: 1px solid @darkest-gray;
+  border-radius: 4px;
+  padding: 0;
+  height: 8rem;
+  min-width: 8rem;
+  overflow-y: scroll;
+  width: fit-content;
+}
+
+.checkbox-list-container.form-control {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  border-radius: 4px;
+  height: calc(12rem - 5px);
+}
+
+.checkbox-list-label-wrapper {
+  padding-bottom:0.3rem;
+  padding-top:0.3rem;
+
+  &.disabled {
+    background-color:@lightest-gray;
+
+    .checkbox-list-label {
+      font-style: italic;
+    }
+  }
+}
+
+.checkbox-list-label {
+  display: block;
+  line-height: 1.05;
+  width: fit-content;
+  padding-right: 0.5rem;
+  min-width: 8rem;
+  margin:0;
+}
+
+.checkbox-list-check {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }

@@ -1,6 +1,6 @@
 /**
  * File created by Peter Olszowka July 17, 2020
- * Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 /* Page Header Stuff */
 .header-wrapper {
@@ -208,53 +208,6 @@ textarea.form-control {
 /* General Form Defaults */
 .col-text-input {
   width: 100%;
-}
-.checkbox-list-legend {
-  float: left;
-  width: 2.5rem;
-  width: fit-content;
-  font-size: initial;
-  margin-right: 0.25rem;
-}
-.checkbox-list-container {
-  display: inline-block;
-  background-color: #ffffff;
-  border: 1px solid #606060;
-  border-radius: 4px;
-  padding: 0;
-  height: 8rem;
-  min-width: 8rem;
-  overflow-y: scroll;
-  width: fit-content;
-}
-.checkbox-list-container.form-control {
-  display: block;
-  width: 100%;
-  padding: 0.375rem 0.75rem;
-  border-radius: 4px;
-  height: calc(12rem - 5px);
-}
-.checkbox-list-label-wrapper {
-  padding-bottom: 0.3rem;
-  padding-top: 0.3rem;
-}
-.checkbox-list-label-wrapper.disabled {
-  background-color: #e5e5e5;
-}
-.checkbox-list-label-wrapper.disabled .checkbox-list-label {
-  font-style: italic;
-}
-.checkbox-list-label {
-  display: block;
-  line-height: 1.05;
-  width: fit-content;
-  padding-right: 0.5rem;
-  min-width: 8rem;
-  margin: 0;
-}
-.checkbox-list-check {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
 }
 .tag-match-radio {
   width: 1.5rem;
