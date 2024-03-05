@@ -249,6 +249,11 @@ body.full-page .header-wrapper {
   height: 100%;
   overflow-y: auto;
 }
+.justify-content-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .zambia-grid-scheduler {
   --bs-border-color: #646667;
 }
@@ -258,11 +263,40 @@ body.full-page .header-wrapper {
 .zambia-grid-scheduler .nav.nav-tabs {
   padding-top: 4px;
 }
+.zambia-grid-scheduler .nav.nav-tabs .nav-link:hover {
+  border-color: #275a9180;
+}
 .zambia-grid-scheduler .nav-item:first-child {
   margin-left: 4px;
 }
 .zambia-grid-scheduler .nav-item:last-child {
   margin-right: 4px;
+}
+.zambia-grid-scheduler .rooms-panel {
+  padding: 4px 6px;
+}
+.zambia-grid-scheduler .sessions-search-panel .row {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.zambia-grid-scheduler .sessions-search-panel .form-select-sm {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 24px;
+}
+.zambia-grid-scheduler .sessions-search-panel .checkbox-list-container {
+  font-size: 0.875rem;
+  padding: 2px 2px 2px 6px;
+}
+.zambia-grid-scheduler .sessions-search-panel input[type="text"].form-control-sm {
+  height: 24px;
+  min-height: 24px;
+}
+.zambia-grid-scheduler .smaller-font {
+  font-size: 0.875rem;
+}
+.zambia-grid-scheduler .no-padding-right {
+  padding-right: 0;
 }
 #grid-scheduler-tabs-container {
   height: 40%;

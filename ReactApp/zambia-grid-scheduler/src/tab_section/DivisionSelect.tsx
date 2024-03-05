@@ -17,7 +17,7 @@ interface DivisionSelectProps {
 
 function DivisionSelect(props: DivisionSelectProps) {
     return(
-        <Form.Select id="division-sel" size="sm">
+        <Form.Select id='division-sel' size='sm'>
             <option value={0}>ANY</option>
             {props.divisionsArr.
             sort((a, b) => (a.display_order - b.display_order)).

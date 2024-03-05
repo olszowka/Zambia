@@ -22,14 +22,14 @@ function TabSection() {
                     </Nav.Item>
                 </Nav>
                 <Tab.Content className={'flex-row-remainder-wrapper'}>
-                    <Tab.Pane eventKey="Rooms" className="overflow-y-container">
+                    <Tab.Pane eventKey="Rooms" className="overflow-y-container rooms-panel">
                         <Rooms />
                     </Tab.Pane>
-                    <Tab.Pane eventKey="Sessions" className="overflow-y-container">
+                    <Tab.Pane eventKey="Sessions" className="overflow-y-container sessions-search-panel">
                         <SessionSearchForm />
                     </Tab.Pane>
-                    <Tab.Pane eventKey="Warnings" className="overflow-y-container">Warnings tab content</Tab.Pane>
-                    <Tab.Pane eventKey="Info" className="overflow-y-container">Info tab content</Tab.Pane>
+                    <Tab.Pane eventKey="Warnings" className="overflow-y-container warnings-panel">Warnings tab content</Tab.Pane>
+                    <Tab.Pane eventKey="Info" className="overflow-y-container info-panel">Info tab content</Tab.Pane>
                 </Tab.Content>
             </Tab.Container>
         </div>

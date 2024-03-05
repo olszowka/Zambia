@@ -277,6 +277,12 @@ body.full-page {
   overflow-y: auto;
 }
 
+.justify-content-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .zambia-grid-scheduler {
   --bs-border-color:#646667;
 
@@ -286,6 +292,10 @@ body.full-page {
 
   .nav.nav-tabs {
     padding-top: 4px;
+
+    .nav-link:hover {
+      border-color: #275a9180;
+    }
   }
 
   .nav-item:first-child {
@@ -294,6 +304,41 @@ body.full-page {
 
   .nav-item:last-child {
     margin-right: 4px;
+  }
+
+  .rooms-panel {
+    padding: 4px 6px;
+  }
+
+  .sessions-search-panel {
+    .row {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .form-select-sm {
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 24px;
+    }
+
+    .checkbox-list-container {
+      font-size: .875rem;
+      padding: 2px 2px 2px 6px;
+    }
+
+    input[type="text"].form-control-sm {
+      height: 24px;
+      min-height: 24px;
+    }
+  }
+
+  .smaller-font {
+    font-size: .875rem;
+  }
+
+  .no-padding-right {
+    padding-right: 0;
   }
 }
 

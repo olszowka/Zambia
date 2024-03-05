@@ -17,7 +17,7 @@ interface TypeSelectProps {
 
 function TypeSelect(props: TypeSelectProps) {
     return(
-        <Form.Select id="type-sel" size="sm">
+        <Form.Select id='type-sel' size='sm'>
             <option value={0}>ANY</option>
             {props.typesArr.
                 sort((a, b) => (a.display_order - b.display_order)).

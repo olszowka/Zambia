@@ -39,28 +39,41 @@ function SessionSearchForm() {
         <Container fluid>
             <Row>
                 <Col xs={3}>
-                    <label htmlFor="track-sel">Track:</label>
+                    <label htmlFor='track-sel'>Track:</label>
                 </Col>
                 <Col xs={9}>
                     <TrackSelect tracksArr={tracksArr} />
                 </Col>
             </Row>
             <Row>
-                <Col xs={3}>
-                    <label htmlFor="tag-picker">Tags:</label>
+                <Col xs={3} className='justify-content-center'>
+                    <label htmlFor='tag-picker'>Tags:</label>
                 </Col>
                 <Col xs={9}>
                     <TagPicker tagsArr={tagsArr} />
                 </Col>
             </Row>
             <Row>
-                <Col>
-                    Tag radios go here
+                <Col xs={{span:10, offset:2}} className='smaller-font'>
+                    <Form.Check
+                        inline
+                        label='Match Any'
+                        name='tag-match'
+                        type='radio'
+                        id='tag-match-any'
+                    />
+                    <Form.Check
+                        inline
+                        label='Match All'
+                        name='tag-match'
+                        type='radio'
+                        id='tag-match-all'
+                    />
                 </Col>
             </Row>
             <Row>
                 <Col xs={3}>
-                    <label htmlFor="type-sel">Type:</label>
+                    <label htmlFor='type-sel'>Type:</label>
                 </Col>
                 <Col xs={9}>
                     <TypeSelect typesArr={typesArr} />
@@ -68,10 +81,18 @@ function SessionSearchForm() {
             </Row>
             <Row>
                 <Col xs={3}>
-                    <label htmlFor="division-sel">Divison:</label>
+                    <label htmlFor='division-sel'>Divison:</label>
                 </Col>
                 <Col xs={9}>
                     <DivisionSelect divisionsArr={divisionsArr} />
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={4} className='no-padding-right'>
+                    <label htmlFor='session-id-inp'>Session ID:</label>
+                </Col>
+                <Col xs={8}>
+                    <Form.Control id='session-id-inp' size='sm' type='text'  />
                 </Col>
             </Row>
         </Container>
