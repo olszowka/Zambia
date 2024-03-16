@@ -28,7 +28,7 @@
                         <img class="d-none d-lg-block" >
                             <xsl:attribute name="src"><xsl:value-of select="$headerimg" /></xsl:attribute>
                             <xsl:attribute name="alt"><xsl:value-of select="$headerimgalt" /></xsl:attribute>
-	                    </img>
+                        </img>
                         <h1 class="wide-medium-only">
                             <xsl:text>Zambia</xsl:text>
                             <span class="wide-only">
