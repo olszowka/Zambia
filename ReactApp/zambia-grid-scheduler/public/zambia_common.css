@@ -298,6 +298,10 @@ body.full-page .header-wrapper {
 .zambia-grid-scheduler .no-padding-right {
   padding-right: 0;
 }
+.zambia-grid-scheduler button.btn {
+  margin-left: 4px;
+  margin-right: 4px;
+}
 #grid-scheduler-tabs-container {
   height: 40%;
   border-bottom: 1px solid black;

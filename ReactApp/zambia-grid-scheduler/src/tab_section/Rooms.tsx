@@ -1,3 +1,5 @@
+// Copyright (c) 2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// File created by Peter Olszowka on 2024-Mar-08
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 
@@ -30,9 +32,9 @@ function Rooms() {
 function RoomsList(props: roomsListProps) {
     return(
         <>
-            {props.roomsArr.
-                sort((a, b) => (a.display_order - b.display_order)).
-                map((room) => (<RoomEntry room={room} key={room.roomid} />))
+            {props.roomsArr
+                .sort((a, b) => (a.display_order - b.display_order))
+                .map((room) => (<RoomEntry room={room} key={room.roomid} />))
             }
         </>
     );

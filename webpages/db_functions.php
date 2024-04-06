@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function log_error_or_stdderr($error_msg) {
     global $runAScript;
@@ -276,7 +276,9 @@ function mysqli_query_with_prepare_and_error_handling($query, $type_string, $par
             //$message_error = $mysqli->error;
             throw new ErrorException("DB prepare statement failed.");
         };
-        $statement->bind_param($type_string, ...$param_arr);
+        if (strlen($type_string) >0 && count($param_arr) >0) {
+            $statement->bind_param($type_string, ...$param_arr);
+        }
         if (!$statement->execute()) {
             $message_error = log_mysqli_error_new($query, "");
             if ($exit_on_error) {

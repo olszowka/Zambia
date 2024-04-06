@@ -1,3 +1,5 @@
+// Copyright (c) 2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// File created by Peter Olszowka on 2024-Mar-08
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 
@@ -19,9 +21,9 @@ function TrackSelect(props: TrackSelectProps) {
     return(
         <Form.Select id='track-sel' size='sm'>
             <option value={0}>ANY</option>
-            {props.tracksArr.
-                sort((a, b) => (a.display_order - b.display_order)).
-                map((track) => (<TrackEntry track={track} key={track.trackid} />))
+            {props.tracksArr
+                .sort((a, b) => (a.display_order - b.display_order))
+                .map((track) => (<TrackEntry track={track} key={track.trackid} />))
             }
         </Form.Select>
     );

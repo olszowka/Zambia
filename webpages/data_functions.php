@@ -110,6 +110,19 @@ function getArrayOfInts($name, $default = false) {
     }
 }
 
+// Function sanitizeArrayOfInts(IntArray)
+// returns an array possibly shorter or zero length
+// of only the ints in the original array
+function sanitizeArrayOfInts(array $IntArray): array {
+    $returnValue = array();
+    foreach ($IntArray as $val) {
+        if (!empty($t = filter_var($val, FILTER_SANITIZE_NUMBER_INT))) {
+            $returnValue[] = $t;
+        }
+    }
+    return $returnValue;
+}
+
 // Function getString("name")
 // gets a parameter from $_GET[] or $_POST[] of name
 // and strips slashes

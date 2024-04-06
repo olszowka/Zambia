@@ -1,3 +1,5 @@
+// Copyright (c) 2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// File created by Peter Olszowka on 2024-Mar-08
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
@@ -7,6 +9,8 @@ import TrackSelect, { trackType } from "./TrackSelect";
 import TagPicker, { tagType } from "./TagPicker";
 import TypeSelect, { typeType } from "./TypeSelect";
 import DivisionSelect, { divisionType } from "./DivisionSelect";
+import { Button } from "react-bootstrap";
+import { resetSearchForm, submitSearchForm } from "./SessionSearchUtilities";
 
 type sessionsSearchDataType = {
     tracks: trackType[];
@@ -92,7 +96,37 @@ function SessionSearchForm() {
                     <label htmlFor='session-id-inp'>Session ID:</label>
                 </Col>
                 <Col xs={8}>
-                    <Form.Control id='session-id-inp' size='sm' type='text'  />
+                    <Form.Control id='session-id-inp' size='sm' type='text' />
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={3}>
+                    <label htmlFor='title-inp'>Title:</label>
+                </Col>
+                <Col xs={9}>
+                    <Form.Control id='title-inp' size='sm' type='text' />
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={{span:9, offset:3}} className='smaller-font'>
+                    <span>Leave blank for ANY.</span>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={7}>
+                    <label htmlFor='persons-assigned-chk'>Persons assigned:</label>
+                </Col>
+                <Col xs={5}>
+                    <Form.Check
+                        type='checkbox'
+                        id='persons-assigned-chk'
+                    />
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={{span:11, offset:1}}>
+                    <Button variant="primary" onClick={submitSearchForm}>Retrieve</Button>
+                    <Button variant="secondary" onClick={resetSearchForm}>Reset Search</Button>
                 </Col>
             </Row>
         </Container>
