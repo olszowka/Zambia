@@ -311,7 +311,7 @@ function rollback_mysqli($exit_on_error = false, $ajax = false) {
 function populateCustomTextArray() {
     global $customTextArray, $title;
     $customTextArray = array();
-    $query = "SELECT tag, textcontents FROM CustomText WHERE page = \"$title\";";
+    $query = "SELECT tag, textcontents FROM CustomText WHERE page = '$title';";
     if (!$result = mysqli_query_with_error_handling($query))
         return false;
     while ($row = mysqli_fetch_assoc($result)) {
