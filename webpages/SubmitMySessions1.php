@@ -12,14 +12,18 @@ if ($addInterest !== false) {
         $query = "INSERT INTO ParticipantSessionInterest SET badgeid=\"$badgeid\", sessionid = $id";
         mysqli_query_exit_on_error($query);
     }
-}
+} else
+    $inscount = 0;
+
 $deleteInterest = getArrayOfInts('deleteInterest');
 if ($deleteInterest !== false) {
     $delcount = count($deleteInterest);
     $dellist = implode(',', $deleteInterest);
     $query = "DELETE FROM ParticipantSessionInterest WHERE badgeid=\"$badgeid\" AND sessionid in ($dellist)";
     mysqli_query_exit_on_error($query);
-}
+} else
+    $delcount = 0;
+
 $messageSave = "";
 if (($delcount == 0) && ($inscount == 0)) {
     $messageSave = "No changes to database requested.";

@@ -7,7 +7,7 @@ require ('PartCommonCode.php'); // initialize db; check login;
 //                                  set $badgeid from session
 participant_header($title, false, 'Normal', true);
 if (!may_I('search_panels')) {
-    
+
     $message_error="You do not currently have permission to view this page.<br>\n";
     RenderError($message_error);
     exit();
@@ -22,7 +22,8 @@ SELECT
     WHERE
         P.badgeid = '$badgeid';
 EOD;
-$queryArray['tracks'] = <<<EOD
+if (TRACK_TAG_USAGE !== "TAG_ONLY") {
+    $queryArray['tracks'] = <<<EOD
 SELECT
         trackid, trackname
     FROM
@@ -32,7 +33,9 @@ SELECT
     ORDER BY
         display_order;
 EOD;
-$queryArray['tags'] = <<<EOD
+}
+if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
+    $queryArray['tags'] = <<<EOD
 SELECT
         tagid, tagname
     FROM
@@ -40,6 +43,7 @@ SELECT
     ORDER BY
         display_order;
 EOD;
+}
 if (($resultXML = mysql_query_XML($queryArray)) === false) {
     $message="Error querying database. Unable to continue.<br>";
     echo "<p class\"alert alert-error\">$message</p>\n";
@@ -50,6 +54,7 @@ $paramArray = array();
 $paramArray["conName"] = CON_NAME;
 $paramArray["showTags"] = TRACK_TAG_USAGE !== "TRACK_ONLY";
 $paramArray["showTrack"] = TRACK_TAG_USAGE !== "TAG_ONLY";
+$paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
 // echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 RenderXSLT('PartSearchSessions.xsl', $paramArray, $resultXML);
 

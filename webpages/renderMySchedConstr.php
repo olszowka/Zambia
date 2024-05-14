@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 // $timesXML array defined on global scope
 participant_header($title);
 ?>
@@ -24,7 +24,7 @@ participant_header($title);
         <div class="control-group">
             <div class="controls">
                 <label class="control-label" for="maxprog">preferred total number of sessions:</label>
-                <input class="span1" type="text" size=3 name="maxprog" value="<?php echo $partAvail["maxprog"]; ?>">
+                <input id="maxprog" class="span1" type="text" size=3 name="maxprog" value="<?php echo $partAvail["maxprog"]; ?>">
             </div>
             <?php
             // Don't ask about day limits at all if only 1 day con
@@ -57,12 +57,7 @@ participant_header($title);
 
     <!-- SCHEDULE availability times -->
     <h4 class="alert-info center">Times I Am Available</H4>
-    <p> For each day you will be attending <?php echo CON_NAME; ?>, please
-        indicate the times when you will be available as a program panelist.
-        Entering a single time for the whole con is fine. Splitting a day into
-        multiple time slots also is fine. Change all items in a row to blank to delete the row. 
-        Keep in mind we will be using this only as guidance when scheduling your sessions.</p>
-
+    <?php echo fetchCustomText("note_before_time_slots"); ?>
     <table class="table table-condensed">
         <tr> <!-- row one -->
             <?php if (CON_NUM_DAYS > 1) {
@@ -128,20 +123,22 @@ participant_header($title);
         }
         ?>
     </table>
-    <?php showCustomText("<div>", "note_after_times", "</div>"); ?>
+    <?php echo fetchCustomText("note_after_time_slots"); ?>
     <hr style="margin-top:5px">
 
     <div class="row-fluid">
-        <div class="span6">
-            <label>Please don't schedule me for a session that conflicts with:</label>
-            <textarea class="span12" name="preventconflict" rows=3 cols=72><?php
+        <div class="span6 input-container">
+            <label for="preventconflict">Please don't schedule me for a session that conflicts with:</label>
+            <textarea class="span12" name="preventconflict" id="preventconflict" rows=3 cols=72><?php
                 echo htmlspecialchars($partAvail["preventconflict"], ENT_NOQUOTES); ?></textarea>
+            <div class="input-error-message">Please limit to 255 characters.</div>
         </div>
 
-        <div class="span6">
-            <label>Other constraints or conflicts that we should know about?</label>
-            <textarea class="span12" name="otherconstraints" rows=3 cols=72><?php
+        <div class="span6 input-container">
+            <label for="otherconstraints">Other constraints or conflicts that we should know about?</label>
+            <textarea class="span12" name="otherconstraints" id="otherconstraints" rows=3 cols=72><?php
                 echo htmlspecialchars($partAvail["otherconstraints"], ENT_NOQUOTES); ?></textarea>
+            <div class="input-error-message">Please limit to 255 characters.</div>
         </div>
     </div>
 

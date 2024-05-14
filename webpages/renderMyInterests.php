@@ -1,8 +1,8 @@
 <?php
-// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function renderMyInterests($title, $error, $message, $rolearray) {
     global $link, $yespanels, $nopanels, $yespeople, $nopeople;
-    global $otherroles, $newrow;
+    global $otherroles, $newrow, $customTextArray;
     $rolerows = $rolearray['count'];
     participant_header($title);
     if ($error) {
@@ -11,15 +11,22 @@ function renderMyInterests($title, $error, $message, $rolearray) {
         echo "<p class=\"alert alert-success\">" . $message . "</p>";
     }
     if (!may_I('my_gen_int_write')) {
-        echo "<p>We're sorry, but we are unable to accept your suggestions at this time.\n";
+        echo "<p class='vert-sep-above'>We're sorry, but we are unable to accept your suggestions at this time.\n</p>";
     }
-    echo "<form class=\"form-horizontal\" name=\"addform\" method=POST action=\"SubmitMyInterests.php\">\n";
-    echo "<input type=\"hidden\" name=\"newrow\" value=\"" . ($newrow ? 1 : 0) . "\">\n";
-    echo "<input type=\"hidden\" name=\"rolerows\" value=\"" . $rolerows . "\">\n";
-    echo "<div class=\"row-fluid vert-sep vert-sep-above\">\n";
+    echo "<form name=\"addform\" method=\"POST\" action=\"SubmitMyInterests.php\" >\n";
+    echo "<input type=\"hidden\" name=\"newrow\" value=\"" . ($newrow ? 1 : 0) . "\" />\n";
+    echo "<input type=\"hidden\" name=\"rolerows\" value=\"" . $rolerows . "\" />\n";
+    if (array_key_exists('intro_text', $customTextArray) && $customTextArray['intro_text'] != '') {
+        echo "<div class=\"row-fluid vert-sep-above\">\n";
+        echo "  <div class=\"span12\">\n";
+        echo $customTextArray['intro_text'] . "\n";
+        echo "  <div>\n";
+        echo "<div>\n";
+    }
+    echo "<div class=\"row-fluid vert-sep-above\">\n";
     echo "  <div class=\"span6\">\n";
-    echo "    <label for=\"yespanels\"><p>Workshops or presentations I'd like to run: </p></label>\n";
-    echo "    <textarea class=\"span12\" name=\"yespanels\" rows=5 cols=72";
+    echo "    <label for=\"yespanels\"><p>Workshops or presentations I'd like to run:</p></label>\n";
+    echo "    <textarea class=\"span12\" id=\"yespanels\" name=\"yespanels\" rows=\"5\" cols=\"72\"";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
     }

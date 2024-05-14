@@ -1,4 +1,4 @@
-// JavaScript source code
+// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 var EditCustomText = function () {
 
@@ -10,15 +10,15 @@ var EditCustomText = function () {
 
         if (currentCustomTextID < 0 && customtextid >= 0) {
             $("#customtextid option[value='-1']").remove();
-        };
+        }
 
         currentCustomTextID = customtextid;
         initialCustomText = initialtext;
 
         $('#textcontents').val(initialtext);
         $('#texteditor').css("display", "block");
-   
-        tinymce.init({
+
+        tinyMCE.init({
             selector: 'textarea#textcontents',
             plugins: 'table wordcount fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
             browser_spellcheck: true,
@@ -34,47 +34,41 @@ var EditCustomText = function () {
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
             placeholder: 'Type custom content here...'
         });
-        return true;
-    };
+    }
 
     function ResetTextarea() {
         if (currentCustomTextID >= 0) {
             UpdateTextEditor(currentCustomTextID, initialCustomText);
-        };
-        return false;
-    };
+        }
+    }
 
     function SaveTextaarea() {
         if (currentCustomTextID >= 0) {
             tinyMCE.triggerSave();
             mysubmit();
-            return true;
-        };
-        return false;
-    };
+        }
+    }
 
     function UpdateSelected() {
+        var $customtextid = $('#customtextid');
         if (currentCustomTextID >= 0) {
             tinyMCE.triggerSave();
             
             var newText = document.getElementById("textcontents").value; // Jquery returned Undefined for this, using document. method
-            var newAlt = newText.replace(/^<p>/i, "");
-            newAlt = newAlt.replace(/<\/p>\s*$/i, "");
-            if (newText != initialCustomText && newAlt != initialCustomText) {
-                if (confirm("Discard changes?") == false) {
-                    $('#customtextid').val(currentCustomTextID);
-                    return false;                    
-                };
-            };
-        };
-        var strValue = $('#customtextid').val();
-        var strText = $('#customtextid').find(':selected').data("initialtext");
+            if (newText !== initialCustomText) {
+                if (!confirm("Discard changes?")) {
+                    $customtextid.val(currentCustomTextID);
+                    return;
+                }
+            }
+        }
+        var strValue = $customtextid.val();
+        var strText = $customtextid.find(':selected').data("initialtext");
         UpdateTextEditor(strValue, strText);
-    };
+    }
 
     this.initialize = function () {
         //called when EditCustomText page has loaded
-        var that = this;
 
         var e = document.getElementById("resetbtn");
         e.addEventListener('click', ResetTextarea);
@@ -85,9 +79,7 @@ var EditCustomText = function () {
         if (strValue >= 0) {
             var strText = e.options[e.selectedIndex].dataset.initialtext;
             UpdateTextEditor(strValue, strText);
-        };
-
-        return true;
+        }
     };
 
 };

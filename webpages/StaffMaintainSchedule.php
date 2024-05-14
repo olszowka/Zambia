@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $fullPage, $title;
 $title="Grid Scheduler";
 $fullPage = true; // changes body class to support all content restricted to screen size
@@ -51,7 +51,7 @@ staff_header($title);
                         </div>
                     </div>
 					<div style="height: 28px">
-						<div style="display:inline-block; width:75px"><label for="type">Type:</label></div>
+						<div style="display:inline-block; width:75px"><label for="typeSEL">Type:</label></div>
 						<span class="newformselectspan">
 							<select id="typeSEL" name="type" class="newformselect">
                                 <?php populate_select_from_table("Types",0,"ANY",true); ?>
@@ -59,7 +59,7 @@ staff_header($title);
 						</span>
 					</div>
 					<div style="height: 28px">
-						<div style="display:inline-block; width:75px"><label for="division">Division:</label></div>
+						<div style="display:inline-block; width:75px"><label for="divisionSEL">Division:</label></div>
 						<span class="newformselectspan">
 							<select id="divisionSEL" name="division" class="newformselect">
                                 <?php populate_select_from_table("Divisions",0,"ANY",true); ?>
@@ -67,26 +67,34 @@ staff_header($title);
 						</span>
 					</div>
 					<div style="height: 28px">
-						<div style="display:inline-block; width:75px"><label for="sessionid">Session ID:</label></div>
+						<div style="display:inline-block; width:75px"><label for="sessionIdINP">Session ID:</label></div>
 						<span class="newforminputspan">
 							<input id="sessionIdINP" name="sessionid" class="newforminputtight" />
 						</span>
 					</div>
 					<div style="height: 28px">
-						<div style="display:inline-block; width:75px"><label for="title">Title:</label></div>
+						<div style="display:inline-block; width:75px"><label for="titleINP">Title:</label></div>
 						<span class="newforminputspan">
 							<input id="titleINP" name="title" class="newforminputtight" style="width:160px; margin-left:2px" />
 						</span>
 					</div>
-					<div style="height: 28px">
+					<div style="height: 28px;margin-top:-8px;">
 						<div style="display:inline-block; width:75px">&nbsp;</div>
 						<span class="newformnotetight">Leave blank for "any".</span>
 					</div>
-					<div style="text-align: center">
+                    <div style="padding-bottom:0.5rem;">
+                        <span style="display:inline-block; padding-right:1rem;">
+                            <label for="personsAssignedINP">Persons Assigned:</label>
+                        </span>
+                        <span class="newforminputspan">
+                            <input type="checkbox" id="personsAssignedINP" name="personsAssigned">
+                        </span>
+                    </div>
+                    <div style="text-align: center">
 						<button id="retrieveSessionsBUT" type="button" class="btn btn-primary" >Retrieve</button>
 						<button id="resetSessionsSearchBUT" type="button" class="btn" >Reset Search</button>
 					</div>
-					<div id="noSessionsFoundMSG" style="text-align: center; font-weight:bold; color:red; display:none; margin-top:3px">
+					<div id="noSessionsFoundMSG" class="hidden" style="text-align: center; font-weight:bold; color:red; margin-top:3px">
 						No new sessions matched.
 					</div>
 				</div>
@@ -111,11 +119,10 @@ staff_header($title);
 			</div>
 		</div>
 	</div>
-	<div id="scheduleGridContainer" class="flex-column-remainder" style="margin: 2px 2px 2px 1px; border: 1px solid black">
+	<div id="scheduleGridContainer" class="flex-column-remainder">
 		<!--<div class = "fullBlockContainer" style="margin: 2px; overflow:auto">&nbsp;</div>-->
 	</div>
 </div>
 </div><!-- closes #fullPageContainer -->
 </body>
 </html>
-

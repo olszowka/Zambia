@@ -1,0 +1,449 @@
+/**
+ * Created by Peter Olszowka on 2015-08-30;
+ * Copyright (c) 2015-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+ */
+html.full-page, body.full-page {
+    width:100%;
+    height:100%;
+}
+
+body.full-page {
+    display:flex;
+    flex-direction: column;
+
+    #headerContainer {
+        flex:0 0 auto;
+    }
+
+    #staffNav {
+        flex:0 0 auto;
+        margin-left:0;
+        margin-right:0;
+    }
+
+    #mainContentContainer {
+        flex:1 1 auto;
+        overflow:hidden;
+        padding:2px;
+    }
+}
+
+#headerContainer {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.animHelper {
+    position: absolute;
+    z-index: 4;
+    background: none;
+    font-size: 11px;
+    line-height: normal;
+}
+
+#myhelper {
+    position: absolute;
+    display: none;
+    border: 3px solid green;
+    z-index: 4;
+    background: none;
+    font-size: 11px;
+    line-height: normal;
+}
+
+.compoundTD {
+    vertical-align: top
+}
+
+#tabs-content-wrapper {
+    padding: 0.2rem 0;
+}
+
+.tabs-content div div, .tabs-content div div li {
+    line-height: 15px;
+}
+
+#tabs-warnings .conflictList {
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+
+    ul {
+        padding-left: 1.5em;
+        margin-left: 1.5em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+}
+
+.warnConfMsg {
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+    margin-bottom: 0.75em;
+}
+
+.warnConfMsgTitle {
+    font-style: italic;
+}
+
+.scheduleGridEmptyDIV {
+    border: 4px solid white;
+}
+
+table.scheduleGridCompTAB, table.scheduleGridCompTAB td {
+    padding: 0;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+.scheduleGridCompoundEmptyDIV {
+    border: 1px solid #909090;
+    width: 125px;
+}
+
+.scheduleGridCompoundDIV {
+    width: 254px;
+    overflow: hidden
+}
+
+.scheduleGridCompoundSessContainer {
+    overflow: hidden;
+    width: 125px;
+    border: 1px solid #909090;
+}
+
+.scheduleGridComplexDIV {
+    background-color: #ffd0d0;
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+}
+
+.infofield, .inforow, .infolabel {
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.infolabel {
+    color: #00b0d0;
+    font-style: italic;
+    padding: 1px 0;
+}
+
+span.infolabel {
+    display: inline-block;
+}
+
+.infofield, .inforow {
+    color: black;
+}
+
+.inforow {
+    display: block;
+    padding-bottom: 1px;
+}
+
+.infofield {
+    display: inline-block;
+}
+
+div.sessionBlockTitleRow {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 99%;
+    padding: 0 1px 0 1px;
+    vertical-align: top;
+    /* don't understand why firefox makes height 21 when there's only 15 worth of stuff in it */
+    height: 15px;
+}
+
+div.sessionBlockTitle {
+    display: inline-block;
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: 3px;
+}
+
+.my-ui-icon {
+    display: table-cell;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    background-image: url(../external/jqueryui1.8.16/images/ui-icons_808080_256x240.png);
+}
+
+.schedulerGridContainer {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+th.schedulerGridRoom, td.schedulerGridRoom {
+    width: 250px;
+}
+
+td.schedulerGridSlot {
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+    padding: 0;
+    vertical-align: top;
+}
+
+.gap {
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+    padding-left: 2px;
+    padding-right: 2px;
+    color: white;
+    background-color: black;
+
+    &:first-child {
+        position: sticky;
+        left: 0;
+    }
+}
+
+.sessionBlock {
+    width: 250px;
+    margin: 2px 0;
+    border: 1px solid black;
+    background-color: white;
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+}
+
+.scheduledSessionBlock {
+    width: 250px;
+    background-color: white;
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+}
+
+.sessionBlockId {
+    color: blue;
+    display: inline-block;
+    width: 60px;
+    padding: 0 1px 0 1px;
+}
+
+.sessionBlockDivis {
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 1px 0 1px;
+}
+
+.sessionBlockType {
+    color: green;
+    display: inline-block;
+    width: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 1px 0 1px;
+}
+
+.sessionBlockTrack {
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 1px 0 1px;
+    display: inline-block;
+}
+
+.ui-tabs-widget-header LI A {
+    font-weight: normal;
+    line-height: 1em;
+}
+
+.checkboxContainer input {
+    margin-top: -2px;
+    margin-left: 2px;
+}
+
+.activeArea:hover {
+    background-color: #106a22;
+    color: white;
+}
+
+#scheduleGridContainer {
+    margin: 2px 2px 2px 1px;
+}
+
+.schedulerGrid {
+    font-family: Arial, sans-serif;
+    color: black;
+    line-height: normal;
+    border-collapse: separate;
+
+    & > tbody > tr:first-child {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+    }
+
+    th {
+        background-color: #c0e4ff;
+        padding-left: 2px;
+        padding-right: 2px;
+        border-right: 2px solid black;
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        z-index: 3;
+
+        &:first-child {
+            border-left: 2px solid black;
+        }
+    }
+
+    th:first-child {
+        position:sticky;
+        left: 0;
+        z-index: 2;
+    }
+
+    td {
+        z-index: 1;
+    }
+}
+
+.timeTop {
+    position:sticky;
+    left: 0;
+    margin-top: -2px;
+    padding:2px 0 0 4px;
+    background-color: white;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    z-index: 2;
+}
+.timeBottom {
+    position:sticky;
+    left: 0;
+    background-color: white;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+    z-index: 2;
+}
+
+i.getSessionInfo {
+    vertical-align: top;
+    margin-right: 1px;
+}
+
+#tabs-rooms div[id^='roomidDIV_'] {
+    line-height: 17px;
+}
+
+span.newformselectspan, span.newforminputspan {
+    float: none;
+    margin: 0;
+}
+
+span.newformselectspan select {
+    font-size: 11px;
+    line-height: normal;
+    margin: 2px;
+    padding: 0;
+    width: auto;
+    height: auto;
+    color: black;
+}
+
+span.newforminputspan input {
+    font-size: 11px;
+    line-height: normal;
+    margin: 2px;
+    padding: 1px;
+    width: auto;
+    height: auto;
+    color: black;
+}
+
+span.newformnotetight {
+    font-size: 11px;
+    line-height: normal;
+    color: black;
+}
+
+.onepage-titlebar {
+    border: 1px solid #106a22;
+    background: #ece8da url(../external/jqueryui1.8.16/images/ui-bg_gloss-wave_100_ece8da_500x100.png) 50% 50% repeat-x;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    text-align: center;
+    margin: 0.4rem 0.2rem 0.2rem 0.2rem;
+    line-height: normal;
+}
+
+.onepage-title {
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #106a22;
+    line-height: normal;
+    padding: 0.3rem;
+}
+
+#sessions-to-be-scheduled-wrapper {
+    border:3px solid white;
+}
+
+#sessions-to-be-scheduled-container {
+	min-height:20rem;
+}
+
+#sessionsToBeScheduled {
+    line-height: normal;
+}
+
+.flex-row-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row-fixed {
+    flex: 0 0 auto;
+}
+
+.flex-row-remainder {
+    flex: 1 1 auto;
+    overflow-y: auto;
+}
+
+.flex-row-remainder-wrapper {
+    flex: 1 1 auto;
+    overflow-y: hidden;
+}
+
+.overflow-y-container {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.flex-column-container {
+    display: flex;
+}
+
+.flex-column-fixed {
+    flex: 0 0 auto;
+}
+
+.flex-column-remainder {
+    flex: 1 1 auto;
+    overflow-x: auto;
+}
+
+/* override JQuery UI */
+.ui-tabs .ui-tabs-panel {
+    padding: 2px 4px;
+}

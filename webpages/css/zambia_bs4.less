@@ -1,6 +1,6 @@
 /**
  * File created by Peter Olszowka July 17, 2020
- * Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 @import (reference) "zambia_include.less";
 
@@ -34,35 +34,47 @@
         background-color:#e7ebee;
     }
 }
+
+.invalid-feedback {
+    font-size: unset;
+}
 /* end of bootstrap overrides */
 
-/* Bootstrap extensions */
-.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25 {
+/* Bootstrap 4 extensions */
+.col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25, .col-md-2p5, .col-md-2p01, .col-lg-2p5,
+.col-xl-2p25, .col-xl-3p5, .col-xxl-1, .col-xxl-2, .col-xxl-3, .col-xxl-4, .col-xxl-5, .col-xxl-6, .col-xxl-7,
+.col-xxl-8, .col-xxl-9, .col-xxl-10, .col-xxl-11, .col-xxl-12 {
     position: relative;
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
 }
+
 .col-0p5 {
     flex: 0 0 4.166667%;
     max-width: 4.166667%;
 }
+
 .col-0p75 {
     flex: 0 0 6.25%;
     max-width: 6.25%;
 }
+
 .col-1p25 {
     flex: 0 0 10.416667%;
     max-width: 10.416667%;
 }
+
 .col-1p5 {
     flex: 0 0 12.5%;
     max-width: 12.5%;
 }
+
 .col-1p75 {
     flex: 0 0 14.583333%;
     max-width: 14.583333%;
 }
+
 .col-2p75 {
     flex: 0 0 22.916667%;
     max-width: 22.916667%;
@@ -73,52 +85,229 @@
     max-width: 27.083333%;
 }
 
-input[readonly], textarea[readonly] {
-    background-color: lightGray;
-    color: #222222;
+@media (min-width: 2000px) {
+    .col-xxl-1 {
+        flex: 0 0 8.333333%;
+        max-width: 8.333333%;
+    }
+
+    .col-xxl-2 {
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+
+    .col-xxl-2p5 {
+        flex: 0 0 20.833333%;
+        max-width: 20.833333%;
+    }
+
+    .col-xxl-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+
+    .col-xxl-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+
+    .col-xxl-5 {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+
+    .col-xxl-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .col-xxl-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+
+    .col-xxl-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    }
+
+    .col-xxl-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+
+    .col-xxl-10 {
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+
+    .col-xxl-11 {
+        flex: 0 0 91.666667%;
+        max-width: 91.666667%;
+    }
+
+    .col-xxl-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
 
-textarea.readonly {
-    background-color: lightgray;
-    color: #222222;
+@media (min-width: 576px) and (max-width: 767px) {
 }
 
-/* End of Bootstrap extensions */
+@media (min-width: 576px) {
+    .col-sm-3p5 {
+        flex: 0 0 29.16667%;
+        max-width: 29.16667%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+@media (min-width: 768px) {
+    .col-md-2p01 {
+        flex: 0 0 16.75%;
+        max-width: 16.75%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media (min-width: 992px) {
+    .col-lg-2p5 {
+        flex: 0 0 20.83333%;
+        max-width: 20.83333%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2p25 {
+        flex: 0 0 18.75%;
+        max-width: 18.75%;
+    }
+
+    .col-xl-3p5 {
+        flex: 0 0 29.166667%;
+        max-width: 29.166667%;
+    }
+
+    .container.container-xl {
+        max-width:1800px
+    }
+}
+
+.badge.badge-full-width {
+    width: 100%;
+    text-align: left;
+}
+
+// Make text in span display like a label
+.label {
+    display: inline-block;
+    margin-bottom: .5rem
+}
+
+.form-group.special-col-adjustment {
+    padding-left: calc(16px - 0.25%);
+    padding-right: calc(16px + 0.25%);
+}
+/* End of Bootstrap 4 extensions */
+
+/* Bootstrap 4 overrides */
+
+.custom-select {
+    height: 2rem;
+    padding-top: 3px;
+    border: 1px solid #606060;
+    border-radius: 4px;
+}
+
+textarea.form-control {
+    border: 1px solid #606060;
+    border-radius: 4px;
+}
+
+/* End of Bootstrap 4 overrides */
 
 /* General Form Defaults */
 
-.tag-chk-legend {
+.col-text-input {
+    width:100%;
+}
+
+.checkbox-list-legend {
     float: left;
     width: 2.5rem;
     width: fit-content;
     font-size: initial;
     margin-right:0.25rem;
 }
-.tag-chk-container {
-    display:inline-block;
-    background-color:@white;
-    border:1px solid @darkest-gray;
-    border-radius:2px;
-    padding:0.5rem 0.5rem 0.5rem 0;
-    height:8rem;
-    min-width:8rem;
-    overflow-y:scroll;
-    width:fit-content;
+
+.checkbox-list-container {
+    display: inline-block;
+    background-color: @white;
+    border: 1px solid @darkest-gray;
+    border-radius: 4px;
+    padding: 0;
+    height: 8rem;
+    min-width: 8rem;
+    overflow-y: scroll;
+    width: fit-content;
 }
-.tag-chk-label {
-    display:block;
-    line-height:1.05;
-    width:fit-content;
+
+.checkbox-list-container.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    border-radius: 4px;
+    height: calc(12rem - 5px);
 }
-.tag-chk {
-    margin-left:0.5rem;
-    margin-right:0.5rem;
+
+.checkbox-list-label-wrapper {
+    padding-bottom:0.3rem;
+    padding-top:0.3rem;
+    
+    &.disabled {
+        background-color:@lightest-gray;
+        
+        .checkbox-list-label {
+            font-style: italic;
+        }
+    }
 }
+
+.checkbox-list-label {
+    display: block;
+    line-height: 1.05;
+    width: fit-content;
+    padding-right: 0.5rem;
+    min-width: 8rem;
+    margin:0;
+}
+
+.checkbox-list-check {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
 .tag-match-radio {
     width: 1.5rem;
 }
+
 .tag-match-label {
     padding-right: 1.5rem;
+}
+
+input[type='text'], input[type='password'] {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+input[type='text'].disabled {
+    background-color: @lightest-gray;
+    font-style: italic;
 }
 
 /* End of General Form Defaults */
@@ -146,6 +335,7 @@ textarea.readonly {
         }
     }
 }
+
 .expander {
     font-size: 1.75rem;
     transform: translate(-0.5rem, -0.5rem) rotate(0deg);
@@ -154,4 +344,59 @@ textarea.readonly {
     .collapsed & {
         transform: translate(0, 0.1rem) rotate(90deg);
     }
+}
+
+.bs4-alert-primary {
+    background-color: @bs4-alert-primary-bg-color;
+    color: @bs4-alert-primary-text-color;
+    border-color: @bs4-alert-primary-border-color
+}
+
+
+.bs4-alert-secondary {
+    background-color: @bs4-alert-secondary-bg-color;
+    color: @bs4-alert-secondary-text-color;
+    border-color: @bs4-alert-secondary-border-color
+}
+
+
+.bs4-alert-success {
+    background-color: @bs4-alert-success-bg-color;
+    color: @bs4-alert-success-text-color;
+    border-color: @bs4-alert-success-border-color
+}
+
+
+.bs4-alert-danger {
+    background-color: @bs4-alert-danger-bg-color;
+    color: @bs4-alert-danger-text-color;
+    border-color: @bs4-alert-danger-border-color
+}
+
+
+.bs4-alert-warning {
+    background-color: @bs4-alert-warning-bg-color;
+    color: @bs4-alert-warning-text-color;
+    border-color: @bs4-alert-warning-border-color
+}
+
+
+.bs4-alert-info {
+    background-color: @bs4-alert-info-bg-color;
+    color: @bs4-alert-info-text-color;
+    border-color: @bs4-alert-info-border-color
+}
+
+
+.bs4-alert-light {
+    background-color: @bs4-alert-light-bg-color;
+    color: @bs4-alert-light-text-color;
+    border-color: @bs4-alert-light-border-color
+}
+
+
+.bs4-alert-dark {
+    background-color: @bs4-alert-dark-bg-color;
+    color: @bs4-alert-dark-text-color;
+    border-color: @bs4-alert-dark-border-color
 }

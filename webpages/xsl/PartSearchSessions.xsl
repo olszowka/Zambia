@@ -2,7 +2,7 @@
 <!--
 	PartSearchSessions.xsl
 	Created by Peter Olszowka on 2020-08-22.
-	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+	Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output encoding="UTF-8" indent="yes" method="xml"/>
@@ -54,10 +54,10 @@
                     <xsl:when test="$showTags">
                         <div class="row mb-3">
                             <div class="col-auto">
-                                <div class="tag-chk-legend">Tags:</div>
+                                <div class="checkbox-list-legend">Tags:</div>
                             </div>
                             <div class="col-auto">
-                                <div class="tag-chk-container">
+                                <div class="checkbox-list-container">
                                     <xsl:apply-templates select="doc/query[@queryName='tags']/row" />
                                 </div>
                             </div>
@@ -88,7 +88,13 @@
     </xsl:template>
 
     <xsl:template match="/doc/query[@queryName='tags']/row">
-        <label class="tag-chk-label"><input type="checkbox" name="tags[]" class="tag-chk" value="{@tagid}" /><xsl:value-of select="@tagname" /></label>
+        <div class="checkbox-list-label-wrapper">
+            <label class="checkbox-list-label">
+                <input type="checkbox" name="tags[]" class="checkbox-list-check" value="{@tagid}" />
+                <xsl:value-of select="@tagname" />
+            </label>
+        </div>
+        
     </xsl:template>
 
 </xsl:stylesheet>

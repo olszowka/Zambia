@@ -1,180 +1,235 @@
-var myProfile = new MyProfile;
+//  Copyright (c) 2015-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function MyProfile() {
-	var dirtyInputArr = [];
-	var anyDirty = false;
-	var pw;
-	var cpw;
-	var pwOK = true;
-	var bioOK = true;
-	
-	this.anyChange = function anyChange(element) {
-		$("#resultBoxDIV").html("&nbsp;").css("visibility", "hidden");
-		pw = $("#password").val();
-		if (element != "password" && element != "cpassword") {
-				anyDirty = true;
-				dirtyInputArr[element] = true;
-				}
-			else {
-				cpw = $("#cpassword").val();
-				if (pw && pw!=cpw) {
-						$("#badPassword").show();
-						$("#passGroup").addClass("error");
-						$("#submitBTN").attr("disabled","disabled");
-						pwOK = false;
-						return;
-						}
-					else {
-						$("#badPassword").hide();
-						$("#passGroup").removeClass("error");
-						$("#submitBTN").removeAttr("disabled");
-						pwOK = true;
-						}
-				}
-		if (element == "htmlbioTXTA") {
-			if ($("#htmlbioTXTA").val().length > maxBioLen) {
-					$("#badBio").show();
-				    $("#bioGroup").addClass("error");
-					$("#submitBTN").attr("disabled","disabled");
-					bioOK = false;
-				}
-				else {
-					$("#badBio").hide();
-					$("#bioGroup").removeClass("error");
-					$("#submitBTN").removeAttr("disabled");
-					bioOK = true;
-				}
-			}
-		if (pwOK && bioOK && (anyDirty || pw)) {
-			$("#submitBTN").removeAttr("disabled");
-			}
-	}
+    var anyDirty = false;
+    var pw;
+    var cpw;
+    var pwOK = true;
+    var bioOK = true;
+    var maxBioLen;
+    var htmlbioused = false;
+    var $password;
+    var $cpassword;
+    var $submitBTN;
+    var $bioTextarea;
+    var $htmlbioTextarea;
+    var $resultBoxDiv;
+    var $badBio;
 
-	this.initialize = function initialize() {
-		//called when JQuery says My Profile page has loaded
-		//just a filler for now
-		//debugger;
-		$("#password").val("");
-		this.anyChange("password");
-		this.anyChange("htmlbioTXTA");
-		dirtyInputArr = [];
-		$("#submitBTN").button().attr("disabled","disabled");
-		//window.status="Reached initializeMyProfile.";
-		tinymce.init({
-			selector: 'textarea#htmlbioTXTA',
-			plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
-			browser_spellcheck: true,
-			contextmenu: false,
-			height: 400,
-			min_height: 200,
-			menubar: false,
-			toolbar: [
-				'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
-				'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
-			],
-			toolbar_mode: 'wrap',
-			content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-			placeholder: 'Type custom content here...',
-			setup: function (ed) {
-				ed.on('change', function (e) {
-					bioDirty = true;
-					myProfile.anyChange("htmlbioTXTA");
-				});
-			},
-			init_instance_callback: function (editor) {
-				$(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
-			}
-		});
-	}
 
-	this.updateBUTN = function updateBUTN() {
-		//debugger;
-		$("#submitBTN").button('loading');
-		var postdata = {
-			ajax_request_action : "update_participant"
-			};
-		if (pw)
-			postdata.password = pw;
-		if (dirtyInputArr["htmlbioTXTA"]) {
-			tinymce.triggerSave();
-			postdata.htmlbio = $("#htmlbioTXTA").val();
-			}
-		if (dirtyInputArr["interested"])
-			postdata.interested = $("#interested").val();
-		if (dirtyInputArr["share_email"])
-			postdata.share_email = $("#share_email").val();
-		if (dirtyInputArr["use_photo"])
-			postdata.use_photo = $("#use_photo").val();
-		if (dirtyInputArr["bestway"])
-			if ($("#bwemailRB").attr('checked'))
-					postdata.bestway = "Email";
-				else if ($("#bwpmailRB").attr('checked'))
-					postdata.bestway = "Postal mail";
-				else if ($("#bwphoneRB").attr('checked'))
-					postdata.bestway = "Phone";
-		if (dirtyInputArr["pubsname"])
-			postdata.pubsname = $("#pubsname").val();
-		if (dirtyInputArr["firstname"])
-			postdata.firstname = $("#firstname").val();
-		if (dirtyInputArr["lastname"])
-			postdata.lastname = $("#lastname").val();
-		if (dirtyInputArr["badgename"])
-			postdata.badgename = $("#badgename").val();
-		if (dirtyInputArr["phone"])
-			postdata.phone = $("#phone").val();
-		if (dirtyInputArr["email"])
-			postdata.email = $("#email").val();
-		if (dirtyInputArr["postaddress1"])
-			postdata.postaddress1 = $("#postaddress1").val();
-		if (dirtyInputArr["postaddress2"])
-			postdata.postaddress2 = $("#postaddress2").val();
-		if (dirtyInputArr["postcity"])
-			postdata.postcity = $("#postcity").val();
-		if (dirtyInputArr["poststate"])
-			postdata.poststate = $("#poststate").val();
-		if (dirtyInputArr["postzip"])
-			postdata.postzip = $("#postzip").val();
-		if (dirtyInputArr["postcountry"])
-			postdata.postcountry = $("#postcountry").val();
-		$('[id^="credentialCHK"]').each( function() {
-			var id = $(this).attr("id");
-			if (dirtyInputArr[id])
-				postdata[id] = ($(this).attr("checked")=="checked");
-			});
-		$.ajax({
-			url: "SubmitMyContact.php",
-			dataType: "html",
-			data: postdata,
-			success: myProfile.getUpdateResults,
-			type: "POST"
-			});			
-	}
+    this.validatePW = () => {
+        pw = $password.val();
+        cpw = $cpassword.val();
+        if (pw && pw !== cpw) {
+            $password.addClass("is-invalid");
+            $cpassword.addClass("is-invalid");
+            pwOK = false;
+        } else {
+            $password.removeClass("is-invalid");
+            $cpassword.removeClass("is-invalid");
+            pwOK = true;
+        }
+    };
+    
+    this.validateBio = () => {
+        var biolen;
+        if ($bioTextarea.length < 1) {
+            return;
+        }
+        var bio = $bioTextarea.val();
+        biolen = bio.length;
+        if (biolen > maxBioLen) {
+            $bioTextarea.addClass("is-invalid");
+            $badBio.show();
+            bioOK = false;
+        } else {
+            $bioTextarea.removeClass("is-invalid");
+            $badBio.hide();
+            bioOK = true;
+        }
+    };
 
-	this.getUpdateResults = function getUpdateResults(data, textStatus, jqXHR) {
-		//ajax success callback function
-		$("#resultBoxDIV").html(data).css("visibility", "visible");
-		$("#password").val("");
-		$("#cpassword").val("");
-		dirtyInputArr = [];
-		anyDirty = false;
-		$("#submitBTN").button('reset');
-		setTimeout(function() {$("#submitBTN").button().attr("disabled","disabled");}, 0);
-		//$("#submitBTN").html("Update").removeClass("disabled");
-		document.getElementById("resultBoxDIV").scrollIntoView(false);
-		$.ajax({
-			url: "SubmitMyContact.php",
-			dataType: "xml",
-			data: ({
-				ajax_request_action: "fetch_bio"
-			}),
-			success: myProfile.showUpdateResults,
-			type: "GET"
-		});			
-	}
+    this.bioChange = () => {
+        $resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+        if (htmlbioused) {
+            this.updatePlainText();
+        }
+        anyDirty = true;
+        this.validateBio();
+        $("#submitBTN").prop("disabled", (!pwOK || !bioOK || (!anyDirty && !pw)));
+    };
 
-	this.showUpdateResults = function showUpdateResults(data, textStatus, jqXHR) {
-		//ajax success callback function
-		var node = data.firstChild.firstChild.firstChild;
-		$("#bioTXTA").val(node.getAttribute("bio"));
-	}
+    this.updatePlainText = () => {
+        tinymce.triggerSave();
+        var tempDivElement = document.createElement("div");
+        tempDivElement.innerHTML = $htmlbioTextarea.val();
+        $bioTextarea.val(tempDivElement.textContent || tempDivElement.innerText || "");
+        tempDivElement.remove();
+    };
+
+    this.anyChange = (event) => {
+        $resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+        anyDirty = true;
+        var $target = $(event.target);
+        var targetId = $target.attr("id");
+        if (targetId === "bioTXTA" || targetId === "htmlbioTXTA") {
+            this.validateBio();
+        } else if (targetId === "password" || targetId === "cpassword") {
+            this.validatePW();
+        }
+        $("#submitBTN").prop("disabled", (!pwOK || !bioOK || (!anyDirty && !pw)));
+    };
+
+    this.initialize = () => {
+        //called when JQuery says My Profile page has loaded
+        this.$confNotAttModal = $('#confNotAttModal');
+        this.$confNotAttModal.modal({show:false});
+        this.$interestedSelect = document.getElementById('interested');
+        this.scheduleCount = parseInt(this.$interestedSelect.dataset.scheduleCount, 10);
+        document.getElementById('cancelNotAtt').addEventListener('click', this.cancelNotAttModal);
+        document.getElementById('confNotAtt').addEventListener('click', this.onConfirmNotAtt);
+        $password = $("#password");
+        $cpassword = $("#cpassword");
+        $password.val("");
+        this.validatePW();
+        $submitBTN = $("#submitBTN");
+        $submitBTN.button().prop("disabled", true);
+        $bioTextarea = $("#bioTXTA");
+        $badBio = $("#badBio");
+        maxBioLen = $bioTextarea.data("maxLength");
+        $htmlbioTextarea = $("#htmlbioTXTA");
+        if ($htmlbioTextarea.length > 0) {
+            tinymce.init({
+                selector: 'textarea#htmlbioTXTA',
+                plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
+                browser_spellcheck: true,
+                contextmenu: false,
+                height: 400,
+                min_height: 200,
+                menubar: false,
+                toolbar: [
+                    'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
+                    'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
+                ],
+                toolbar_mode: 'wrap',
+                content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+                placeholder: 'Type custom content here...',
+                setup: function (ed) {
+                    ed.on('change', function (e) {
+                        myProfile.bioChange();
+                    });
+                },
+                init_instance_callback: function (editor) {
+                    $(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
+                }
+            });
+            htmlbioused = true;
+        }
+        this.validateBio();
+        $("select.mycontrol").on("change", this.anyChange);
+        $("input.mycontrol[type='text']").on("input", this.anyChange);
+        $("input.mycontrol[type='password']").on("input", this.anyChange);
+        $(":checkbox.mycontrol").on("change", this.anyChange);
+        $(":radio.mycontrol").on("change", this.anyChange);
+        $("textarea.mycontrol").on("input", this.anyChange);
+        $resultBoxDiv = $("#resultBoxDIV");
+        $resultBoxDiv.html("&nbsp;").css("visibility", "hidden");
+    };
+
+    this.updateBUTN = () => {
+        if (this.$interestedSelect.value !== '1'
+            && this.scheduleCount >= 1
+            && !this.interestedOverride
+        ) {
+            this.$confNotAttModal.modal('show');
+            return;
+        }
+        this.interestedOverride = false;
+        $("#submitBTN").button('loading');
+        var postdata = {
+            ajax_request_action: "update_participant"
+        };
+        $(".mycontrol").each(function() { // this is element
+            var $elem = $(this);
+            if ($elem.is(":disabled") || ($elem.attr("readonly") && !$elem.attr("updatealso"))) {
+                return;
+            }
+            var name = $elem.attr("name");
+            if (!name)
+                return;
+
+            if (name === "cpassword") {
+                return;
+            }
+            if ($elem.attr("type") === "radio") {
+                if ($elem.prop("checked") && !$elem.prop("defaultChecked")) {
+                    postdata[$elem.attr("name")] = $elem.val();
+                }
+            } else if ($elem.prop("tagName") === "SELECT") {
+                if ($elem.val() !== $elem.find("option").filter(function () { return this.defaultSelected; }).attr("value")) {
+                    postdata[$elem.attr("name")] = $elem.val();
+                }
+            } else if ($elem.attr("type") === "checkbox") {
+                if ($elem.prop("defaultChecked") !== $elem.is(":checked")) {
+                    postdata[$elem.attr("id")] = $elem.is(":checked") ? 1 : 0;
+                }
+            } else { // text or textarea
+                if ($elem.prop("defaultValue") !== $elem.val()) {
+                    postdata[$elem.attr("name")] = $elem.val();
+                }
+            }
+        });
+        $.ajax({
+            url: "SubmitMyContact.php",
+            dataType: "html",
+            data: postdata,
+            success: myProfile.showUpdateResults,
+            error: myProfile.showAjaxError,
+            type: "POST"
+        });
+    };
+
+    this.showUpdateResults = (data, textStatus, jqXHR) => {
+        //ajax success callback function
+        $resultBoxDiv.html(data).css("visibility", "visible");
+        $password.val("");
+        $cpassword.val("");
+        anyDirty = false;
+        $submitBTN.button('reset');
+        setTimeout(function () {
+            $submitBTN.button().prop("disabled", true);
+        }, 0);
+        document.getElementById("resultBoxDIV").scrollIntoView(false);
+    };
+
+    this.showErrorMessage = (message) => {
+        content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">` + message + `</div></div></div>`;
+        $resultBoxDiv.html(content).css("visibility", "visible");
+        document.getElementById("resultBoxDIV").scrollIntoView(false);
+    };
+
+    this.showAjaxError = (data, textStatus, jqXHR) => {
+        var content;
+        if (data && data.responseText) {
+            content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">${data.responseText}</div></div></div>`;
+        } else {
+            content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">An error occurred on the server.</div></div></div>`;
+        }
+        $resultBoxDiv.html(content).css("visibility", "visible");
+        document.getElementById("resultBoxDIV").scrollIntoView(false);
+        uploadlock = false;
+    };
+
+    this.onConfirmNotAtt = (event) => {
+        this.$confNotAttModal.modal('hide');
+        this.interestedOverride = true;
+        this.updateBUTN();
+    }
+
+    this.cancelNotAttModal = (event) => {
+        this.$interestedSelect.value = '1';
+    }
+
 }
+
+window.myProfile = new MyProfile();

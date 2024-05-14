@@ -1,4 +1,4 @@
-//	Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $(document).on("ready", function() {
     var $reportTable = $("#reportTable");
     if ($reportTable.length === 1) {
@@ -18,6 +18,3 @@ $(document).on("ready", function() {
         $reportTable.DataTable(options);
     }
 });
-
-
-

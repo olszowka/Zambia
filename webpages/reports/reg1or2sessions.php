@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participants with 1 or 2 sessions';
 $report['description'] = 'Program or Event participants with one or two scheduled sessions in Program or Event divisions not counting signings.';
@@ -23,7 +23,7 @@ SELECT
                     JOIN ParticipantOnSession POS USING (sessionid)
                     JOIN Sessions S USING (sessionid)
                 WHERE
-                        S.typeid != 7 /* signing */
+                        S.typeid != 10 /* signing */
                     AND S.divisionid IN (2,3) /* Programming, Events */
                 GROUP BY
                     POS.badgeid
@@ -33,7 +33,7 @@ SELECT
             ) AS subq USING (badgeid)
         JOIN Sessions S USING (sessionid)
      WHERE
-             S.typeid != 7 /* signing */
+             S.typeid != 10 /* signing */
          AND S.divisionid IN (2,3) /* Programming, Events */
      ORDER BY
          IF(INSTR(P.pubsname,CD.lastname)>0,CD.lastname,SUBSTRING_INDEX(P.pubsname,' ',-1)),

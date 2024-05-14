@@ -9,8 +9,8 @@
 function get_session_interests_from_db($badgeid) {
     global $session_interests, $session_interest_index;
     $query = <<<EOD
-SELECT sessionid, rank, willmoderate, comments FROM ParticipantSessionInterest
-    WHERE badgeid='$badgeid' ORDER BY IFNULL(rank,9999), sessionid
+SELECT sessionid, `rank`, willmoderate, comments FROM ParticipantSessionInterest
+    WHERE badgeid='$badgeid' ORDER BY IFNULL(`rank`,9999), sessionid
 EOD;
     if (!$result = mysqli_query_exit_on_error($query)) {
         exit(); // Should have exited already

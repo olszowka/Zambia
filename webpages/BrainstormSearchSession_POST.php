@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $participant, $message_error, $message2, $title;
 $title = "Show Search Session Results";
 require('BrainstormCommonCode.php'); // initialize db; check login;
@@ -7,6 +7,15 @@ $ConStartDatim = CON_START_DATIM;
 $trackid = getInt("track", 0);
 $titlesearch = isset($_POST["title"]) ? stripslashes($_POST["title"]) : "";
 $query = <<<EOD
+WITH SessionTags AS (
+    SELECT
+            SHT.sessionid, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        FROM
+                      SessionHasTag SHT
+            LEFT JOIN Tags TA USING (tagid)
+        GROUP BY
+            SHT.sessionid
+    )
 SELECT
         S.sessionid, TR.trackname, null typename, S.title, 
         CONCAT( IF(LEFT(S.duration,2)=00, '', 
@@ -15,16 +24,15 @@ SELECT
                 IF(LEFT(DATE_FORMAT(S.duration,'%i'),1)=0, CONCAT(RIGHT(DATE_FORMAT(S.duration,'%i'),1),'min'), 
             CONCAT(DATE_FORMAT(S.duration,'%i'),'min')))) Duration,
         S.estatten, S.progguiddesc, S.persppartinfo, 
-		DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
-		R.roomname, SS.statusname, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+        R.roomname, SS.statusname, SessionTags.taglist
     FROM
-    	          Sessions S
-    	     JOIN Tracks TR USING (trackid)
-    	     JOIN SessionStatuses SS USING (statusid)
-		LEFT JOIN Schedule SCH USING (sessionid)
-		LEFT JOIN Rooms R USING (roomid)
-		LEFT JOIN SessionHasTag SHT USING (sessionid)
-		LEFT JOIN Tags TA USING (tagid)
+                  Sessions S
+             JOIN Tracks TR USING (trackid)
+             JOIN SessionStatuses SS USING (statusid)
+        LEFT JOIN Schedule SCH USING (sessionid)
+        LEFT JOIN Rooms R USING (roomid)
+        LEFT JOIN SessionTags USING (sessionid)
     WHERE
         SS.statusname IN ('Edit Me','Brainstorm','Vetted','Assigned','Scheduled')
 EOD;
@@ -35,8 +43,6 @@ if ($titlesearch != "") {
     $query .= " AND title LIKE \"%" . mysqli_real_escape_string($linki, $titlesearch) . "%\" ";
 }
 $query .= <<<EOD
-    GROUP BY
-        S.sessionid
     ORDER BY
         trackname, title
 EOD;

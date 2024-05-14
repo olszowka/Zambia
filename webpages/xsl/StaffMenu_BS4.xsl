@@ -1,17 +1,18 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!--
     Created by Peter Olszowka on 2020-07-20;
-    Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="title" select="''" />
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
-  <xsl:param name="adduser" select="''"/>
+  <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
   <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
   <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
+  <xsl:variable name="Brainstorm" select="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']"/>
   <xsl:template match="/">
     <nav id="staffNav" class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand py-1" href="#">
@@ -23,6 +24,11 @@
       </button>
       <div class="collapse navbar-collapse flex-wrap" id="navbarSupportedContent">
         <ul class="navbar-nav mr-4">
+          <xsl:if test="$Brainstorm">
+            <li class="nav-item py-0">
+              <a class="nav-link py-1" href="BrainstormWelcome.php">Brainstorming</a>
+            </li>
+          </xsl:if>
           <li class="nav-item dropdown mr-2 py-0">
             <a class="nav-link dropdown-toggle py-1" href="#" id="navbarSessionsDropdown" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
@@ -46,10 +52,19 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarParticipantsDropdown">
               <a class="dropdown-item" href="AdminParticipants.php">Administer</a>
+              <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
+                <a class="dropdown-item" href="AdminPhotos.php">Photos</a>              
+              </xsl:if>
               <a class="dropdown-item" href="InviteParticipants.php">Invite to a Session</a>
               <a class="dropdown-item" href="StaffAssignParticipants.php">Assign to a Session</a>
               <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
                 <a class="dropdown-item" href="StaffSendEmailCompose.php">Send email</a>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='CreateUser']">
+                  <a class="dropdown-item" href="AddZambiaUser.php">Create User</a>
+              </xsl:if>
+              <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='reg_ImportUsers']">
+                <a class="dropdown-item" href="BalticonImportRegUser.php">Import User from Reg</a>
               </xsl:if>
             </div>
           </li>
@@ -110,9 +125,8 @@
                 </xsl:if>
                 <xsl:if test="$Administrator">
                   <a class="dropdown-item" href="EditCustomText.php">Edit Custom Text</a>
-                </xsl:if>
-                <xsl:if test="$adduser">
-                  <a class="dropdown-item" href="AddZambiaUser.php">Add Zambia User</a>
+                  <a class="dropdown-item" href="EditSurvey.php">Edit Survey</a>
+                  <a class="dropdown-item" href="ConfigTableEditor.php">Edit Configuration Tables</a>
                 </xsl:if>
               </div>
             </div>

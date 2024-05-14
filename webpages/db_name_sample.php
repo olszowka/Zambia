@@ -1,6 +1,6 @@
 <?php
 // This is an example file.  Please copy to db_name.php and edit as needed.
-// Copyright (c) 2008-2020 Peter Olszowka. All rights reserved.
+// Copyright (c) 2008-2024 Peter Olszowka. All rights reserved.
 // See copyright document for more details.
 define("DBHOSTNAME", "localhost");
 define("DBUSERID", "zambiademo");
@@ -29,6 +29,7 @@ define("SMTP_PORT", "587"); // Likely options are "587", "2525", "25", or "465".
 define("SMTP_PROTOCOL", "TLS"); // Options are "", "SSL", or "TLS".  Blank/Default is no encryption. See documentation for your mail relay service.
 define("SMTP_USER", "foo"); // Use "" to skip authentication. See documentation for your mail relay service.
 define("SMTP_PASSWORD", "bar"); // Use "" to skip authentication. See documentation for your mail relay service.
+define("SMTP_QUEUEONLY", FALSE); // TRUE = add to DB queue, schedule processEmailQueue.php as a cron job do the send, FALSE send immediately, add to queue only on transport failure
 define("PREF_TTL_SESNS_LMT", 10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT", 5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS", 8); // Number of rows of availability records to render
@@ -37,13 +38,13 @@ define("MY_AVAIL_KIDS", FALSE); // Enables questions regarding no. of kids in Fa
 define("ENABLE_SHARE_EMAIL_QUESTION", TRUE); // Enables question regarding sharing participant email address
 define("ENABLE_USE_PHOTO_QUESTION", TRUE); // Enables question regarding using participant photo for promotional purposes
 define("ENABLE_BESTWAY_QUESTION", FALSE); // Enables question regarding best way to contact participant
-define("BILINGUAL", TRUE); // Triggers extra fields in Session and "My General Interests"
+define("BILINGUAL", TRUE); // Triggers extra fields in Session
 define("SECOND_LANG", "FRENCH");
 define("SECOND_TITLE_CAPTION", "Titre en fran&ccedil;ais");
 define("SECOND_DESCRIPTION_CAPTION", "Description en fran&ccedil;ais");
-define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
+define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais"); // not supported
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
-define("REG_URL", "https://reg.arisia.org"); // URL for logging into user self service portion of registration system -- appears on My Profile page
+define('BRAINSTORM_STAFF_STATUS', FALSE); // if the user has staff role, should the brainstorm suggestion be set to edit_me?
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID
 define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and reCAPTCHA integration.
 define("ROOT_URL", "https://zambia.server.com/"); // URL to reach this zambia server. Required to generate and email password reset link. Include trailing /
@@ -60,16 +61,36 @@ define("DEFAULT_USER_PASSWORD", "changeme"); // Note, Zambia will never directly
 // does not use a default password, leave this empty ''.
 define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag fields are used -- one of 4 following values:
 // "TAG_ONLY" : Track field is not used and will be hidden where possible.
+//      NOTE: TAG_ONLY requires that trackid 1 exist in Tracks, be the hidden track for TAG_ONLY and have selfselect be set to 1 (1, "Tag Based", 10, 1)
 // "TAG_OVER_TRACK" : Both fields are used, but primary sorting and filtering is by Tag.
 // "TRACK_OVER_TAG" : Both fields are used, but primary sorting and filtering is by Track.
 // "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
 define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all users
 define("USE_REG_SYSTEM", FALSE);
-// True -> Users loaded from reg system into CongoDump, users cannot edit
-// False -> Script loads to CongoDump, users can edi
+// True -> Zambia users loaded from reg system into CongoDump; staff users cannot edit them
+// False -> Zambia users created and edited by staff users in Zambia
 define("REG_PART_PREFIX", "");
-// edit that for each year or as needed for prefix for number code, only needed for USE_REG_SYSTEM = FALSE
-// staff default regtype, only needed for USE_REG_SYSTEM = FALSE
-define("REG_STAFF_DEFAULT", "StaffComp");
-define("REG_PART_DEFAULT", "ParticipantComp");
+// only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
+define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
+define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
+define("MEETING_LINK", TRUE); // Add support for Meeting Link in sessions
+define("PARTICIPANT_LINK", TRUE); // Add support for Participant Link in sessions
+define("RECORDING_LINK", TRUE); // Add support for Recording Link in sessions
+define("CAPTION_LINK", TRUE); // Add support for Caption Link in sessions
+// Items for Photo Upload/Approval
+define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
+define("PHOTO_UPLOAD_DIRECTORY", "../upload_photos");  // outside of web server path, only served by PHP
+define("PHOTO_PUBLIC_DIRECTORY", "/participant_photos"); // inside of web server path, can be served outside of PHP
+define("PHOTO_FILE_TYPES", "jpg,png"); // comma separated list of allowed file types/suffixes (will be verified by PHP)
+define("PHOTO_DIMENSIONS", "200,200,300,300,1048576"); // comma separated list min width/height, max width/height, file size
+define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participants without photo
+define("CON_THEME", "");
+// if con-specific theming should be applied, you can reference a theme css here.
+// for example: define("CON_THEME", "themes/reallybigcon/main.css");
+define("CON_HEADER_IMG", "");
+// to improve the con branding, you can define a con-specific header image that will take the place of the
+// Zambia illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
+define("CON_HEADER_IMG_ALT", "");
+// to improve the con branding, you can specify the alt-text of the header image. For example:
+// define("CON_HEADER_IMG_ALT", "Really Big Con Logo);
 ?>

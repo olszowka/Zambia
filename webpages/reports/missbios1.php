@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Missing Bios Report 1';
 $report['description'] = 'Participants with missing or short bios with their Participant Types.';
@@ -24,7 +24,7 @@ SELECT
         JOIN UserHasPermissionRole UHPR USING (badgeid)
         JOIN PermissionRoles PR USING (permroleid)
     WHERE
-            PR.permroleid NOT IN (1, 2, 4) /* Administrator, Staff, Brainstorm */
+            PR.permroleid = 4 /* Participant (B61) */
         AND LENGTH(IFNULL(bio, "")) <= 15
         AND EXISTS ( SELECT *
             FROM

@@ -3,9 +3,7 @@
 $report = [];
 $report['name'] = 'Arisia TV by time ';
 $report['description'] = 'Just things in TV room';
-$report['categories'] = array(
-    'Arisia TV Reports' => 250,
-);
+$report['categories'] = array();
 $report['queries'] = [];
 $report['queries']['schedule'] =<<<'EOD'
 SELECT

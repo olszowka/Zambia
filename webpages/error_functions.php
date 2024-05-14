@@ -1,23 +1,47 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 
-function StaffRenderErrorPage($title, $message) {
+function StaffRenderErrorPage($title, $message, $bootstrap4 = false) {
     global $debug;
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, $bootstrap4);
     if (isset($debug)) {
         echo $debug . "<br>\n";
     }
-    echo "<p class=\"alert alert-error\">" . $message . "</p>\n";
+    if ($bootstrap4) {
+?>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <?php echo $message; ?>
+                </div>
+            </div>
+        </div>
+<?php
+    } else {
+        echo "<p class=\"alert alert-error\">$message</p>\n";
+    }
     staff_footer();
 }
 
-function PartRenderErrorPage($title, $message) {
+function PartRenderErrorPage($title, $message, $bootstrap4 = false) {
     require_once('ParticipantHeader.php');
     require_once('ParticipantFooter.php');
-    participant_header($title);
-    echo "<p class=\"alert alert-error\">" . $message . "</p>\n";
+    participant_header($title, false, 'Normal', $bootstrap4);
+    if ($bootstrap4) {
+?>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <?php echo $message; ?>
+                </div>
+            </div>
+        </div>
+<?php
+    } else {
+        echo "<p class=\"alert alert-error\">$message</p>\n";
+    }
     participant_footer();
 }
 
@@ -30,7 +54,10 @@ function BrainstormRenderErrorPage($title, $message) {
 }
 
 function RenderError($message_error, $ajax = false) {
-    global $header_rendered, $header_section, $title;
+    global $header_rendered, $header_section, $returnAjaxErrors, $title;
+    if (isset($returnAjaxErrors) && $returnAjaxErrors) {
+        $ajax = true;
+    }
     if ($ajax) {
         RenderErrorAjax($message_error);
         exit(0);
@@ -85,7 +112,18 @@ function RenderError($message_error, $ajax = false) {
 }
 
 function RenderErrorAjax($message_error) {
-    echo "<div class=\"error-container alert\"><span>$message_error</span></div>\n";
+    global $return500errors;
+    if (isset($return500errors) && $return500errors) {
+        Render500ErrorAjax($message_error);
+    } else {
+        echo "<div class=\"error-container alert\"><span>$message_error</span></div>\n";
+    }
+}
+
+function Render500ErrorAjax($message_error) {
+    // pages which know how to handle 500 errors are expected to format the error message appropriately.
+    header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error', true, 500);
+    echo "$message_error";
 }
 
 ?>

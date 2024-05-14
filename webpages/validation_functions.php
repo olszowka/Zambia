@@ -1,15 +1,15 @@
 <?php
-//	Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2009-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function validate_suggestions($paneltopics, $otherideas, $suggestedguests) {
     $retval = ""; // return "" means "passed"
-    if (strlen($paneltopics) > 10000) {
+    if (mb_strlen($paneltopics) > 10000) {
         $retval .= "Please edit your Program Topic Ideas to fewer than 10,000 characters. ";
     }
-    if (strlen($otherideas) > 10000) {
+    if (mb_strlen($otherideas) > 10000) {
         $retval .= "Please edit your Other Programming Ideas to fewer than 10,000 characters. ";
     }
-    if (strlen($suggestedguests) > 10000) {
+    if (mb_strlen($suggestedguests) > 10000) {
         $retval .= "Please edit your Suggested Guests to fewer than 10,000 characters. ";
     }
     return($retval);
@@ -24,7 +24,7 @@ function validate_session_interests($max_si_row) {
     global $session_interests, $message;
     $flag = true;
     $message = "";
-    $count = array(0, 0, 0, 0, 0);
+    $count = array(0, 0, 0, 0, 0, 0);
     for ($i = 1; $i <= $max_si_row; $i++) {
         if ($session_interests[$i]['rank'] == "" or $session_interests[$i]['delete']) {
             continue;
@@ -160,7 +160,7 @@ function validate_session() {
         $messages .= "Estimated attendance must be a positive integer or blank.<br>\n";
         $flag = false;
     }
-    if ($session["track"] == 0) {
+    if ($session["track"] == 0 && TRACK_TAG_USAGE !== "TAG_ONLY") {
         $messages .= "Please select a track.<br>\n";
         $flag = false;
     }
@@ -172,15 +172,15 @@ function validate_session() {
 //don't validate further those not marked with 'validate' such as "dropped" or "cancelled"
         return ($flag);
     }
-    $i = strlen($session["title"]);
-    if ($i < 10 || $i > 99) {
-        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>99</b> characters.<br>\n";
+    $i = mb_strlen($session["title"]);
+    if ($i < 10 || $i > 48) {
+        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>48</b> characters.<br>\n";
         $flag = false;
     }
-    $i = strlen($session["progguiddesc"]);
-    if ($i < 10 || $i > 500) {
+    $i = mb_strlen($session["progguiddesc"]);
+    if ($i < 10 || $i > 1000) {
         $messages .= "Description is $i characters long.  Please edit it to between";
-        $messages .= " <b>10</b> and <b>500</b> characters long.<br>\n";
+        $messages .= " <b>10</b> and <b>1000</b> characters long.<br>\n";
         $flag = false;
     }
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {
@@ -208,7 +208,7 @@ function validate_session() {
         $messages .= "Please select a room set.<br>\n";
         $flag = false;
     }
-    if ($session["track"] == 0 || $session["track"] == 99) { // don't allow "Unspecified"
+    if (($session["track"] == 0 || $session["track"] == 99) && TRACK_TAG_USAGE !== "TAG_ONLY") { // don't allow "Unspecified"
         $messages .= "Please select a track.<br>\n";
         $flag = false;
     }
@@ -247,9 +247,11 @@ function validate_participant_availability() {
             }
         }
     }
-    if (!($partAvail["numkidsfasttrack"] >= 0 and $partAvail["numkidsfasttrack"] <= 8)) {
-        $messages .= "For the number of kids for fastrack, enter a number between 0 and 8.<BR>\n";
-        $flag = false;
+    if (MY_AVAIL_KIDS === TRUE) {
+        if (!($partAvail["numkidsfasttrack"] >= 0 and $partAvail["numkidsfasttrack"] <= 8)) {
+            $messages .= "For the number of kids for fastrack, enter a number between 0 and 8.<BR>\n";
+            $flag = false;
+        }
     }
     for ($i = 1; $i <= AVAILABILITY_ROWS; $i++) {
         if (CON_NUM_DAYS > 1) {

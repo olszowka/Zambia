@@ -1,11 +1,11 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $headerErrorMessage, $link, $linki, $title;
+require_once('CommonCode.php');
+$userIdPrompt = USER_ID_PROMPT;
 if (!isset($_SESSION['badgeid'])) {
-    require_once('CommonCode.php');
-    $userIdPrompt = USER_ID_PROMPT;
     $title = "Submit Password";
-    $badgeid = trim(getString('badgeid'));
+    $badgeid = getString('badgeid');
     $password = getString('passwd');
     $query = "SELECT password, data_retention FROM Participants WHERE badgeid = ?;";
     $query_param_arr = array($badgeid);
@@ -20,7 +20,7 @@ if (!isset($_SESSION['badgeid'])) {
     $dbobject = mysqli_fetch_object($result);
     mysqli_free_result($result);
     $dbpassword = $dbobject->password;
-    $data_consent = $dbobject->data_retention;
+    $_SESSION['data_consent'] = $dbobject->data_retention;
     if (!password_verify($password, $dbpassword)) {
         $headerErrorMessage = "Incorrect $userIdPrompt or password.";
         require('login.php');
@@ -52,43 +52,19 @@ if (!isset($_SESSION['badgeid'])) {
     set_permission_set($badgeid);
 } else {
     $badgeid = $_SESSION['badgeid'];
-    $query = "SELECT data_retention FROM Participants WHERE badgeid = ?;";
-    $query_param_arr = array($badgeid);
-    if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_arr)) {
-        exit(); // Should have exited already
-    }
-    if (mysqli_num_rows($result) != 1) {
-        $headerErrorMessage = "Incorrect $userIdPrompt or password.";
-        require('logout.php');
-        exit(0);
-    }
-    $dbobject = mysqli_fetch_object($result);
-    mysqli_free_result($result);
-    $data_consent = $dbobject->data_retention;
 }
 $message2 = "";
 if (may_I('Staff')) {
-     if (!$participant_array = retrieveFullParticipant($badgeid)) {
-        $message_error = $message2 . "<br />Error retrieving data from DB.  No further execution possible.";
-        RenderError($message_error);
-    } else {
-        if ($data_consent == 0 && REQUIRE_CONSENT == true) {
-            require('dataConsent.php');
-        } else {
-            require('StaffPage.php');
-        }
-    }
+    require('StaffPage.php');
 } elseif (may_I('Participant')) {
     if (!$participant_array = retrieveFullParticipant($badgeid)) {
         $message_error = $message2 . "<br />Error retrieving data from DB.  No further execution possible.";
         RenderError($message_error);
     } else {
-        if ($data_consent == 0 && REQUIRE_CONSENT == true) {
-            require('dataConsent.php');
-        } else {
-            require('renderWelcome.php');
-        }
+        require('renderWelcome.php');
     }
+} elseif (may_I('declined_participant')) {
+    require('DeclinedParticipant.php');
 } elseif (may_I('public_login')) {
     require('renderBrainstormWelcome.php');
 } else {

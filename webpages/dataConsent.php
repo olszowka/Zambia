@@ -1,8 +1,8 @@
 <?php
-// Copyright (c) 2008-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message, $message_error, $message2, $title;
-// $participant_array is defined by file including this.
-//error_log("Zambia: Reached renderWelcome.php"); 
+// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//
+// This file is required directly from ParticipantHeader.php or StaffHeader.php if consent is required and not given
+global $message, $message_error, $message2, $participant_array, $title;
 $title = "Data Retention Consent";
 // Now that title is set, get common text
 if (!populateCustomTextArray()) {
@@ -10,38 +10,32 @@ if (!populateCustomTextArray()) {
     RenderError($message_error);
     exit();
 }
-require_once('PartCommonCode.php');
-participant_header($title, false, 'Consent', true);
+$participant_array = retrieveFullParticipant($_SESSION['badgeid']);
 if ($message_error != "") {
-    echo "<P class=\"alert alert-danger\">$message_error</P>\n";
+    echo "<p class=\"alert alert-danger\">$message_error</p>\n";
 }
 if ($message != "") {
-    echo "<P class=\"alert alert-success\">$message</P>\n";
+    echo "<p class=\"alert alert-success\">$message</p>\n";
 }
-$consent_message = fetchCustomText("consent");
 ?>
     
 <div class="container-fluid">
-	<div class="text-left">
-		<h3>Consent for collection and usage of your data entered into Zambia for <?php echo CON_NAME ?></h3>
-		<p><?php echo $consent_message ?></p>
+	<div class="mt-2">
+		<h3 class="mb-2">Consent for collection and usage of your data entered into Zambia for <?php echo CON_NAME ?></h3>
+		<?php echo fetchCustomText("consent"); ?>
 		
 		<form class="form-inline" name="consentform" method=POST action="SubmitConsent.php">
-                <div id="update_section" class="form-group">
-                    <label for="consent">I, <?php echo $participant_array["firstname"]; echo " "; echo $participant_array["lastname"]; ?> grant consent for data collection of my personal data:&nbsp;</label>
-                </div>
-                <div class="form-group">
-                    <select id="consent" name="consent">
-                        <option value=0 selected="selected">No</option>
-                        <option value=1>Yes</option>
-                    </select>
-				</div>
-                <div class="form-group">
-                    &nbsp;&nbsp;
-                </div>
-                <div class="from-group">
-                    <button class="btn btn-primary" type="submit" name="submit" >Update</button>
-                </div>
+            <div id="update_section" class="form-group pr-2">
+                <label for="consent">I, <?php echo $participant_array["firstname"]." ".$participant_array["lastname"]; ?>, grant consent for data collection of my personal data:&nbsp;</label>
+            </div>
+            <div class="form-group pr-4">
+                <select id="consent" name="consent">
+                    <option value=0 selected="selected">No</option>
+                    <option value=1>Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" name="submit" >Update</button>
             </div>
 		</form>
 	</div>

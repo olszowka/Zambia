@@ -1,17 +1,18 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!--
     Created by Peter Olszowka on 2020-04-12;
-    Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="title" select="''" />
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
-  <xsl:param name="adduser" select="''"/>
+  <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
   <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
+  <xsl:variable name="Brainstorm" select="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']"/>
   <xsl:template match="/">
     <nav id="staffNav" class="navbar navbar-inverse">
       <div class="navbar-inner">
@@ -26,6 +27,10 @@
           </span>
           <div class="nav-collapse">
             <ul class="nav">
+              <xsl:if test="$Brainstorm">
+                <li><a href="BrainstormWelcome.php">Brainstorming</a></li>
+                <li class="divider-vertical"/>
+              </xsl:if>
               <li class="dropdown">
                 <a href="#sessions" class="dropdown-toggle" data-toggle="dropdown">
                   Sessions
@@ -67,6 +72,11 @@
                   <li>
                     <a href="AdminParticipants.php">Administer</a>
                   </li>
+                  <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
+                    <li>
+                      <a href="AdminPhotos.php">Photos</a>
+                    </li>
+                  </xsl:if>
                   <li>
                     <a href="InviteParticipants.php">Invite to a Session</a>
                   </li>
@@ -76,6 +86,16 @@
                   <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
                     <li>
                       <a href="StaffSendEmailCompose.php">Send email</a>
+                    </li>
+                  </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='CreateUser']">
+                    <li>
+                      <a href="AddZambiaUser.php">Create User</a>
+                    </li>
+                  </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='reg_ImportUsers']">
+                    <li>
+                      <a href="BalticonImportRegUser.php">Import User from Reg</a>
                     </li>
                   </xsl:if>
                 </ul>
@@ -152,10 +172,11 @@
                       <li>
                         <a href="EditCustomText.php">Edit Custom Text</a>
                       </li>
-                    </xsl:if>
-                    <xsl:if test="$adduser">
                       <li>
-                        <a href="AddZambiaUser.php">Add Zambia User</a>
+                        <a href="EditSurvey.php">Edit Survey</a>
+                      </li>
+                      <li>
+                        <a href="ConfigTableEditor.php">Edit Configuration Tables</a>
                       </li>
                     </xsl:if>
                   </ul>

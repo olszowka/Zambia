@@ -1,11 +1,11 @@
 <?php
-//	Copyright (c) 2011-2020 The Zambia Group. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
-	$startTimeUnits = $startTimeHour * 2;
-	if ($startTimeMin >= 30) {
+    $startTimeUnits = $startTimeHour * 2;
+    if ($startTimeMin >= 30) {
         $startTimeUnits++;
     }
-	return $startTimeUnits;
+    return $startTimeUnits;
 }
 
 function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
@@ -18,21 +18,10 @@ function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
     return $endTimeUnits;
 }
 
-function convertUnitsToTimeStr($timeUnits) {
-	return floor($timeUnits/2).":00:00";
-}
-
 function convertUnitsToHourMin($timeUnits) {
-	$hour = floor($timeUnits/2);
-	$min = ($timeUnits%2) * 30;
-	return array($hour, $min);
-}
-
-function showCustomText($pre, $tag, $post) {
-    global $customTextArray;
-    if (!empty($customTextArray[$tag])) {
-        echo $pre . $customTextArray[$tag] . $post;
-    }
+    $hour = floor($timeUnits/2);
+    $min = ($timeUnits%2) * 30;
+    return array($hour, $min);
 }
 
 function fetchCustomText($tag) {
@@ -55,9 +44,11 @@ function appendCustomTextArrayToXML($xmlDoc) {
     return $xmlDoc;
 }
 
-// Function conv_min2hrsmin()
-// Input is unchecked form input in minutes
-// Output is string in MySql time format
+/**
+ * Function conv_min2hrsmin()
+ * Input is unchecked form input in minutes
+ * Output is string in MySql time format
+ */
 function conv_min2hrsmin($mininput) {
     $min = filter_var($mininput, FILTER_SANITIZE_NUMBER_INT);
     if (($min < 1) or ($min > 3000)) {
@@ -73,15 +64,15 @@ function conv_min2hrsmin($mininput) {
 // and confirms it is an integer.
 // Safe from referencing nonexisting array index
 function getInt($name, $default = false) {
-    if (isset($_GET[$name])) {
+    if (array_key_exists($name, $_GET)) {
         $int = $_GET[$name];
-    } elseif (isset($_POST[$name])) {
+    } elseif (array_key_exists($name, $_POST)) {
         $int = $_POST[$name];
     } else {
         return $default;
     }
     $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
-    if (empty($t)) {
+    if (mb_strlen($t) == 0) {
         return $default;
     } else {
         return(intval($t));
@@ -93,9 +84,9 @@ function getInt($name, $default = false) {
 // and confirms it is an integer.
 // Safe from referencing nonexisting array index
 function getArrayOfInts($name, $default = false) {
-    if (isset($_GET[$name])) {
+    if (array_key_exists($name, $_GET)) {
         $intArr = $_GET[$name];
-    } elseif (isset($_POST[$name])) {
+    } elseif (array_key_exists($name, $_POST)) {
         $intArr = $_POST[$name];
     } else {
         return $default;
@@ -103,6 +94,9 @@ function getArrayOfInts($name, $default = false) {
     $retVal = array();
     if ($intArr === "null") {
         return $retVal;
+    }
+    if (gettype($intArr) === "string") {
+        $intArr = array($intArr);
     }
     forEach ($intArr as $int) {
         if (!empty($t = filter_var($int, FILTER_SANITIZE_NUMBER_INT))) {
@@ -116,18 +110,17 @@ function getArrayOfInts($name, $default = false) {
     }
 }
 
-
 // Function getString("name")
 // gets a parameter from $_GET[] or $_POST[] of name
 // and strips slashes
 // Safe from referencing nonexisting array index
 function getString($name) {
-    if (isset($_GET[$name])) {
+    if (array_key_exists($name, $_GET)) {
         $string = $_GET[$name];
-    } elseif (isset($_POST[$name])) {
+    } elseif (array_key_exists($name, $_POST)) {
         $string = $_POST[$name];
     } else {
-        return "";
+        return NULL;
     }
     return stripslashes($string);
 }
@@ -137,9 +130,9 @@ function getString($name) {
 // in form of array and strips slashes from each element
 // Safe from referencing nonexisting array index
 function getArrayOfStrings($name) {
-    if (isset($_GET[$name])) {
+    if (array_key_exists($name, $_GET)) {
         $array = $_GET[$name];
-    } elseif (isset($_POST[$name])) {
+    } elseif (array_key_exists($name, $_POST)) {
         $array = $_POST[$name];
     } else {
         return array();
@@ -204,7 +197,12 @@ function get_session_from_post() {
     $session["secondtitle"] = getString('secondtitle');
     $session["pocketprogtext"] = getString('pocketprogtext');
     $session["progguidhtml"] = getString('progguidhtml');
-    $session["progguiddesc"] = html_to_text(getString('progguidhtml'));
+    if (HTML_SESSION === TRUE) {
+        $text = getString('progguidhtml');
+        $session["progguiddesc"] = $text !== null ? html_to_text($text) : getString('progguiddesc');
+    } else {
+        $session["progguiddesc"] = getString('progguiddesc');
+    }
     $session["persppartinfo"] = getString('persppartinfo');
     $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
@@ -219,7 +217,16 @@ function get_session_from_post() {
     $session["servnotes"] = getString('servnotes');
     $session["status"] = getInt('status');
     $session["notesforprog"] = getString('notesforprog');
-    $session["mlink"] = getString('mlink');
+    if (MEETING_LINK === TRUE) {
+        $session["mlink"] = getString('mlink');
+    } else {
+        $session["mlink"] = "";
+    }
+    if (RECORDING_LINK === TRUE) {
+        $session["rlink"] = getString('rlink');
+    } else {
+        $session["rlink"] = "";
+    }
 }
 
 // Function set_session_defaults()
@@ -232,8 +239,8 @@ function set_session_defaults() {
     global $session;
     //$session["sessionid"] set elsewhere
     $session["track"] = 0; // prompt with "SELECT"
-    $session["type"] = 1; // default to "Panel"
-    $session["divisionid"] = 2; // default to "Programming"
+    $session["type"] = 2; // default to "Panel"
+    $session["divisionid"] = 1; // default to "Don't CAre"
     $session["pubstatusid"] = 2; // default to "Public"
     $session["languagestatusid"] = 1; // default to "English"
     $session["pubno"] = "";
@@ -248,14 +255,16 @@ function set_session_defaults() {
     $session["tagdest"] = "";
     $session["duration"] = DEFAULT_DURATION; //should be specified corresponding to DURATION_IN_MINUTES preference
     $session["atten"] = "";
-    $session["kids"] = 2; // "Kids Welcome"
+    $session["kids"] = 1; // "Don't Care"
     $session["signup"] = false; // leave checkbox blank initially
-    $session["roomset"] = 8; // panel by default
+    $session["roomset"] = 1; // "Don't Care"
     $session["notesforpart"] = "";
     $session["servnotes"] = "";
     $session["status"] = 6; // default to "Edit Me"
     $session["notesforprog"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
+    $session["mlink"] = "";
+    $session["rlink"] = "";
 }
 
 // Function set_brainstorm_session_defaults
@@ -267,14 +276,15 @@ function set_session_defaults() {
 function set_brainstorm_session_defaults() {
     global $session;
     $session["roomset"] = 99; // "Unspecified"
-    if (!may_I('Staff')) {
+    if (!may_I('Staff') || BRAINSTORM_STAFF_STATUS === FALSE) {
         $session["status"] = 1; // brainstorm
     }
 }
 
-// Function parse_mysql_time($time)
-// Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
-//
+/**
+ * Function parse_mysql_time($time)
+ * Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
+ */
 function parse_mysql_time($time) {
     $result = array();
     $h = 0 + substr($time, 0, strlen($time) - 6);
@@ -364,35 +374,6 @@ function longDayNameFromInt($daynum) {
     return date_format($netdatetime, "l");
 }
 
-//
-// Function fix_slashes($arg)
-// Takes the string $arg and removes multiple slashes,
-// slash-quote and slash-double quote.
-function fix_slashes($arg) {
-    while (($pos = strpos($arg, "\\\\")) !== false) {
-        if ($pos == 0) {
-            $arg = substr($arg, 1);
-        } else {
-            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
-        }
-    }
-    while (($pos = strpos($arg, "\\'")) !== false) {
-        if ($pos == 0) {
-            $arg = substr($arg, 1);
-        } else {
-            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
-        }
-    }
-    while (($pos = strpos($arg, "\\\"")) !== false) {
-        if ($pos == 0) {
-            $arg = substr($arg, 1);
-        } else {
-            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
-        }
-    }
-    return $arg;
-}
-
 // Function may_I($permatomtag)
 // $permatomtag is a string which designates a permission atom
 // returns TRUE if user has this permission in the current phase(s)
@@ -407,9 +388,10 @@ function may_I($permatomtag) {
     return (in_array($permatomtag, $_SESSION['permission_set']));
 }
 
-// Function GeneratePermissionSetXML()
-// returns an XMLDoc as if from a query with the permission set from the Session.
-//
+/**
+ * Function GeneratePermissionSetXML()
+ * returns an XMLDoc as if from a query with the permission set from the Session.
+ */
 function GeneratePermissionSetXML() {
     $permissionSetXML = new DomDocument("1.0", "UTF-8");
     $doc = $permissionSetXML -> createElement("doc");
@@ -442,12 +424,132 @@ function generateControlString($paramArray, $controliv = '') {
     return array("controliv" => base64_encode($controliv), "control" => $control);
 }
 
-// Function interpretControlString()
-// $control and $controliv were returned from generateControlString() and passed through a form.
-// returns the original associative array sent to generateControlString()
+/**
+ * Function interpretControlString()
+ * $control and $controliv were returned from generateControlString() and passed through a form.
+ * returns the original associative array sent to generateControlString()
+ */
 function interpretControlString($control, $controliv) {
     return json_decode(openssl_decrypt($control, 'aes-128-cbc', ENCRYPT_KEY, 0, base64_decode($controliv)), true);
 }
+
+/**
+ * Function var_error_log()
+ * $object = object to be dumped to the PHP error log
+ * the object is walked and written to the PHP error log using var_dump and a redirect of the output buffer.
+ */
+function var_error_log( $object=null ){
+    ob_start();                    // start buffer capture
+    var_dump( $object );           // dump the values
+    $contents = ob_get_contents(); // put the buffer into a variable
+    ob_end_clean();                // end capture
+    error_log( $contents );        // log contents of the result of var_dump( $object )
+}
+
+// Function ArrayToXML()
+// $queryname = name attribute of the query node
+// $array = array to write to that doc element as rows
+// $xml = existing XML structure, if omitted a new XML DOMDocument is created
+// returns an XML DOMDocument as if from a query with the contents of the array added
+//
+function ArrayToXML($queryname, $array, $xml = null) {
+    // Create the XML object if needed, else use the existing doc
+    if (is_null($xml)) {
+        $xml = new DomDocument("1.0", "UTF-8");
+        $doc = $xml -> createElement("doc");
+        $doc = $xml -> appendChild($doc);
+        $dosearch = false;
+    } else {
+        $doc = $xml -> getElementsByTagName("doc")[0];
+        $dosearch = true;
+    }
+    // see if there already is a query node with the name queryname
+    $queryNode = null;
+    if ($dosearch) {
+        $xpath = new DOMXPath($xml);
+        $query = "/doc/query[@queryName='options']";
+        $elements = $xpath->query($query);
+
+        if (!is_null($elements)) {
+            foreach ($elements as $element) {
+                if ($element->getAttribute("queryName") == $queryname) {
+                    $queryNode = $element;
+                    break;
+                }
+            }
+        }
+    }
+
+    // if not found, create a new node
+    if (is_null($queryNode)) {
+        $queryNode = $xml -> createElement("query");
+        $queryNode = $doc -> appendChild($queryNode);
+        $queryNode->setAttribute("queryName", $queryname);
+    }
+    // add the elements to the node
+    foreach($array as $element) {
+        $rowNode = $xml->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        $rowNode->setAttribute("value", $element);
+    }
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
+    return $xml;
+}
+
+// Function ObjectToXML()
+// $queryname = name attribute of the query node
+// $object = object to write to that doc element as rows
+// $xml = existing XML structure, if omitted a new XML DOMDocument is created
+// returns an XML DOMDocument as if from a query with the contents of the object added
+//
+function ObjecttoXML($queryname, $object, $xml = null) {
+    // Create the XML object if needed, else use the existing doc
+    if (is_null($xml)) {
+        //error_log("object to xml - creating new xml object");
+        $xml = new DomDocument("1.0", "UTF-8");
+        $doc = $xml -> createElement("doc");
+        $doc = $xml -> appendChild($doc);
+        $dosearch = false;
+    } else {
+        //error_log($xml->saveXML());
+        $doc = $xml -> getElementsByTagName("doc")[0];
+        $dosearch = true;
+    }
+    // see if there already is a query node with the name queryname
+    $queryNode = null;
+    if ($dosearch) {
+        $xpath = new DOMXPath($xml);
+        $query = "/doc/query[@queryName='options']";
+        $elements = $xpath->query($query);
+
+        if (!is_null($elements)) {
+            foreach ($elements as $element) {
+                if ($element->getAttribute("queryName") == $queryname) {
+                    $queryNode = $element;
+                    break;
+                }
+            }
+        }
+    }
+
+    // if not found, create a new node
+    if (is_null($queryNode)) {
+        $queryNode = $xml -> createElement("query");
+        $queryNode = $doc -> appendChild($queryNode);
+        $queryNode->setAttribute("queryName", $queryname);
+    }
+    // add the elements to the node
+    foreach($object as $element) {
+        $rowNode = $xml->createElement("row");
+        $rowNode = $queryNode->appendChild($rowNode);
+        foreach($element as $key => $value) {
+            $rowNode->setAttribute($key, $value);
+        }
+    }
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
+    return $xml;
+}
+
 // Function html_to_text()
 //  $html = html text to convert
 //  returns plain text with <p>'s converted to two newlines and <br>'s converted to one newline.

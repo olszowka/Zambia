@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 function check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray) {
     //
     // $addToScheduleArray is an array of $sessionid => $startmin
@@ -288,7 +288,8 @@ function SubmitMaintainRoom($ignore_conflicts)
     if (count($deleteScheduleIds) > 0) {
         $delSchedIdList = implode(",", $deleteScheduleIds);
 //  Set status of deleted entries back to vetted.
-        $vs = get_idlist_from_db('SessionStatuses', 'statusid', 'statusname', "'vetted'");
+//        $vs = get_idlist_from_db('SessionStatuses', 'statusid', 'statusname', "'vetted'");
+        $vs = 2; // Vetted must be statusid=2
         $query = "UPDATE Sessions AS S, Schedule as SC SET S.statusid=$vs WHERE S.sessionid=SC.sessionid AND ";
         $query .= "SC.scheduleid IN ($delSchedIdList)";
         if (!mysqli_query($linki, $query)) {
@@ -336,7 +337,8 @@ EOD;
             exit();
         }
 // Set status of scheduled entries to Scheduled.
-        $vs = get_idlist_from_db('SessionStatuses', 'statusid', 'statusname', "'scheduled'");
+//        $vs = get_idlist_from_db('SessionStatuses', 'statusid', 'statusname', "'scheduled'");
+        $vs = 3; // Scheduled must be statusid=3
         $query = "UPDATE Sessions SET statusid=$vs WHERE sessionid=$sessionid";
         if (!mysqli_query($linki, $query)) {
             $message = $query . "<br />Error updating database.<br />";
