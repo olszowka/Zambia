@@ -1,12 +1,12 @@
 <?php
 // Created by Peter Olszowka on 2020-04-19;
-// Copyright (c) 2020-2022 The Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2024 The Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Send Reset Password Link";
 require ('PartCommonCode.php');
 require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
-require_once('external/guzzlehttp-guzzle-6.5.3/vendor/autoload.php');
+require_once('external/guzzlehttp-guzzle-7.8.1/vendor/autoload.php');
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
     participant_header($title, true, 'Normal');
@@ -27,7 +27,7 @@ $client = new Client([
     'base_uri' => 'https://www.google.com',
     'timeout'  => 7.5,
 ]);
-$guzzleRepsonse = $client->request('PUT', '/recaptcha/api/siteverify', [
+$guzzleRepsonse = $client->request('POST', '/recaptcha/api/siteverify', [
     'form_params' => [
         'secret' => RECAPTCHA_SERVER_KEY,
         'response' => $recaptchaResponse,
@@ -47,7 +47,7 @@ $email = getString('emailAddress');
 if (empty($badgeid) || empty($email)) {
     $params = array();
     $params["USER_ID_PROMPT"] = USER_ID_PROMPT;
-    $params["error_message"] = "Both ${params['USER_ID_PROMPT']} and email address are required.";
+    $params["error_message"] = "Both {$params['USER_ID_PROMPT']} and email address are required.";
     RenderXSLT('ForgotPassword.xsl', $params);
     participant_footer();
     exit;
