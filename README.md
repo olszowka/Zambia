@@ -30,7 +30,7 @@ These libraries are included in the repo and should just work if you leave as is
   * TinyMCE 5.4.2
 * Server Side  
   * Swift mailer 5.4.8
-  * Guzzle 6.5.3
+  * Guzzle 7.8.1
 
 ## Integrations
 Other software which can work with Zambia
