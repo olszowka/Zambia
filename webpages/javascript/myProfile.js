@@ -1,4 +1,4 @@
-//  Copyright (c) 2015-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function MyProfile() {
     var anyDirty = false;
@@ -151,17 +151,17 @@ function MyProfile() {
         };
         $(".mycontrol").each(function() { // this is element
             var $elem = $(this);
+            var type = $elem.attr("type");
             if ($elem.is(":disabled") || ($elem.attr("readonly") && !$elem.attr("updatealso"))) {
                 return;
             }
             var name = $elem.attr("name");
-            if (!name)
+            if (!name && type !== "checkbox")
                 return;
-
             if (name === "cpassword") {
                 return;
             }
-            if ($elem.attr("type") === "radio") {
+            if (type === "radio") {
                 if ($elem.prop("checked") && !$elem.prop("defaultChecked")) {
                     postdata[$elem.attr("name")] = $elem.val();
                 }
@@ -169,7 +169,7 @@ function MyProfile() {
                 if ($elem.val() !== $elem.find("option").filter(function () { return this.defaultSelected; }).attr("value")) {
                     postdata[$elem.attr("name")] = $elem.val();
                 }
-            } else if ($elem.attr("type") === "checkbox") {
+            } else if (type === "checkbox") {
                 if ($elem.prop("defaultChecked") !== $elem.is(":checked")) {
                     postdata[$elem.attr("id")] = $elem.is(":checked") ? 1 : 0;
                 }
