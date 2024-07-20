@@ -11,6 +11,7 @@ import TypeSelect, { typeType } from "./TypeSelect";
 import DivisionSelect, { divisionType } from "./DivisionSelect";
 import { Button } from "react-bootstrap";
 import { resetSearchForm, submitSearchForm } from "./SessionSearchUtilities";
+import { useUnifiedContext } from "../context/UnifiedContext";
 
 type sessionsSearchDataType = {
     tracks: trackType[];
@@ -19,6 +20,7 @@ type sessionsSearchDataType = {
     divisions: divisionType[];
 }
 function SessionSearchForm() {
+    const { state, dispatch } = useUnifiedContext();
     const root = document.getElementById('zambia-grid-scheduler');
     const zgsSessionsSearchDataEnc = root?.dataset.zgsSessionsSearch;
     let tracksArr: trackType[];
@@ -125,13 +127,12 @@ function SessionSearchForm() {
             </Row>
             <Row>
                 <Col xs={{span:11, offset:1}}>
-                    <Button variant="primary" onClick={submitSearchForm}>Retrieve</Button>
+                    <Button variant="primary" onClick={() => submitSearchForm(state, dispatch)}>Retrieve</Button>
                     <Button variant="secondary" onClick={resetSearchForm}>Reset Search</Button>
                 </Col>
             </Row>
         </Container>
     );
 }
-
 
 export default SessionSearchForm;

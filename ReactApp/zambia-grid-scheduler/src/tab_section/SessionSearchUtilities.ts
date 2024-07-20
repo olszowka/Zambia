@@ -1,6 +1,8 @@
 // Copyright (c) 2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Peter Olszowka on 2024-Mar-08
-export type submissionDataType = {
+import {ActionType, ActionTypeEnum, UnifiedContextStateType} from "../context/UnifiedContext";
+
+export type sessionSearchSubmissionype = {
     track?: number;
     tags?: number[];
     matchAny?: 1;
@@ -63,7 +65,7 @@ export function resetSearchForm() {
     }
 }
 
-export function submitSearchForm() {
+export function submitSearchForm(state: UnifiedContextStateType, dispatch: React.Dispatch<ActionType>) {
     const submissionData = collectSearchFormData();
     submissionData.ajax_request_action = 'retrieveSessions';
     fetch("StaffMaintainScheduleAjax.php", {
@@ -73,15 +75,26 @@ export function submitSearchForm() {
         },
         body: JSON.stringify(submissionData),
     })
-        .then((response) => response.json())
-        .then((data => {
-            console.log(data);
-        })
-    );
+        .then((response) => response.json() as Promise<schedulableSessionType[]>)
+        .then((sessions) => {
+            let currentSessionIds = state.schedulableSessions.map(session => session.sessionid);
+            sessions.forEach((session => {
+                if (currentSessionIds.includes(session.sessionid)) {
+                    dispatch({
+                        type: ActionTypeEnum.RemoveSchedulableSession,
+                        payload: session.sessionid
+                    });
+                }
+            }));
+            dispatch({
+                type: ActionTypeEnum.AddSchedulableSessions,
+                payload: sessions
+            });
+        });
 }
 
 function collectSearchFormData() {
-    const submissionData: submissionDataType = {};
+    const submissionData: sessionSearchSubmissionype = {};
     const {
         trackSel,
         tagCheckArr,

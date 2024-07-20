@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import ZambiaGridScheduler from './ZambiaGridScheduler';
+import { UnifiedContextProvider } from "./context/UnifiedContext";
 // import reportWebVitals from './reportWebVitals';
 
 document.addEventListener( "DOMContentLoaded", () => {
@@ -12,7 +13,9 @@ document.addEventListener( "DOMContentLoaded", () => {
     );
     root.render(
         <React.StrictMode>
-            <ZambiaGridScheduler />
+            <UnifiedContextProvider>
+                <ZambiaGridScheduler />
+            </UnifiedContextProvider>
         </React.StrictMode>
     );
 });
