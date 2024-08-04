@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Peter Olszowka on 2024-Mar-08
-import {ActionType, ActionTypeEnum, UnifiedContextStateType} from "../context/UnifiedContext";
+import { ActionType, ActionTypeEnum, UnifiedContextStateType } from "../../context/UnifiedContextTypes";
+import { SchedulableSessionType } from "../../render_sessions/SessionTypes";
 
 export type sessionSearchSubmissionype = {
     track?: number;
@@ -13,17 +14,6 @@ export type sessionSearchSubmissionype = {
     title?: string;
     personAssigned?: 1;
     ajax_request_action?: string;
-}
-
-export type schedulableSessionType = {
-    divisionname: string;
-    duration: string;
-    durationMins? : number;
-    sessionid: number;
-    taglist: string;
-    title: string;
-    trackname: string;
-    typename: string;
 }
 
 export function resetSearchForm() {
@@ -75,7 +65,7 @@ export function submitSearchForm(state: UnifiedContextStateType, dispatch: React
         },
         body: JSON.stringify(submissionData),
     })
-        .then((response) => response.json() as Promise<schedulableSessionType[]>)
+        .then((response) => response.json() as Promise<SchedulableSessionType[]>)
         .then((sessions) => {
             let currentSessionIds = state.schedulableSessions.map(session => session.sessionid);
             sessions.forEach((session => {

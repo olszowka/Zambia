@@ -3,35 +3,58 @@
 import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Tab from 'react-bootstrap/Tab';
-import Rooms from './Rooms';
-import SessionSearchForm from './SessionSearchForm';
+import Rooms from './rooms/Rooms';
+import SessionSearchForm from './sessions/SessionSearchForm';
+import InfoSection from "./info/InfoSection";
+import { useUnifiedContext } from "../context/UnifiedContext";
+import {ActionTypeEnum} from "../context/UnifiedContextTypes";
+
+export enum TabKeys {
+    Rooms = "Rooms",
+    Sessions = "Sessions",
+    Warnings = "Warnings",
+    Info = "Info"
+}
+
 function TabSection() {
+    const { state, dispatch } = useUnifiedContext();
+    const activeKey = state.visibleTab;
+    const setKey = (key: string | null) => {
+        if (key) {
+            dispatch({
+                type: ActionTypeEnum.SetVisibleTab,
+                payload: key as TabKeys
+            });
+        }
+    }
     return (
         <div id="grid-scheduler-tabs-container" className={'flex-row-fixed flex-row-container'}>
-            <Tab.Container id="grid-scheduler-tabs" defaultActiveKey="Rooms">
+            <Tab.Container id="grid-scheduler-tabs" activeKey={activeKey} onSelect={setKey}>
                 <Nav variant="tabs">
                     <Nav.Item>
-                        <Nav.Link eventKey="Rooms">Rooms</Nav.Link>
+                        <Nav.Link eventKey={TabKeys.Rooms}>Rooms</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="Sessions">Sessions</Nav.Link>
+                        <Nav.Link eventKey={TabKeys.Sessions}>Sessions</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="Warnings">Warnings</Nav.Link>
+                        <Nav.Link eventKey={TabKeys.Warnings}>Warnings</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="Info">Info</Nav.Link>
+                        <Nav.Link eventKey={TabKeys.Info}>Info</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 <Tab.Content className={'flex-row-remainder-wrapper'}>
-                    <Tab.Pane eventKey="Rooms" className="overflow-y-container rooms-panel">
+                    <Tab.Pane eventKey={TabKeys.Rooms} className="overflow-y-container rooms-panel">
                         <Rooms />
                     </Tab.Pane>
-                    <Tab.Pane eventKey="Sessions" className="overflow-y-container sessions-search-panel">
+                    <Tab.Pane eventKey={TabKeys.Sessions} className="overflow-y-container sessions-search-panel">
                         <SessionSearchForm />
                     </Tab.Pane>
-                    <Tab.Pane eventKey="Warnings" className="overflow-y-container warnings-panel">Warnings tab content</Tab.Pane>
-                    <Tab.Pane eventKey="Info" className="overflow-y-container info-panel">Info tab content</Tab.Pane>
+                    <Tab.Pane eventKey={TabKeys.Warnings} className="overflow-y-container warnings-panel">Warnings tab content</Tab.Pane>
+                    <Tab.Pane eventKey={TabKeys.Info} className="overflow-y-container info-panel">
+                        <InfoSection />
+                    </Tab.Pane>
                 </Tab.Content>
             </Tab.Container>
         </div>

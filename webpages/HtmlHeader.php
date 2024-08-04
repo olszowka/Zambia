@@ -22,6 +22,7 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
         case 'bs5':
 ?>
     <link rel="stylesheet" href="external/bootstrap5.3.3/bootstrap.min.css" type="text/css" >
+    <link rel="stylesheet" href="external/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css" type="text/css" >
 <?php
             break;
         case 'bs2':

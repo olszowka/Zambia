@@ -5,42 +5,17 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import TrackSelect, { trackType } from "./TrackSelect";
-import TagPicker, { tagType } from "./TagPicker";
-import TypeSelect, { typeType } from "./TypeSelect";
-import DivisionSelect, { divisionType } from "./DivisionSelect";
+import TrackSelect from "./TrackSelect";
+import TagPicker from "./TagPicker";
+import TypeSelect from "./TypeSelect";
+import DivisionSelect from "./DivisionSelect";
 import { Button } from "react-bootstrap";
 import { resetSearchForm, submitSearchForm } from "./SessionSearchUtilities";
-import { useUnifiedContext } from "../context/UnifiedContext";
+import { useUnifiedContext } from "../../context/UnifiedContext";
 
-type sessionsSearchDataType = {
-    tracks: trackType[];
-    tags: tagType[];
-    types: typeType[];
-    divisions: divisionType[];
-}
 function SessionSearchForm() {
     const { state, dispatch } = useUnifiedContext();
-    const root = document.getElementById('zambia-grid-scheduler');
-    const zgsSessionsSearchDataEnc = root?.dataset.zgsSessionsSearch;
-    let tracksArr: trackType[];
-    let tagsArr: tagType[];
-    let typesArr: typeType[];
-    let divisionsArr: divisionType[];
-    let sessionsSearchData: sessionsSearchDataType;
-    if (zgsSessionsSearchDataEnc) {
-        sessionsSearchData = JSON.parse(decodeURIComponent(zgsSessionsSearchDataEnc));
-        tracksArr = sessionsSearchData.tracks;
-        tagsArr = sessionsSearchData.tags;
-        typesArr = sessionsSearchData.types;
-        divisionsArr = sessionsSearchData.divisions;
-    } else {
-        tracksArr = [];
-        tagsArr = [];
-        typesArr = [];
-        divisionsArr = [];
-    }
-
+    const searchData = state.configuration.sessionsSearchData;
     return(
         <Container fluid>
             <Row>
@@ -48,7 +23,7 @@ function SessionSearchForm() {
                     <label htmlFor='track-sel'>Track:</label>
                 </Col>
                 <Col xs={9}>
-                    <TrackSelect tracksArr={tracksArr} />
+                    <TrackSelect tracksArr={searchData.tracks} />
                 </Col>
             </Row>
             <Row>
@@ -56,7 +31,7 @@ function SessionSearchForm() {
                     <label htmlFor='tag-picker'>Tags:</label>
                 </Col>
                 <Col xs={9}>
-                    <TagPicker tagsArr={tagsArr} />
+                    <TagPicker tagsArr={searchData.tags} />
                 </Col>
             </Row>
             <Row>
@@ -82,7 +57,7 @@ function SessionSearchForm() {
                     <label htmlFor='type-sel'>Type:</label>
                 </Col>
                 <Col xs={9}>
-                    <TypeSelect typesArr={typesArr} />
+                    <TypeSelect typesArr={searchData.types} />
                 </Col>
             </Row>
             <Row>
@@ -90,7 +65,7 @@ function SessionSearchForm() {
                     <label htmlFor='division-sel'>Divison:</label>
                 </Col>
                 <Col xs={9}>
-                    <DivisionSelect divisionsArr={divisionsArr} />
+                    <DivisionSelect divisionsArr={searchData.divisions} />
                 </Col>
             </Row>
             <Row>
@@ -127,8 +102,9 @@ function SessionSearchForm() {
             </Row>
             <Row>
                 <Col xs={{span:11, offset:1}}>
-                    <Button variant="primary" onClick={() => submitSearchForm(state, dispatch)}>Retrieve</Button>
-                    <Button variant="secondary" onClick={resetSearchForm}>Reset Search</Button>
+                    <Button variant="primary" className={'me-2'}
+                            onClick={() => submitSearchForm(state, dispatch)}>Retrieve</Button>
+                    <Button variant="secondary" className={'ms-2'} onClick={resetSearchForm}>Reset Search</Button>
                 </Col>
             </Row>
         </Container>

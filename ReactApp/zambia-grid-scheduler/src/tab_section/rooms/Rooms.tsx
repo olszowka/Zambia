@@ -2,31 +2,20 @@
 // File created by Peter Olszowka on 2024-Mar-08
 import React from 'react';
 import Form from 'react-bootstrap/Form';
-
-type roomType = {
-    roomid: number;
-    roomname: string;
-    display_order: number;
-};
+import { RoomType } from "../../context/UnifiedContextTypes";
+import { useUnifiedContext } from "../../context/UnifiedContext";
 
 interface roomEntryProps {
-    room: roomType;
+    room: RoomType;
 }
 
 interface roomsListProps {
-    roomsArr: roomType[];
+    roomsArr: RoomType[];
 }
 
 function Rooms() {
-    const root = document.getElementById('zambia-grid-scheduler');
-    const zgsRoomData = root?.dataset.zgsRooms;
-    let roomsArr: roomType[];
-    if (zgsRoomData) {
-        roomsArr = JSON.parse(decodeURIComponent(zgsRoomData));
-    } else {
-        roomsArr = [];
-    }
-    return(<RoomsList roomsArr={roomsArr} />);
+    const { state } = useUnifiedContext();
+    return(<RoomsList roomsArr={state.configuration.rooms} />);
 }
 
 function RoomsList(props: roomsListProps) {

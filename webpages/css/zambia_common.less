@@ -341,9 +341,37 @@ body.full-page {
     padding-right: 0;
   }
 
-  button.btn {
-    margin-left:4px;
-    margin-right:4px;
+  .infofield, .inforow, .infolabel {
+    font-family: verdana, arial, sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .infolabel {
+    color: #00b0d0;
+    font-style: italic;
+    padding: 1px 0;
+  }
+
+  .schedulableSessionsTitleBadge {
+    background-color: hsl(58 52% 88% / 1) !important;
+    border: 1px solid #bbb;
+  }
+
+  #grid-scheduler-schedulable-sessions {
+    height: calc(60% - 6px);
+  }
+
+  #file-cabinet {
+    width: 49px;
+    height: 65px;
+    background: url("../images/FileCabinetClosed.png") no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+
+    &:hover {
+      background: url("../images/FileCabinetOpen.png") no-repeat;
+    }
   }
 }
 

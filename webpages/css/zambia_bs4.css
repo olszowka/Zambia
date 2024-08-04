@@ -293,3 +293,6 @@ input[type='text'].disabled {
   color: #1b1e21;
   border-color: #c6c8ca;
 }
+.badge.bg-light {
+  color: var(--bs-light-text-emphasis);
+}

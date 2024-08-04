@@ -3,6 +3,7 @@
 import React from 'react';
 import './App.css';
 import TabSection from './tab_section/TabSection';
+import SchedulableSessionsSection from "./schedulable_sessions_section/SchedulableSessionsSection";
 function ZambiaGridScheduler() {
     const firstColumnStyle = {
         width: '285px',
@@ -14,6 +15,7 @@ function ZambiaGridScheduler() {
         <>
             <div className={'flex-row-container flex-column-fixed'} style={firstColumnStyle}>
                 <TabSection />
+                <SchedulableSessionsSection />
             </div>
             <div id={'scheduleGridContainer'} className={'flex-column-remainder'}></div>
         </>

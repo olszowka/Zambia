@@ -11,7 +11,7 @@ if ($reportName == '') {
 }
 require("reports/$reportName");
 foreach ($report['queries'] as $queryName => $query) {
-    $report['queries'][$queryName] = str_replace('$ConStartDatim$',CON_START_DATIM, $query);
+    $report['queries'][$queryName] = str_replace(' $ConStartDatim$',CON_START_DATIM, $query);
 }
 if (isset($report['csv_output']) && $report['csv_output'] == true) {
     if (isset($report['group_concat_expand']) && $report['group_concat_expand'] == true) {

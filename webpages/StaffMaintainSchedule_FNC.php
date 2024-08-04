@@ -103,3 +103,11 @@ EOD;
     $sessionSearchInfo['divisions'] = $divisionsArr;
     return encodeURIComponent(json_encode($sessionSearchInfo));
 }
+
+function getConfigurationForScheduler() {
+    $configuration = array();
+    $configuration['trackTagUsage'] = TRACK_TAG_USAGE;
+    $date = new DateTimeImmutable(CON_START_DATIM);
+    $configuration['conStartDateTime'] = $date->format('c');
+    return encodeURIComponent(json_encode($configuration));
+}
