@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Peter Olszowka on 2024-Jul-22
 import React from 'react';
+import { useDroppable } from '@dnd-kit/core';
 import { Badge, Button } from "react-bootstrap";
 import { useUnifiedContext } from "../context/UnifiedContext";
 import SchedulableSession from "../render_sessions/SchedulableSession";
@@ -12,6 +13,9 @@ function onClickClearAll(dispatch: React.Dispatch<ActionType>) {
 
 function SchedulableSessionsSection() {
     const { state, dispatch } = useUnifiedContext();
+    const { setNodeRef } = useDroppable({
+        id: 'file-cabinet',
+    });
     return (
         <div id="grid-scheduler-schedulable-sessions" className={'flex-row-fixed flex-row-container'}>
             <div className={'flex-row-fixed p-2'}>
@@ -23,7 +27,7 @@ function SchedulableSessionsSection() {
                 <Button variant="outline-primary" size="sm" className={'align-middle ms-2 me-3'}
                         onClick={() => onClickClearAll(dispatch)}>Clear All</Button>
                 <Button variant="outline-primary" size="sm" className={'align-middle me-3'} >Swap Mode</Button>
-                <div id={'file-cabinet'} />
+                <div id={'file-cabinet'} ref={setNodeRef} />
             </div>
             <div className={'flex-row-remainder mt-2'}>
                 {state.schedulableSessions.map(session => (<SchedulableSession session={session}/>))}

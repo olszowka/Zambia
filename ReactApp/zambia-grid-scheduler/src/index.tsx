@@ -12,11 +12,11 @@ document.addEventListener( "DOMContentLoaded", () => {
         document.getElementById('zambia-grid-scheduler') as HTMLElement
     );
     root.render(
-        <React.StrictMode>
+        // <React.StrictMode>
             <UnifiedContextProvider>
                 <ZambiaGridScheduler />
             </UnifiedContextProvider>
-        </React.StrictMode>
+        // </React.StrictMode>
     );
 });
 
