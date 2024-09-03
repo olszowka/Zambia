@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $congoinfo, $linki, $message2, $message_error, $participant, $title;
 $title = "Session Search Results";
 require('PartCommonCode.php'); // initialize db; check login; retrieve $badgeid
@@ -107,7 +107,7 @@ $paramArray['conName'] = CON_NAME;
 $paramArray["trackIsPrimary"] = TRACK_TAG_USAGE === "TRACK_ONLY" || TRACK_TAG_USAGE === "TRACK_OVER_TAG";
 $paramArray["showTrack"] = TRACK_TAG_USAGE !== "TAG_ONLY";
 $paramArray["showTags"] = TRACK_TAG_USAGE !== "TRACK_ONLY";
-participant_header($title, false, 'Normal', true);
+participant_header($title, false, 'Normal', 'bs4');
 //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 RenderXSLT('PartSearchSessionsSubmit.xsl', $paramArray, $resultXML);
 participant_footer();

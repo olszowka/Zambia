@@ -6,7 +6,7 @@ $title = "Participant View";
 require_once('PartCommonCode.php');
 populateCustomTextArray(); // title changed above, reload custom text with the proper page title
 $pageHeaderFamily = may_I('postcon') ? 'No_Menu' : 'Normal';
-participant_header($title, false, $pageHeaderFamily, true);
+participant_header($title, false, $pageHeaderFamily, 'bs4');
 ?>
 <div id="confNotAttModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

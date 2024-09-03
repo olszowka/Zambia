@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $participant, $message, $message_error, $message2, $congoinfo, $title;
 $title="My Profile";
 require ('PartCommonCode.php'); // initialize db; check login;
@@ -58,7 +58,7 @@ $paramArray['enableBioEdit'] = may_I('EditBio');
 $paramArray['htmlbio'] = HTML_BIO ? 1 : 0;
 $paramArray['userIdPrompt'] = USER_ID_PROMPT;
 $paramArray['participant'] = may_I('Participant');
-participant_header($title, false, 'Normal', true);
+participant_header($title, false, 'Normal', 'bs4');
 $resultXML = appendCustomTextArrayToXML($resultXML);
 RenderXSLT('my_profile.xsl', $paramArray, $resultXML);
 participant_footer();

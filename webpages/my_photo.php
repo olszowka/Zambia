@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $participant, $message, $message_error, $message2, $congoinfo, $title;
 $title="My Photo";
 require ('PartCommonCode.php'); // initialize db; check login;
@@ -26,7 +26,7 @@ $paramArray['conName'] = CON_NAME;
 $paramArray['defaultPhotoName'] = PHOTO_DEFAULT_IMAGE;
 $paramArray['approvedPhotoURL'] = PHOTO_PUBLIC_DIRECTORY;
 $paramArray['enablePhotos'] = PARTICIPANT_PHOTOS ? 1 : 0;
-participant_header($title, false, 'Normal', true);
+participant_header($title, false, 'Normal', 'bs4');
 $resultXML = appendCustomTextArrayToXML($resultXML);
 RenderXSLT('my_photo.xsl', $paramArray, $resultXML);
 participant_footer();
