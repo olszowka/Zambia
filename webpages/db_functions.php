@@ -1,8 +1,17 @@
 <?php
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 
-/*
- * mysql_cmd_with_prepare_multi:
+function log_error_or_stdderr($error_msg) {
+    global $runAScript;
+    if (isset($runAScript) && $runAScript) {
+        fwrite(STDERR, $error_msg);
+    } else {
+        error_log($error_msg);
+    }
+}
+
+/**
+ * Function mysql_cmd_with_prepare_multi()
  *  as a single transaction, prepare an insert/update/delete statement, execute one or more data value sets, and return the number of rows affected
  *  query = valid mysql insert, udpate or delete statement with ? for parameter binding
  *  type_string = datatypes of the specific ? values in the update statement
@@ -11,101 +20,127 @@
  *          each row contains one element per ? in the update statement, datatype based on type_string value
  */
 function mysql_cmd_with_prepare_multi($query, $type_string, $param_repeat_arr) {
-    global $linki;
+    global $mysqli;
 
-	$rows = 0;
-	$message_error = "";
-    mysqli_autocommit($linki, FALSE); //turn on transactions
+    $rows = 0;
+    $message_error = "";
+    $mysqli->autocommit(FALSE); //turn on transactions
     try {
-        $stmt = mysqli_prepare($linki, $query);
-        foreach ($param_repeat_arr as $param_arr) {
-            mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-            mysqli_stmt_execute($stmt);
-			$rows = $rows + mysqli_affected_rows($linki);
+        if (!$mysqli->begin_transaction()) {
+            throw new ErrorException("DB begin transaction statement failed.");
         }
-        mysqli_stmt_close($stmt);
-        mysqli_commit($linki);
+        if (!$mysqli_stmt = $mysqli->prepare($query)) {
+            throw new ErrorException("DB prepare statement failed.");
+        }
+        foreach ($param_repeat_arr as $param_arr) {
+            if (!$mysqli_stmt->bind_param($type_string, ...$param_arr)) {
+                throw new ErrorException("DB bind param statement failed.");
+            }
+            if (!$mysqli_stmt->execute()) {
+                throw new ErrorException("DB execute statement failed.");
+            }
+            $rows = $rows + $mysqli_stmt->affected_rows;
+        }
+        if (!$mysqli_stmt->close()) {
+            throw new ErrorException("DB close statement failed.");
+        }
+        if (!$mysqli->commit()) {
+            throw new ErrorException("DB commit transaction statement failed.");
+        }
     }
     catch (Exception $e) {
-        mysqli_rollback($linki); //remove all queries from queue if error (undo)
-        $message_error = log_mysqli_error($query, "");
+        $mysqli->rollback(); //remove all queries from queue if error (undo)
+        $message_error = log_mysqli_error_new($query, $e->getMessage());
         RenderError($message_error);
     }
-    mysqli_autocommit($linki, TRUE); //turn off transactions + commit queued queries
+    $mysqli->autocommit(TRUE); //turn off transactions
 
-	if ($message_error != "") {
+    if ($message_error != "") {
         return NULL;
     }
 
-	return $rows;
+    return $rows;
 }
 
-/*
- * mysql_cmd_with_prepare:
+/**
+ * Function mysql_cmd_with_prepare()
  *  prepare an insert/update/delete statement, execute one data value set, and return the number of rows affected
  *  query = valid mysql insert/udpate/delete statement with ? for parameter binding
  *  type_string = datatypes of the specific ? values in the update statement
  *  param_arr = array of elements per ? in the update statement, datatype based on type_string value
  */
 function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
-    global $linki;
+    global $mysqli;
 
-	$rows = 0;
-	$message_error = "";
+    $rows = 0;
+    $message_error = "";
     try {
-        $stmt = mysqli_prepare($linki, $query);
-        mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-        mysqli_stmt_execute($stmt);
-        // $foo = mysqli_info($linki);
-		$rows = $rows + mysqli_affected_rows($linki);
-        mysqli_stmt_close($stmt);
+        if (!$mysqli_stmt = $mysqli->prepare($query)) {
+            throw new ErrorException("DB prepare statement failed.");
+        }
+        if (!$mysqli_stmt->bind_param($type_string, ...$param_arr)) {
+            throw new ErrorException("DB bind param statement failed.");
+        }
+        if (!$mysqli_stmt->execute()) {
+            throw new ErrorException("DB execute statement failed.");
+        }
+        $rows = $rows + $mysqli_stmt->affected_rows;
+        if (!$mysqli_stmt->close()) {
+            throw new ErrorException("DB close statement failed.");
+        }
     }
     catch (Exception $e) {
-        $message_error = log_mysqli_error($query, "");
+        $message_error = log_mysqli_error_new($query, $e->getMessage());
         RenderError($message_error);
     }
 
-	if ($message_error != "") {
+    if ($message_error != "") {
         return NULL;
     }
-	return $rows;
+
+    return $rows;
 }
 
 function mysql_prepare_query_XML($query_array, $parmtype_array, $param_array) {
-	global $linki, $message_error;
-	$xml = new DomDocument("1.0", "UTF-8");
-	$doc = $xml -> createElement("doc");
-	$doc = $xml -> appendChild($doc);
+    global $linki, $message_error;
+    $xml = new DomDocument("1.0", "UTF-8");
+    $doc = $xml -> createElement("doc");
+    $doc = $xml -> appendChild($doc);
     foreach ($query_array as $name=>$query) {
-        $query = trim($query);
-        $parama = $param_array[$name];
-        $params = $parmtype_array[$name];
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, $params, $parama);
-        $queryNode = $xml -> createElement("query");
-        $queryNode = $doc -> appendChild($queryNode);
-        $queryNode->setAttribute("queryName", $name);
-        if ($result !== false) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $rowNode = $xml->createElement("row");
-                $rowNode = $queryNode->appendChild($rowNode);
-                foreach ($row as $fieldname => $fieldvalue) {
-                    if ($fieldvalue !== "" && $fieldvalue !== null) {
-                        $rowNode->setAttribute($fieldname, $fieldvalue);
+        if (is_null($name) || $name == '') {
+            // This protects against exceptions, but should be fixed where it occurs
+            error_log("mysql_prepare_query_XML called with unnamed query." . print_r(debug_backtrace(), true));
+        } else {
+            $query = trim($query);
+            $parama = $param_array[$name];
+            $params = $parmtype_array[$name];
+            $result = mysqli_query_with_prepare_and_exit_on_error($query, $params, $parama);
+            $queryNode = $xml -> createElement("query");
+            $queryNode = $doc -> appendChild($queryNode);
+            $queryNode->setAttribute("queryName", $name);
+            if ($result !== false) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $rowNode = $xml->createElement("row");
+                    $rowNode = $queryNode->appendChild($rowNode);
+                    foreach ($row as $fieldname => $fieldvalue) {
+                        if ($fieldvalue !== "" && $fieldvalue !== null) {
+                            $rowNode->setAttribute($fieldname, $fieldvalue);
+                        }
                     }
                 }
             }
+            mysqli_free_result($result);
         }
-        mysqli_free_result($result);
     }
-	return $xml;
+    return $xml;
 }
 
 function mysql_query_XML($query_array) {
-	global $linki, $message_error;
-	$xml = new DomDocument("1.0", "UTF-8");
-	$doc = $xml -> createElement("doc");
-	$doc = $xml -> appendChild($doc);
-	$multiQueryStr = "";
+    global $linki, $message_error;
+    $xml = new DomDocument("1.0", "UTF-8");
+    $doc = $xml -> createElement("doc");
+    $doc = $xml -> appendChild($doc);
+    $multiQueryStr = "";
     foreach ($query_array as $query) {
         $query = trim($query);
         $multiQueryStr .= $query;
@@ -124,9 +159,9 @@ function mysql_query_XML($query_array) {
             $message_error = $multiQueryStr . "<br />";
             $message_error .= "Error with query number " . ($queryNo + 1) . " <br />";
             $message_error .= mysqli_error($linki) . "<br />";
-            error_log($multiQueryStr);
-            error_log("Error with query number " . ($queryNo + 1));
-            error_log(mysqli_error($linki));
+            log_error_or_stdderr($multiQueryStr);
+            log_error_or_stdderr("Error with query number " . ($queryNo + 1));
+            log_error_or_stdderr(mysqli_error($linki));
             return false;
         }
         $queryNode = $xml -> createElement("query");
@@ -147,13 +182,13 @@ function mysql_query_XML($query_array) {
         }
         $queryNo++;
     } while (mysqli_more_results($linki));
-	return $xml;
+    return $xml;
 }
 
 function mysql_result_to_XML($queryName, $result) {
-	$xml = new DomDocument("1.0", "UTF-8");
-	$doc = $xml -> createElement("doc");
-	$doc = $xml -> appendChild($doc);
+    $xml = new DomDocument("1.0", "UTF-8");
+    $doc = $xml -> createElement("doc");
+    $doc = $xml -> appendChild($doc);
 
     $queryNode = $xml -> createElement("query");
     $queryNode = $doc -> appendChild($queryNode);
@@ -168,24 +203,44 @@ function mysql_result_to_XML($queryName, $result) {
         }
     }
 
-	return $xml;
+    return $xml;
 }
 
 function log_mysqli_error($query, $additional_error_message) {
     global $linki;
     $result = "";
-    error_log("mysql query error in {$_SERVER["SCRIPT_FILENAME"]}");
+    log_error_or_stdderr("mysql query error in {$_SERVER["SCRIPT_FILENAME"]}");
     if (!empty($query)) {
-        error_log($query);
+        log_error_or_stdderr($query);
         $result = $query . "<br>\n";
     }
     $query_error = mysqli_error($linki);
     if (!empty($query_error)) {
-        error_log($query_error);
+        log_error_or_stdderr($query_error);
         $result .= $query_error . "<br>\n";
     }
     if (!empty($additional_error_message)) {
-        error_log($additional_error_message);
+        log_error_or_stdderr($additional_error_message);
+        $result .= $additional_error_message . "<br>\n";
+    }
+    return $result;
+}
+
+function log_mysqli_error_new($query, $additional_error_message) {
+    global $mysqli;
+    $result = "";
+    log_error_or_stdderr("mysql query error in {$_SERVER["SCRIPT_FILENAME"]}");
+    if (!empty($query)) {
+        log_error_or_stdderr($query);
+        $result = $query . "<br>\n";
+    }
+    $query_error = $mysqli->error;
+    if (!empty($query_error)) {
+        log_error_or_stdderr($query_error);
+        $result .= $query_error . "<br>\n";
+    }
+    if (!empty($additional_error_message)) {
+        log_error_or_stdderr($additional_error_message);
         $result .= $additional_error_message . "<br>\n";
     }
     return $result;
@@ -213,23 +268,26 @@ function mysqli_query_with_prepare_and_exit_on_error($query, $type_string, $para
 }
 
 function mysqli_query_with_prepare_and_error_handling($query, $type_string, $param_arr, $exit_on_error = false, $ajax = false) {
-    global $linki, $message_error;
+    global $message_error, $mysqli;
 
      try {
-         $stmt = mysqli_prepare($linki, $query);
-         mysqli_stmt_bind_param($stmt, $type_string, ...$param_arr);
-         if (!mysqli_stmt_execute($stmt)) {
-             $message_error = log_mysqli_error($query, "");
+        $statement = $mysqli->stmt_init();
+        if (!$statement->prepare($query)) {
+            //$message_error = $mysqli->error;
+            throw new ErrorException("DB prepare statement failed.");
+        };
+        $statement->bind_param($type_string, ...$param_arr);
+        if (!$statement->execute()) {
+            $message_error = log_mysqli_error_new($query, "");
              if ($exit_on_error) {
                  RenderError($message_error, $ajax);
              }
             return false;
          };
-         $result = mysqli_stmt_get_result($stmt);
-         mysqli_stmt_close($stmt);
-     }
-     catch (Exception $e) {
-         $message_error = log_mysqli_error($query, "");
+        $result = $statement->get_result();
+        $statement->close();
+    } catch (Exception $e) {
+        $message_error = log_mysqli_error_new($query, "");
          if ($exit_on_error) {
              RenderError($message_error, $ajax);
          }
@@ -264,18 +322,33 @@ function populateCustomTextArray() {
 }
 
 // Function prepare_db_and_more()
-// Opens database channel
+// Opens database channel; Do both procedural and class versions populating both global variables
+if (isset($db_name_path)) {
+    include($db_name_path);
+} else {
 if (!include ('../db_name.php'))
-	include ('./db_name.php'); // scripts which rely on this file (db_functions.php) may run from a different directory
+    include ('./db_name.php'); // scripts which rely on this file (db_functions.php) may run from a different directory
+}
 function prepare_db_and_more() {
-    global $con_start_php_timestamp, $linki, $fatalError;
+    mysqli_report(MYSQLI_REPORT_OFF); // Set behavior to like PHP < 8.1 in which mysqli errors are reported through
+    // inspection of function results rather than by throwing exceptions
+    global $con_start_php_timestamp, $linki, $fatalError, $mysqli;
     $linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
     if (!$linki) {
         $fatalError = true;
         return false;
     }
+    $mysqli = new mysqli(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
+    if (mysqli_connect_errno()) {
+        $fatalError = true;
+        return false;
+    }
     date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
-    if (mysqli_set_charset($linki, "utf8") === false) {
+    if (!mysqli_set_charset($linki, "utf8")) {
+        $fatalError = true;
+        return false;
+    }
+    if (!$mysqli->set_charset("utf8")) {
         $fatalError = true;
         return false;
     };
@@ -289,8 +362,6 @@ function prepare_db_and_more() {
         $query = "SET time_zone = '" . DB_DEFAULT_TIMEZONE . "';";
         mysqli_query_exit_on_error($query);
     }
-
-
     return true;
 }
 
@@ -321,10 +392,10 @@ function push_query_arrays($value, $field_name, $param_type, $max_len, &$query_p
 // The table SessionEditHistory has a timestamp column which is automatically set to the
 // current timestamp by MySQL.
 function record_session_history($sessionid, $badgeid, $name, $email, $editcode, $statusid) {
-	global $linki;
-	$name = mysqli_real_escape_string($linki, $name);
-	$email = mysqli_real_escape_string($linki, $email);
-	$query = <<<EOD
+    global $linki;
+    $name = mysqli_real_escape_string($linki, $name);
+    $email = mysqli_real_escape_string($linki, $email);
+    $query = <<<EOD
 INSERT INTO SessionEditHistory
     SET
         sessionid = $sessionid,
@@ -334,7 +405,7 @@ INSERT INTO SessionEditHistory
         sessioneditcode = $editcode,
         statusid = $statusid;
 EOD;
-	return mysqli_query_with_error_handling($query);
+    return mysqli_query_with_error_handling($query);
 }
 
 // Function get_name_and_email(&$name, &$email)
@@ -353,16 +424,16 @@ function get_name_and_email(&$name, &$email) {
     }
     if (may_I('Staff') || may_I('Participant')) { //name and email should be found in db if either set
         $query = "SELECT pubsname FROM Participants WHERE badgeid = '$badgeid';";
-		if (!$result = mysqli_query_with_error_handling($query)) {
+        if (!$result = mysqli_query_with_error_handling($query)) {
             return false;
         }
         $name = mysqli_fetch_row($result)[0];
-		mysqli_free_result($result);
+        mysqli_free_result($result);
         if ($name === '') {
             $name = ' '; //if name is null or '' in db, set to ' ' so it won't appear unpopulated in query above
         }
         $query = "SELECT badgename, email FROM CongoDump WHERE badgeid = \"$badgeid\";";
-		if (!$result = mysqli_query_with_error_handling($query)) {
+        if (!$result = mysqli_query_with_error_handling($query)) {
             return false;
         }
         $row = mysqli_fetch_row($result);
@@ -509,27 +580,27 @@ function update_session() {
 
     $query=<<<EOD
 UPDATE Sessions SET
-        trackid="{$sessionf["track"]}",
-        typeid="{$sessionf["type"]}",
-        divisionid="{$sessionf["divisionid"]}",
-        pubstatusid="{$sessionf["pubstatusid"]}",
-        languagestatusid="{$sessionf["languagestatusid"]}",
-        pubsno="{$sessionf["pubno"]}",
-        title="{$sessionf["title"]}",
-        secondtitle="{$sessionf["secondtitle"]}",
-        pocketprogtext="{$sessionf["pocketprogtext"]}",
-        progguiddesc="{$sessionf["progguiddesc"]}",
-        persppartinfo="{$sessionf["persppartinfo"]}",
-        duration="{$sessionf["duration"]}",
+        trackid='{$sessionf["track"]}',
+        typeid='{$sessionf["type"]}',
+        divisionid='{$sessionf["divisionid"]}',
+        pubstatusid='{$sessionf["pubstatusid"]}',
+        languagestatusid='{$sessionf["languagestatusid"]}',
+        pubsno='{$sessionf["pubno"]}',
+        title='{$sessionf["title"]}',
+        secondtitle='{$sessionf["secondtitle"]}',
+        pocketprogtext='{$sessionf["pocketprogtext"]}',
+        progguiddesc='{$sessionf["progguiddesc"]}',
+        persppartinfo='{$sessionf["persppartinfo"]}',
+        duration='{$sessionf["duration"]}',
         estatten={$sessionf["estatten"]},
-        kidscatid="{$sessionf["kidscatid"]}",
+        kidscatid='{$sessionf["kidscatid"]}',
         signupreq={$sessionf["signupreq"]},
         invitedguest={$sessionf["invitedguest"]},
-        roomsetid="{$sessionf["roomsetid"]}",
-        notesforpart="{$sessionf["notesforpart"]}",
-        servicenotes="{$sessionf["servnotes"]}",
-        statusid="{$sessionf["status"]}",
-        notesforprog="{$sessionf["notesforprog"]}"
+        roomsetid='{$sessionf["roomsetid"]}',
+        notesforpart='{$sessionf["notesforpart"]}',
+        servicenotes='{$sessionf["servnotes"]}',
+        statusid='{$sessionf["status"]}',
+        notesforprog='{$sessionf["notesforprog"]}',
     WHERE
         sessionid = $id;
 EOD;
@@ -606,33 +677,39 @@ function get_next_session_id() {
 function insert_session() {
     global $linki;
     $sessionf = filter_session(); // reads global $session array and returns sanitized copy
-    $id = $sessionf["id"];
 
     $query=<<<EOD
-INSERT INTO Sessions SET
-        trackid="{$sessionf["track"]}",
-        typeid="{$sessionf["type"]}",
-        divisionid="{$sessionf["divisionid"]}",
-        pubstatusid="{$sessionf["pubstatusid"]}",
-        languagestatusid="{$sessionf["languagestatusid"]}",
-        pubsno="{$sessionf["pubno"]}",
-        title="{$sessionf["title"]}",
-        secondtitle="{$sessionf["secondtitle"]}",
-        pocketprogtext="{$sessionf["pocketprogtext"]}",
-        progguiddesc="{$sessionf["progguiddesc"]}",
-        persppartinfo="{$sessionf["persppartinfo"]}",
-        duration="{$sessionf["duration"]}",
-        estatten={$sessionf["estatten"]},
-        kidscatid="{$sessionf["kidscatid"]}",
-        signupreq={$sessionf["signupreq"]},
-        invitedguest={$sessionf["invitedguest"]},
-        roomsetid="{$sessionf["roomsetid"]}",
-        notesforpart="{$sessionf["notesforpart"]}",
-        servicenotes="{$sessionf["servnotes"]}",
-        statusid="{$sessionf["status"]}",
-        notesforprog="{$sessionf["notesforprog"]}"
+INSERT INTO Sessions
+        (trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno, title, secondtitle,
+        pocketprogtext, progguiddesc, persppartinfo, duration, estatten, kidscatid, signupreq,
+        invitedguest, roomsetid, notesforpart, servicenotes, statusid, notesforprog) 
+    VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 EOD;
-    if (!mysqli_query_with_error_handling($query)) {
+    $typestring = 'iiiiisssssssiiiiissis';
+    $paramArray = array();
+    $paramArray[] = $sessionf['track'];
+    $paramArray[] = $sessionf['type'];
+    $paramArray[] = $sessionf['divisionid'];
+    $paramArray[] = $sessionf['pubstatusid'];
+    $paramArray[] = $sessionf['languagestatusid'];
+    $paramArray[] = $sessionf['pubno'];
+    $paramArray[] = $sessionf['title'];
+    $paramArray[] = $sessionf['secondtitle'];
+    $paramArray[] = $sessionf['pocketprogtext'];
+    $paramArray[] = $sessionf['progguiddesc'];
+    $paramArray[] = $sessionf['persppartinfo'];
+    $paramArray[] = $sessionf['duration'];
+    $paramArray[] = $sessionf['estatten'];
+    $paramArray[] = $sessionf['kidscatid'];
+    $paramArray[] = $sessionf['signupreq'];
+    $paramArray[] = $sessionf['invitedguest'];
+    $paramArray[] = $sessionf['roomsetid'];
+    $paramArray[] = $sessionf['notesforpart'];
+    $paramArray[] = $sessionf['servnotes'];
+    $paramArray[] = $sessionf['status'];
+    $paramArray[] = $sessionf['notesforprog'];
+    if (!mysqli_query_with_prepare_and_error_handling($query, $typestring, $paramArray)) {
         return false;
     }
     $id = mysqli_insert_id($linki);
@@ -669,60 +746,92 @@ EOD;
     return $id;
 }
 
-// Function filter_session()
-// Takes data from global $session array returns array with filtered data
-//
-function filter_session() {
-    global $linki, $session;
+/**
+ * Function filter_session()
+ * @return array filtered session array
+ *
+ * Takes data from global $session array returns array with filtered data; nulls converted to string NULL
+ */
+function filter_session(): array {
+    global $session;
     $session2 = array();
-    $session2["track"] = filter_var($session["track"], FILTER_SANITIZE_NUMBER_INT);
-    $session2["type"] = filter_var($session["type"], FILTER_SANITIZE_NUMBER_INT);
-    $session2["divisionid"] = filter_var($session["divisionid"], FILTER_SANITIZE_NUMBER_INT);
-    $session2["pubstatusid"] = filter_var($session["pubstatusid"], FILTER_SANITIZE_NUMBER_INT);
-    $session2["languagestatusid"] = filter_var($session["languagestatusid"], FILTER_SANITIZE_NUMBER_INT);
-    $session2["pubno"] = mysqli_real_escape_string($linki, $session["pubno"]);
-    $session2["title"] = mysqli_real_escape_string($linki, $session["title"]);
-    $session2["secondtitle"] = mysqli_real_escape_string($linki, $session["secondtitle"]);
-    $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
-    $session2["progguiddesc"] = mysqli_real_escape_string($linki, $session["progguiddesc"]);
-    $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
+    $session2['track'] = sanitize_int($session['track']);
+    $session2['type'] = sanitize_int($session['type']);
+    $session2['divisionid'] = sanitize_int($session['divisionid']);
+    $session2['pubstatusid'] = sanitize_int($session['pubstatusid']);
+    $session2['languagestatusid'] = sanitize_int($session['languagestatusid']);
+    $session2['pubno'] = escape_field($session['pubno']);
+    $session2['title'] = escape_field($session['title']);
+    $session2['secondtitle'] = escape_field($session['secondtitle']);
+    $session2['pocketprogtext'] = escape_field($session['pocketprogtext']);
+    $session2['progguiddesc'] = escape_field($session['progguiddesc']);
+    $session2['persppartinfo'] = escape_field($session['persppartinfo']);
     if (DURATION_IN_MINUTES === TRUE) {
-        $session2["duration"] = conv_min2hrsmin($session["duration"]);
+        $session2['duration'] = conv_min2hrsmin($session['duration']);
     } else {
-        $session2["duration"] = mysqli_real_escape_string($linki, $session["duration"]);
+        $session2['duration'] = escape_field($session['duration']);
     }
-    $session2["estatten"] = empty($session["atten"]) ? "NULL" : strval(filter_var($session["atten"], FILTER_SANITIZE_NUMBER_INT));
-    $session2["kidscatid"] = filter_var($session["kids"], FILTER_SANITIZE_NUMBER_INT);
-    $session2["signupreq"] = empty($session["signup"]) ? "0" : "1";
-    $session2["invitedguest"] = empty($session["invguest"]) ? "0" : "1";
-    $session2["roomsetid"] = filter_var($session["roomset"], FILTER_SANITIZE_NUMBER_INT);
-    $session2["pocketprogtext"] = mysqli_real_escape_string($linki, $session["pocketprogtext"]);
-    $session2["notesforpart"] = mysqli_real_escape_string($linki, $session["notesforpart"]);
-    $session2["servnotes"] = mysqli_real_escape_string($linki, $session["servnotes"]);
-    $session2["status"] = filter_var($session["status"], FILTER_SANITIZE_NUMBER_INT);
-    $session2["notesforprog"] = mysqli_real_escape_string($linki, $session["notesforprog"]);
-    $session2["id"] = filter_var($session["sessionid"], FILTER_SANITIZE_NUMBER_INT);
+    $session2['estatten'] = sanitize_int($session['atten']);
+    $session2['kidscatid'] = sanitize_int($session['kids']);
+    $session2['signupreq'] = empty($session['signup']) ? "0" : "1";
+    $session2['invitedguest'] = empty($session['invguest']) ? "0" : "1";
+    $session2['roomsetid'] = sanitize_int($session['roomset']);
+    $session2['notesforpart'] = escape_field($session['notesforpart']);
+    $session2['servnotes'] = escape_field($session['servnotes']);
+    $session2['status'] = sanitize_int($session['status']);
+    $session2['notesforprog'] = escape_field($session['notesforprog']);
+    $session2['id'] = sanitize_int($session['sessionid']);
 
-    if (!empty($session["featdest"])) {
-        $session2["features"] = array();
-        foreach ($session["featdest"] as $feature) {
-            $session2["features"][] = filter_var($feature, FILTER_SANITIZE_NUMBER_INT);
+    if (!empty($session['featdest'])) {
+        $session2['features'] = array();
+        foreach ($session['featdest'] as $feature) {
+            $sanitized_feature = sanitize_int($feature);
+            if ($sanitized_feature !== false) {
+                $session2['features'][] = $sanitized_feature;
+            }
         }
     }
-    if (!empty($session["servdest"])) {
-        $session2["services"] = array();
-        foreach ($session["servdest"] as $service) {
-            $session2["services"][] = filter_var($service, FILTER_SANITIZE_NUMBER_INT);
+    if (!empty($session['servdest'])) {
+        $session2['services'] = array();
+        foreach ($session['servdest'] as $service) {
+            $sanitized_service = sanitize_int($service);
+            if ($sanitized_service !== false) {
+                $session2['services'][] = $sanitized_service;
+            }
         }
     }
-    if (!empty($session["tagdest"])) {
-        $session2["tags"] = array();
-        foreach ($session["tagdest"] as $tag) {
-            $session2["tags"][] = filter_var($tag, FILTER_SANITIZE_NUMBER_INT);
+    if (!empty($session['tagdest'])) {
+        $session2['tags'] = array();
+        foreach ($session['tagdest'] as $tag) {
+            $sanitized_tag = sanitize_int($tag);
+            if ($sanitized_tag !== false) {
+                $session2['tags'][] = $sanitized_tag;
+            }
         }
     }
 
     return $session2;
+}
+
+/**
+ * @param string|null $field
+ * @return string escaped version of $field if not null or 'null'
+ */
+function escape_field(?string $field) : ?string {
+    global $linki;
+    return is_null($field) ? 'null' : mysqli_real_escape_string($linki, $field);
+}
+
+/**
+ * @param string|null $field
+ * @return string|null $field if it is int or otherwise null
+ */
+function sanitize_int(string|null $field) : string|null {
+    if (is_null($field)) {
+        return null;
+    }
+    $sanitized_field = filter_var($field, FILTER_SANITIZE_NUMBER_INT);
+    return $sanitized_field === false ? null : $sanitized_field;
 }
 
 // Function retrieve_session_from_db()
@@ -819,13 +928,6 @@ EOD;
 // Reads the session variables and checks password in db to see if user is
 // logged in.  Returns true if logged in or false if not.  Assumes db already
 // connected on $linki.
-
-/* The script will check login status.  If user is logged in
-   it will pass control to script (???) to implement edit my contact info.
-   If user not logged in, it will pass control to script (???) to
-   log user in. */
-/* check login script, included in db_connect.php. */
-
 function isLoggedIn() {
     global $message_error;
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['hashedPassword'])) {
@@ -870,7 +972,7 @@ function isLoggedIn() {
 //
 function retrieveParticipant($badgeid) {
     global $message_error;
-    if (empty($message_error)) {
+    if (!isset($message_error)) {
         $message_error = "";
     }
     $query = <<<EOD
@@ -879,10 +981,10 @@ SELECT
     FROM
         Participants
     WHERE
-        badgeid='$badgeid';
+        badgeid = ?;
 EOD;
-    if (!$result = mysqli_query_with_error_handling($query)) {
-        return false;
+    if (!$result = mysqli_query_with_prepare_and_error_handling($query, 's', array($badgeid), true, true)) {
+        exit(); // should have exited already
     }
     $rows = mysqli_num_rows($result);
     if ($rows != 1) {
@@ -899,7 +1001,7 @@ EOD;
 // to return combined results
 function retrieveFullParticipant($badgeid) {
     global $message_error;
-    if (empty($message_error)) {
+    if (!isset($message_error)) {
         $message_error = "";
     }
     $query = <<<EOD
@@ -919,10 +1021,10 @@ SELECT
     FROM
         CongoDump
     WHERE
-        badgeid = '$badgeid';
+        badgeid = ?;
 EOD;
-    if (!$result = mysqli_query_with_error_handling($query)) {
-        return false;
+    if (!$result = mysqli_query_with_prepare_and_error_handling($query, 's', array($badgeid), true, true)) {
+        exit(); // should have exited already
     };
     $rows = mysqli_num_rows($result);
     if ($rows != 1) {
@@ -938,6 +1040,25 @@ EOD;
         $participant_array["chpw"] = password_verify(DEFAULT_USER_PASSWORD, $participant_array["password"]);
     }
     $participant_array["password"] = "";
+    $participant_array = array_merge($participant_array, mysqli_fetch_array($result, MYSQLI_ASSOC));
+    mysqli_free_result($result);
+    $query = <<<EOD
+SELECT
+        COUNT(*) AS `scheduleCount`
+    FROM
+             ParticipantOnSession POS
+        JOIN Schedule SCH USING (sessionid)
+    WHERE
+        POS.badgeid = ?;
+EOD;
+    if (!$result = mysqli_query_with_prepare_and_error_handling($query, 's', array($badgeid), true, true)) {
+        exit(); // should have exited already
+    };
+    $rows = mysqli_num_rows($result);
+    if ($rows != 1) {
+        $message_error = "$rows rows returned for badgeid: $badgeid when 1 expected. $message_error";
+        return false;
+    };
     $participant_array = array_merge($participant_array, mysqli_fetch_array($result, MYSQLI_ASSOC));
     mysqli_free_result($result);
     return $participant_array;
@@ -1003,8 +1124,8 @@ SELECT
         TIME_FORMAT(endtime, '%T') AS endtime
     FROM
         ParticipantAvailabilityTimes
-	WHERE
-	    badgeid="$badgeid"
+    WHERE
+        badgeid="$badgeid"
     ORDER BY
         starttime;
 EOD;

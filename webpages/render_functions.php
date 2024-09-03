@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2007-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2007-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 //	RenderPrecis display requires:  a query result containing rows with these fields IN THIS ORDER:
 //	$sessionid, $trackname, $typename, $title, $duration, $estatten, $progguiddesc, $persppartinfo, $starttime, $roomname, $statusname
 //	it displays the precis view of the data.
@@ -56,8 +56,8 @@ function RenderPrecis($result, $showlinks) {
         }
         echo "</tr>\n";
         echo "<tr>";
-        echo "    <td colspan=\"2\" class=\"border0010\">" . htmlspecialchars($taglist, ENT_NOQUOTES) . "</td>";
-        echo "    <td colspan=\"6\" class=\"border0010\">" . htmlspecialchars($progguiddesc, ENT_NOQUOTES) . "</td>";
+        echo "    <td colspan=\"2\" class=\"border0010\">" . (is_null($taglist) ? "" : htmlspecialchars($taglist, ENT_NOQUOTES)) . "</td>";
+        echo "    <td colspan=\"6\" class=\"border0010\">" . (is_null($progguiddesc) ? "" : htmlspecialchars($progguiddesc, ENT_NOQUOTES)) . "</td>";
         echo "</tr>\n";
         if ($persppartinfo) {
             echo "<tr><td></td>";

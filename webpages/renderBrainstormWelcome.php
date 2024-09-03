@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
    global $participant,$message,$message_error,$message2,$congoinfo,$title;
    $title="Brainstorm View";
    require_once('BrainstormCommonCode.php');
@@ -7,18 +7,21 @@
 ?>
 
 <?php if ($message_error!="") { ?>
-	<p class="alert alert-error"><?php echo $message_error; ?></p>
-	<?php } ?>
+    <p class="alert alert-error"><?php echo $message_error; ?></p>
+    <?php } ?>
 <?php if ($message!="") { ?>
-	<p class="alert alert-success"><?php echo $message; ?></p>
-	<?php } ?>
+    <p class="alert alert-success"><?php echo $message; ?></p>
+    <?php } ?>
 <?php
-    if (empty(DEFAULT_USER_PASSWORD)) {
+    if (is_null($participant)) {
+        $participant = array();
+    }
+    if (empty(DEFAULT_USER_PASSWORD) || !isset($participant["password"]) || is_null($participant["password"])) {
         $chpw = false;
     } else {
         $chpw = password_verify(DEFAULT_USER_PASSWORD, $participant["password"]);
     }
-    $chint=($participant["interested"]==0);
+    $chint = isset($participant["interested"]) ? ($participant["interested"] == 0) : 0;
     if (may_I('BrainstormSubmit')) { ?>
 <p> Here you can submit new suggestions or look at existing ideas for 
     panels, events, movies, films, presentations, speeches, concerts, etc.</p>

@@ -1,9 +1,10 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+require_once ("javascript_functions.php");
+
 function brainstorm_header($title) {
     global $header_section;
     $header_section = HEADER_BRAINSTORM;
-    require_once ("javascript_functions.php");
 ?>
 <!DOCTYPE html>
 <head>
@@ -12,6 +13,9 @@ function brainstorm_header($title) {
     <link rel="stylesheet" href="css/Common.css" type="text/css">
     <link rel="stylesheet" href="css/zambia.css" type="text/css">
     <link rel="stylesheet" href="css/BrainstormSection.css" type="text/css">
+<?php
+    load_internal_javascript($title);
+?>
     <meta name="keywords" content="Questionnaire">
 </head>
 <body>
@@ -21,37 +25,35 @@ function brainstorm_header($title) {
     <hr class="brainstorm-header-hr">
 <?php if (isset($_SESSION['badgeid'])) { ?>
   <table class="tabhead">
-    <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
-    <col width=10%><col width=10%><col width=10%><col width=10%><col width=10%>
     <tr class="tabrows">
-      <td class="tabblocks border0020" colspan=2><?php maketab("Welcome",1,"BrainstormWelcome.php"); ?></td>
-      <td class="tabblocks border0020" colspan=2>
+      <td class="tabblocks border0020" style="width:20%"><?php maketab("Welcome",1,"BrainstormWelcome.php"); ?></td>
+      <td class="tabblocks border0020" style="width:20%">
            <?php maketab("Suggest a Session",may_I('BrainstormSubmit'),"BrainstormCreateSession.php"); ?></td>
-      <td class="tabblocks border0020" colspan=2><?php maketab("Search Sessions",1,"BrainstormSearchSession.php"); ?></td>
+      <td class="tabblocks border0020" style="width:20%"><?php maketab("Search Sessions",1,"BrainstormSearchSession.php"); ?></td>
 
-      <td class="tabblocks border0020" colspan=2>
+      <td class="tabblocks border0020" style="width:20%">
          <?php if(may_I('Participant')) { 
                   maketab("Participants View",may_I('Participant'),"welcome.php"); 
                }?></td>
-      <td class="tabblocks border0020" colspan=2>
+      <td class="tabblocks border0020" style="width:20%">
          <?php if(may_I('Staff')) { 
                    maketab("Staff View",may_I('Staff'),"StaffPage.php");
                }?></td>
     </tr>
     <tr class="tabrows">
-      <td class="tabblocks border0020" colspan=10>
+      <td class="tabblocks border0020" colspan="5">
          View sessions proposed to date:
     </tr>
     <tr class="tabrows">
-      <td class="tabblocks border0020" colspan=2>
+      <td class="tabblocks border0020">
          <?php maketab("All Proposals",1,"BrainstormReportAll.php"); ?></td>
-      <td class="tabblocks border0020" colspan=2>
+      <td class="tabblocks border0020">
          <?php maketab("New (Unseen)",1,"BrainstormReportUnseen.php"); ?></td>
-      <td class="tabblocks border0020" colspan=2>
+      <td class="tabblocks border0020">
          <?php maketab("Reviewed",1,"BrainstormReportReviewed.php"); ?></td>
-      <td class="tabblocks border0020" colspan=2>
+      <td class="tabblocks border0020">
          <?php maketab("Likely to Occur",1,"BrainstormReportLikely.php");?></td>
-      <td class="tabblocks border0020" colspan=2>
+      <td class="tabblocks border0020">
          <?php maketab("Scheduled",1,"BrainstormReportScheduled.php"); ?></td>
     </tr>
   </table>
@@ -62,15 +64,15 @@ function brainstorm_header($title) {
     </tr>
   <tr>
     <td>
-      <table width="100%">
+      <table style="width:100%">
         <tr>
-          <td width="425">&nbsp;
+          <td style="width:425px">&nbsp;
             </td>
           <td class="Welcome">Welcome <?php echo $_SESSION['badgename']; ?>
             </td>
           <td><A class="logout" HREF="brainstormLogout.php">&nbsp;Logout&nbsp;</A>
             </td>
-          <td width="25">&nbsp;
+          <td style="width:25px">&nbsp;
             </td>
           </tr>
         </table>
