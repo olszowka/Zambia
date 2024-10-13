@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 function renderMyInterests($title, $error, $message, $rolearray) {
     global $link, $yespanels, $nopanels, $yespeople, $nopeople;
     global $otherroles, $newrow, $customTextArray;
@@ -34,7 +34,11 @@ function renderMyInterests($title, $error, $message, $rolearray) {
 
     echo "  </div>\n";
     echo "  <div class=\"span6\">\n";
-    echo "    <label for=\"nopanels\"><p>Panel types I am not interested in participating in:</p></label>\n";
+    $panel_types_not_int = fetchCustomText('panel_types_not_int');
+    if ($panel_types_not_int === '') {
+        $panel_types_not_int = "Panel types I am not interested in participating in:";
+    }
+    echo "    <label for=\"nopanels\"><p>$panel_types_not_int</p></label>\n";
     echo "    <textarea class=\"span12\" name=\"nopanels\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
@@ -95,7 +99,11 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "                <input type=hidden name=\"diddorole0\" value=\"";
     echo ((isset($rolearray[0]["badgeid"])) ? 1 : 0) . "\">\n";
     echo "</div>"; // close roles-list-container div
-    echo "<p class=\"vert-sep vert-sep-above\">Description for \"Other\" Roles:</p>\n";
+    $other_role_desc = fetchCustomText('other_role_desc');
+    if ($other_role_desc === '') {
+        $other_role_desc = "Description for \"Other\" Roles:";
+    }
+    echo "    <label for=\"nopanels\"><p>$panel_types_not_int</p></label>\n";    echo "<p class=\"vert-sep vert-sep-above\">$other_role_desc</p>\n";
     echo "<textarea class=\"span12\" name=\"otherroles\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
