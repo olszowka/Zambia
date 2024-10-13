@@ -103,7 +103,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     if ($other_role_desc === '') {
         $other_role_desc = "Description for \"Other\" Roles:";
     }
-    echo "    <label for=\"nopanels\"><p>$panel_types_not_int</p></label>\n";    echo "<p class=\"vert-sep vert-sep-above\">$other_role_desc</p>\n";
+    echo "<p class=\"vert-sep vert-sep-above\">$other_role_desc</p>\n";
     echo "<textarea class=\"span12\" name=\"otherroles\" rows=5 cols=72";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
