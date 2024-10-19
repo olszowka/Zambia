@@ -64,7 +64,11 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo ">" . htmlspecialchars($nopeople, ENT_COMPAT) . "</textarea>\n";
     echo "  </div>\n";
     echo "</div>\n";
-    echo "<p class=\"vert-sep vert-sep-above\">Roles I'm willing to take on:</p>\n";
+    $roles_checkboxes_label = fetchCustomText('roles_checkboxes_label');
+    if ($roles_checkboxes_label === '') {
+        $roles_checkboxes_label = "Roles I'm willing to take on:";
+    }
+    echo "<p class=\"vert-sep vert-sep-above\">$roles_checkboxes_label</p>\n";
     echo "<div class=\"row-fluid\">\n";
     echo "    <div class=\"control-group span12\">\n";
     echo "        <div class=\"roles-list-container\">";
