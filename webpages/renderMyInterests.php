@@ -74,7 +74,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     echo "        <div class=\"roles-list-container\">";
     for ($i = 1; $i < $rolerows; $i++) {
         echo "        <div class=\"role-entry-container\">";
-        echo "                <label class=\"checkbox inline long\" for=\"willdorole" . $i . "\">" . $rolearray[$i]["rolename"] . "\n";
+        echo "                <label class=\"checkbox inline\" for=\"willdorole" . $i . "\">" . $rolearray[$i]["rolename"] . "\n";
         echo "                <input type=checkbox name=\"willdorole" . $i . "\" id=\"willdorole" . $i . "\"";
         if (isset($rolearray[$i]["badgeid"])) {
             echo "checked";
@@ -89,7 +89,7 @@ function renderMyInterests($title, $error, $message, $rolearray) {
         echo "                <input type=hidden name=\"rolename" . $i . "\" value=\"" . $rolearray[$i]["rolename"] . "\">\n";
     }
 
-    echo "                <label class=\"checkbox inline long\" for=\"willdorole0\">" . $rolearray[0]["rolename"] . "  (Please describe below)";
+    echo "                <label class=\"checkbox inline\" for=\"willdorole0\">" . $rolearray[0]["rolename"] . "  (Please describe below)";
     echo "                <input class=\"checkbox\" type=checkbox name=\"willdorole0\" ";
     if (isset($rolearray[0]["badgeid"])) {
         echo "checked";

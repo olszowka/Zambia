@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding="UTF-8"?>
-<!-- Copyright (c) 2019-2022 Peter Olszowka. All rights reserved. See copyright document for more details.-->
+<!-- Copyright (c) 2019-2024 Peter Olszowka. All rights reserved. See copyright document for more details.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <!-- "Staff" or "Participant" --><xsl:param name="header_version" select="'Participant'"/>
     <!-- "LOGIN", "SESSION_EXPIRED", "LOGOUT", "PASSWORD_RESET_COMPLETE", "NO_USER", "NORMAL" --><xsl:param name="top_section_behavior" select="'NORMAL'" />
@@ -49,7 +49,7 @@
                                         </xsl:when>
                                     </xsl:choose>
                                 </img>
-                                <a href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
+                                <a href="logout.php" class="btn btn-primary pull-right" style="margin-right:1.5rem;" title="Click to log out">Log out</a>
                             </div>
                         </xsl:when>
                         <xsl:when test="$top_section_behavior = 'LOGIN' or $top_section_behavior = 'SESSION_EXPIRED'
@@ -142,7 +142,7 @@
                                     <xsl:text>Welcome, </xsl:text>
                                     <xsl:value-of select="$badgename" />
                                 </p>
-                                <a class="btn btn-primary btn-mini" href="logout.php" title="Click to log out">Log out</a>
+                                <a class="btn btn-primary btn-mini" href="logout.php" style="margin-right:1.5rem;" title="Click to log out">Log out</a>
                                 <img id="show-header-but" alt="Expand header to normal size" title="Expand header to normal size"
                                     aria-role="button">
                                     <xsl:choose>

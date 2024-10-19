@@ -2,9 +2,9 @@
 // Copyright (c) 2008-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message, $message_error, $message2, $title;
 // $participant_array is defined by file including this.
-$title = "Participant View";
+$title = "Participant Overview";
 require_once('PartCommonCode.php');
-populateCustomTextArray(); // title changed above, reload custom text with the proper page title
+populateCustomTextArray();
 $pageHeaderFamily = may_I('postcon') ? 'No_Menu' : 'Normal';
 participant_header($title, false, $pageHeaderFamily, 'bs4');
 ?>
@@ -48,7 +48,7 @@ if (may_I('postcon')) { ?>
 }
     ?>
 
-<div class="welcome-page-wrapper" style="margin: 0 auto; width:100rem;">
+<div class="welcome-page-wrapper" style="margin: 0 auto; max-width:100rem;">
 <form id="pwform" name="pwform" method=POST action="SubmitWelcome.php">
 <div class="row mt-4">
     <div class="col col-sm-12">
@@ -78,7 +78,7 @@ if (may_I('postcon')) { ?>
         <h4>Now take a moment and personalize your password.</h4>
     </div>
 </div>
- <div class="row mt-2">
+<div class="row mt-2">
     <div class="col col-sm-1"></div>
     <div class="col col-sm-9">
         <fieldset>
@@ -88,9 +88,9 @@ if (may_I('postcon')) { ?>
             <input id="cpassword" type="password" size="10" name="cpassword" />
         </fieldset>
         <?php } ?>
-     </div>
+    </div>
 </div>
- <div class="row mt-2">
+<div class="row mt-2">
     <div class="col col-sm-12">
         <button class="btn btn-primary" type="submit" name="submit" >Update</button>
     </div>
@@ -169,13 +169,13 @@ if (may_I('postcon')) { ?>
         <p> The "Suggest a Session" menu is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></p>
         <?php } ?>
     </div>
-    </div>
+</div>
 <?php
-    $add_pert_overview = fetchCustomText("part_overview");
-    if (strlen($add_pert_overview) > 0) { ?>
+    $add_part_overview = fetchCustomText("part_overview");
+    if (strlen($add_part_overview) > 0) { ?>
 <div class="row mt-4">
     <div class="col col-sm-12">
-        <?php echo fetchCustomText("part_overview"); ?>
+        <?php echo $add_part_overview; ?>
     </div>
 </div>
 <?php } ?>
@@ -183,6 +183,6 @@ if (may_I('postcon')) { ?>
     <div class="col col-sm-12">
         <p>Thank you for your time, and we look forward to seeing you at <?php echo CON_NAME; ?>.</p>
         <p>- <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a> </p>
-</div>
+    </div>
 </div>
 <?php participant_footer(); ?>

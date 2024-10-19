@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!-- File created by Peter Olszowka July 17, 2020
-     Copyright (c) 2020-2022 Peter Olszowka. All rights reserved. See copyright document for more details. -->
+     Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details. -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <!-- "Staff" or "Participant" --><xsl:param name="header_version" select="'Participant'"/>
     <!-- "LOGIN", "SESSION_EXPIRED", "LOGOUT", "PASSWORD_RESET_COMPLETE", "NO_USER", "NORMAL" --><xsl:param name="top_section_behavior" select="'NORMAL'" />
@@ -50,7 +50,7 @@
                                         </xsl:when>
                                     </xsl:choose>
                                 </img>
-                                <a href="logout.php" class="btn btn-primary float-right mr-2" title="Click to log out">Log out</a>
+                                <a href="logout.php" class="btn btn-primary float-right mr-4" title="Click to log out">Log out</a>
                             </div>
                         </xsl:when>
                         <xsl:when test="$top_section_behavior = 'LOGIN' or $top_section_behavior = 'SESSION_EXPIRED'
