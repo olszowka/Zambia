@@ -25,7 +25,11 @@ function renderMyInterests($title, $error, $message, $rolearray) {
     }
     echo "<div class=\"row-fluid vert-sep-above\">\n";
     echo "  <div class=\"span6\">\n";
-    echo "    <label for=\"yespanels\"><p>Workshops or presentations I'd like to run:</p></label>\n";
+    $stuff_id_like_to_run = fetchCustomText('stuff_id_like_to_run');
+    if ($stuff_id_like_to_run === '') {
+        $stuff_id_like_to_run = "Workshops or presentations I'd like to run:";
+    }
+    echo "    <label for=\"yespanels\"><p>$stuff_id_like_to_run</p></label>\n";
     echo "    <textarea class=\"span12\" id=\"yespanels\" name=\"yespanels\" rows=\"5\" cols=\"72\"";
     if (!may_I('my_gen_int_write')) {
         echo " readonly class=\"readonly\"";
