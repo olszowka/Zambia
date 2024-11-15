@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2006-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2006-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
@@ -472,7 +472,9 @@ EOD;
         $resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
     }
     header("Content-Type: text/html");
-    $paramArray = array("userIdPrompt" => USER_ID_PROMPT);
+    $paramArray = array();
+    $paramArray['userIdPrompt'] = USER_ID_PROMPT;
+    $paramArray['edit_participant_responses'] = may_I('edit_participant_responses') ? '1' : '0';
     //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xml->saveXML(), "i")); //for debugging only
     $json_return["HTML"] = RenderXSLT('AdminParticipants.xsl', $paramArray, $xml, true);
     $json_return["rowcount"] = $rows;

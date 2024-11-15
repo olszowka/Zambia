@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-10-28
 require('EditPermRoles_FNC.php');
 
@@ -150,7 +150,7 @@ $message = "";
 $paramArray = array();
 if (!may_I('CreateUser') || !may_I('EditUserPermRoles')) {
     $message_error = "You do not have permission to access this page.";
-    StaffRenderErrorPage($title, $message_error, true);
+    StaffRenderErrorPage($title, $message_error, 'bs4');
     exit();
 }
 $loggedInUserBadgeId = $_SESSION['badgeid'];

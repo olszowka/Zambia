@@ -1,11 +1,11 @@
 <?php
-// Copyright (c) 2019-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2019-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Build Report Menus";
 require_once('StaffCommonCode.php'); // Checks for staff permission among other things
 if (!may_I('ConfigureReports')) {
     $message_error = "You do not currently have permission to view this page.<br>\n";
-    StaffRenderErrorPage($title, $message_error, true);
+    StaffRenderErrorPage($title, $message_error, 'bs4');
     exit();
 }
 $areYouSure = getInt("areYouSure");

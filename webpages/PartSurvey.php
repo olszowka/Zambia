@@ -2,9 +2,12 @@
 // Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-12-29
 
-global $message_error, $title, $linki, $session;
+global $header_section, $message_error, $title, $linki, $session;
 $title = "Participant Survey";
+// This can be a participant or a staff page
 require_once('PartCommonCode.php');
+require_once('StaffHeader.php');
+require_once('StaffFooter.php');
 $message = "";
 $rows = 0;
 $rows_modified = 0;
@@ -16,25 +19,28 @@ if (!populateCustomTextArray()) {
     exit();
 }
 
-participant_header($title, false, 'Normal', 'bs4');
+$edit_badgeid = getInt('edit_badgeid');
+if ($edit_badgeid === false) {
+    $edit_badgeid = $badgeid;
+    participant_header($title, false, 'Normal', 'bs4');
+} else {
+    $header_section = HEADER_STAFF;
+    if (!may_I('edit_participant_responses')) {
+        $message_error = "You do not have permission to access this page.";
+        StaffRenderErrorPage($title, $message_error, 'bs4');
+        exit();
+    }
+    staff_header($title, 'bs4');
+}
 if (isLoggedIn()) {
     if (isset($_POST["PostCheck"])) {
         $priorValues = interpretControlString($_POST["control"], $_POST["controliv"]);
-        //foreach ($priorValues as $key => $value) {
-        //        echo "$key => '$value'<br/>";
-        //    }
-
         if ($priorValues["getSessionID"] !=  session_id()) {
             $message = "Session expired, survey not updated";
         } else {
             $shortname_types = json_decode($priorValues["shortname_types"]);
-            //var_dump($shortname_types);
-            }
-        // find the data to insert/update
-            //echo "<h1>Submitted data</h1>";
-            //var_dump($_POST);
-
-            $sql = <<<EOD
+        }
+        $sql = <<<EOD
 INSERT INTO ParticipantSurveyAnswers(participantid, questionid, privacy_setting, value, othertext, updatedby)
 VALUES (?, ?, ?, ?, ?, ?)
 ON DUPLICATE KEY UPDATE
@@ -43,81 +49,80 @@ ON DUPLICATE KEY UPDATE
     othertext = ?,
     updatedby = ?;
 EOD;
-            $delsql = <<<EOD
+        $delsql = <<<EOD
 DELETE FROM ParticipantSurveyAnswers WHERE participantid = ? and questionid = ?;
 EOD;
-            $parms = [];
-            $types = "";
-            $inserted = 0;
-            $updated = 0;
-            $deleted = 0;
-            $errors = 0;
-            $types = "siisssisss";
-            foreach ($shortname_types as $obj) {
-                if ($obj->typename != "heading") {
-                    if (!isset($_POST[$obj->id])) {
-                        $deleted += mysql_cmd_with_prepare($delsql, "si", array($badgeid, $obj->questionid));
-                        continue;
-                    }
-                    $separator = ',';
-                    $othertextname = $obj->id . "-othertext";
-                    if (isset($_POST[$othertextname]))
-                        $othertext = $_POST[$othertextname];
-                    else
-                        $othertext = null;
-                    if ($othertext == '')
-                        $othertext = null;
+        $parms = [];
+        $types = "";
+        $inserted = 0;
+        $updated = 0;
+        $deleted = 0;
+        $errors = 0;
+        $types = "siisssisss";
+        foreach ($shortname_types as $obj) {
+            if ($obj->typename != "heading") {
+                if (!isset($_POST[$obj->id])) {
+                    $deleted += mysql_cmd_with_prepare($delsql, "si", array($edit_badgeid, $obj->questionid));
+                    continue;
+                }
+                $separator = ',';
+                $othertextname = $obj->id . "-othertext";
+                if (isset($_POST[$othertextname]))
+                    $othertext = $_POST[$othertextname];
+                else
+                    $othertext = null;
+                if ($othertext == '')
+                    $othertext = null;
 
-                    $privacyname = $obj->id . "-privacyuser";
-                    if (isset($_POST[$privacyname]))
-                        $privacyuser = $_POST[$privacyname];
-                    else
-                        $privacyuser = 0;
+                $privacyname = $obj->id . "-privacyuser";
+                if (isset($_POST[$privacyname]))
+                    $privacyuser = $_POST[$privacyname];
+                else
+                    $privacyuser = 0;
 
-                    switch ($obj->typename) {
-                        case "monthyear":
-                            $separator = ' ';
-                        case "multi-select list":
-                        case "multi-checkbox list":
-                        case "multi-display":
-                            // error_log("processing " . $obj->typename );
-                            //  error_log("shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id);
-                            // var_dump($_POST[$obj->id]);
-                            $ans = implode($separator, $_POST[$obj->id]);
-                            $parms= array($badgeid, $obj->questionid, $privacyuser, $ans, $othertext, $badgeid, $privacyuser, $ans, $othertext, $badgeid);
-                            break;
-                        default:
-                            //echo "processing default for " . $obj->typename . "<br/>";
-                            //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
-                            $parms= array($badgeid, $obj->questionid, $privacyuser, $_POST[$obj->id], $othertext, $badgeid, $privacyuser, $_POST[$obj->id], $othertext, $badgeid);
-                    }
-                    //var_dump($parms);
-                    $rows_modified = mysql_cmd_with_prepare($sql, $types, $parms);
-                    //echo "status = $rows_modified<br/><br/>";
-                    if ($rows_modified == 1)
-                        $inserted = $inserted + 1;
-                    else if ($rows_modified == 2)
-                        $updated = $updated + 1;
-                    else if ($rows_modified < 0) {
-                        echo("Error description: " . mysqli_error($linki) . "<br/><br/>");
-                        $errors = $errors + 1;
+                switch ($obj->typename) {
+                    case "monthyear":
+                        $separator = ' ';
+                    case "multi-select list":
+                    case "multi-checkbox list":
+                    case "multi-display":
+                        // error_log("processing " . $obj->typename );
+                        //  error_log("shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id);
+                        // var_dump($_POST[$obj->id]);
+                        $ans = implode($separator, $_POST[$obj->id]);
+                        $parms= array($edit_badgeid, $obj->questionid, $privacyuser, $ans, $othertext, $badgeid, $privacyuser, $ans, $othertext, $badgeid);
                         break;
-                    }
+                    default:
+                        //echo "processing default for " . $obj->typename . "<br/>";
+                        //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
+                        $parms= array($edit_badgeid, $obj->questionid, $privacyuser, $_POST[$obj->id], $othertext, $badgeid, $privacyuser, $_POST[$obj->id], $othertext, $badgeid);
+                }
+                //var_dump($parms);
+                $rows_modified = mysql_cmd_with_prepare($sql, $types, $parms);
+                //echo "status = $rows_modified<br/><br/>";
+                if ($rows_modified == 1)
+                    $inserted = $inserted + 1;
+                else if ($rows_modified == 2)
+                    $updated = $updated + 1;
+                else if ($rows_modified < 0) {
+                    echo("Error description: " . mysqli_error($linki) . "<br/><br/>");
+                    $errors = $errors + 1;
+                    break;
                 }
             }
-            $message = "";
-            if ($inserted > 0)
-                $message = $message . $inserted . " answers inserted, ";
-            if ($updated > 0)
-                $message = $message . $updated . " answers updated, ";
-            if ($deleted > 0)
-                $message = $message . $deleted . " answers deleted, ";
-            if ($message == "")
-                $message = "No changes made to survey";
-            else {
-                $message = "Survey updated: " . preg_replace('/, $/', "", $message);
-            }
-
+        }
+        $message = "";
+        if ($inserted > 0)
+            $message = $message . $inserted . " answers inserted, ";
+        if ($updated > 0)
+            $message = $message . $updated . " answers updated, ";
+        if ($deleted > 0)
+            $message = $message . $deleted . " answers deleted, ";
+        if ($message == "")
+            $message = "No changes made to survey";
+        else {
+            $message = "Survey updated: " . preg_replace('/, $/', "", $message);
+        }
     }
 
     // Start of display portion
@@ -148,13 +153,13 @@ EOD;
                     CASE WHEN max_value > 500 THEN 8 ELSE 4 END
                 ELSE ""
             END as `rows`,
-            CASE WHEN ISNULL(a.value) THEN "" ELSE a.value END AS answer,
-            CASE WHEN ISNULL(a.othertext) THEN "" ELSE a.othertext END AS othertext,
-            CASE WHEN ISNULL(a.privacy_setting) THEN publish ELSE a.privacy_setting END AS privacy_setting,
+            IFNULL(a.value, "") AS answer,
+            IFNULL(a.othertext, "") AS othertext,
+            IFNULL(a.privacy_setting, publish) AS privacy_setting,
             CASE WHEN SUM(o.allowothertext) > 0 THEN 1 ELSE 0 END AS allowothertext
         FROM SurveyQuestionConfig d
         JOIN SurveyQuestionTypes t USING (typeid)
-        LEFT OUTER JOIN ParticipantSurveyAnswers a ON (a.questionid = d.questionid and a.participantid = "$badgeid")
+        LEFT OUTER JOIN ParticipantSurveyAnswers a ON (a.questionid = d.questionid and a.participantid = "$edit_badgeid")
         LEFT OUTER JOIN SurveyQuestionOptionConfig o ON (d.questionid = o.questionid)
         GROUP BY d.questionid
         ORDER BY d.display_order ASC;
@@ -215,7 +220,6 @@ EOD;
                         $next = $next - 1;
                     }
                 }
-                //var_error_log($options);
                 $resultXML = ObjecttoXML($numberquery, $options, $resultXML);
                 break;
         }
@@ -223,7 +227,7 @@ EOD;
     $sql = <<<EOD
         SELECT count(*) AS answers
         FROM ParticipantSurveyAnswers
-        WHERE participantid = "$badgeid";
+        WHERE participantid = "$edit_badgeid";
 EOD;
     $result = mysqli_query_exit_on_error($sql);
     $rows = 0;
@@ -242,9 +246,21 @@ EOD;
     if ($message != "") {
         $paramArray["UpdateMessage"] = $message;
     }
-
-    // following line for debugging only
-    //echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
+    if ($edit_badgeid != $badgeid) {
+        $query = <<<EOD
+SELECT
+        firstname, lastname
+     FROM
+         CongoDump
+     WHERE
+         badgeid = ?;
+EOD;
+        $query_param_array = array($edit_badgeid);
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, 's', $query_param_array);
+        $row = mysqli_fetch_assoc($result);
+        $paramArray['EditParticipantName'] = $row['firstname'] . ' ' . $row['lastname'];
+        $paramArray['EditBadgeId'] = $edit_badgeid;
+    }
     RenderXSLT('RenderSurvey.xsl', $paramArray, $resultXML);
     echo "<br/>\n";
     echo fetchCustomText("survey_displayonly");
