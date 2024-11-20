@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
     $startTimeUnits = $startTimeHour * 2;
     if ($startTimeMin >= 30) {
@@ -564,5 +564,13 @@ function html_to_text($html) {
     $text = preg_replace('=<p[^>]*>=i', '', $text);
     $text = html_entity_decode(strip_tags($text), ENT_QUOTES);
     return $text;
+}
+
+/**
+ * function if_null_default()
+ * if $val is null, return default, else return val
+ */
+function if_null_default($val, $default) {
+    return is_null($val) ? $default : $val;
 }
 ?>

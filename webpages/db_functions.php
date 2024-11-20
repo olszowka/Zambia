@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function log_error_or_stdderr($error_msg) {
     global $runAScript;
@@ -419,7 +419,6 @@ function get_name_and_email(&$name, &$email) {
     if (isset($_SESSION['name'])) {
         $name = $_SESSION['name'];
         $email = $_SESSION['email'];
-        //error_log("get_name_and_email found a name in the session variables.");
         return true;
     }
     if (may_I('Staff') || may_I('Participant')) { //name and email should be found in db if either set

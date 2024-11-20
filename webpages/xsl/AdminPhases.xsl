@@ -19,7 +19,7 @@
     <div class="row justify-content-center mt-4 mb-1">
       <h2 class="col col-auto">Current Zambia Phase Status</h2>
     </div>
-    <form name="phaseform" class="form-inline form-more-whitespace" method="POST" action="AdminPhases.php">
+    <form name="phaseform" method="POST" action="AdminPhases.php">
       <input type="hidden" id="PostCheck" name="PostCheck" value="POST"/>
       <input type="hidden" id="control" name="control" value="{$control}" />
       <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />

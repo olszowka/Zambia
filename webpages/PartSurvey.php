@@ -2,7 +2,7 @@
 // Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-12-29
 
-global $header_section, $message_error, $title, $linki, $session;
+global $header_section, $message_error, $title, $linki;
 $title = "Participant Survey";
 // This can be a participant or a staff page
 require_once('PartCommonCode.php');
@@ -265,5 +265,9 @@ EOD;
     echo "<br/>\n";
     echo fetchCustomText("survey_displayonly");
 }
-participant_footer();
+if ($header_section == HEADER_PARTICIPANT) {
+    participant_footer();
+} else {
+    staff_footer();
+}
 ?>

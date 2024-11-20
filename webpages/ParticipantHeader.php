@@ -54,11 +54,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
     }
     html_header($title, $bootstrapVersion);
     $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
-    if ($isBs4or5) {
-        echo "<body class=\"bs4\">\n";
-    } else {
-        echo "<body>\n";
-    }
+    echo "<body>\n";
     echo "<div class=\"container-fluid\">\n";
     /**
      * Top section behavior
@@ -88,7 +84,12 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
             $paramArray["title"] = $title;
             $paramArray["survey"] = $_SESSION['survey_exists'];
             $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
-            RenderXSLT('ParticipantMenu_BS4.xsl', $paramArray, GeneratePermissionSetXML());
+            if ($bootstrapVersion == 'bs4') {
+                $filename = 'ParticipantMenu_BS4.xsl';
+            } else {
+                $filename = 'ParticipantMenu_BS5.xsl';
+            }
+            RenderXSLT($filename, $paramArray, GeneratePermissionSetXML());
         } else {
 ?>
         <nav id="participantNav" class="navbar navbar-inverse">
