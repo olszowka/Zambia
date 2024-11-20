@@ -155,7 +155,7 @@ if (!may_I('CreateUser') || !may_I('EditUserPermRoles')) {
 }
 $loggedInUserBadgeId = $_SESSION['badgeid'];
 ['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
-staff_header($title, true);
+staff_header($title, 'bs4');
 if (array_key_exists("PostCheck", $_POST)) {
     $insert_successful = insert_user($mayIEditAllRoles, $rolesIMayEditArr);
 }

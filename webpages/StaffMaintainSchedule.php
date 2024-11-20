@@ -6,7 +6,7 @@ $fullPage = true; // changes body class to support all content restricted to scr
 require_once('StaffCommonCode.php');
 require_once('StaffMaintainSchedule_FNC.php');
 
-staff_header($title);
+staff_header($title, 'bs2');
 ?>
 <div id="mainContentContainer" class="flex-column-container">
 	<div class="flex-row-container flex-column-fixed" style="width: 280px; margin: 2px 1px 2px 2px; border: 1px solid black"><!-- ### LEFT COLUMN ###-->

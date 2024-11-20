@@ -3,7 +3,7 @@
 global $title;
 require_once('StaffCommonCode.php');
 $title = "Precis";
-staff_header($title, true);
+staff_header($title, 'bs4');
 $showlinks = getInt("showlinks", 0);
 $_SESSION['return_to_page'] = "ViewPrecis.php?showlinks=$showlinks";
 $ConStartDatim = CON_START_DATIM; // make it a variable so it can be substituted

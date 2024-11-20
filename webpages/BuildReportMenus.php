@@ -10,7 +10,7 @@ if (!may_I('ConfigureReports')) {
 }
 $areYouSure = getInt("areYouSure");
 if ($areYouSure !== 1) {
-    staff_header($title, true);
+    staff_header($title, 'bs4');
 ?>
 <div class="row mt-3">
     <div class="col-12">
@@ -68,7 +68,7 @@ $reportMenuFilHand = fopen('ReportMenuInclude.php', 'wb');
 $reportMenuBS4FilHand = fopen('ReportMenuBS4Include.php', 'wb');
 $staffReportsICIFilHand = fopen('staffReportsInCategoryInclude.php', 'wb');
 if ($reportMenuFilHand === false || $reportMenuBS4FilHand === false || $staffReportsICIFilHand === false) {
-    staff_header($title, true);
+    staff_header($title, 'bs4');
 ?>
     <div class="row mt-3">
         <div class="col-12">
@@ -112,7 +112,7 @@ fclose($reportMenuFilHand);
 fclose($reportMenuBS4FilHand);
 fclose($staffReportsICIFilHand);
 $reportCount = count($allReports);
-staff_header($title, true);
+staff_header($title, 'bs4');
 ?>
 <div class="row mt-3">
     <div class="col-12">

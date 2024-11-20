@@ -30,7 +30,7 @@ function render_query_result_as_csv($result) {
 function echo_if_zero_rows_and_exit($result) {
     global $title;
     if (mysqli_num_rows($result) == 0) {
-        staff_header($title);
+        staff_header($title, 'bs2');
         $message = "Report returned no records.";
         echo "<p>" . $message . "\n";
         staff_footer();

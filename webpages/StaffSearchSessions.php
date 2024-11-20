@@ -3,7 +3,7 @@
     global $participant, $message_error, $message2, $congoinfo, $title;
     $title = "Search Sessions";
     require_once('StaffCommonCode.php');
-    staff_header($title);
+    staff_header($title, 'bs2');
     if (may_I('Staff')) {
 ?>
 

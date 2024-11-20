@@ -17,7 +17,7 @@ function RenderEditCreateSession ($action, $session, $messageWarning, $messageFa
     } else {
         exit();
     }
-    staff_header($title, true);
+    staff_header($title, 'bs4');
     if ($messageFatal == '') {
         $queryArr = array();
         $queryArr['divisions'] =<<<EOD

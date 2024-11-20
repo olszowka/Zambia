@@ -7,7 +7,7 @@ $title = "Maintain Room Schedule";
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
-staff_header($title);
+staff_header($title, 'bs2');
 $topsectiononly = true; // no room selected -- flag indicates to display only the top section of the page
 $conflict = false; // initialize
 if (isset($_POST["numrows"])) {

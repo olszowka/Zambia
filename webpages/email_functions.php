@@ -55,7 +55,7 @@ function render_send_email($email, $message_warning) {
     $title = "Send Email to Participants";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, 'bs2');
 
     if (isset($message_warning) && strlen($message_warning) > 0) {
         echo "<p class=\"alert\">$message_warning</p>\n";
@@ -102,7 +102,7 @@ function renderQueueEmail($goodCount, $arrayOfGood, $badCount, $arrayOfBad) {
     $title = "Results of Queueing Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, 'bs2');
     echo "<p>$goodCount message(s) were queued for email transmission.<br>\n";
     echo "$badCount message(s) failed.</p>\n";
     echo "<p>List of messages successfully queued:<br>\n";
@@ -138,7 +138,7 @@ function render_verify_email($email, $email_verify, $message_warning) {
     $title = "Send Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, 'bs2');
 
     if (strlen($message_warning) > 0) {
         echo "<p class=\"alert\">$message_warning</p>\n";
@@ -167,7 +167,7 @@ function render_send_email_engine($email, $message_warning) {
     $title = "Pretend to actually send email.";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, 'bs2');
 
     if (strlen($message_warning) > 0) {
         echo "<p class=\"message_warning\">$message_warning</p>\n";

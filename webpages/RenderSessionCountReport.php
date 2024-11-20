@@ -4,7 +4,7 @@ function RenderSessionCountReport($result) {
     global $title;
     $title = "Session Count Report";
     require_once('StaffCommonCode.php');
-    staff_header($title);
+    staff_header($title, 'bs2');
     ?>
 <p> Sessions are sorted by the session status. </p><br>
 

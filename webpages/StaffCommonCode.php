@@ -10,7 +10,7 @@
         if (isset($returnAjaxErrors) && $returnAjaxErrors) {
             RenderErrorAjax($headerErrorMessage);
         } else {
-            staff_header($title);
+            staff_header($title, 'bs2');
         }
         exit();
         };

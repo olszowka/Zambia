@@ -23,7 +23,7 @@ if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     RenderError($message_error);
     exit();
 }
-staff_header($title);
+staff_header($title, 'bs2');
 echo "<dl>\n";
 if ($reportcategoryid === "") {
     foreach ($reportNames as $reportFileName => $reportName) {
