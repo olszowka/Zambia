@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 var badgenameDirty = false;
 var bioDirty = false;
 var htmlbioused = false;
@@ -329,6 +329,9 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
         startTinymce();
     }
     $staffnotes.val(node.getAttribute("staff_notes")).prop("defaultValue", node.getAttribute("staff_notes")).prop("readOnly", false);
+    if (regtypeElem) {
+        regtypeElem.value = node.getAttribute("regmessage");
+    }
     $password.prop("readOnly", false);
     $password.val("");
     $cpassword.prop("readOnly", false);
