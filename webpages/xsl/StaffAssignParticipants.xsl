@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
     Created by Peter Olszowka on 2015-10-16;
-    Copyright (c) 2011-2023 The Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2011-2024 The Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:import href="renderSurveySearch.xsl"/>
+    <!--<xsl:import href="renderSurveySearch.xsl"/>-->
     <xsl:output encoding="UTF-8" indent="yes" method="html" />
     <xsl:param name="surveys" select="'0'"/>
-    <xsl:param name="SurveyUsed" select="'0'"/>
+    <!--<xsl:param name="SurveyUsed" select="'0'"/>-->
     <xsl:template match="/">
         <xsl:variable name="editSessionNotes" select="doc/parameters/@editSessionNotes = 'true'" />
         <div id="message" alert-dismissible="true" fade="true" show="true" class="alert mt-4 alert-success" style="display: none;">
@@ -93,15 +93,15 @@
                 <div class="col col-auto">
                     <label for="partDropdown">Assign participant not indicated as interested or invited.</label>
                 </div>
-                <xsl:if test="$SurveyUsed = '1'">
+                <!--<xsl:if test="$SurveyUsed = '1'">
                     <div class="col col-auto">
                         <button type="button" id="showhideSurveyFilter" class="btn btn-secondary" onclick="toggleShowFilter();">Show Survey Filter</button>
                     </div>
-                </xsl:if>
+                </xsl:if>-->
             </div>
-            <xsl:if test="$SurveyUsed = '1'">
+            <!--<xsl:if test="$SurveyUsed = '1'">
                 <xsl:apply-imports/>
-            </xsl:if>
+            </xsl:if>-->
             <div class="row mt-4" id="assign-participant-row">
                 <div class="col col-5">
                     <span id="popover-target"></span>
