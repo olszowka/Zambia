@@ -28,10 +28,10 @@ $timeLimitSuccess = set_time_limit(600);
 if (SMTP_QUEUEONLY === TRUE) {
     staff_header($title, 'bs4');
 }
-if (!$timeLimitSuccess) {
-    RenderError("Error extending time limit.");
-    exit(0);
-}
+//if (!$timeLimitSuccess) {
+//    RenderError("Error extending time limit.");
+//    exit(0);
+//}
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $email = get_email_from_post();
 
