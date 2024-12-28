@@ -162,7 +162,7 @@ EOD;
     $paramArray['email'] = $email;
     $paramArray['track_tag_usage'] = TRACK_TAG_USAGE;
     if (TRACK_TAG_USAGE == 'TAG_ONLY') {
-        $paramArray['trackid'] = DEFAULT_TAG_ONLY_TRACK;
+        $paramArray['track'] = DEFAULT_TAG_ONLY_TRACK;
     }
     $paramArray['showmeetinglink'] = defined('MEETING_LINK') ? MEETING_LINK : false;
     $paramArray['showparticipantlink'] = defined('PARTICIPANT_LINK') ? PARTICIPANT_LINK : false;
