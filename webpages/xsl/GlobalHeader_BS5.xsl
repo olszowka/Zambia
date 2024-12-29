@@ -10,8 +10,8 @@
     <xsl:param name="header_error_message" select="''" />
     <!-- TRUE/FALSE --><xsl:param name="RESET_PASSWORD_SELF" select="true()" />
     <xsl:template match="/">
-        <header class="header-wrapper">
-            <div id="reg-header-container" class="collapsible-wrapper">
+        <header class="row">
+            <div id="reg-header-container" class="collapsible-wrapper col px-0">
                 <div id="reg-header">
                     <xsl:choose>
                         <xsl:when test="$header_version='Participant'">
@@ -21,9 +21,11 @@
                             <xsl:attribute name="class">header staff-header collapsible</xsl:attribute>
                         </xsl:when>
                     </xsl:choose>
-                    <div class="header-contents">
-                        <img src="images/Z_illuminated.jpg" alt="Zambia &quot;Z&quot; logo" class="d-none d-lg-block" />
-                        <h1 class="d-none d-md-block">
+                    <div class="col-md-auto px-0">
+                        <img src="images/Z_illuminated.jpg" alt="Zambia &quot;Z&quot; logo" class="d-none d-lg-block" style="width: 175px"/>
+                    </div>
+                    <div class="col">
+                        <h1 class="d-none d-md-block px-2">
                             <xsl:text>Zambia</xsl:text>
                             <span class="d-none d-lg-inline">
                                 <xsl:text>: The </xsl:text>
@@ -32,87 +34,95 @@
                             </span>
                         </h1>
                     </div>
-                    <xsl:choose>
-                        <xsl:when test="$top_section_behavior = 'NORMAL'">
-                            <div id="welcome">
-                                <p>
-                                    <xsl:text>Welcome, </xsl:text>
-                                    <xsl:value-of select="$badgename" />
-                                </p>
-                                <img id="hide-header-but" class="img-button float-end" aria-role="button"
-                                     alt="Shrink header to a thin strip" title="Shrink header to a thin strip" >
-                                    <xsl:choose>
-                                        <xsl:when test="$header_version='Participant'">
-                                            <xsl:attribute name="src">images/blue-up.png</xsl:attribute>
-                                        </xsl:when>
-                                        <xsl:when test="$header_version='Staff'">
-                                            <xsl:attribute name="src">images/green-up.png</xsl:attribute>
-                                        </xsl:when>
-                                    </xsl:choose>
-                                </img>
-                                <a href="logout.php" class="btn btn-primary float-end mr-4" title="Click to log out">Log out</a>
-                            </div>
-                        </xsl:when>
-                        <xsl:when test="$top_section_behavior = 'LOGIN' or $top_section_behavior = 'SESSION_EXPIRED'
-                            or $top_section_behavior = 'LOGOUT' or $top_section_behavior = 'PASSWORD_RESET_COMPLETE'">
-                            <div>
-                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="doLogin.php">
-                                    <fieldset id="login-box">
-                                        <xsl:if test="$header_error_message = '' and not($top_section_behavior = 'SESSION_EXPIRED' and $top_section_behavior = 'LOGOUT' and $top_section_behavior = 'PASSWORD_RESET_COMPLETE')">
-                                            <xsl:attribute name="class">extended</xsl:attribute>
-                                        </xsl:if>
-                                        <xsl:if test="not($header_error_message = '')">
-                                            <div class="login-alert-container">
-                                                <span class="alert alert-danger"><xsl:value-of select="$header_error_message" /></span>
-                                            </div>
-                                        </xsl:if>
-                                        <xsl:choose>
-                                            <xsl:when test="$top_section_behavior = 'SESSION_EXPIRED'">
-                                                <div class="login-alert-container">
-                                                    <span class="alert alert-danger">Session expired. Please log in again.</span>
+                    <xsl:if test="$top_section_behavior != 'NO_USER'">
+                        <div class="col col-lg-4 col-xl-3 mt-4 pe-4">
+                            <xsl:choose>
+                                <xsl:when test="$top_section_behavior = 'NORMAL'">
+                                    <div id="welcome">
+                                        <p>
+                                            <xsl:text>Welcome, </xsl:text>
+                                            <xsl:value-of select="$badgename" />
+                                        </p>
+                                        <img id="hide-header-but" class="img-button float-end" aria-role="button"
+                                             alt="Shrink header to a thin strip" title="Shrink header to a thin strip" >
+                                            <xsl:choose>
+                                                <xsl:when test="$header_version='Participant'">
+                                                    <xsl:attribute name="src">images/blue-up.png</xsl:attribute>
+                                                </xsl:when>
+                                                <xsl:when test="$header_version='Staff'">
+                                                    <xsl:attribute name="src">images/green-up.png</xsl:attribute>
+                                                </xsl:when>
+                                            </xsl:choose>
+                                        </img>
+                                        <a href="logout.php" class="btn btn-primary float-end mr-4" title="Click to log out">Log out</a>
+                                    </div>
+                                </xsl:when>
+                                <xsl:when test="$top_section_behavior = 'LOGIN' or $top_section_behavior = 'SESSION_EXPIRED'
+                                    or $top_section_behavior = 'LOGOUT' or $top_section_behavior = 'PASSWORD_RESET_COMPLETE'">
+                                    <form id="login-form" name="loginform" method="post" action="doLogin.php">
+                                        <fieldset id="login-box">
+                                            <xsl:if test="$header_error_message = '' and not($top_section_behavior = 'SESSION_EXPIRED' and $top_section_behavior = 'LOGOUT' and $top_section_behavior = 'PASSWORD_RESET_COMPLETE')">
+                                                <xsl:attribute name="class">extended</xsl:attribute>
+                                            </xsl:if>
+                                            <xsl:if test="not($header_error_message = '')">
+                                                <div class="row mb-3">
+                                                    <span class="alert alert-danger py-1"><xsl:value-of select="$header_error_message" /></span>
                                                 </div>
-                                            </xsl:when>
-                                            <xsl:when test="$top_section_behavior = 'LOGOUT'">
-                                                <div class="login-alert-container">
-                                                    <span class="alert alert-success">You have logged out successfully.</span>
-                                                </div>
-                                            </xsl:when>
-                                            <xsl:when test="$top_section_behavior = 'PASSWORD_RESET_COMPLETE'">
-                                                <div class="login-alert-container">
-                                                    <span class="alert alert-success">You have changed your password successfully.</span>
-                                                </div>
-                                            </xsl:when>
-                                        </xsl:choose>
-                                        <div class="control-group">
-                                            <label class="control-label vert-sep vert-sep-above" for="badgeid">
-                                                <xsl:value-of select="$USER_ID_PROMPT"/>
-                                                <xsl:text>:</xsl:text>
-                                            </label>
-                                            <div class="controls vert-sep vert-sep-above">
-                                                <input type="text" name="badgeid" id="badgeid" class="pbox" placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
-                                            </div>
-                                            <label class="control-label" for="passwd">Password:</label>
-                                            <div class="controls">
-                                                <input type="password" id="passwd" name="passwd" class="pbox" placeholder="Password" title="Enter your password" />
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <div class="controls">
-                                                <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
-                                            </div>
-                                        </div>
-                                        <xsl:if test="$RESET_PASSWORD_SELF">
-                                            <div class="control-group">
-                                                <div class="controls">
-                                                    <a href="ForgotPassword.php">New user or forgot your password</a>
+                                            </xsl:if>
+                                            <xsl:choose>
+                                                <xsl:when test="$top_section_behavior = 'SESSION_EXPIRED'">
+                                                    <div class="row mb-3">
+                                                        <span class="alert alert-danger py-1">Session expired. Please log in again.</span>
+                                                    </div>
+                                                </xsl:when>
+                                                <xsl:when test="$top_section_behavior = 'LOGOUT'">
+                                                    <div class="row mb-3">
+                                                        <span class="alert alert-success py-1">You have logged out successfully.</span>
+                                                    </div>
+                                                </xsl:when>
+                                                <xsl:when test="$top_section_behavior = 'PASSWORD_RESET_COMPLETE'">
+                                                    <div class="row mb-3">
+                                                        <span class="alert alert-success py-1">You have changed your password successfully.</span>
+                                                    </div>
+                                                </xsl:when>
+                                            </xsl:choose>
+                                            <div class="row mb-3">
+                                                <label for="badgeid" class="col-5 col-form-label">
+                                                    <xsl:value-of select="$USER_ID_PROMPT"/>
+                                                    <xsl:text>:</xsl:text>
+                                                </label>
+                                                <div class="col-7">
+                                                    <input type="text" name="badgeid" id="badgeid" class="form-control"
+                                                        placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
                                                 </div>
                                             </div>
-                                        </xsl:if>
-                                    </fieldset>
-                                </form>
-                            </div>
-                        </xsl:when>
-                    </xsl:choose>
+                                            <div class="row mb-3">
+                                                <label for="passwd" class="col-5 col-form-label">Password</label>
+                                                <div class="col-7">
+                                                    <input type="password" id="passwd" name="passwd" class="form-control"
+                                                        placeholder="Password" title="Enter your password" />
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-7 offset-5">
+                                                    <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
+                                                </div>
+                                            </div>
+                                            <xsl:if test="$RESET_PASSWORD_SELF">
+                                                <div class="row mb-3">
+                                                    <div class="col-12">
+                                                        <div class="mx-auto" style="width:16rem">
+                                                            <a href="ForgotPassword.php">New user or forgot your password</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </xsl:if>
+                                        </fieldset>
+                                    </form>
+                                </xsl:when>
+                            </xsl:choose>
+                        </div>
+                    </xsl:if><!-- End of 3rd column with user info -->
                 </div><!-- End of reg-header -->
             </div><!-- End of reg-header-container -->
             <xsl:if test="$top_section_behavior = 'NORMAL'">

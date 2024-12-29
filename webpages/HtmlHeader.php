@@ -34,8 +34,10 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
     <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
     <link rel="stylesheet" href="external/tabulator-4.9.1/css/tabulator.min.css" type="text/css" >
     <link rel="stylesheet" href="css/zambia_common.css" type="text/css" media="screen" />
-<?php if ($isBs4or5) { ?>
-    <link rel="stylesheet" href="css/zambia_bs4.css" type="text/css" media="screen" />
+<?php if ($bootstrapVersion == 'bs4') { ?>
+    <link rel="stylesheet" href="css/zambia_bs4_customizations.css" type="text/css" media="screen" />
+<?php } else if ($bootstrapVersion == 'bs5') { ?>
+    <link rel="stylesheet" href="css/zambia_bs5_customizations.css" type="text/css" media="screen" />
 <?php } else { ?>
     <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
 <?php } ?>

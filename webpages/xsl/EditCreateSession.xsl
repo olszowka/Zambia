@@ -51,7 +51,7 @@
     <xsl:param name="seconddescriptioncaption" />
 
     <xsl:template match="/">
-        <div class="container container-xl">
+        <div class="container-xxxl">
             <xsl:choose>
                 <xsl:when test="$messageFatal">
                     <div class="row mt-3">

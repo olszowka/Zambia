@@ -1,6 +1,7 @@
 /**
- * File created by Peter Olszowka July 17, 2020
- * Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * File created as zambia_bs4.less by Peter Olszowka July 17, 2020
+ * Renamed zambia_bs4_customizations.less by Peter Olszowka Nov 27, 2024
+ * Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 /* Page Header Stuff */
 .header-wrapper {
@@ -205,6 +206,28 @@ textarea.form-control {
   --bs-table-bg: #e87f7f;
 }
 /* End of Bootstrap 4 overrides */
+/* BS4 & 5 container extension */
+.container-xxxl {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 1760px) {
+  .container-xxxl {
+    max-width: 1680px;
+  }
+}
+.navbar > .container-xxxl {
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
+}
+/* end of BS4 & 5 container extension */
 /* General Form Defaults */
 .col-text-input {
   width: 100%;

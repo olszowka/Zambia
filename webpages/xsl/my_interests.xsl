@@ -11,7 +11,7 @@
     <xsl:param name="EditBadgeId" select="''"/>
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
-        <div class="container container-xl">
+        <div class="container-xxxl">
             <form name="addform" method="POST" action="my_interests.php" class="mt-2">
                 <xsl:if test="$readonly = '1'">
                     <div class="row">

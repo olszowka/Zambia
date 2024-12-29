@@ -88,11 +88,11 @@
                                                 <xsl:text>:</xsl:text>
                                             </label>
                                             <div class="controls vert-sep vert-sep-above">
-                                                <input type="text" name="badgeid" id="badgeid" class="pbox" placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
+                                                <input type="text" name="badgeid" id="badgeid" placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
                                             </div>
                                             <label class="control-label" for="passwd">Password:</label>
                                             <div class="controls">
-                                                <input type="password" id="passwd" name="passwd" class="pbox" placeholder="Password" title="Enter your password" />
+                                                <input type="password" id="passwd" name="passwd" placeholder="Password" title="Enter your password" />
                                             </div>
                                         </div>
                                         <div class="control-group">

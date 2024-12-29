@@ -637,9 +637,6 @@ img.tabborder {
 #revealPassword img {
   width: 1.8rem;
 }
-#password-instructions span {
-  padding-right: 1rem;
-}
 /* Table Changed Row Highlight Color */
 table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
   background-color: #ff7f7f;

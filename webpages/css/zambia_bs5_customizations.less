@@ -1,6 +1,6 @@
 /**
- * File created by Peter Olszowka July 17, 2020
- * Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * File created by Peter Olszowka Dec 2, 2024
+ * Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 @import (reference) "zambia_include.less";
 
@@ -8,6 +8,11 @@
 .header-wrapper {
     margin-left:-15px;
     margin-right:-15px;
+}
+
+#reg-header-container.collapsible-wrapper {
+    display: initial;
+    overflow: initial;
 }
 
 #alt-header {
@@ -40,7 +45,8 @@
 }
 /* end of bootstrap overrides */
 
-/* Bootstrap 4 extensions */
+/* Bootstrap 5 extensions */
+/* from bs4 customization -- not used for bs5
 .col-0p5, .col-0p75, .col-1p25, .col-1p5, .col-1p75, .col-2p75, .col-3p25, .col-md-2p5, .col-md-2p01, .col-lg-2p5,
 .col-xl-2p25, .col-xl-3p5, .col-xxl-1, .col-xxl-2, .col-xxl-3, .col-xxl-4, .col-xxl-5, .col-xxl-6, .col-xxl-7,
 .col-xxl-8, .col-xxl-9, .col-xxl-10, .col-xxl-11, .col-xxl-12 {
@@ -49,152 +55,109 @@
     padding-right: 15px;
     padding-left: 15px;
 }
+*/
 
 .col-0p5 {
-    flex: 0 0 4.166667%;
-    max-width: 4.166667%;
+    flex: 0 0 auto;
+    width: 4.166667%;
 }
 
 .col-0p75 {
-    flex: 0 0 6.25%;
-    max-width: 6.25%;
+    flex: 0 0 auto;
+    width: 6.25%;
 }
 
 .col-1p25 {
-    flex: 0 0 10.416667%;
-    max-width: 10.416667%;
+    flex: 0 0 auto;
+    width: 10.416667%;
 }
 
 .col-1p5 {
-    flex: 0 0 12.5%;
-    max-width: 12.5%;
+    flex: 0 0 auto;
+    width: 12.5%;
 }
 
 .col-1p75 {
-    flex: 0 0 14.583333%;
-    max-width: 14.583333%;
+    flex: 0 0 auto;
+    width: 14.583333%;
 }
 
 .col-2p75 {
-    flex: 0 0 22.916667%;
-    max-width: 22.916667%;
+    flex: 0 0 auto;
+    width: 22.916667%;
 }
 
 .col-3p25 {
-    flex: 0 0 27.083333%;
-    max-width: 27.083333%;
-}
-
-@media (min-width: 2000px) {
-    .col-xxl-1 {
-        flex: 0 0 8.333333%;
-        max-width: 8.333333%;
-    }
-
-    .col-xxl-2 {
-        flex: 0 0 16.666667%;
-        max-width: 16.666667%;
-    }
-
-    .col-xxl-2p5 {
-        flex: 0 0 20.833333%;
-        max-width: 20.833333%;
-    }
-
-    .col-xxl-3 {
-        flex: 0 0 25%;
-        max-width: 25%;
-    }
-
-    .col-xxl-4 {
-        flex: 0 0 33.333333%;
-        max-width: 33.333333%;
-    }
-
-    .col-xxl-5 {
-        flex: 0 0 41.666667%;
-        max-width: 41.666667%;
-    }
-
-    .col-xxl-6 {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-
-    .col-xxl-7 {
-        flex: 0 0 58.333333%;
-        max-width: 58.333333%;
-    }
-
-    .col-xxl-8 {
-        flex: 0 0 66.666667%;
-        max-width: 66.666667%;
-    }
-
-    .col-xxl-9 {
-        flex: 0 0 75%;
-        max-width: 75%;
-    }
-
-    .col-xxl-10 {
-        flex: 0 0 83.333333%;
-        max-width: 83.333333%;
-    }
-
-    .col-xxl-11 {
-        flex: 0 0 91.666667%;
-        max-width: 91.666667%;
-    }
-
-    .col-xxl-12 {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-}
-
-@media (min-width: 576px) and (max-width: 767px) {
+    flex: 0 0 auto;
+    width: 27.083333%;
 }
 
 @media (min-width: 576px) {
-    .col-sm-3p5 {
-        flex: 0 0 29.16667%;
-        max-width: 29.16667%;
+    .col-sm-2p5 {
+        flex: 0 0 auto;
+        width: 20.83333%;
     }
-}
 
-@media (min-width: 768px) and (max-width: 991px) {
+    .col-sm-3p5 {
+        flex: 0 0 auto;
+        width: 29.16667%;
+    }
 }
 
 @media (min-width: 768px) {
     .col-md-2p01 {
-        flex: 0 0 16.75%;
-        max-width: 16.75%;
+        flex: 0 0 auto;
+        width: 16.75%;
     }
-}
 
-@media (min-width: 992px) and (max-width: 1199px) {
+    .col-md-2p5 {
+        flex: 0 0 auto;
+        width: 20.83333%;
+    }
+
+    .col-md-3p5 {
+        flex: 0 0 auto;
+        width: 29.16667%;
+    }
 }
 
 @media (min-width: 992px) {
     .col-lg-2p5 {
-        flex: 0 0 20.83333%;
-        max-width: 20.83333%;
+        flex: 0 0 auto;
+        width: 20.83333%;
+    }
+
+    .col-lg-3p5 {
+        flex: 0 0 auto;
+        width: 29.16667%;
     }
 }
 
 @media (min-width: 1200px) {
     .col-xl-2p25 {
-        flex: 0 0 18.75%;
-        max-width: 18.75%;
+        flex: 0 0 auto;
+        width: 18.75%;
     }
 
     .col-xl-3p5 {
-        flex: 0 0 29.166667%;
-        max-width: 29.166667%;
+        flex: 0 0 auto;
+        width: 29.166667%;
     }
 
     .container.container-xl {
         max-width:1800px
+    }
+}
+
+@media (min-width: 2000px) {
+    .col-xxl-2p5 {
+        flex: 0 0 auto;
+        width: 20.833333%;
+    }
+
+    .col-xxl-3p5 {
+        flex: 0 0 auto;
+        width: 29.166667%;
     }
 }
 
@@ -213,7 +176,8 @@
     padding-left: calc(16px - 0.25%);
     padding-right: calc(16px + 0.25%);
 }
-/* End of Bootstrap 4 extensions */
+
+/* End of Bootstrap 5 extensions */
 
 /* Bootstrap 4 overrides */
 
@@ -238,6 +202,33 @@ textarea.form-control {
 }
 
 /* End of Bootstrap 4 overrides */
+
+/* BS4 & 5 container extension */
+
+.container-xxxl {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-right: auto;
+    margin-left: auto
+}
+
+@media (min-width: 1760px) {
+    .container-xxxl {
+        max-width: 1680px;
+    }
+}
+
+.navbar > .container-xxxl {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* end of BS4 & 5 container extension */
 
 /* General Form Defaults */
 
