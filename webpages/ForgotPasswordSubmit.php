@@ -9,15 +9,27 @@ require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('external/guzzlehttp-guzzle-7.8.1/vendor/autoload.php');
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
-    participant_header($title, true, 'Normal');
-    echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">You have reached this page in error.</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
 $recaptchaResponse = getString('g-recaptcha-response');
 if (empty($recaptchaResponse)) {
-    participant_header($title, true, 'Normal');
-    echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">Error with reCAPTCHA (bot detector).</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
@@ -36,12 +48,18 @@ $guzzleRepsonse = $client->request('POST', '/recaptcha/api/siteverify', [
 ]);
 $recaptchaConf = json_decode($guzzleRepsonse->getBody()->getContents(), true);
 if (!$recaptchaConf["success"]) {
-    participant_header($title, true, 'Normal');
-    echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">Error with reCAPTCHA (bot detector).</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
-participant_header($title, true, 'Normal');
+participant_header($title, true, 'Normal', 'bs5');
 $badgeid = getString('badgeid');
 $email = getString('emailAddress');
 if (empty($badgeid) || empty($email)) {
@@ -131,6 +149,8 @@ $message->setFrom($fromAddress);
 
 //Define body
 $urlLink = sprintf('<a href="%s">%s</a>', $url, $url);
+error_log("ForgotPasswordSubmit:152 -- urlLink: $urlLink");
+
 if (!empty($badgename)) {
     $username = $badgename;
 } elseif (!empty($pubsname)) {
@@ -200,7 +220,7 @@ $param_arr = array($email, $fromAddress, $subjectLine, $code);
 $types = "sssi";
 $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
 
-// regular response is name as error response above
+// regular response is same as error response above
 RenderXSLT('ForgotPasswordResponse.xsl', $responseParams);
 participant_footer();
 ?>
