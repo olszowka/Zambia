@@ -14,12 +14,17 @@ if (TRACK_TAG_USAGE !== "TAG_ONLY") {
 } else {
     $addtrack = "";
 }
+if (TRACK_TAG_USAGE !== 'TRACK_ONLY') {
+    $addtag = "GROUP_CONCAT(TA.tagname ORDER BY TA.display_order SEPARATOR ', ') AS taglist,";
+} else {
+    $addtag = "";
+}
 // List of sessions that match search criteria
 // Includes sessions in which participant is already interested if they do match match search
 // Use "Session Interests" page to just see everything in which you are interested
 $sql = <<<EOD
 SELECT
-        S.sessionid, $addtrack S.title, GROUP_CONCAT(TA.tagname ORDER BY TA.display_order SEPARATOR ', ') AS taglist,
+        S.sessionid, S.title, $addtrack $addtag
         CASE
             WHEN (minute(S.duration)=0) THEN date_format(S.duration,'%l hr')
             WHEN (hour(S.duration)=0) THEN date_format(S.duration, '%i min')
