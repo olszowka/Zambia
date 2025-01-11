@@ -3,23 +3,27 @@
 // Created by Peter Olszowka on 2022-12-15
 $report = [];
 $report['name'] = 'All Participants and Assignments';
-$report['description'] = 'Shows who has been assigned to each session ordered by participant. Includes unassigned participants. Includes scheduled and unscheduled sessions.';
+$report['description'] = 'Shows who has been assigned to each session ordered by participant. Includes unassigned participants, but limited to ones currently interested in attending. Includes scheduled and unscheduled sessions, but not dropped or cancelled ones.';
 $report['categories'] = array(
     'Programming Reports' => 155,
 );
 $report['columns'] = array(
     array("width" => "4rem"),
     array("width" => "10rem"),
+    array("width" => "6rem"),
+    array("width" => "6rem"),
     array("orderable" => false)
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, P.pubsname
+        P.badgeid, P.pubsname, CD.firstname, CD.lastname
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
-    WHERE EXISTS ( SELECT *
+    WHERE
+            P.interested = 1 /* yes */
+        AND EXISTS ( SELECT *
                         FROM
                             UserHasPermissionRole UHPR
                         WHERE
@@ -54,6 +58,8 @@ $report['xsl'] =<<<'EOD'
                         <tr style="height:2.6rem">
                             <th class="report">Badgeid</th>
                             <th class="report">Pubsname</th>
+                            <th class="report">First name</th>
+                            <th class="report">Last Name</th>
                             <th class="report">Sessions</th>
                         </tr>
                     </thead>
@@ -80,6 +86,12 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
+            </td>
+            <td class="report">
+                <xsl:value-of select="@firstname" />
+            </td>
+            <td class="report">
+                <xsl:value-of select="@lastname" />
             </td>
             <td class="report">
                 <xsl:choose>
