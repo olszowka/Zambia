@@ -1,11 +1,10 @@
 <?php
-// Copyright (c) 2009-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2009-2025 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Palm Calendar';
 $report['description'] = 'Export CSV file for Palm device calendars';
 $report['categories'] = array(
     'Reports downloadable as CSVs' => 60,
-    'Publication Reports' => 40
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = true;

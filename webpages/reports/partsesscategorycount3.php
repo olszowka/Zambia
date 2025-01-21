@@ -2,7 +2,7 @@
 // Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'New Comps Report';
-$report['description'] = 'Session counts for each participant.  Rewritten for B61';
+$report['description'] = 'Session counts for each participant.  Rewritten for B61 and again for B62';
 $report['categories'] = array(
     'Registration Reports' => 100,
 );
@@ -27,7 +27,8 @@ $report['columns'] = array(
     array(),
     array(),
     array(),
-    array()
+    array(),
+    array(),
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
@@ -35,7 +36,12 @@ SELECT
         P.badgeid, CD.regtype, RT.message, CD.firstname, CD.lastname, CD.badgename, P.pubsname, CD.email,
         CD.phone, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry,
         IFNULL(subQ.blp, 0) as blp, IFNULL(subQ.ag, 0) as ag, IFNULL(subQ.re, 0) as re, IFNULL(subQ.kk, 0) as kk,
-        IFNULL(subQ.other, 0) AS other, IFNULL(subQ.total, 0) as total
+        IFNULL(subQ.other, 0) AS other, IFNULL(subQ.total, 0) as total,
+        CASE 
+            WHEN P.interested = 1 THEN 'Yes'
+            WHEN P.interested = 2 THEN 'No'
+            ELSE 'Unk'
+        END AS interested
     FROM
                   Participants P
              JOIN CongoDump CD USING (badgeid)
@@ -43,11 +49,11 @@ SELECT
         LEFT JOIN (
             SELECT
                     POS.badgeid,
-                    SUM(IF((S.sessionid = 340), 1, 0)) AS blp, /* book launch party */
+                    SUM(IF((S.sessionid = 200), 1, 0)) AS blp, /* book launch party */
                     SUM(IF((S.typeid = 8), 1, 0)) AS ag, /* autographings */
                     SUM(IF((S.typeid = 7), 1, 0)) AS re, /* reading */
                     SUM(IF((S.typeid = 1), 1, 0)) AS kk, /* kaffeeklatsches */
-                    SUM(IF((S.sessionid != 340 AND S.typeid != 8 AND S.typeid != 7 AND S.typeid != 1), 1, 0)) AS other, /* see above */
+                    SUM(IF((S.sessionid != 200 AND S.typeid != 8 AND S.typeid != 7 AND S.typeid != 1), 1, 0)) AS other, /* see above */
                     Count(*) AS total
                 FROM
                          Schedule SCH
@@ -57,8 +63,13 @@ SELECT
                     S.pubstatusid = 2 /* Public */
                 GROUP BY POS.badgeid    
             ) AS subQ USING (badgeid)
-    WHERE
-        P.interested = 1
+    WHERE EXISTS (SELECT *
+                    FROM
+                        UserHasPermissionRole UHPR
+                    WHERE
+                            UHPR.badgeid = P.badgeid
+                        AND UHPR.permroleid = 4 /* Participant */
+                      )
     ORDER BY
         CD.lastname, CD.firstname;
 
@@ -77,6 +88,7 @@ $report['xsl'] =<<<'EOD'
                             <th class="report" >Badge ID</th>
                             <th class="report" >Registration Type</th>
                             <th class="report" >Registration Description</th>
+                            <th class="report" >Interested</th>
                             <th class="report" >First Name</th>
                             <th class="report" >Last Name</th>
                             <th class="report" >Badge Name</th>
@@ -110,6 +122,7 @@ $report['xsl'] =<<<'EOD'
             <td class="report"><xsl:value-of select="@badgeid" /></td>
             <td class="report"><xsl:value-of select="@regtype" /></td>
             <td class="report"><xsl:value-of select="@message" /></td>
+            <td class="report"><xsl:value-of select="@interested" /></td>
             <td class="report"><xsl:value-of select="@firstname" /></td>
             <td class="report"><xsl:value-of select="@lastname" /></td>
             <td class="report"><xsl:value-of select="@badgename" /></td>
