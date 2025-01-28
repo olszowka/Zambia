@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2025 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Full Event Schedule';
 $report['description'] = 'Lists all Events (as determined by division on session) Scheduled in all Rooms (includes unpublished).';
@@ -31,7 +31,7 @@ SELECT
         R.roomid,
         R.roomname,
         R.function,
-        T.trackname,
+        '' AS trackname,
         S.sessionid,
         S.title, 
         PS.pubstatusname,
@@ -39,13 +39,12 @@ SELECT
     FROM
                   Schedule SCH
              JOIN Sessions S USING (sessionid)
-             JOIN Tracks T USING (trackid)
              JOIN Rooms R USING (roomid)
              JOIN PubStatuses PS USING (pubstatusid)
         LEFT JOIN SessionHasTag SHT USING (sessionid)
         LEFT JOIN Tags TA USING (tagid)
     WHERE
-        S.divisionid = 3 /* Events */
+        S.typeid = 9 /* Event */
     GROUP BY
          SCH.scheduleid
     ORDER BY
@@ -64,7 +63,7 @@ SELECT
   LEFT JOIN Participants P USING (badgeid)
   LEFT JOIN CongoDump CD USING (badgeid)
     WHERE
-            S.divisionid=3 # Events
+            S.typeid = 9 /* Event */
         AND P.badgeid IS NOT NULL
     ORDER BY
         S.sessionid, P.pubsname;
