@@ -133,7 +133,7 @@ function renderQueueEmail($goodCount, $arrayOfGood, $badCount, $arrayOfBad) {
 //   recipient_list, emailfrom, body
 // This function will render the entire page.
 // This page will next go to the StaffSendEmailResults_POST page
-function render_verify_email($email, $email_verify, $message_warning) {
+function render_verify_email($email, $email_verify, $numEmails, $message_warning) {
     global $title;
     $title = "Send Email";
     require_once('StaffHeader.php');
@@ -145,7 +145,7 @@ function render_verify_email($email, $email_verify, $message_warning) {
     }
     echo "<h3>Step 2 -- Verify </h3>\n";
     echo "<form name=\"emailverifyform\" method=POST action=\"StaffSendEmailCompose.php\">\n";
-    echo "<p>Recipient List:<br>\n";
+    echo "<p>Recipient List: $numEmails recipients<br>\n";
     echo "<textarea readonly rows=\"8\" cols=\"70\" style=\"width:400px;\">";
     echo $email_verify['recipient_list'] . "</textarea></P>\n";
     echo "<p>Rendering of message body to first recipient:<br>\n";
