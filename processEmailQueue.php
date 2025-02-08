@@ -35,7 +35,7 @@ while($row = mysqli_fetch_assoc($result)) {
 		$message = (new Swift_Message($row['emailsubject']));
 		$message->setFrom($row["emailfrom"]);
 		if ($row["emailcc"] != "") {
-            $message->addCcc($row["emailcc"]);
+            $message->addCc($row["emailcc"]);
         }
 		$message->setBody($row["body"],'text/plain');
         $emailto = $row["emailto"];
