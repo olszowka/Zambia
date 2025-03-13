@@ -142,7 +142,7 @@ FROM
     $regdbname.perinfo P
     LEFT OUTER JOIN CongoDump CD ON P.id = CD.badgeid
 WHERE
-    P.id = "$searchString" AND CD.badgeid IS NULL AND P.active = 'Y' and P.banned = 'N'
+    P.id = "$searchString" AND CD.badgeid IS NULL AND P.banned = 'N'
 ORDER BY
     P.last_name, P.first_name
 EOD;
@@ -160,7 +160,7 @@ WHERE
     OR P.last_name LIKE ?
     OR P.first_name LIKE ?
     OR P.badge_name LIKE ?)
-    AND CD.badgeid IS NULL AND P.active = 'Y' and P.banned = 'N'
+    AND CD.badgeid IS NULL AND P.banned = 'N'
 ORDER BY
     P.last_name, P.first_name
 EOD;
