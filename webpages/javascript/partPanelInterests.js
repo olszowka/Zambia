@@ -55,9 +55,9 @@ function PanelInterests() {
     function setDirty(short) {
         panelInterests.pageDirty = true;
         if (short)
-            var timeout = 90000; // 1:30 for short
+            var timeout = 1.5 * 60 * 1000; // 1:30 for short
         else
-            var timeout = 600000; // 10:00 for long
+            var timeout = 30 * 60 * 1000; // 30:00 for long, was 60000 (10 minutes)
         panelInterests.timeoutID = window.setTimeout(panelInterests.showAutosaveDialog, timeout);
     }
 
