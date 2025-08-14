@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Not Registered  -- Program Participants';
 $report['description'] = 'This is a report of program participants only sorted by number of sessions they are on that are actually running, with some registration information. It is useful for cons that comp program participants based on a minimum number of panels. In this case, this report helps make sure people get their comps. Also, participants who have not earned a comp may need some kind of consideration.';
@@ -34,13 +34,13 @@ SELECT
                         JOIN Sessions S USING (sessionid)
                     WHERE
                             S.pubstatusid = 2 /* public */
-                        AND S.typeid != 7 /* Signing */
+                        AND S.typeid != 10 /* Signing */
                     GROUP BY
                         POS.badgeid
                    ) AS SU USING (badgeid)
     WHERE
-            UHPR.permroleid = 3 /* Program Participant */
-	    AND SU.assigned > 0
+            UHPR.permroleid = 4 /* Participant (B61) */
+        AND SU.assigned > 0
     ORDER BY
         CD.regtype, SU.assigned DESC, pubsnamesort;
 EOD;

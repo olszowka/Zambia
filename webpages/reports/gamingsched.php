@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Gaming Schedule';
 $report['description'] = 'Full schedule of everything in track gaming (with participants).';
@@ -29,7 +29,7 @@ SELECT
         JOIN Participants P USING (badgeid)
         JOIN CongoDump CD USING (badgeid)
     WHERE
-        S.trackid = 7 /* Gaming */
+        S.trackid = 6 /* Gaming */
     ORDER BY
         S.sessionid, POS.moderator DESC, IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1));
 EOD;
@@ -47,7 +47,7 @@ SELECT
         LEFT JOIN SessionHasTag SHT USING (sessionid)
         LEFT JOIN Tags TA USING (tagid)
     WHERE
-        S.trackid = 7 /* Gaming */
+        S.trackid = 6 /* Gaming */
     GROUP BY
          SCH.scheduleid
     ORDER BY

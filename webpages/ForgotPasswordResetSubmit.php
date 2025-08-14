@@ -1,13 +1,19 @@
 <?php
 // Created by Peter Olszowka on 2020-04-21;
-// Copyright (c) 2020 The Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2024 The Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Submit Reset Password";
 require ('PartCommonCode.php');
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">You have reached this page in error.</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
@@ -17,8 +23,14 @@ $password = getString('password');
 $cpassword = getString('cpassword');
 $controlParams = interpretControlString($control, $controliv);
 if (!$controlParams || empty($controlParams['selector']) || empty($controlParams['validator']) || empty($controlParams['badgeid'])) {
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>Reset password form was missing required parameters.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">Reset password form was missing required parameters.</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
@@ -39,8 +51,14 @@ if (!$result = mysqli_query_exit_on_error($query)) {
     exit;
 }
 if (mysqli_num_rows($result) !== 1) {
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>Authentication error resetting password.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">Authentication error resetting password.</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
@@ -48,13 +66,19 @@ list($badgeid, $token, $pubsname, $badgename, $firstname, $lastname) = mysqli_fe
 mysqli_free_result($result);
 $calc = hash('sha256', hex2bin($controlParams['validator']));
 if (!hash_equals($token, $calc) || $controlParams['badgeid'] !== $badgeid) {
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>Authentication error resetting password.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">Authentication error resetting password.</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
 if (empty($password) || $password !== $cpassword) {
-    participant_header($title, true, 'Login');
+    participant_header($title, true, 'Normal', 'bs5');
     $controlParams = array(
         "selector" => $selector,
         "validator" => $validator,
@@ -103,5 +127,5 @@ if (!$result = mysqli_query_exit_on_error($query)) {
 }
 // Show login page with password reset confirmation
 $title = "Login";
-participant_header($title, false, 'Password_Reset');
+participant_header($title, true, 'PASSWORD_RESET_COMPLETE', 'bs5');
 participant_footer();

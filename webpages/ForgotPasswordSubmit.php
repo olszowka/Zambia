@@ -1,23 +1,35 @@
 <?php
 // Created by Peter Olszowka on 2020-04-19;
-// Copyright (c) 2020 The Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2024 The Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Send Reset Password Link";
 require ('PartCommonCode.php');
 require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
-require_once('external/guzzlehttp-guzzle-6.5.3/vendor/autoload.php');
+require_once('external/guzzlehttp-guzzle-7.8.1/vendor/autoload.php');
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">You have reached this page in error.</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
 $recaptchaResponse = getString('g-recaptcha-response');
 if (empty($recaptchaResponse)) {
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">Error with reCAPTCHA (bot detector).</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
@@ -27,7 +39,7 @@ $client = new Client([
     'base_uri' => 'https://www.google.com',
     'timeout'  => 7.5,
 ]);
-$guzzleRepsonse = $client->request('PUT', '/recaptcha/api/siteverify', [
+$guzzleRepsonse = $client->request('POST', '/recaptcha/api/siteverify', [
     'form_params' => [
         'secret' => RECAPTCHA_SERVER_KEY,
         'response' => $recaptchaResponse,
@@ -36,18 +48,24 @@ $guzzleRepsonse = $client->request('PUT', '/recaptcha/api/siteverify', [
 ]);
 $recaptchaConf = json_decode($guzzleRepsonse->getBody()->getContents(), true);
 if (!$recaptchaConf["success"]) {
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>Error with reCAPTCHA.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">Error with reCAPTCHA (bot detector).</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
-participant_header($title, true, 'Login');
+participant_header($title, true, 'Normal', 'bs5');
 $badgeid = getString('badgeid');
 $email = getString('emailAddress');
 if (empty($badgeid) || empty($email)) {
     $params = array();
     $params["USER_ID_PROMPT"] = USER_ID_PROMPT;
-    $params["error_message"] = "Both ${params['USER_ID_PROMPT']} and email address are required.";
+    $params["error_message"] = "Both {$params['USER_ID_PROMPT']} and email address are required.";
     RenderXSLT('ForgotPassword.xsl', $params);
     participant_footer();
     exit;
@@ -131,6 +149,8 @@ $message->setFrom($fromAddress);
 
 //Define body
 $urlLink = sprintf('<a href="%s">%s</a>', $url, $url);
+error_log("ForgotPasswordSubmit:152 -- urlLink: $urlLink");
+
 if (!empty($badgename)) {
     $username = $badgename;
 } elseif (!empty($pubsname)) {
@@ -176,17 +196,31 @@ try {
 }
 if ($ok) {
     try {
+        $code = 0;
         $sendMailResult = $mailer->send($message);
     } catch (Swift_TransportException $e) {
         $ok = FALSE;
-        error_log("Swift transport exception: send email failed.");
+        $code = $e->getCode();
+        if ($code < 500) {
+            error_log("Swift transport exception: send email failed, adding to queue.");
+            $sql = "INSERT INTO EmailQueue(emailto, emailfrom, emailsubject, body, status) VALUES(?, ?, ?, ?, ?);";
+            $param_arr = array($email, $fromAddress, $subjectLine, $emailBody, $e->getCode());
+            $types = "ssssi";
+            $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
+        } else {
+            error_log("Swift transport exception: send email failed, with code $code, not adding to queue.");
+        }
     } catch (Swift_SwiftException $e) {
         $ok = FALSE;
-        error_log("Swift exception: send email failed.");
+        error_log("Swift exception: add address $email failed");
     }
 }
+$sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailsubject, status) VALUES(?, ?, ?, ?);";
+$param_arr = array($email, $fromAddress, $subjectLine, $code);
+$types = "sssi";
+$rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
 
-// regular response is name as error response above
+// regular response is same as error response above
 RenderXSLT('ForgotPasswordResponse.xsl', $responseParams);
 participant_footer();
 ?>

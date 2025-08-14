@@ -1,24 +1,24 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
-$report['name'] = 'FastTrack Schedule (easy troubleshooting)';
-$report['description'] = 'What is happening in FastTrack';
+$report['name'] = 'Kids Programming Schedule (easy troubleshooting)';
+$report['description'] = 'What is happening in Dragon\'s Lair';
 $report['categories'] = array(
-    'Fast Track Reports' => 650,
+    'Dragon&apos;s Lair Reports' => 650,
 );
 $report['queries'] = [];
 $report['queries']['schedule'] =<<<'EOD'
 SELECT
         DATE_FORMAT(S.duration,'%i') as durationmin, DATE_FORMAT(S.duration,'%k') as durationhrs,
-	R.roomid, R.roomname, S.sessionid, S.title,
-	DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime
+        R.roomid, R.roomname, S.sessionid, S.title,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime
     FROM
-	     Sessions S
-	JOIN Schedule SCH USING (sessionid)
-	JOIN Rooms R USING (roomid)
+             Sessions S
+        JOIN Schedule SCH USING (sessionid)
+        JOIN Rooms R USING (roomid)
     WHERE
-            S.trackid = 5 /* Fasttrack */
-        and S.pubstatusid = 2 /* public */
+            R.roomid = 5 /* Dragon's Lair */
+        AND S.pubstatusid = 2 /* public */
     ORDER BY
         SCH.starttime, R.roomname;
 EOD;
@@ -26,16 +26,15 @@ $report['queries']['participants'] =<<<'EOD'
 SELECT
         SCH.sessionid, P.pubsname, P.badgeid, POS.moderator
     FROM
-			 Schedule SCH
+             Schedule SCH
         JOIN Sessions S USING (sessionid)
         JOIN ParticipantOnSession POS USING (sessionid)
         JOIN Participants P USING (badgeid)
         JOIN CongoDump C USING (badgeid)
     WHERE
-            S.trackid = 5 /* Fasttrack */
-        and S.pubstatusid = 2 /* public */
+        S.pubstatusid = 2 /* public */
     ORDER BY
-		SCH.sessionid, POS.moderator DESC, 
+        SCH.sessionid, POS.moderator DESC, 
         IF(instr(P.pubsname,C.lastname)>0,C.lastname,substring_index(P.pubsname,' ',-1)),
         C.firstname;
 EOD;

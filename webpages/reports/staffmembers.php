@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Staff Members';
 $report['description'] = 'List Staff Members and their priviliges';
@@ -18,7 +18,6 @@ $report['columns'] = array(
 $report['queries'] = [];
 if (empty(DEFAULT_USER_PASSWORD)) {
     $report['queries']['bad_password'] = "SELECT badgeid FROM Participants WHERE 1 = 2;";
-    $defaultUserPassword = '';
 } else {
     $defaultUserPassword = DEFAULT_USER_PASSWORD;
     // Have to run a query here to find all the default passwords;
@@ -27,13 +26,14 @@ if (empty(DEFAULT_USER_PASSWORD)) {
 SELECT
         P.badgeid, P.password
     FROM
-         Participants P
-    WHERE EXISTS (SELECT *
-        FROM
-            UserHasPermissionRole UHPR
-        WHERE
-                UHPR.badgeid = P.badgeid
-            AND UHPR.permroleid IN (1, 2, 12)) /* admin, staff, senior staff */;
+             Participants P
+        JOIN UserHasPermissionRole UHPR using (badgeid)
+    WHERE
+        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
+            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
+                    P.badgeid = UHPR2.badgeid
+                AND UHPR2.permroleid IN (1, 2, 3)
+        );
 EOD;
     if (!$result = mysqli_query_exit_on_error($prequery)) {
         exit(0); //should have exited already
@@ -45,10 +45,11 @@ EOD;
     }
     if (count($badPasswordArr) > 0) {
         $badPasswordList = implode(',', $badPasswordArr);
-        $report['queries']['bad_password'] = "SELECT badgeid FROM Participants WHERE badgeid IN ($badPasswordList);";
     } else {
-        $report['queries']['bad_password'] = "SELECT badgeid FROM Participants WHERE 0 = 1;";
+        $badPasswordList = '-99999999';
     }
+
+    $report['queries']['bad_password'] = "SELECT badgeid FROM Participants WHERE badgeid IN ($badPasswordList);";
 }
 
 $report['queries']['staff'] =<<<EOD
@@ -58,12 +59,12 @@ SELECT
     FROM
              Participants P
         JOIN CongoDump CD using (badgeid)
-    WHERE EXISTS (SELECT *
-        FROM
-            UserHasPermissionRole UHPR
-        WHERE
-                UHPR.badgeid = P.badgeid
-            AND UHPR.permroleid IN (1, 2, 12)) /* admin, staff, senior staff */
+    WHERE
+        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
+            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
+                    P.badgeid = UHPR2.badgeid
+                AND UHPR2.permroleid IN (1, 2, 3)
+        )
     ORDER BY
         CD.lastname, CD.firstname;
 EOD;
@@ -74,12 +75,12 @@ SELECT
     FROM
              UserHasPermissionRole UHPR
         JOIN PermissionRoles PR using (permroleid)
-    WHERE EXISTS (SELECT *
-        FROM
-            UserHasPermissionRole UHPR2
-        WHERE
-                UHPR2.badgeid = UHPR.badgeid
-            AND UHPR.permroleid IN (1, 2, 12)) /* admin, staff, senior staff */;
+    WHERE
+        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
+            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
+                    UHPR.badgeid = UHPR2.badgeid
+                AND UHPR2.permroleid IN (1, 2, 3)
+        );
 EOD;
 $report['xsl'] =<<<EOD
 <?xml version="1.0" encoding="UTF-8" ?>

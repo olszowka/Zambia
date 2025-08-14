@@ -1,30 +1,73 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Administer Participants";
-$bootstrap4 = true;
 require_once('StaffCommonCode.php');
-$fbadgeid = getInt("badgeid");
-staff_header($title, $bootstrap4);
+require('ParticipantTags_FNC.php');
+$fbadgeid = getString("badgeid");
+staff_header($title, 'bs4');
+if (!isLoggedIn() || !may_I('Staff')) {
+    staff_footer();
+    exit();
+}
 if ($fbadgeid) {
-    echo "<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
+    echo "<script type=\"text/javascript\">fbadgeid = '$fbadgeid';</script>\n";
 }
 ?>
 <form id="adminParticipantsForm" class="form-row">
     <div id="resultBoxDIV" class="container-fluid"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
-    <div id="searchPartsDIV" class="container-fluid">
+    <div id="searchPartsDIV" class="container-fluid border-bottom border-dark pb-3">
         <div class="row mt-3">
-            <div class="col-sm-12">
-                <div class="dialog">Enter all or part of first name, last name, badge name, <span style="font-weight:bold">or</span> published name.  If you enter numbers, it will be interpreted as a complete <?php echo USER_ID_PROMPT; ?>.
+            <div class="col-sm-4 col-lg-3 col-xl-3 col-xxl-2">
+                <label for="searchPartsINPUT" class="dialog">Enter all or part of first name, last name, badge name, <span style="font-weight:bold">or</span> published name.  If you enter numbers, it will be interpreted as a complete <?php echo USER_ID_PROMPT; ?>.
+                </label>
+            </div>
+            <div class="col-sm-4 col-lg-3 col-xl-3 col-xxl-2">
+                <div class="pt-4 text-center">Participant Tags</div>
+            </div>
+        </div>
+        <div class="row mt-3" style="row-gap:1rem;">
+            <div class="col-sm-4 col-lg-3 col-xl-3 col-xxl-2">
+                <input type="text" id="searchPartsINPUT" style="width:100%;"/>
+            </div>
+            <div class="col-sm-4 col-lg-3 col-xl-3p5 col-xxl-2p5 d-flex">
+                <div class="checkbox-list-container" id="tag-search-container">
+<?php
+echo fetch_participant_tags(true);
+?>
+                </div>
+                <div class="ml-4 mr-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tagmatchRadio" id="tagMatchAny" value="tagmatchany" checked>
+                        <label class="form-check-label" for="tagMatchAny">
+                            Match any selected
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tagmatchRadio" id="tagMatchAll" value="tagmatchall">
+                        <label class="form-check-label" for="tagMatchAll">
+                            Match all selected
+                        </label>
+                    </div>
+                    <div class="form-check disabled">
+                        <input class="form-check-input" type="radio" name="tagmatchRadio" id="tagMatchNotAll" value="tagmatchnotall">
+                        <label class="form-check-label" for="tagMatchNotAll">
+                            Match not all selected
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-12 col-xl-5 col-xxl-3">
+                <input type="hidden" id="searchPhotoApproval" value=""/>
+                <div class="btn-group" role="group" aria-label="search actions">
+                    <button type="button" class="btn btn-primary mr-3" data-loading-text="Searching..." id="searchPartsBUTN" >Search</button>
+                    <button type="button" class="btn btn-secondary mr-3" id="prevSearchResultBUTN" style="display: none;" disabled onclick="prevParticipant();">Previous</button>
+                    <button type="button" class="btn btn-secondary mr-3" id="nextSearchResultBUTN" style="display: none;" disabled onclick="nextParticipant();">Next</button>
+                    <button type="button" class="btn btn-secondary" id="toggleSearchResultsBUTN"><span id="toggleText">Hide</span> Results</button>
                 </div>
             </div>
         </div>
-        <div style="margin-top: 0.5em">
-            <input type="text" id="searchPartsINPUT" onkeypress = "if (event.keyCode === 13) doSearchPartsBUTN();" />
-            <button type="button" class="btn btn-primary" data-loading-text="Searching..." id="searchPartsBUTN">Search</button>
-            <button type="button" class="btn btn-secondary" id="toggleSearchResultsBUTN"><span id="toggleText">Hide</span> Results</button>
-        </div>
-        <div style="margin-top: 1em; height:250px; overflow:auto; border: 1px solid grey" id="searchResultsDIV">&nbsp;
+        <div class="mt-3" style="height:250px; overflow:auto; border: 1px solid grey" id="searchResultsDIV">&nbsp;
         </div>
     </div>
     <div id="unsavedWarningModal" class="modal" tabindex="-1" role="dialog">
@@ -57,7 +100,7 @@ if ($fbadgeid) {
                 </div>
             </div>
 <?php
-if (USE_REG_SYSTEM === TRUE) {
+if (USE_REG_SYSTEM === TRUE && UPDATE_REG_SYSTEM === FALSE) {
 ?>
             <div class="col-sm-3">
                 <div class="">
@@ -94,7 +137,7 @@ if (USE_REG_SYSTEM === TRUE) {
                     <label for="badgename" class="mb-1">Badge name:</label>
                 </div>
                 <div>
-<?php if (USE_REG_SYSTEM === TRUE) { 
+<?php if (USE_REG_SYSTEM === TRUE && UPDATE_REG_SYSTEM === FALSE) {
 ?>
                     <input type="text" id="badgename" class="col-text-input disabled" readonly="readonly" maxlength="50" />
 <?php
@@ -106,8 +149,17 @@ if (USE_REG_SYSTEM === TRUE) {
 ?>
                 </div>
             </div>
+            <div class="col-sm-2">
+                <div class="">
+                    <label for="badgename" class="mb-1">Registration Status</label>
+                </div>
+                <div>
+                    <input class="col-text-input disabled" id="regtype" type="text" readonly="readonly" style="max-width:15rem;" />
+                </div>
+            </div>
+
 <?php
-if (USE_REG_SYSTEM === FALSE) {
+if (USE_REG_SYSTEM === FALSE || UPDATE_REG_SYSTEM === TRUE) {
 ?> 
         </div>
         <div class="row mt-3">
@@ -140,7 +192,7 @@ if (USE_REG_SYSTEM === FALSE) {
             </div>
         </div>
 <?php
-if (USE_REG_SYSTEM === FALSE) {
+if (USE_REG_SYSTEM === FALSE || UPDATE_REG_SYSTEM === TRUE) {
 ?>
         <div class="row mt-3">
             <div class="col-sm-3 offset-sm-2 offset-xl-1">
@@ -240,37 +292,81 @@ if (may_I("ResetUserPassword")) {
 ?>
         <div class="row mt-3">
             <div class="col-sm-6">
-                <div>
-                    <label for="bio" class="">Participant biography:</label>
-                </div>
-                <div>
-                    <textarea id="bio" class="mycontrol" rows="4" cols="80" readonly="readonly" data-maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
-                </div>
+                
+<?php
+if (HTML_BIO === TRUE) {
+?>
+              <div>
+                <label for="htmlbio" class="">Participant biography:</label>
+              </div>
+              <div class="newforminput">
+                <textarea id="htmlbio" rows="4" cols="80" class="mycontrol" readonly="readonly" data-max-length="<?php echo MAX_BIO_LEN?>"></textarea>
+              </div>
+<?php
+} else {
+?>
+              <div>
+                <label for="bio" class="">Participant biography:</label>
+              </div>
+              <div>
+                <textarea id="bio" class="mycontrol" rows="4" cols="80" readonly="readonly"  data-max-length="<?php echo MAX_BIO_LEN?>"></textarea>
+              </div>
+            
+<?php
+}
+?>
             </div>
             <div class="col-sm-6">
-                <div class="">
+                <div class="newformlabel">
                     <label for="staffnotes" class="">Staff notes re. participant:</label>
                 </div>
-                <div>
+                <div class="newforminput">
                     <textarea id="staffnotes" rows="6" cols="80" readonly="readonly" class="mycontrol"></textarea>
                 </div>
+<?php
+if (HTML_BIO === TRUE) {
+?>
+              <div class="newformlabel">
+                 <label for="bio" class="newformlabel">Text biography:</label>
+              </div>
+              <div class="newforminput">
+                  <textarea id="bio" rows="8" cols="80" class="userFormTXT readonly mycontrol form-control" readonly="readonly" data-max-length="<?php echo MAX_BIO_LEN?>"></textarea>
+              </div>
+<?php
+}
+?>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-sm-4">
+            <div class="col-sm-2">
                 <div class="pb-1">
                     User Permission Roles:
                 </div>
                 <div>
-                    <div class="tag-chk-container" id="role-container">
+                    <div class="checkbox-list-container" id="role-container">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="pb-1">
+                    Participant Tags:
+                </div>
+                <div>
+                    <div class="checkbox-list-container" id="tag-container">
                     </div>
                 </div>
             </div>
         </div>
         <div class="row mt-3">
-            <button type="button" class="btn btn-primary" data-loading-text="Updating..." id="updateBUTN"
-                onclick="updateBUTTON();" disabled="disabled">Update
-            </button>
+            <div class="col col-auto">
+                <button type="button" class="btn btn-primary" data-loading-text="Updating..." id="updateBUTN"
+                    onclick="updateBUTTON();" disabled="disabled">Update
+                </button>
+            </div>
+            <div class="col col-auto" id="showsurveydiv" style="display: none;">
+                <button type="button" class="btn btn-info" id="showsurveyBTN" disabled="disabled" onclick="showSurveyBUTTON();">Show Survey Responses
+                </button>
+            </div>
         </div>
     </div>
 </form>

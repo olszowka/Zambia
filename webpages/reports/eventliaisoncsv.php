@@ -12,8 +12,8 @@ $report['group_concat_expand'] = false;
 $report['queries'] = [];
 $report['queries']['master'] =<<<'EOD'
 SELECT
-        S.sessionid, DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a') AS 'day',
-        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%l:%i %p') AS 'starttime',
+        S.sessionid, DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a') AS 'day',
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%l:%i %p') AS 'starttime',
         left(S.duration, 5) AS duration, R.roomname, S.title, P.pubsname,
         IF(ISNULL(EO.badgeid), "", "Event Organizer") AS eventorganizer,
         IF(ISNULL(EO.badgeid), "", CD.phone) AS phone,

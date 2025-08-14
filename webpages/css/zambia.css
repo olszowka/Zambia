@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 /**
  * LAYOUT
@@ -70,11 +70,6 @@ a {
   padding-top: 0;
   margin-bottom: 5px;
 }
-.checkbox.inline.long {
-  padding-top: 0;
-  margin-bottom: 5px;
-  width: 14em;
-}
 .checkbox.adjust {
   padding-top: 0;
   margin-bottom: 8px;
@@ -83,7 +78,7 @@ a {
   margin-top: 0.5em;
 }
 #resultsDiv {
-  padding-top: 1.0em;
+  padding-top: 1em;
 }
 #searchPartsINPUT {
   margin-bottom: 0;
@@ -153,12 +148,24 @@ th.report {
   padding-right: 0.2em;
   padding-left: 0.2em;
 }
-div.reportPageContent table td,
+div.reportPageContent table td {
+  border: 1px solid #000000;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
 td.report {
   border: 1px solid #000000;
   vertical-align: top;
   padding-left: 0.2em;
   padding-right: 0.2em;
+}
+td.report.report-spacious {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+td.report.report-align-right {
+  text-align: right;
 }
 div.reportPageContent table td a,
 .report A {
@@ -449,10 +456,6 @@ table.multcol-list td {
 .error-container {
   line-height: 2;
 }
-.hidden {
-  display: none !important;
-  visibility: hidden !important;
-}
 /**
  * General spacing bits
  */
@@ -634,9 +637,6 @@ img.tabborder {
 #revealPassword img {
   width: 1.8rem;
 }
-#password-instructions span {
-  padding-right: 1rem;
-}
 /* Table Changed Row Highlight Color */
 table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
   background-color: #ff7f7f;
@@ -645,20 +645,13 @@ table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
 .za-table-striped tbody > tr:nth-child(odd) > th {
   background-color: #c9c9c9;
 }
-.my-suggestions-wrapper {
-  padding-top: 1rem;
+.input-error-message {
+  display: none;
 }
-.my-suggestions-wrapper .titledtextarea {
-  margin: 1rem;
-  padding-bottom: 1rem;
+.input-container.field-error .input-error-message {
+  display: initial;
+  color: #d05b5e;
 }
-.my-suggestions-wrapper .titledtextarea > label {
-  font-weight: bold;
-  font-size: 1.05rem;
-  display: block;
-}
-.my-suggestions-wrapper .titledtextarea > textarea {
-  display: block;
-  width: 50rem;
-  max-width: 95%;
+.input-container.field-error textarea {
+  border: 2px solid #d05b5e;
 }

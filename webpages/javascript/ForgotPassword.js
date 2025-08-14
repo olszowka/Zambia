@@ -1,5 +1,5 @@
-//	Created by Peter Olszowka on 2020-04-24;
-//	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Created by Peter Olszowka on 2020-04-24;
+//  Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 var ForgotPassword = function() {
     this.initialize = function initialize() {

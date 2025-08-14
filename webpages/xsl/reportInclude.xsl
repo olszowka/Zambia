@@ -2,7 +2,7 @@
 <!--
     $Header: svn+ssh://polszowka@svn.code.sf.net/p/zambia/code/branches/arisia_prod2/webpages/xsl/StaffAssignParticipantsBadTimestamp.xsl 1190 2016-09-03 19:18:43Z polszowka $
         Created by Peter Olszowka;
-        Copyright (c) 2011-2016 The Zambia Group. All rights reserved. See copyright document for more details.
+        Copyright (c) 2011-2023 The Zambia Group. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:template name="showBadgeid">
@@ -28,10 +28,10 @@
                 <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
             </xsl:when>
             <xsl:when test="$durationhrs='0'">
-                <xsl:value-of select="@durationmin" /> Min
+                <xsl:value-of select="$durationmin" /> Min
             </xsl:when>
             <xsl:when test="$durationmin='00'">
-                <xsl:value-of select="@durationhrs" /> Hr
+                <xsl:value-of select="$durationhrs" /> Hr
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$durationhrs" /> Hr <xsl:value-of select="$durationmin" /> Min

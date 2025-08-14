@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2009-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2009-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function validate_suggestions($paneltopics, $otherideas, $suggestedguests) {
     $retval = ""; // return "" means "passed"
@@ -173,14 +173,14 @@ function validate_session() {
         return ($flag);
     }
     $i = mb_strlen($session["title"]);
-    if ($i < 10 || $i > 48) {
-        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>48</b> characters.<br>\n";
+    if ($i < 10 || $i > 100) {
+        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>100</b> characters.<br>\n";
         $flag = false;
     }
     $i = mb_strlen($session["progguiddesc"]);
-    if ($i < 10 || $i > 500) {
+    if ($i < 10 || $i > 1000) {
         $messages .= "Description is $i characters long.  Please edit it to between";
-        $messages .= " <b>10</b> and <b>500</b> characters long.<br>\n";
+        $messages .= " <b>10</b> and <b>1000</b> characters long.<br>\n";
         $flag = false;
     }
     if (!($sstatus[$session["status"]]['may_be_scheduled'])) {

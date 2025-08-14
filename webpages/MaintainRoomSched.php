@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title, $linki;
 $bigarray = array();
 define("newroomslots", 5); // number of rows at bottom of page for new schedule entries
@@ -7,7 +7,7 @@ $title = "Maintain Room Schedule";
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
-staff_header($title);
+staff_header($title, 'bs2');
 $topsectiononly = true; // no room selected -- flag indicates to display only the top section of the page
 $conflict = false; // initialize
 if (isset($_POST["numrows"])) {
@@ -29,14 +29,14 @@ if (isset($_POST["selroom"]) && $_POST["selroom"] != "0") { // room was selected
 }
 
 if ($conflict != true) {
-    $queryArray["rooms"] = "SELECT roomid, roomname, function, is_scheduled FROM Rooms ORDER BY display_order";
+    $queryArray["rooms"] = "SELECT roomid, roomname, `function`, is_scheduled FROM Rooms ORDER BY display_order";
     if (($resultXML = mysql_query_XML($queryArray)) === false) {
         RenderErrorAjax($message_error); //header has already been sent, so can just send error message and stop.
         exit();
     }
     ?>
 <form id="maintain-room-sched-room-form" class="form-inline page-top-spacer" name="selroomform" method="POST" action="MaintainRoomSched.php">
-	<div class="vert-sep">
+    <div class="vert-sep">
         <label for="selroom">Select Room:</label>
 <?php RenderXSLT('MaintainRoomSched_roomSelect.xsl', array(), $resultXML); ?>
         <button type="submit" name="submit" class="btn btn-primary">Fetch Room</button>
@@ -46,16 +46,16 @@ if ($conflict != true) {
         echo "<A HREF=\"" . $_SESSION['return_to_page'] . "\">Return to report</A>";
     }
 ?>
-	<div class="vert-sep">
+    <div class="vert-sep">
         <input type="checkbox" class="checkbox adjust" id="showUnschedRmsCHK" name="showUnschedRmsCHK" value="1"
             <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
         <label class="checkbox inline" for="showUnschedRmsCHK">Include unscheduled rooms</label>
-	</div>
-	<div class="padded text-info">For any session where you are rescheduling, please read the Notes for Programming Committee.</div>
-	</form>
-	<hr>
+    </div>
+    <div class="padded text-info">For any session where you are rescheduling, please read the Notes for Programming Committee.</div>
+    </form>
+    <hr>
 <?php
-		// unset all stuff from posts so input fields get reset to blank
+        // unset all stuff from posts so input fields get reset to blank
     for ($i = 1; $i <= newroomslots; $i++) {
         unset($_POST["day$i"]);
         unset($_POST["hour$i"]);
@@ -73,13 +73,13 @@ if ($topsectiononly) {
 <input type="hidden" name="showUnschedRmsCHK" value="1" <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
 <?php
 if ($conflict==true) {
-	echo "<button type=\"submit\" name=\"override\" class=\"btn btn-danger\">Save Anyway!</button>\n";
-	echo "<br><hr>\n";
+    echo "<button type=\"submit\" name=\"override\" class=\"btn btn-danger\">Save Anyway!</button>\n";
+    echo "<br><hr>\n";
 }
 $query = <<<EOD
 SELECT
         roomid, roomname, opentime1, closetime1, opentime2, closetime2, opentime3, closetime3,
-        function, floor, height, dimensions, area, notes
+        `function`, floor, height, dimensions, area, notes
     FROM
         Rooms
     WHERE
@@ -157,13 +157,13 @@ foreach ($roomSetArray as $roomset) {
 echo "      </table>\n";
 $query = <<<EOD
 SELECT
-        SCH.scheduleid, SCH.starttime, S.duration, SCH.sessionid, T.trackname, S.title, RS.roomsetname,
-        GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
+        SCH.scheduleid, SCH.starttime, S.duration, SCH.sessionid, T.trackname, S.title,
+        TY.typename, GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
     FROM
-                   Schedule SCH
-              JOIN Sessions S USING (sessionid)
-              JOIN Tracks T USING (trackid)
-              JOIN RoomSets RS USING (roomsetid)
+                  Schedule SCH
+             JOIN Sessions S USING (sessionid)
+             JOIN Tracks T USING (trackid)
+             JOIN Types TY USING (typeid)
         LEFT JOIN SessionHasTag SHT USING (sessionid)
         LEFT JOIN Tags TA USING (tagid)
     WHERE
@@ -190,11 +190,15 @@ echo "   <tr>\n";
 echo "      <th>Delete</th>\n";
 echo "      <th>Start Time</th>\n";
 echo "      <th>Duration</th>\n";
-echo "      <th>Track</th>\n";
-echo "      <th>Tags</th>\n";
-echo "      <th>Session ID</th>\n";
 echo "      <th>Title</th>\n";
-echo "      <th>Room Set</th>\n";
+if (TRACK_TAG_USAGE !== 'TAG_ONLY') {
+    echo "      <th>Track</th>\n";
+}
+if (TRACK_TAG_USAGE !== 'TRACK_ONLY') {
+    echo "      <th>Tags</th>\n";
+}
+echo "      <th>Session ID</th>\n";
+echo "      <th>Type</th>\n";
 echo "      </tr>\n";
 for ($i = 1; $i <= $numrows; $i++) {
     echo "   <tr>\n";
@@ -203,11 +207,15 @@ for ($i = 1; $i <= $numrows; $i++) {
     echo "<input type=\"hidden\" name=\"rowsession$i\" value=\"{$bigarray[$i]["sessionid"]}\"></td>\n";
     echo "      <td class=\"vatop lrpad border0010\">" . time_description($bigarray[$i]["starttime"]) . "</td>\n";
     echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["duration"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["trackname"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["taglist"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\"> <a href=EditSession.php?id=" . $bigarray[$i]["sessionid"] . ">" . $bigarray[$i]["sessionid"] . "</td>\n";
     echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["title"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["roomsetname"] . "</td>\n";
+    if (TRACK_TAG_USAGE !== 'TAG_ONLY') {
+        echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["trackname"] . "</td>\n";
+    }
+    if (TRACK_TAG_USAGE !== 'TRACK_ONLY') {
+        echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["taglist"] . "</td>\n";
+    }
+    echo "      <td class=\"vatop lrpad border0010\"> <a href=EditSession.php?id=" . $bigarray[$i]["sessionid"] . ">" . $bigarray[$i]["sessionid"] . "</td>\n";
+    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["typename"] . "</td>\n";
     echo "      </tr>\n";
 }
 echo "   </table>\n";
@@ -215,10 +223,11 @@ echo "<h4 class=\"label\">Add To Room Schedule</H4>\n";
 echo "<table id=\"add-to-room-schedule-table\" class=\"table table-condensed compressed\">\n";
 $query = <<<EOD
 SELECT
-        S.sessionid, T.trackname, S.title
+        S.sessionid, T.trackname, S.title, TY.typename
     FROM
              Sessions S
         JOIN Tracks T USING (trackid)
+        JOIN Types TY USING (typeid)
         JOIN SessionStatuses SS USING (statusid)
     WHERE
             SS.may_be_scheduled = 1
@@ -246,74 +255,91 @@ for ($i = 1; $i <= newroomslots; $i++) {
     // ****DAY****
     if (CON_NUM_DAYS>1) {
         echo "<select class=\"span2\" name=day$i><option value=0 ";
-        if ((!isset($_POST["day$i"])) or $_POST["day$i"]==0)
+        if ((!isset($_POST["day$i"])) or $_POST["day$i"]==0) {
             echo "selected";
+        }
         echo ">Day&nbsp;</option>";
         for ($j=1; $j<=CON_NUM_DAYS; $j++) {
             $x = longDayNameFromInt($j);
             echo"         <option value=$j ";
-            if (isset($_POST["day$i"]) && $_POST["day$i"]==$j)
+            if (isset($_POST["day$i"]) && $_POST["day$i"]==$j) {
                 echo "selected";
-            echo ">$x</option>\n";
             }
-        echo "</Select>&nbsp;\n";
+            echo ">$x</option>\n";
         }
-	// ****HOUR****
+        echo "</Select>&nbsp;\n";
+    }
+    // ****HOUR****
     echo "          <select class=\"span1 myspan1\" name=\"hour$i\"><option value=\"-1\" ";
-    if (!isset($_POST["hour$i"]))
+    if (!isset($_POST["hour$i"])) {
         $_POST["hour$i"]=-1;
-    if ($_POST["hour$i"]==-1)
+    }
+    if ($_POST["hour$i"]==-1) {
         echo "selected";
+    }
     echo ">Hour&nbsp;</option><option value=0 ";
-	if ($_POST["hour$i"]==0)
-	    echo "selected";
-	echo ">12</option>";
+    if ($_POST["hour$i"]==0) {
+        echo "selected";
+    }
+    echo ">12</option>";
     for ($j=1;$j<=11;$j++) {
         echo "<option value=$j ";
-        if ($_POST["hour$i"]==$j)
+        if ($_POST["hour$i"]==$j) {
             echo "selected";
-        echo ">$j</option>";
         }
+        echo ">$j</option>";
+    }
     echo "</select>\n";
-	// ****MIN****
+    // ****MIN****
     echo "          <select class=\"span1 myspan1\" name=\"min$i\"><option value=\"-1\" ";
-	if (!isset($_POST["min$i"]))
-	    $_POST["min$i"]=-1;
-    if ($_POST["min$i"]==-1)
+    if (!isset($_POST["min$i"])) {
+        $_POST["min$i"]=-1;
+    }
+    if ($_POST["min$i"]==-1) {
         echo "selected";
-	echo">Min&nbsp;</option>";
+    }
+    echo">Min&nbsp;</option>";
     for ($j=0;$j<=55;$j+=5) {
         echo "<option value=$j ";
-        if ($_POST["min$i"]==$j)
+        if ($_POST["min$i"]==$j) {
             echo "selected";
-		echo ">".($j<10?"0":"").$j."</option>";
         }
+        echo ">".($j<10?"0":"").$j."</option>";
+    }
     echo "</select>\n";
-	// ****AM/PM****
+    // ****AM/PM****
     echo "          <Select class=\"span1 myspan1\" name=\"ampm$i\"><option value=0 ";
-    if ((!isset($_POST["ampm$i"])) or $_POST["ampm$i"]==0)
+    if ((!isset($_POST["ampm$i"])) or $_POST["ampm$i"]==0) {
         echo "selected";
+    }
     echo ">AM&nbsp;</option><option value=1 ";
-    if (isset($_POST["ampm$i"]) && $_POST["ampm$i"]==1)
+    if (isset($_POST["ampm$i"]) && $_POST["ampm$i"]==1) {
         echo "selected";
-	echo ">PM</option>";
+    }
+    echo ">PM</option>";
     echo "</select>\n";
     echo "          </td>";
     // ****Session****
     echo "      <td class=\"room-select-td\"><Select class=\"span8\" name=\"sess$i\"><option value=\"unset\" ";
-	if ((!isset($_POST["sess$i"])) or $_POST["sess$i"]=="unset")
-	    echo "selected";
+    if ((!isset($_POST["sess$i"])) or $_POST["sess$i"]=="unset") {
+        echo "selected";
+    }
     echo ">Select Session</option>\n";
     for ($j=1;$j<=$numsessions;$j++) {
         echo "          <option value=\"".$bigarray[$j]["sessionid"]."\" ";
         if (isset($_POST["sess$i"]) && $_POST["sess$i"]==$bigarray[$j]["sessionid"])
             echo "selected";
-		echo ">{$bigarray[$j]['trackname']} - {$bigarray[$j]['sessionid']} - {$bigarray[$j]['title']}</option>\n";
+        if (TRACK_TAG_USAGE == 'TAG_ONLY') {
+            echo ">{$bigarray[$j]['typename']} - {$bigarray[$j]['sessionid']} - {$bigarray[$j]['title']}</option>\n";
+        } else {
+            echo ">{$bigarray[$j]['trackname']} - {$bigarray[$j]['sessionid']} - {$bigarray[$j]['title']}</option>\n";
         }
+        echo ">{$bigarray[$j]['trackname']} - {$bigarray[$j]['sessionid']} - {$bigarray[$j]['title']}</option>\n";
+    }
     echo "</select>\n";
     echo "          </td>\n";
     echo "       </tr>\n";
-    }
+}
 echo "</table>";
 echo "<input type=\"hidden\" name=\"selroom\" value=\"$selroomid\">\n";
 echo "<input type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";

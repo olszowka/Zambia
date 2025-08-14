@@ -1,11 +1,12 @@
 <?php
-// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $linki, $title;
+// Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $linki, $title, $message2;
 require('PartCommonCode.php');
 $title = "Welcome";
 $interested = getString('interested');
 $password = getString('password');
 $cpassword = getString('cpassword');
+$message2 = '';
 if (($password === "" or $password === null) and ($cpassword === "" or $cpassword === null)) {
     $update_password = false;
 } elseif ($password === $cpassword) {

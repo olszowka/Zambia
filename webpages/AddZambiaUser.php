@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-10-28
 require('EditPermRoles_FNC.php');
 
@@ -132,7 +132,7 @@ EOD;
         $message_error .= "Failed adding Program Participant Role - get help.<br />\n";
         return false;
     }
-    
+
     // TODO: Add code to support other roles if user has permission and data set.
 
     $message = "User {$paramArray["badgeid"]}: {$paramArray["firstname"]} {$paramArray["lastname"]}, " .
@@ -150,12 +150,12 @@ $message = "";
 $paramArray = array();
 if (!may_I('CreateUser') || !may_I('EditUserPermRoles')) {
     $message_error = "You do not have permission to access this page.";
-    StaffRenderErrorPage($title, $message_error, true);
+    StaffRenderErrorPage($title, $message_error, 'bs4');
     exit();
 }
 $loggedInUserBadgeId = $_SESSION['badgeid'];
 ['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
-staff_header($title, true);
+staff_header($title, 'bs4');
 if (array_key_exists("PostCheck", $_POST)) {
     $insert_successful = insert_user($mayIEditAllRoles, $rolesIMayEditArr);
 }
@@ -195,7 +195,7 @@ $paramArray["errorMessage"] = $message_error;
 $queryArr = array();
 if ($mayIEditAllRoles) {
     $queryArr['roles'] = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid
     FROM
         PermissionRoles PR
@@ -224,10 +224,13 @@ EOD;
         array('roles' => array($loggedInUserBadgeId))
     );
 }
-if (array_key_exists('permissionRoles', $paramArray) && count($paramArray['permissionRoles']) > 0) {
-    ArrayToXML('selectedRoles', $paramArray['permissionRoles'], $XMLDoc);
-    unset($paramArray['permissionRoles']);
+if (!array_key_exists('permissionRoles', $paramArray)) {
+    $paramArray['permissionRoles'] = array();
 }
+ArrayToXML('selectedRoles', $paramArray['permissionRoles'], $XMLDoc);
+unset($paramArray['permissionRoles']);
+// following line for debugging only
+// echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $XMLDoc->saveXML(), "i"));
 RenderXSLT('AddZambiaUser.xsl', $paramArray, $XMLDoc);
 staff_footer();
 ?>

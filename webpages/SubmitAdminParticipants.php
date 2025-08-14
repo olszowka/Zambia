@@ -1,11 +1,12 @@
 <?php
-// Copyright (c) 2006-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2006-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
 require_once('StaffCommonCode.php'); // will check if logged in and for staff privileges
 require('EditPermRoles_FNC.php');
+require('ParticipantTags_FNC.php');
 // skip to below all functions
 
 // gets data for a participant to be displayed.  Returns as XML
@@ -19,16 +20,22 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio,
-        P.staff_notes, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1,
-        CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry
+        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio, P.staff_notes, CD.firstname,
+        CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1, CD.postaddress2,
+        CD.postcity, CD.poststate, CD.postzip, CD.postcountry, P.uploadedphotofilename,
+        P.approvedphotofilename, P.photodenialreasonothertext,
+        IFNULL(P.photouploadstatus, 0) AS photouploadstatus, R.statustext, D.reasontext,
+        RT.message AS regmessage
     FROM
-			 Participants P
-		JOIN CongoDump CD ON P.badgeid = CD.badgeid
+                  Participants P
+             JOIN CongoDump CD ON P.badgeid = CD.badgeid
+        LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
+        LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
+        LEFT JOIN RegTypes RT USING (regtype)
     WHERE
         P.badgeid = ?
     ORDER BY
-        CD.lastname, CD.firstname
+        CD.lastname, CD.firstname;
 EOD;
     $param_arr = array($fbadgeid);
     $result = mysqli_query_with_prepare_and_exit_on_error($query, "s", $param_arr);
@@ -49,6 +56,8 @@ function update_participant() {
     $participantBadgeId = getString("badgeid");
     $password = getString("password");
     $bio = getString("bio");
+    if (HTML_BIO === TRUE)
+        $htmlbio = getString("htmlbio");
     $pubsname = getString("pubsname");
     $staffnotes = getString("staffnotes");
     $interested = getInt("interested", NULL);
@@ -61,6 +70,8 @@ function update_participant() {
         if (!is_null($password)) {
             push_query_arrays(password_hash($password, PASSWORD_DEFAULT), 'password', 's', 254, $query_portion_arr, $query_param_arr, $query_param_type_str);
         }
+        if (HTML_BIO === true)
+            push_query_arrays($htmlbio, 'htmlbio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($bio, 'bio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($pubsname, 'pubsname', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($staffnotes, 'staff_notes', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
@@ -89,10 +100,10 @@ function update_participant() {
     $poststate = getString("poststate");
     $postzip = getString("postzip");
     $postcountry = getString("postcountry");
-    
+
     if (!is_null($lastname) || !is_null($firstname) || !is_null($badgename) || !is_null($phone) || !is_null($email) || !is_null($postaddress1)
         || !is_null($postaddress2) || !is_null($postcity) || !is_null($poststate) || !is_null($postzip) || !is_null($postcountry)) {
-        if (USE_REG_SYSTEM) {
+        if (USE_REG_SYSTEM && !UPDATE_REG_SYSTEM) {
             $message_error = "Zambia configuration error.  Editing contact data is not permitted.";
             RenderErrorAjax($message_error);
             exit();
@@ -101,7 +112,7 @@ function update_participant() {
         $query = <<<EOD
 UPDATE CongoDumpHistory
     SET inactivatedts = CURRENT_TIMESTAMP, inactivatedbybadgeid = ?
-    WHERE 
+    WHERE
             badgeid = ?
         AND inactivatedts IS NULL;
 EOD;
@@ -112,9 +123,9 @@ EOD;
         if ($rows == 0) {   // no record existed with old values, add one
             $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts, inactivatedts, inactivatedbybadgeid)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, badgeid, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, ?
         FROM
             CongoDump
         WHERE
@@ -125,6 +136,36 @@ EOD;
                 $message_error = "Error updating db. (insert history record)";
                 Render500ErrorAjax($message_error);
                 exit();
+            }
+        }
+        // for Balticon reg system update perinfo then congodump so if the congodump fails, it gets it from reginfo, and if the cron job runs, congodump is the same either way
+        if (USE_REG_SYSTEM && UPDATE_REG_SYSTEM) {
+            $reg_dbname = REG_DBNAME;
+            if (is_numeric($participantBadgeId)) {
+                $query_preable = "UPDATE $reg_dbname.perinfo SET ";
+                $query_portion_arr = array();
+                $query_param_arr = array();
+                $query_param_type_str = "";
+                push_query_arrays($firstname, 'first_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($lastname, 'last_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($badgename, 'badge_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($phone, 'phone', 's', 15, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($email, 'email_addr', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($postaddress1, 'address', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($postaddress2, 'addr_2', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($postcity, 'city', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($poststate, 'state', 's', 2, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($postzip, 'zip', 's', 10, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                push_query_arrays($postcountry, 'country', 's', 20, $query_portion_arr, $query_param_arr, $query_param_type_str);
+                $query_param_arr[] = $participantBadgeId;
+                $query_param_type_str .= 's';
+                $query = $query_preable . implode(', ', $query_portion_arr) . " WHERE id = ?";
+                $rows = mysql_cmd_with_prepare($query, $query_param_type_str, $query_param_arr);
+                if ($rows != 1) {
+                    $message_error = "Error updating db. (reg update)";
+                    Render500ErrorAjax($message_error);
+                    exit();
+                }
             }
         }
 
@@ -157,9 +198,9 @@ EOD;
 
         $query = <<<EOD
 INSERT INTO CongoDumpHistory
-    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, createdbybadgeid)
+    (badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, createdbybadgeid, createdts)
     SELECT
-            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, ?
+            badgeid, firstname, lastname, badgename, phone, email, postaddress1, postaddress2, postcity, poststate, postzip, postcountry, regtype, ?, CURRENT_TIMESTAMP
         FROM
             CongoDump
         WHERE
@@ -225,6 +266,45 @@ EOD;
             $updatePerformed = true;
         }
     }
+    $tagsToAddArr = getArrayOfInts("tagsToAdd");
+    $tagsToDeleteArr = getArrayOfInts("tagsToDelete");
+    if ($tagsToAddArr !== false || $tagsToDeleteArr !== false) {
+        if (!may_I('edit_participant_tags')) {
+            $message_error = "Server configuration error: You do not have permission to edit participant tags. Seek assistance.";
+            RenderErrorAjax($message_error);
+            exit();
+        }
+        $badgeIdSafe = mysqli_real_escape_string($linki, $participantBadgeId);
+        if ($tagsToAddArr != false && count($tagsToAddArr) > 0) {
+            $tagsToAddList = implode(',', array_map(function ($tag) use ($badgeIdSafe) {
+                return "('$badgeIdSafe', $tag)";
+            }, $tagsToAddArr));
+            $query = "INSERT INTO ParticipantHasTag (badgeid, participanttagid) VALUES $tagsToAddList;";
+            $result = mysqli_query_exit_on_error($query);
+            if (!$result) {
+                exit(); // should have exited already
+            }
+            $updatePerformed = true;
+        }
+        if ($tagsToDeleteArr != false && count($tagsToDeleteArr) > 0) {
+            $tagsToDeleteList = implode(',', $tagsToDeleteArr);
+            $query = <<<EOD
+    DELETE
+            PHT
+        FROM
+            ParticipantHasTag PHT
+        WHERE
+                PHT.badgeid = ?
+            AND PHT.participanttagid IN ($tagsToDeleteList);
+EOD;
+            $rows = mysql_cmd_with_prepare($query, "s", array($participantBadgeId));
+            if (is_null($rows)) {
+                // query should have already rendered error
+                exit();
+            }
+            $updatePerformed = true;
+        }
+    }
     if (!$updatePerformed) {
         $message_error = "Server error: nothing found to update. Seek assistance.";
         RenderErrorAjax($message_error);
@@ -235,9 +315,9 @@ EOD;
         $query = <<<EOD
 UPDATE ParticipantOnSessionHistory
     SET inactivatedts = NOW(), inactivatedbybadgeid = ?
-	WHERE
-	        badgeid = ?
-		AND inactivatedts IS NULL;
+    WHERE
+            badgeid = ?
+        AND inactivatedts IS NULL;
 EOD;
         $update_arr = array($_SESSION['badgeid'], $participantBadgeId);
         $updateStr = "ss";
@@ -267,64 +347,141 @@ EOD;
 function perform_search() {
     global $linki, $message_error;
     $searchString = getString("searchString");
-    if ($searchString == "")
+    $searchString = is_null($searchString) ? "" : $searchString;
+    $tagsArr = getArrayOfInts("tags", array());
+    $tagSearchType = getString("tagSearchType");
+    if ($searchString == "" && count($tagsArr) == 0) {
         exit();
-    if (is_numeric($searchString)) {
-        $searchString =  mysqli_real_escape_string($linki, $searchString);
-        $query["searchParticipants"] = <<<EOD
-			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio,
-                    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-                    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-                    CD.postcountry, CD.regtype
-			    FROM
-						 Participants P
-					JOIN CongoDump CD ON P.badgeid = CD.badgeid
-			    WHERE
-			        P.badgeid = "$searchString"
-			    ORDER BY
-			        CD.lastname, CD.firstname
-EOD;
-        $xml = mysql_query_XML($query);
-    } else {
-        $searchString = '%' . $searchString . '%';
-        $query = <<<EOD
-			SELECT
-			        P.badgeid, P.pubsname, P.interested, P.bio,
-                    P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
-                    CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-                    CD.postcountry, CD.regtype
-			    FROM
-						 Participants P
-					JOIN CongoDump CD ON P.badgeid = CD.badgeid
-			    WHERE
-			           P.pubsname LIKE ?
-					OR CD.lastname LIKE ?
-					OR CD.firstname LIKE ?
-					OR CD.badgename LIKE ?
-			    ORDER BY
-			        CD.lastname, CD.firstname
-EOD;
-        $param_arr = array($searchString,$searchString,$searchString,$searchString);
-        $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssss", $param_arr);
-        $xml = mysql_result_to_XML("searchParticipants", $result);
     }
+    $json_return = array();
+    $queryPart1 = <<<EOD
+SELECT
+        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+        P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
+        CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
+        CD.postcountry, RT.message AS regmessage, IFNULL(A.answercount, 0) AS answercount,
+        P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
+        IFNULL(P.photouploadstatus, 0) AS photouploadstatus, R.statustext, D.reasontext, ? AS foo
+    FROM
+                  Participants P
+             JOIN CongoDump CD USING (badgeid)
+        LEFT JOIN (
+                SELECT
+                        participantid, COUNT(*) AS answercount
+                    FROM
+                        ParticipantSurveyAnswers
+                    GROUP BY
+                        participantid
+                ) A ON P.badgeid = A.participantid
+        LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
+        LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
+        LEFT JOIN RegTypes RT USING (regtype)
+    WHERE
+EOD;
+    if ($searchString == "") {
+        $queryMainWhere = "";
+        $param_arr = array($searchString);
+        $typeString = "s";
+    } elseif (is_numeric($searchString)) {
+        $queryMainWhere = "            P.badgeid = ?\n";
+        $param_arr = array($searchString, $searchString);
+        $typeString = "ss";
+    } else {
+        $searchString = '%' . strtolower($searchString) . '%';
+        $queryMainWhere = <<<EOD
+           (LOWER(P.pubsname) LIKE ?
+        OR LOWER(CD.lastname) LIKE ?
+        OR LOWER(CD.firstname) LIKE ?
+        OR LOWER(CD.badgename) LIKE ?)
+EOD;
+        $param_arr = array($searchString, $searchString, $searchString, $searchString, $searchString);
+        $typeString = "sssss";
+    }
+    if (count($tagsArr) == 0) {
+        $queryAdditionalWhere = "";
+    } else {
+        switch ($tagSearchType) {
+            case 'tagmatchany':
+                $tagsList = implode(',', $tagsArr);
+                $queryAdditionalWhere = <<<EOD
+                EXISTS (SELECT *
+                            FROM ParticipantHasTag PHT
+                            WHERE
+                                    P.badgeid = PHT.badgeid
+                                AND PHT.participanttagid IN ($tagsList))
+EOD;
+                break;
+            case 'tagmatchall':
+                $queryAdditionalWhere = "";
+                foreach ($tagsArr as $tag) {
+                    if ($queryAdditionalWhere != "") {
+                        $queryAdditionalWhere .= ' AND ';
+                    }
+                    $queryAdditionalWhere .= <<<EOD
+                EXISTS (SELECT *
+                            FROM ParticipantHasTag PHT
+                            WHERE
+                                    P.badgeid = PHT.badgeid
+                                AND PHT.participanttagid = $tag )
+EOD;
+                }
+                break;
+            case 'tagmatchnotall':
+                $tagsList = implode(',', $tagsArr);
+                $queryAdditionalWhere = <<<EOD
+                NOT EXISTS (SELECT *
+                            FROM ParticipantHasTag PHT
+                            WHERE
+                                    P.badgeid = PHT.badgeid
+                                AND PHT.participanttagid IN ($tagsList))
+EOD;
+                break;
+            default:
+                error_log(__FILE__.__LINE__." unrecognized option in switch statement for tagSearchType.");
+                $message_error = "Internal error.";
+                RenderErrorAjax($message_error);
+                exit();
+        }
+    }
+    $queryOrderBy = <<<EOD
+    ORDER BY
+        CD.lastname, CD.firstname;
+EOD;
+    $queryConj = ($queryMainWhere != "" && $queryAdditionalWhere != "") ? " AND " : "";
+    $query = $queryPart1 . $queryMainWhere . $queryConj . $queryAdditionalWhere . $queryOrderBy;
+    $result = mysqli_query_with_prepare_and_exit_on_error($query, $typeString, $param_arr);
+    $xml = mysql_result_to_XML("searchParticipants", $result);
+    $rows = mysqli_num_rows($result);
+    if ($rows > 1) {
+        mysqli_data_seek($result, 0);
+        $bidarray = array ();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $bidarray[] = $row["badgeid"];
+        }
+        $json_return["badgeids"] = $bidarray;
+    }
+
+    mysqli_free_result($result);
     if (!$xml) {
         echo $message_error;
         exit();
     }
     $xpath = new DOMXpath($xml);
-	$searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
+    $searchParticipantsResultRowElements = $xpath->query("/doc/query[@queryName='searchParticipants']/row");
     foreach ($searchParticipantsResultRowElements as $resultRowElement) {
-    	$badgeid = $resultRowElement -> getAttribute("badgeid");
-    	$jsEscapedBadgeid = addslashes($badgeid);
-		$resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
-	}
+        $badgeid = $resultRowElement -> getAttribute("badgeid");
+        $jsEscapedBadgeid = addslashes($badgeid);
+        $resultRowElement -> setAttribute('jsEscapedBadgeid', $jsEscapedBadgeid);
+    }
     header("Content-Type: text/html");
-    $paramArray = array("userIdPrompt" => USER_ID_PROMPT);
+    $paramArray = array();
+    $paramArray['userIdPrompt'] = USER_ID_PROMPT;
+    $paramArray['edit_participant_responses'] = may_I('edit_participant_responses') ? '1' : '0';
     //echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xml->saveXML(), "i")); //for debugging only
-    RenderXSLT('AdminParticipants.xsl', $paramArray, $xml);
-	exit();
+    $json_return["HTML"] = RenderXSLT('AdminParticipants.xsl', $paramArray, $xml, true);
+    $json_return["rowcount"] = $rows;
+    echo json_encode($json_return);
+    exit();
 }
 
 function fetch_user_perm_roles() {
@@ -340,7 +497,7 @@ function fetch_user_perm_roles() {
         ['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
         if ($mayIEditAllRoles) {
             $query = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 1 AS mayedit
     FROM
                   PermissionRoles PR
@@ -356,8 +513,8 @@ EOD;
                     array("permroles" => array($fetchedUserBadgeId)));
         } else { // has permission to edit only specific perm roles
             $query = <<<EOD
-SELECT 
-        PR.permrolename, PR.permroleid, UHPR.badgeid, 
+SELECT
+        PR.permrolename, PR.permroleid, UHPR.badgeid,
         IF(ISNULL(SQ.elementid), 0, 1) AS mayedit
     FROM
                   PermissionRoles PR
@@ -365,7 +522,7 @@ SELECT
                 UHPR.badgeid = ?
             AND UHPR.permroleid = PR.permroleid
         LEFT JOIN (
-            SELECT 
+            SELECT
                     PA.elementid
                 FROM
                          UserHasPermissionRole UHPR
@@ -386,7 +543,7 @@ EOD;
         }
     } else { // has no permission to edit user perm roles
         $query = <<<EOD
-SELECT 
+SELECT
         PR.permrolename, PR.permroleid, UHPR.badgeid, 0 AS mayedit
     FROM
                   PermissionRoles PR
@@ -405,6 +562,7 @@ EOD;
         RenderErrorAjax($message_error);
         exit();
     }
+    // error_log("SubmitAdminParticipants:510: ".$resultXML->saveXML());
     // $foo = mb_ereg_replace("<(row|query)([^>]*)/[ ]*>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"); //for debugging only
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
 }
@@ -413,11 +571,10 @@ EOD;
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-if (!isLoggedIn()) {
+if (!isLoggedIn() || !may_I('Staff')) {
     $message_error = "You are not logged in or your session has expired.";
     RenderErrorAjax($message_error);
     exit();
-
 }
 $ajax_request_action = getString("ajax_request_action");
 if (is_null($ajax_request_action)) {
@@ -438,6 +595,9 @@ switch ($ajax_request_action) {
         break;
     case "fetch_user_perm_roles":
         fetch_user_perm_roles();
+        break;
+    case "fetch_participant_tags":
+        fetch_participant_tags();
         break;
     default:
         $message_error = "Internal error.";

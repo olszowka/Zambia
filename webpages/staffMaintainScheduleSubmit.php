@@ -88,7 +88,8 @@ EOD;
     }
     echo "<table class=\"schedulerGrid\">\n";
     echo "<tr>";
-    echo $htmlTimesArray[0]["html"];
+//    echo $htmlTimesArray[0]["html"];
+    echo "<th>Time</th>";
     echo $roomsHtml;
     echo "</tr>\n";
     for ($i = 1; $i < count($htmlTimesArray); $i++) {
@@ -667,6 +668,7 @@ function retrieveSessions() {
     $sessionId = getInt("sessionId");
     $title = mysqli_real_escape_string($linki, mb_strtolower(getString("title")));
     $tagmatch = getString("tagmatch");
+    $personsAssigned = getInt('personsAssigned', 0);
     $query["sessions"] = <<<EOD
 SELECT
         S.sessionid, S.title, S.progguiddesc, TR.trackname, TY.typename, D.divisionname,
@@ -712,13 +714,14 @@ EOD;
             $query["sessions"] .= " AND EXISTS (SELECT * FROM SessionHasTag WHERE sessionid = S.sessionid AND tagid IN ($tagidList))";
         }
     }
+    if ($personsAssigned === 1) {
+        $query["sessions"] .= " AND EXISTS (SELECT * FROM ParticipantOnSession WHERE sessionid = S.sessionid)";
+    }
     $resultXML = mysql_query_XML($query);
     if (!$resultXML) {
         RenderErrorAjax($message_error);
         exit();
     }
-    //echo($resultXML->saveXML());
-    //exit();
     $xpath = new DOMXpath($resultXML);
     $numRows = $xpath->evaluate("count(/doc/query/row)");
     // signal found no new sessions

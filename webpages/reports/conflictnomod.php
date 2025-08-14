@@ -1,8 +1,8 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Sessions with no moderator';
-$report['description'] = 'Lists all public sessions which have at least one participant assigned, but no moderator.  Excludes Dropped, Cancelled, and Duplicate Sessions.';
+$report['description'] = 'Lists all public sessions from the schedule which have at least one participant assigned, but no moderator.';
 $report['categories'] = array(
     'Conflict Reports' => 350,
 );
@@ -15,30 +15,43 @@ $report['columns'] = array(
 );
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'
+WITH ModSchedCount AS (
+    SELECT
+            sessionid, count(*) as partcount
+        FROM
+                 Schedule SCH
+            JOIN ParticipantOnSession POS USING (sessionid)
+        WHERE
+            POS.moderator = 1
+        GROUP BY
+            sessionid
+),
+PartSchedList AS (
+    SELECT
+            SCH.sessionid, GROUP_CONCAT(P.pubsname SEPARATOR ", ") AS partlist
+        FROM
+                 Schedule SCH
+            JOIN ParticipantOnSession POS USING (sessionid)
+            JOIN Participants P USING (badgeid)
+        GROUP BY
+            SCH.sessionid
+)
 SELECT
         T.trackname,
         S.sessionid,
         S.title,
         TY.typename,
-        COUNT(badgeid) AS assigned,
-        SUM(IFNULL(moderator,0)) AS moderator
+        PartSchedList.partlist
     FROM
-                  Sessions S
+                  Schedule SCH
+             JOIN Sessions S USING (sessionid)
              JOIN Tracks T USING (trackid)
              JOIN Types TY USING (typeid)
-        LEFT JOIN ParticipantOnSession POS USING (sessionid)
+        LEFT JOIN ModSchedCount USING (sessionid)
+        LEFT JOIN PartSchedList USING (sessionid)
     WHERE
-            S.pubstatusid = 2 ## Public
-        AND S.statusid NOT IN (4,5,10) ## Dropped, Cancelled, or Duplicate
-        AND (
-                S.sessionid IN (SELECT sessionid FROM Schedule)
-             OR S.sessionid IN (SELECT sessionid FROM ParticipantOnSession)
-             )
-    GROUP BY
-        S.sessionid
-    HAVING
-            assigned >= 1
-        AND moderator < 1
+            S.pubstatusid = 2 /* Public */
+        AND IFNULL(ModSchedCount.partcount, 0) = 0
     ORDER BY
         T.trackname, S.sessionid;
 EOD;
@@ -57,7 +70,7 @@ $report['xsl'] =<<<'EOD'
                             <th class="report">Type</th>
                             <th class="report">Session ID</th>
                             <th class="report">Title</th>
-                            <th class="report">How Many Assigned</th>
+                            <th class="report">Participants Assigned</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='sessions']/row"/>
@@ -79,7 +92,7 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@assigned"/></td>
+            <td class="report"><xsl:value-of select="@partlist"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

@@ -1,14 +1,25 @@
 <?php
-//	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "", $bootstrap4 = false) {
+// Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+function commonHeader($headerVersion, $topSectionBehavior, $bootstrapVersion = 'bs2', $headerErrorMessage='') {
+    /**
+     * Top section behavior
+     * LOGIN:
+     *      Login form, no message
+     * SESSION_EXPIRED:
+     *      Login form, session expired message (error)
+     * LOGOUT:
+     *      Login form, logout success message (success)
+     * PASSWORD_RESET_COMPLETE:
+     *      Login form, password changed message (success)
+     * NO_USER:
+     *      No login form, just title and logo
+     * NORMAL:
+     *      No login form, welcome message with logout button
+     */
     global $header_rendered;
-    if ($isLoggedIn && ($loginPageStatus == 'Normal' || $loginPageStatus == 'Consent') && !may_I("Participant") && !may_I("Staff")) {
-        $loginPageStatus = 'No_Permission';
-    }
     $paramArray = array();
     $paramArray["header_version"] = $headerVersion;
-    $paramArray["logged_in"] = $isLoggedIn;
-    $paramArray["login_page_status"] = $loginPageStatus;
+    $paramArray["top_section_behavior"] = $topSectionBehavior;
     $paramArray["CON_NAME"] = CON_NAME;
     $paramArray["badgename"] = isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '';
     if (defined('CON_HEADER_IMG') && CON_HEADER_IMG !== "") {
@@ -18,13 +29,19 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
         $paramArray["headerimgalt"] = CON_HEADER_IMG_ALT;
     }
     $paramArray["USER_ID_PROMPT"] = USER_ID_PROMPT;
-    $paramArray["header_error_message"] = $headerErrorMessage;
-    $paramArray["no_user_required"] = $noUserRequired;
     $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
-    if ($bootstrap4) {
-        RenderXSLT('GlobalHeader_BS4.xsl', $paramArray);
-    } else {
-        RenderXSLT('GlobalHeader.xsl', $paramArray);
+    $paramArray["header_error_message"] = $headerErrorMessage;
+    switch ($bootstrapVersion) {
+        case 'bs5':
+            RenderXSLT('GlobalHeader_BS5.xsl', $paramArray);
+            break;
+        case 'bs4':
+            RenderXSLT('GlobalHeader_BS4.xsl', $paramArray);
+            break;
+        case 'bs2':
+        default:
+            RenderXSLT('GlobalHeader.xsl', $paramArray);
+            break;
     }
     $header_rendered = true;
 }

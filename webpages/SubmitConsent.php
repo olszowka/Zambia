@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 require('PartCommonCode.php');
 $title = "Submit Consent";
@@ -32,10 +32,13 @@ if (may_I('Staff')) {
     } else {
         require('renderWelcome.php');
     }
+} elseif (may_I('declined_participant')) {
+    require('DeclinedParticipant.php');
 } elseif (may_I('public_login')) {
     require('renderBrainstormWelcome.php');
 } else {
     unset($_SESSION['badgeid']);
+    $userIdPrompt = USER_ID_PROMPT;
     $message_error = "There is a problem with your $userIdPrompt's permission configuration:  It doesn't have ";
     $message_error .= "permission to access any welcome page.  Please contact Zambia staff.";
     RenderError($message_error);

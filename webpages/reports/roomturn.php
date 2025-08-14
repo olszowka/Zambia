@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Room Turns';
 $report['description'] = 'List of all Sessions related to room turns';
@@ -20,8 +20,8 @@ SELECT
 		JOIN RoomSets RS USING (roomsetid)
 		JOIN Types TY USING (typeid)
 	WHERE
-			S.typeid IN (3, 21, 22)
-		OR S.trackid=14
+			S.typeid = 20 /* Room Turn, etc. */
+		OR S.trackid = 13 /* Room Turn, etc. */
 	ORDER BY
 		SCH.starttime, R.display_order;
 EOD;

@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('error_functions.php');
 require_once('Constants.php');
 require_once('data_functions.php');

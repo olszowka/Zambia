@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Categorized Session Count Report ';
 $report['description'] = 'Show count of how many sessions each participant is scheduled for broken down by division (disregarding signings)';
@@ -20,7 +20,7 @@ SELECT
         JOIN Sessions S USING (sessionid) 
         JOIN Schedule SCH USING (sessionid)
     WHERE
-            S.typeid != 7 /* signing */
+            S.typeid != 10 /* signing */
         AND S.pubstatusid = 2 /* published/public */
     GROUP BY
         P.badgeid

@@ -1,9 +1,10 @@
 <?php
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2025 Peter Olszowka. All rights reserved. See copyright document for more details.
     global $participant, $message_error, $message2, $congoinfo, $title;
     $title = "Search Sessions";
     require_once('StaffCommonCode.php');
-    staff_header($title);
+    staff_header($title, 'bs2');
+    if (may_I('Staff')) {
 ?>
 
 <div class="row-fluid">
@@ -11,7 +12,7 @@
         <fieldset>
             <p class="">Session Search (shows same data as Precis View for each session):</p>
 <?php
-    if (TRACK_TAG_USAGE !== "TAG_ONLY") {
+        if (TRACK_TAG_USAGE !== "TAG_ONLY") {
 ?>
             <div class="control-group">
                 <label for="track" class="control-label">Track: </label>
@@ -22,11 +23,11 @@
                 </div>
             </div>
 <?php
-    } else {
+        } else {
 ?>
            <input id="track" type="hidden" name="track" Value="0"/>
 <?php
-    }
+        }
 ?>
             <div class="control-group">
                 <label for="type" class="control-label">Type: </label>
@@ -67,7 +68,7 @@
                 </div>
             </div>
 <?php
-    if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
+        if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
 ?>
             <div class="control-group control-group-horizontal">
                 <label for="tags" class="control-label">Tags:</label>
@@ -87,16 +88,17 @@
                 </div>
             </div>
 <?php
-    } else {
+        } else {
 ?>
             <input id="tags" type="hidden" name="tags[]" value="" />
 <?php
-    }
+        }
 ?>
             <button type="submit" value="search" class="btn btn-primary">Search</button>
         </fieldset>
     </form>
 </div>
 <?php
-    staff_footer(); 
+    }
+    staff_footer();
 ?>

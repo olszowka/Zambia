@@ -1,16 +1,16 @@
 <?php
-// Copyright (c) 2019-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2019-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Build Report Menus";
 require_once('StaffCommonCode.php'); // Checks for staff permission among other things
 if (!may_I('ConfigureReports')) {
     $message_error = "You do not currently have permission to view this page.<br>\n";
-    StaffRenderErrorPage($title, $message_error, true);
+    StaffRenderErrorPage($title, $message_error, 'bs4');
     exit();
 }
 $areYouSure = getInt("areYouSure");
 if ($areYouSure !== 1) {
-    staff_header($title, true);
+    staff_header($title, 'bs4');
 ?>
 <div class="row mt-3">
     <div class="col-12">
@@ -68,7 +68,7 @@ $reportMenuFilHand = fopen('ReportMenuInclude.php', 'wb');
 $reportMenuBS4FilHand = fopen('ReportMenuBS4Include.php', 'wb');
 $staffReportsICIFilHand = fopen('staffReportsInCategoryInclude.php', 'wb');
 if ($reportMenuFilHand === false || $reportMenuBS4FilHand === false || $staffReportsICIFilHand === false) {
-    staff_header($title, true);
+    staff_header($title, 'bs4');
 ?>
     <div class="row mt-3">
         <div class="col-12">
@@ -112,7 +112,7 @@ fclose($reportMenuFilHand);
 fclose($reportMenuBS4FilHand);
 fclose($staffReportsICIFilHand);
 $reportCount = count($allReports);
-staff_header($title, true);
+staff_header($title, 'bs4');
 ?>
 <div class="row mt-3">
     <div class="col-12">

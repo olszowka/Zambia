@@ -1,6 +1,7 @@
-// Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 var badgenameDirty = false;
 var bioDirty = false;
+var htmlbioused = false;
 var emailDirty = false;
 var firstnameDirty = false;
 var interestedDirty = false;
@@ -16,12 +17,16 @@ var postzipDirty = false;
 var pubsnameDirty = false;
 var rolesDirty = false;
 var staffnotesDirty = false;
+var tagsDirty = false;
 var originalInterested = "0";
 var fbadgeid;
+var curbadgeid;
 var resultsHidden = true;
 var max_bio_len = 500;
+var mce_running = false;
 var $interested;
 var $bio;
+var $htmlbio;
 var $password;
 var $cpassword;
 var $staffnotes;
@@ -39,7 +44,14 @@ var $postzip;
 var $postcountry;
 var $passwordsDontMatch;
 var $updateButton;
+var $showSurveyDiv;
+var $showSurveyBtn;
 var saveNewBadgeId;
+var $prevBTN = null;
+var $nextBTN = null;
+var searchIndex = 0;
+var badgeList = null;
+var searchCount = -1;
 
 function isDirty(override) {
     //called when user clicks "Search for participants" on the page
@@ -48,7 +60,7 @@ function isDirty(override) {
     }
     if (!override && (badgenameDirty || bioDirty || emailDirty || firstnameDirty || interestedDirty || lastnameDirty ||
         $password.val() || phoneDirty || postaddress1Dirty || postaddress2Dirty || postcityDirty || poststateDirty ||
-        postzipDirty || postcountryDirty || pubsnameDirty || rolesDirty || staffnotesDirty)) {
+        postzipDirty || postcountryDirty || pubsnameDirty || rolesDirty || staffnotesDirty || tagsDirty)) {
         $("#unsavedWarningModal").modal('show');
         $("#cancelOpenSearchBUTN").blur();
         return true;
@@ -59,14 +71,42 @@ function isDirty(override) {
     return false;
 }
 
+function nextParticipant() {
+    if (searchIndex < (searchCount - 1)) {
+        searchIndex++;
+        chooseParticipant(badgeList[searchIndex], false);
+    }
+}
+
+function prevParticipant() {
+    if (searchIndex > 0) {
+        searchIndex--;
+        chooseParticipant(badgeList[searchIndex], false);
+    }
+}
+
 function chooseParticipant(badgeid, override) {
-    //debugger;
     if (isDirty(override)) {
         saveNewBadgeId = badgeid;
         return;
     }
+
+    if (mce_running) {
+        tinymce.remove();
+        mce_running = false;
+    }
+    curbadgeid = badgeid;
     var badgeidJQSel = badgeid.replace(/[']/g, "\\'").replace(/["]/g, '\\"');
     hideSearchResults();
+    if (badgeList) {
+        searchIndex = badgeList.indexOf(badgeid, 0);
+        if ($prevBTN) {
+            $prevBTN.disabled = searchIndex < 1;
+        }
+        if ($nextBTN) {
+            $nextBTN.disabled = searchIndex == (badgeList.length - 1);
+        }
+    }
     $("#badgeid").val($("#bidSPAN_" + badgeidJQSel).text());
     var lastname = $("#lastnameHID_" + badgeidJQSel).val();
     $lastname.val(lastname).prop("defaultValue", lastname).prop("readOnly", false);
@@ -88,6 +128,9 @@ function chooseParticipant(badgeid, override) {
     $postzip.val(postzip).prop("defaultValue", postzip).prop("readOnly", false);
     var postcountry = $("#postcountryHID_" + badgeidJQSel).val();
     $postcountry.val(postcountry).prop("defaultValue", postcountry).prop("readOnly", false);
+    if (regtypeElem) {
+        regtypeElem.value = document.getElementById('regmessageHID_' + badgeidJQSel)?.value;
+    }
     $("#lname_fname").val($("#lnameSPAN_" + badgeidJQSel).text());
     var badgename = $("#bnameSPAN_" + badgeidJQSel).text();
     $badgename.val(badgename).prop("defaultValue", badgename).prop("readOnly", false);
@@ -102,7 +145,13 @@ function chooseParticipant(badgeid, override) {
     $interested.val(originalInterested);
     $interested.prop("disabled", false);
     var bio = $("#bioHID_" + badgeidJQSel).val();
-    $bio.val(bio).prop("defaultValue", bio).prop("readOnly", false);
+    var htmlbio = $("#htmlbioHID_" + badgeidJQSel).val();
+    if (htmlbioused) {
+        $htmlbio.val(htmlbio);
+    } else {
+        $bio.prop("readOnly", false);
+    }
+    $bio.val(bio).prop("defaultValue", bio);
     var staffnotes = $("#staffnotesHID_" + badgeidJQSel).val();
     $("#staffnotes").val(staffnotes).prop("defaultValue", staffnotes).prop("readOnly", false);
     $password.val("").prop("readOnly", false);
@@ -124,11 +173,23 @@ function chooseParticipant(badgeid, override) {
     pubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
+    tagsDirty = false;
     $('#resultsDiv').show();
     $updateButton.prop("disabled", true);
     $("#resultBoxDIV").html("").hide();
     $passwordsDontMatch.hide();
-    max_bio_len = document.getElementById("bio").dataset.maxLength;
+    var answercount = $("#answercountHID_" + badgeidJQSel).val();
+    if (answercount > 0) {
+        $showSurveyDiv.show();
+        $showSurveyBtn.prop("disabled", false);
+    } else {
+        $showSurveyDiv.hide();
+        $showSurveyBtn.prop("disabled", true);
+    }
+    if (htmlbioused) {
+        startTinymce();
+    }
+
     $.ajax({
         url: "SubmitAdminParticipants.php",
         dataType: "html",
@@ -140,19 +201,74 @@ function chooseParticipant(badgeid, override) {
         error: showAjaxError,
         type: "POST"
     });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_participant_tags"
+        }),
+        success: fetchParticipantTagsCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
+}
+
+function startTinymce() {
+    if (mce_running)
+        tinymce.remove();
+
+    tinymce.init({
+        selector: 'textarea#htmlbio',
+        plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
+        browser_spellcheck: true,
+        contextmenu: false,
+        height: 400,
+        min_height: 200,
+        menubar: false,
+        toolbar: [
+            'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
+            'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
+        ],
+        toolbar_mode: 'wrap',
+        content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+        placeholder: 'Type custom content here...',
+        setup: function (ed) {
+            ed.on('change', function (e) {
+                bioDirty = true;
+                textChange();
+            });
+        },
+        init_instance_callback: function (editor) {
+            $(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
+        }
+    });
+    mce_running = true;
 }
 
 function doSearchPartsBUTN() {
     //called when user clicks "Search" within dialog
-    var x = document.getElementById("searchPartsINPUT").value;
-    if (!x)
+    let searchString = document.getElementById("searchPartsINPUT").value;
+    let photosApproval = document.getElementById("searchPhotoApproval").checked;
+    let tags = [];
+    document.querySelectorAll('#tag-search-container .tag-check').forEach((checkbox) => {
+        if (checkbox.checked) {
+            tags.push(checkbox.value);
+        }
+    });
+
+    if (!searchString && !photosApproval && tags.length === 0)
         return;
+    let tagSearchType = document.querySelector("[name='tagmatchRadio']:checked").value;
     $('#searchPartsBUTN').button('loading');
     $.ajax({
         url: "SubmitAdminParticipants.php",
         dataType: "html",
         data: ({
-            searchString: x,
+            searchString,
+            photosApproval,
+            tags,
+            tagSearchType,
             ajax_request_action: "perform_search"
         }),
         success: writeSearchResults,
@@ -173,10 +289,20 @@ function fetchParticipant(badgeid) {
         error: showAjaxError,
         type: "GET"
     });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_user_perm_roles"
+        }),
+        success: fetchUserPermRolesCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
 }
 
 function fetchParticipantCallback(data, textStatus, jqXHR) {
-    //debugger;
     var node = data.firstChild.firstChild.firstChild;
     $("#badgeid").val(node.getAttribute("badgeid"));
     $("#lname_fname").val(node.getAttribute("lastname") + ", " + node.getAttribute("firstname"));
@@ -198,7 +324,14 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     $interested.val(originalInterested);
     $interested.prop("disabled", false);
     $bio.val(node.getAttribute("bio")).prop("defaultValue", node.getAttribute("bio"));
+    if (htmlbioused) {
+        $htmlbio.val(node.getAttribute("htmlbio")).prop("defaultValue", node.getAttribute("htmlbio"));
+        startTinymce();
+    }
     $staffnotes.val(node.getAttribute("staff_notes")).prop("defaultValue", node.getAttribute("staff_notes")).prop("readOnly", false);
+    if (regtypeElem) {
+        regtypeElem.value = node.getAttribute("regmessage");
+    }
     $password.prop("readOnly", false);
     $password.val("");
     $cpassword.prop("readOnly", false);
@@ -220,6 +353,7 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     pubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
+    tagsDirty = false;
     $('#resultsDiv').show();
     $('#resultBoxDIV').show();
     $updateButton.prop("disabled", true);
@@ -230,6 +364,11 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
 function fetchUserPermRolesCallback(data, textStatus, jqXHR) {
     //ajax success callback function
     $("#role-container").html(data);
+}
+
+function fetchParticipantTagsCallback(data, textStatus, jqXHR) {
+    //ajax success callback function
+    $("#tag-container").html(data);
 }
 
 function getUpdateResults(data, textStatus, jqXHR) {
@@ -263,10 +402,22 @@ function getUpdateResults(data, textStatus, jqXHR) {
         error: showAjaxError,
         type: "POST"
     });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_participant_tags"
+        }),
+        success: fetchParticipantTagsCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
 }
 
 function hideSearchResults() {
     resultsHidden = true;
+    $('#resultBoxDIV').hide()
     $("#searchResultsDIV").hide("fast");
     $("#toggleSearchResultsBUTN").prop("disabled", false).prop("hidden", false);
     $("#toggleText").html("Show");
@@ -274,9 +425,11 @@ function hideSearchResults() {
 
 function initializeAdminParticipants() {
     //called when JQuery says AdminParticipants page has loaded
-    //debugger;
     $interested = $("#interested");
     $bio = $("#bio");
+    $htmlbio = $("#htmlbio");
+    if ($htmlbio.length > 0)
+        htmlbioused = true;
     $password = $("#password");
     $cpassword = $("#cpassword");
     $staffnotes = $("#staffnotes");
@@ -294,6 +447,9 @@ function initializeAdminParticipants() {
     $postcountry = $("#postcountry");
     $passwordsDontMatch = $("#passwordsDontMatch");
     $updateButton = $("#updateBUTN");
+    $showSurveyDiv = $("#showsurveydiv");
+    $showSurveyBtn = $("#showsurveyBTN");
+    regtypeElem = document.getElementById('regtype');
     $passwordsDontMatch.hide();
     $('#resultsDiv').hide();
     $('#resultBoxDIV').hide();
@@ -302,18 +458,33 @@ function initializeAdminParticipants() {
     $toggleSearchResultsBUTN.click(toggleSearchResultsBUTN);
     $toggleSearchResultsBUTN.prop("disabled", true).prop("hidden", true);
     resultsHidden = true;
-    $("#searchPartsBUTN").on('click', doSearchPartsBUTN);
+    document.getElementById('searchPartsBUTN').addEventListener('click', doSearchPartsBUTN);
     $("#searchResultsDIV").html("").hide('fast');
     if (fbadgeid) { // signal from page initializer that page was requested to
         // to be preloaded with a participant
         fetchParticipant(fbadgeid);
     }
     $("#adminParticipantsForm").on("input", ".mycontrol", processChange);
+    document.getElementById('adminParticipantsForm').addEventListener('submit', onSubmit);
+    document.getElementById('searchPartsINPUT').addEventListener('keydown', searchKeypr);
+    $prevBTN = document.getElementById("prevSearchResultBUTN");
+    $nextBTN = document.getElementById("nextSearchResultBUTN");
+    max_bio_len = $bio.data("maxLength");
+}
+
+function searchKeypr(event) {
+    if (event.code === "Enter") {
+        doSearchPartsBUTN();
+    }
 }
 
 function loadNewParticipant() {
     chooseParticipant(saveNewBadgeId, true);
     return true;
+}
+
+function onSubmit(event) {
+    event.preventDefault();
 }
 
 function processChange() {
@@ -342,6 +513,9 @@ function processChange() {
             break;
         case 'bio':
             bioDirty = ($bio.val() !== $bio.prop("defaultValue"));
+            break;
+        case 'htmlbio':
+            bioDirty = ($htmlbio.val() !== $htmlbio.prop("defaultValue"));
             break;
         case 'staffnotes':
             staffnotesDirty = ($staffnotes.val() !== $staffnotes.prop("defaultValue"));
@@ -383,9 +557,9 @@ function processChange() {
             postcountryDirty = ($postcountry.val() !== $postcountry.prop("defaultValue"));
             break;
         default:
-            if ($target.is(".tag-chk")) {
+            if ($target.is(".role-check")) {
                 rolesDirty = false;
-                $(".tag-chk").each(function() {
+                $(".role-check").each(function () {
                     $checkbox = $(this);
                     if ($checkbox.is(":checked") !== $checkbox.prop("defaultChecked")) {
                         rolesDirty = true;
@@ -393,16 +567,47 @@ function processChange() {
                     }
                 });
             }
+            if ($target.is("#tag-container .tag-check")) {
+                tagsDirty = false;
+                $("#tag-container .tag-check").each(function () {
+                    $checkbox = $(this);
+                    if ($checkbox.is(":checked") !== $checkbox.prop("defaultChecked")) {
+                        tagsDirty = true;
+                        return false;
+                    }
+                });
+            }
     }
+    checkDirty();
+}
+
+function checkDirty() {
     if (passwordDirtyAndReady || interestedDirty || bioDirty || staffnotesDirty || pubsnameDirty || lastnameDirty ||
         firstnameDirty || badgenameDirty || phoneDirty || emailDirty || postaddress1Dirty || postaddress2Dirty ||
-        postcityDirty || poststateDirty || postzipDirty || postcountryDirty || rolesDirty) {
+        postcityDirty || poststateDirty || postzipDirty || postcountryDirty || rolesDirty || tagsDirty) {
 
         $updateButton.prop("disabled", false);
     } else {
         $updateButton.prop("disabled", true);
     }
 }
+
+
+function updatePlainText() {
+    tinymce.triggerSave();
+    var tempDivElement = document.createElement("div");
+    tempDivElement.innerHTML = $htmlbio.val();
+    $bio.val(tempDivElement.textContent || tempDivElement.innerText || "");
+    tempDivElement.remove();
+}
+
+function textChange(id) {
+    if (htmlbioused) {
+        updatePlainText();
+        bioDirty = ($htmlbio.val() !== $htmlbio.prop("defaultValue"));
+        checkDirty();
+    }
+}        
 
 function showAjaxError(data, textStatus, jqXHR) {
     var $resultBoxDIV = $("#resultBoxDIV");
@@ -441,6 +646,7 @@ function showUpdateResults(data, textStatus, jqXHR) {
     pubsnameDirty = false;
     rolesDirty = false;
     staffnotesDirty = false;
+    tagsDirty = false;
     $password.val("");
     $cpassword.val("");
     $('#updateBUTN').button('reset');
@@ -466,6 +672,11 @@ function showUpdateResults(data, textStatus, jqXHR) {
     $("#bnameSPAN_" + badgeidJQSel).html(node.getAttribute("badgename"));
     $("#interestedHID_" + badgeidJQSel).originalInterested = node.getAttribute("interested");
     $("#bioHID_" + badgeidJQSel).val(node.getAttribute("bio"));
+    if (htmlbioused) {
+        $("#htmlbioHID_" + badgeidJQSel).val(node.getAttribute("htmlbio"));
+        $htmlbio.val(node.getAttribute("bio"));
+        startTinymce();
+    }
     $("#staffnotesHID_" + badgeidJQSel).val(node.getAttribute("staff_notes"));
     $bio.val(node.getAttribute("bio"));
 }
@@ -477,7 +688,6 @@ function toggleSearchResultsBUTN() {
 }
 
 function updateBUTTON() {
-    //debugger;
     if (!validateBioCharacterLength()) {
         return;
     }
@@ -491,6 +701,10 @@ function updateBUTTON() {
     }
     if (bioDirty) {
         postdata.bio = $bio.val();
+        if (htmlbioused) {
+            tinymce.triggerSave();
+            postdata.htmlbio = $htmlbio.val();
+        }
     }
     if (pubsnameDirty) {
         postdata.pubsname = $pubsname.val();
@@ -537,7 +751,7 @@ function updateBUTTON() {
     if (rolesDirty) {
         var rolesToAdd = [];
         var rolesToDelete = [];
-        $(".tag-chk").each(function() {
+        $(".role-check").each(function() {
            $check = $(this);
            checked = $check.is(":checked");
            defaultChecked = $check.prop("defaultChecked");
@@ -554,6 +768,27 @@ function updateBUTTON() {
             postdata.rolesToDelete = rolesToDelete;
         }
     }
+    if (tagsDirty) {
+        var tagsToAdd = [];
+        var tagsToDelete = [];
+        $("#tag-container .tag-check").each(function() {
+            $check = $(this);
+            checked = $check.is(":checked");
+            defaultChecked = $check.prop("defaultChecked");
+            if (checked && !defaultChecked) {
+                tagsToAdd.push($check.val());
+            } else if (!checked && defaultChecked) {
+                tagsToDelete.push($check.val());
+            }
+        });
+        if (tagsToAdd.length > 0) {
+            postdata.tagsToAdd = tagsToAdd;
+        }
+        if (tagsToDelete.length > 0) {
+            postdata.tagsToDelete = tagsToDelete;
+        }
+    }
+
     $.ajax({
         url: "SubmitAdminParticipants.php",
         dataType: "html",
@@ -565,7 +800,8 @@ function updateBUTTON() {
 }
 
 function validateBioCharacterLength() {
-    if ($bio.val().length > max_bio_len) {
+    count = $bio.val().length;
+    if (count > max_bio_len) {
         alert("Bio too long at " + count + "; " + max_bio_len + " characters allowed.");
         return false;
     }
@@ -574,8 +810,42 @@ function validateBioCharacterLength() {
 
 function writeSearchResults(data, textStatus, jqXHR) {
     //ajax success callback function
-    $("#searchResultsDIV").html(data).show('fast');
+    data_json = new Array();
+    data_json["HTML"] = "";
+    data_json["rowcount"] = 0;
+    try {
+        data_json = JSON.parse(data);
+    } catch (error) {
+        console.log(error);
+    }
+
+    $("#searchResultsDIV").html(data_json["HTML"]).show('fast');
     $('#searchPartsBUTN').button('reset');
+    searchCount = data_json["rowcount"];
+    if (searchCount > 1) {
+        if ($prevBTN) {
+            $prevBTN.style.display = "block";
+            $prevBTN.disabled = true;
+        }
+        else
+            $prevBTN.style.display = "none";
+
+        if ($nextBTN) {
+            $nextBTN.style.display = "block";
+            $nextBTN.disabled = false;
+        }
+        else
+            $nextBTN.style.display = "none";
+        badgeList = data_json["badgeids"];
+    } else
+        badgeList = null;
+
+    searchIndex = -1;
     showSearchResults();
 }
 
+function showSurveyBUTTON() {
+    if (curbadgeid != '') {
+        window.open('StaffViewSurveyResults.php?badgeid=' + curbadgeid, "_blank");
+    }
+}

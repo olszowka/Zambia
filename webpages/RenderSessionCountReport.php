@@ -4,7 +4,7 @@ function RenderSessionCountReport($result) {
     global $title;
     $title = "Session Count Report";
     require_once('StaffCommonCode.php');
-    staff_header($title, true);
+    staff_header($title, 'bs2');
     ?>
 <div class="container">
 

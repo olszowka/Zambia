@@ -1,6 +1,6 @@
 <?php
 // Created by Peter Olszowka on 2020-04-21;
-// Copyright (c) 2020 The Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2024 The Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Reset Password";
 require ('PartCommonCode.php');
@@ -8,14 +8,26 @@ $selector = getString('selector');
 $validator = getString('validator');
 if (RESET_PASSWORD_SELF !== true) {
     http_response_code(403); // forbidden
-    participant_header($title, true, 'Login');
-    echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
+    participant_header($title, true, 'Normal', 'bs5');
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">You have reached this page in error.</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }
-participant_header($title, true, 'Login');
+participant_header($title, true, 'Normal', 'bs5');
 if (empty($selector) || empty($validator)) {
-    echo "<p class='alert alert-error vert-sep-above'>Reset password link was missing required parameters.</p>";
+    echo <<<EOD
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="alert alert-danger">Reset password link was missing required parameters.</div>
+    </div>
+</div>
+EOD;
     participant_footer();
     exit;
 }

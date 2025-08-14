@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Created by Peter Olszowka on 2011-07-24;
-	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved.
-	See copyright document for more details.
+    Created by Peter Olszowka on 2011-07-24;
+    Copyright (c) 2011-2024 Peter Olszowka. All rights reserved.
+    See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:param name="conName" select="''"/>
@@ -10,9 +10,12 @@
     <xsl:param name="enableUsePhotoQuestion" select="'0'"/>
     <xsl:param name="enableBestwayQuestion" select="'0'"/>
     <xsl:param name="useRegSystem" select="0"/>
+    <xsl:param name="updateRegSystem" select="0"/>
     <xsl:param name="maxBioLen" select="500"/>
     <xsl:param name="enableBioEdit" select="'0'"/>
+    <xsl:param name="htmlbio" select="'0'"/>
     <xsl:param name="userIdPrompt" select="''"/>
+    <xsl:param name="participant" select="'0'"/><!-- boolean representing whether user is participant -->
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
         <xsl:variable name="use_photo" select="/doc/query[@queryName='participant_info']/row/@use_photo" />
@@ -20,12 +23,40 @@
         <xsl:variable name="interested" select="/doc/query[@queryName='participant_info']/row/@interested" />
         <xsl:variable name="bestway" select="/doc/query[@queryName='participant_info']/row/@bestway" />
         <xsl:variable name="bioNote" select="/doc/customText/@biography_note" />
+        <xsl:variable name="policyNote" select="/doc/customText/@policy_block_at_top" />
         <xsl:variable name="regDataNote" select="/doc/customText/@registration_data" />
+        <div id="confNotAttModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm No Longer Attending</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><xsl:text disable-output-escaping="yes">&amp;times;</xsl:text></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are currently scheduled to participate in sessions at <xsl:value-of select="$conName" /> but
+                            are now changing your status to not attending.  Please confirm.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelNotAtt" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="confNotAtt" class="btn btn-secondary">Confirm Not Attending</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="resultBoxDIV">
             <span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span>
         </div>
         <div class="container-fluid">
             <form name="partform" class="container mt-2 mb-4">
+                <xsl:if test="$policyNote">
+                    <div class="row mt-1">
+                        <div class="col note">
+                            <xsl:value-of select="$policyNote" disable-output-escaping="yes"/>
+                        </div>
+                    </div>
+                </xsl:if>
                 <div class="row mt-3">
                     <legend>Permissions</legend>
                 </div>
@@ -38,20 +69,27 @@
                         </div>
                         <div class="col-auto">
                             <select id="interested" name="interested" class="mb-2 pl-2 pr-4 mycontrol">
+                                <!-- if user is not participant, force this select to be "No" -->
+                                <xsl:if test="not ($participant='1')">
+                                    <xsl:attribute name="disabled">disabled</xsl:attribute>
+                                </xsl:if>
+                                <xsl:attribute name="data-schedule-count">
+                                    <xsl:value-of select="/doc/query[@queryName='schedule_count']/row/@scheduleCount"/>
+                                </xsl:attribute>
                                 <option value="0">
-                                    <xsl:if test="$interested=0 or not ($interested)">
+                                    <xsl:if test="($interested=0 or not ($interested)) and $participant='1'">
                                         <xsl:attribute name="selected">selected</xsl:attribute>
                                     </xsl:if>
                                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                                 </option>
                                 <option value="1">
-                                    <xsl:if test="$interested=1">
+                                    <xsl:if test="$interested=1 and $participant='1'">
                                         <xsl:attribute name="selected">selected</xsl:attribute>
                                     </xsl:if>
                                     Yes
                                 </option>
                                 <option value="2">
-                                    <xsl:if test="$interested=2">
+                                    <xsl:if test="$interested=2 or not ($participant='1')">
                                         <xsl:attribute name="selected">selected</xsl:attribute>
                                     </xsl:if>
                                     No
@@ -246,38 +284,93 @@
                             </input>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label for="bio">
-                                Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
-                                spaces):
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <textarea rows="5" cols="72" name="bio" id="bioTXTA" data-max-length="{$maxBioLen}">
-                                <xsl:choose>
-                                    <xsl:when test="$enableBioEdit!='1'">
-                                        <xsl:attribute name="readonly">readonly</xsl:attribute>
-                                        <xsl:attribute name="class">span12 userFormTXT readonly mycontrol form-control</xsl:attribute>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:attribute name="class">span12 userFormTXT mycontrol form-control</xsl:attribute>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                                <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
-                            </textarea>
-                            <div id="badBio" class="invalid-feedback">Biography is too long!</div>
-                        </div>
-                    </div>
-                    <xsl:if test="$bioNote">
-                        <div class="row mt-1">
-                            <div class="col note">
-                                <xsl:value-of select="$bioNote" disable-output-escaping="yes"/>
+                    <xsl:choose>
+                        <xsl:when test="$htmlbio = '1'">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="htmlbio">
+                                        Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
+                                        spaces):
+                                    </label>
+                                </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <textarea rows="5" cols="72" name="htmlbio" id="htmlbioTXTA"
+                                              onchange="myProfile.bioChange()" onkeyup="myProfile.bioChange()"
+                                              data-max-length="{$maxBioLen}">
+                                        <xsl:choose>
+                                            <xsl:when test="$enableBioEdit!='1'">
+                                                <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                                <xsl:attribute name="class">col-sm-12 userFormTXT readonly mycontrol
+                                                    form-control
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="class">col-sm-12 userFormTXT mycontrol
+                                                    form-control
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                        <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@htmlbio"/>
+                                    </textarea>
+                                    <div id="badBio" class="invalid-feedback">Biography is too long!</div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-12">
+                                    <label for="bio">Plain Text Version (Automatically updates while typing changes or
+                                        on press of Update button):
+                                    </label>
+                                    <textarea rows="5" cols="72" name="bio" id="bioTXTA" data-max-length="{$maxBioLen}">
+                                        <xsl:attribute name="class">col-sm-12 userFormTXT readonly mycontrol
+                                            form-control
+                                        </xsl:attribute>
+                                        <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                        <xsl:attribute name="updatealso">true</xsl:attribute>
+                                        <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
+                                    </textarea>
+                                </div>
+                            </div>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="bio">
+                                        Biography (<xsl:value-of select="$maxBioLen"/> characters or fewer including
+                                        spaces):
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <textarea rows="5" cols="72" name="bio" id="bioTXTA" data-max-length="{$maxBioLen}">
+                                        <xsl:choose>
+                                            <xsl:when test="$enableBioEdit!='1'">
+                                                <xsl:attribute name="readonly">readonly</xsl:attribute>
+                                                <xsl:attribute name="class">span12 userFormTXT readonly mycontrol
+                                                    form-control
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="class">span12 userFormTXT mycontrol form-control
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                        <xsl:value-of select="/doc/query[@queryName='participant_info']/row/@bio"/>
+                                    </textarea>
+                                    <div id="badBio" class="invalid-feedback">Biography is too long!</div>
+                                </div>
+                            </div>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:if test="$bioNote">
+                    <div class="row mt-1">
+                        <div class="col note">
+                            <xsl:value-of select="$bioNote" disable-output-escaping="yes"/>
                         </div>
-                     </xsl:if>
+                    </div>
+                  </xsl:if>
                 </fieldset>
                 <xsl:if test="/doc/query[@queryName='credentials']/row">
                     <fieldset>
@@ -314,7 +407,7 @@
                         </div>
                     </fieldset>
                 </xsl:if>
-                <xsl:if test="$useRegSystem = 1"><!-- show button here if using reg system because data below not editable in that case -->
+                <xsl:if test="($useRegSystem = 1) and ($updateRegSystem = 0)"><!-- show button here if using reg system because data below not editable in that case -->
                     <div class="row mt-3">
                         <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN"
                             data-loading-text="Updating..." onclick="myProfile.updateBUTN();">
@@ -323,7 +416,7 @@
                     </div>
                 </xsl:if>
                 <xsl:choose>
-                    <xsl:when test="$useRegSystem = 1">
+                    <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 0)">
                         <div class="row mt-3">
                             <legend>Data from Registration System</legend>
                         </div>
@@ -334,6 +427,14 @@
                                 </div>
                             </div>
                         </xsl:if>
+                    </xsl:when>
+                    <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 1)">
+                        <div class="row mt-3">
+                            <legend>Contact Information from Registration System</legend>
+                        </div>
+                        <div class="row">
+                            <div class="col">Please confirm your contact information. Please provide missing information or correct what has changed. This will also update the registration system.</div>
+                        </div>
                     </xsl:when>
                     <xsl:otherwise>
                         <div class="row mt-3">
@@ -444,8 +545,12 @@
                         <xsl:with-param name="maxlength" select="25" />
                         <xsl:with-param name="fieldsize" select="25" />
                     </xsl:call-template>
+                    <xsl:call-template name="regRowContentsRO">
+                        <xsl:with-param name="label">Registration Type</xsl:with-param>
+                        <xsl:with-param name="value" select="/doc/query[@queryName='participant_info']/row/@regtype" />
+                    </xsl:call-template>
                 </fieldset>
-                <xsl:if test="$useRegSystem != 1"><!-- show button here if not using reg system -->
+                <xsl:if test="($useRegSystem != 1) or ($updateRegSystem = 1)"><!-- show button here if not using reg system -->
                     <div class="row mt-3">
                         <button class="btn btn-primary" type="button" name="submitBTN" id="submitBTN"
                             data-loading-text="Updating..." onclick="myProfile.updateBUTN();">
@@ -456,7 +561,6 @@
             </form>
         </div>
     </xsl:template>
-
     <xsl:template name="regRowContents">
         <xsl:param name="label" />
         <xsl:param name="value" />
@@ -467,7 +571,7 @@
             <div class="col-sm-3p5 col-md-3 col-lg-2">
                 <h5>
                     <xsl:choose>
-                        <xsl:when test="$useRegSystem = 1">
+                        <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 0)">
                             <div class="badge badge-secondary badge-full-width">
                                 <xsl:value-of select="$label" />
                             </div>
@@ -482,7 +586,7 @@
             </div>
             <div class="col">
                 <xsl:choose>
-                    <xsl:when test="$useRegSystem = 1">
+                    <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 0)">
                         <xsl:value-of select="$value" />
                     </xsl:when>
                     <xsl:otherwise>
@@ -493,5 +597,20 @@
             </div>
         </div>
     </xsl:template>
-
+    <xsl:template name="regRowContentsRO">
+        <xsl:param name="label" />
+        <xsl:param name="value" />
+        <div class="row">
+            <div class="col-sm-3p5 col-md-3 col-lg-2">
+                <h5>
+                    <div class="badge badge-secondary badge-full-width">
+                        <xsl:value-of select="$label" />
+                    </div>
+                </h5>
+            </div>
+            <div class="col">
+                <xsl:value-of select="$value" />
+            </div>
+        </div>
+    </xsl:template>
 </xsl:stylesheet>

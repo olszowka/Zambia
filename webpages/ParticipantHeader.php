@@ -1,46 +1,95 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section;
 $header_section = HEADER_PARTICIPANT;
 
-function participant_header($title, $noUserRequired = false, $loginPageStatus = 'Normal', $bootstrap4 = false) {
+function participant_header($title, $noUserRequired = false, $pageHeaderFamily = 'Normal', $bootstrapVersion = 'bs2') {
     // $noUserRequired is true if user not required to be logged in to access this page
-    // $loginPageStatus is "Login", "Logout", "Normal", "No_Permission", "Password_Reset"
-    //      login page should be "Login"
+    // $pageHeaderFamily is "Login", "Logout", "No_Menu", "PASSWORD_RESET_COMPLETE", "Consent", "Normal"
+    //      "Login":
     //          don't show menu; show login form in header
-    //      logout page should be "Logout"
+    //          login page and password reset pages
+    //      "Logout":
     //          don't show menu; show logout confirmation in header
-    //      logged in user who reached page for which he does not have permission is "No_Permission"
-    //          show menu; don't show page; show "No permission" where?
-    //      pages for user to reset password are "Password_Reset"
-    //          don't show menu; show header without welcome; show page
+    //          logout page only
+    //      "No_Menu":
+    //          don't show menu; show welcome if user required and populated; show page
+    //          declined participant pages
+    //      "PASSWORD_RESET_COMPLETE":
+    //          don't show menu; show login form in header (just like login, but with password change message)
     //      override page to gather user data retention consent is "Consent"
     //          don't show menu; show dataConsent page; show normal header (with welcome)
     //      all other pages should be "Normal"
     //          show menu; show page; show normal header (with welcome)
     global $headerErrorMessage;
+    $displayDataConsentPage = false;
     $isLoggedIn = isLoggedIn();
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
         $title = "Data Retention Consent";
-        $loginPageStatus = 'Consent';
-        $bootstrap4 = true;
+        $pageHeaderFamily = 'No_Menu';
+        $bootstrapVersion = 'bs4';
+        $displayDataConsentPage = true;
     }
-    html_header($title, $bootstrap4);
-    if ($bootstrap4) { ?>
-<body class="bs4">
-<?php } else { ?>
-<body>
-<?php } ?>
-    <div class="container-fluid">
-<?php
-    commonHeader('Participant', $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage, $bootstrap4);
+    switch ($pageHeaderFamily) {
+        case 'Login':
+            $topSectionBehavior = 'LOGIN';
+            break;
+        case 'Logout':
+            $topSectionBehavior = 'LOGOUT';
+            break;
+        case 'Normal':
+        case 'No_Menu':
+            if ($isLoggedIn) {
+                $topSectionBehavior = 'NORMAL';
+            } elseif ($noUserRequired) {
+                $topSectionBehavior = 'NO_USER';
+            } else {
+                $topSectionBehavior = 'SESSION_EXPIRED';
+                $bootstrapVersion = 'bs2';
+            }
+            break;
+        case 'PASSWORD_RESET_COMPLETE':
+            $topSectionBehavior = 'PASSWORD_RESET_COMPLETE';
+            break;
+    }
+    html_header($title, $bootstrapVersion);
+    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
+    echo "<body>\n";
+    echo "<div class=\"container-fluid\">\n";
+    /**
+     * Top section behavior
+     * LOGIN:
+     *      Login form, no message
+     * SESSION_EXPIRED:
+     *      Login form, session expired message (error)
+     * LOGOUT:
+     *      Login form, logout success message (success)
+     * PASSWORD_RESET_COMPLETE:
+     *      Login form, password changed message (success)
+     * NO_USER:
+     *      No login form, just title and logo
+     * NORMAL:
+     *      No login form, welcome message with logout button
+     */
+    commonHeader('Participant', $topSectionBehavior, $bootstrapVersion, $headerErrorMessage);
     // below: authenticated and authorized to see a menu
-    if ($isLoggedIn && $loginPageStatus != 'Login' && $loginPageStatus != 'Consent' &&
+    if ($isLoggedIn && $pageHeaderFamily === 'Normal' &&
         (may_I("Participant") || may_I("Staff"))) {
-        if ($bootstrap4) {
+    // check if survey is defined to set Survey Menu item in paramArray
+        if (!isset($_SESSION['survey_exists'])) {
+            $_SESSION['survey_exists'] = survey_programmed();
+        }
+        if ($isBs4or5) {
             $paramArray = array();
             $paramArray["title"] = $title;
-            RenderXSLT('ParticipantMenu_BS4.xsl', $paramArray, GeneratePermissionSetXML());
+            $paramArray["survey"] = $_SESSION['survey_exists'];
+            $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
+            if ($bootstrapVersion == 'bs4') {
+                $filename = 'ParticipantMenu_BS4.xsl';
+            } else {
+                $filename = 'ParticipantMenu_BS5.xsl';
+            }
+            RenderXSLT($filename, $paramArray, GeneratePermissionSetXML());
         } else {
 ?>
         <nav id="participantNav" class="navbar navbar-inverse">
@@ -56,12 +105,15 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                         <ul class="nav">
                             <li><a href="welcome.php">Overview</a></li>
                             <li><a href="my_contact.php">Profile</a></li>
-                            <?php makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false); ?>
-                            <?php makeMenuItem("General Interests",1,"my_interests.php",false); ?>
-                            <?php makeMenuItem("My Suggestions",1,"my_suggestions.php",false); ?>
-                            <?php makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false); ?>
-                            <?php makeMenuItem("Session Interests", may_I('my_panel_interests'),"PartPanelInterests.php",false); ?>
-                            <?php makeMenuItem("My Schedule", may_I('my_schedule'),"MySchedule.php",false); ?>
+                    <?php
+                            makeMenuItem("Photo", (PARTICIPANT_PHOTOS === TRUE && may_I('photos')), "my_photo.php", false);
+                            makeMenuItem("Survey", ($_SESSION['survey_exists'] && may_I('survey')), "PartSurvey.php", false);
+                            makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false);
+                            makeMenuItem("General Interests", may_I('general_interests'),"my_interests.php",false);
+                            makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false);
+                            makeMenuItem("Session Interests", may_I('my_panel_interests'),"PartPanelInterests.php",false);
+                            makeMenuItem("My Schedule", may_I('my_schedule'),"MySchedule.php",false);
+                    ?>
                             <li class="divider-vertical"></li>
                             <?php makeMenuItem("Suggest a Session", may_I('BrainstormSubmit'),"BrainstormWelcome.php", false); ?>
                             <li class="divider-vertical"></li>
@@ -73,12 +125,12 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                 </div>
             </div>
         </nav>
-<?php       }
+<?php       } // end of bootstrap 2
     } else { // couldn't show menu
-        if ($loginPageStatus === 'Consent') {
+        if ($displayDataConsentPage) {
             require('dataConsent.php');
             exit();
-        } elseif (!$noUserRequired) { // not authenticated and authorized to see a menu
+        } elseif (!$noUserRequired && !$isLoggedIn) { // not authenticated and authorized to see a menu
             participant_footer();
             exit();
         }

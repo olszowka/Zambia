@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant Interests';
 $report['description'] = 'What is that participant interested in? (Program Participants who are attending)';
@@ -19,17 +19,17 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-		P.badgeid, P.pubsname, PI.yespanels, PI.nopanels, PI.yespeople, PI.nopeople, PI.otherroles,
+        P.badgeid, P.pubsname, PI.yespanels, PI.nopanels, PI.yespeople, PI.nopeople, PI.otherroles,
         IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnameSort
-	FROM
-	         Participants P
-	    JOIN ParticipantInterests PI USING (badgeid)
-	    JOIN CongoDump CD USING (badgeid)
+    FROM
+             Participants P
+        JOIN ParticipantInterests PI USING (badgeid)
+        JOIN CongoDump CD USING (badgeid)
         JOIN UserHasPermissionRole UHPR USING (badgeid)
-	WHERE
-	        P.interested = 1
-        AND UHPR.permroleid = 3 /* Program Participant */
-	ORDER BY
+    WHERE
+            P.interested = 1
+        AND UHPR.permroleid = 4 /* Participant (B61) */
+    ORDER BY
         IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)), CD.firstname;
 EOD;
 $report['xsl'] =<<<'EOD'

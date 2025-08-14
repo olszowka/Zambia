@@ -7,17 +7,12 @@
   <xsl:param name="title" select="''" />
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
+  <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
   <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
-  <xsl:variable name="EditAnyTable" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_All' or
-      @permatomtag='ce_BioEditStatuses' or @permatomtag='ce_Credentials' or @permatomtag='ce_Divisions' or
-      @permatomtag='ce_EmailCC' or @permatomtag='ce_EmailFrom' or @permatomtag='ce_EmailTo' or @permatomtag='ce_Features' or
-      @permatomtag='ce_KidsCategories' or @permatomtag='ce_LanguageStatuses' or @permatomtag='ce_PubStatuses' or
-      @permatomtag='ce_RegTypes' or @permatomtag='ce_Roles' or @permatomtag='ce_Rooms' or @permatomtag='ce_RoomSets' or
-      @permatomtag='ce_RoomHasSet' or @permatomtag='ce_Services' or @permatomtag='ce_SessionStatuses' or
-      @permatomtag='ce_Tags' or @permatomtag='ce_Times' or @permatomtag='ce_Tracks' or @permatomtag='ce_Types']"/>
+  <xsl:variable name="Brainstorm" select="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']"/>
   <xsl:template match="/">
     <nav id="staffNav" class="navbar navbar-inverse">
       <div class="navbar-inner">
@@ -32,6 +27,10 @@
           </span>
           <div class="nav-collapse">
             <ul class="nav">
+              <xsl:if test="$Brainstorm">
+                <li><a href="BrainstormWelcome.php">Brainstorming</a></li>
+                <li class="divider-vertical"/>
+              </xsl:if>
               <li class="dropdown">
                 <a href="#sessions" class="dropdown-toggle" data-toggle="dropdown">
                   Sessions
@@ -73,6 +72,11 @@
                   <li>
                     <a href="AdminParticipants.php">Administer</a>
                   </li>
+                  <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
+                    <li>
+                      <a href="AdminPhotos.php">Photos</a>
+                    </li>
+                  </xsl:if>
                   <li>
                     <a href="InviteParticipants.php">Invite to a Session</a>
                   </li>
@@ -87,6 +91,11 @@
                   <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='CreateUser']">
                     <li>
                       <a href="AddZambiaUser.php">Create User</a>
+                    </li>
+                  </xsl:if>
+                  <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='reg_ImportUsers']">
+                    <li>
+                      <a href="BalticonImportRegUser.php">Import User from Reg</a>
                     </li>
                   </xsl:if>
                 </ul>
@@ -141,7 +150,7 @@
                   <input type="hidden" value="ANY" name="divisionid"/>
                 </form>
               </li>
-              <xsl:variable name="AdminMenu" select="$AdminPhases or $ConfigureReports or $Administrator or $EditAnyTable" />
+              <xsl:variable name="AdminMenu" select="$AdminPhases or $ConfigureReports or $Administrator" />
               <xsl:if test="$AdminMenu">
                 <li class="dropdown">
                   <a href="#admin" class="dropdown-toggle" data-toggle="dropdown">
@@ -163,8 +172,9 @@
                       <li>
                         <a href="EditCustomText.php">Edit Custom Text</a>
                       </li>
-                    </xsl:if>
-                    <xsl:if test="$EditAnyTable">
+                      <li>
+                        <a href="EditSurvey.php">Edit Survey</a>
+                      </li>
                       <li>
                         <a href="ConfigTableEditor.php">Edit Configuration Tables</a>
                       </li>

@@ -1,10 +1,22 @@
 <?php
-//	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrap4 = false) {
-    if ($bootstrap4) { ?>
-    <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
-    <script src="external/bootstrap4.5.0/bootstrap.bundle.min.js" type="text/javascript"></script>
-<?php } else { ?>
+//  Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrapVersion = 'bs2') {
+    switch ($bootstrapVersion) {
+        case 'bs5':
+?>
+            <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
+            <script src="external/bootstrap5.3.3/bootstrap.bundle.min.js" type="text/javascript"></script>
+<?php
+            break;
+        case 'bs4':
+?>
+        <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
+        <script src="external/bootstrap4.5.0/bootstrap.bundle.min.js" type="text/javascript"></script>
+<?php
+            break;
+        case 'bs2':
+        default:
+?>
     <script src="external/jquery1.7.2/jquery-1.7.2.min.js"></script>
     <script src="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.min.js"></script>
     <script src="external/bootstrap2.3.2/bootstrap.js" type="text/javascript"></script>
@@ -58,28 +70,59 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
             break;
         case "Edit Custom Text":
-            echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
+            break;
+        case "Edit Survey":
+            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
+            echo "<script src=\"javascript/EditSurvey.js\"></script>\n";
+            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            break;
+        case "Participant Survey":
+            echo "<script src=\"javascript/PartSurvey.js\"></script>\n";
+            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+        case "Preview Survey":
+            echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
             break;
         case "Session Search Results":
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;
         case "Administer Participants":
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
             break;
+        case "Administer Photos":
+            echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
+            echo "<script src=\"javascript/AdminPhotos.js\"></script>\n";
+            break;
         case "My Profile":
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/myProfile.js\"></script>";
             break;
-        case "Edit Session":
-            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
+        case "My Photo":
+            echo "<script src=\"external/croppie.2.6.5/croppie.min.js\"></script>\n";
+            echo "<script src=\"javascript/myPhoto.js\"></script>";
             break;
+        case "Edit Session":
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
         case "Create New Session":
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
             break;
         case "Edit Configuration Tables":
-            echo "<script src=\"external/tinymce-5.6.2/js/tinymce/tinymce.min.js\"></script>\n";
+            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
+            break;
+        case "Import Reg User":
+            echo "<script src=\"javascript/BalticonImportRegUser.js\"></script>\n";
+            break;
+        case "Participant View":
+            echo "<script src=\"javascript/ParticipantView.js\"></script>\n";
             break;
         default:
             if ($isDataTables) {

@@ -1,11 +1,11 @@
 <?php
-//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
-	$startTimeUnits = $startTimeHour * 2;
-	if ($startTimeMin >= 30) {
+    $startTimeUnits = $startTimeHour * 2;
+    if ($startTimeMin >= 30) {
         $startTimeUnits++;
     }
-	return $startTimeUnits;
+    return $startTimeUnits;
 }
 
 function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
@@ -18,14 +18,10 @@ function convertEndTimeToUnits($endTimeHour, $endTimeMin) {
     return $endTimeUnits;
 }
 
-function convertUnitsToTimeStr($timeUnits) {
-	return floor($timeUnits/2).":00:00";
-}
-
 function convertUnitsToHourMin($timeUnits) {
-	$hour = floor($timeUnits/2);
-	$min = ($timeUnits%2) * 30;
-	return array($hour, $min);
+    $hour = floor($timeUnits/2);
+    $min = ($timeUnits%2) * 30;
+    return array($hour, $min);
 }
 
 function fetchCustomText($tag) {
@@ -48,9 +44,11 @@ function appendCustomTextArrayToXML($xmlDoc) {
     return $xmlDoc;
 }
 
-// Function conv_min2hrsmin()
-// Input is unchecked form input in minutes
-// Output is string in MySql time format
+/**
+ * Function conv_min2hrsmin()
+ * Input is unchecked form input in minutes
+ * Output is string in MySql time format
+ */
 function conv_min2hrsmin($mininput) {
     $min = filter_var($mininput, FILTER_SANITIZE_NUMBER_INT);
     if (($min < 1) or ($min > 3000)) {
@@ -256,7 +254,13 @@ function get_session_from_post() {
     $session["title"] = getString('title');
     $session["secondtitle"] = getString('secondtitle');
     $session["pocketprogtext"] = getString('pocketprogtext');
-    $session["progguiddesc"] = getString('progguiddesc');
+    $session["progguidhtml"] = getString('progguidhtml');
+    if (HTML_SESSION === TRUE) {
+        $text = getString('progguidhtml');
+        $session["progguiddesc"] = $text !== null ? html_to_text($text) : getString('progguiddesc');
+    } else {
+        $session["progguiddesc"] = getString('progguiddesc');
+    }
     $session["persppartinfo"] = getString('persppartinfo');
     $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
@@ -271,6 +275,16 @@ function get_session_from_post() {
     $session["servnotes"] = getString('servnotes');
     $session["status"] = getInt('status');
     $session["notesforprog"] = getString('notesforprog');
+    if (MEETING_LINK === TRUE) {
+        $session["mlink"] = getString('mlink');
+    } else {
+        $session["mlink"] = "";
+    }
+    if (RECORDING_LINK === TRUE) {
+        $session["rlink"] = getString('rlink');
+    } else {
+        $session["rlink"] = "";
+    }
 }
 
 // Function set_session_defaults()
@@ -283,8 +297,8 @@ function set_session_defaults() {
     global $session;
     //$session["sessionid"] set elsewhere
     $session["track"] = 0; // prompt with "SELECT"
-    $session["type"] = 1; // default to "Panel"
-    $session["divisionid"] = 2; // default to "Programming"
+    $session["type"] = 2; // default to "Panel"
+    $session["divisionid"] = 1; // default to "Don't CAre"
     $session["pubstatusid"] = 2; // default to "Public"
     $session["languagestatusid"] = 1; // default to "English"
     $session["pubno"] = "";
@@ -292,20 +306,23 @@ function set_session_defaults() {
     $session["secondtitle"] = "";
     $session["pocketprogtext"] = "";
     $session["persppartinfo"] = "";
+    $session["progguidhtml"] = "";
     $session["progguiddesc"] = "";
     $session["featdest"] = "";
     $session["servdest"] = "";
     $session["tagdest"] = "";
     $session["duration"] = DEFAULT_DURATION; //should be specified corresponding to DURATION_IN_MINUTES preference
     $session["atten"] = "";
-    $session["kids"] = 2; // "Kids Welcome"
+    $session["kids"] = 1; // "Don't Care"
     $session["signup"] = false; // leave checkbox blank initially
-    $session["roomset"] = 0; // prompt with "SELECT"
+    $session["roomset"] = 1; // "Don't Care"
     $session["notesforpart"] = "";
     $session["servnotes"] = "";
     $session["status"] = 6; // default to "Edit Me"
     $session["notesforprog"] = "";
     $session["invguest"] = false; // leave checkbox blank initially
+    $session["mlink"] = "";
+    $session["rlink"] = "";
 }
 
 // Function set_brainstorm_session_defaults
@@ -317,14 +334,15 @@ function set_session_defaults() {
 function set_brainstorm_session_defaults() {
     global $session;
     $session["roomset"] = 99; // "Unspecified"
-    if (!may_I('Staff')) {
+    if (!may_I('Staff') || BRAINSTORM_STAFF_STATUS === FALSE) {
         $session["status"] = 1; // brainstorm
     }
 }
 
-// Function parse_mysql_time($time)
-// Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
-//
+/**
+ * Function parse_mysql_time($time)
+ * Takes the string $time in "hhh:mm:ss" and return array of "day" and "hour" and "minute"
+ */
 function parse_mysql_time($time) {
     $result = array();
     $h = 0 + substr($time, 0, strlen($time) - 6);
@@ -457,9 +475,10 @@ function may_I($permatomtag) {
     return (in_array($permatomtag, $_SESSION['permission_set']));
 }
 
-// Function GeneratePermissionSetXML()
-// returns an XMLDoc as if from a query with the permission set from the Session.
-//
+/**
+ * Function GeneratePermissionSetXML()
+ * returns an XMLDoc as if from a query with the permission set from the Session.
+ */
 function GeneratePermissionSetXML() {
     $permissionSetXML = new DomDocument("1.0", "UTF-8");
     $doc = $permissionSetXML -> createElement("doc");
@@ -492,16 +511,20 @@ function generateControlString($paramArray, $controliv = '') {
     return array("controliv" => base64_encode($controliv), "control" => $control);
 }
 
-// Function interpretControlString()
-// $control and $controliv were returned from generateControlString() and passed through a form.
-// returns the original associative array sent to generateControlString()
+/**
+ * Function interpretControlString()
+ * $control and $controliv were returned from generateControlString() and passed through a form.
+ * returns the original associative array sent to generateControlString()
+ */
 function interpretControlString($control, $controliv) {
     return json_decode(openssl_decrypt($control, 'aes-128-cbc', ENCRYPT_KEY, 0, base64_decode($controliv)), true);
 }
 
-// Function var_error_log()
-// $object = object to be dumped to the PHP error log
-// the object is walked and written to the PHP error log using var_dump and a redirect of the output buffer.
+/**
+ * Function var_error_log()
+ * $object = object to be dumped to the PHP error log
+ * the object is walked and written to the PHP error log using var_dump and a redirect of the output buffer.
+ */
 function var_error_log( $object=null ){
     ob_start();                    // start buffer capture
     var_dump( $object );           // dump the values
@@ -531,7 +554,7 @@ function ArrayToXML($queryname, $array, $xml = null) {
     $queryNode = null;
     if ($dosearch) {
         $xpath = new DOMXPath($xml);
-        $query = "/doc/query[@queryName='$queryname']";
+        $query = "/doc/query[@queryName='options']";
         $elements = $xpath->query($query);
 
         if (!is_null($elements)) {
@@ -612,5 +635,29 @@ function ObjecttoXML($queryname, $object, $xml = null) {
     }
     // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $permissionSetXML->saveXML(), "i"));
     return $xml;
+}
+
+// Function html_to_text()
+//  $html = html text to convert
+//  returns plain text with <p>'s converted to two newlines and <br>'s converted to one newline.
+//  remove html codes preserving line break
+function html_to_text($html) {
+    $text = preg_replace('=^<p>=i', '', $html);
+    $text = preg_replace('=</p>$=i', '', $text);
+    $text = str_replace("\r", '', $text);
+    $text = str_replace("\n", '', $text);
+    $text = preg_replace('=<br */*>=i', "\r\n", $text);
+    $text = preg_replace('=</p>=i', "\r\n\r\n", $text);
+    $text = preg_replace('=<p[^>]*>=i', '', $text);
+    $text = html_entity_decode(strip_tags($text), ENT_QUOTES);
+    return $text;
+}
+
+/**
+ * function if_null_default()
+ * if $val is null, return default, else return val
+ */
+function if_null_default($val, $default) {
+    return is_null($val) ? $default : $val;
 }
 ?>

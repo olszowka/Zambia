@@ -12,7 +12,7 @@ $report['group_concat_expand'] = false;
 $report['queries'] = [];
 $report['queries']['master'] =<<<'EOD'
 SELECT
-        POS.badgeid, P.pubsname, DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+        POS.badgeid, P.pubsname, DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
         CASE
 			WHEN HOUR(S.duration) < 1 THEN CONCAT(DATE_FORMAT(S.duration,'%i'),'min')
 			WHEN MINUTE(S.duration)=0 THEN CONCAT(DATE_FORMAT(S.duration,'%k'),'hr')

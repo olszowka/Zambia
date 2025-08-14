@@ -23,13 +23,13 @@ if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     RenderError($message_error);
     exit();
 }
-staff_header($title, true);
+staff_header($title, 'bs2');
 ?>
 <div class="container">
     <div class="row mt-2">
         <div class=" col-md-9">
             <div class="list-group">
-<?php 
+<?php
 if ($reportcategoryid === "") {
     foreach ($reportNames as $reportFileName => $reportName) {
         echo "<div class='list-group-item flex-column align-items-start'>\n<h5><a  href='generateReport.php?reportName=$reportFileName'>$reportName</a></h5>\n";
@@ -48,6 +48,6 @@ if ($reportcategoryid === "") {
         </div>
     </div>
 </div>
-<?php 
+<?php
 staff_footer();
 ?>
