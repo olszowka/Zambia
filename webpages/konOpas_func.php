@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2015-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2025 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('db_functions.php');
     function retrieveKonOpasData() {
         $results = array();
@@ -8,7 +8,7 @@
             return $results;
             };
         $ConStartDatim = CON_START_DATIM;
-        $photoPublicDirectory = mb_substr(PHOTO_PUBLIC_DIRECTORY, 2);
+        $photoPublicDirectory = mb_substr(PHOTO_PUBLIC_DIRECTORY, 1);
         // first query: which people are on which sessions
         $query = <<<EOD
 SELECT
