@@ -75,9 +75,10 @@
                     </xsl:otherwise>
                 </xsl:choose>
 
-                <p>On the following page, you can select sessions for participation. You must <strong>SAVE</strong> your changes
+                <p>On the following page, you can select up to 12 sessions to express an interest in participating in them. You must <strong>SAVE</strong> your changes
                     before leaving the page or your selections will not be recorded.</p>
-                <p><strong>Clicking Search without making any selections will display all sessions.</strong></p>
+                <p>Clicking Search without making any selections will display all sessions.</p>
+                <p><strong>After selecting sessions you're interested in, don't forget to select the Session Interests option at the top of this page to rank the items you've selected.  That way we'll know what you're most interested in.</strong></p>
             </form>
 
         </div>
