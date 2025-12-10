@@ -4,6 +4,7 @@ $report = [];
 $report['name'] = 'Abridged Schedule Report';
 $report['description'] = 'Lists all Sessions Scheduled in all Rooms.';
 $report['categories'] = array(
+    'Boskone Central' => 220,
     'Publication Reports' => 15,
 );
 $report['queries'] = [];

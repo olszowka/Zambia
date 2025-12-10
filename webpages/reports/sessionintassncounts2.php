@@ -5,6 +5,7 @@ $report = [];
 $report['name'] = 'Panel Sign-up Report';
 $report['description'] = 'Show all sessions for which particpants can sign up and how many have';
 $report['categories'] = array(
+    'Boskone Central' => 120,
     'Programming Reports' => 160,
 );
 $report['columns'] = array(

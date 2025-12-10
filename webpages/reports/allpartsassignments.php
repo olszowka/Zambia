@@ -5,6 +5,7 @@ $report = [];
 $report['name'] = 'All Participants and Assignments';
 $report['description'] = 'Shows who has been assigned to each session ordered by participant. Includes unassigned participants, but limited to ones currently interested in attending. Includes scheduled and unscheduled sessions, but not dropped or cancelled ones.';
 $report['categories'] = array(
+    'Boskone Central' => 600,
     'Programming Reports' => 155,
 );
 $report['columns'] = array(

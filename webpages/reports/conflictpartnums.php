@@ -4,6 +4,7 @@ $report = [];
 $report['name'] = 'Conflict Report - Participant Number of Sessions';
 $report['description'] = 'Compare number of sessions participants requested with the number of which they were assigned';
 $report['categories'] = array(
+    'Boskone Central' => 320,
     'Conflict Reports' => 420,
 );
 $report['columns'] = array(

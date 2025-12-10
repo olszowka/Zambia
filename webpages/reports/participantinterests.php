@@ -4,6 +4,7 @@ $report = [];
 $report['name'] = 'Participant Interests';
 $report['description'] = 'What is that participant interested in? (Program Participants who are attending)';
 $report['categories'] = array(
+    'Boskone Central' => 260,
     'Participant Info Reports' => 720,
 );
 $report['columns'] = array(
@@ -14,12 +15,13 @@ $report['columns'] = array(
     array("orderable" => false),
     array("orderable" => false),
     array("orderable" => false),
+    array("orderable" => false),
     array("orderable" => false)
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, P.pubsname, PI.yespanels, PI.nopanels, PI.yespeople, PI.nopeople, PI.otherroles,
+        P.badgeid, P.pubsname, PI.yespanels, PI.nopanels, PI.yespeople, PI.nopeople, PI.otherroles, P.bio,
         IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnameSort
     FROM
              Participants P
@@ -51,6 +53,7 @@ $report['xsl'] =<<<'EOD'
                             <th class="report">"People with whom I'd like to be on a session"</th>
                             <th class="report">"People with whom I'd rather not be on a session"</th>
                             <th class="report">"Other" Role Details</th>
+                            <th class="report">Bio</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
@@ -77,6 +80,7 @@ $report['xsl'] =<<<'EOD'
             <td class="report"><xsl:value-of select="@yespeople"/></td>
             <td class="report"><xsl:value-of select="@nopeople"/></td>
             <td class="report"><xsl:value-of select="@otherroles"/></td>
+            <td class="report"><xsl:value-of select="@bio"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

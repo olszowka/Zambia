@@ -4,6 +4,7 @@ $report = [];
 $report['name'] = 'Session Interest by participant (all info)';
 $report['description'] = 'Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report. (All data included including for invited sessions.) order by participant';
 $report['categories'] = array(
+    'Boskone Central' => 100,
     'Programming Reports' => 980,
 );
 $report['queries'] = [];
