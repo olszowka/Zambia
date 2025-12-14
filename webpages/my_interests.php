@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2025 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section, $message_error, $title;
 $title = "General Interests";
 // This can be a participant or a staff page
@@ -58,7 +58,7 @@ EOD;
     }
     $maxRoleId = mysqli_fetch_array($result, MYSQLI_NUM)[0];
     $rolesArr = array();
-    for ($i = 1; $i < $maxRoleId; $i++) {
+    for ($i = 1; $i <= $maxRoleId; $i++) {
         if (getInt("willdorole$i") !== false) {
             $rolesArr[] = $i;
         }
