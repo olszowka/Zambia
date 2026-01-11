@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Participant Number of Sessions';
 $report['description'] = 'Compare number of sessions participants requested with the number of which they were assigned';
@@ -19,8 +19,8 @@ $report['columns'] = array(
     array("orderable" => false),
     array("orderable" => false),
     array("orderable" => false),
-    array("orderable" => false),
-    array("orderable" => false),
+//    array("orderable" => false),
+//    array("orderable" => false),
     array("orderable" => false)
 );
 $report['queries'] = [];
