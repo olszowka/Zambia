@@ -181,7 +181,6 @@ EOD;
         push_query_arrays($lname, 'last_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($badgename, 'badge_name', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($phone, 'phone', 's', 15, $query_portion_arr, $query_param_arr, $query_param_type_str);
-        push_query_arrays($email, 'email_addr', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($postaddress1, 'address', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($postaddress2, 'addr_2', 's', 64, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($postcity, 'city', 's', 32, $query_portion_arr, $query_param_arr, $query_param_type_str);
