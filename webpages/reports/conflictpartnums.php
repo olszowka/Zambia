@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Participant Number of Sessions';
 $report['description'] = 'Compare number of sessions participants requested with the number of which they were assigned';
@@ -19,8 +19,8 @@ $report['columns'] = array(
     array("orderable" => false),
     array("orderable" => false),
     array("orderable" => false),
-    array("orderable" => false),
-    array("orderable" => false),
+//    array("orderable" => false),
+//    array("orderable" => false),
     array("orderable" => false)
 );
 $report['queries'] = [];
@@ -28,8 +28,8 @@ $report['queries']['availability'] =<<<'EOD'
 SELECT
         PAD.badgeid, PAD.day, PAD.maxprog
     FROM
-             ParticipantAvailabilityDays PAD
-        JOIN Participants P USING(badgeid)
+                  Participants P
+        LEFT JOIN ParticipantAvailabilityDays PAD USING(badgeid)
     WHERE
         P.interested = 1 /* interested */;
 EOD;
@@ -39,9 +39,9 @@ SELECT
         IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnameSort,
         PA.maxprog
     FROM
-             Participants P
-        JOIN ParticipantAvailability PA USING(badgeid)
-        JOIN CongoDump CD USING (badgeid)
+                  Participants P
+             JOIN CongoDump CD USING (badgeid)
+        LEFT JOIN ParticipantAvailability PA USING(badgeid)
     WHERE
             P.interested = 1 /* interested */
         AND EXISTS (SELECT *

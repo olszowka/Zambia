@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title, $report;
 $title = "Run Report";
 require_once('StaffCommonCode.php');
@@ -29,6 +29,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
     echo_if_zero_rows_and_exit($result);
     header("Content-disposition: attachment; filename={$report['output_filename']}");
     header('Content-type: text/csv');
+    echo chr(0xEF) . chr(0xBB) . chr(0xBF); // Byte Order Mark (BOM) for UTF-8
     echo $report['column_headings']."\n";
     render_query_result_as_csv($result);
 } else {
