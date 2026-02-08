@@ -1,7 +1,7 @@
 <?php
-//  Copyright (c) 2015-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('db_functions.php');
-    function retrieveKonOpasData() {
+    function retrieveKonOpasData($mode) {
         $results = array();
         if (prepare_db_and_more() === false) {
             $results["message_error"] = "Unable to connect to database.<br />No further execution possible.";
@@ -35,6 +35,16 @@ EOD;
         $query = <<<EOD
 SELECT
         S.sessionid AS id, TR.trackname, TY.typename, R.roomname AS loc, SQ.tags,
+        DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins, 
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time,
+EOD;
+    if ($mode == 'PRIVATE') {
+        $query .= <<<EOD
+    S.title, S.progguidhtml AS `desc`, S.meetinglink, S.recordinglink
+EOD;
+    } else { /* public data */
+        $query .= <<<EOD
         CASE
             WHEN TRIM(IFNULL(S.secondtitle, '')) = '' THEN S.title
             ELSE S.secondtitle
@@ -42,10 +52,10 @@ SELECT
         CASE
             WHEN TRIM(IFNULL(S.pocketprogtext, '')) = '' THEN S.progguidhtml
             ELSE S.pocketprogtext
-            END AS `desc`,
-        DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins, 
-        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
-        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time
+            END AS `desc`
+EOD;
+    }
+    $query .= <<<EOD
     FROM
                   Schedule SCH
              JOIN Sessions S USING (sessionid)
@@ -63,7 +73,6 @@ SELECT
                             S2.pubstatusid = 2 /* Public */
                         GROUP BY 
                             S2.sessionid
-                            
                     ) AS SQ USING (sessionid)
     WHERE
         S.pubstatusid = 2 /* Public */
@@ -84,6 +93,20 @@ EOD;
                 "desc" => $row["desc"],
                 "mins" => $row["mins"]
                 );
+            if ($mode == 'PRIVATE') {
+                $meetinglink = is_null($row['meetinglink']) ? '' : $row['meetinglink'];
+                $recordinglink = is_null($row['recordinglink']) ? '' : $row['recordinglink'];
+                if (trim($meetinglink) != '' || trim($recordinglink) != '') {
+                    $links = array();
+                    if (trim($meetinglink) != '') {
+                        $links['meeting'] = trim($meetinglink);
+                    }
+                    if (trim($recordinglink) != '') {
+                        $links['recording'] = trim($recordinglink);
+                    }
+                    $programRow['links'] = $links;
+                }
+            }
             if ($row["tags"]) {
                 $tags = explode(',', $row["tags"]);
                 $programRow["tags"] = array_merge($programRow["tags"], array_map(fn($s): string => "tag:$s", $tags));
@@ -94,14 +117,16 @@ EOD;
             // P.badgeid, P.pubsname, IFNULL(P.bio, '') AS bio, P.approvedphotofilename AS photo,
         $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, COALESCE(P.htmlbio, P.bio, '') AS bio, P.approvedphotofilename AS photo,
-        PSA1.value AS website, PSA2.value AS facebook, PSA3.value AS twitter, PSA4.value AS instagram
+        P.badgeid, P.pubsname, COALESCE(P.htmlbio, P.bio, '') AS bio, P.approvedphotofilename AS photo /*,
+        PSA1.value AS website, PSA2.value AS facebook, PSA3.value AS twitter, PSA4.value AS instagram */
     FROM
                   Participants P
+/*
         LEFT JOIN ParticipantSurveyAnswers PSA1 on P.badgeid = PSA1.participantid AND PSA1.questionid = 11
         LEFT JOIN ParticipantSurveyAnswers PSA2 on P.badgeid = PSA2.participantid AND PSA2.questionid = 12
         LEFT JOIN ParticipantSurveyAnswers PSA3 on P.badgeid = PSA3.participantid AND PSA3.questionid = 13
         LEFT JOIN ParticipantSurveyAnswers PSA4 on P.badgeid = PSA4.participantid AND PSA4.questionid = 14
+*/
     WHERE
         P.badgeid IN (
             SELECT POS.badgeid FROM
@@ -118,7 +143,8 @@ EOD;
                 "id" => $row["badgeid"],
                 "name" => array($row["pubsname"]),
                 "prog" => $participantOnSession[$row["badgeid"]],
-                "bio" => mb_ereg_replace('/[\x00-\x1F\x7F]/','',$row["bio"])
+                "bio" => $row["bio"]
+//                "bio" => mb_ereg_replace('/[\x00-\x1F\x7F]/','',$row["bio"])
                 );
             $links = array();
 //            if ($row["website"]) {
