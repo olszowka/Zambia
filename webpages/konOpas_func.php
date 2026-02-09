@@ -1,7 +1,7 @@
 <?php
 //  Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('db_functions.php');
-    function retrieveKonOpasData($mode) {
+    function retrieveKonOpasData($mode = '') {
         $results = array();
         if (prepare_db_and_more() === false) {
             $results["message_error"] = "Unable to connect to database.<br />No further execution possible.";
