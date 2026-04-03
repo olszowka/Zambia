@@ -24,11 +24,11 @@ UPDATE Participants SET
     bio = CONCAT('This is the bio for ',badgeid,'.'),
     htmlbio = CONCAT('<p>This is the htmlbio for ',badgeid,'.</p>'),
     pubsname = CONCAT('pubsname',badgeid),
-    uploadedphotofilename = NULL,
+    /*uploadedphotofilename = NULL,
     approvedphotofilename = NULL,
     photodenialreasonothertext = NULL,
     photodenialreasonid = NULL,
-    photouploadstatus = NULL;
+    photouploadstatus = NULL*/;
 
 UPDATE SessionEditHistory SET
     name = CONCAT('name',badgeid),
