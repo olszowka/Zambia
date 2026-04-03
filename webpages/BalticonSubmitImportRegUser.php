@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2021-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2021-03-11
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
@@ -31,7 +31,7 @@ function import_users() {
 
     ['mayIEditAllRoles' => $mayIEditAllRoles, 'rolesIMayEditArr' => $rolesIMayEditArr] = fetchMyEditableRoles($loggedInUserBadgeId);
     if (!$mayIEditAllRoles) {
-        if (count(array_diff($rolesIMayEditArr, $rolesToAddArr)) > 0) {
+        if (count(array_diff($rolesToAddArr, $rolesIMayEditArr)) > 0) {
            RenderErrorAjax("Server configuration error: You attempting to add roles you do not have permission to add. Seek assistance.");
            exit();
         }
