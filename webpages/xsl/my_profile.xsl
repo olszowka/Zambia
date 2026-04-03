@@ -586,7 +586,7 @@
             </div>
             <div class="col">
                 <xsl:choose>
-                    <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 0)">
+                    <xsl:when test="($useRegSystem = 1) and ($updateRegSystem = 0 or $id = 'email')">
                         <xsl:value-of select="$value" />
                     </xsl:when>
                     <xsl:otherwise>

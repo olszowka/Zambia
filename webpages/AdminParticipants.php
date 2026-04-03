@@ -176,7 +176,17 @@ if (USE_REG_SYSTEM === FALSE || UPDATE_REG_SYSTEM === TRUE) {
                     <label for="email" class="mb-1">Email address:</label>
                 </div>
                 <div>
+<?php
+    if (USE_REG_SYSTEM === FALSE) {
+?>
                     <input class="col-text-input mycontrol" id="email" type="text" maxlength="100" />
+<?php
+    } else {
+?>
+                    <input class='col-text-input disabled' id = 'email' type = 'text' readonly = 'readonly' style = 'max-width:15rem;' />
+<?php
+    }
+?>
                 </div>
             </div>
 <?php
