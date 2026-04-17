@@ -242,7 +242,7 @@ global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
 
-if (!isLoggedIn() || !may_I('reg_ImportUsers')) {
+if (!isLoggedIn() || !may_I('ConTrollImportUsers')) {
     $message_error = "You are not logged in or your session has expired.";
     RenderErrorAjax($message_error);
     exit();

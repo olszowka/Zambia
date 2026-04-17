@@ -47,7 +47,7 @@ EOD;
 function update_table($tablename) {
     global $json_return, $linki, $schema, $prikey;
 
-    if (!(may_I('ce_All') || may_I("ce_$tablename"))) {
+    if (!(may_I('EditAnyConfigurationTable') || may_I("ce_$tablename"))) {
         $message_error = "You do not have permission to view this page.";
         RenderErrorAjax($message_error);
         exit();
@@ -193,7 +193,7 @@ function update_table($tablename) {
 function fetch_table($tablename, $message) {
     global $displayorder_found, $json_return, $schema;
     $db = DBDB;
-    if (!(may_I('ce_All') || may_I("ce_$tablename"))) {
+    if (!(may_I('EditAnyConfigurationTable') || may_I("ce_$tablename"))) {
         $message_error = "You do not have permission to view this page.";
         RenderErrorAjax($message_error);
         exit();
