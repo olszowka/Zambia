@@ -9,14 +9,13 @@ You need a server with:
   - apache
      - Zambia might work with other web servers, but hasn't been tested on them.
   - php
-     - version 8.0.X or 8.1.X.  It might work with 8.2, but hasn't been tested on it. 
+     - version 8.2.X.  It might work with 8.3 or higher, but hasn't been tested on it. 
      - needs to have xsl and multibyte libraries installed and enabled
-       (often, but not always, included by default)
-  - mysql
-    - version 5.7.X or 8.0.X
-    - server property `ONLY_FULL_GROUP_BY` is disabled
+       (I haven't seen these missing in years)
+  - MySQL or MariaDB
+    - MySQL versions 8 or 9
+    - MariaDB version 10
 [(notes)](https://github.com/olszowka/Zambia/wiki/MySQL-Issue----ONLY_FULL_GROUP_BY)
-    - should work with corresponding versins of MariaDB, but hasn't been tested
   - a mail relay to accept mail for sending via smtp
        (optional; needed only if you want to send email from Zambia)
 Please test them and make sure they work.  

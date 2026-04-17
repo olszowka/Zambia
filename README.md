@@ -12,10 +12,10 @@ participants, and rooms.
 
 ## Requirements
 * PHP 8.0 or greater (Tested on 8.0 and 8.1)
-  * XSLT library
-  * Multibyte library
+  * XSLT library (I haven't seen a PHP deployment without this in many years)
+  * Multibyte library (I haven't seen a PHP deployment without this in many years)
 * Apache (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
-* MySQL (Tested on 5.7 & 8.0)
+* MySQL (Tested on 8.0 & 9.0.1) or MariaDB (Tested on 10.11.13)
 * SMTP connection for use as mail relay (only if you want to send email from Zambia)
   * Note, many hosts limit use of their mail relays in ways not compatible with Zambia
 * Google reCAPTCHA account (If you want to allow users to reset their own passwords via email)
@@ -23,13 +23,13 @@ participants, and rooms.
 ## Built In Dependencies
 These libraries are included in the repo and should just work if you leave as is
 * Client Side
-  * Bootstrap 2.3.2 / 4.5.0
+  * Bootstrap 2.3.2 / 4.5.0 / 5.3.3
   * Choices 9.0.0
   * DataTables 1.10.16
   * JQuery 1.7.2 / 3.5.1
   * JQueryUI 1.8.16
   * Tabulator 4.9.1
-  * TinyMCE 5.6.2
+  * TinyMCE 6.7.1
 * Server Side  
   * Swift mailer 5.4.8
   * Guzzle 7.8.1
@@ -39,6 +39,7 @@ Other software which can work with Zambia
 * ConClár [(repo)](https://github.com/lostcarpark/conclar) a free tool for publishing the schedule
 * conguide [(repo)](https://github.com/pselkirk/conguide), a tool for producing a printable pocket program in InDesign from Zambia, including a schedule grid
 * KonOpas [(repo)](https://github.com/dpmott/konopas) a free tool for publishing the schedule
+* ConTroll [(site)](https://controll-reg.org) [(repo)](https://github.com/MichaelRafferty/ConTroll), a registration system
 
 ## Installation
 See [Installation](Install/INSTALL.md)
