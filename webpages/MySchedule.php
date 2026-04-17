@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "My Schedule";
 require('PartCommonCode.php'); // initialize db; check login;
@@ -44,14 +44,14 @@ SELECT
         IF (P.share_email=1, CD.email, NULL) AS email,
         POS.moderator, PSI.comments
     FROM
-				ParticipantOnSession POS
-		   JOIN CongoDump CD USING(badgeid)
-		   JOIN Participants P USING(badgeid)
-	  LEFT JOIN ParticipantSessionInterest PSI USING(sessionid, badgeid)
+                ParticipantOnSession POS
+           JOIN CongoDump CD USING(badgeid)
+           JOIN Participants P USING(badgeid)
+      LEFT JOIN ParticipantSessionInterest PSI USING(sessionid, badgeid)
     WHERE
         POS.sessionid IN (
             SELECT sessionid FROM ParticipantOnSession WHERE badgeid='$badgeid'
-			)
+            )
     ORDER BY sessionid, moderator DESC;
 EOD;
 $resultXML = mysql_query_XML($queryArr);
@@ -95,6 +95,7 @@ echo fetchCustomText("all_panelists_1");
 echo fetchCustomText("all_panelists_2");
 if (false) { // lock out code for now to get/display the reg status for VB55, need to remove this code and make it work right for B56.
     echo "<p>Your registration status is <span class=\"hilit\">$regmessage</span>\n";
+}
 echo "<p>Thank you -- <a class=\"alert-link\" href=\"mailto:$PROGRAM_EMAIL\"> Programming </a></div>\n";
 ?>
 
