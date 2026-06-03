@@ -159,7 +159,7 @@ INSERT INTO `Phases`
         (phaseid, phasename, current, notes, implemented, display_order)
     VALUES
         (1, 'Initial invitation', 1, 'Login, welcome, and profile', 1, 10),
-        (2, 'General information', 1, 'Availability, general interests, and suggestions', 2, 20),
+        (2, 'General information', 1, 'Availability, general interests, and suggestions', 1, 20),
         (3, 'Edit stuff for publications', 1, 'Even after print deadline might not deactivate if you want to allow updating of online publications', 1, 30),
         (4, 'Survey', 1, 'Edit survey responses', 1, 40),
         (5, 'Panel sign up', 0, 'Search and sign up for panels',1, 50),
