@@ -1095,7 +1095,7 @@ SELECT DISTINCT
     FROM
                   PermissionAtoms PA
              JOIN Permissions P USING (permatomid)
-        LEFT JOIN Phases PH ON P.phaseid = PH.phaseid AND PH.current = TRUE
+        LEFT JOIN Phases PH ON P.phaseid = PH.phaseid AND PH.current = TRUE AND PH.implemented = TRUE
         LEFT JOIN UserHasPermissionRole UHPR ON P.permroleid = UHPR.permroleid AND UHPR.badgeid='$badgeid'
     WHERE
             (PH.phaseid IS NOT NULL OR P.phaseid IS NULL)
