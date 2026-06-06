@@ -168,36 +168,36 @@ INSERT INTO `Phases`
         (8, 'Brainstorm', 0, 'Users may suggest schedule items on brainstorm pages',1, 80);
 
     INSERT INTO `Permissions`
-        (permissionid, permatomid, phaseid, permroleid)
+        (permissionid, permatomid, phaseid, permroleid, badgeid)
     VALUES
         #######################
         ## Staff permissions ##
         #######################
         ## "Staff" Staff Menu and login -- permatomid: 1
-        (1, 1, NULL, 1),
-        (2, 1, NULL, 2),
-        (3, 1, NULL, 3),
+        (1, 1, NULL, 1, NULL),
+        (2, 1, NULL, 2, NULL),
+        (3, 1, NULL, 3, NULL),
         ## "Administrator" Misc Administrator -- permatomid: 2
         ## 1) Config table editor render or post, 2) Edit custom text render or post,
         ## 3) Edit survey render, 4) Preview survey render, 5) Edit survey post,
         ## 6) 1-5 above in menus
-        (4, 2, NULL, 1),
+        (4, 2, NULL, 1, NULL),
         ## "SendEmail" Send email -- permatomid: 14
-        (5, 14, NULL, 1),
-        (6, 14, NULL, 2),
+        (5, 14, NULL, 1, NULL),
+        (6, 14, NULL, 2, NULL),
         ## "EditSesNtsAsgnPartPg" Edit notes for program staff on assign participants page -- permatomid: 16
-        (7, 16, NULL, 1),
-        (8, 16, NULL, 2),
-        (9, 16, NULL, 3),
+        (7, 16, NULL, 1, NULL),
+        (8, 16, NULL, 2, NULL),
+        (9, 16, NULL, 3, NULL),
         ## "ConfigureReports" Build Report Menus -- permatomid: 17
         ## Complete: Menu and page
-        (10, 17, NULL, 1),
+        (10, 17, NULL, 1, NULL),
         ## "ResetUserPassword" Edit User Password -- permatomid: 18
         ## If self service email reset is working, don't grant to anyone
         ## Incomplete: Controls rendering on Admin Participants page, but doesn't gate back end
         ## "AdminPhases" Administer Phases -- permatomid: 19
         ## Complete: Staff menu, page rendering, back end action
-        (11, 19, NULL, 1),
+        (11, 19, NULL, 1, NULL),
         ## "CreateUser" Create User -- permatomid: 20
         ## Must also have edit for one or more roles
         ## Complete: Staff menu, page rendering, back end action
@@ -207,31 +207,31 @@ INSERT INTO `Phases`
         ## having the same permatomtag.  There is special code in EditPermRoles_FNC.php for wrangling
         ## this atom.
         ## Complete: Render and back end on Admin Participants, Create User, and Import User from ConTroll
-        (12, 21, NULL, 1),
-        (13, 22, NULL, 2),
-        (14, 22, NULL, 3),
+        (12, 21, NULL, 1, NULL),
+        (13, 22, NULL, 2, NULL),
+        (14, 22, NULL, 3, NULL),
         ## "edit_my_contact" writability of my profile/my contact page -- permatomid: 24
         ## Also writability of participant photo
         ## Back end only
-        ## Staff (and participants) need this to change their passwords
-        (15, 24, NULL, 1),
+        ## Staff (and participants, NULL) need this to change their passwords
+        (15, 24, NULL, 1, NULL),
         ## "EditAnyConfigurationTable" Edit Any Configuration Table -- permatomid: 26
         ## Complete: Menu, Render and back end
-        (16, 26, NULL, 1),
+        (16, 26, NULL, 1, NULL),
         ## "AdminPhotos" Approve or deny photos -- permatomid: 29
         ## Incomplete: Page render and back end, but not menus
-        (17, 29, NULL, 1),
-        (18, 29, NULL, 2),
+        (17, 29, NULL, 1, NULL),
+        (18, 29, NULL, 2, NULL),
         ## "edit_participant_tags" Edit a user's tags -- permatomid: 30
         ## Complete: render and back end
-        (19, 30, NULL, 1),
-        (20, 30, NULL, 2),
-        (21, 30, NULL, 3),
+        (19, 30, NULL, 1, NULL),
+        (20, 30, NULL, 2, NULL),
+        (21, 30, NULL, 3, NULL),
         ## "edit_participant_responses" Edit a participant's responses -- permatomid: 31
         ## Currently implemented for survey and general interests
         ## Complete: render and back end
-        (22, 31, NULL, 1),
-        (23, 31, NULL, 2),
+        (22, 31, NULL, 1, NULL),
+        (23, 31, NULL, 2, NULL),
         ## "ce_BioEditStatuses" -- permatomid: 2000 through
         ## "ce_ParticipantTags" -- permatomid: 2022
         ## These work very similarly to "EditAnyConfigurationTable" except that they control
@@ -242,63 +242,63 @@ INSERT INTO `Phases`
         ## User also needs permission to edit a role in order to grant the imported
         ## user a role.
         ## Complete: Menu, Render and back end
-        (24, 10001, NULL, 1),
-        (25, 10001, NULL, 2),
-        (26, 10001, NULL, 3),
+        (24, 10001, NULL, 1, NULL),
+        (25, 10001, NULL, 2, NULL),
+        (26, 10001, NULL, 3, NULL),
         #############################
         ## Participant permissions ##
         #############################
         ## "Participant" several particpant functions -- permatomid: 3
         ## Login as participant, get participant menu initially, flag self as interested
-        (27, 3, 1, 4),
+        (27, 3, 1, 4, NULL),
         ## "EditBio" several particpant functions -- permatomid: 4
         ## On "My Profile" page, edit bio, pubsname, and credentials
         ## Incomplete: Page render and back end except no back end protection for credentials
         ## No protection on admin participants
-        (28, 4, 3, 4),
+        (28, 4, 3, 4, NULL),
         ## "my_availability" availability page -- permatomid: 5
         ## Menu and rendering of availability page.  No back end protection.
-        (29, 5, 2, 4),
+        (29, 5, 2, 4, NULL),
         ## "search_panels" search panels page -- permatomid: 6
         ## Menu and rendering of availability page.  No back end protection.
-        (30, 6, 5, 4),
+        (30, 6, 5, 4, NULL),
         ## "my_panel_interests" my panel interests page -- permatomid: 7
         ## Menu and rendering of availability page.  No back end protection.
-        (31, 7, 5, 4),
+        (31, 7, 5, 4, NULL),
         ## "my_schedule" my schedule page -- permatomid: 8
         ## Menu and rendering of availability page.  There is no back end to protect because page is read only.
-        (32, 8, 6, 4),
+        (32, 8, 6, 4, NULL),
         ## "my_suggestions_write" writability of suggestion page -- permatomid: 9
         ## Render and back end
-        (33, 9, 2, 4),
+        (33, 9, 2, 4, NULL),
         ## "my_gen_int_write" writability of my general interests page -- permatomid: 10
         ## Render and back end
-        (34, 10, 2, 4),
+        (34, 10, 2, 4, NULL),
         ## "postcon" force participant welcome page to be post con page -- permatomid: 15
-        (35, 15, 7, 4),
+        (35, 15, 7, 4, NULL),
         ## "edit_my_contact" writability of my profile/my contact page -- permatomid: 24
         ## Also writability of participant photo
         ## Back end only
         ## Also granted to staff so they can edit their passwords, etc.
         ## Why does this exist?
-        (36, 24, 1, 4),
+        (36, 24, 1, 4, NULL),
         ## "general_interests" my general interests page -- permatomid: 25
         ## Menu and render of my general interests page -- no backend
-        (37, 25, 2, 4),
+        (37, 25, 2, 4, NULL),
         ## "photos" photos page -- permatomid: 27
         ## Menu only -- no render or backend
         ## Don't need to use this to disable photos entirely -- use db_name
-        (38, 27, 2, 4),
+        (38, 27, 2, 4, NULL),
         ## "survey" photos page -- permatomid: 28
         ## Menu only -- no render or backend
         ## Don't need to use this to disable survey entirely -- use db_name
-        (39, 28, 4, 4),
+        (39, 28, 4, 4, NULL),
         ######################################
         ## Declined participant permissions ##
         ######################################
         ## "declined_participant" replace welcome page with declined participant page -- permatomid: 28
         ##
-        (40, 32, NULL, 5),
+        (40, 32, NULL, 5, NULL),
         ############################
         ## Brainstorm permissions ##
         ############################
@@ -308,12 +308,12 @@ INSERT INTO `Phases`
         ## "BrainstormSubmit" user can create session -- permatomid: 11
         ## Menu and render -- no backend
         ## "Brainstorm" menu item can appear on staff menu, but isn't configured here
-        (41, 11, 8, 4),
+        (41, 11, 8, 4, NULL),
         ## "BS_sear_sess" search session from brainstorm pages -- permatomid: 12
         ## backend only
         ## Some other paths for viewing brainstorm items are still supported without any permission protection
         ## other than login
-        (42, 12, 8, 4);
+        (42, 12, 8, 4, NULL);
         ## "public_login" special anonymous login for brainstorm pages -- permatomid: 13
         ## No longer supported
 
