@@ -1,13 +1,10 @@
 ## This script adds additional fields to Participants and Sessions tables
 ##
 ##	Created by Syd Weinstein on September 3, 2020
-## 	Copyright (c) 2020 by Peter Olszowka. All rights reserved. See copyright document for more details.
+## 	Copyright (c) 2020-2026 by Peter Olszowka. All rights reserved. See copyright document for more details.
 ##
 ALTER TABLE Participants
 ADD COLUMN htmlbio TEXT AFTER bio;
-
-ALTER TABLE Sessions
-ADD meetinglink VARCHAR(512) AFTER persppartinfo;
 
 ALTER TABLE Sessions
 ADD progguidhtml TEXT AFTER progguiddesc;
