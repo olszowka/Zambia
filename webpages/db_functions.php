@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function log_error_or_stdderr($error_msg) {
     global $runAScript;
@@ -97,7 +97,7 @@ function mysql_cmd_with_prepare($query, $type_string, $param_arr) {
     if ($message_error != "") {
         return NULL;
     }
-	return $rows;
+    return $rows;
 }
 
 function mysql_prepare_query_XML($query_array, $parmtype_array, $param_array) {
@@ -310,11 +310,15 @@ function rollback_mysqli($exit_on_error = false, $ajax = false) {
 function populateCustomTextArray() {
     global $customTextArray, $title;
     $customTextArray = array();
+    $searchArray = array('$CON_NAME$', '$PROGRAM_EMAIL$');
+    $replacementArray = array(CON_NAME, PROGRAM_EMAIL);
     $query = "SELECT tag, textcontents FROM CustomText WHERE page = '$title';";
-    if (!$result = mysqli_query_with_error_handling($query))
+    if (!$result = mysqli_query_with_error_handling($query)) {
         return false;
+    }
     while ($row = mysqli_fetch_assoc($result)) {
-        $customTextArray[$row["tag"]] = $row["textcontents"];
+        $customTextArray[$row["tag"]] =
+            isset($row["textcontents"]) ? str_replace($searchArray, $replacementArray, $row["textcontents"]) : "";
     }
     mysqli_free_result($result);
     return true;
