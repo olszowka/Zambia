@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 require('PartCommonCode.php');
 $title = "Submit Consent";
@@ -24,7 +24,7 @@ $message = "Database updated successfully.";
 $message2 = "";
 $_SESSION['data_consent'] = 1;
 if (may_I('Staff')) {
-    require('StaffPage.php');
+    require('StaffOverview.php');
 } elseif (may_I('Participant')) {
     if (!$participant_array = retrieveFullParticipant($badgeid)) {
         $message_error = $message2 . "<br />Error retrieving data from DB.  No further execution possible.";
