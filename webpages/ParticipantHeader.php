@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section;
 $header_section = HEADER_PARTICIPANT;
 
@@ -118,7 +118,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
                             <li class="divider-vertical"></li>
                         </ul>
                             <?php if (may_I('Staff')) {
-                                echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="StaffView" href="StaffPage.php">Staff View</a></li></ul>';
+                                echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="StaffView" href="StaffOverview.php">Staff View</a></li></ul>';
                             }?>
                     </div>
                 </div>

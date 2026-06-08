@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 function convertStartTimeToUnits($startTimeHour, $startTimeMin) {
     $startTimeUnits = $startTimeHour * 2;
     if ($startTimeMin >= 30) {
@@ -573,4 +573,22 @@ function html_to_text($html) {
 function if_null_default($val, $default) {
     return is_null($val) ? $default : $val;
 }
+
+/**
+ * function getConStartDate()
+ * returns string of convention start date like Friday, January 10, 2020
+ */
+function getConStartDate() {
+    return DateTimeImmutable::createFromFormat('Y-m-d H:i:s', CON_START_DATIM)->format('l, F j, Y');
+}
+
+/**
+ * function getConEndDate()
+ * returns string of convention start date like Friday, January 10, 2020
+ */
+function getConEndDate() {
+    return DateTimeImmutable::createFromFormat('Y-m-d H:i:s', CON_START_DATIM)->
+        add(new DateInterval('P'.(CON_NUM_DAYS - 1).'D'))->format('l, F j, Y');
+}
+
 ?>

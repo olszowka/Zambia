@@ -310,15 +310,17 @@ function rollback_mysqli($exit_on_error = false, $ajax = false) {
 function populateCustomTextArray() {
     global $customTextArray, $title;
     $customTextArray = array();
-    $searchArray = array('$CON_NAME$', '$PROGRAM_EMAIL$');
-    $replacementArray = array(CON_NAME, PROGRAM_EMAIL);
     $query = "SELECT tag, textcontents FROM CustomText WHERE page = '$title';";
     if (!$result = mysqli_query_with_error_handling($query)) {
         return false;
     }
-    while ($row = mysqli_fetch_assoc($result)) {
-        $customTextArray[$row["tag"]] =
-            isset($row["textcontents"]) ? str_replace($searchArray, $replacementArray, $row["textcontents"]) : "";
+    if (mysqli_num_rows($result) > 0) {
+        $searchArray = array('$CON_NAME$', '$PROGRAM_EMAIL$', '$CON_NUM_DAYS$', '$CON_START_DATE$', '$CON_END_DATE$');
+        $replacementArray = array(CON_NAME, PROGRAM_EMAIL, CON_NUM_DAYS, getConStartDate(), getConEndDate());
+        while ($row = mysqli_fetch_assoc($result)) {
+            $customTextArray[$row["tag"]] =
+                isset($row["textcontents"]) ? str_replace($searchArray, $replacementArray, $row["textcontents"]) : "";
+        }
     }
     mysqli_free_result($result);
     return true;

@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 function brainstorm_header($title) {
     global $header_section;
     $header_section = HEADER_BRAINSTORM;
@@ -10,7 +10,7 @@ function brainstorm_header($title) {
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Zambia &ndash; <?php echo $title ?></title>
     <link rel="stylesheet" href="css/Common.css" type="text/css">
-    <link rel="stylesheet" href="css/Zambia.css" type="text/css">
+    <link rel="stylesheet" href="css/zambia.css" type="text/css">
     <link rel="stylesheet" href="css/BrainstormSection.css" type="text/css">
     <meta name="keywords" content="Questionnaire">
 </head>
@@ -35,7 +35,7 @@ function brainstorm_header($title) {
                }?></td>
       <td class="tabblocks border0020" colspan=2>
          <?php if(may_I('Staff')) { 
-                   maketab("Staff View",may_I('Staff'),"StaffPage.php");
+                   maketab("Staff View",may_I('Staff'),"StaffOverview.php");
                }?></td>
     </tr>
     <tr class="tabrows">

@@ -22,7 +22,7 @@ if ($areYouSure !== 1) {
 <form class="form-inline" name="confform" method="GET" action="BuildReportMenus.php">
     <input type="hidden" name="areYouSure" value="1" />
     <button type="submit" class="btn btn-primary mr-3">Continue</button>
-    <a class="btn btn-secondary" href="StaffPage.php">Cancel</a>
+    <a class="btn btn-secondary" href="StaffOverview.php">Cancel</a>
 </form>
     <?php
     staff_footer();
