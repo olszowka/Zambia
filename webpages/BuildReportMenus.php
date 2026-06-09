@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2019-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2019-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Build Report Menus";
 require_once('StaffCommonCode.php'); // Checks for staff permission among other things
