@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // $timesXML array defined on global scope
 participant_header($title);
 ?>
@@ -123,7 +123,7 @@ participant_header($title);
         }
         ?>
     </table>
-    <?php echo fetchCustomText("note_after_time_slots"); ?>
+    <?php echo fetchCustomText("note_after_times"); ?>
     <hr style="margin-top:5px">
 
     <div class="row-fluid">
