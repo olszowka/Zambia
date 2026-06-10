@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
     Created by Peter Olszowka on 2024-11-16;
-    Copyright (c) 2024 Peter Olszowka. All rights reserved.
+    Copyright (c) 2024-2026 Peter Olszowka. All rights reserved.
     See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -47,7 +47,7 @@
                         <label for="yespanels" class="form-label">
                             <xsl:choose>
                                 <xsl:when test="string-length(doc/customText/@stuff_id_like_to_run) > 0">
-                                    <xsl:value-of select="doc/customText/@stuff_id_like_to_run" />
+                                    <xsl:value-of select="doc/customText/@stuff_id_like_to_run" disable-output-escaping="yes" />
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:text>Workshops or presentations I'd like to run:</xsl:text>
@@ -66,7 +66,7 @@
                         <label for="nopanels" class="form-label">
                             <xsl:choose>
                                 <xsl:when test="string-length(/doc/customText/@panel_types_not_int) > 0">
-                                    <xsl:value-of select="/doc/customText/@panel_types_not_int" />
+                                    <xsl:value-of select="/doc/customText/@panel_types_not_int" disable-output-escaping="yes" />
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:text>Panel types I am not interested in participating in:</xsl:text>
@@ -108,7 +108,7 @@
                             <legend>
                                 <xsl:choose>
                                     <xsl:when test="string-length(doc/customText/@roles_checkboxes_label) > 0">
-                                        <xsl:value-of select="doc/customText/@roles_checkboxes_label" />
+                                        <xsl:value-of select="doc/customText/@roles_checkboxes_label" disable-output-escaping="yes" />
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:text>Roles I'm willing to take on:</xsl:text>
@@ -130,7 +130,7 @@
                         <label for="otherroles" class="form-label">
                             <xsl:choose>
                                 <xsl:when test="string-length(/doc/customText/@other_role_desc) > 0">
-                                    <xsl:value-of select="/doc/customText/@other_role_desc" />
+                                    <xsl:value-of select="/doc/customText/@other_role_desc" disable-output-escaping="yes" />
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:text>Description for "Other" Roles:</xsl:text>
