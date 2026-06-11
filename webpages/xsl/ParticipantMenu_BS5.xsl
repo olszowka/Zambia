@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!--
     Created by Peter Olszowka on 2024-11-16;
-    Copyright (c) 2024 Peter Olszowka. All rights reserved.
+    Copyright (c) 2024-2026 Peter Olszowka. All rights reserved.
     See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -69,7 +69,7 @@
         <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='Staff']">
           <div class="navbar-nav ms-auto">
             <div class="nav-item py-0">
-              <a id="StaffView" class="nav-link py-1" href="StaffPage.php">Staff View</a>
+              <a id="StaffView" class="nav-link py-1" href="StaffOverview.php">Staff View</a>
             </div>
           </div>
         </xsl:if>
