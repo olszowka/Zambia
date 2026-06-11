@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!--
     Created by Peter Olszowka on 2020-04-12;
-    Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="title" select="''" />
@@ -138,7 +138,7 @@
               </li>
               <li class="divider-vertical"/>
               <li>
-                <a href="StaffPage.php">Overview</a>
+                <a href="StaffOverview.php">Overview</a>
               </li>
               <li>
                 <form method="post" action="ShowSessions.php" class="navbar-search pull-left">
