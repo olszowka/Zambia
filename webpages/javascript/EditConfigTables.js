@@ -1,5 +1,5 @@
 // Created by Syd Weinstein on 2021-01-04;
-// Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2021-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 var table = null;
 var tablename = '';
 var message = "";
@@ -19,7 +19,7 @@ var EditConfigTable = function () {
 
        // if top level tab clicked, find which sub tab is open
         if (newtabname.match(/-top$/i)) {
-            $("a.active").each(function () {
+            $("button.active").each(function () {
                 attr = $(this).attr("data-top");
                 if (attr === newtabname) {
                     tabname = this.id;
@@ -28,10 +28,10 @@ var EditConfigTable = function () {
         }
 
         // now with the subtab (clicked or refed by top), see if it needs a table and data fetched
-        if (tabname.substring(0, 2) !== 't-') {
-            document.getElementById("table-div").style.display = "none";
-        } else {
-            document.getElementById("table-div").style.display = "block";
+        $tablediv = document.getElementById('table-div');
+        $tablediv.classList.remove('show');
+        $tablediv.style.display = 'none';
+        if (tabname.substring(0, 2) == 't-') {
             tablename = tabname.substring(2);
             FetchTable();
         }
@@ -60,17 +60,17 @@ var EditConfigTable = function () {
     }
 
     this.initialize = function () {
-        $('.nav-tabs a').on('shown.bs.tab', function (event) {
+        $('.nav-pills button').on('shown.bs.tab', function (event) {
             var x = event.target.id;         // active tab
             tabshown(x);
         });
-        $('.nav-tabs a').on('hide.bs.tab', function (event) {
+        $('.nav-pills button').on('hide.bs.tab', function (event) {
             var x = event.target.id;        // to be hidden tab
             var n = event.relatedTarget.id;    // to be shown tab
             //console.log('act = ' + x);
             return tabprehide(x, n);
         });
-        $('.nav-tabs a').on('hidden.bs.tab', function (event) {
+        $('.nav-pills button').on('hidden.bs.tab', function (event) {
             var x = event.target.id;        // active tab
             //console.log('act = ' + x);
             tabhide(x);
@@ -360,8 +360,7 @@ function saveComplete(data, textStatus, jqXHR) {
     if (fetch_json.hasOwnProperty('tabledata')) {
         if (table) {
             table.replaceData(fetch_json.tabledata);
-        }
-        else {
+        } else {
             opentable(fetch_json.tabledata);
         }
     }
@@ -373,6 +372,9 @@ function saveComplete(data, textStatus, jqXHR) {
     dirty = false;
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
+    $tablediv = document.getElementById('table-div');
+    $tablediv.style.display = 'block';
+    $tablediv.classList.add('show');
 }
 
 function SaveTable() {
