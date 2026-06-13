@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!-- File created by Peter Olszowka February 24, 2024
-     Copyright (c) 2024 Peter Olszowka. All rights reserved. See copyright document for more details. -->
+     Copyright (c) 2024-2026 Peter Olszowka. All rights reserved. See copyright document for more details. -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <!-- "Staff" or "Participant" --><xsl:param name="header_version" select="'Participant'"/>
     <!-- "LOGIN", "SESSION_EXPIRED", "LOGOUT", "PASSWORD_RESET_COMPLETE", "NO_USER", "NORMAL" --><xsl:param name="top_section_behavior" select="'NORMAL'" />
@@ -35,7 +35,7 @@
                         </h1>
                     </div>
                     <xsl:if test="$top_section_behavior != 'NO_USER'">
-                        <div class="col col-lg-4 col-xl-3 mt-4 pe-4">
+                        <div class="col col-lg-4 col-xl-3 col-xxl-2 mt-4 pe-4">
                             <xsl:choose>
                                 <xsl:when test="$top_section_behavior = 'NORMAL'">
                                     <div id="welcome">
