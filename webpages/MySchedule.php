@@ -88,7 +88,8 @@ if (false) { // lock out code for now to get/display the reg status for VB55, ne
         }
     }
 }
-participant_header($title, false, 'Normal', true);
+participant_header($title, false, 'Normal', 'bs5');
+echo "<div class=\"container-xxxl\">\n";
 echo "<div class=\"alert alert-primary mt-2\"><p>Below is the list of all the panels for which you are scheduled.  If you need any changes";
 echo " to this schedule please contact <a class=\"alert-link\" href=\"mailto:$PROGRAM_EMAIL\"> Programming </a>.</p>\n";
 echo fetchCustomText("all_panelists_1");
@@ -99,13 +100,8 @@ if (false) { // lock out code for now to get/display the reg status for VB55, ne
 echo "<p>Thank you -- <a class=\"alert-link\" href=\"mailto:$PROGRAM_EMAIL\"> Programming </a></div>\n";
 ?>
 
-<div class="card">
-    <div class="card-body">
 <?php
 RenderXSLT('my_schedule.xsl', array(), $resultXML);
-?>
-    </div>
-</div>
-<?php
+echo "</div>\n";
 participant_footer();
 ?>

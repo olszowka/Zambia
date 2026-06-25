@@ -1,116 +1,122 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	my_schedule
-	Created by Peter Olszowka on 2013-12-09.
-	Copyright (c) 2013-2023 Peter Olszowka. All rights reserved.
+    my_schedule
+    Created by Peter Olszowka on 2013-12-09.
+    Copyright (c) 2013-2026 Peter Olszowka. All rights reserved.
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:output encoding="UTF-8" indent="yes" method="html" />
-	<xsl:template match="/">
-		<xsl:choose>
-			<xsl:when test="doc/query[@queryName='sessions']/row">
-				<table class="table table-sm">
-					<col style="width:4em;" />
-					<col style="width:15%;" />
-					<col style="width:8em;" />
-					<col style="width:8em;" />
-					<col style="width:8em;" />
-					<col style="width:8em;" />
-					<col style="width:65%;" />
-					<xsl:apply-templates select="doc/query[@queryName='sessions']/row" />
-				</table>
-			</xsl:when>
-			<xsl:otherwise>
-				<div class="alert alert-error">No schedule sessions found.</div>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
-	<xsl:template match="doc/query[@queryName='sessions']/row">
-		<tr>
-			<td>
-				<span class="badge badge-info"><xsl:value-of select="@sessionid" /></span>
-			</td>
-			<td colspan="7"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<span class="badge badge-primary"><xsl:value-of select="@title" /></span>
-			</td>
-			<td>
-				<span class="badge badge-primary" title="Room"><xsl:value-of select="@roomname" /></span>
-			</td>
-			<td>
-				<span class="badge badge-primary" title="Track"><xsl:value-of select="@trackname" /></span>
-			</td>
-			<td>
-				<span class="badge badge-primary" title="Type"><xsl:value-of select="@typename" /></span>
-			</td>
-			<td>
-				<span class="badge badge-primary"><xsl:value-of select="@starttime" /></span>
-			</td>
-			<td>
-				<span class="badge badge-primary">Duration: <xsl:value-of select="@duration" /></span>
-			</td>
-			<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-		</tr>
-		<tr>
-			<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-			<td colspan="7">
-				<span class="badge badge-secondary">Description</span>
-				<span><xsl:text> </xsl:text><xsl:value-of select="@progguiddesc" /></span>
-			</td>
-		</tr>
-		<xsl:if test="@persppartinfo">
-			<tr>
-				<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-				<td colspan="7">
-					<span class="badge badge-secondary">Prospective participant information</span>
-					<span><xsl:text> </xsl:text><xsl:value-of select="@persppartinfo" /></span>
-				</td>
-			</tr>
-		</xsl:if>
-		<xsl:if test="@notesforpart">
-			<tr>
-				<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-				<td colspan="7">
-					<span class="badge badge-secondary">Notes for participants</span>
-					<span><xsl:text> </xsl:text><xsl:value-of select="@notesforpart" /></span>
-				</td>
-			</tr>
-		</xsl:if>
-		<tr>
-			<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-			<td>
-				<span class="badge badge-secondary">Panelists' Publication Names (Badge Names)</span>
-			</td>
-			<td colspan="2">
-				<span class="badge badge-secondary">Email addresses</span>
-			</td>
-			<td colspan="4">
-				<span class="badge badge-secondary">Comments</span>
-			</td>
-		</tr>
-		<xsl:variable name="sessionid" select="@sessionid" />
-		<xsl:apply-templates select="/doc/query[@queryName='participants']/row[@sessionid = $sessionid]" />
-	</xsl:template>
+    <xsl:output encoding="UTF-8" indent="yes" method="html" />
+    <xsl:template match="/">
+        <xsl:choose>
+            <xsl:when test="doc/query[@queryName='sessions']/row">
+                <xsl:apply-templates select="doc/query[@queryName='sessions']/row" />
+            </xsl:when>
+            <xsl:otherwise>
+                <div class="alert alert-error">No schedule sessions found.</div>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
-	<xsl:template match="/doc/query[@queryName='participants']/row">
-		<tr>
-			<td><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-			<td>
-				<span><xsl:value-of select="@pubsname" /></span>
-				<span><xsl:text> (</xsl:text><xsl:value-of select="@badgename" /><xsl:text>)</xsl:text></span>
-				<xsl:if test="@moderator = '1'">
-					<span style="font-style:italic;"><xsl:text> mod</xsl:text></span>
-				</xsl:if>
-			</td>
-			<td colspan="2">
-				<span><xsl:value-of select="@email" /></span>
-			</td>
-			<td colspan="4">
-				<span><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
-			</td>
-		</tr>
-	</xsl:template>
+    <xsl:template match="doc/query[@queryName='sessions']/row">
+        <div class="row mt-4">
+            <div class="col-lg-2">
+                <xsl:text>Session ID: </xsl:text>
+                <span class="h4">
+                    <span class="badge text-bg-primary"><xsl:value-of select="@sessionid" /></span>
+                </span>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-4">
+                <span class="h5">
+                    <span class="badge text-bg-primary"><xsl:value-of select="@title" /></span>
+                </span>
+            </div>
+            <div class="col-1p5">
+                <span class="h5">
+                    <span class="badge text-bg-primary" title="Room"><xsl:value-of select="@roomname" /></span>
+                </span>
+            </div>
+            <div class="col-1p5">
+                <span class="h5">
+                    <span class="badge text-bg-primary" title="Track"><xsl:value-of select="@trackname" /></span>
+                </span>
+            </div>
+            <div class="col-1p5">
+                <span class="h5">
+                    <span class="badge text-bg-primary" title="Type"><xsl:value-of select="@typename" /></span>
+                </span>
+            </div>
+            <div class="col-1p5">
+                <span class="h5">
+                    <span class="badge text-bg-primary"><xsl:value-of select="@starttime" /></span>
+                </span>
+            </div>
+            <div class="col-lg-2">
+                <span class="h5">
+                    <xsl:text>Duration: </xsl:text>
+                    <span class="badge text-bg-primary"><xsl:value-of select="@duration" /></span>
+                </span>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-1 offset-lg-1">
+                <span class="badge text-bg-secondary"><xsl:text>Description</xsl:text></span>
+            </div>
+            <div class="col-lg-10">
+                <xsl:value-of select="@progguiddesc" />
+            </div>
+        </div>
+        <xsl:if test="@persppartinfo">
+            <div class="row mt-2">
+                <div class="col-lg-3 offset-lg-1">
+                    <span class="badge text-bg-secondary"><xsl:text>Prospective participant information</xsl:text></span>
+                </div>
+                <div class="col-lg-8">
+                    <xsl:value-of select="@persppartinfo" />
+                </div>
+            </div>
+        </xsl:if>
+        <xsl:if test="@notesforpart">
+            <div class="row mt-2">
+                <div class="col-lg-3 offset-lg-1">
+                    <span class="badge text-bg-secondary"><xsl:text>Notes for participants</xsl:text></span>
+                </div>
+                <div class="col-lg-8">
+                    <xsl:value-of select="@notesforpart" />
+                </div>
+            </div>
+        </xsl:if>
+        <div class="row mt-1">
+            <div class="col-lg-4 offset-lg-1">
+                <span class="badge text-bg-secondary"><xsl:text>Panelists' Publication Names (Badge Names)</xsl:text></span>
+            </div>
+            <div class="col-lg-3">
+                <span class="badge text-bg-secondary"><xsl:text>Email addresses</xsl:text></span>
+            </div>
+            <div class="col-lg-4">
+                <span class="badge text-bg-secondary"><xsl:text>Comments</xsl:text></span>
+            </div>
+        </div>
+        <xsl:variable name="sessionid" select="@sessionid" />
+        <xsl:apply-templates select="/doc/query[@queryName='participants']/row[@sessionid = $sessionid]" />
+    </xsl:template>
+
+    <xsl:template match="/doc/query[@queryName='participants']/row">
+        <div class="row mt-1">
+            <div class="col-lg-4 offset-lg-1">
+                <span><xsl:value-of select="@pubsname" /></span>
+                <span><xsl:text> (</xsl:text><xsl:value-of select="@badgename" /><xsl:text>)</xsl:text></span>
+                <xsl:if test="@moderator = '1'">
+                    <span style="font-style:italic;"><xsl:text> mod</xsl:text></span>
+                </xsl:if>
+            </div>
+            <div class="col-lg-3">
+                <span><xsl:value-of select="@email" /></span>
+            </div>
+            <div class="col-lg-4">
+                <span><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
+            </div>
+        </div>
+    </xsl:template>
 </xsl:stylesheet>
