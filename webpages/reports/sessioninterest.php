@@ -19,7 +19,7 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'
 SELECT
-        T.trackname, S.sessionid, S.title, P.pubsname, P.badgeid, PSI.rank, PSI.willmoderate,
+        T.trackname, S.sessionid, S.title, P.pubsname, P.badgeid, PSI.`rank`, PSI.willmoderate,
         PSI.comments
     FROM
              Sessions S

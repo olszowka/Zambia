@@ -134,7 +134,7 @@ function update_session_interests_in_db($badgeid, $session_interest_count) {
     }
     if ($noDeleteCount) {
         $noDeleteCount = 0;
-        $query = "REPLACE INTO ParticipantSessionInterest (badgeid, sessionid, rank, willmoderate, comments) VALUES ";
+        $query = "REPLACE INTO ParticipantSessionInterest (badgeid, sessionid, `rank`, willmoderate, comments) VALUES ";
         for ($i = 1; $i <= $session_interest_count; $i++) {
             if ($session_interests[$i]['delete'])
                 continue;

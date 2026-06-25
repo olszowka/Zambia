@@ -26,7 +26,7 @@ SELECT
         X.trackname, 
         X.sessionid,
         X.title,
-        X.rank,
+        X.`rank`,
         X.assigned,
         IF(moderator IS NULL OR moderator=0,0,1) AS moderator,
         Y.roomid,

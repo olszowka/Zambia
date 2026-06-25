@@ -12,7 +12,7 @@ SELECT
         P.badgeid, P.pubsname, T.trackname, S.sessionid, S.title,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
         DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
-        PSI.rank, PSI.willmoderate, PSI.comments
+        PSI.`rank`, PSI.willmoderate, PSI.comments
     FROM
                   Participants P
              JOIN CongoDump CD USING (badgeid)
