@@ -43,7 +43,7 @@
     <xsl:variable name="rlink" select="/doc/session/@rlink" />
     <xsl:variable name="clink" select="/doc/session/@clink" />
     <xsl:param name="showmeetinglink" />
-    <xsl:param name="showparticipantlink" />
+    <xsl:param name="showpanelistlink" />
     <xsl:param name="showrecordinglink" />
     <xsl:param name="showcaptionlink" />
     <xsl:param name="bilingual" />
@@ -334,9 +334,9 @@
                                     <input type="text" class="form-control" name="mlink" id="mlink" value="{$mlink}" maxlength="510" />
                                 </div>
                             </xsl:if>
-                            <xsl:if test="$showparticipantlink">
+                            <xsl:if test="$showpanelistlink">
                                 <div class="form-group col-md-6">
-                                    <label for="plink">Participant Link</label>
+                                    <label for="plink">Panelist Link</label>
                                     <input type="text" class="form-control" name="plink" id="plink" value="{$plink}" maxlength="510" />
                                 </div>
                             </xsl:if>

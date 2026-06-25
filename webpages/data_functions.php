@@ -285,6 +285,16 @@ function get_session_from_post() {
     } else {
         $session["rlink"] = "";
     }
+    if (CAPTION_LINK === TRUE) {
+        $session["clink"] = getString('clink');
+    } else {
+        $session["clink"] = "";
+    }
+    if (PANELIST_LINK === TRUE) {
+        $session["rlink"] = getString('rlink');
+    } else {
+        $session["rlink"] = "";
+    }
 }
 
 // Function set_session_defaults()
