@@ -43,7 +43,7 @@
                                             <xsl:text>Welcome, </xsl:text>
                                             <xsl:value-of select="$badgename" />
                                         </p>
-                                        <img id="hide-header-but" class="img-button float-end" aria-role="button"
+                                        <img id="hide-header-but" class="img-button float-end ms-2" aria-role="button"
                                              alt="Shrink header to a thin strip" title="Shrink header to a thin strip" >
                                             <xsl:choose>
                                                 <xsl:when test="$header_version='Participant'">
@@ -126,7 +126,7 @@
                 </div><!-- End of reg-header -->
             </div><!-- End of reg-header-container -->
             <xsl:if test="$top_section_behavior = 'NORMAL'">
-                <div id="alt-header-container" class="collapsible-wrapper hidden">
+                <div id="alt-header-container" class="collapsible-wrapper hidden px-0">
                     <div id="alt-header" class="collapsible">
                         <div>
                             <xsl:choose>
