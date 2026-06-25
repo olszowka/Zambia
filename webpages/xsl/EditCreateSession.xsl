@@ -2,7 +2,7 @@
 <!--
     EditCreateSession.xsl
     Created by Peter Olszowka on 2023-11-29.
-    Copyright (c) 2023-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2023-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
     Page intended for BS4
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

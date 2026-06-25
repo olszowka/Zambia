@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // This function will output the page with the form to add or create a session
 // Variables
 //     action: "create" or "edit"
