@@ -110,6 +110,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
                             makeMenuItem("Survey", ($_SESSION['survey_exists'] && may_I('survey')), "PartSurvey.php", false);
                             makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false);
                             makeMenuItem("General Interests", may_I('general_interests'),"my_interests.php",false);
+                            makeMenuItem("My Suggestions", may_I('my_suggestions_write'),"my_suggestions.php",false);
                             makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false);
                             makeMenuItem("Session Interests", may_I('my_panel_interests'),"PartPanelInterests.php",false);
                             makeMenuItem("My Schedule", may_I('my_schedule'),"MySchedule.php",false);
