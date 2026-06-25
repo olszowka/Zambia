@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Assign Participants";
 require_once('StaffCommonCode.php');
@@ -103,7 +103,7 @@ WITH
         )
 SELECT
         POS.badgeid AS posbadgeid, COALESCE(POS.moderator, 0) AS moderator, P.badgeid, P.pubsname, P.staff_notes,
-        IFNULL(PSI.rank, 99) AS `rank`, PSI.willmoderate, PSI.comments, P.bio, PHR.roleid,
+        IFNULL(PSI.`rank`, 99) AS `rank`, PSI.willmoderate, PSI.comments, P.bio, PHR.roleid,
         IF(P.interested = 1, 1, 0) AS attending, IFNULL(A.answercount, 0) AS answercount
     FROM
                   Participants P

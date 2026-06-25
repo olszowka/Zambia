@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Interest by participant (all info)';
 $report['description'] = 'Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report. (All data included including for invited sessions.) order by participant';
@@ -12,7 +12,7 @@ SELECT
         P.badgeid, P.pubsname, T.trackname, S.sessionid, S.title,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
         DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
-        PSI.rank, PSI.willmoderate, PSI.comments
+        PSI.`rank`, PSI.willmoderate, PSI.comments
     FROM
                   Participants P
              JOIN CongoDump CD USING (badgeid)

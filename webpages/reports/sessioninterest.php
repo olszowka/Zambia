@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Interest Report (all info)';
 $report['description'] = 'Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report. (All data included including for invited sessions.)';
@@ -19,7 +19,7 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'
 SELECT
-        T.trackname, S.sessionid, S.title, P.pubsname, P.badgeid, PSI.rank, PSI.willmoderate,
+        T.trackname, S.sessionid, S.title, P.pubsname, P.badgeid, PSI.`rank`, PSI.willmoderate,
         PSI.comments
     FROM
              Sessions S

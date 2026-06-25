@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Interest v Schedule - sorted by track, then title';
 $report['description'] = 'Show who is interested in each panel and if they are assigned to it. Also show the scheduling information';
@@ -26,7 +26,7 @@ SELECT
         X.trackname, 
         X.sessionid,
         X.title,
-        X.rank,
+        X.`rank`,
         X.assigned,
         IF(moderator IS NULL OR moderator=0,0,1) AS moderator,
         Y.roomid,
