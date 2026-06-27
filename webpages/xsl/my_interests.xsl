@@ -84,7 +84,16 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6 mt-4">
-                        <label for="yespeople" class="form-label">People with whom I'd like to be on a session: (Leave blank for none)</label>
+                        <label for="yespeople" class="form-label">
+                            <xsl:choose>
+                                <xsl:when test="string-length(/doc/customText/@people_want_on_sess_label) > 0">
+                                    <xsl:value-of select="/doc/customText/@people_want_on_sess_label" disable-output-escaping="yes" />
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:text>People with whom I'd like to be on a session: (Leave blank for none)</xsl:text>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </label>
                         <textarea name="yespeople" rows="5" cols="72" class="form-control">
                             <xsl:if test="$readonly = '1'">
                                 <xsl:attribute name="readonly">readonly</xsl:attribute>
@@ -93,7 +102,16 @@
                         </textarea>
                     </div>
                     <div class="col-12 col-md-6 mt-4">
-                        <label for="nopeople" class="form-label">People with whom I'd rather not be on a session: (Leave blank for none)</label>
+                        <label for="nopeople" class="form-label">
+                            <xsl:choose>
+                                <xsl:when test="string-length(/doc/customText/@people_dont_want_label) > 0">
+                                    <xsl:value-of select="/doc/customText/@people_dont_want_label" disable-output-escaping="yes" />
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:text>People with whom I'd rather not be on a session: (Leave blank for none)</xsl:text>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </label>
                         <textarea name="nopeople" rows="5" cols="72" class="form-control">
                             <xsl:if test="$readonly = '1'">
                                 <xsl:attribute name="readonly">readonly</xsl:attribute>
