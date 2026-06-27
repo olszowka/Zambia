@@ -4,6 +4,7 @@ $report = [];
 $report['name'] = 'Conflict Report - Participant Double Booked ';
 $report['description'] = 'Find all instances where a participant is scheduled to be in two or more places at once.';
 $report['categories'] = array(
+    'Boskone Central' => 300,
     'Conflict Reports' => 400,
 );
 $report['columns'] = array(

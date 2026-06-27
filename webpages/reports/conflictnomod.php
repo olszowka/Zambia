@@ -4,6 +4,7 @@ $report = [];
 $report['name'] = 'Conflict Report - Sessions with no moderator';
 $report['description'] = 'Lists all public sessions from the schedule which have at least one participant assigned, but no moderator.';
 $report['categories'] = array(
+    'Boskone Central' => 340,
     'Conflict Reports' => 350,
 );
 $report['columns'] = array(

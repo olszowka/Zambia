@@ -17,7 +17,7 @@ SELECT
         JOIN Schedule SCH USING (sessionid)
         JOIN Rooms R USING (roomid)
     WHERE
-            R.roomid = 5 /* Dragon's Lair */
+            R.roomid = 7 /* Dragon's Lair */
         AND S.pubstatusid = 2 /* public */
     ORDER BY
         SCH.starttime, R.roomname;

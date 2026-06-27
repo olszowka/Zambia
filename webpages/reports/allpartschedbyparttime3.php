@@ -4,6 +4,7 @@ $report = [];
 $report['name'] = 'Extended All Participant Schedule ';
 $report['description'] = 'The schedule sorted by participant, then time';
 $report['categories'] = array(
+    'Boskone Central' => 200,
     'Programming Reports' => 23,
 );
 $report['queries'] = [];

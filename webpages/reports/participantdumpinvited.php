@@ -3,10 +3,11 @@
 // Created by Peter Olszowka on 2022-10-12
 // Configured for B61 survey
 $report = [];
-$report['name'] = 'Participant data dump';
-$report['description'] = 'Export CSV file of all participant contact and survey information';
+$report['name'] = 'Participant data dump (invited only)';
+$report['description'] = 'Export CSV file of all invited participant contact and survey information';
 $report['categories'] = array(
-    'Participant Info Reports' => 500
+    'Boskone Central' => 270,
+    'Participant Info Reports' => 501
 );
 $report['csv_output'] = true;
 $report['group_concat_expand'] = false;
@@ -57,6 +58,14 @@ SELECT
                             UHPR2.badgeid = P.badgeid
                         AND UHPR2.permroleid IN (4) /* partcipant */
             )
+        AND
+        EXISTS ( SELECT *
+                    FROM
+                         ParticipantHasTag PHT
+                    WHERE
+                             PHT.badgeid = P.badgeid
+                         AND PHT.participanttagid IS NOT NULL
+            ) 
     ORDER BY
         P.pubsname;
 EOD;

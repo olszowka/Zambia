@@ -43,9 +43,11 @@ function render_session_interests($session_interest_count,$message,$message_erro
     echo "<form id=\"sessionFRM\" class=\"form-inline\" name=\"sessionform\" method=\"POST\" action=\"PartPanelInterests_POST2.php\">\n";
 	echo "<input type=\"hidden\" name=\"submitranks\" value=\"1\" />\n";
     echo "<div class=\"submit\"><button class=\"btn btn-primary pull-right\" type=\"submit\" $disabled>Save</button></div>\n";
-    echo "<p>Please use the following scale when ranking your interest in the sessions you have chosen:  </p>\n";
-    echo "<strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I'd like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong>\n";
-    echo "<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</p>\n";
+    echo "<h4>Please use the following scale when ranking your interest in the sessions you have chosen:  </h4>\n";
+    echo "<p><strong>1 &mdash;<em> Most interested&nbsp;/&nbsp;have a strong background for this session</em></strong></p>\n";
+    echo "<p><strong>2-3 &mdash;<em> Qualified but this is not one of my primary interests</em></strong></p>\n";
+    echo "<p><strong>4-5 &mdash;<em> General interest in this session.</em></strong></p>\n";
+    echo "<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5. Most panelists will only be on 2-4 sessions.</p>\n";
     echo "<h4>List of Sessions in Which I'm Interested in Participating:</h4>\n";
     echo "<div class=\"row-fluid\">\n";
     $j = 1; //use $j so that skipped sessions don't skip numbering
