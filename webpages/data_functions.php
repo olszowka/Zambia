@@ -239,7 +239,7 @@ function set_session_defaults() {
     global $session;
     //$session["sessionid"] set elsewhere
     $session["track"] = 0; // prompt with "SELECT"
-    $session["type"] = 2; // default to "Panel"
+    $session["type"] = 1; // default to "Panel"
     $session["divisionid"] = 1; // default to "Don't CAre"
     $session["pubstatusid"] = 2; // default to "Public"
     $session["languagestatusid"] = 1; // default to "English"
