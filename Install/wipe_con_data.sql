@@ -27,11 +27,9 @@ truncate table PreviousParticipants;
 -- because you missed zeroing a table and you need to zero it or eek!
 --
 -- Now you want to pull a backup using:
---    mysqldump -u username -p dbasename > EmptyDbase.dump
+--    mysqldump -u username -p dbasename > EmptyDbase.sql
 -- 
 -- you might very well want the following: 
 INSERT INTO `Participants` (badgeid, pubsname, password, bestway, interested, bio)
  VALUES ('brainstorm',null,'ecf65a5d41056d7dd4d548e3ef200476',null,null,null);
 INSERT INTO `UserHasPermissionRole` VALUES ('brainstorm',5);
-
-

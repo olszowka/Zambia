@@ -30,7 +30,5 @@ TRUNCATE TABLE Participants;
 SET FOREIGN_KEY_CHECKS = 1;
 --
 -- Now you want to pull a backup using:
---    mysqldump -u username -p dbasename > EmptyDbase.dump
+--    mysqldump -u username -p dbasename > EmptyDbase.sql
 -- 
-
-
