@@ -44,6 +44,10 @@ Other software which can work with Zambia
 ## Installation
 See [Installation](Install/INSTALL.md)
 
+## Configuration
+See [Configuration](Documentation/Configuration.md)<br />
+Check out the [wiki](https://github.com/olszowka/Zambia/wiki)
+
 ## More Information
 Check out the [wiki](https://github.com/olszowka/Zambia/wiki)
 
