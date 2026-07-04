@@ -1138,8 +1138,10 @@ INSERT INTO `CustomText` (customtextid, page, tag, textcontents, active, html_bl
     (13,'Declined to Invite','declined_particpant','<h3 class="mb-2">Thank you so much for contacting $CON_NAME$.</h3>\n<p>If you are receiving this message, your record in the Zambia system has been closed. A closed record indicates one or more of three things:</p>\n<ol>\n<li>You contacted $CON_NAME$ to let us know that you are unable to participate in the program this year.</li>\n<li>You did not meet a deadline to contact us or provide required information.</li>\n<li>You were not selected to be on the $CON_NAME$ program. We received far more requests to be on program from qualified and amazing people than it is possible to accommodate.</li>\n</ol>\n<p>If you have any questions or if you believe that an error has been made, please contact us at <a href="mailto:$PROGRAM_EMAIL$">$PROGRAM_EMAIL$</a></p>',0,1),
     (14,'General Interests','panel_types_not_int','Panel types I am not interested in participating in:',0,0),
     (15,'General Interests','other_role_desc','Description for "Other" Roles:',0,0),
-    (16,'General Interests','roles_checkboxes_label','Roles I''m willing to take on:',0,0),
-    (17,'General Interests','stuff_id_like_to_run','Workshops or presentations I''d like to run:',0,0);
+    (16,'General Interests','roles_checkboxes_label','Roles I\'m willing to take on:',0,0),
+    (17,'General Interests','stuff_id_like_to_run','Workshops or presentations I''d like to run:',0,0),
+    (18,'General Interests','roles_checkboxes_label','People with whom I\'d like to be on a session: (Leave blank for none)',0,0),
+    (19,'General Interests','stuff_id_like_to_run','People with whom I\'d rather not be on a session: (Leave blank for none)',0,0);
 
 INSERT INTO `LanguageStatuses`
     (languagestatusid, languagestatusname, display_order)
@@ -1205,7 +1207,8 @@ INSERT INTO `PatchLog`
     ('62_import_session_html.sql'),
     ('66_permission_cleanup.sql'),
     ('67_session_links_cleanup.sql'),
-    ('68_custom_text_new_columns.sql');
+    ('68_custom_text_new_columns.sql'),
+    ('69_my_interests_new_custom_text.sql');
 
 INSERT INTO `PermissionAtoms`
     (permatomid, permatomtag, elementid, page, notes)
