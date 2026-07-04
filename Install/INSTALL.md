@@ -33,7 +33,7 @@ If you don't please ask the person who does to do these 4 steps.
 
     mysql -u root -p
 
-    mysql> create database zambiademo;
+    mysql> create database zambiademo character set utf8mb4 collate utf8mb4_general_ci;
     Query OK, 1 row affected (0.00 sec)
 
     mysql> grant all on zambiademo.* to 'zambiademo'@'localhost' 
@@ -61,14 +61,19 @@ You'll need the account and the database created in step 1.
     mysql> use zambiademo
     Database changed
 
-    mysql> \. EmptyDbase.dump
+    mysql> \. EmptyDbase.sql
     Query OK ...   (snipped for sanity)
 
-Now you have an empty database that is ready for use with Zambia.  You may instead
-use DemoDbase.dump or SampleDbase.dump.
- - `EmptyDbase.dump` — only tables required for Zambia to run at all or with hard coded values are populated.
- - `SampleDbase.dump` — contains data from `EmptyDbase.dump` plus some configuration data you will need to edit.  Also contains users “1” and “2” with password “demo”.
- - `DemoDbase.dump` — contains data from `EmptyDbase.dump`, `SampleDbase.dump`, and some participant preference and schedule data.
+Now you have an empty database that is ready for use with Zambia.
+
+You may apply additional scripts to add some more data.
+
+ - `SampleDbase.sql`— contains sample configuration data you will likely want to edit.  See #10 below.  While there
+ is sample data for many configuration tables that might be close to what many cons will want to use, the "rooms" table
+ must be created specifically for each host facility.<br /><br />
+ - `DemoDbase.sql`— contains data that would normally come from users actually using Zambia.  In particular, it
+ contains two demo users: administrator user with userid 1 and password "demo" and participant user with userid 3 and
+ password "demo".
 
 ## 3 - Setting up the webpages 
 
@@ -93,18 +98,19 @@ or whatever your URL is...
 
 ## 6 - Ah, an account for in zambia so you can log in.  That would be useful.
 
-Zambia may take a feed from the registration system to create and configure users.  However, the
-code for handling that is specific to each registration system and not in the master branch. 
+Zambia may take a feed from the registration system to create and configure users.  There is code in the master
+branch for integrating with ConTroll.  You'll want to reach out to the Controll developers to use that.
 
-There is a script `add_zambia_users.php` in `scripts` directory to add users.
+For creating initial users in order to configure Zambia and create users within it, 
+there is a script `add_zambia_users.php` in `scripts` directory to add users.
 
 Usage:
 
     php -f add_zambia_users.php input_file.csv
 
-The input_file should have field names in first row.  See `add_user_sample_input.csv`.  If there is are one or more
-columns in `CongoDump` you don't care about, you may skip them entirely including skipping them from the header row. The
-other fields are all required.
+The input_file should have field names in first row.  See `add_user_sample_input.csv`.  If there are one or more
+columns in `CongoDump` you don't care about, you may skip them entirely including skipping them from the header row.
+The other fields are all required. Note, permroleid = 1 corresponds to administrator.
 
 ## 7 - Mail relay configuration
 
@@ -133,14 +139,27 @@ reset their own passwords, do the following to configure reCAPTCHA.
    - `RECAPTCHA_SITE_KEY`
    - `RECAPTCHA_SERVER_KEY`
 
-## 9 - Backups are a good thing 
+## 9 - Build Report Menus
+
+The files which specify the reports also specify the menu tree for the reports.  This mechanism makes it very easy
+to rearrange the report menues or rename the reports for your convenience.  The first time you deploy Zambia and
+aftereach time you edit any report configuration, you need to rebuild the report menus.  Zambia users with
+administrative privileges will have a menu item under "Admin" called "Build Report Menus" to do this.
+
+## 10 - Configuration from the Zambia administrative UI
+
+There are quite a few mechanisms for configuring Zambia from its administrative UI.  This UI is the "Admin" menu
+which appears for all users with administrative privileges.  See [Configuration](../Documentation/Configuration.md)
+for more details.
+
+## 11 - Backups are a good thing 
 
 If you are changing php and html files, I suggest you fork Zambia on github and commit your changes to your fork.
 
 If you care about dbase content, see `backup_mysql` and `clean_backups` in the 
 scripts directory.  You'll want to run them or something similar.   
 
-## 10 - Reaching us
+## 12 - Reaching us
 
 I can be reached via github.
 
@@ -148,6 +167,6 @@ I can be reached via github.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- PeterO
 
-## 11 - Wiki
+## 13 - Wiki
 
 More documentation, particularly about configuration, can be found on the [wiki](https://github.com/olszowka/Zambia/wiki).
