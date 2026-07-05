@@ -12,11 +12,11 @@ Zambia is so old.
   * Active flag on entries so table can contain example which isn't currently used
   * All entries have hard coded default text or may be skipped entirely
   * There are a few text substitions which can be performed on entries
-    * $CON_NAME$
-    * $PROGRAM_EMAIL$
-    * $CON_NUM_DAYS$
-    * $CON_START_DATE$
-    * $CON_END_DATE$
+    * <span>$</span>CON_NAME<span>$</span>
+    * <span>$</span>PROGRAM_EMAIL<span>$</span>
+    * <span>$</span>CON_NUM_DAYS<span>$</span>
+    * <span>$</span>CON_START_DATE<span>$</span>
+    * <span>$</span>CON_END_DATE<span>$</span>
 * Session form will exclude many properties not used if so configured
 * Updated schema creation scripts to latest schema
 * Created missing schema patch scripts for all schema changes
