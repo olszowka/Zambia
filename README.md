@@ -11,9 +11,7 @@ participants, and rooms.
 * Includes interface to KonOpas/ConClár, free tools for publishing the schedule
 
 ## Requirements
-* PHP 8.0 or greater (Tested on 8.0 and 8.1)
-  * XSLT library (I haven't seen a PHP deployment without this in many years)
-  * Multibyte library (I haven't seen a PHP deployment without this in many years)
+* PHP 8.2 or 8.3 (May run on 8.4, but hasn't been tested)
 * Apache (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
 * MySQL (Tested on 8.0 & 9.0.1) or MariaDB (Tested on 10.11.13)
 * SMTP connection for use as mail relay (only if you want to send email from Zambia)
