@@ -1140,8 +1140,8 @@ INSERT INTO `CustomText` (customtextid, page, tag, textcontents, active, html_bl
     (15,'General Interests','other_role_desc','Description for "Other" Roles:',0,0),
     (16,'General Interests','roles_checkboxes_label','Roles I\'m willing to take on:',0,0),
     (17,'General Interests','stuff_id_like_to_run','Workshops or presentations I''d like to run:',0,0),
-    (18,'General Interests','roles_checkboxes_label','People with whom I\'d like to be on a session: (Leave blank for none)',0,0),
-    (19,'General Interests','stuff_id_like_to_run','People with whom I\'d rather not be on a session: (Leave blank for none)',0,0);
+    (18,'General Interests','people_want_on_sess_label','People with whom I\'d like to be on a session: (Leave blank for none)',0,0),
+    (19,'General Interests','people_dont_want_label','People with whom I\'d rather not be on a session: (Leave blank for none)',0,0);
 
 INSERT INTO `LanguageStatuses`
     (languagestatusid, languagestatusname, display_order)
