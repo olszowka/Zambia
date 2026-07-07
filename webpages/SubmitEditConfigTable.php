@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
@@ -98,7 +98,7 @@ function update_table($tablename) {
     foreach($schema as $col) {
         //var_error_log($col);
         if ($col['EXTRA'] != 'auto_increment') {
-            $sql .= $col['COLUMN_NAME'] . ',';
+            $sql .= '`' . $col['COLUMN_NAME'] . '`,';
             $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
             $fieldcount++;
         }
@@ -138,7 +138,7 @@ function update_table($tablename) {
     foreach($schema as $col) {
         if ($col['COLUMN_KEY'] != 'PRI') {
             if ($col['COLUMN_NAME'] != 'Usage_COUNT') {
-                $sql .= "\t" . $col['COLUMN_NAME'] . " = ?,\n";
+                $sql .= "\t`" . $col['COLUMN_NAME'] . "` = ?,\n";
                 $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
                 $fieldcount++;
             }

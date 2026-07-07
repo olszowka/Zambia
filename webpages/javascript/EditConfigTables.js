@@ -443,15 +443,16 @@ function Redo() {
 }
 
 function showAjaxError(data, textStatus, jqXHR) {
+    document.getElementById("saving_div").style.display = "none";
+    var submitbtn = document.getElementById("submitbtn");
+    submitbtn.disabled = false;
+    submitbtn.innerHTML = "Save";
+
     var $mesageDIV = document.getElementById('message');
     if (!$mesageDIV) {
         return;
     }
-    if (data && data.responseText) {
-        $mesageDIV.innerHTML = data.responseText;
-    } else {
-        $mesageDIV.innerHTML = 'An error occurred on the server.';
-    }
+    $mesageDIV.innerHTML = 'An error occurred on the server. Your changes were not saved. Please try again or contact an administrator if the problem persists.';
     $mesageDIV.classList.remove('hidden', 'alert-success');
     $mesageDIV.classList.add('alert-danger');
     window.scrollTo(0, 0);
