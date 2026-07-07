@@ -58,13 +58,12 @@ INSERT INTO `UserHasPermissionRole`
     ('9', 5);
 
 INSERT INTO `Rooms`
-    (roomid, roomname, display_order, height, dimensions, area, `function`, floor, notes, opentime1,
-     closetime1, opentime2, closetime2, opentime3, closetime3, is_scheduled)
+    (roomid, roomname, display_order, height, dimensions, area, `function`, floor, notes, is_scheduled)
     VALUES
-    (1,'Alcott', 10,'8 ft 5in','23 x 34','654','Panels','1 East',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
-    (2,'Brandeis', 20,'8 ft 6in','13 x 35','446','Panels','1 East',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
-    (3,'Cabot', 30,'8 ft 6in','19 x 29','515','Panels','1 East',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 1),
-    (4,'Delaware', 40,'8 ft 6in','19 x 29','515','Green Room','1 East',NULL,NULL,NULL,NULL,NULL,NULL,NULL, 0);
+    (1,'Alcott', 10,'8 ft 5in','23 x 34','654','Panels','1 East',NULL, 1),
+    (2,'Brandeis', 20,'8 ft 6in','13 x 35','446','Panels','1 East',NULL, 1),
+    (3,'Cabot', 30,'8 ft 6in','19 x 29','515','Panels','1 East',NULL, 1),
+    (4,'Delaware', 40,'8 ft 6in','19 x 29','515','Green Room','1 East',NULL, 0);
 
 INSERT INTO `RoomHasSet`
     (roomhassetid, roomid, roomsetid, capacity)

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title, $linki;
 $bigarray = array();
 define("newroomslots", 5); // number of rows at bottom of page for new schedule entries
@@ -78,8 +78,7 @@ if ($conflict==true) {
 }
 $query = <<<EOD
 SELECT
-        roomid, roomname, opentime1, closetime1, opentime2, closetime2, opentime3, closetime3,
-        `function`, floor, height, dimensions, area, notes
+        roomid, roomname, `function`, floor, height, dimensions, area, notes
     FROM
         Rooms
     WHERE
@@ -91,18 +90,6 @@ if (!$result = mysqli_query_exit_on_error($query)) {
 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 mysqli_free_result($result);
 echo "<h2>$selroomid - " . htmlspecialchars($row["roomname"]) . "</h2>";
-echo "<h4 class=\"label\">Open Times</h4>\n";
-echo "<div class=\"border1111 lrpad lrmargin\"><p class=\"lrmargin\">";
-if ($row["opentime1"] != "") {
-    echo time_description($row["opentime1"]) . " through " . time_description($row["closetime1"]) . "<br />\n";
-}
-if ($row["opentime2"] != "") {
-    echo time_description($row["opentime2"]) . " through " . time_description($row["closetime2"]) . "<br />\n";
-}
-if ($row["opentime3"] != "") {
-    echo time_description($row["opentime3"]) . " through " . time_description($row["closetime3"]) . "<br />\n";
-}
-echo "</div>\n";
 echo "<h4 class=\"label\">Characteristics</H4>\n";
 echo "   <table class=\"table-condensed compressed\">\n";
 echo "      <tr>\n";

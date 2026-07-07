@@ -406,12 +406,6 @@ CREATE TABLE `Rooms` (
     `function` VARCHAR(100) DEFAULT NULL,
     `floor` VARCHAR(50) DEFAULT NULL,
     `notes` TEXT,
-    `opentime1` TIME DEFAULT NULL,
-    `closetime1` TIME DEFAULT NULL,
-    `opentime2` TIME DEFAULT NULL,
-    `closetime2` TIME DEFAULT NULL,
-    `opentime3` TIME DEFAULT NULL,
-    `closetime3` TIME DEFAULT NULL,
     `is_scheduled` TINYINT(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`roomid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
