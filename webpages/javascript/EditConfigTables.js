@@ -196,6 +196,43 @@ function cellChanged(cell) {
     cell.getElement().style.backgroundColor = "#fff3cd";
 }
 
+// Measures the rendered pixel width of a column header title so a column is
+// never made narrower than the space needed to display its own name.
+var headerMeasureCanvas = null;
+function headerMinWidth(title) {
+    if (!headerMeasureCanvas) {
+        headerMeasureCanvas = document.createElement("canvas");
+    }
+    var context = headerMeasureCanvas.getContext("2d");
+    context.font = "14px Arial";
+    var textWidth = context.measureText(title).width;
+    return Math.ceil(textWidth) + 25; // account for header cell padding
+}
+
+// Rooms has many text columns; the normal width formula makes the table wider
+// than 1920px, forcing horizontal scroll while editing. Use narrower columns
+// for Rooms so the whole table fits on a >=1920px wide browser window.
+function columnWidth(characterMaximumLength) {
+    if (tablename === 'Rooms') {
+        width = 3 * characterMaximumLength;
+        if (width < 60) {
+            width = 60;
+        }
+        if (width > 150) {
+            width = 150;
+        }
+        return width;
+    }
+    width = 8 * characterMaximumLength;
+    if (width < 80) {
+        width = 80;
+    }
+    if (width > 500) {
+        width = 500;
+    }
+    return width;
+}
+
 function opentable(tabledata) {
     // get table information from tableschema
     //console.log(tableschema);
@@ -234,35 +271,25 @@ function opentable(tabledata) {
                 editorParams: editorlist,
                 formatter: "lookup",
                 formatterParams: selectlist,
-                minWidth: 200
+                minWidth: Math.max(200, headerMinWidth(column.COLUMN_NAME))
             });
         } else if (column.DATA_TYPE === 'int')
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
-                editor: "number", minWidth: 50, hozAlign: "right", 
+                editor: "number", minWidth: Math.max(50, headerMinWidth(column.COLUMN_NAME)), hozAlign: "right",
             });
         else if (column.DATA_TYPE === 'text') {
-            width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
-            if (width < 80) {
-                width = 80;
-            }
-            if (width > 500) {
-                width = 500;
-            }
+            width = columnWidth(column.CHARACTER_MAXIMUM_LENGTH);
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, width: width,
+                minWidth: headerMinWidth(column.COLUMN_NAME),
                 cellClick: tceEditor
             });
         } else {
-            width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
-            if (width < 80) {
-                width = 80;
-            }
-            if (width > 500) {
-                width = 500;
-            }
+            width = columnWidth(column.CHARACTER_MAXIMUM_LENGTH);
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
+                minWidth: headerMinWidth(column.COLUMN_NAME),
                 editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
             });
         }
