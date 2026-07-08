@@ -116,7 +116,7 @@
                         <a class="nav-link py-1" href="StaffOverview.php">Overview</a>
                     </li>
                 </ul>
-                <form method="post" action="ShowSessions.php" class="form-inline my-0 my-lg-0 me-4">
+                <form method="post" action="ShowSessions.php" class="d-flex align-items-center my-0 my-lg-0 me-4">
                     <input type="text" id="searchtitle" name="searchtitle" size="28"
                         class="form-control me-sm-2 h-100 bg-secondary text-white"
                         placeholder="Search for sessions by title" aria-label="Search"/>

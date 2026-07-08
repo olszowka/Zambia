@@ -54,7 +54,7 @@
                                                 </xsl:when>
                                             </xsl:choose>
                                         </img>
-                                        <a href="logout.php" class="btn btn-primary float-end mr-4" title="Click to log out">Log out</a>
+                                        <a href="logout.php" class="btn btn-primary float-end me-4" title="Click to log out">Log out</a>
                                     </div>
                                 </xsl:when>
                                 <xsl:when test="$top_section_behavior = 'LOGIN' or $top_section_behavior = 'SESSION_EXPIRED'
