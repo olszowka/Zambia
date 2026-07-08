@@ -39,6 +39,7 @@ var EditConfigTable = function () {
 
     // show unsaved data modal popup if dirty
     function tabprehide(tabname, newtab) {
+        savetceEdit(true); // commit any open notes editor into its cell so its dirty state (if any) is reflected below
         //console.log('prehide:' + tabname + ", " + newtab + ", dirty: " + dirty);
         if (!dirty) {
             return true;
