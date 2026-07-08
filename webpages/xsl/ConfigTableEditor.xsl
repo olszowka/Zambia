@@ -60,9 +60,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Data Not Saved</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&#215;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
                     </div>
                     <div class="modal-body">
                         <p>
@@ -71,7 +69,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="cancelOpenSearchBUTN" class="btn btn-primary"
-                                data-dismiss="modal">Cancel
+                                data-bs-dismiss="modal">Cancel
                         </button>
                         <button type="button" id="overrideOpenSearchBUTN" class="btn btn-secondary"
                                 onclick="return discardChanges();">Discard changes
