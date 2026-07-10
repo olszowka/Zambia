@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2006-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2006-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 require_once('BrainstormCommonCode.php');
 $ConStartDatim = CON_START_DATIM;
@@ -28,8 +28,8 @@ SELECT
                   Sessions S
              JOIN Tracks T USING (trackid)
              JOIN SessionStatuses SS USING (statusid)
-             JOIN Schedule SCH USING (sessionid)
-             JOIN Rooms R USING (roomid)
+        LEFT JOIN Schedule SCH USING (sessionid)
+        LEFT JOIN Rooms R USING (roomid)
         LEFT JOIN SessionTags USING (sessionid)
     ORDER BY
         T.trackname, S.title;
