@@ -1,6 +1,6 @@
 /**
  * File created by Peter Olszowka July 17, 2020
- * Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+ * Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
 /* Header Stuff */
 header h1 {
@@ -165,6 +165,9 @@ textarea.tall-textarea {
 .hidden {
   display: none !important;
   visibility: hidden !important;
+}
+.clearboth {
+  clear: both;
 }
 #no-menu-spacer {
   margin-bottom: 1rem;

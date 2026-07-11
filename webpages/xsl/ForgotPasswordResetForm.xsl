@@ -11,7 +11,7 @@
         <div class="container-xxxl">
             <xsl:if test="$error_message">
                 <div class="row">
-                    <div class="col-12 mt-4">
+                    <div class="col-36 mt-4">
                         <div class="alert alert-danger"><xsl:value-of select="$error_message" /></div>
                     </div>
                 </div>
@@ -20,12 +20,12 @@
                 <input type="hidden" id="control" name="control" value="{$control}" />
                 <input type="hidden" id="controliv" name="controliv" value="{$controliv}" />
                 <div class="row">
-                    <div class="col-12 mt-4">
+                    <div class="col-36 mt-4">
                         <span>Enter new password for <xsl:value-of select="$user_name" />, badgeid: <xsl:value-of select="$badgeid" /></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-xl-3 col-lg-4 col-md-6 mt-4">
+                    <div class="col-36 col-xl-9 col-lg-12 col-md-18 mt-4">
                         <label for="password" class="form-label">Password</label>
                         <div class="input-group">
                             <input type="password" name="password" id="password" class="form-control" />
@@ -37,19 +37,19 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-xl-3 col-lg-4 col-md-6 mt-4">
+                    <div class="col-36 col-xl-9 col-lg-12 col-md-18 mt-4">
                         <label for="cpassword" class="form-label">Confirm password</label>
                         <input type="password" name="cpassword" id="cpassword" class="form-control" />
                         <div id="cpasswordfeedback" class="invalid-feedback">Passwords do not match.</div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-xl-3 col-lg-4 col-md-6 mt-4">
+                    <div class="col-36 col-xl-9 col-lg-12 col-md-18 mt-4">
                         <button type="submit" id="submit-button" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 mt-4">
+                    <div class="col-36 mt-4">
                         <p>After changing your password, you will be taken to the login page.</p>
                     </div>
                 </div>

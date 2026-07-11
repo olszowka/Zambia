@@ -5,12 +5,12 @@
     <xsl:template match="/">
         <div class="container-xxxl">
             <div class="row">
-                <div class="col-12 mt-4">
+                <div class="col-36 mt-4">
                     <h3 class="alert alert-danger">Unable to reset password.</h3>
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 mt-4">
+                <div class="col-36 mt-4">
                     <p>This problem may be due to one of the following reasons:</p>
                     <ul class="vert-sep-above">
                         <li>The password reset link has expired.</li>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 mt-4">
+                <div class="col-36 mt-4">
                     <a href="login.php" class="btn btn-primary">Return to Login Page</a>
                 </div>
             </div>
