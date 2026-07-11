@@ -1,16 +1,25 @@
 <?php
-//	Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function StaffRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
     global $debug;
-    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
     staff_header($title, $bootstrapVersion);
     if (isset($debug)) {
         echo $debug . "<br>\n";
     }
-    if ($isBs4or5) {
+    if ($bootstrapVersion == 'bs5') {
+?>
+        <div class="row mt-3">
+            <div class="col-36">
+                <div class="alert alert-danger" role="alert">
+                    <?php echo $message; ?>
+                </div>
+            </div>
+        </div>
+<?php
+    } else if ($bootstrapVersion == 'bs4') {
 ?>
         <div class="row mt-3">
             <div class="col-12">
@@ -27,11 +36,20 @@ function StaffRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
 }
 
 function PartRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
-    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     require_once('ParticipantHeader.php');
     require_once('ParticipantFooter.php');
     participant_header($title, false, 'Normal', $bootstrapVersion);
-    if ($isBs4or5) {
+    if ($bootstrapVersion == 'bs5') {
+?>
+        <div class="row mt-3">
+            <div class="col-36">
+                <div class="alert alert-danger" role="alert">
+                    <?php echo $message; ?>
+                </div>
+            </div>
+        </div>
+<?php
+    } else if ($bootstrapVersion == 'bs4') {
 ?>
         <div class="row mt-3">
             <div class="col-12">

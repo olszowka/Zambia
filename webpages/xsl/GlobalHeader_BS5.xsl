@@ -35,7 +35,7 @@
                         </h1>
                     </div>
                     <xsl:if test="$top_section_behavior != 'NO_USER'">
-                        <div class="col col-lg-4 col-xl-3 col-xxl-2 mt-4 pe-4">
+                        <div class="col col-lg-12 col-xl-9 col-xxl-6 mt-4 pe-4">
                             <xsl:choose>
                                 <xsl:when test="$top_section_behavior = 'NORMAL'">
                                     <div id="welcome">
@@ -87,30 +87,30 @@
                                                 </xsl:when>
                                             </xsl:choose>
                                             <div class="row mb-3">
-                                                <label for="badgeid" class="col-5 col-form-label">
+                                                <label for="badgeid" class="col-15 col-form-label">
                                                     <xsl:value-of select="$USER_ID_PROMPT"/>
                                                     <xsl:text>:</xsl:text>
                                                 </label>
-                                                <div class="col-7">
+                                                <div class="col-21">
                                                     <input type="text" name="badgeid" id="badgeid" class="form-control"
                                                         placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
-                                                <label for="passwd" class="col-5 col-form-label">Password</label>
-                                                <div class="col-7">
+                                                <label for="passwd" class="col-15 col-form-label">Password</label>
+                                                <div class="col-21">
                                                     <input type="password" id="passwd" name="passwd" class="form-control"
                                                         placeholder="Password" title="Enter your password" />
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
-                                                <div class="col-7 offset-5">
+                                                <div class="col-21 offset-15">
                                                     <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
                                                 </div>
                                             </div>
                                             <xsl:if test="$RESET_PASSWORD_SELF">
                                                 <div class="row mb-3">
-                                                    <div class="col-12">
+                                                    <div class="col-36">
                                                         <div class="mx-auto" style="width:16rem">
                                                             <a href="ForgotPassword.php">New user or forgot your password</a>
                                                         </div>

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2015-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title;
 $title = "Reports in Category";
 require_once('StaffCommonCode.php');
@@ -23,12 +23,12 @@ if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     RenderError($message_error);
     exit();
 }
-staff_header($title, 'bs2');
+staff_header($title, 'bs5');
 ?>
-<div class="container">
+<div class="container-lg">
     <div class="row mt-2">
-        <div class=" col-md-9">
-            <div class="list-group">
+        <div class=" col-md-27">
+            <div class="list-group" id="reports-list">
 <?php
 if ($reportcategoryid === "") {
     foreach ($reportNames as $reportFileName => $reportName) {
