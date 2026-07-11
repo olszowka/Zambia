@@ -6,7 +6,6 @@ $title = "Edit Configuration Tables";
 require_once('StaffCommonCode.php');
 
 $paramArray = array();
-staff_header($title, 'bs5');
 
 $mayEditAll = may_I('EditAnyConfigurationTable');
 
@@ -47,13 +46,14 @@ $mayEditRegTypes = may_I('ce_RegTypes') || $mayEditAll;
 $mayEditAnyOtherTables = $mayEditRegTypes;
 
 $editAnyTable = $mayEditAnyParticipantTables || $mayEditAnySessionTables || $mayEditAnyEmailTables ||
-    $mayEditAnyFacilityTables = $mayEditAnyOtherTables;
+    $mayEditAnyFacilityTables || $mayEditAnyOtherTables;
 
 if (!$editAnyTable) {
     $message_error = "You do not currently have permission to view this page.<br>\n";
     StaffRenderErrorPage($title, $message_error, 'bs5');
     exit();
 }
+staff_header($title, 'bs5');
 
 $PriorArray["getSessionID"] = session_id();
 
