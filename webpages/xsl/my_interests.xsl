@@ -15,7 +15,7 @@
             <form name="addform" method="POST" action="my_interests.php" class="mt-2">
                 <xsl:if test="$readonly = '1'">
                     <div class="row">
-                        <div class="col-12 mt-3">
+                        <div class="col-36 mt-3">
                             <div class="alert alert-warning" role="alert">
                                 We're sorry, but we are unable to accept your suggestions at this time.
                             </div>
@@ -24,7 +24,7 @@
                 </xsl:if>
                 <xsl:if test="$db_updated = '1'">
                     <div class="row">
-                        <div class="col-12 mt-3">
+                        <div class="col-36 mt-3">
                             <div class="alert alert-success" role="alert">
                                 Database updated successfully.
                             </div>
@@ -33,7 +33,7 @@
                 </xsl:if>
                 <xsl:if test="$EditBadgeId != ''">
                     <div class="row">
-                        <div class="col-12 mt-3">
+                        <div class="col-36 mt-3">
                             <div class="alert alert-primary" role="alert">
                                 <xsl:text>Editing participant </xsl:text>
                                 <xsl:value-of select="$EditParticipantName" />
@@ -43,7 +43,7 @@
                     </div>
                 </xsl:if>
                 <div class="row">
-                    <div class="col-12 col-md-6 mt-4">
+                    <div class="col-36 col-md-18 mt-4">
                         <label for="yespanels" class="form-label">
                             <xsl:choose>
                                 <xsl:when test="string-length(doc/customText/@stuff_id_like_to_run) > 0">
@@ -62,7 +62,7 @@
                             <xsl:value-of select="doc/query[@queryName='participantinterests']/row/@yespanels" />
                         </textarea>
                     </div>
-                    <div class="col-12 col-md-6 mt-4">
+                    <div class="col-36 col-md-18 mt-4">
                         <label for="nopanels" class="form-label">
                             <xsl:choose>
                                 <xsl:when test="string-length(/doc/customText/@panel_types_not_int) > 0">
@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-6 mt-4">
+                    <div class="col-36 col-md-18 mt-4">
                         <label for="yespeople" class="form-label">
                             <xsl:choose>
                                 <xsl:when test="string-length(/doc/customText/@people_want_on_sess_label) > 0">
@@ -101,7 +101,7 @@
                             <xsl:value-of select="doc/query[@queryName='participantinterests']/row/@yespeople" />
                         </textarea>
                     </div>
-                    <div class="col-12 col-md-6 mt-4">
+                    <div class="col-36 col-md-18 mt-4">
                         <label for="nopeople" class="form-label">
                             <xsl:choose>
                                 <xsl:when test="string-length(/doc/customText/@people_dont_want_label) > 0">
@@ -122,7 +122,7 @@
                 </div>
                 <fieldset>
                     <div class="row mt-4">
-                        <div class="col-12">
+                        <div class="col-36">
                             <legend>
                                 <xsl:choose>
                                     <xsl:when test="string-length(doc/customText/@roles_checkboxes_label) > 0">
@@ -137,14 +137,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 roles-list-container">
+                        <div class="col-36 roles-list-container">
                             <xsl:apply-templates select="doc/query[@queryName='participantroles']/row[@roleid > 1]" />
                             <xsl:apply-templates select="doc/query[@queryName='participantroles']/row[@roleid = 1]" />
                         </div>
                     </div>
                 </fieldset>
                 <div class="row">
-                    <div class="col-12 col-md-6 mt-4">
+                    <div class="col-36 col-md-18 mt-4">
                         <label for="otherroles" class="form-label">
                             <xsl:choose>
                                 <xsl:when test="string-length(/doc/customText/@other_role_desc) > 0">
@@ -165,7 +165,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-4 col-md-2 mt-4">
+                    <div class="col-12 col-md-6 mt-4">
                         <button class="btn btn-primary" type="submit" name="submit">
                             <xsl:if test="$readonly = '1'">
                                 <xsl:attribute name="disabled">disabled</xsl:attribute>

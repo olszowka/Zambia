@@ -80,6 +80,13 @@
         </div>
         <div id="config-table-editor-nav" class="mt-3">
             <h1 style="text-align: center;">Configuration Table Editor</h1>
+            <xsl:if test="not ($mayEditAll = 1)">
+                <div class="row mt-3 mb-4">
+                    <div class="col">
+                        You have permission to edit only some tables, so some pages or tables will be disabled.
+                    </div>
+                </div>
+            </xsl:if>
             <ul class="nav nav-pills" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="pills-overview-tab" data-bs-toggle="pill" data-bs-target="#pills-overview"
@@ -648,22 +655,15 @@
                 </div>
             </div>
         </div>
-        <xsl:if test="not ($mayEditAll = 1)">
-            <div class="row mt-4">
-                <div class="col col-12">
-                    You have permission to edit only some tables, so some pages or tables will be disabled.
-                </div>
-            </div>
-        </xsl:if>
         <div id="table-div" style="display: none" class="fade">
             <div class="row mt-4">
-                <div class="col col-12">
+                <div class="col-36">
                     <div id="table"></div>
                 </div>
             </div>
             <div id="tceedit-div" style="display: none">
                 <div class="row mt-4">
-                    <div class="col col-12">
+                    <div class="col col-lg-22 col-xl-18 col-xxl-15">
                         <textarea id="tceedit-textarea"></textarea>
                     </div>
                 </div>
