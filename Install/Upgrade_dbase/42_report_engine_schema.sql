@@ -36,3 +36,4 @@ CREATE TABLE `CategoryHasReport` (
   CONSTRAINT `FK_CategoryHasReport` FOREIGN KEY (`reportcategoryid`) REFERENCES `ReportCategories` (`reportcategoryid`),
   CONSTRAINT `FK_CategoryHasReport2` FOREIGN KEY (`reporttypeid`) REFERENCES `ReportTypes` (`reporttypeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO PatchLog (patchname) VALUES ('42_report_engine_schema.sql');
