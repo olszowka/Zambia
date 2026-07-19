@@ -34,6 +34,7 @@ define("PREF_TTL_SESNS_LMT", 10); // Input data verification limit for preferred
 define("PREF_DLY_SESNS_LMT", 5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS", 8); // Number of rows of availability records to render
 define("MAX_BIO_LEN", 1000); // Maximum length (in characters) permitted for participant biographies
+define("NEW_ROOM_SLOTS", 5); // number of rows at bottom of Maintain Room Schedule page for new schedule entries
 define("MY_AVAIL_KIDS", FALSE); // Enables questions regarding no. of kids in Fasttrack on "My Availability"
 define("ENABLE_SHARE_EMAIL_QUESTION", TRUE); // Enables question regarding sharing participant email address
 define("ENABLE_USE_PHOTO_QUESTION", TRUE); // Enables question regarding using participant photo for promotional purposes
@@ -67,10 +68,14 @@ define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag field
 // "TRACK_ONLY" : Tag field is not used and will be hidden where possible.
 define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all users
 define("USE_REG_SYSTEM", FALSE);
-// True -> Zambia users loaded from reg system into CongoDump; staff users cannot edit them
+// True -> Zambia users loaded from reg system into CongoDump
 // False -> Zambia users created and edited by staff users in Zambia
+define("UPDATE_REG_SYSTEM", TRUE); // Set to TRUE for ConTroll integration; Staff users may edited user data and edits will be pushed to registration system
+define("REG_DBNAME", ""); // only needed for USE_REG_SYSTEM/UPDATE_REG_SYSTEM = TRUE; name of the registration system's database, used to update perinfo/congodump directly
+define("REG_CONID", ""); // only needed for USE_REG_SYSTEM/UPDATE_REG_SYSTEM = TRUE; the registration system's ID for this convention
 define("REG_PART_PREFIX", "");
-// only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
+// only needed for the Add Zambia user script; prefix portion of userid/badgeid before counter; can be empty string for no prefix
+// When integrating with ConTroll, add an alphabetic prefix to the badgeid's of users not maintained by ConTroll, usually just initial admin users.
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
 define("MEETING_LINK", TRUE); // Add support for Meeting Link in sessions

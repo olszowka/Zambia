@@ -2,7 +2,6 @@
 // Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title, $linki;
 $bigarray = array();
-define("newroomslots", 5); // number of rows at bottom of page for new schedule entries
 $title = "Maintain Room Schedule";
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
@@ -56,7 +55,7 @@ if ($conflict != true) {
     <hr>
 <?php
         // unset all stuff from posts so input fields get reset to blank
-    for ($i = 1; $i <= newroomslots; $i++) {
+    for ($i = 1; $i <= NEW_ROOM_SLOTS; $i++) {
         unset($_POST["day$i"]);
         unset($_POST["hour$i"]);
         unset($_POST["min$i"]);
@@ -236,7 +235,7 @@ while ($bigarray[$i] = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 }
 mysqli_free_result($result);
 $numsessions = --$i;
-for ($i = 1; $i <= newroomslots; $i++) {
+for ($i = 1; $i <= NEW_ROOM_SLOTS; $i++) {
     echo "   <tr>\n";
     echo "      <td>";
     // ****DAY****
