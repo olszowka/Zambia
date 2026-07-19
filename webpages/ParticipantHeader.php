@@ -104,7 +104,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
                     <div class="nav-collapse">
                         <ul class="nav">
                             <li><a href="welcome.php">Overview</a></li>
-                            <li><a href="my_contact.php">Profile</a></li>
+                            <li><a href="my_profile.php">Profile</a></li>
                     <?php
                             makeMenuItem("Photo", (PARTICIPANT_PHOTOS === TRUE && may_I('photos')), "my_photo.php", false);
                             makeMenuItem("Survey", ($_SESSION['survey_exists'] && may_I('survey')), "PartSurvey.php", false);

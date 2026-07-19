@@ -23,7 +23,7 @@
             <a class="nav-link py-1 pe-3" href="welcome.php">Overview</a>
           </li>
           <li class="nav-item py-0">
-            <a class="nav-link py-1 pe-3" href="my_contact.php">Profile</a>
+            <a class="nav-link py-1 pe-3" href="my_profile.php">Profile</a>
           </li>
           <xsl:if test="$PARTICIPANT_PHOTOS = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='photos']">
             <li class="nav-item py-0">

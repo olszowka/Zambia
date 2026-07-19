@@ -15,6 +15,11 @@ function MyProfile() {
     var $htmlbioTextarea;
     var $resultBoxDiv;
     var $badBio;
+    var $pubsname;
+    var $nameForSorting;
+    var nameForSortingWasEmpty = false;
+    var nameForSortingManuallyEdited = false;
+    var NAME_FOR_SORTING_SUFFIXES = ["fn", "jr", "sr", "iii"];
 
 
     this.validatePW = () => {
@@ -47,6 +52,50 @@ function MyProfile() {
             $badBio.hide();
             bioOK = true;
         }
+    };
+
+    this.setButtonLoading = ($btn) => {
+        if ($btn.data("originalHtml") === undefined) {
+            $btn.data("originalHtml", $btn.html());
+        }
+        $btn.prop("disabled", true).html($btn.attr("data-loading-text"));
+    };
+
+    this.resetButtonLoading = ($btn) => {
+        $btn.prop("disabled", false).html($btn.data("originalHtml"));
+    };
+
+    this.deriveNameForSorting = (pubsname) => {
+        var name = (pubsname || "").replace(/\([^)]*\)/g, " ");
+        var tokens = name.split(/\s+/).filter((token) => token.length > 0);
+        while (tokens.length > 1) {
+            var lastToken = tokens[tokens.length - 1].replace(/[.,]+$/, "").toLowerCase();
+            if (NAME_FOR_SORTING_SUFFIXES.indexOf(lastToken) === -1) {
+                break;
+            }
+            tokens.pop();
+            if (tokens.length > 0) {
+                tokens[tokens.length - 1] = tokens[tokens.length - 1].replace(/,+$/, "");
+            }
+        }
+        if (tokens.length === 0) {
+            return "";
+        }
+        if (tokens.length === 1) {
+            return tokens[0];
+        }
+        var familyName = tokens.pop();
+        return familyName + ", " + tokens.join(" ");
+    };
+
+    this.autoPopulateNameForSorting = () => {
+        if ($nameForSorting.attr("type") === "hidden") {
+            return;
+        }
+        if (this.submitting || !nameForSortingWasEmpty || nameForSortingManuallyEdited) {
+            return;
+        }
+        $nameForSorting.val(myProfile.deriveNameForSorting($pubsname.val()));
     };
 
     this.bioChange = () => {
@@ -82,8 +131,10 @@ function MyProfile() {
 
     this.initialize = () => {
         //called when JQuery says My Profile page has loaded
-        this.$confNotAttModal = $('#confNotAttModal');
-        this.$confNotAttModal.modal({show:false});
+        this.confNotAttModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('confNotAttModal'));
+        document.querySelectorAll('[data-bs-toggle="popover"]').forEach((el) => {
+            bootstrap.Popover.getOrCreateInstance(el);
+        });
         this.$interestedSelect = document.getElementById('interested');
         this.scheduleCount = parseInt(this.$interestedSelect.dataset.scheduleCount, 10);
         document.getElementById('cancelNotAtt').addEventListener('click', this.cancelNotAttModal);
@@ -93,7 +144,7 @@ function MyProfile() {
         $password.val("");
         this.validatePW();
         $submitBTN = $("#submitBTN");
-        $submitBTN.button().prop("disabled", true);
+        $submitBTN.data("originalHtml", $submitBTN.html()).prop("disabled", true);
         $bioTextarea = $("#bioTXTA");
         $badBio = $("#badBio");
         maxBioLen = $bioTextarea.data("maxLength");
@@ -126,6 +177,14 @@ function MyProfile() {
             htmlbioused = true;
         }
         this.validateBio();
+        $pubsname = $("#pubsname");
+        $nameForSorting = $("#name_for_sorting");
+        nameForSortingWasEmpty = !$nameForSorting.val() || $nameForSorting.val().trim() === "";
+        nameForSortingManuallyEdited = false;
+        $nameForSorting.on("input", () => {
+            nameForSortingManuallyEdited = true;
+        });
+        $pubsname.on("blur", this.autoPopulateNameForSorting);
         $("select.mycontrol").on("change", this.anyChange);
         $("input.mycontrol[type='text']").on("input", this.anyChange);
         $("input.mycontrol[type='password']").on("input", this.anyChange);
@@ -141,11 +200,12 @@ function MyProfile() {
             && this.scheduleCount >= 1
             && !this.interestedOverride
         ) {
-            this.$confNotAttModal.modal('show');
+            this.confNotAttModal.show();
             return;
         }
         this.interestedOverride = false;
-        $("#submitBTN").button('loading');
+        this.submitting = true;
+        myProfile.setButtonLoading($submitBTN);
         var postdata = {
             ajax_request_action: "update_participant"
         };
@@ -180,7 +240,7 @@ function MyProfile() {
             }
         });
         $.ajax({
-            url: "SubmitMyContact.php",
+            url: "my_profile_submit.php",
             dataType: "html",
             data: postdata,
             success: myProfile.showUpdateResults,
@@ -195,25 +255,27 @@ function MyProfile() {
         $password.val("");
         $cpassword.val("");
         anyDirty = false;
-        $submitBTN.button('reset');
+        this.submitting = false;
+        myProfile.resetButtonLoading($submitBTN);
         setTimeout(function () {
-            $submitBTN.button().prop("disabled", true);
+            $submitBTN.prop("disabled", true);
         }, 0);
         document.getElementById("resultBoxDIV").scrollIntoView(false);
     };
 
     this.showErrorMessage = (message) => {
-        content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">` + message + `</div></div></div>`;
+        content = `<div class="row mt-3"><div class="col-36"><div class="alert alert-danger" role="alert">` + message + `</div></div></div>`;
         $resultBoxDiv.html(content).css("visibility", "visible");
         document.getElementById("resultBoxDIV").scrollIntoView(false);
     };
 
     this.showAjaxError = (data, textStatus, jqXHR) => {
+        this.submitting = false;
         var content;
         if (data && data.responseText) {
-            content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">${data.responseText}</div></div></div>`;
+            content = `<div class="row mt-3"><div class="col-36"><div class="alert alert-danger" role="alert">${data.responseText}</div></div></div>`;
         } else {
-            content = `<div class="row mt-3"><div class="col-12"><div class="alert alert-danger" role="alert">An error occurred on the server.</div></div></div>`;
+            content = `<div class="row mt-3"><div class="col-36"><div class="alert alert-danger" role="alert">An error occurred on the server.</div></div></div>`;
         }
         $resultBoxDiv.html(content).css("visibility", "visible");
         document.getElementById("resultBoxDIV").scrollIntoView(false);
@@ -221,7 +283,7 @@ function MyProfile() {
     };
 
     this.onConfirmNotAtt = (event) => {
-        this.$confNotAttModal.modal('hide');
+        this.confNotAttModal.hide();
         this.interestedOverride = true;
         this.updateBUTN();
     }

@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<!-- Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.-->
+<!-- Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:param name="userIdPrompt" select="'Badge ID'"/>
     <xsl:param name="edit_participant_responses" select="'0'"/><!-- boolean ('1'/'0' representing whether user may edit participant info -->
@@ -9,7 +9,7 @@
                 <div class="alert-info">No matching results found</div>
             </xsl:when>
             <xsl:otherwise>
-                <table class="table table-condensed table-hover">
+                <table class="table table-condensed table-hover table-clear">
                     <thead>
                         <tr>
                             <th>Last, First Name</th>
@@ -18,6 +18,10 @@
                             <th>
                                 <xsl:value-of select="$userIdPrompt"/>
                             </th>
+                            <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+                            <xsl:if test="$edit_participant_responses = '1'">
+                                <th><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></th>
+                            </xsl:if>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,6 +62,11 @@
                                     <input type="hidden" id="staffnotesHID_{@badgeid}">
                                         <xsl:attribute name="value">
                                             <xsl:value-of select="@staff_notes"/>
+                                        </xsl:attribute>
+                                    </input>
+                                    <input type="hidden" id="name_for_sortingHID_{@badgeid}">
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="@name_for_sorting"/>
                                         </xsl:attribute>
                                     </input>
                                     <input type="hidden" id="lastnameHID_{@badgeid}">
@@ -119,7 +128,7 @@
                                 <xsl:if test="$edit_participant_responses = '1'">
                                     <td>
                                         <div class="dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Edit Participant Responses
                                             </button>
                                             <div class="dropdown-menu">

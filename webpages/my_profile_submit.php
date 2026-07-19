@@ -68,6 +68,15 @@ function update_participant($badgeid) {
             Render500ErrorAjax($message_error);
             exit();
         }
+    if (isset($_POST['name_for_sorting']))
+        if ($may_edit_bio) {
+            $name_for_sorting = stripslashes($_POST['name_for_sorting']);
+            $updateClause .= "name_for_sorting=\"" . mysqli_real_escape_string($linki, $name_for_sorting) . "\", ";
+        } else {
+            $message_error = "You may not update your name for sorting in publications at this time.  Database not updated.";
+            Render500ErrorAjax($message_error);
+            exit();
+        }
     if (isset($_POST['htmlbio'])) {
         if ($may_edit_bio) {
             $updateClause .= "htmlbio=\"" . mysqli_real_escape_string($linki, $_POST['htmlbio']) . "\", ";
@@ -248,7 +257,7 @@ if (empty($password) && !$ParticipantsUpdated and !$CongoDumpUpdated) {
 }
 ?>
     <div class="row mt-3">
-    <div class="col-12">
+    <div class="col">
         <div class="alert alert-success">
 <?php
     if (!empty($password)) {

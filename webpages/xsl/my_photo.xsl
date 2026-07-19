@@ -49,7 +49,7 @@
                                         <xsl:choose>
                                             <xsl:when
                                                     test="/doc/query[@queryName='participant_info']/row/@uploadedphotofilename != ''">
-                                                <xsl:text>SubmitMyContact.php?ajax_request_action=fetchPhoto</xsl:text>
+                                                <xsl:text>my_profile_submit.php?ajax_request_action=fetchPhoto</xsl:text>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:value-of select="$approvedPhotoURL"/>

@@ -189,7 +189,7 @@ function MyPhoto() {
         };
 
         $.ajax({
-            url: "SubmitMyContact.php",
+            url: "my_profile_submit.php",
             dataType: "html",
             data: postdata,
             success: myPhoto.transfercomplete,
@@ -239,7 +239,7 @@ function MyPhoto() {
             ajax_request_action: "delete_uploaded_photo"
         };
         $.ajax({
-            url: "SubmitMyContact.php",
+            url: "my_profile_submit.php",
             dataType: "html",
             data: postdata,
             success: myPhoto.deleteuploadedcomplete,
@@ -286,7 +286,7 @@ function MyPhoto() {
             ajax_request_action: "delete_approved_photo"
         };
         $.ajax({
-            url: "SubmitMyContact.php",
+            url: "my_profile_submit.php",
             dataType: "html",
             data: postdata,
             success: myPhoto.deleteapprovedcomplete,
