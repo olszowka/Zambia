@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2006-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2006-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 var badgenameDirty = false;
 var bioDirty = false;
 var htmlbioused = false;
@@ -115,7 +115,10 @@ function chooseParticipant(badgeid, override) {
     var phone = $("#phoneHID_" + badgeidJQSel).val();
     $phone.val(phone).prop("defaultValue", phone).prop("readOnly", false);
     var email = $("#emailHID_" + badgeidJQSel).val();
-    $email.val(email).prop("defaultValue", email);//.prop("readOnly", false);
+    $email.val(email).prop("defaultValue", email);
+    if (!$email.data("readonly")) {
+        $email.prop("readOnly", false);
+    }
     var postaddress1 = $("#postaddress1HID_" + badgeidJQSel).val();
     $postaddress1.val(postaddress1).prop("defaultValue", postaddress1).prop("readOnly", false);
     var postaddress2 = $("#postaddress2HID_" + badgeidJQSel).val();

@@ -183,7 +183,7 @@ if (USE_REG_SYSTEM === FALSE || UPDATE_REG_SYSTEM === TRUE) {
 <?php
     } else {
 ?>
-                    <input class='col-text-input disabled' id = 'email' type = 'text' readonly = 'readonly' style = 'max-width:15rem;' />
+                    <input class="col-text-input disabled" id = "email" type = "text" readonly = "readonly" maxlength="100" data-readonly="true" />
 <?php
     }
 ?>
