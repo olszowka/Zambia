@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $participant, $message, $message_error, $message2, $congoinfo, $title;
 $title="My Profile";
 require ('PartCommonCode.php'); // initialize db; check login;
@@ -8,7 +8,7 @@ $queryArray["participant_info"] = <<<EOD
 SELECT
         CD.badgeid, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email,
             CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-            CD.postcountry, P.pubsname, P.password, P.bestway, P.interested, P.bio,
+            CD.postcountry, P.pubsname, P.name_for_sorting, P.password, P.bestway, P.interested, P.bio,
 			P.htmlbio, P.share_email, P.use_photo, CD.regtype
     FROM
        CongoDump CD
@@ -51,6 +51,7 @@ $paramArray['conName'] = CON_NAME;
 $paramArray['enableShareEmailQuestion'] = ENABLE_SHARE_EMAIL_QUESTION ? 1 : 0;
 $paramArray['enableUsePhotoQuestion'] = ENABLE_USE_PHOTO_QUESTION ? 1 : 0;
 $paramArray['enableBestwayQuestion'] = ENABLE_BESTWAY_QUESTION ? 1 : 0;
+$paramArray['enableNameForSorting'] = ENABLE_NAME_FOR_SORTING ? 1 : 0;
 $paramArray['useRegSystem'] = USE_REG_SYSTEM ? 1 : 0;
 $paramArray['updateRegSystem'] = UPDATE_REG_SYSTEM ? 1 : 0;
 $paramArray['maxBioLen'] = MAX_BIO_LEN;
@@ -58,7 +59,7 @@ $paramArray['enableBioEdit'] = may_I('EditBio');
 $paramArray['htmlbio'] = HTML_BIO ? 1 : 0;
 $paramArray['userIdPrompt'] = USER_ID_PROMPT;
 $paramArray['participant'] = may_I('Participant');
-participant_header($title, false, 'Normal', 'bs4');
+participant_header($title, false, 'Normal', 'bs5');
 $resultXML = appendCustomTextArrayToXML($resultXML);
 RenderXSLT('my_profile.xsl', $paramArray, $resultXML);
 participant_footer();

@@ -13,35 +13,35 @@ INSERT INTO `CongoDump`
     ('9','Janice','Rand','Janice','617-555-1218','rand@zambiademo.org','1 Eighth Street',NULL,'Boston','MA','02100','USA','');
 
 INSERT INTO `Participants`
-    (badgeid, password, bestway, interested, bio, htmlbio, pubsname, uploadedphotofilename, approvedphotofilename,
+    (badgeid, password, bestway, interested, bio, htmlbio, pubsname, name_for_sorting, uploadedphotofilename, approvedphotofilename,
         photodenialreasonothertext, photodenialreasonid, photouploadstatus, share_email, staff_notes, use_photo, data_retention)
     VALUES
     ('1','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL, 'Admin User has been program chair of Zambiademo for 5 years.',
-        '<p>Admin User has been program chair of Zambiademo for 5 years.</p>','Admin User',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
+        '<p>Admin User has been program chair of Zambiademo for 5 years.</p>','Admin User','User Admin',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
     ('2','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL,
         'Staff User has been on the program committee of Zambiademo for 3 years.',
-        '<p>Staff User has been on the program committee of Zambiademo for 3 years.</p>','Staff User',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
+        '<p>Staff User has been on the program committee of Zambiademo for 3 years.</p>','Staff User','User Staff',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
     ('3','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL, 'Participant User has been on program of Zambiademo for 5 years.',
-        '<p>Participant User has been on program of Zambiademo for 5 years.</p>','Participant User',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
+        '<p>Participant User has been on program of Zambiademo for 5 years.</p>','Participant User','User Participant',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
     ('4','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL, 'James T. Kirk has been captain of the starship Enterprise for 5 years.',
-        '<p>James T. Kirk has been captain of the starship Enterprise for 5 years.</p>','James T. Kirk',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
+        '<p>James T. Kirk has been captain of the starship Enterprise for 5 years.</p>','James T. Kirk','Kirk James T.',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
     ('5','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL,
      'Commander Spock has been science officer of the starship Enterprise for 10 years.',
-        '<p>Commander Spock has been science officer of the starship Enterprise for 10 years.</p>','Mr. Spock',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
+        '<p>Commander Spock has been science officer of the starship Enterprise for 10 years.</p>','Mr. Spock','Spock',NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 1),
     ('6','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL,
      'Leonard McCoy, MD, has been chief medical officer of the starship Enterprise for 7 years.',
-        '<p>Leonard McCoy, MD, has been chief medical officer of the starship Enterprise for 7 years.</p>','Leonard McCoy, MD',NULL, NULL, NULL, NULL, NULL,
+        '<p>Leonard McCoy, MD, has been chief medical officer of the starship Enterprise for 7 years.</p>','Leonard McCoy, MD','McCoy Leonard',NULL, NULL, NULL, NULL, NULL,
         1, NULL, 1, 1),
     ('7','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL,
      'Nikota Uhura has been communications officer of the starship Enterprise for 4 years.',
-        '<p>Nikota Uhura has been communications officer of the starship Enterprise for 4 years.</p>','Nikota Uhura',NULL, NULL, NULL, NULL, NULL, 1, NULL,
+        '<p>Nikota Uhura has been communications officer of the starship Enterprise for 4 years.</p>','Nikota Uhura','Uhura Nikota',NULL, NULL, NULL, NULL, NULL, 1, NULL,
         1, 1),
     ('8','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL,
      'Christine Chapel has been a nurse serving on the starship Enterprise for 5 years.',
-        '<p>Christine Chapel has been a nurse serving on the starship Enterprise for 5 years.</p>','Christine Chapel',NULL, NULL, NULL, NULL, NULL, 1, NULL,
+        '<p>Christine Chapel has been a nurse serving on the starship Enterprise for 5 years.</p>','Christine Chapel','Chapel Christine',NULL, NULL, NULL, NULL, NULL, 1, NULL,
         1, 1),
     ('9','$2y$10$ynxaiOCmt3bOqeDFHPEjA.wuP2ptf5Lt563pqleZ4rro7t0ycTjGe', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, 0);
+        NULL, NULL, 0);
 
 INSERT INTO `UserHasPermissionRole`
     (badgeid, permroleid)

@@ -20,7 +20,7 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio, P.staff_notes, CD.firstname,
+        P.badgeid, P.pubsname, P.name_for_sorting, P.interested, P.bio, P.htmlbio, P.staff_notes, CD.firstname,
         CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1, CD.postaddress2,
         CD.postcity, CD.poststate, CD.postzip, CD.postcountry, P.uploadedphotofilename,
         P.approvedphotofilename, P.photodenialreasonothertext,
@@ -59,10 +59,11 @@ function update_participant() {
     if (HTML_BIO === TRUE)
         $htmlbio = getString("htmlbio");
     $pubsname = getString("pubsname");
+    $name_for_sorting = getString("name_for_sorting");
     $staffnotes = getString("staffnotes");
     $interested = getInt("interested", NULL);
 
-    if (!is_null($password) || !is_null($bio) || !is_null($pubsname) || !is_null($staffnotes) || !is_null($interested)) {
+    if (!is_null($password) || !is_null($bio) || !is_null($pubsname) || !is_null($name_for_sorting) || !is_null($staffnotes) || !is_null($interested)) {
         $query_preable = "UPDATE Participants SET ";
         $query_portion_arr = array();
         $query_param_arr = array();
@@ -74,6 +75,7 @@ function update_participant() {
             push_query_arrays($htmlbio, 'htmlbio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($bio, 'bio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($pubsname, 'pubsname', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($name_for_sorting, 'name_for_sorting', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($staffnotes, 'staff_notes', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($interested, 'interested', 'i', NULL, $query_portion_arr, $query_param_arr, $query_param_type_str);
         $query_param_arr[] = $participantBadgeId;
@@ -334,7 +336,7 @@ EOD;
     }
 ?>
 <div class="row mt-3">
-    <div class="col-12">
+    <div class="col-36">
         <div class="alert alert-success">
             <?php echo $message; ?>
         </div>
@@ -355,7 +357,7 @@ function perform_search() {
     $json_return = array();
     $queryPart1 = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+        P.badgeid, P.pubsname, P.name_for_sorting, P.interested, P.bio, P.htmlbio,
         P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
         CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
         CD.postcountry, RT.message AS regmessage, IFNULL(A.answercount, 0) AS answercount,

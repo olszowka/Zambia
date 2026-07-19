@@ -237,6 +237,7 @@ CREATE TABLE `Participants` (
     `bio` TEXT,
     `htmlbio` TEXT,
     `pubsname` VARCHAR(50) DEFAULT NULL,
+    `name_for_sorting` VARCHAR(50) DEFAULT NULL,
     `uploadedphotofilename` VARCHAR(64) DEFAULT NULL,
     `approvedphotofilename` VARCHAR(64) DEFAULT NULL,
     `photodenialreasonothertext` VARCHAR(512) DEFAULT NULL,
