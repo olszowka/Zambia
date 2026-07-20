@@ -477,6 +477,15 @@ if (HTML_BIO === TRUE) {
                 </button>
             </div>
         </div>
+        <div class="row mt-3">
+            <div class="col-sm-36">
+                <div class="pb-1">
+                    Participant's Schedule:
+                </div>
+                <div id="schedule-container">
+                </div>
+            </div>
+        </div>
     </div>
 </form>
 <?php
