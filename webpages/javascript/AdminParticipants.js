@@ -240,6 +240,17 @@ function chooseParticipant(badgeid, override) {
         error: showAjaxError,
         type: "POST"
     });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_participant_schedule"
+        }),
+        success: fetchParticipantScheduleCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
 }
 
 function startTinymce() {
@@ -332,6 +343,17 @@ function fetchParticipant(badgeid) {
         error: showAjaxError,
         type: "POST"
     });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_participant_schedule"
+        }),
+        success: fetchParticipantScheduleCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
 }
 
 function fetchParticipantCallback(data, textStatus, jqXHR) {
@@ -413,6 +435,11 @@ function fetchParticipantTagsCallback(data, textStatus, jqXHR) {
     $("#tag-container").html(data);
 }
 
+function fetchParticipantScheduleCallback(data, textStatus, jqXHR) {
+    //ajax success callback function
+    $("#schedule-container").html(data);
+}
+
 function getUpdateResults(data, textStatus, jqXHR) {
     $("#resultBoxDIV").html(data);
     $('#resultBoxDIV').show();
@@ -452,6 +479,17 @@ function getUpdateResults(data, textStatus, jqXHR) {
             ajax_request_action: "fetch_participant_tags"
         }),
         success: fetchParticipantTagsCallback,
+        error: showAjaxError,
+        type: "POST"
+    });
+    $.ajax({
+        url: "SubmitAdminParticipants.php",
+        dataType: "html",
+        data: ({
+            badgeid: badgeid,
+            ajax_request_action: "fetch_participant_schedule"
+        }),
+        success: fetchParticipantScheduleCallback,
         error: showAjaxError,
         type: "POST"
     });

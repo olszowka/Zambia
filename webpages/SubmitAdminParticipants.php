@@ -568,6 +568,46 @@ EOD;
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
 }
 
+// gets a participant's scheduled sessions in chronological order.  Renders as HTML
+function fetch_participant_schedule() {
+    global $message_error;
+    $fetchedUserBadgeId = getString('badgeid');
+    if (empty($fetchedUserBadgeId)) {
+        $message_error = "Internal error.";
+        RenderErrorAjax($message_error);
+        exit();
+    }
+    $ConStartDatim = CON_START_DATIM;
+    $query = <<<EOD
+SELECT
+        DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime), '%W') AS day,
+        DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime), '%l:%i %p') AS starttime,
+        DATE_FORMAT(ADDTIME('$ConStartDatim', ADDTIME(SCH.starttime, S.duration)), '%l:%i %p') AS endtime,
+        R.roomname, S.title, TY.typename
+    FROM
+                  ParticipantOnSession POS
+             JOIN Sessions S USING (sessionid)
+             JOIN Schedule SCH USING (sessionid)
+             JOIN Rooms R USING (roomid)
+             JOIN Types TY USING (typeid)
+    WHERE
+        POS.badgeid = ?
+    ORDER BY
+        SCH.starttime;
+EOD;
+    $resultXML = mysql_prepare_query_XML(
+        array("schedule" => $query),
+        array("schedule" => "s"),
+        array("schedule" => array($fetchedUserBadgeId))
+    );
+    if (!$resultXML) {
+        RenderErrorAjax($message_error);
+        exit();
+    }
+    //echo mb_ereg_replace("<(row|query)([^>]*)/[ ]*>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"); //for debugging only
+    RenderXSLT('FetchParticipantSchedule.xsl', array(), $resultXML);
+}
+
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
@@ -599,6 +639,9 @@ switch ($ajax_request_action) {
         break;
     case "fetch_participant_tags":
         fetch_participant_tags();
+        break;
+    case "fetch_participant_schedule":
+        fetch_participant_schedule();
         break;
     default:
         $message_error = "Internal error.";
