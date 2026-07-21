@@ -180,3 +180,74 @@ textarea.tall-textarea {
   column-count: 3;
   max-width: 60rem;
 }
+.roles-list-container {
+  column-count: 3;
+  max-width: 70rem;
+}
+/* Report table (DataTables) */
+.reportPageContent {
+  line-height: normal;
+}
+div.reportPageContent table,
+table.report {
+  border-collapse: collapse;
+  margin: 10px;
+  border: 1px solid #000000;
+  font-family: Arial;
+  font-size: 13.5px;
+}
+div.reportPageContent table th,
+th.report {
+  border: 1px solid #000000;
+  background-color: #c0e4ff;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+}
+div.reportPageContent table td {
+  border: 1px solid #000000;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+td.report {
+  border: 1px solid #000000;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+td.report.report-spacious {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+td.report.report-align-right {
+  text-align: right;
+}
+div.reportPageContent table td a,
+.report A {
+  color: #1c30b0;
+}
+th.report.sorting_disabled span.sorting {
+  display: none;
+}
+td.report.highlight1 {
+  font-weight: bold;
+  background-color: #e17575;
+}
+td.za-report-lastRowCell {
+  border-bottom: 2px solid #000000;
+}
+/* Override DataTables' default inactive sort-arrow opacity (0.125) to make it more visible.
+   ".dt-orderable-{asc,desc}" (can be sorted this way) and ".dt-ordering-{asc,desc}" (is
+   currently sorted this way) co-occur on an actively-sorted header, so the :not() exclusions
+   below are needed to avoid also dimming the active arrow (styled to opacity 0.6 by DataTables). */
+table.dataTable thead > tr > th.dt-orderable-asc:not(.dt-ordering-asc) .dt-column-order:before,
+table.dataTable thead > tr > td.dt-orderable-asc:not(.dt-ordering-asc) .dt-column-order:before,
+table.dataTable thead > tr > th.dt-orderable-desc:not(.dt-ordering-desc) .dt-column-order:after,
+table.dataTable thead > tr > td.dt-orderable-desc:not(.dt-ordering-desc) .dt-column-order:after,
+table.dataTable thead > tr > th.dt-ordering-asc .dt-column-order:after,
+table.dataTable thead > tr > td.dt-ordering-asc .dt-column-order:after,
+table.dataTable thead > tr > th.dt-ordering-desc .dt-column-order:before,
+table.dataTable thead > tr > td.dt-ordering-desc .dt-column-order:before {
+  opacity: 0.25 !important;
+}
+/* End of report table (DataTables) */

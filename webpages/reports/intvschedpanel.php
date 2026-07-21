@@ -15,7 +15,7 @@ $report['columns'] = array(
     array(),
     array(),
     array(),
-    array("orderData" => 9),
+    array("orderData" => array(9, 8)),
     array("visible" => false)
 );
 $report['queries'] = [];

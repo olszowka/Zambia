@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrapVersion = 'bs2') {
     switch ($bootstrapVersion) {
         case 'bs5':
@@ -23,7 +23,7 @@ function load_external_javascript($isDataTables = false, $isRecaptcha = false, $
 <?php } ?>
     <script src="external/choices9.0.0/choices.min.js"></script>
 <?php if ($isDataTables) { ?>
-    <script src="external/dataTables1.10.16/jquery.dataTables.js"></script>
+    <script src="external/dataTables2.3.8/dataTables.js"></script>
 <?php }
     if ($isRecaptcha) { ?>
     <script async defer id="recaptcha-script" src="https://www.google.com/recaptcha/api.js"></script>

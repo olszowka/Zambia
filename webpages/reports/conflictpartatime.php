@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Participants Scheduled Outside Available Times';
 $report['description'] = 'Show all participant-sessions scheduled outside set of times participant has listed as being available.';
@@ -8,17 +8,17 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     array(),
-    array("orderData" => 2),
+    array("orderData" => array(2, 1)),
     array("visible" => false),
-    array("orderData" => 4),
+    array("orderData" => array(4, 3)),
     array("visible" => false),
     array(),
     array(),
     array(),
     array(),
-    array("orderData" => 10),
+    array("orderData" => array(10, 9)),
     array("visible" => false),
-    array("orderData" => 12),
+    array("orderData" => array(12, 11)),
     array("visible" => false),
     array()
 );

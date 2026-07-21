@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant # Panel and Constraints';
 $report['description'] = 'How many panels does each person want to be on and the other constraints they indicated';
@@ -9,7 +9,7 @@ $report['categories'] = array(
 $report['columns'] = array_pad(
     array(
         null,
-        array("orderData" => 2),
+        array("orderData" => array(2, 1)),
         array("visible" => false)
     ), CON_NUM_DAYS + 6, array("orderable" => false));
 $report['queries'] = [];

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant Interests';
 $report['description'] = 'What is that participant interested in? (Program Participants who are attending)';
@@ -8,7 +8,7 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     null,
-    array("orderData" => 2),
+    array("orderData" => array(2, 1)),
     array("visible" => false),
     array("orderable" => false),
     array("orderable" => false),

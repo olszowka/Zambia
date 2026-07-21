@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant Roles';
 $report['description'] = 'What Roles is a participant willing to take?';
@@ -8,7 +8,7 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     array("width" => "6em"),
-    array("width" => "12em", "orderData" => 2),
+    array("width" => "12em", "orderData" => array(2, 1)),
     array("visible" => false),
     array("width" => "12em", "orderable" => false),
     array("orderable" => false)

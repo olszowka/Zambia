@@ -1,33 +1,33 @@
 <?php
-// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 function RenderViewSessions($result) {
     global $title;
     $title = "View All Sessions";
-    staff_header($title, 'bs2', true);
+    staff_header($title, 'bs5', true);
     ?>
-    <table id="reportTable" class="table-condensed table-hover">
+    <table id="reportTable" class="table table-bordered border-dark table-clear">
         <thead>
             <tr>
-                <th class="border1121">Sess.<br>ID</th>
-                <th class="border1121">Track</th>
-                <th class="border1121">Tags</th>
-                <th class="border1121">Title</th>
-                <th class="border1121">Duration</th>
-                <th class="border1121">Est. Atten.</th>
-                <th class="border1121">Status</th>
+                <th>Sess.<br>ID</th>
+                <th>Track</th>
+                <th>Tags</th>
+                <th>Title</th>
+                <th>Duration</th>
+                <th>Est. Atten.</th>
+                <th>Status</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
             <?php
             while (list($sessionid, $trackname, $title, $duration, $estatten, $statusname, $taglist) = mysqli_fetch_array($result, MYSQLI_NUM)) {
                 echo "        <tr>\n";
-                echo "            <td class=\"border1111\"><a href=\"EditSession.php?id=$sessionid\">$sessionid</a></td>\n";
-                echo "            <td class=\"border1111\">$trackname</td>\n";
-                echo "            <td class=\"border1111\">$taglist</td>\n";
-                echo "            <td class=\"border1111\">" . htmlspecialchars($title, ENT_NOQUOTES) . "</td>\n";
-                echo "            <td class=\"border1111\">$duration</td>\n";
-                echo "            <td class=\"border1111\">$estatten</td>\n";
-                echo "            <td class=\"border1111\">$statusname</td>\n";
+                echo "            <td ><a href=\"EditSession.php?id=$sessionid\">$sessionid</a></td>\n";//class=\"border1111\"
+                echo "            <td >$trackname</td>\n";
+                echo "            <td >$taglist</td>\n";
+                echo "            <td >" . htmlspecialchars($title, ENT_NOQUOTES) . "</td>\n";
+                echo "            <td >$duration</td>\n";
+                echo "            <td >$estatten</td>\n";
+                echo "            <td >$statusname</td>\n";
                 echo "        </tr>\n";
             }
             ?>

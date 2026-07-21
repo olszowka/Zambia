@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - not attending people that are on panels';
 $report['description'] = 'Lists all sessions not dropped, cancelled, or duplicate which have at least one participant assigned who has not confirmed he or she is attending.';
@@ -10,9 +10,9 @@ $report['columns'] = array(
     null,
     null,
     null,
-    array("orderData" => 4),
+    array("orderData" => array(4, 3)),
     array("visible" => false),
-    array("orderData" => 6),
+    array("orderData" => array(6, 5)),
     array("visible" => false),
     null,
     null
