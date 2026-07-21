@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2019-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2019-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;
     $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
@@ -50,7 +50,7 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
     }
 ?>
 <?php if ($isDataTables) {
-    echo "    <link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
+    echo "    <link rel=\"stylesheet\" href=\"external/dataTables2.3.8/dataTables.css\" type=\"text/css\" />\n";
     if ($reportColumns) {
         echo "<meta id=\"reportColumns\" data-report-columns=\"";
         echo htmlentities(json_encode($reportColumns));

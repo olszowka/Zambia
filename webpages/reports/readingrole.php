@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Reading Own Works Role';
 $report['description'] = 'Show all participants who checked the "Reading my own works" role';
@@ -8,10 +8,10 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     null,
-    array("orderData" => 2),
+    array("orderData" => array(2, 1)),
     array("visible" => false),
     null,
-    array("orderData" => 5),
+    array("orderData" => array(5, 4)),
     array("visible" => false)
 );
 $report['queries'] = [];

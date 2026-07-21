@@ -1,20 +1,32 @@
-//  Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
-$(document).on("ready", function() {
-    var $reportTable = $("#reportTable");
-    if ($reportTable.length === 1) {
-        var options = {
+//  Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+
+
+function loadDataTables() {
+    const reportTable = document.getElementById('reportTable');
+    if (reportTable) {
+        const options = {
             "autoWidth": false,
             "pageLength": -1,
             "lengthMenu": [ [25, 50, 100, 200, -1], [25, 50, 100, 200, "All"] ]
         };
-        var columns = $("#reportColumns").data("reportColumns");
-        if (columns) {
-            options.columns = columns;
+        const columnsJson = document.getElementById('reportColumns')?.dataset?.reportColumns;
+        if (columnsJson) {
+            options.columns = JSON.parse(columnsJson);
         }
-        var additionalOptions = $("#reportAdditionalOptions").data("reportAdditionalOptions");
-        if (additionalOptions) {
-            $.extend(options, additionalOptions);
+        const additionalOptionsJson = document.getElementById('reportAdditionalOptions')?.dataset?.reportAdditionalOptions;
+        if (additionalOptionsJson) {
+            Object.assign(options, JSON.parse(additionalOptionsJson));
         }
-        $reportTable.DataTable(options);
+        new DataTable(reportTable, options);
     }
-});
+}
+
+function ready(fn) {
+    if (document.readyState !== "loading") {
+        fn();
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
+}
+
+ready(loadDataTables);

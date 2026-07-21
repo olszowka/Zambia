@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Participant Double Booked ';
 $report['description'] = 'Find all instances where a participant is scheduled to be in two or more places at once.';
@@ -7,22 +7,22 @@ $report['categories'] = array(
     'Conflict Reports' => 400,
 );
 $report['columns'] = array(
-    array("orderData" => 1),
+    array("orderData" => array(1, 0)),
     array("visible" => false),
-    array("orderData" => 3),
+    array("orderData" => array(3, 2)),
     array("visible" => false),
     array("width" => "20em"),
     array(),
     array(),
     array("width" => "8em"),
-    array("orderData" => 9),
+    array("orderData" => array(9, 8)),
     array("visible" => false),
     array(),
     array("width" => "20em"),
     array(),
     array(),
     array(),
-    array("orderData" => 16, "width" => "8em"),
+    array("orderData" => array(16, 15), "width" => "8em"),
     array("visible" => false),
     array()
 );

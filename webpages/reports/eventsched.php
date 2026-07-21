@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2025 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Full Event Schedule';
 $report['description'] = 'Lists all Events (as determined by division on session) Scheduled in all Rooms (includes unpublished).';
@@ -7,9 +7,9 @@ $report['categories'] = array(
     'Events Reports' => 5,
 );
 $report['columns'] = array(
-    array("orderData" => 1, "width" => "7em"),
+    array("orderData" => array(1, 0), "width" => "7em"),
     array("visible" => false),
-    array("width" => "6em", "orderData" => 3),
+    array("width" => "6em", "orderData" => array(3, 2)),
     array("visible" => false),
     array("width" => "14em"),
     array("width" => "12em"),

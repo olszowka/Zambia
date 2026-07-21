@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Not Registered';
 $report['description'] = 'This is a report of participants sorted by number of sessions they are on that are actually running, with some registration information. It is useful for cons that comp program participants based on a minimum number of panels. In this case, this report helps make sure people get their comps. Also, participants who have not earned a comp may need some kind of consideration.';
@@ -9,9 +9,9 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     array("width" => "7em"),
-    array("width" => "17em", "orderData" => 2),
+    array("width" => "17em", "orderData" => array(2, 1)),
     array("visible" => false),
-    array("width" => "17em", "orderData" => 4),
+    array("width" => "17em", "orderData" => array(4, 3)),
     array("visible" => false),
     array("width" => "8em"),
     array("width" => "12em")

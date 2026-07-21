@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Preliminary Programming Schedule ';
 $report['description'] = 'Preliminary list of all scheduled "Programming" sessions.';
@@ -7,9 +7,9 @@ $report['categories'] = array(
     'Programming Reports' => 10,
 );
 $report['columns'] = array(
-    array("orderData" => 1),
+    array("orderData" => array(1, 0)),
     array("visible" => false),
-    array("orderData" => 3),
+    array("orderData" => array(3, 2)),
     array("visible" => false),
     null,
     null,

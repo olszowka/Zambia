@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - people on panels they are not interested in';
 $report['description'] = 'Participants appear on this report only if they have deleted their interest after being assigned to the panel.  Note, this report includes only "Panels".';
@@ -10,9 +10,9 @@ $report['columns'] = array(
     null,
     null,
     null,
-    array("orderData" => 4),
+    array("orderData" => array(4, 3)),
     array("visible" => false),
-    array("orderData" => 6),
+    array("orderData" => array(6, 5)),
     array("visible" => false),
     null
 );
