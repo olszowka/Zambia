@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
     global $headerErrorMessage, $returnAjaxErrors, $title;
     require_once('CommonCode.php');
     require_once('StaffHeader.php');
@@ -10,7 +10,7 @@
         if (isset($returnAjaxErrors) && $returnAjaxErrors) {
             RenderErrorAjax($headerErrorMessage);
         } else {
-            staff_header($title, 'bs2');
+            StaffRenderErrorPage($title, $headerErrorMessage, 'bs5');
         }
         exit();
         };
