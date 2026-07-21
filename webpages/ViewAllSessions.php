@@ -1,11 +1,12 @@
 <?php
-// Copyright (c) 2005-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
-$title = "Query Session Results";
+$title = "View All Sessions";
 require_once('StaffCommonCode.php');
-require_once('RenderViewSessions.php');
+staff_header($title, 'bs5', true);
 $_SESSION['return_to_page'] = 'ViewAllSessions.php';
-$query = <<<EOD
+$queryArray = array();
+$queryArray["sessions"] = <<<EOD
 SELECT
         S.sessionid, TR.trackname, S.title,
         CONCAT( IF(LEFT(S.duration,2)=00, '', IF(LEFT(S.duration,1)=0, CONCAT(RIGHT(LEFT(S.duration,2),1),'hr '), CONCAT(LEFT(S.duration,2),'hr '))),
@@ -23,9 +24,12 @@ SELECT
     ORDER BY
         trackname, statusname;
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
-    exit(); // Should have exited already
+if (($resultXML = mysql_query_XML($queryArray)) === false) {
+    echo "<p class=\"alert alert-danger\">Error querying database. Unable to continue.<br></p>\n";
+    staff_footer();
+    exit();
 }
-RenderViewSessions($result);
+RenderXSLT('ViewAllSessions.xsl', array(), $resultXML);
+staff_footer();
 exit();
-?> 
+?>
