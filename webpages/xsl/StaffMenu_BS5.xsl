@@ -11,6 +11,7 @@
     <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
     <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
     <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+    <xsl:variable name="ConfigurePermissions" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigurePermissions']"/>
     <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
     <xsl:variable name="Brainstorm" select="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']"/>
     <xsl:template match="/">
@@ -126,7 +127,7 @@
                     <input type="hidden" value="" name="sessionid"/>
                     <input type="hidden" value="ANY" name="divisionid"/>
                 </form>
-                <xsl:if test="$AdminPhases or $ConfigureReports or $Administrator">
+                <xsl:if test="$AdminPhases or $ConfigurePermissions or $ConfigureReports or $Administrator">
                     <div class="navbar-nav">
                         <div class="nav-item dropdown me-4 py-0">
                             <a class="nav-link dropdown-toggle py-1" href="#" id="navbarAdminDropdown" role="button"
@@ -136,6 +137,9 @@
                             <div class="dropdown-menu" aria-labelledby="navbarAdminDropdown">
                                 <xsl:if test="$AdminPhases">
                                     <a class="dropdown-item" href="AdminPhases.php">Administer Phases</a>
+                                </xsl:if>
+                                <xsl:if test="$ConfigurePermissions">
+                                    <a class="dropdown-item" href="ConfigurePermissions.php">Configure Permissions</a>
                                 </xsl:if>
                                 <xsl:if test="$ConfigureReports">
                                     <a class="dropdown-item" href="BuildReportMenus.php">Build Report Menus</a>

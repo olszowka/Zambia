@@ -1203,7 +1203,8 @@ INSERT INTO `PatchLog`
     ('66_permission_cleanup.sql'),
     ('67_session_links_cleanup.sql'),
     ('68_custom_text_new_columns.sql'),
-    ('69_my_interests_new_custom_text.sql');
+    ('69_my_interests_new_custom_text.sql'),
+    ('72_configure_permissions.sql');
 
 INSERT INTO `PermissionAtoms`
     (permatomid, permatomtag, elementid, page, notes)
@@ -1240,6 +1241,7 @@ INSERT INTO `PermissionAtoms`
     (30, 'edit_participant_tags', NULL, 'Admin Participants', 'Change a participant\'s tags'),
     (31, 'edit_participant_responses', NULL, 'many', 'edit others\' survey responses, etc.'),
     (32, 'declined_participant', NULL, 'many', 'Upon login show only declined participant page'),
+    (33, 'ConfigurePermissions', NULL, 'ConfigurePermissions', 'Allows editing the Permissions, Phases, and PermissionRoles tables'),
     (2000, 'ce_BioEditStatuses', NULL, 'Edit Configuration Tables', 'enables edit'),
     (2001, 'ce_Credentials', NULL, 'Edit Configuration Tables', 'enables edit'),
     (2002, 'ce_Roles', NULL, 'Edit Configuration Tables', 'enables edit'),
@@ -1352,6 +1354,8 @@ INSERT INTO `Permissions`
     ## Complete: render and back end
     (22, 31, NULL, 1, NULL),
     (23, 31, NULL, 2, NULL),
+    ## "ConfigurePermissions" Configure Permissions -- permatomid: 33
+    (43, 33, NULL, 1, NULL),
     ## "ce_BioEditStatuses" -- permatomid: 2000 through
     ## "ce_ParticipantTags" -- permatomid: 2022
     ## These work very similarly to "EditAnyConfigurationTable" except that they control

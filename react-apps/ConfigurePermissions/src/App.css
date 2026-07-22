@@ -1,0 +1,35 @@
+.permission-matrix thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bs-body-bg, #fff);
+  z-index: 1;
+}
+
+.drag-handle {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px 6px;
+  cursor: grab;
+  vertical-align: middle;
+}
+
+.drag-handle-bar {
+  width: 16px;
+  height: 2px;
+  background: #888;
+  border-radius: 1px;
+}
+
+tr.drag-over-row {
+  border-top: 2px solid var(--bs-primary, #0d6efd);
+}
+
+/* Overrides the paint only (not pointer-events), so a button that lands under a stationary
+   cursor after a click doesn't render as hovered, but remains immediately clickable -- e.g.
+   Save -> Edit appearing in the same slot right before the user's next click. */
+.suppress-hover .btn:hover {
+  color: var(--bs-btn-color);
+  background-color: var(--bs-btn-bg);
+  border-color: var(--bs-btn-border-color);
+}
