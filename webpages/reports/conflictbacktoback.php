@@ -1,19 +1,29 @@
 <?php
-// Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+if (STANDARD_BLOCK_LENGTH === '1:30') {
+    $durationDesc = '35';
+    $durationQuery = '00:36:00';
+} else if (STANDARD_BLOCK_LENGTH === '1:00') {
+    $durationDesc = '15';
+    $durationQuery = '00:16:00';
+} else {
+    echo "Unexpected value of \"STANDARD_BLOCK_LENGTH constant.\" Exiting.";
+    exit(1);
+}
 $report = [];
 $report['name'] = 'Conflict Report - Back-to-back Sessions';
-$report['description'] = 'Show all cases where a participant is scheduled for two sessions with 15 minutes or fewer between sessions. (Also includes actual overlaps)';
+$report['description'] = "Show all cases where a participant is scheduled for two sessions with $durationDesc minutes or fewer between sessions. (Also includes actual overlaps)";
 $report['categories'] = array(
     'Conflict Reports' => 1090,
 );
 $report['queries'] = [];
-$report['queries']['sessions'] =<<<'EOD'
+$report['queries']['sessions'] =<<<EOD
 SELECT
         Subq1.badgeid, P.pubsname, Subq1.sessionid AS sessionid1, S.title AS title1, R.roomname AS roomname1,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',Subq1.starttime),'%a %l:%i %p') AS starttime1,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',ADDTIME(Subq1.starttime, S.duration)),'%l:%i %p') AS endtime1,
+        DATE_FORMAT(ADDTIME('\$ConStartDatim\$',Subq1.starttime),'%a %l:%i %p') AS starttime1,
+        DATE_FORMAT(ADDTIME('\$ConStartDatim\$',ADDTIME(Subq1.starttime, S.duration)),'%l:%i %p') AS endtime1,
         Subq2.sessionid AS sessionid2, S2.title AS title2, R2.roomname AS roomname2,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',Subq2.starttime),'%a %l:%i %p') AS starttime2
+        DATE_FORMAT(ADDTIME('\$ConStartDatim\$',Subq2.starttime),'%a %l:%i %p') AS starttime2
     FROM
                    (SELECT
                           POS.badgeid, SCH.sessionid, SCH.starttime, SCH.roomid
@@ -25,18 +35,19 @@ SELECT
               JOIN Rooms R ON Subq1.roomid = R.roomid
               JOIN Participants P ON Subq1.badgeid = P.badgeid
               JOIN CongoDump CD ON Subq1.badgeid = CD.badgeid
-        JOIN (SELECT
+             JOIN (SELECT
                            POS.badgeid, SCH.sessionid, SCH.starttime, SCH.roomid
                         FROM
                                  `Schedule` SCH
                             JOIN ParticipantOnSession POS USING (sessionid)
-                    ) Subq2 ON Subq1.badgeid = Subq2.badgeid
+                    ) Subq2
               JOIN Sessions S2 ON Subq2.sessionid = S2.sessionid
               JOIN Rooms R2 ON Subq2.roomid = R2.roomid
     WHERE
-            Subq1.sessionid != Subq2.sessionid
+            Subq1.badgeid = Subq2.badgeid
+        AND Subq1.sessionid != Subq2.sessionid
         AND Subq2.starttime > Subq1.starttime
-        AND SUBTIME(Subq2.starttime, ADDTIME(Subq1.starttime, S.duration)) < '00:16:00'
+        AND SUBTIME(Subq2.starttime, ADDTIME(Subq1.starttime, S.duration)) < '$durationQuery'
     ORDER BY
         IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),
         CD.firstname,
