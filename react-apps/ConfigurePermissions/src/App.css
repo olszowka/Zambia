@@ -1,3 +1,9 @@
+/* Matches the outline color of .btn-outline-secondary (e.g. the "Edit" buttons) -- the default
+   Bootstrap checkbox border (--bs-border-color) is too light to read clearly. */
+.form-check-input {
+  border-color: #6c757d;
+}
+
 .permission-matrix thead th {
   position: sticky;
   top: 0;

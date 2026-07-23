@@ -90,21 +90,44 @@ function update_role() {
 
 function delete_role() {
     $permroleid = getInt("permroleid", null);
+    $cascade = getInt("cascade", 0);
     if (is_null($permroleid)) {
         RenderErrorAjax("Internal error.");
         exit();
     }
-    $usageQuery = <<<EOD
-SELECT
-    (SELECT COUNT(*) FROM Permissions WHERE permroleid = ?) +
-    (SELECT COUNT(*) FROM UserHasPermissionRole WHERE permroleid = ?) AS usage_count;
-EOD;
-    $result = mysqli_query_with_prepare_and_exit_on_error($usageQuery, "ii", array($permroleid, $permroleid));
+
+    // Roles assigned to actual users are always a hard block -- this endpoint only cascades
+    // the Permissions table, never silently unassigns a role from users.
+    $result = mysqli_query_with_prepare_and_exit_on_error(
+        "SELECT COUNT(*) AS usage_count FROM UserHasPermissionRole WHERE permroleid = ?;",
+        "i",
+        array($permroleid)
+    );
     $row = mysqli_fetch_assoc($result);
     if (intval($row["usage_count"]) > 0) {
+        RenderErrorAjax("This role is currently assigned to one or more users and cannot be deleted.");
+        exit();
+    }
+
+    $result = mysqli_query_with_prepare_and_exit_on_error(
+        "SELECT COUNT(*) AS usage_count FROM Permissions WHERE permroleid = ?;",
+        "i",
+        array($permroleid)
+    );
+    $row = mysqli_fetch_assoc($result);
+    if (intval($row["usage_count"]) > 0 && !$cascade) {
         RenderErrorAjax("This role is still in use and cannot be deleted.");
         exit();
     }
+
+    if ($cascade) {
+        $rows = mysql_cmd_with_prepare("DELETE FROM Permissions WHERE permroleid = ?;", "i", array($permroleid));
+        if (is_null($rows)) {
+            RenderErrorAjax("Unable to remove this role's permission grants");
+            exit();
+        }
+    }
+
     $rows = mysql_cmd_with_prepare("DELETE FROM PermissionRoles WHERE permroleid = ?;", "i", array($permroleid));
     if (is_null($rows)) {
         RenderErrorAjax("Unable to delete role");
@@ -191,6 +214,7 @@ function update_phase() {
 
 function delete_phase() {
     $phaseid = getInt("phaseid", null);
+    $cascade = getInt("cascade", 0);
     if (is_null($phaseid)) {
         RenderErrorAjax("Internal error.");
         exit();
@@ -201,10 +225,19 @@ function delete_phase() {
         array($phaseid)
     );
     $row = mysqli_fetch_assoc($result);
-    if (intval($row["usage_count"]) > 0) {
+    if (intval($row["usage_count"]) > 0 && !$cascade) {
         RenderErrorAjax("This phase is still in use and cannot be deleted.");
         exit();
     }
+
+    if ($cascade) {
+        $rows = mysql_cmd_with_prepare("DELETE FROM Permissions WHERE phaseid = ?;", "i", array($phaseid));
+        if (is_null($rows)) {
+            RenderErrorAjax("Unable to remove this phase's permission grants");
+            exit();
+        }
+    }
+
     $rows = mysql_cmd_with_prepare("DELETE FROM Phases WHERE phaseid = ?;", "i", array($phaseid));
     if (is_null($rows)) {
         RenderErrorAjax("Unable to delete phase");

@@ -129,7 +129,7 @@ export default function PermissionMatrix({
         </div>
       </div>
       <div className="table-responsive">
-        <table className="table table-bordered table-sm permission-matrix">
+        <table className="table table-bordered table-sm permission-matrix table-clear border-dark">
           <thead>
             <tr>
               <th>Permission Atom</th>

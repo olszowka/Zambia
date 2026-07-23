@@ -60,8 +60,10 @@ export function updateRole(
   return postAction('update_role', { permroleid, permrolename, notes, display_order });
 }
 
-export function deleteRole(permroleid: number): Promise<Record<string, never>> {
-  return postAction('delete_role', { permroleid });
+// cascade: when true, dependent Permissions rows for this role are deleted first (the caller
+// is expected to have already confirmed this with the user -- see RolesTab.tsx).
+export function deleteRole(permroleid: number, cascade = false): Promise<Record<string, never>> {
+  return postAction('delete_role', { permroleid, cascade: cascade ? '1' : '0' });
 }
 
 export function addPhase(
@@ -98,8 +100,10 @@ export function updatePhase(
   });
 }
 
-export function deletePhase(phaseid: number): Promise<Record<string, never>> {
-  return postAction('delete_phase', { phaseid });
+// cascade: when true, dependent Permissions rows for this phase are deleted first (the caller
+// is expected to have already confirmed this with the user -- see PhasesTab.tsx).
+export function deletePhase(phaseid: number, cascade = false): Promise<Record<string, never>> {
+  return postAction('delete_phase', { phaseid, cascade: cascade ? '1' : '0' });
 }
 
 // Reassigns display_order to 10, 20, 30, ... in the given order (same convention as the

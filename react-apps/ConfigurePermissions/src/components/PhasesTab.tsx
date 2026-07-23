@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import type { Permission, Phase } from '../types';
+import type { Permission, PermissionAtom, PermissionRole, Phase } from '../types';
 import { addPhase, deletePhase, reorderPhases, updatePhase } from '../api';
+import { buildDeleteConfirmMessage, describePhaseDeleteImpact } from '../deleteImpact';
 import { canAccessConfigurePermissionsPage, SELF_LOCKOUT_MESSAGE } from '../selfLockout';
 import { useDragReorder } from '../useDragReorder';
 import { useSuppressHoverAfterClick } from '../useSuppressHoverAfterClick';
@@ -8,8 +9,11 @@ import DragHandle from './DragHandle';
 
 interface Props {
   phases: Phase[];
+  atoms: PermissionAtom[];
+  roles: PermissionRole[];
   permissions: Permission[];
   onPhasesChange: (phases: Phase[]) => void;
+  onPermissionsChange: (permissions: Permission[]) => void;
   onError: (message: string) => void;
   currentUserRoleIds: number[];
   staffAtomId: number | null;
@@ -20,8 +24,11 @@ const emptyForm = { phasename: '', notes: '', current: false, implemented: false
 
 export default function PhasesTab({
   phases,
+  atoms,
+  roles,
   permissions,
   onPhasesChange,
+  onPermissionsChange,
   onError,
   currentUserRoleIds,
   staffAtomId,
@@ -102,12 +109,44 @@ export default function PhasesTab({
   }
 
   async function handleDelete(phase: Phase) {
-    if (!confirm(`Delete phase "${phase.phasename}"?`)) {
+    const impactLines = describePhaseDeleteImpact(permissions, atoms, roles, phase.phaseid);
+    const hasImpact = impactLines.length > 0;
+
+    if (hasImpact) {
+      const nextPermissions = permissions.filter((p) => p.phaseid !== phase.phaseid);
+      const nextPhases = phases.filter((p) => p.phaseid !== phase.phaseid);
+      const wasReachable = canAccessConfigurePermissionsPage(
+        permissions,
+        phases,
+        currentUserRoleIds,
+        staffAtomId,
+        configurePermissionsAtomId
+      );
+      const willBeReachable = canAccessConfigurePermissionsPage(
+        nextPermissions,
+        nextPhases,
+        currentUserRoleIds,
+        staffAtomId,
+        configurePermissionsAtomId
+      );
+      if (wasReachable && !willBeReachable) {
+        onError(SELF_LOCKOUT_MESSAGE);
+        return;
+      }
+    }
+
+    const message = hasImpact
+      ? buildDeleteConfirmMessage(`the phase "${phase.phasename}"`, impactLines)
+      : `Delete phase "${phase.phasename}"?`;
+    if (!confirm(message)) {
       return;
     }
     try {
-      await deletePhase(phase.phaseid);
+      await deletePhase(phase.phaseid, hasImpact);
       onPhasesChange(phases.filter((p) => p.phaseid !== phase.phaseid));
+      if (hasImpact) {
+        onPermissionsChange(permissions.filter((p) => p.phaseid !== phase.phaseid));
+      }
     } catch (e) {
       onError(e instanceof Error ? e.message : 'Failed to delete phase');
     }
@@ -115,7 +154,7 @@ export default function PhasesTab({
 
   return (
     <div ref={hoverSuppressRef} onClickCapture={suppressHoverOnClick}>
-      <table className="table table-bordered table-sm align-middle">
+      <table className="table table-bordered table-sm align-middle table-clear border-dark">
         <thead>
           <tr>
             <th style={{ width: '2rem' }}></th>

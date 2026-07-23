@@ -61,12 +61,25 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
           configurePermissionsAtomId={configurePermissionsAtomId}
         />
       )}
-      {activeTab === 'roles' && <RolesTab roles={roles} onRolesChange={setRoles} onError={setErrorMessage} />}
+      {activeTab === 'roles' && (
+        <RolesTab
+          roles={roles}
+          atoms={initialData.atoms}
+          phases={phases}
+          permissions={permissions}
+          onRolesChange={setRoles}
+          onPermissionsChange={setPermissions}
+          onError={setErrorMessage}
+        />
+      )}
       {activeTab === 'phases' && (
         <PhasesTab
           phases={phases}
+          atoms={initialData.atoms}
+          roles={roles}
           permissions={permissions}
           onPhasesChange={setPhases}
+          onPermissionsChange={setPermissions}
           onError={setErrorMessage}
           currentUserRoleIds={currentUserRoleIds}
           staffAtomId={staffAtomId}

@@ -1,19 +1,32 @@
 import { useState } from 'react';
-import type { PermissionRole } from '../types';
+import type { Permission, PermissionAtom, PermissionRole, Phase } from '../types';
 import { addRole, deleteRole, reorderRoles, updateRole } from '../api';
+import { buildDeleteConfirmMessage, describeRoleDeleteImpact } from '../deleteImpact';
 import { useDragReorder } from '../useDragReorder';
 import { useSuppressHoverAfterClick } from '../useSuppressHoverAfterClick';
 import DragHandle from './DragHandle';
 
 interface Props {
   roles: PermissionRole[];
+  atoms: PermissionAtom[];
+  phases: Phase[];
+  permissions: Permission[];
   onRolesChange: (roles: PermissionRole[]) => void;
+  onPermissionsChange: (permissions: Permission[]) => void;
   onError: (message: string) => void;
 }
 
 const emptyForm = { permrolename: '', notes: '' };
 
-export default function RolesTab({ roles, onRolesChange, onError }: Props) {
+export default function RolesTab({
+  roles,
+  atoms,
+  phases,
+  permissions,
+  onRolesChange,
+  onPermissionsChange,
+  onError,
+}: Props) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -68,12 +81,20 @@ export default function RolesTab({ roles, onRolesChange, onError }: Props) {
   }
 
   async function handleDelete(role: PermissionRole) {
-    if (!confirm(`Delete role "${role.permrolename}"?`)) {
+    const impactLines = describeRoleDeleteImpact(permissions, atoms, phases, role.permroleid);
+    const hasImpact = impactLines.length > 0;
+    const message = hasImpact
+      ? buildDeleteConfirmMessage(`the role "${role.permrolename}"`, impactLines)
+      : `Delete role "${role.permrolename}"?`;
+    if (!confirm(message)) {
       return;
     }
     try {
-      await deleteRole(role.permroleid);
+      await deleteRole(role.permroleid, hasImpact);
       onRolesChange(roles.filter((r) => r.permroleid !== role.permroleid));
+      if (hasImpact) {
+        onPermissionsChange(permissions.filter((p) => p.permroleid !== role.permroleid));
+      }
     } catch (e) {
       onError(e instanceof Error ? e.message : 'Failed to delete role');
     }
@@ -81,7 +102,7 @@ export default function RolesTab({ roles, onRolesChange, onError }: Props) {
 
   return (
     <div ref={hoverSuppressRef} onClickCapture={suppressHoverOnClick}>
-      <table className="table table-bordered table-sm align-middle">
+      <table className="table table-bordered table-sm align-middle table-clear border-dark">
         <thead>
           <tr>
             <th style={{ width: '2rem' }}></th>
