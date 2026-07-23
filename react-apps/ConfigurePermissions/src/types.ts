@@ -4,6 +4,7 @@ export interface PermissionAtom {
   elementid: number | null;
   page: string | null;
   notes: string | null;
+  display_order: number | null;
 }
 
 export interface PermissionRole {

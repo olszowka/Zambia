@@ -27,8 +27,12 @@
   border-radius: 1px;
 }
 
-tr.drag-over-row {
+tr.drag-over-top {
   border-top: 2px solid var(--bs-primary, #0d6efd);
+}
+
+tr.drag-over-bottom {
+  border-bottom: 2px solid var(--bs-primary, #0d6efd);
 }
 
 /* Overrides the paint only (not pointer-events), so a button that lands under a stationary

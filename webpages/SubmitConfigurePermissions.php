@@ -160,6 +160,27 @@ function reorder_roles() {
     exit();
 }
 
+function reorder_atoms() {
+    $orderedIds = getArrayOfInts("ordered_ids", null);
+    if (is_null($orderedIds)) {
+        RenderErrorAjax("Internal error.");
+        exit();
+    }
+    $displayOrder = 10;
+    $paramRepeatArr = array();
+    foreach ($orderedIds as $id) {
+        $paramRepeatArr[] = array($displayOrder, intval($id));
+        $displayOrder += 10;
+    }
+    $rows = mysql_cmd_with_prepare_multi("UPDATE PermissionAtoms SET display_order = ? WHERE permatomid = ?;", "ii", $paramRepeatArr);
+    if (is_null($rows)) {
+        RenderErrorAjax("Unable to update permission atom order");
+        exit();
+    }
+    echo json_encode(array());
+    exit();
+}
+
 function add_phase() {
     $phasename = getString("phasename");
     $notes = getString("notes");
@@ -311,6 +332,9 @@ switch ($ajax_request_action) {
         break;
     case "reorder_phases":
         reorder_phases();
+        break;
+    case "reorder_atoms":
+        reorder_atoms();
         break;
     default:
         RenderErrorAjax("Internal error.");

@@ -115,3 +115,7 @@ export function reorderRoles(orderedRoleIds: number[]): Promise<Record<string, n
 export function reorderPhases(orderedPhaseIds: number[]): Promise<Record<string, never>> {
   return postActionWithIdList('reorder_phases', 'ordered_ids', orderedPhaseIds);
 }
+
+export function reorderAtoms(orderedAtomIds: number[]): Promise<Record<string, never>> {
+  return postActionWithIdList('reorder_atoms', 'ordered_ids', orderedAtomIds);
+}

@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import type { PermissionAtom, PermissionRole, Phase, Permission } from '../types';
-import { togglePermission } from '../api';
+import { reorderAtoms, togglePermission } from '../api';
 import { canAccessConfigurePermissionsPage, SELF_LOCKOUT_MESSAGE } from '../selfLockout';
+import { useDragReorder } from '../useDragReorder';
+import DragHandle from './DragHandle';
 
 const ALL_PHASES = 'all';
 
 interface Props {
   atoms: PermissionAtom[];
+  onAtomsChange: (atoms: PermissionAtom[]) => void;
   roles: PermissionRole[];
   phases: Phase[];
   permissions: Permission[];
@@ -27,6 +30,7 @@ function atomRowLabel(atom: PermissionAtom, roles: PermissionRole[]): string {
 
 export default function PermissionMatrix({
   atoms,
+  onAtomsChange,
   roles,
   phases,
   permissions,
@@ -40,6 +44,22 @@ export default function PermissionMatrix({
   const [pendingCells, setPendingCells] = useState<Set<string>>(new Set());
 
   const viewingPhaseId = selectedPhase === ALL_PHASES ? null : Number(selectedPhase);
+
+  const { getRowProps, getHandleProps } = useDragReorder(
+    atoms,
+    (atom) => atom.permatomid,
+    async (orderedIds) => {
+      const previousAtoms = atoms;
+      const byId = new Map(atoms.map((a) => [a.permatomid, a]));
+      onAtomsChange(orderedIds.map((id, index) => ({ ...byId.get(id)!, display_order: (index + 1) * 10 })));
+      try {
+        await reorderAtoms(orderedIds);
+      } catch (e) {
+        onAtomsChange(previousAtoms);
+        onError(e instanceof Error ? e.message : 'Failed to reorder permission atoms');
+      }
+    }
+  );
 
   function cellKey(permatomid: number, permroleid: number): string {
     return `${permatomid}:${permroleid}`;
@@ -132,6 +152,7 @@ export default function PermissionMatrix({
         <table className="table table-bordered table-sm permission-matrix table-clear border-dark">
           <thead>
             <tr>
+              <th style={{ width: '2rem' }}></th>
               <th>Permission Atom</th>
               {roles.map((role) => (
                 <th key={role.permroleid} className="text-center">
@@ -141,8 +162,11 @@ export default function PermissionMatrix({
             </tr>
           </thead>
           <tbody>
-            {atoms.map((atom) => (
-              <tr key={`${atom.permatomid}`}>
+            {atoms.map((atom, index) => (
+              <tr key={`${atom.permatomid}`} {...getRowProps(index)}>
+                <td className="text-center">
+                  <DragHandle {...getHandleProps()} />
+                </td>
                 <td>
                   {atomRowLabel(atom, roles)}
                   {atom.notes && <div className="form-text">{atom.notes}</div>}

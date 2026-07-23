@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { BootstrapData, PermissionRole, Phase, Permission } from './types';
+import type { BootstrapData, PermissionAtom, PermissionRole, Phase, Permission } from './types';
 import PermissionMatrix from './components/PermissionMatrix';
 import RolesTab from './components/RolesTab';
 import PhasesTab from './components/PhasesTab';
@@ -8,16 +8,17 @@ type TabKey = 'matrix' | 'roles' | 'phases';
 
 export default function App({ initialData }: { initialData: BootstrapData }) {
   const [activeTab, setActiveTab] = useState<TabKey>('matrix');
+  const [atoms, setAtoms] = useState<PermissionAtom[]>(initialData.atoms);
   const [roles, setRoles] = useState<PermissionRole[]>(initialData.roles);
   const [phases, setPhases] = useState<Phase[]>(initialData.phases);
   const [permissions, setPermissions] = useState<Permission[]>(initialData.permissions);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const configurePermissionsAtom = initialData.atoms.find((a) => a.permatomtag === 'ConfigurePermissions');
+  const configurePermissionsAtom = atoms.find((a) => a.permatomtag === 'ConfigurePermissions');
   const configurePermissionsAtomId = configurePermissionsAtom ? configurePermissionsAtom.permatomid : null;
   // Reaching this page also requires the "Staff" atom -- StaffCommonCode.php gates every
   // staff page on it before this page's own permission check ever runs.
-  const staffAtom = initialData.atoms.find((a) => a.permatomtag === 'Staff');
+  const staffAtom = atoms.find((a) => a.permatomtag === 'Staff');
   const staffAtomId = staffAtom ? staffAtom.permatomid : null;
   const currentUserRoleIds = initialData.currentUserRoleIds;
 
@@ -50,7 +51,8 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
       </ul>
       {activeTab === 'matrix' && (
         <PermissionMatrix
-          atoms={initialData.atoms}
+          atoms={atoms}
+          onAtomsChange={setAtoms}
           roles={roles}
           phases={phases}
           permissions={permissions}
@@ -64,7 +66,7 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
       {activeTab === 'roles' && (
         <RolesTab
           roles={roles}
-          atoms={initialData.atoms}
+          atoms={atoms}
           phases={phases}
           permissions={permissions}
           onRolesChange={setRoles}
@@ -75,7 +77,7 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
       {activeTab === 'phases' && (
         <PhasesTab
           phases={phases}
-          atoms={initialData.atoms}
+          atoms={atoms}
           roles={roles}
           permissions={permissions}
           onPhasesChange={setPhases}

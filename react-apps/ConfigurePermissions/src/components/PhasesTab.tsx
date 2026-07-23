@@ -153,7 +153,7 @@ export default function PhasesTab({
   }
 
   return (
-    <div ref={hoverSuppressRef} onClickCapture={suppressHoverOnClick}>
+    <div ref={hoverSuppressRef} onClickCapture={suppressHoverOnClick} className="container-xl">
       <table className="table table-bordered table-sm align-middle table-clear border-dark">
         <thead>
           <tr>
