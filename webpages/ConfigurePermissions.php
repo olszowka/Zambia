@@ -8,12 +8,13 @@ if (isLoggedIn() && may_I("ConfigurePermissions")) {
     staff_header($title, 'bs5');
 
     $atoms = array();
-    $query = "SELECT permatomid, permatomtag, elementid, page, notes, display_order FROM PermissionAtoms ORDER BY display_order, permatomtag, elementid;";
+    $query = "SELECT permatomid, permatomtag, permatomname, elementid, page, notes, display_order FROM PermissionAtoms ORDER BY display_order, permatomtag, elementid;";
     $result = mysqli_query_exit_on_error($query);
     while ($row = mysqli_fetch_assoc($result)) {
         $atoms[] = array(
             "permatomid" => intval($row["permatomid"]),
             "permatomtag" => $row["permatomtag"],
+            "permatomname" => $row["permatomname"],
             "elementid" => is_null($row["elementid"]) ? null : intval($row["elementid"]),
             "page" => $row["page"],
             "notes" => $row["notes"],

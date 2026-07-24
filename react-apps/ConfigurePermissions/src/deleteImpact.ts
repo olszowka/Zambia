@@ -17,8 +17,8 @@ export function describeRoleDeleteImpact(
   return permissions
     .filter((p) => p.permroleid === permroleid)
     .map((p) => {
-      const atomTag = atoms.find((a) => a.permatomid === p.permatomid)?.permatomtag ?? `atom ${p.permatomid}`;
-      return `${atomTag} (${phaseLabel(p.phaseid, phases)})`;
+      const atomName = atoms.find((a) => a.permatomid === p.permatomid)?.permatomname ?? `atom ${p.permatomid}`;
+      return `${atomName} (${phaseLabel(p.phaseid, phases)})`;
     });
 }
 
@@ -32,9 +32,9 @@ export function describePhaseDeleteImpact(
   return permissions
     .filter((p) => p.phaseid === phaseid)
     .map((p) => {
-      const atomTag = atoms.find((a) => a.permatomid === p.permatomid)?.permatomtag ?? `atom ${p.permatomid}`;
+      const atomName = atoms.find((a) => a.permatomid === p.permatomid)?.permatomname ?? `atom ${p.permatomid}`;
       const roleName = roles.find((r) => r.permroleid === p.permroleid)?.permrolename ?? `role ${p.permroleid}`;
-      return `${atomTag} granted to ${roleName}`;
+      return `${atomName} granted to ${roleName}`;
     });
 }
 

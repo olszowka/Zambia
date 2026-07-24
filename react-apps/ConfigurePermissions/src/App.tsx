@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import type { BootstrapData, PermissionAtom, PermissionRole, Phase, Permission } from './types';
 import PermissionMatrix from './components/PermissionMatrix';
+import PermissionPhaseMatrix from './components/PermissionPhaseMatrix';
 import RolesTab from './components/RolesTab';
 import PhasesTab from './components/PhasesTab';
 
-type TabKey = 'matrix' | 'roles' | 'phases';
+type TabKey = 'matrix' | 'phaseMatrix' | 'roles' | 'phases';
 
 export default function App({ initialData }: { initialData: BootstrapData }) {
   const [activeTab, setActiveTab] = useState<TabKey>('matrix');
@@ -45,12 +46,27 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
         </div>
       )}
       <ul className="nav nav-tabs mb-3">
-        {tabButton('matrix', 'Permission Matrix')}
+        {tabButton('matrix', 'Permission x Role Matrix')}
+        {tabButton('phaseMatrix', 'Permission x Phase Matrix')}
         {tabButton('roles', 'Roles')}
         {tabButton('phases', 'Phases')}
       </ul>
       {activeTab === 'matrix' && (
         <PermissionMatrix
+          atoms={atoms}
+          onAtomsChange={setAtoms}
+          roles={roles}
+          phases={phases}
+          permissions={permissions}
+          onPermissionsChange={setPermissions}
+          onError={setErrorMessage}
+          currentUserRoleIds={currentUserRoleIds}
+          staffAtomId={staffAtomId}
+          configurePermissionsAtomId={configurePermissionsAtomId}
+        />
+      )}
+      {activeTab === 'phaseMatrix' && (
+        <PermissionPhaseMatrix
           atoms={atoms}
           onAtomsChange={setAtoms}
           roles={roles}

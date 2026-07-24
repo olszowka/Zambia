@@ -1,6 +1,9 @@
 export interface PermissionAtom {
   permatomid: number;
   permatomtag: string;
+  // Human-friendly display name -- used in the UI instead of permatomtag, which remains the
+  // internal identifier (matched against by tag in App.tsx/selfLockout.ts).
+  permatomname: string;
   elementid: number | null;
   page: string | null;
   notes: string | null;

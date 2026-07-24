@@ -5,7 +5,7 @@ import { canAccessConfigurePermissionsPage, SELF_LOCKOUT_MESSAGE } from '../self
 import { useDragReorder } from '../useDragReorder';
 import DragHandle from './DragHandle';
 
-const ALL_PHASES = 'all';
+const ALL_PHASES_COLUMN = 'all';
 
 interface Props {
   atoms: PermissionAtom[];
@@ -28,7 +28,9 @@ function atomRowLabel(atom: PermissionAtom, roles: PermissionRole[]): string {
   return `${atom.permatomname} (${scopedRole ? `${scopedRole.permrolename} only` : `elementid ${atom.elementid}`})`;
 }
 
-export default function PermissionMatrix({
+// Same grid as PermissionMatrix, transposed: one role is picked via a select box, and the
+// columns are phases (plus an "All Phases" column) instead of roles.
+export default function PermissionPhaseMatrix({
   atoms,
   onAtomsChange,
   roles,
@@ -40,19 +42,16 @@ export default function PermissionMatrix({
   staffAtomId,
   configurePermissionsAtomId,
 }: Props) {
-  const [selectedPhase, setSelectedPhase] = useState<string>(ALL_PHASES);
+  const [selectedRole, setSelectedRole] = useState<string>('');
   const [pendingCells, setPendingCells] = useState<Set<string>>(new Set());
 
-  const viewingPhaseId = selectedPhase === ALL_PHASES ? null : Number(selectedPhase);
+  const selectedRoleId = roles.some((r) => String(r.permroleid) === selectedRole)
+    ? Number(selectedRole)
+    : (roles[0]?.permroleid ?? null);
 
-  // The header and body are two separate <table> elements (see below) so the body's table can
-  // scroll on its own while the header table simply sits above it, unscrolled -- position:
-  // sticky on table cells doesn't reliably paint above sibling rows in this browser, so this
-  // avoids sticky entirely rather than trying to work around that. table-layout: fixed plus
-  // these shared explicit widths is what keeps the two tables' columns aligned with each other.
   const handleColWidth = '4%';
   const nameColWidth = '40%';
-  const roleColWidth = `${(100 - 4 - 40) / Math.max(roles.length, 1)}%`;
+  const phaseColWidth = `${(100 - 4 - 40) / Math.max(phases.length + 1, 1)}%`;
 
   const { getRowProps, getHandleProps } = useDragReorder(
     atoms,
@@ -70,8 +69,8 @@ export default function PermissionMatrix({
     }
   );
 
-  function cellKey(permatomid: number, permroleid: number): string {
-    return `${permatomid}:${permroleid}`;
+  function cellKey(permatomid: number, phaseid: number | null): string {
+    return `${permatomid}:${phaseid === null ? ALL_PHASES_COLUMN : phaseid}`;
   }
 
   function isGranted(permatomid: number, permroleid: number, phaseid: number | null): boolean {
@@ -80,8 +79,11 @@ export default function PermissionMatrix({
     );
   }
 
-  async function handleToggle(atom: PermissionAtom, role: PermissionRole, checked: boolean) {
-    const key = cellKey(atom.permatomid, role.permroleid);
+  async function handleToggle(atom: PermissionAtom, phaseid: number | null, checked: boolean) {
+    if (selectedRoleId === null) {
+      return;
+    }
+    const key = cellKey(atom.permatomid, phaseid);
     if (pendingCells.has(key)) {
       return;
     }
@@ -90,10 +92,10 @@ export default function PermissionMatrix({
     const nextPermissions = checked
       ? [
           ...permissions,
-          { permissionid: -1, permatomid: atom.permatomid, permroleid: role.permroleid, phaseid: viewingPhaseId },
+          { permissionid: -1, permatomid: atom.permatomid, permroleid: selectedRoleId, phaseid },
         ]
       : permissions.filter(
-          (p) => !(p.permatomid === atom.permatomid && p.permroleid === role.permroleid && p.phaseid === viewingPhaseId)
+          (p) => !(p.permatomid === atom.permatomid && p.permroleid === selectedRoleId && p.phaseid === phaseid)
         );
 
     const isSelfProtectedAtom = atom.permatomid === configurePermissionsAtomId || atom.permatomid === staffAtomId;
@@ -122,7 +124,7 @@ export default function PermissionMatrix({
     onPermissionsChange(nextPermissions);
 
     try {
-      await togglePermission(atom.permatomid, role.permroleid, viewingPhaseId, checked);
+      await togglePermission(atom.permatomid, selectedRoleId, phaseid, checked);
     } catch (e) {
       onPermissionsChange(previousPermissions);
       onError(e instanceof Error ? e.message : 'Failed to update permission');
@@ -139,19 +141,18 @@ export default function PermissionMatrix({
     <div>
       <div className="row mb-3">
         <div className="col-auto">
-          <label htmlFor="phase-select" className="form-label">
-            Phase scope
+          <label htmlFor="role-select" className="form-label">
+            Role
           </label>
           <select
-            id="phase-select"
+            id="role-select"
             className="form-select"
-            value={selectedPhase}
-            onChange={(e) => setSelectedPhase(e.target.value)}
+            value={selectedRoleId ?? ''}
+            onChange={(e) => setSelectedRole(e.target.value)}
           >
-            <option value={ALL_PHASES}>All Phases</option>
-            {phases.map((phase) => (
-              <option key={phase.phaseid} value={phase.phaseid}>
-                {phase.phasename}
+            {roles.map((role) => (
+              <option key={role.permroleid} value={role.permroleid}>
+                {role.permrolename}
               </option>
             ))}
           </select>
@@ -163,9 +164,12 @@ export default function PermissionMatrix({
             <tr>
               <th style={{ width: handleColWidth }}></th>
               <th style={{ width: nameColWidth }}>Permission Atom</th>
-              {roles.map((role) => (
-                <th key={role.permroleid} className="text-center" style={{ width: roleColWidth }}>
-                  {role.permrolename}
+              <th className="text-center" style={{ width: phaseColWidth }}>
+                All
+              </th>
+              {phases.map((phase) => (
+                <th key={phase.phaseid} className="text-center" style={{ width: phaseColWidth }}>
+                  {phase.phasename}
                 </th>
               ))}
             </tr>
@@ -184,18 +188,21 @@ export default function PermissionMatrix({
                   {atomRowLabel(atom, roles)}
                   {atom.notes && <div className="form-text">{atom.notes}</div>}
                 </td>
-                {roles.map((role) => {
-                  const grantedAtCurrentScope = isGranted(atom.permatomid, role.permroleid, viewingPhaseId);
-                  const grantedAllPhases = viewingPhaseId !== null && isGranted(atom.permatomid, role.permroleid, null);
-                  const key = cellKey(atom.permatomid, role.permroleid);
+                {[null, ...phases.map((phase) => phase.phaseid)].map((phaseid) => {
+                  const granted = selectedRoleId !== null && isGranted(atom.permatomid, selectedRoleId, phaseid);
+                  const grantedAllPhases =
+                    phaseid !== null &&
+                    selectedRoleId !== null &&
+                    isGranted(atom.permatomid, selectedRoleId, null);
+                  const key = cellKey(atom.permatomid, phaseid);
                   return (
-                    <td key={role.permroleid} className="text-center" style={{ width: roleColWidth }}>
+                    <td key={phaseid ?? ALL_PHASES_COLUMN} className="text-center" style={{ width: phaseColWidth }}>
                       <input
                         type="checkbox"
                         className="form-check-input"
-                        checked={grantedAtCurrentScope}
-                        disabled={pendingCells.has(key)}
-                        onChange={(e) => handleToggle(atom, role, e.target.checked)}
+                        checked={granted}
+                        disabled={pendingCells.has(key) || selectedRoleId === null}
+                        onChange={(e) => handleToggle(atom, phaseid, e.target.checked)}
                         title={grantedAllPhases ? 'Already granted for All Phases' : undefined}
                       />
                       {grantedAllPhases && <div className="form-text">(all phases)</div>}
