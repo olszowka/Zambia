@@ -69,6 +69,10 @@ function load_internal_javascript($title, $isDataTables = false) {
         case "Administer Phases":
             echo "<script src=\"javascript/AdminPhases.js\"></script>\n";
             break;
+        case "Configure Permissions":
+            echo "<link rel=\"stylesheet\" href=\"javascript/ConfigurePermissions/dist/bundle.css\" type=\"text/css\">\n";
+            echo "<script type=\"module\" src=\"javascript/ConfigurePermissions/dist/bundle.js\"></script>\n";
+            break;
         case "Edit Custom Text":
             echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
