@@ -11,6 +11,7 @@
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+  <xsl:variable name="ConfigurePermissions" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigurePermissions']"/>
   <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
   <xsl:variable name="Brainstorm" select="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']"/>
   <xsl:template match="/">
@@ -150,7 +151,7 @@
                   <input type="hidden" value="ANY" name="divisionid"/>
                 </form>
               </li>
-              <xsl:variable name="AdminMenu" select="$AdminPhases or $ConfigureReports or $Administrator" />
+              <xsl:variable name="AdminMenu" select="$AdminPhases or $ConfigurePermissions or $ConfigureReports or $Administrator" />
               <xsl:if test="$AdminMenu">
                 <li class="dropdown">
                   <a href="#admin" class="dropdown-toggle" data-toggle="dropdown">
@@ -161,6 +162,11 @@
                     <xsl:if test="$AdminPhases">
                       <li>
                         <a href="AdminPhases.php">Administer Phases</a>
+                      </li>
+                    </xsl:if>
+                    <xsl:if test="$ConfigurePermissions">
+                      <li>
+                        <a href="ConfigurePermissions.php">Configure Permissions</a>
                       </li>
                     </xsl:if>
                     <xsl:if test="$ConfigureReports">

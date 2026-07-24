@@ -1,0 +1,75 @@
+/* Matches the outline color of .btn-outline-secondary (e.g. the "Edit" buttons) -- the default
+   Bootstrap checkbox/select border (--bs-border-color) is too light to read clearly. */
+.form-check-input,
+.form-select {
+  border-color: #6c757d;
+}
+
+/* zambia_common.css has a legacy `select { height: 2rem; }` rule (from the Bootstrap 2 era)
+   that applies sitewide and squashes Bootstrap 5's .form-select shorter than its own padding +
+   line-height call for (~38px) -- the dropdown caret icon stays centered via background-position,
+   but the option text doesn't fit the shrunken box cleanly and renders visibly below center.
+   Restoring auto height here (scoped to this app, not the shared stylesheet) lets .form-select
+   size itself the way Bootstrap 5 intends. */
+.form-select {
+  height: auto;
+}
+
+/* The permission matrix's header and body are two separate, ordinary <table> elements rather
+   than one <table> with a sticky <thead>. position: sticky on table cells turned out not to
+   reliably paint above sibling rows in this browser -- body content kept showing through the
+   header at certain scroll offsets even with the header confirmed fully opaque and correctly
+   positioned, and taking header/body cells out of native table layout to route around it (via
+   display: table or display: flex on the rows) instead broke the body's own overflow clipping.
+   Two independent tables sidestep all of that: the header table never scrolls (it's simply not
+   inside the scrolling container), and the body table scrolls the ordinary way inside a plain
+   overflow-y: auto div. table-layout: fixed plus the matching explicit column widths set in
+   PermissionMatrix.tsx is what keeps their columns aligned with each other. */
+.permission-matrix-header,
+.permission-matrix-body {
+  width: 100%;
+  table-layout: fixed;
+  margin-bottom: 0;
+}
+
+.permission-matrix-body-scroll {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.permission-matrix-header thead th {
+  background: var(--bs-body-bg, #fff);
+}
+
+.drag-handle {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px 6px;
+  cursor: grab;
+  vertical-align: middle;
+}
+
+.drag-handle-bar {
+  width: 16px;
+  height: 2px;
+  background: #888;
+  border-radius: 1px;
+}
+
+tr.drag-over-top {
+  border-top: 2px solid var(--bs-primary, #0d6efd);
+}
+
+tr.drag-over-bottom {
+  border-bottom: 2px solid var(--bs-primary, #0d6efd);
+}
+
+/* Overrides the paint only (not pointer-events), so a button that lands under a stationary
+   cursor after a click doesn't render as hovered, but remains immediately clickable -- e.g.
+   Save -> Edit appearing in the same slot right before the user's next click. */
+.suppress-hover .btn:hover {
+  color: var(--bs-btn-color);
+  background-color: var(--bs-btn-bg);
+  border-color: var(--bs-btn-border-color);
+}
