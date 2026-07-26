@@ -650,23 +650,21 @@ function processChange(event) {
             postcountryDirty = ($postcountry.val() !== $postcountry.prop("defaultValue"));
             break;
         default:
-            if ($target.is(".role-check")) {
+            if (target.classList.contains('role-check')) {
                 rolesDirty = false;
-                $(".role-check").each(function () {
-                    $checkbox = $(this);
-                    if ($checkbox.is(":checked") !== $checkbox.prop("defaultChecked")) {
+                roleCheckboxArr = Array.from(document.getElementsByClassName('role-check'));
+                roleCheckboxArr.forEach((elem) => {
+                    if (elem.checked !== elem.defaultChecked) {
                         rolesDirty = true;
-                        return false;
                     }
                 });
             }
-            if ($target.is("#tag-container .tag-check")) {
+            if (target.classList.contains('tag-check')) {
                 tagsDirty = false;
-                $("#tag-container .tag-check").each(function () {
-                    $checkbox = $(this);
-                    if ($checkbox.is(":checked") !== $checkbox.prop("defaultChecked")) {
+                tagCheckboxArr = Array.from(document.getElementsByClassName('tag-check'));
+                tagCheckboxArr.forEach((elem) => {
+                    if (elem.checked !== elem.defaultChecked) {
                         tagsDirty = true;
-                        return false;
                     }
                 });
             }
