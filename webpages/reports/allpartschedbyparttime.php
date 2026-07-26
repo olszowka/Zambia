@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Full Program Participant Schedule ';
 $report['description'] = 'The schedule sorted by participant, then time limited to program participants';
@@ -10,7 +10,7 @@ $report['categories'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT DISTINCT
-        P.badgeid, P.pubsname, C.lastname, C.firstname
+        P.badgeid, P.pubsname, P.name_for_sorting, C.lastname, C.firstname
     FROM
              Participants P
         JOIN CongoDump C USING (badgeid)
@@ -18,10 +18,11 @@ SELECT DISTINCT
         JOIN Sessions S USING (sessionid)
         JOIN Schedule SCH USING (sessionid)
         JOIN UserHasPermissionRole UHPR USING (badgeid)
+        JOIN PermissionRoles PR USING (permroleid)
     WHERE
-        UHPR.permroleid = 4 /* Participant (B61) */
+        PR.permrolename = 'Participant'
     ORDER BY
-        IF(instr(P.pubsname, C.lastname)>0, C.lastname, substring_index(P.pubsname,' ',-1)),
+        IFNULL(P.name_for_sorting, IF(instr(P.pubsname, C.lastname)>0, C.lastname, substring_index(P.pubsname,' ',-1))),
         C.firstname;
 EOD;
 $report['queries']['schedule'] =<<<'EOD'

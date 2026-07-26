@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2022-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Created by Peter Olszowka on 2022-12-15
 $report = [];
 $report['name'] = 'All Participants and Assignments';
@@ -10,14 +10,16 @@ $report['categories'] = array(
 $report['columns'] = array(
     array("width" => "4rem"),
     array("width" => "10rem"),
+    array("width" => "10rem"),
     array("width" => "6rem"),
     array("width" => "6rem"),
     array("orderable" => false)
 );
+$report['additionalOptions'] = array("order" => array( array(2, 'asc')));
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, P.pubsname, CD.firstname, CD.lastname
+        P.badgeid, P.pubsname, P.name_for_sorting, CD.firstname, CD.lastname
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
@@ -25,16 +27,17 @@ SELECT
             P.interested = 1 /* yes */
         AND EXISTS ( SELECT *
                         FROM
-                            UserHasPermissionRole UHPR
+                                 UserHasPermissionRole UHPR
+                            JOIN PermissionRoles PR USING (permroleid)
                         WHERE
                                 UHPR.badgeid = P.badgeid
-                            AND UHPR.permroleid IN (4) /* Participant (B61) */
+                            AND PR.permrolename = 'Participant'
                  )                   
     ORDER BY
-        IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),
+        IFNULL(P.name_for_sorting, IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1))),
         CD.firstname;
 EOD;
-$report['queries']['sessions'] =<<<'EOD'
+$report['queries']['sessions'] = <<<'EOD'
 SELECT
         POS.badgeid, POS.moderator, S.sessionid, S.title
     FROM
@@ -43,7 +46,7 @@ SELECT
     WHERE
         S.statusid IN (1, 2, 3, 6, 7) ## Brainstorm, Vetted, Scheduled, Edit Me, Assigned
     ORDER BY
-        POS.badgeid
+        POS.badgeid;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -58,6 +61,7 @@ $report['xsl'] =<<<'EOD'
                         <tr style="height:2.6rem">
                             <th class="report">Badgeid</th>
                             <th class="report">Pubsname</th>
+                            <th class="report">Name for Sorting</th>
                             <th class="report">First name</th>
                             <th class="report">Last Name</th>
                             <th class="report">Sessions</th>
@@ -86,6 +90,9 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
+            </td>
+            <td class="report">
+                <xsl:value-of select="@name_for_sorting" />
             </td>
             <td class="report">
                 <xsl:value-of select="@firstname" />
