@@ -25,6 +25,7 @@ SELECT
                   Participants P 
              JOIN CongoDump CD USING (badgeid)
              JOIN UserHasPermissionRole UHPR USING (badgeid)
+             JOIN PermissionRoles PR USING (permroleid)
         LEFT JOIN (
             SELECT
                     POS.badgeid, COUNT(POS.sessionid) AS assigned
@@ -34,12 +35,16 @@ SELECT
                         JOIN Sessions S USING (sessionid)
                     WHERE
                             S.pubstatusid = 2 /* public */
-                        AND S.typeid != 10 /* Signing */
+                        AND NOT EXISTS (SELECT * FROM Types TY
+                                           WHERE
+                                                   TY.typeid = S.typeid
+                                               AND (TY.typename = 'Autographing' OR TY.typename = 'Signing')
+                                       )
                     GROUP BY
                         POS.badgeid
                    ) AS SU USING (badgeid)
     WHERE
-            UHPR.permroleid = 4 /* Participant (B61) */
+            PR.permrolename = 'Participant'
         AND SU.assigned > 0
     ORDER BY
         CD.regtype, SU.assigned DESC, pubsnamesort;

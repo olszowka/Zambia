@@ -2,7 +2,7 @@
 // Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Missing Bios Report 1';
-$report['description'] = 'Participants with missing or short bios with their Participant Types.';
+$report['description'] = 'Scheduled participants with missing or short bios with their Participant Types.';
 $report['categories'] = array(
     'Publication Reports' => 2000,
 );
@@ -17,15 +17,16 @@ $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
         P.badgeid, P.pubsname, CD.lastname, CD.firstname, PR.permrolename, P.bio,
-        IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnamesort
+        IFNULL(P.name_for_sorting,
+            IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1))
+            ) AS pubsnamesort
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
         JOIN UserHasPermissionRole UHPR USING (badgeid)
         JOIN PermissionRoles PR USING (permroleid)
     WHERE
-            PR.permroleid = 4 /* Participant (B61) */
-        AND LENGTH(IFNULL(bio, "")) <= 15
+            LENGTH(IFNULL(bio, '')) <= 15
         AND EXISTS ( SELECT *
             FROM
                      ParticipantOnSession POS
