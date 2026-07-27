@@ -1,12 +1,12 @@
 <?php
-// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Interest Counts by Participant';
 $report['description'] = 'Just how many panels did each participant sign up for anyway? (Also counts invitations)';
 $report['categories'] = array(
     'Participant Info Reports' => 970,
 );
-$report['columns'] = array(null, null, null, null, null, null);
+$report['columns'] = array(null, null, null, null, null, null, null);
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 WITH Interest AS (
@@ -18,17 +18,21 @@ WITH Interest AS (
             PSI.badgeid
     )
 SELECT
-        P.badgeid, P.pubsname, CD.firstname, CD.lastname, CD.badgename, IFNULL(Interest.interested, 0) AS interested
+        P.badgeid, P.pubsname, P.name_for_sorting, CD.firstname, CD.lastname, CD.badgename,
+        IFNULL(Interest.interested, 0) AS interested
     FROM
                   Participants P
              JOIN CongoDump CD USING (badgeid)
              JOIN UserHasPermissionRole UHPR USING (badgeid)
+             JOIN PermissionRoles PR USING (permroleid)
         LEFT JOIN Interest USING (badgeid)
     WHERE
             P.interested = 1
-        AND UHPR.permroleid = 4 /* B61 Program Participant */
+        AND PR.permrolename = 'Participant'
     ORDER BY
-        IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),
+        IFNULL(P.name_for_sorting,
+            IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1))
+            ),
         CD.firstname;
 EOD;
 $report['xsl'] =<<<'EOD'
@@ -44,6 +48,7 @@ $report['xsl'] =<<<'EOD'
                         <tr style="height:2.6rem">
                             <th class="report">Badge ID</th>
                             <th class="report">Name for Publications</th>
+                            <th class="report">Name for Sorting</th>
                             <th class="report">First Name</th>
                             <th class="report">Last Name</th>
                             <th class="report">Badge Name</th>
@@ -68,6 +73,7 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
             </td>
+            <td class="report"><xsl:value-of select="@name_for_sorting" /></td>
             <td class="report"><xsl:value-of select="@firstname" /></td>
             <td class="report"><xsl:value-of select="@lastname" /></td>
             <td class="report"><xsl:value-of select="@badgename" /></td>
