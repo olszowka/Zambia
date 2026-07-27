@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2017-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2017-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Program Packet Export';
 $report['description'] = 'Export CSV file of Program Packet Export';
@@ -40,10 +40,13 @@ SELECT
              Participants P
         JOIN PartSched USING (badgeid)
     WHERE EXISTS (
-        SELECT * FROM UserHasPermissionRole UHPR
+        SELECT *
+            FROM
+                     UserHasPermissionRole UHPR
+                JOIN PermissionRoles PR USING (permroleid)
             WHERE 
                     UHPR.badgeid = P.badgeid
-                AND UHPR.permroleid = 4 /* Participant (B61) */
+                AND PR.permrolename = 'Participant'
         )
     ORDER BY
         P.pubsname;

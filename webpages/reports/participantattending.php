@@ -1,9 +1,9 @@
 <?php
-// Copyright (c) 2022-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Created by Peter Olszowka on 2022-11-04
 $report = [];
 $report['name'] = 'Participant Attending';
-$report['description'] = 'How each participant is attending';
+$report['description'] = 'How each participant is attending (assumes survey question 1 is about hybrid attendance type)';
 $report['categories'] = array(
     'Participant Info Reports' => 500
 );
@@ -22,10 +22,11 @@ SELECT
     WHERE
         EXISTS ( SELECT *
                     FROM
-                        UserHasPermissionRole UHPR2
+                             UserHasPermissionRole UHPR2
+                        JOIN PermissionRoles PR USING (permroleid)
                     WHERE
                             UHPR2.badgeid = P.badgeid
-                        AND UHPR2.permroleid = 4 /* partcipant (B61) */
+                        AND PR.permrolename = 'Participant'
             )
     ORDER BY
         P.pubsname;
