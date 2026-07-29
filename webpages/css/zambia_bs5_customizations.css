@@ -36,6 +36,9 @@
 #reports-list .list-group-item {
   background-color: initial;
 }
+table.compressed {
+  width: auto;
+}
 /* end of bootstrap overrides */
 /* Bootstrap 5 extensions */
 .badge.badge-full-width {
@@ -52,6 +55,9 @@
 }
 .table.table-clear td {
   background: initial;
+}
+.table.table-clear .form-check-input {
+  border-color: #6c757d;
 }
 /* End of Bootstrap 5 extensions */
 /* Bootstrap 4 overrides */

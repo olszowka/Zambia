@@ -1,10 +1,12 @@
 <?php
-//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
-function check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray) {
+//	Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+function check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray, $durationOverridesMin = array()) {
     //
     // $addToScheduleArray is an array of $sessionid => $startmin
     //     sessions to add to schedule with starttime measured in minutes from start of con
     // $deleteScheduleIds is an array of $scheduleid => 1
+    // $durationOverridesMin is an array of $sessionid => $durationmin, used in place of the session's stored
+    //     duration when checking a session whose duration is being edited in this same submission
     // Perform following checks on the participants in the new schedule entries (taking into account deleted entries):
     //    1. Are any participants double booked?
     //    2. Are any participants scheduled outside available times?
@@ -46,6 +48,9 @@ EOD;
         exit(); // should have exited already
     }
     while (list($sessionid, $durationmin, $title) = mysqli_fetch_array($result, MYSQLI_NUM)) {
+        if (isset($durationOverridesMin[$sessionid])) {
+            $durationmin = $durationOverridesMin[$sessionid];
+        }
         $addToScheduleArray2[$sessionid]['startmin'] = $addToScheduleArray[$sessionid];
         $addToScheduleArray2[$sessionid]['endmin'] = $addToScheduleArray[$sessionid] + $durationmin;
         $addToScheduleArray2[$sessionid]['title'] = $title;
@@ -251,18 +256,59 @@ function SubmitMaintainRoom($ignore_conflicts)
     $name = mysqli_real_escape_string($linki, $name);
     $email = mysqli_real_escape_string($linki, $email);
     $badgeid = mysqli_real_escape_string($linki, $_SESSION['badgeid']);
+    // Current (pre-edit) state of every row on the page, used below to tell whether an edited row's day/time/
+    // duration actually changed, and to compute conflict-check data for edited rows.
+    $currentRows = array(); // scheduleid => array('sessionid'=>, 'starttime'=>, 'duration'=>)
+    $query = "SELECT SCH.scheduleid, SCH.starttime, SCH.sessionid, S.duration FROM Schedule SCH JOIN Sessions S USING (sessionid) WHERE SCH.roomid=$selroomid";
+    if (!$result = mysqli_query_with_error_handling($query, true)) {
+        exit(); // should have exited already
+    }
+    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+        $currentRows[$row['scheduleid']] = $row;
+    }
+    mysqli_free_result($result);
+
     $deleteScheduleIds = array();
     $deleteSessionIds = array();
+    $editScheduleIds = array(); // scheduleid => array('sessionid'=>, 'startmin'=>, 'starttime'=>, 'starttimeChanged'=>, 'durationdb'=>, 'durationChanged'=>)
     for ($i = 1; $i <= $numrows; $i++) { //***** need to update render as well to start at 1********
-        if (!isset($_POST["del$i"]) || $_POST["del$i"] != "1")
+        $scheduleid = getInt("row$i");
+        $sessionid = getInt("rowsession$i");
+        if ($scheduleid === false || !isset($currentRows[$scheduleid]))
             continue;
-        $deleteSessionIds[] = getInt("rowsession$i");
-        $deleteScheduleIds[] = getInt("row$i");
+        if (isset($_POST["del$i"]) && $_POST["del$i"] == "1") {
+            $deleteSessionIds[] = $sessionid;
+            $deleteScheduleIds[] = $scheduleid;
+            continue;
+        }
+        // Not deleted -- pick up any edits to day/time/duration for this existing row.
+        $day = (CON_NUM_DAYS == 1) ? 1 : getInt("editday$i", 1);
+        $ampm = getInt("editampm$i", 0);
+        $edittime = isset($_POST["edittime$i"]) ? trim($_POST["edittime$i"]) : "";
+        $editduration = isset($_POST["editduration$i"]) ? trim($_POST["editduration$i"]) : "";
+        $newStarttime = edit_fields_to_starttime($day, $ampm, $edittime);
+        $newDurationDb = parse_duration_for_db($editduration);
+        if ($newStarttime === false || $newDurationDb === false)
+            continue; // malformed edit -- leave this row alone rather than corrupt the schedule
+        $current = $currentRows[$scheduleid];
+        $starttimeChanged = duration_to_minutes($newStarttime) !== duration_to_minutes($current['starttime']);
+        $durationChanged = duration_to_minutes($newDurationDb) !== duration_to_minutes($current['duration']);
+        if (!$starttimeChanged && !$durationChanged)
+            continue; // unchanged
+        $startParts = parse_mysql_time_hours($newStarttime);
+        $editScheduleIds[$scheduleid] = array(
+            'sessionid' => $sessionid,
+            'startmin' => $startParts['hours'] * 60 + $startParts['minutes'],
+            'starttime' => $newStarttime,
+            'starttimeChanged' => $starttimeChanged,
+            'durationdb' => $newDurationDb,
+            'durationChanged' => $durationChanged,
+        );
     }
     $incompleteRows = 0;
     $completeRows = 0;
     $addToScheduleArray = array();
-    for ($i = 1; $i <= newroomslots; $i++) {
+    for ($i = 1; $i <= NEW_ROOM_SLOTS; $i++) {
         if ($_POST["sess$i"] == "unset")
             continue;
         if (CON_NUM_DAYS == 1) {
@@ -278,8 +324,17 @@ function SubmitMaintainRoom($ignore_conflicts)
         $addToScheduleArray[$_POST["sess$i"]] = ($day - 1) * 1440 + $_POST["ampm$i"] * 720 + $_POST["hour$i"] * 60 + $_POST["min$i"];
         $completeRows++;
     }
+    // For conflict-checking purposes only, treat each edited row as if its old slot were deleted and a new
+    // slot (at the edited time/duration) were added; this does not affect the real deletes/inserts below.
+    $conflictCheckDeleteScheduleIds = array_merge($deleteScheduleIds, array_keys($editScheduleIds));
+    $conflictCheckAddToScheduleArray = $addToScheduleArray;
+    $durationOverridesMin = array();
+    foreach ($editScheduleIds as $edit) {
+        $conflictCheckAddToScheduleArray[$edit['sessionid']] = $edit['startmin'];
+        $durationOverridesMin[$edit['sessionid']] = duration_to_minutes($edit['durationdb']);
+    }
     if (!$ignore_conflicts) {
-        if (!check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray)) {
+        if (!check_room_sched_conflicts($conflictCheckDeleteScheduleIds, $conflictCheckAddToScheduleArray, $durationOverridesMin)) {
             echo "<p class=\"alert alert-warning\">Database not updated.  There were conflicts.</p>\n";
             echo $message;
             return false;
@@ -323,8 +378,49 @@ EOD;
             exit();
         }
     }
-    if (count($addToScheduleArray) < 1)
+    $editcount = 0;
+    foreach ($editScheduleIds as $scheduleid => $edit) {
+        $sessionid = $edit['sessionid'];
+        if ($edit['starttimeChanged']) {
+            $query = "UPDATE Schedule SET starttime=\"{$edit['starttime']}\" WHERE scheduleid=$scheduleid";
+            if (!mysqli_query($linki, $query)) {
+                $message = $query . "<br />Error updating database.<br />";
+                echo "<p class=\"alert alert-error\">" . $message . "\n";
+                staff_footer();
+                exit();
+            }
+        }
+        if ($edit['durationChanged']) {
+            $query = "UPDATE Sessions SET duration=\"{$edit['durationdb']}\" WHERE sessionid=$sessionid";
+            if (!mysqli_query($linki, $query)) {
+                $message = $query . "<br />Error updating database.<br />";
+                echo "<p class=\"alert alert-error\">" . $message . "\n";
+                staff_footer();
+                exit();
+            }
+        }
+// Record history of the edit -- 7=Rescheduled, 3=Edit session contents (used when only duration changed)
+        $editcode = $edit['starttimeChanged'] ? 7 : 3;
+        $query = <<<EOD
+INSERT INTO SessionEditHistory
+        (sessionid, badgeid, name, email_address, timestamp, sessioneditcode, statusid, editdescription)
+        VALUES
+EOD;
+        $query .= "($sessionid,\"$badgeid\",\"$name\",\"$email\",CURRENT_TIMESTAMP,$editcode,3,\"" . time_description($edit['starttime']) . " in $selroomid\")";
+        if (!mysqli_query($linki, $query)) {
+            $message = $query . "<br />Error updating database.<br />";
+            echo "<p class=\"alert alert-error\">" . $message . "\n";
+            staff_footer();
+            exit();
+        }
+        $editcount++;
+    }
+    if ($editcount) {
+        echo "<p class=\"alert alert-success\">$editcount schedule entr" . ($editcount > 1 ? "ies" : "y") . " updated.\n</p>";
+    }
+    if (count($addToScheduleArray) < 1) {
         return (true); // nothing to add
+    }
     foreach ($addToScheduleArray as $sessionid => $startmin) {
         $hour = floor($startmin / 60); // convert to hours since start of con
         $min = $startmin % 60;
