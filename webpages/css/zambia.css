@@ -304,22 +304,6 @@ select#tags {
 }
 /* <end> Session History & Staff Assign Participants */
 /**
- * Maintain Room Schedule
- */
-#maintain-room-sched-room-form label[for='selroom'] {
-  margin-right: 1.5rem;
-}
-#maintain-room-sched-room-form #selroom {
-  margin-right: 1.5rem;
-}
-.room-select-td > .choices {
-  width: 31rem;
-}
-#add-to-room-schedule-table td {
-  vertical-align: bottom;
-}
-/* <end> Maintain Room Schedule */
-/**
  * Edit / Create Session
  */
 select#tagdest {

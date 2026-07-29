@@ -154,6 +154,28 @@ textarea {
 textarea.tall-textarea {
   height: calc(12rem - 5px);
 }
+/* Make a closed "choices" (see external/choices9.0.0) select match the height/border/font of a plain select. */
+.choices:not(.is-open) .choices__inner {
+  min-height: initial;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1.6rem 0 0.5rem;
+  border: 1px solid #606060;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 1rem;
+}
+.choices:not(.is-open) .choices__list--single {
+  padding: 0 0 0 0.25rem;
+  min-width: 0;
+}
+.choices:not(.is-open) .choices__list--single > .choices__item--selectable {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .form-group .tox-tinymce {
   border: 1px solid #606060;
   border-radius: 4px;
@@ -251,3 +273,30 @@ table.dataTable thead > tr > td.dt-ordering-desc .dt-column-order:before {
   opacity: 0.25 !important;
 }
 /* End of report table (DataTables) */
+/**
+ * Maintain Room Schedule
+ */
+.room-select-td > .choices {
+  width: 31rem;
+}
+.room-select-td {
+  /* min-height is not honored on table cells by browsers; height acts as a floor instead, and is tall enough
+     to fit the choices select's open (search box) state so opening it doesn't reflow the table */
+  height: 4rem;
+}
+.schedule-time-input {
+  width: 4.5rem;
+}
+.schedule-duration-input {
+  width: 4rem;
+}
+.current-schedule-editable.field-modified {
+  border-color: #d4a017;
+  background-color: #fff8e1;
+}
+.revert-row-btn {
+  margin-top: 0.25rem;
+}
+/**
+ * <end> Maintain Room Schedule
+ */

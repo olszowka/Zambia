@@ -47,6 +47,10 @@
 #reports-list .list-group-item {
     background-color: initial;
 }
+
+table.compressed {
+    width: auto;
+}
 /* end of bootstrap overrides */
 
 /* Bootstrap 5 extensions */
@@ -67,8 +71,13 @@
     padding-right: calc(16px + 0.25%);
 }
 
-.table.table-clear td {
-    background: initial;
+.table.table-clear {
+    td {
+        background: initial;
+    }
+    .form-check-input {
+        border-color: #6c757d;
+    }
 }
 /* End of Bootstrap 5 extensions */
 
@@ -160,10 +169,10 @@ textarea.form-control {
 .checkbox-list-label-wrapper {
     padding-bottom:0.3rem;
     padding-top:0.3rem;
-    
+
     &.disabled {
         background-color:@lightest-gray;
-        
+
         .checkbox-list-label {
             font-style: italic;
         }
