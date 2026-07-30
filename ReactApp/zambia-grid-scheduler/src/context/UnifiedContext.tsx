@@ -3,7 +3,7 @@
 import { createContext, useContext, useReducer } from 'react';
 import { ActionType, ActionTypeEnum, UnifiedContextStateType, UnifiedContextType } from "./UnifiedContextTypes";
 import { getInitialState } from "./initialState";
-import {SchedulableSessionType} from "../render_sessions/SessionTypes";
+import { SchedulableSessionType } from "../render_sessions/SessionTypes";
 
 const reducer = (state : UnifiedContextStateType, action: ActionType) => {
     switch (action.type) {
@@ -13,9 +13,13 @@ const reducer = (state : UnifiedContextStateType, action: ActionType) => {
         case ActionTypeEnum.ClearAllSchedulableSession:
             const newSchedulableSesstions2 = [] as SchedulableSessionType[];
             return {...state, schedulableSessions: newSchedulableSesstions2}
+        case ActionTypeEnum.ClearDraggingSession:
+            return {...state, draggingSession: null}
         case ActionTypeEnum.RemoveSchedulableSession:
             const newSchedulableSesstions3 = state.schedulableSessions.filter(session=> session.sessionid !== action.payload);
             return {...state, schedulableSessions: newSchedulableSesstions3}
+        case ActionTypeEnum.SetDraggingSession:
+            return {...state, draggingSession: action.payload}
         case ActionTypeEnum.SetVisibleTab:
             return {...state, visibleTab: action.payload}
         case ActionTypeEnum.UpdateInfoSection:

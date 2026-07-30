@@ -1,6 +1,6 @@
 import { RoomType, SessionsSearchDataType, UnifiedContextStateType } from "./UnifiedContextTypes";
 import { SchedulableSessionType } from "../render_sessions/SessionTypes";
-import {TabKeys} from "../tab_section/TabSection";
+import { TabKeys } from "../tab_section/TabSection";
 
 export function getInitialState(): UnifiedContextStateType {
     const root = document.getElementById('zambia-grid-scheduler');
@@ -21,13 +21,14 @@ export function getInitialState(): UnifiedContextStateType {
         }
     }
     return ({
-        schedulableSessions: [] as SchedulableSessionType[],
         configuration: {
             conStartDateTime: new Date(configuration.conStartDateTime),
             rooms,
             trackTagUsage: configuration.trackTagUsage,
             sessionsSearchData
         },
+        draggingSession: null,
+        schedulableSessions: [] as SchedulableSessionType[],
         visibleTab: TabKeys.Rooms
     });
 }

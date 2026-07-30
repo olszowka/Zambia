@@ -1,4 +1,4 @@
-import { SchedulableSessionType } from "../render_sessions/SessionTypes";
+import { SchedulableSessionType, SessionType } from "../render_sessions/SessionTypes";
 import { InfoSectionDataType } from "../tab_section/info/infoSectionUtils";
 import { trackType } from "../tab_section/sessions/TrackSelect";
 import { tagType } from "../tab_section/sessions/TagPicker";
@@ -14,31 +14,36 @@ export enum TrackTagUsageEnum {
 }
 
 export type UnifiedContextStateType = {
-    schedulableSessions: SchedulableSessionType[],
-    infoSectionData?: InfoSectionDataType
     configuration: {
         conStartDateTime: Date,
         rooms: RoomType[],
         sessionsSearchData: SessionsSearchDataType
         trackTagUsage: TrackTagUsageEnum,
     },
+    draggingSession: SessionType | null,
+    infoSectionData?: InfoSectionDataType
+    schedulableSessions: SchedulableSessionType[],
     visibleTab: TabKeys
 }
 
 export enum ActionTypeEnum {
     AddSchedulableSessions = "ADD_SCHEDULABLE_SESSIONS",
     ClearAllSchedulableSession = "CLEAR_ALL_SCHEDULABLE_SESSIONS",
+    ClearDraggingSession = "CLEAR_DRAGGING_SESSION",
     RemoveSchedulableSession = "REMOVE_SCHEDULABLE_SESSION",
-    UpdateInfoSection = "UPDATE_INFO_SECTION",
-    SetVisibleTab = "SET_VISIBLE_TAB"
+    SetDraggingSession = "SET_DRAGGING_SESSION",
+    SetVisibleTab = "SET_VISIBLE_TAB",
+    UpdateInfoSection = "UPDATE_INFO_SECTION"
 }
 
 export type ActionType =
     | { type: ActionTypeEnum.AddSchedulableSessions; payload: SchedulableSessionType[] }
     | { type: ActionTypeEnum.ClearAllSchedulableSession; }
+    | { type: ActionTypeEnum.ClearDraggingSession; }
     | { type: ActionTypeEnum.RemoveSchedulableSession; payload: number }
-    | { type: ActionTypeEnum.UpdateInfoSection; payload: InfoSectionDataType }
-    | { type: ActionTypeEnum.SetVisibleTab; payload: TabKeys };
+    | { type: ActionTypeEnum.SetDraggingSession; payload: SessionType }
+    | { type: ActionTypeEnum.SetVisibleTab; payload: TabKeys }
+    | { type: ActionTypeEnum.UpdateInfoSection; payload: InfoSectionDataType };
 
 export type UnifiedContextType = {
     state: UnifiedContextStateType,

@@ -6,6 +6,8 @@ import { Badge, Button } from "react-bootstrap";
 import { useUnifiedContext } from "../context/UnifiedContext";
 import SchedulableSession from "../render_sessions/SchedulableSession";
 import { ActionType, ActionTypeEnum } from "../context/UnifiedContextTypes";
+import { SchedulableSessionType } from "../render_sessions/SessionTypes";
+import HiddenSession from "../render_sessions/HiddenSession";
 
 function onClickClearAll(dispatch: React.Dispatch<ActionType>) {
     dispatch({type: ActionTypeEnum.ClearAllSchedulableSession})
@@ -16,6 +18,28 @@ function SchedulableSessionsSection() {
     const { setNodeRef } = useDroppable({
         id: 'file-cabinet',
     });
+    let firstSessions: SchedulableSessionType[] = [];
+    let hiddenSession: SchedulableSessionType | null = null;
+    let secondSessions: SchedulableSessionType[] = [];
+    const draggingSessionId = state.draggingSession?.sessionid;
+    let found = false;
+    if (draggingSessionId) {
+        state.schedulableSessions.forEach(session => {
+            if (session.sessionid === draggingSessionId) {
+                found = true;
+                hiddenSession = session;
+            } else {
+                if (found) {
+                    secondSessions.push(session);
+                } else {
+                    firstSessions.push(session);
+                }
+            }
+        });
+    } else {
+        firstSessions = state.schedulableSessions;
+    }
+
     return (
         <div id="grid-scheduler-schedulable-sessions" className={'flex-row-fixed flex-row-container'}>
             <div className={'flex-row-fixed p-2'}>
@@ -30,7 +54,9 @@ function SchedulableSessionsSection() {
                 <div id={'file-cabinet'} ref={setNodeRef} />
             </div>
             <div className={'flex-row-remainder mt-2'}>
-                {state.schedulableSessions.map(session => (<SchedulableSession session={session}/>))}
+                { firstSessions.map(session => (<SchedulableSession session={session}/>)) }
+                { hiddenSession ? <HiddenSession session={hiddenSession} /> : null }
+                { secondSessions.map(session => (<SchedulableSession session={session}/>)) }
             </div>
         </div>
     );

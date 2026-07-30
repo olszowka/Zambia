@@ -10,3 +10,13 @@ export type SchedulableSessionType = {
     trackName: string;
     typeName: string;
 }
+
+export type SessionType = {
+    divisionName: string;
+    duration: number; /* minutes */
+    sessionid: number;
+    tagNameArray: string[];
+    title: string;
+    trackName: string;
+    typeName: string;
+}
