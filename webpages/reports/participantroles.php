@@ -1,10 +1,11 @@
 <?php
 // Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
-$report['name'] = 'Participant Roles';
-$report['description'] = 'What Roles is a participant willing to take?';
+$report['name'] = 'Participant Program Types';
+$report['description'] = 'What Program Types is a participant willing to take?';
 $report['categories'] = array(
-    'Participant Info Reports' => 740,
+    'Boskone Central' => 250,
+    'Participant Info Reports' => 740
 );
 $report['columns'] = array(
     array("width" => "6em"),

@@ -64,8 +64,7 @@ $report['xsl'] =<<<'EOD'
                             <th class="report">Pubsname</th>
                             <th class="report">Name for Sorting</th>
                             <th class="report">First name</th>
-                            <th class="report">Pubsname</th>
-                            <th class="report">Badgeid</th>
+                            <th class="report">Last Name</th>
                             <th class="report">Sessions</th>
                         </tr>
                     </thead>
@@ -83,10 +82,9 @@ $report['xsl'] =<<<'EOD'
         <xsl:variable name="rowCount" select="count(/doc/query[@queryName='sessions']/row[@badgeid=$badgeid])" />
         <tr class="report">
             <td class="report">
-                <xsl:value-of select="@lastname" />
-            </td>
-            <td class="report">
-                <xsl:value-of select="@firstname" />
+                <xsl:call-template name="showBadgeid">
+                    <xsl:with-param name="badgeid" select = "@badgeid" />
+                </xsl:call-template>
             </td>
             <td class="report">
                 <xsl:call-template name="showPubsname">
@@ -98,9 +96,10 @@ $report['xsl'] =<<<'EOD'
                 <xsl:value-of select="@name_for_sorting" />
             </td>
             <td class="report">
-                <xsl:call-template name="showBadgeid">
-                    <xsl:with-param name="badgeid" select = "@badgeid" />
-                </xsl:call-template>
+                <xsl:value-of select="@firstname" />
+            </td>
+            <td class="report">
+                <xsl:value-of select="@lastname" />
             </td>
             <td class="report">
                 <xsl:choose>
