@@ -71,7 +71,7 @@
                 <xsl:if test="$selected = ''">
                     <xsl:attribute name="style">display: none;</xsl:attribute>
                 </xsl:if>
-                <div class="col-2">
+                <div class="col-6">
                     <label for="textcontents">Custom Text</label>
                 </div>
                 <div class="col">

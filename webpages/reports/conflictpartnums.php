@@ -9,9 +9,9 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     null,
-    array("orderData" => 2),
+    array("orderData" => array(2, 1)),
     array("visible" => false),
-    array("orderData" => 4),
+    array("orderData" => array(4, 3)),
     array("visible" => false),
     array("orderable" => false),
     array("orderable" => false),

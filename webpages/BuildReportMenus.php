@@ -5,7 +5,7 @@ $title = "Build Report Menus";
 require_once('StaffCommonCode.php'); // Checks for staff permission among other things
 if (!may_I('ConfigureReports')) {
     $message_error = "You do not currently have permission to view this page.<br>\n";
-    StaffRenderErrorPage($title, $message_error, 'bs4');
+    StaffRenderErrorPage($title, $message_error, 'bs5');
     exit();
 }
 $areYouSure = getInt("areYouSure");

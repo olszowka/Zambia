@@ -12,7 +12,7 @@ if (RESET_PASSWORD_SELF !== true) {
     participant_header($title, true, 'Normal', 'bs5');
     echo <<<EOD
 <div class="row">
-    <div class="col-12 mt-4">
+    <div class="col-36 mt-4">
         <div class="alert alert-danger">You have reached this page in error.</div>
     </div>
 </div>
@@ -25,7 +25,7 @@ if (empty($recaptchaResponse)) {
     participant_header($title, true, 'Normal', 'bs5');
     echo <<<EOD
 <div class="row">
-    <div class="col-12 mt-4">
+    <div class="col-36 mt-4">
         <div class="alert alert-danger">Error with reCAPTCHA (bot detector).</div>
     </div>
 </div>
@@ -51,7 +51,7 @@ if (!$recaptchaConf["success"]) {
     participant_header($title, true, 'Normal', 'bs5');
     echo <<<EOD
 <div class="row">
-    <div class="col-12 mt-4">
+    <div class="col-36 mt-4">
         <div class="alert alert-danger">Error with reCAPTCHA (bot detector).</div>
     </div>
 </div>

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Features';
 $report['description'] = 'Which Session needs which Features? (Scheduled sessions only)';
@@ -13,10 +13,10 @@ $report['columns'] = array(
     array("width" => "11em"),
     array("width" => "5em"),
     array("width" => "26em"),
-    array("width" => "8em", "orderData" => 4),
+    array("width" => "8em", "orderData" => array(4, 3)),
     array("visible" => false),
     array("width" => "11em"),
-    array("width" => "8em", "orderData" => 7),
+    array("width" => "8em", "orderData" => array(7, 6)),
     array("visible" => false),
     array("width" => "15em")
 );

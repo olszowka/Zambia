@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // This function will output the page with the form to add or create a session
 // Variables
 //     action: "create" or "edit"
@@ -165,12 +165,14 @@ EOD;
         $paramArray['track'] = DEFAULT_TAG_ONLY_TRACK;
     }
     $paramArray['showmeetinglink'] = defined('MEETING_LINK') ? MEETING_LINK : false;
-    $paramArray['showparticipantlink'] = defined('PARTICIPANT_LINK') ? PARTICIPANT_LINK : false;
+    $paramArray['showpanelistlink'] = defined('PANELIST_LINK') ? PANELIST_LINK : false;
     $paramArray['showrecordinglink'] = defined('RECORDING_LINK') ? RECORDING_LINK : false;
     $paramArray['showcaptionlink'] = defined('CAPTION_LINK') ? CAPTION_LINK : false;
     $paramArray['bilingual'] = defined('BILINGUAL') ? BILINGUAL : false;
     $paramArray['secondtitlecaption'] = defined('SECOND_TITLE_CAPTION') ? SECOND_TITLE_CAPTION : false;
     $paramArray['seconddescriptioncaption'] = defined('SECOND_DESCRIPTION_CAPTION') ? SECOND_DESCRIPTION_CAPTION : false;
+    // following line for debugging only
+    // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));
     RenderXSLT('EditCreateSession.xsl', $paramArray, $resultXML);
     staff_footer();
 }

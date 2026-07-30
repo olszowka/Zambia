@@ -837,19 +837,6 @@ TD#sessidtcell {
     font-size: 85%;
 }
 
-.titledtextarea {
-    margin: 1em;
-}
-
-.titledtextarea > label {
-    font-weight: bold;
-    display: block;
-}
-
-.titledtextarea > textarea {
-    display: block;
-}
-
 .titlelabelarea {
     display: table-cell; 
     height: 1.2em;

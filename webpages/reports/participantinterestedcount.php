@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant Interested Count';
 $report['description'] = 'Quick count of participants that are interested in attending.';
@@ -13,8 +13,9 @@ SELECT
     FROM
              Participants P
         JOIN UserHasPermissionRole UHPR USING (badgeid)
+        JOIN PermissionRoles PR USING (permroleid)
     WHERE
-        UHPR.permroleid = 4 /* B61 Program Participant */
+        PR.permrolename = 'Participant'
     GROUP BY
         P.interested;
 EOD;

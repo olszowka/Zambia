@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Tech and Hotel notes';
 $report['description'] = 'What notes are in on this panel for tech and hotel? (sorted by room then time)';
@@ -11,9 +11,9 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     array("width" => "11em"),
-    array("width" => "7em", "orderData" => 2),
+    array("width" => "7em", "orderData" => array(2, 1)),
     array("visible" => false),
-    array("width" => "6em", "orderData" => 4),
+    array("width" => "6em", "orderData" => array(4, 3)),
     array("visible" => false),
     array("width" => "9em"),
     array("width" => "5em"),

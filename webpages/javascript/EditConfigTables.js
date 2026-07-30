@@ -1,5 +1,5 @@
 // Created by Syd Weinstein on 2021-01-04;
-// Copyright (c) 2021-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2021-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 var table = null;
 var tablename = '';
 var message = "";
@@ -19,19 +19,19 @@ var EditConfigTable = function () {
 
        // if top level tab clicked, find which sub tab is open
         if (newtabname.match(/-top$/i)) {
-            $("a.active").each(function () {
+            $("button.active").each(function () {
                 attr = $(this).attr("data-top");
-                if (attr == newtabname) {
+                if (attr === newtabname) {
                     tabname = this.id;
                 }
             });
         }
 
         // now with the subtab (clicked or refed by top), see if it needs a table and data fetched
-        if (tabname.substring(0, 2) != 't-') {
-            document.getElementById("table-div").style.display = "none";
-        } else {
-            document.getElementById("table-div").style.display = "block";
+        $tablediv = document.getElementById('table-div');
+        $tablediv.classList.remove('show');
+        $tablediv.style.display = 'none';
+        if (tabname.substring(0, 2) == 't-') {
             tablename = tabname.substring(2);
             FetchTable();
         }
@@ -39,6 +39,7 @@ var EditConfigTable = function () {
 
     // show unsaved data modal popup if dirty
     function tabprehide(tabname, newtab) {
+        savetceEdit(true); // commit any open notes editor into its cell so its dirty state (if any) is reflected below
         //console.log('prehide:' + tabname + ", " + newtab + ", dirty: " + dirty);
         if (!dirty) {
             return true;
@@ -60,17 +61,17 @@ var EditConfigTable = function () {
     }
 
     this.initialize = function () {
-        $('.nav-tabs a').on('shown.bs.tab', function (event) {
+        $('.nav-pills button').on('shown.bs.tab', function (event) {
             var x = event.target.id;         // active tab
             tabshown(x);
         });
-        $('.nav-tabs a').on('hide.bs.tab', function (event) {
+        $('.nav-pills button').on('hide.bs.tab', function (event) {
             var x = event.target.id;        // to be hidden tab
             var n = event.relatedTarget.id;    // to be shown tab
             //console.log('act = ' + x);
             return tabprehide(x, n);
         });
-        $('.nav-tabs a').on('hidden.bs.tab', function (event) {
+        $('.nav-pills button').on('hidden.bs.tab', function (event) {
             var x = event.target.id;        // active tab
             //console.log('act = ' + x);
             tabhide(x);
@@ -103,10 +104,10 @@ function savetceEdit(display) {
     if (curcell) {
         tinyMCE.triggerSave();
         newval = txtel.value;
-        newval = newval.replace(/\<\/p\>[ \r\n]*\<p\>/gi, "\n");
-        newval = newval.replace(/\<br *\/*\>/gi, "\n");
-        newval = newval.replace(/^\<p\> */i, "");
-        newval = newval.replace(/ *\<\/p\> *$/i, "");
+        newval = newval.replace(/<\/p>[ \r\n]*<p>/gi, "\n");
+        newval = newval.replace(/<br *\/*>/gi, "\n");
+        newval = newval.replace(/^<p> */i, "");
+        newval = newval.replace(/ *<\/p> *$/i, "");
         curcell.setValue(newval);
         tinyMCE.remove();
         curcell = null;
@@ -129,13 +130,13 @@ function savetceEdit(display) {
 
 function tceEditor(e, cell) {
     txtel = document.getElementById("tceedit-textarea");
-    if (cell != curcell) {
+    if (cell !== curcell) {
         savetceEdit(false);
     }
     cellname = cell.getField();        
     // initialize the starting value from the current value of the cell
     curcell = cell;
-    txtel.value = cell.getValue().replace(/\n/g, "<br/>");
+    txtel.value = (cell.getValue() || "").replace(/\n/g, "<br/>");
 
     el = document.getElementById("tceedit-div");
     el.style.display = "block";
@@ -172,16 +173,13 @@ function tceEditor(e, cell) {
 
 function deleteicon(cell, formattParams, onRendered) {
     var value = cell.getValue();
-    if (value == 0) {
-        return "&#x1F5D1;";
-    }
-    return value;
+    return value === '0' ? '&#x1F5D1;' : value;
 }
 
 function deleterow(e, row, questiontable) {
-    document.getElementById("message").style.display = 'none';
+    document.getElementById('message').classList.add('hidden');
     var count = row.getCell("Usage_Count").getValue();
-    if (count == 0) {
+    if (count === '0') {
         row.delete();
     }
 }
@@ -199,33 +197,73 @@ function cellChanged(cell) {
     cell.getElement().style.backgroundColor = "#fff3cd";
 }
 
+// Measures the rendered pixel width of a column header title so a column is
+// never made narrower than the space needed to display its own name.
+var headerMeasureCanvas = null;
+function headerMinWidth(title) {
+    if (!headerMeasureCanvas) {
+        headerMeasureCanvas = document.createElement("canvas");
+    }
+    var context = headerMeasureCanvas.getContext("2d");
+    context.font = "14px Arial";
+    var textWidth = context.measureText(title).width;
+    return Math.ceil(textWidth) + 25; // account for header cell padding
+}
+
+// Rooms has many text columns; the normal width formula makes the table wider
+// than 1920px, forcing horizontal scroll while editing. Use narrower columns
+// for Rooms so the whole table fits on a >=1920px wide browser window.
+function columnWidth(characterMaximumLength) {
+    if (tablename === 'Rooms') {
+        width = 3 * characterMaximumLength;
+        if (width < 60) {
+            width = 60;
+        }
+        if (width > 150) {
+            width = 150;
+        }
+        return width;
+    }
+    width = 8 * characterMaximumLength;
+    if (width < 80) {
+        width = 80;
+    }
+    if (width > 500) {
+        width = 500;
+    }
+    return width;
+}
+
 function opentable(tabledata) {
     // get table information from tableschema
     //console.log(tableschema);
-    columns = new Array();
+    columns = [];
     indexcol = 'display_order';
     displayorder_found = false;
-    initialsort = new Array();
+    initialsort = [];
     columns.push({ rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30, maxWidth:30 });
     tableschema.forEach(function (column) {
-        if (column.COLUMN_KEY == 'PRI') {
+        if (column.COLUMN_KEY === 'PRI') {
             indexcol = column.COLUMN_NAME;
             initialsort.push({ column: indexcol, dir: "asc" });
             columns.push({
                 title: indexcol, field: indexcol,
                 visible: false
             });
-        } else if (column.COLUMN_NAME == 'display_order') {
+        } else if (column.COLUMN_NAME === 'display_order') {
             columns.push({ title: "Order", field: "display_order", visible: false });
             display_order = true;
         } else if (fetch_json.hasOwnProperty(column.COLUMN_NAME + "_select")) {
             selectlistname = column.COLUMN_NAME + "_select";
             editor_type = 'select';
-            selectlist = new Array();
-            editorlist = new Array();
+            selectlist = [];
+            editorlist = [];
             fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) {
                 selectlist[entry.id] = entry.name;
-                editorlist.push( { label: entry.name,  value: entry.id } );
+                editorlist.push({
+                    label: entry.name,
+                    value: entry.id
+                });
             });
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
@@ -234,35 +272,25 @@ function opentable(tabledata) {
                 editorParams: editorlist,
                 formatter: "lookup",
                 formatterParams: selectlist,
-                minWidth: 200
+                minWidth: Math.max(200, headerMinWidth(column.COLUMN_NAME))
             });
-        } else if (column.DATA_TYPE == 'int')
+        } else if (column.DATA_TYPE === 'int')
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
-                editor: "number", minWidth: 50, hozAlign: "right", 
+                editor: "number", minWidth: Math.max(50, headerMinWidth(column.COLUMN_NAME)), hozAlign: "right",
             });
-        else if (column.DATA_TYPE == 'text') {
-            width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
-            if (width < 80) {
-                width = 80;
-            }
-            if (width > 500) {
-                width = 500;
-            }
+        else if (column.DATA_TYPE === 'text') {
+            width = columnWidth(column.CHARACTER_MAXIMUM_LENGTH);
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, width: width,
+                minWidth: headerMinWidth(column.COLUMN_NAME),
                 cellClick: tceEditor
             });
         } else {
-            width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
-            if (width < 80) {
-                width = 80;
-            }
-            if (width > 500) {
-                width = 500;
-            }
+            width = columnWidth(column.CHARACTER_MAXIMUM_LENGTH);
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
+                minWidth: headerMinWidth(column.COLUMN_NAME),
                 editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
             });
         }
@@ -276,7 +304,7 @@ function opentable(tabledata) {
     //console.log(columns);
     
     if (display_order) {
-        initialsort = new Array();
+        initialsort = [];
         initialsort.push({ column: "display_order", dir: "asc" });
     }
     document.getElementById("table-div").style.display = "block";
@@ -294,7 +322,7 @@ function opentable(tabledata) {
         //autoColumns: true,
         columns: columns,
         rowMoved: function (row) {
-            document.getElementById("message").style.display = 'none';
+            document.getElementById('message').classList.add('hidden');
             //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
             if (this.getHistoryUndoSize() > 0) {
                 dirty = true;
@@ -317,18 +345,21 @@ function opentable(tabledata) {
 
 function saveComplete(data, textStatus, jqXHR) {
     message = "";
+    errorMessage = "";
     //console.log(data);
     try {
         fetch_json = JSON.parse(data);
     } catch (error) {
-        //console.log(error);
         fetch_json = {};
     }
     //console.log(fetch_json);
     if (fetch_json.hasOwnProperty('message')) {
         message = fetch_json.message;
-        //console.log(message);
-    }       
+    }
+    if (fetch_json.hasOwnProperty('errorMessage')) {
+        errorMessage = fetch_json.errorMessage;
+    }
+
 
     if (fetch_json.hasOwnProperty('tableschema')) {
         tableschema = fetch_json.tableschema;
@@ -337,24 +368,24 @@ function saveComplete(data, textStatus, jqXHR) {
         message += '<br/>Error: no schema returned for this table';
     }
 
-    proceed = true;
-    if (message != "") {
-        el = document.getElementById("message");
-        if (message.indexOf("Error:") >= 0) {
-            el.class = "alert alert-danger mt-4";
-            proceed = false;
-        } else if (message.indexOf("Warning:") >= 0) {
-            el.class = "alert alert-danger mt-4";
-            proceed = false;
-        } else {
-            el.class = "alert alert-success mt-4";
-        }
-        el.innerHTML = fetch_json.message;
-        el.style.display = 'block';
+    $message = document.getElementById('message');
+    if (!$message) {
+        return;
     }
-
-    if (proceed && fetch_json.hasOwnProperty('tabledata')) {
-        //console.log(tabledata);
+    if (errorMessage) {
+        $message.innerHTML = errorMessage + (message ? '<br/>' : '') + message;
+        $message.classList.remove('alert-success', 'hidden');
+        $message.classList.add('alert-danger');
+        return;
+    }
+    if (message) {
+        $message.innerHTML = message;
+        $message.classList.remove('alert-danger', 'hidden');
+        $message.classList.add('alert-success');
+    } else {
+        $message.classList.add('hidden');
+    }
+    if (fetch_json.hasOwnProperty('tabledata')) {
         if (table) {
             table.replaceData(fetch_json.tabledata);
         } else {
@@ -369,16 +400,20 @@ function saveComplete(data, textStatus, jqXHR) {
     dirty = false;
     document.getElementById("redo").disabled = true;
     document.getElementById("undo").disabled = true;
+    $tablediv = document.getElementById('table-div');
+    $tablediv.style.display = 'block';
+    $tablediv.classList.add('show');
 }
 
 function SaveTable() {
     document.getElementById("saving_div").style.display = "block";
     document.getElementById("submitbtn").disabled = true;
-    document.getElementById("message").style.display = 'none';
-    console.log(table.getData());
+    document.getElementById('message').classList.add('hidden');
+    //console.log(table.getData());
+    // table.getData() provides data in the order it was loaded, not order it is currently displayed.
     var postdata = {
         ajax_request_action: "updatetable",
-        tabledata: table.getData(),
+        tabledata: JSON.stringify(table.getData()),
         tablename: tablename,
         indexcol: indexcol
     };
@@ -387,6 +422,7 @@ function SaveTable() {
         dataType: "html",
         data: postdata,
         success: saveComplete,
+        error: showAjaxError,
         type: "POST"
     }); 
 }
@@ -401,6 +437,7 @@ function FetchTable() {
         dataType: "html",
         data: postdata,
         success: saveComplete,
+        error: showAjaxError,
         type: "POST"
     });
 }
@@ -431,4 +468,20 @@ function Redo() {
     if (redoCount <= 0) {
         document.getElementById("redo").disabled = true;
     }
+}
+
+function showAjaxError(data, textStatus, jqXHR) {
+    document.getElementById("saving_div").style.display = "none";
+    var submitbtn = document.getElementById("submitbtn");
+    submitbtn.disabled = false;
+    submitbtn.innerHTML = "Save";
+
+    var $mesageDIV = document.getElementById('message');
+    if (!$mesageDIV) {
+        return;
+    }
+    $mesageDIV.innerHTML = 'An error occurred on the server. Your changes were not saved. Please try again or contact an administrator if the problem persists.';
+    $mesageDIV.classList.remove('hidden', 'alert-success');
+    $mesageDIV.classList.add('alert-danger');
+    window.scrollTo(0, 0);
 }

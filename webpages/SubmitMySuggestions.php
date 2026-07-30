@@ -1,12 +1,12 @@
 <?php
-// Copyright (c) 2005-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "My Suggestions";
 require('PartCommonCode.php'); // sets $badgeid from $SESSION among other things
 require_once('renderMySuggestions.php');
-$paneltopics = stripslashes($_POST["paneltopics"]);
-$otherideas = stripslashes($_POST["$otherideas"]);
-$suggestedguests = stripslashes($_POST["$suggestedguests"]);
+$paneltopics = getString("paneltopics");
+$otherideas = getString("otherideas");
+$suggestedguests = getString("suggestedguests");
 if (!may_I('my_suggestions_write')) {
     $message = "Currently, you do not have write access to this page.\n";
     $error = true;
@@ -21,9 +21,9 @@ if ($message = validate_suggestions($paneltopics, $otherideas, $suggestedguests)
 }
 $message = "Database updated successfully.";
 $error = false;
-$paneltopicsE = mysqli_real_escape_string($paneltopics, $linki);
-$otherideasE = mysqli_real_escape_string($otherideas, $linki);
-$suggestedguestsE = mysqli_real_escape_string($suggestedguests, $linki);
+$paneltopicsE = mysqli_real_escape_string($linki, $paneltopics);
+$otherideasE = mysqli_real_escape_string($linki, $otherideas);
+$suggestedguestsE = mysqli_real_escape_string($linki, $suggestedguests);
 $query = <<<EOD
 INSERT INTO ParticipantSuggestions (badgeid, paneltopics, otherideas, suggestedguests)
     VALUES ("$badgeid", "$paneltopicsE", "$otherideasE", "$suggestedguestsE") 

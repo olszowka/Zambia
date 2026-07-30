@@ -2,7 +2,7 @@
 <!--
     EditCreateSession.xsl
     Created by Peter Olszowka on 2023-11-29.
-    Copyright (c) 2023-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2023-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
     Page intended for BS4
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -43,7 +43,7 @@
     <xsl:variable name="rlink" select="/doc/session/@rlink" />
     <xsl:variable name="clink" select="/doc/session/@clink" />
     <xsl:param name="showmeetinglink" />
-    <xsl:param name="showparticipantlink" />
+    <xsl:param name="showpanelistlink" />
     <xsl:param name="showrecordinglink" />
     <xsl:param name="showcaptionlink" />
     <xsl:param name="bilingual" />
@@ -164,11 +164,11 @@
                             <xsl:when test="$bilingual">
                                 <div class="row mt-1">
                                     <div class="form-group col-md-5">
-                                        <label for="secondtitle"><xsl:value-of select="$secondtitlecaption" /></label>
+                                        <label for="secondtitle"><xsl:value-of select="$secondtitlecaption" disable-output-escaping="yes" /></label>
                                         <input type="text" class="form-control" name="secondtitle" id="secondtitle" value="{$secondtitle}" />
                                     </div>
                                     <div class="form-group col-md-6 offset-md-1">
-                                        <label for="pocketprogtext"><xsl:value-of select="$seconddescriptioncaption" /></label>
+                                        <label for="pocketprogtext"><xsl:value-of select="$seconddescriptioncaption" disable-output-escaping="yes" /></label>
                                         <textarea rows="4" cols="70" name="pocketprogtext" id="pocketprogtext" class="form-control">
                                             <xsl:value-of select="$pocketprogtext" />
                                         </textarea>
@@ -334,9 +334,9 @@
                                     <input type="text" class="form-control" name="mlink" id="mlink" value="{$mlink}" maxlength="510" />
                                 </div>
                             </xsl:if>
-                            <xsl:if test="$showparticipantlink">
+                            <xsl:if test="$showpanelistlink">
                                 <div class="form-group col-md-6">
-                                    <label for="plink">Participant Link</label>
+                                    <label for="plink">Panelist Link</label>
                                     <input type="text" class="form-control" name="plink" id="plink" value="{$plink}" maxlength="510" />
                                 </div>
                             </xsl:if>

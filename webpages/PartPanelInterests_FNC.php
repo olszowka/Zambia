@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2009-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Function get_session_interests_from_db($badgeid)
 // Returns count; Will render its own errors
 // Populates global $session_interest with
@@ -102,7 +102,7 @@ function get_session_interests_from_post() {
     }
     $i--;
     //echo "<P>I: $i</P>";
-    //print_r($session_interest_index);
+    //print_r($session_interests);
     return ($i);
 }
 
@@ -134,7 +134,7 @@ function update_session_interests_in_db($badgeid, $session_interest_count) {
     }
     if ($noDeleteCount) {
         $noDeleteCount = 0;
-        $query = "REPLACE INTO ParticipantSessionInterest (badgeid, sessionid, rank, willmoderate, comments) VALUES ";
+        $query = "REPLACE INTO ParticipantSessionInterest (badgeid, sessionid, `rank`, willmoderate, comments) VALUES ";
         for ($i = 1; $i <= $session_interest_count; $i++) {
             if ($session_interests[$i]['delete'])
                 continue;

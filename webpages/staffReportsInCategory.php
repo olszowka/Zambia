@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2015-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message_error, $title;
 $title = "Reports in Category";
 require_once('StaffCommonCode.php');
@@ -23,19 +23,31 @@ if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     RenderError($message_error);
     exit();
 }
-staff_header($title, 'bs2');
-echo "<dl>\n";
+staff_header($title, 'bs5');
+?>
+<div class="container-lg">
+    <div class="row mt-2">
+        <div class=" col-md-27">
+            <div class="list-group" id="reports-list">
+<?php
 if ($reportcategoryid === "") {
     foreach ($reportNames as $reportFileName => $reportName) {
-        echo "<dt><a href='generateReport.php?reportName=$reportFileName'>$reportName</a></dt>\n";
-        echo "<dd>{$reportDescriptions[$reportFileName]}</dd>";
+        echo "<div class='list-group-item flex-column align-items-start'>\n<h5><a  href='generateReport.php?reportName=$reportFileName'>$reportName</a></h5>\n";
+        echo "<div>{$reportDescriptions[$reportFileName]}</div>";
+        echo "</div>";
     }
 } else {
     foreach ($reportCategories[$reportcategoryid] as $reportFileName) {
-        echo "<dt><a href='generateReport.php?reportName=$reportFileName'>$reportNames[$reportFileName]</a></dt>\n";
-        echo "<dd>{$reportDescriptions[$reportFileName]}</dd>";
+        echo "<div class='list-group-item flex-column align-items-start'>\n<h5><a href='generateReport.php?reportName=$reportFileName'>$reportNames[$reportFileName]</a></h5>\n";
+        echo "<div>{$reportDescriptions[$reportFileName]}</div>";
+        echo "</div>";
     }
 }
-echo "</dl>\n";
+?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
 staff_footer();
 ?>

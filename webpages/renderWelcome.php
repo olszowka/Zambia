@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2008-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2008-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $message, $message_error, $message2, $title;
 // $participant_array is defined by file including this.
 $title = "Participant Overview";
@@ -129,6 +129,15 @@ if (may_I('postcon')) { ?>
         </ul>
         <?php } ?>
 
+        <?php if (may_I('my_suggestions_write')) { ?>
+            <p> Use the "My Suggestions" menu to:</p>
+            <ul>
+                <li> Suggestion panel topics or other panelists to program committee.</li>
+            </ul>
+        <?php } else { ?>
+            <p> The "My Suggestions" menu entry is currently unavailable.</p>
+        <?php } ?>
+
         <?php if (may_I('search_panels')) { ?>
         <p> Use the "Search Sessions" menu to:</p>
         <ul>
@@ -136,7 +145,7 @@ if (may_I('postcon')) { ?>
             <li> Indicate sessions you would like to participate on. </li>
         </ul>
         <?php } else { ?>
-        <p> The "Search Sessions" menu is currently unavailable.  Check back later.</p>
+        <p> The "Search Sessions" menu entry is currently unavailable.  Check back later.</p>
         <?php } ?>
 
         <?php if (may_I('my_panel_interests')) { ?>
@@ -147,7 +156,7 @@ if (may_I('postcon')) { ?>
                 <li> Rank the preference of your selections.</li>
             </ul>
         <?php } else { ?>
-        <p> The "Session Interests" menu is currently unavailable. Check back later.</p>
+        <p> The "Session Interests" menu entry is currently unavailable. Check back later.</p>
         <?php } ?>        <?php if (may_I('my_schedule')) { ?>
         <p> Use the "My Schedule" menu to:</p>
         <ul>
@@ -156,7 +165,7 @@ if (may_I('postcon')) { ?>
                 <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></li>
         </ul>
         <?php } else { ?>
-        <p> The "My Schedule" menu is currently unavailable.  Check back later.</p>
+        <p> The "My Schedule" menu entry is currently unavailable.  Check back later.</p>
         <?php } ?>
 
         <?php if (may_I('BrainstormSubmit')) { ?>
@@ -166,7 +175,7 @@ if (may_I('postcon')) { ?>
             <li> You can return back to this page by clicking on "Participant View" tab in the upper right corner.
         </ul>
         <?php } else { ?>
-        <p> The "Suggest a Session" menu is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></p>
+        <p> The "Suggest a Session" menu entry is currently unavailable.  Brainstorming is over.  If you have an urgent request please email us at <a href="mailto: <?php echo PROGRAM_EMAIL; ?>"><?php echo PROGRAM_EMAIL; ?> </a></p>
         <?php } ?>
     </div>
 </div>

@@ -161,10 +161,10 @@ if (array_key_exists("PostCheck", $_POST)) {
 }
 
 // Start of display portion
-
-	$query=<<<EOD
+$prefix_len = mb_strlen(REG_PART_PREFIX) + 1;
+$query=<<<EOD
 SELECT
-		MAX(badgeid) M
+		MAX(CONVERT(SUBSTRING(badgeid, $prefix_len), UNSIGNED)) M
 	FROM
 		CongoDump
 	WHERE badgeid LIKE '

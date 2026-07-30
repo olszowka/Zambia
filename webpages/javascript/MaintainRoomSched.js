@@ -1,5 +1,5 @@
 //  Created by Peter Olszowka on 2015-08-30;
-//  Copyright (c) 2015-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2026 The Peter Olszowka. All rights reserved. See copyright document for more details.
 
 var MaintainRoomSched = function() {
     this.roomArr = [];
@@ -26,20 +26,58 @@ var MaintainRoomSched = function() {
         }
     };
 
+    this.initializeCurrentScheduleEdits = function () {
+        // On the conflict-confirmation render, the room-select form above isn't re-rendered (see
+        // MaintainRoomSched.php), so this runs independently of it rather than as part of initialize()'s
+        // (possibly already-aborted) work.
+        document.querySelectorAll('.current-schedule-row').forEach(function (row) {
+            var editableFields = row.querySelectorAll('.current-schedule-editable');
+            var revertBtn = row.querySelector('.revert-row-btn');
+            var updateModifiedState = function () {
+                var anyModified = false;
+                editableFields.forEach(function (field) {
+                    var modified = field.value !== field.dataset.original;
+                    field.classList.toggle('field-modified', modified);
+                    if (modified) {
+                        anyModified = true;
+                    }
+                });
+                if (revertBtn) {
+                    revertBtn.style.display = anyModified ? '' : 'none';
+                }
+            };
+            editableFields.forEach(function (field) {
+                field.addEventListener('input', updateModifiedState);
+                field.addEventListener('change', updateModifiedState);
+            });
+            if (revertBtn) {
+                revertBtn.addEventListener('click', function () {
+                    editableFields.forEach(function (field) {
+                        field.value = field.dataset.original;
+                    });
+                    updateModifiedState();
+                });
+            }
+        });
+    };
+
     this.initialize = function () {
         //called when My Profile page has loaded
         var that = this;
         this.$showUnscheduledRoomsCheckbox = document.getElementById('showUnschedRmsCHK');
         this.$roomsSelect = document.getElementById('selroom');
-        this.$showUnscheduledRoomsCheckbox.addEventListener('change', this.onChangeShowUnscheduledRooms.bind(this));
-        this.$roomsSelect.querySelectorAll("option:not([value='0'])").forEach(function (option) {
-            that.roomArr.push({
-                value: option.getAttribute('value'),
-                text: option.innerText,
-                isScheduled: option.dataset.isScheduled
+        // Both are absent on the conflict-confirmation render, where the room-select form isn't re-rendered.
+        if (this.$showUnscheduledRoomsCheckbox && this.$roomsSelect) {
+            this.$showUnscheduledRoomsCheckbox.addEventListener('change', this.onChangeShowUnscheduledRooms.bind(this));
+            this.$roomsSelect.querySelectorAll("option:not([value='0'])").forEach(function (option) {
+                that.roomArr.push({
+                    value: option.getAttribute('value'),
+                    text: option.innerText,
+                    isScheduled: option.dataset.isScheduled
+                });
             });
-        });
-        this.onChangeShowUnscheduledRooms();
+            this.onChangeShowUnscheduledRooms();
+        }
         var $addToScheduleTable = document.getElementById('add-to-room-schedule-table');
         if ($addToScheduleTable) {
             $addToScheduleTable.querySelectorAll('.room-select-td > select').forEach(function(elem) {
@@ -49,6 +87,7 @@ var MaintainRoomSched = function() {
                 });
             });
         }
+        this.initializeCurrentScheduleEdits();
     };
 };
 

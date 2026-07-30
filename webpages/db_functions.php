@@ -564,7 +564,9 @@ UPDATE Sessions SET
         statusid='{$sessionf["status"]}',
         notesforprog='{$sessionf["notesforprog"]}',
         meetinglink='{$sessionf["mlink"]}',
-        recordinglink='{$sessionf["rlink"]}'
+        recordinglink='{$sessionf["rlink"]}',
+        panelistlink='{$sessionf["plink"]}',
+        captionlink='{$sessionf["clink"]}'
     WHERE
         sessionid = $id;
 EOD;
@@ -658,6 +660,8 @@ INSERT INTO Sessions SET
         progguidhtml="{$sessionf["progguidhtml"]}",
         meetinglink="{$sessionf["mlink"]}",
         recordinglink="{$sessionf["rlink"]}",
+        panelistlink="{$sessionf["plink"]}",
+        captionlink="{$sessionf["clink"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
         estatten={$sessionf["estatten"]},
@@ -733,6 +737,16 @@ function filter_session() {
         $session2["rlink"] = mysqli_real_escape_string($linki, $session["rlink"]);
     } else {
         $session2["rlink"] = "";
+    }
+    if (PANELIST_LINK === TRUE) {
+        $session2["plink"] = mysqli_real_escape_string($linki, $session["plink"]);
+    } else {
+        $session2["plink"] = "";
+    }
+    if (CAPTION_LINK === TRUE) {
+        $session2["clink"] = mysqli_real_escape_string($linki, $session["clink"]);
+    } else {
+        $session2["clink"] = "";
     }
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
     if (DURATION_IN_MINUTES === TRUE) {
@@ -833,6 +847,8 @@ EOD;
     $session["invguest"] = $sessionarray["invitedguest"];
     $session["mlink"] = $sessionarray["meetinglink"];
     $session["rlink"] = $sessionarray["recordinglink"];
+    $session["plink"] = $sessionarray["panelistlink"];
+    $session["clink"] = $sessionarray["captionlink"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";
     if (!$result = mysqli_query_with_error_handling($query)) {
@@ -1098,7 +1114,7 @@ SELECT DISTINCT
     FROM
                   PermissionAtoms PA
              JOIN Permissions P USING (permatomid)
-        LEFT JOIN Phases PH ON P.phaseid = PH.phaseid AND PH.current = TRUE
+        LEFT JOIN Phases PH ON P.phaseid = PH.phaseid AND PH.current = TRUE AND PH.implemented = TRUE
         LEFT JOIN UserHasPermissionRole UHPR ON P.permroleid = UHPR.permroleid AND UHPR.badgeid='$badgeid'
     WHERE
             (PH.phaseid IS NOT NULL OR P.phaseid IS NULL)

@@ -5,7 +5,7 @@ $title = "Import Reg User";
 require_once('StaffCommonCode.php');
 $fbadgeid = getInt("badgeid");
 staff_header($title, 'bs4');
-if (!isLoggedIn() || !may_I('Staff') || !may_I('reg_ImportUsers')) {
+if (!isLoggedIn() || !may_I('Staff') || !may_I('ConTrollImportUsers')) {
     staff_footer();
     exit();
 }

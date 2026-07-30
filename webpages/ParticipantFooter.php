@@ -2,7 +2,7 @@
 //	Copyright (c) 2005-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
     function participant_footer() {
 ?>
-<div>
+<footer>
 <hr />
 <p /> 
 <p>If you need help or to tell us something that doesn't fit here, please email
@@ -11,7 +11,7 @@
    echo "<a href=\"mailto:$x\">$x</a>.\n"; 
    include('google_analytics.php');
 ?></p>
-</div><!-- end footer div -->
+</footer><!-- end footer div -->
 </div><!-- end whole page div -->
 </body>
 </html>

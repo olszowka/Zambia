@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $message_error, $returnAjaxErrors, $return500errors, $title;
 $title = "My Profile";
 require('PartCommonCode.php'); // initialize db; check login;
@@ -65,6 +65,15 @@ function update_participant($badgeid) {
             $updateClause .= "pubsname=\"" . mysqli_real_escape_string($linki, $pubsname) . "\", ";
         } else {
             $message_error = "You may not update your name for publications at this time.  Database not updated.";
+            Render500ErrorAjax($message_error);
+            exit();
+        }
+    if (isset($_POST['name_for_sorting']))
+        if ($may_edit_bio) {
+            $name_for_sorting = stripslashes($_POST['name_for_sorting']);
+            $updateClause .= "name_for_sorting=\"" . mysqli_real_escape_string($linki, $name_for_sorting) . "\", ";
+        } else {
+            $message_error = "You may not update your name for sorting in publications at this time.  Database not updated.";
             Render500ErrorAjax($message_error);
             exit();
         }
@@ -248,7 +257,7 @@ if (empty($password) && !$ParticipantsUpdated and !$CongoDumpUpdated) {
 }
 ?>
     <div class="row mt-3">
-    <div class="col-12">
+    <div class="col">
         <div class="alert alert-success">
 <?php
     if (!empty($password)) {
@@ -404,8 +413,9 @@ function fetchphoto($badgeid) {
     $paramarray[0] = $badgeid;
     $result =  mysqli_query_with_prepare_and_exit_on_error($sql, 's', $paramarray);
     $row = mysqli_fetch_assoc($result);
-    if (!$row)
+    if (!$row) {
         exit();
+    }
     $dest = getcwd();
     $dest .= "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
     echo file_get_contents($dest);
@@ -431,8 +441,7 @@ function deleteuploadedphoto($badgeid) {
     $fname = $dest . "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
     try {
         unlink($fname);
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
         error_log("Caught: " . $e->getMessage());
         $json_return["message"] = "Error deleting photo";
         $do_update = false;
@@ -493,8 +502,7 @@ function deleteapprovedphoto($badgeid) {
     $fname = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/" . $row["approvedphotofilename"];
     try {
         unlink($fname);
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
         error_log("Caught: " . $e->getMessage());
         $json_return["message"] = "Error deleting approved photo";
         $do_update = false;
@@ -534,14 +542,17 @@ EOD;
     echo json_encode($json_return) . "\n";
 };
 
+function check_edit_my_contact_permission() {
+    if (!may_I('edit_my_contact')) {
+        $message_error = "You do not have permission to perform this function.";
+        RenderErrorAjax($message_error);
+        exit();
+    }
+};
+
 // start of AJAX dispatch
 if (!isLoggedIn()) {
     $message_error = "You are not logged in or your session has expired.";
-    RenderErrorAjax($message_error);
-    exit();
-}
-if (!may_I('edit_my_contact')) {
-    $message_error = "You do not have permission to perform this function.";
     RenderErrorAjax($message_error);
     exit();
 }
@@ -557,18 +568,22 @@ if (array_key_exists('ajax_request_action', $_POST)) {
 $badgeid = isset($_SESSION['badgeid']) ? $_SESSION['badgeid'] : null;
 switch ($action) {
     case 'update_participant':
+        check_edit_my_contact_permission();
         update_participant($badgeid);
         break;
     case 'uploadPhoto':
+        check_edit_my_contact_permission();
         uploadphoto($badgeid);
         break;
     case 'fetchPhoto':
         fetchphoto($badgeid);
         break;
     case 'delete_uploaded_photo':
+        check_edit_my_contact_permission();
         deleteuploadedphoto($badgeid);
         break;
     case 'delete_approved_photo':
+        check_edit_my_contact_permission();
         deleteapprovedphoto($badgeid);
         break;
     default:

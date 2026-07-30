@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2011-2017 The Zambia Group. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2021 The Zambia Group. All rights reserved. See copyright document for more details.
 define("ParticipantAddSession", 1000);
 define("StaffInviteSession", 1001);
 // which header has been used

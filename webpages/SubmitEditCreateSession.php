@@ -19,6 +19,9 @@ get_nameemail_from_post($name, $email); //store in arguments and SESSION variabl
 $email_status = validate_name_email($name, $email);; /* return true if OK.  Store error messages in
         global $messages */
 get_session_from_post(); // store in global $session array
+if (TRACK_TAG_USAGE === 'TAG_ONLY') {
+    $session["track"] = DEFAULT_TAG_ONLY_TRACK;
+}
 prepare_db_and_more();
 $status = validate_session(); /* return true if OK.  Store error messages in
         global $messages */
@@ -57,8 +60,11 @@ if ($action == "edit") {
 // action = create or brainstorm
 $id = insert_session();
 if (!$id) {
-    $messageWarn = ""; // warning message
-    $messageWarn .= "<BR>" . $query . "\nUnknown error creating record.  Database not updated successfully.";
+    $message_warn=""; // warning message
+    if (!isset($query)) {
+        $query = "";
+    }
+    $message_warn.="<br>".$query."\nUnknown error creating record.  Database not updated successfully.";
     if ($action == 'brainstorm') {
         BrainstormRenderCreateSession($session, $messageWarn, $message_error);
     } else {

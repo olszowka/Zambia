@@ -1,4 +1,5 @@
-﻿/.vs
+/.vs
+/CLAUDE.md
 /db_name.php
 /ZambiaPrimaryRepo.iml
 /webpages/ReportMenuBS4Include.php
@@ -16,3 +17,4 @@
 /.idea/dataSources.xml
 /webpages/test2.php
 /webpages/test.php
+/webpages/xdebug.php

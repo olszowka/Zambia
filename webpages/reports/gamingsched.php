@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Gaming Schedule';
 $report['description'] = 'Full schedule of everything in track gaming (with participants).';
@@ -8,9 +8,9 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     array("width" => "11em"),
-    array("orderData" => 2, "width" => "8em"),
+    array("orderData" => array(2, 1), "width" => "8em"),
     array("visible" => false),
-    array("orderData" => 4, "width" => "7em"),
+    array("orderData" => array(4, 3), "width" => "7em"),
     array("visible" => false),
     array("width" => "5em"),
     array("width" => "10em"),

@@ -1,10 +1,10 @@
 <?php
-// Copyright (c) 2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Created by Peter Olszowka on 2022-10-12
 // Configured for B61 survey
 $report = [];
 $report['name'] = 'Participant data dump';
-$report['description'] = 'Export CSV file of all participant contact and survey information';
+$report['description'] = 'Export CSV file of all participant contact and survey information (assumes particular 7 question survey)';
 $report['categories'] = array(
     'Participant Info Reports' => 500
 );
@@ -19,7 +19,7 @@ SELECT
              WHEN 1 THEN 'YES'
              WHEN 2 THEN 'NO'
              WHEN 3 THEN 'DIDN\'T LOG IN' END AS interested,
-        P.pubsname, CD.badgename, CD.lastname, CD.firstname, CD.phone, CD.email,
+        P.htmlbio, P.pubsname, P.name_for_sorting, CD.badgename, CD.lastname, CD.firstname, CD.phone, CD.email,
         CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip, CD.postcountry,
         ROLES.permroles, PSA1.value AS pronouns, PSA3.value AS accessibility, PSA4.value AS diversity,
         PSA5.value AS moderator, PSA6.value AS contact, PSA7.value AS experience
@@ -35,10 +35,11 @@ SELECT
                 WHERE
                      EXISTS (SELECT *
                                 FROM
-                                    UserHasPermissionRole UHPR4
+                                         UserHasPermissionRole UHPR4
+                                    JOIN PermissionRoles PR2 USING (permroleid)
                                 WHERE
                                         UHPR4.badgeid = UHPR3.badgeid
-                                    AND UHPR4.permroleid IN (4) /* partcipant */
+                                    AND PR2.permrolename = 'Participant'
                                 )
                 GROUP BY
                     UHPR3.badgeid
@@ -52,10 +53,11 @@ SELECT
     WHERE
         EXISTS ( SELECT *
                     FROM
-                        UserHasPermissionRole UHPR2
+                             UserHasPermissionRole UHPR2
+                        JOIN PermissionRoles PR3 USING (permroleid)
                     WHERE
                             UHPR2.badgeid = P.badgeid
-                        AND UHPR2.permroleid IN (4) /* partcipant */
+                        AND PR3.permrolename = 'Participant'
             )
     ORDER BY
         P.pubsname;
@@ -64,6 +66,6 @@ $report['queries']['roles'] =<<<'EOD'
 
 EOD;
 $report['output_filename'] = 'participant_data_dump.csv';
-$report['column_headings'] = 'userid, interested, "name for pubs", "badge name", "last name", "first name", ' .
-    'phone, email, address1, address2, city, state, "postal code", country, "permission roles", "pronouns", ' .
-    'accessibility, diversity, experience, moderator, contact';
+$report['column_headings'] = 'userid, interested, bio,"name for pubs", "name for sorting", "badge name", "last name", ' .
+    '"first name", phone, email, address1, address2, city, state, "postal code", country, "permission roles", ' .
+    '"pronouns", accessibility, diversity, experience, moderator, contact';

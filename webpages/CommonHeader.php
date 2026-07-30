@@ -22,6 +22,12 @@ function commonHeader($headerVersion, $topSectionBehavior, $bootstrapVersion = '
     $paramArray["top_section_behavior"] = $topSectionBehavior;
     $paramArray["CON_NAME"] = CON_NAME;
     $paramArray["badgename"] = isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '';
+    if (defined('CON_HEADER_IMG') && CON_HEADER_IMG !== "") {
+        $paramArray["headerimg"] = CON_HEADER_IMG;
+    }
+    if (defined('CON_HEADER_IMG_ALT') && CON_HEADER_IMG_ALT !== "") {
+        $paramArray["headerimgalt"] = CON_HEADER_IMG_ALT;
+    }
     $paramArray["USER_ID_PROMPT"] = USER_ID_PROMPT;
     $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
     $paramArray["header_error_message"] = $headerErrorMessage;

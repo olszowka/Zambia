@@ -79,6 +79,24 @@ function getInt($name, $default = false) {
     }
 }
 
+// Function getIntFromData("name", "data", default)
+// gets a parameter from $data[] of name
+// and confirms it is an integer.
+// Safe from referencing nonexisting array index
+function getIntFromData($name, $data, $default = false) {
+    if (array_key_exists($name, $data)) {
+        $int = $data[$name];
+    } else {
+        return $default;
+    }
+    $t = filter_var($int, FILTER_SANITIZE_NUMBER_INT);
+    if (empty($t) && $t !== 0) {
+        return $default;
+    } else {
+        return(intval($t));
+    }
+}
+
 // Function getArrayOfInts("name", default)
 // gets a parameter from $_GET[] or $_POST[] of name
 // and confirms it is an integer.
@@ -88,6 +106,35 @@ function getArrayOfInts($name, $default = false) {
         $intArr = $_GET[$name];
     } elseif (array_key_exists($name, $_POST)) {
         $intArr = $_POST[$name];
+    } else {
+        return $default;
+    }
+    $retVal = array();
+    if ($intArr === "null") {
+        return $retVal;
+    }
+    if (gettype($intArr) === "string") {
+        $intArr = array($intArr);
+    }
+    forEach ($intArr as $int) {
+        if (!empty($t = filter_var($int, FILTER_SANITIZE_NUMBER_INT))) {
+            $retVal[] = $t;
+        }
+    }
+    if (count($retVal) == 0) {
+        return $default;
+    } else {
+        return $retVal;
+    }
+}
+
+// Function getArrayOfIntsFromData("name", data, default)
+// gets a parameter from $data[] of name
+// and confirms it is an integer.
+// Safe from referencing nonexisting array index
+function getArrayOfIntsFromData($name, $data, $default = false) {
+    if (array_key_exists($name, $data)) {
+        $intArr = $data[$name];
     } else {
         return $default;
     }
@@ -123,6 +170,17 @@ function getString($name) {
         return NULL;
     }
     return stripslashes($string);
+}
+
+// Function getStringFromData("name", $data)
+// gets a parameter from $data[] of name
+// Safe from referencing nonexisting array index
+function getStringFromData($name, $data) {
+    if (array_key_exists($name, $data)) {
+        return $data[$name];
+    } else {
+        return NULL;
+    }
 }
 
 // Function getArrayOfStrings("name")
@@ -227,6 +285,16 @@ function get_session_from_post() {
     } else {
         $session["rlink"] = "";
     }
+    if (CAPTION_LINK === TRUE) {
+        $session["clink"] = getString('clink');
+    } else {
+        $session["clink"] = "";
+    }
+    if (PANELIST_LINK === TRUE) {
+        $session["rlink"] = getString('rlink');
+    } else {
+        $session["rlink"] = "";
+    }
 }
 
 // Function set_session_defaults()
@@ -311,6 +379,86 @@ function parse_mysql_time_hours($time) {
 }
 
 //
+// Function starttime_to_edit_fields($time)
+// Takes a Schedule.starttime string (mysql "hhh:mm:ss", measured from start of con, so hours can exceed 24)
+// and returns array(day, ampm, "h:mm") suitable for pre-filling the Maintain Room Schedule edit controls.
+// day is 1-based; ampm is 0 (AM) or 1 (PM); the hour in "h:mm" is 1-12 (12-hour clock).
+//
+function starttime_to_edit_fields($time) {
+    $parts = parse_mysql_time_hours($time);
+    $totalHours = (int)$parts['hours'];
+    $day = intdiv($totalHours, 24) + 1;
+    $hour24 = $totalHours % 24;
+    $ampm = ($hour24 >= 12) ? 1 : 0;
+    $hour12 = $hour24 % 12;
+    if ($hour12 == 0) {
+        $hour12 = 12;
+    }
+    $minute = (int)$parts['minutes'];
+    return array($day, $ampm, $hour12 . ':' . sprintf('%02d', $minute));
+}
+
+//
+// Function edit_fields_to_starttime($day, $ampm, $hhmm)
+// Inverse of starttime_to_edit_fields(): takes a 1-based day, ampm (0=AM/1=PM), and a "h:mm" (1-12 hour clock)
+// string, and returns a Schedule.starttime string ("hhh:mm:00", measured from start of con), or false if $hhmm
+// doesn't parse as a time.
+//
+function edit_fields_to_starttime($day, $ampm, $hhmm) {
+    if (sscanf($hhmm, "%d:%d", $hour12, $minute) !== 2 || $hour12 < 1 || $hour12 > 12 || $minute < 0 || $minute > 59) {
+        return false;
+    }
+    $hourValue = $hour12 % 12; // 12 o'clock is represented as 0 within its half of the day
+    $totalMinutes = ($day - 1) * 1440 + $ampm * 720 + $hourValue * 60 + $minute;
+    $hours = intdiv($totalMinutes, 60);
+    $minutes = $totalMinutes % 60;
+    return sprintf('%03d:%02d:00', $hours, $minutes);
+}
+
+//
+// Function format_duration_for_edit($duration)
+// Takes a Sessions.duration string (mysql "hh:mm:ss") and formats it for display/editing per the
+// DURATION_IN_MINUTES preference: total minutes if TRUE, "h:mm" (hour not zero-padded) if FALSE.
+//
+function format_duration_for_edit($duration) {
+    $parts = parse_mysql_time_hours($duration);
+    if (DURATION_IN_MINUTES === TRUE) {
+        return strval((int)$parts['hours'] * 60 + (int)$parts['minutes']);
+    }
+    return $parts['hours'] . ':' . sprintf('%02d', (int)$parts['minutes']);
+}
+
+//
+// Function parse_duration_for_db($editduration)
+// Inverse of format_duration_for_edit(): takes the submitted edit-duration text (format depends on
+// DURATION_IN_MINUTES, same convention as the session create/edit "duration" field) and returns a
+// Sessions.duration string ("hh:mm:ss") suitable for use in an UPDATE, or false if it doesn't parse.
+//
+function parse_duration_for_db($editduration) {
+    if (DURATION_IN_MINUTES === TRUE) {
+        $min = filter_var($editduration, FILTER_SANITIZE_NUMBER_INT);
+        if ($min === false || $min === null || $min === '' || $min < 1 || $min > 3000) {
+            return false;
+        }
+        return sprintf('%02d:%02d:00', intdiv((int)$min, 60), $min % 60);
+    }
+    if (sscanf($editduration, "%d:%d", $hours, $minutes) !== 2 || $hours < 0 || $minutes < 0 || $minutes > 59 || ($hours == 0 && $minutes == 0)) {
+        return false;
+    }
+    return sprintf('%02d:%02d:00', $hours, $minutes);
+}
+
+//
+// Function duration_to_minutes($duration)
+// Takes a Sessions.duration string (mysql "hh:mm:ss") and returns the total number of minutes, for numeric
+// comparison purposes (e.g. detecting whether an edited duration actually differs from the stored one).
+//
+function duration_to_minutes($duration) {
+    $parts = parse_mysql_time_hours($duration);
+    return (int)$parts['hours'] * 60 + (int)$parts['minutes'];
+}
+
+//
 // Function time_description($time)
 // Takes the string $time and return string describing time
 // $time is mysql output measured from start of con
@@ -372,6 +520,35 @@ function longDayNameFromInt($daynum) {
         return false;
     }
     return date_format($netdatetime, "l");
+}
+
+//
+// Function fix_slashes($arg)
+// Takes the string $arg and removes multiple slashes,
+// slash-quote and slash-double quote.
+function fix_slashes($arg) {
+    while (($pos = strpos($arg, "\\\\")) !== false) {
+        if ($pos == 0) {
+            $arg = substr($arg, 1);
+        } else {
+            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
+        }
+    }
+    while (($pos = strpos($arg, "\\'")) !== false) {
+        if ($pos == 0) {
+            $arg = substr($arg, 1);
+        } else {
+            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
+        }
+    }
+    while (($pos = strpos($arg, "\\\"")) !== false) {
+        if ($pos == 0) {
+            $arg = substr($arg, 1);
+        } else {
+            $arg = substr($arg, 0, $pos) . substr($arg, $pos + 1);
+        }
+    }
+    return $arg;
 }
 
 // Function may_I($permatomtag)

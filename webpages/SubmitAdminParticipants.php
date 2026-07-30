@@ -1,10 +1,10 @@
 <?php
-// Copyright (c) 2006-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2006-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-require_once('StaffCommonCode.php'); // will check for staff privileges
+require_once('StaffCommonCode.php'); // will check if logged in and for staff privileges
 require('EditPermRoles_FNC.php');
 require('ParticipantTags_FNC.php');
 // skip to below all functions
@@ -20,7 +20,7 @@ function fetch_participant() {
     }
     $query = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio, P.staff_notes, CD.firstname,
+        P.badgeid, P.pubsname, P.name_for_sorting, P.interested, P.bio, P.htmlbio, P.staff_notes, CD.firstname,
         CD.lastname, CD.badgename, CD.phone, CD.email, CD.postaddress1, CD.postaddress2,
         CD.postcity, CD.poststate, CD.postzip, CD.postcountry, P.uploadedphotofilename,
         P.approvedphotofilename, P.photodenialreasonothertext,
@@ -59,10 +59,11 @@ function update_participant() {
     if (HTML_BIO === TRUE)
         $htmlbio = getString("htmlbio");
     $pubsname = getString("pubsname");
+    $name_for_sorting = getString("name_for_sorting");
     $staffnotes = getString("staffnotes");
     $interested = getInt("interested", NULL);
 
-    if (!is_null($password) || !is_null($bio) || !is_null($pubsname) || !is_null($staffnotes) || !is_null($interested)) {
+    if (!is_null($password) || !is_null($bio) || !is_null($pubsname) || !is_null($name_for_sorting) || !is_null($staffnotes) || !is_null($interested)) {
         $query_preable = "UPDATE Participants SET ";
         $query_portion_arr = array();
         $query_param_arr = array();
@@ -74,6 +75,7 @@ function update_participant() {
             push_query_arrays($htmlbio, 'htmlbio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($bio, 'bio', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($pubsname, 'pubsname', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($name_for_sorting, 'name_for_sorting', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($staffnotes, 'staff_notes', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($interested, 'interested', 'i', NULL, $query_portion_arr, $query_param_arr, $query_param_type_str);
         $query_param_arr[] = $participantBadgeId;
@@ -334,7 +336,7 @@ EOD;
     }
 ?>
 <div class="row mt-3">
-    <div class="col-12">
+    <div class="col-36">
         <div class="alert alert-success">
             <?php echo $message; ?>
         </div>
@@ -355,7 +357,7 @@ function perform_search() {
     $json_return = array();
     $queryPart1 = <<<EOD
 SELECT
-        P.badgeid, P.pubsname, P.interested, P.bio, P.htmlbio,
+        P.badgeid, P.pubsname, P.name_for_sorting, P.interested, P.bio, P.htmlbio,
         P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
         CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
         CD.postcountry, RT.message AS regmessage, IFNULL(A.answercount, 0) AS answercount,
@@ -566,6 +568,46 @@ EOD;
     RenderXSLT('FetchUserPermRoles.xsl', array(), $resultXML);
 }
 
+// gets a participant's scheduled sessions in chronological order.  Renders as HTML
+function fetch_participant_schedule() {
+    global $message_error;
+    $fetchedUserBadgeId = getString('badgeid');
+    if (empty($fetchedUserBadgeId)) {
+        $message_error = "Internal error.";
+        RenderErrorAjax($message_error);
+        exit();
+    }
+    $ConStartDatim = CON_START_DATIM;
+    $query = <<<EOD
+SELECT
+        DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime), '%W') AS day,
+        DATE_FORMAT(ADDTIME('$ConStartDatim', SCH.starttime), '%l:%i %p') AS starttime,
+        DATE_FORMAT(ADDTIME('$ConStartDatim', ADDTIME(SCH.starttime, S.duration)), '%l:%i %p') AS endtime,
+        R.roomname, S.title, TY.typename
+    FROM
+                  ParticipantOnSession POS
+             JOIN Sessions S USING (sessionid)
+             JOIN Schedule SCH USING (sessionid)
+             JOIN Rooms R USING (roomid)
+             JOIN Types TY USING (typeid)
+    WHERE
+        POS.badgeid = ?
+    ORDER BY
+        SCH.starttime;
+EOD;
+    $resultXML = mysql_prepare_query_XML(
+        array("schedule" => $query),
+        array("schedule" => "s"),
+        array("schedule" => array($fetchedUserBadgeId))
+    );
+    if (!$resultXML) {
+        RenderErrorAjax($message_error);
+        exit();
+    }
+    //echo mb_ereg_replace("<(row|query)([^>]*)/[ ]*>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"); //for debugging only
+    RenderXSLT('FetchParticipantSchedule.xsl', array(), $resultXML);
+}
+
 // Start here.  Should be AJAX requests only
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
@@ -597,6 +639,9 @@ switch ($ajax_request_action) {
         break;
     case "fetch_participant_tags":
         fetch_participant_tags();
+        break;
+    case "fetch_participant_schedule":
+        fetch_participant_schedule();
         break;
     default:
         $message_error = "Internal error.";
