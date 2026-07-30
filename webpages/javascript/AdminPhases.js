@@ -1,8 +1,8 @@
-// Copyright (c) 2023-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2023-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 function setColor(item, element, match) {
     var options = element.options;
     var sel = options.item(element.selectedIndex).defaultSelected;
-    
+
     if (sel == false) {
         $(item).addClass("table-dark-danger");
     } else {
@@ -25,19 +25,20 @@ function ChangePhase(num, element) {
 
     setColor(item, element, match);
 
-    if (num == 8) {
+    var phaseName = document.getElementById(match).textContent.trim();
+    if (phaseName.toLowerCase() === 'post con') {
         var table = document.getElementById("phase_table");
         for (var i = 1, row; row = table.rows[i]; i++) {
             var col0 = row.cells[0];
-            var rid = col0.innerHTML
-            if (rid != 8) {
-                var sel = document.getElementById('phase_id_' + rid)
+            var rid = col0.innerHTML;
+            if (rid != num) {
+                var sel = document.getElementById('phase_id_' + rid);
                 if (element.selectedIndex == 1) {
                     sel.selectedIndex = 0;
                 } else {
-                    sel.selectedIndex = FindDefaultOption(sel.options)
+                    sel.selectedIndex = FindDefaultOption(sel.options);
                 }
-                col0.classList.remove("tdChangedHighlight");
+                setColor('#phase_id_num_' + rid, sel, 'phase_name_' + rid);
             }
         }
     }
