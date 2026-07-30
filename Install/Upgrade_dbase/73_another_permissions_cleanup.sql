@@ -10,15 +10,19 @@
 ## This script replaces the unique1 index on the Permissions table so that duplicate rows with the
 ## same values for permatomid, phaseid, and permroleid containing a NULL badgeid will be prevented.
 ## The previous index did not prevent duplicates as long as badgeid was NULL.
+## MariaDB does not support MySQL's functional index syntax (CREATE INDEX ... ON t ((expr))), so this
+## is done by adding a generated virtual column for IFNULL(badgeid, '') and indexing that column
+## instead. This form works on both MySQL and MariaDB.
 ## 4)
 ## This script add a row to the Permissions table (if it doesn't already exist) to allow participants
 ## to log in even if the only phase which is active is the "Post con" phase.
 ## 5)
 ## Altering the unique1 index above seems to have the side effect of renaming the table `Permissions` to
 ## `permissions` on some servers (reproducible on lower_case_table_names=2 setups; ALGORITHM=COPY did not
-## prevent it). This step detects whether that happened and, only then, restores the correct case. Since
-## lower_case_table_names=2 makes a same-name case-only rename a no-op, the restore goes through a temporary
-## table name in two steps.
+## prevent it, and MariaDB's DROP INDEX doesn't accept an ALGORITHM clause at all, so it's only specified
+## on the CREATE INDEX below). This step detects whether that happened and, only then, restores the correct
+## case. Since lower_case_table_names=2 makes a same-name case-only rename a no-op, the restore goes through
+## a temporary table name in two steps.
 
 DELETE P1 FROM Permissions P1
     JOIN Permissions P2 ON
@@ -30,9 +34,12 @@ DELETE P1 FROM Permissions P1
 
 CREATE INDEX `FK_PermAtoms` ON Permissions (permatomid);
 
-DROP INDEX unique1 ON Permissions ALGORITHM=COPY;
+DROP INDEX unique1 ON Permissions;
 
-CREATE UNIQUE INDEX unique1 ON Permissions (permatomid, phaseid, permroleid, (IFNULL(badgeid, ''))) ALGORITHM=COPY;
+ALTER TABLE Permissions
+    ADD COLUMN `badgeid_norm` VARCHAR(15) GENERATED ALWAYS AS (IFNULL(badgeid, '')) VIRTUAL;
+
+CREATE UNIQUE INDEX unique1 ON Permissions (permatomid, phaseid, permroleid, badgeid_norm) ALGORITHM=COPY;
 
 INSERT IGNORE INTO Permissions
     (permatomid, phaseid, permroleid, badgeid)
