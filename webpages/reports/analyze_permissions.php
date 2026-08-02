@@ -1,6 +1,13 @@
 <?php
-// Created by Peter Olszowka on 06 June 2020
-// Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+/**
+ * Created by Peter Olszowka on 06 June 2020
+ * Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+ *
+ * There is a quirk in this report that if a permission atom is associated with more than one phase
+ * for a particular permission role, that atom will be listed more than once and may appear both
+ * active and inactive.
+ */
+
 $report = [];
 $report['name'] = 'Analyze Permissions Report';
 $report['description'] = 'Show permission atoms for each permroleid';
