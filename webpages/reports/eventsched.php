@@ -2,7 +2,7 @@
 // Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Full Event Schedule';
-$report['description'] = 'Lists all Events (as determined by division on session) Scheduled in all Rooms (includes unpublished).';
+$report['description'] = 'Lists all Events (as determined by typename on session) Scheduled in all Rooms (includes unpublished).';
 $report['categories'] = array(
     'Events Reports' => 5,
 );
@@ -41,10 +41,16 @@ SELECT
              JOIN Sessions S USING (sessionid)
              JOIN Rooms R USING (roomid)
              JOIN PubStatuses PS USING (pubstatusid)
+             JOIN Types TY USING (typeid)
         LEFT JOIN SessionHasTag SHT USING (sessionid)
         LEFT JOIN Tags TA USING (tagid)
     WHERE
-        S.typeid = 9 /* Event */
+           TY.typename like '%concert%'
+        OR TY.typename like '%performance%'
+        OR TY.typename like '%dance%'
+        OR TY.typename like '%event%'
+        OR TY.typename like '%show%'
+        OR TY.typename like '%ceremony%'
     GROUP BY
          SCH.scheduleid
     ORDER BY

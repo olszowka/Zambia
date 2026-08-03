@@ -1,4 +1,6 @@
-# New Report Engine
+# (Not So) New Report Engine
+
+This document describes a change to the report mechanism implemented in 2019.
 
 ## Primary Benefit
 
@@ -62,5 +64,3 @@ the report is in this array.
 * If you add or delete a report, rerun Build Report Menus to change the menus.
 * If you change the name, description, or categories of a report, rerun Build Report Menus to change the menus.
 * If you want a report not to appear under any categories, set $report\['categories'] = array();
-
-
