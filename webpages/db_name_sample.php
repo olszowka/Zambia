@@ -99,4 +99,8 @@ define("CON_HEADER_IMG", "");
 define("CON_HEADER_IMG_ALT", "");
 // to improve the con branding, you can specify the alt-text of the header image. For example:
 // define("CON_HEADER_IMG_ALT", "Really Big Con Logo);
+define("REPORT_SYSTEM_OVERRIDE_SUBDIR", "");
+// Name of a subdirectory of reportsSystemOverrides/ holding system-level report overrides/additions
+// (e.g. "zambia"), applied on top of reports/ and overridden in turn by reportsConOverrides/.
+// Leave "" to disable this override layer.
 ?>

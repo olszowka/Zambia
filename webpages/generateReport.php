@@ -9,7 +9,13 @@ if ($reportName == '') {
     RenderError($message_error);
     exit();
 }
-require("reports/$reportName");
+require_once('report_functions.php');
+$systemOverrideDir = getReportSystemOverrideDir($reportOverrideWarning);
+if (!requireReportDefinition($reportName, $systemOverrideDir)) {
+    $message_error = "Report $reportName not found.";
+    RenderError($message_error);
+    exit();
+}
 foreach ($report['queries'] as $queryName => $query) {
     $report['queries'][$queryName] = str_replace('$ConStartDatim$',CON_START_DATIM, $query);
 }
