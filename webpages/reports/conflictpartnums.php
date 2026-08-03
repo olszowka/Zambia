@@ -4,7 +4,6 @@ $report = [];
 $report['name'] = 'Conflict Report - Participant Number of Sessions';
 $report['description'] = 'Compare number of sessions participants requested with the number of which they were assigned';
 $report['categories'] = array(
-    'Boskone Central' => 320,
     'Conflict Reports' => 420,
 );
 $report['columns'] = array(
@@ -20,8 +19,8 @@ $report['columns'] = array(
     array("orderable" => false),
     array("orderable" => false),
     array("orderable" => false),
-//    array("orderable" => false),
-//    array("orderable" => false),
+    array("orderable" => false),
+    array("orderable" => false),
     array("orderable" => false)
 );
 $report['queries'] = [];
@@ -29,8 +28,8 @@ $report['queries']['availability'] =<<<'EOD'
 SELECT
         PAD.badgeid, PAD.day, PAD.maxprog
     FROM
-                  Participants P
-        LEFT JOIN ParticipantAvailabilityDays PAD USING(badgeid)
+             ParticipantAvailabilityDays PAD
+        JOIN Participants P USING(badgeid)
     WHERE
         P.interested = 1 /* interested */;
 EOD;
@@ -40,9 +39,9 @@ SELECT
         IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnameSort,
         PA.maxprog
     FROM
-                  Participants P
-             JOIN CongoDump CD USING (badgeid)
-        LEFT JOIN ParticipantAvailability PA USING(badgeid)
+             Participants P
+        JOIN ParticipantAvailability PA USING(badgeid)
+        JOIN CongoDump CD USING (badgeid)
     WHERE
             P.interested = 1 /* interested */
         AND EXISTS (SELECT *

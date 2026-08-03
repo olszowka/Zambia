@@ -1,44 +1,7 @@
 <?php
-// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-$report = [];
-$report['name'] = 'Participant Interests';
-$report['description'] = 'What is that participant interested in? (Program Participants who are attending)';
-$report['categories'] = array(
-    'Participant Info Reports' => 720,
-);
-$report['columns'] = array(
-    null,
-    array("orderData" => array(2, 1)),
-    array("visible" => false),
-    array(),
-    array("orderable" => false),
-    array("orderable" => false),
-    array("orderable" => false),
-    array("orderable" => false),
-    array("orderable" => false)
-);
-$report['queries'] = [];
-$report['queries']['participants'] =<<<'EOD'
-SELECT
-        P.badgeid, P.pubsname, P.name_for_sorting, PI.yespanels, PI.nopanels, PI.yespeople, PI.nopeople,
-        PI.otherroles, IFNULL(P.name_for_sorting,
-            IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1))
-            ) AS pubsnameSort
-    FROM
-             Participants P
-        JOIN ParticipantInterests PI USING (badgeid)
-        JOIN CongoDump CD USING (badgeid)
-        JOIN UserHasPermissionRole UHPR USING (badgeid)
-        JOIN PermissionRoles PR USING (permroleid)
-    WHERE
-            P.interested = 1
-        AND PR.permrolename = 'Participant'
-    ORDER BY
-        IFNULL(P.name_for_sorting,
-            IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1))
-            ),
-        CD.firstname;
-EOD;
+// Copyright (c) 2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+$report['categories']['Boskone Central'] = 260;
+$report['columns'][] = array("orderable" => false);
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -59,6 +22,7 @@ $report['xsl'] =<<<'EOD'
                             <th class="report">"People with whom I'd like to be on a session"</th>
                             <th class="report">"People with whom I'd rather not be on a session"</th>
                             <th class="report">"Other" Role Details</th>
+                            <th class="report">Bio</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
@@ -66,7 +30,7 @@ $report['xsl'] =<<<'EOD'
             </xsl:when>
             <xsl:otherwise>
                 <div class="alert alert-danger">No results found.</div>
-            </xsl:otherwise>                    
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
@@ -86,6 +50,7 @@ $report['xsl'] =<<<'EOD'
             <td class="report"><xsl:value-of select="@yespeople"/></td>
             <td class="report"><xsl:value-of select="@nopeople"/></td>
             <td class="report"><xsl:value-of select="@otherroles"/></td>
+            <td class="report"><xsl:value-of select="@bio"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

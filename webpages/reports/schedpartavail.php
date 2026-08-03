@@ -4,7 +4,6 @@ $report = [];
 $report['name'] = 'Participant availablity';
 $report['description'] = 'When they said they were available.';
 $report['categories'] = array(
-    'Boskone Central' => 240,
     'Participant Info Reports' => 920,
 );
 $report['columns'] = array(

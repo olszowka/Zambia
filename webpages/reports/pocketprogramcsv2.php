@@ -5,7 +5,6 @@ $report = [];
 $report['name'] = 'Pocket Program 2';
 $report['description'] = 'Export CSV file of public schedule for generating pocket program with tags instead of tracks';
 $report['categories'] = array(
-    'Boskone Central' => 620,
     'Reports downloadable as CSVs' => 79,
     'Publication Reports' => 45
 );
