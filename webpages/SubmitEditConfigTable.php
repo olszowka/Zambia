@@ -44,14 +44,29 @@ EOD;
     }
 }
 
+// $tablename must be restricted to this allowlist before use: it is interpolated directly into SQL
+// (SELECT/INSERT/UPDATE/DELETE/INFORMATION_SCHEMA), so accepting an arbitrary table name here would let
+// anyone with EditAnyConfigurationTable act on any table in the database, not just the intended config tables.
+// Keep in sync with the $mayEdit* table list in ConfigTableEditor.php.
+function may_edit_table($tablename) {
+    $validTableNameArr = array("BioEditStatuses", "Credentials", "Divisions", "EmailFrom", "EmailTo", "EmailCC",
+        "Features", "KidsCategories", "LanguageStatuses", "ParticipantTags", "PhotoDenialReasons", "PubStatuses",
+        "RegTypes", "Roles", "Rooms", "RoomHasSet", "RoomSets", "Services", "SessionStatuses", "Tags", "Times",
+        "Tracks", "Types");
+    if (!in_array($tablename, $validTableNameArr)) {
+        RenderErrorAjax("Editing $tablename is not supported.");
+        exit();
+    }
+    if (!(may_I('EditAnyConfigurationTable') || may_I("ce_$tablename"))) {
+        RenderErrorAjax("You do not have permission to view this page.");
+        exit();
+    }
+}
+
 function update_table($tablename) {
     global $json_return, $linki, $schema, $prikey;
 
-    if (!(may_I('EditAnyConfigurationTable') || may_I("ce_$tablename"))) {
-        $message_error = "You do not have permission to view this page.";
-        RenderErrorAjax($message_error);
-        exit();
-    }
+    may_edit_table($tablename);
 
     $rows = json_decode(getString("tabledata"));
     // $json_return['debug'] = print_r($rows, true);
@@ -193,11 +208,8 @@ function update_table($tablename) {
 function fetch_table($tablename, $message) {
     global $displayorder_found, $json_return, $schema;
     $db = DBDB;
-    if (!(may_I('EditAnyConfigurationTable') || may_I("ce_$tablename"))) {
-        $message_error = "You do not have permission to view this page.";
-        RenderErrorAjax($message_error);
-        exit();
-    }
+
+    may_edit_table($tablename);
 
     if (strpos($tablename, ' ', 0) !== false) {
         $json_return["message"] = $tablename;
@@ -243,19 +255,35 @@ EOD;
         }
     }
 
-    // Build CTE's for getting count of foreign key usage
+    // Build CTE's for getting count of foreign key usage.  Different child tables may reference different
+    // columns of $tablename, so group the foreign keys by referenced column and LEFT JOIN one usage-count
+    // subquery per distinct referenced column, then sum them for the row's total Usage_Count.
     if (count($foreign_keys) > 0 ) {
-        $innerQueryArray = array();
+        $keysByReferencedColumn = array();
         foreach ($foreign_keys as $key) {
-            $innerQueryArray[] = "SELECT ${key["COLUMN_NAME"]} AS ${key["REFERENCED_COLUMN_NAME"]}, count(*) AS occurs FROM ${key["TABLE_NAME"]} GROUP BY ${key["COLUMN_NAME"]}";
+            $keysByReferencedColumn[$key["REFERENCED_COLUMN_NAME"]][] = $key;
         }
-        $innerQuery = implode(" UNION ALL ", $innerQueryArray);
-        if (count($innerQueryArray) > 1) {
-            $middleQuery = "SELECT ${key["REFERENCED_COLUMN_NAME"]}, sum(occurs) AS occurs FROM ($innerQuery) AS union1 GROUP BY ${key["REFERENCED_COLUMN_NAME"]}";
-        } else {
-            $middleQuery = $innerQuery;
+
+        $joinClauses = array();
+        $usageCountTerms = array();
+        $joinIndex = 0;
+        foreach ($keysByReferencedColumn as $referencedColumn => $keysForColumn) {
+            $joinIndex++;
+            $alias = "usage_join_$joinIndex";
+            $innerQueryArray = array();
+            foreach ($keysForColumn as $key) {
+                $innerQueryArray[] = "SELECT {$key["COLUMN_NAME"]} AS $referencedColumn, count(*) AS occurs FROM {$key["TABLE_NAME"]} GROUP BY {$key["COLUMN_NAME"]}";
+            }
+            $innerQuery = implode(" UNION ALL ", $innerQueryArray);
+            if (count($innerQueryArray) > 1) {
+                $subQuery = "SELECT $referencedColumn, sum(occurs) AS occurs FROM ($innerQuery) AS {$alias}_inner GROUP BY $referencedColumn";
+            } else {
+                $subQuery = $innerQuery;
+            }
+            $joinClauses[] = "LEFT JOIN ($subQuery) AS $alias USING ($referencedColumn)";
+            $usageCountTerms[] = "ifnull($alias.occurs, 0)";
         }
-        $mainQuery = "SELECT ${key["REFERENCED_TABLE_NAME"]}.*, ifnull(occurs, 0) AS Usage_Count FROM ${key["REFERENCED_TABLE_NAME"]} LEFT JOIN ($middleQuery) AS union2 USING (${key["REFERENCED_COLUMN_NAME"]})";
+        $mainQuery = "SELECT $tablename.*, (" . implode(" + ", $usageCountTerms) . ") AS Usage_Count FROM $tablename " . implode(" ", $joinClauses);
     } else {
         $mainQuery = "SELECT *, 0 AS Usage_Count FROM $tablename";
     }
