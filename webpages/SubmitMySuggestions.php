@@ -1,38 +1,49 @@
 <?php
-// Copyright (c) 2005-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $linki, $title;
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $title;
 $title = "My Suggestions";
 require('PartCommonCode.php'); // sets $badgeid from $SESSION among other things
-require_once('renderMySuggestions.php');
-$paneltopics = getString("paneltopics");
-$otherideas = getString("otherideas");
-$suggestedguests = getString("suggestedguests");
+$paneltopics = if_null_default(getString("paneltopics"), '');
+$otherideas = if_null_default(getString("otherideas"), '');
+$suggestedguests = if_null_default(getString("suggestedguests"), '');
 if (!may_I('my_suggestions_write')) {
     $message = "Currently, you do not have write access to this page.\n";
     $error = true;
-    renderMySuggestions($title, $error, $message, $paneltopics, $otherideas, $suggestedguests);
-    exit();
-}
-if ($message = validate_suggestions($paneltopics, $otherideas, $suggestedguests)) {
+} elseif ($message = validate_suggestions($paneltopics, $otherideas, $suggestedguests)) {
     $message .= "<br>Database not updated.\n";
     $error = true;
-    renderMySuggestions($title, $error, $message, $paneltopics, $otherideas, $suggestedguests);
-    exit();
-}
-$message = "Database updated successfully.";
-$error = false;
-$paneltopicsE = mysqli_real_escape_string($linki, $paneltopics);
-$otherideasE = mysqli_real_escape_string($linki, $otherideas);
-$suggestedguestsE = mysqli_real_escape_string($linki, $suggestedguests);
-$query = <<<EOD
+} else {
+    $error = false;
+    $query = <<<EOD
 INSERT INTO ParticipantSuggestions (badgeid, paneltopics, otherideas, suggestedguests)
-    VALUES ("$badgeid", "$paneltopicsE", "$otherideasE", "$suggestedguestsE") 
-    ON DUPLICATE KEY UPDATE 
+    VALUES (?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
         badgeid = VALUES(badgeid), paneltopics=VALUES(paneltopics),
         otherideas = VALUES(otherideas), suggestedguests=VALUES(suggestedguests);
 EOD;
-if (!mysqli_query_exit_on_error($query)) {
-    exit(); // Should have exited already
+    $queryParamsArr = array($badgeid, $paneltopics, $otherideas, $suggestedguests);
+    mysqli_query_with_prepare_and_exit_on_error($query, 'ssss', $queryParamsArr);
+    // Just assume it exited on error correctly
+    $message = "Database updated successfully.";
 }
-renderMySuggestions($title, $error, $message, $paneltopics, $otherideas, $suggestedguests);
+
+$resultXML = ObjecttoXML('mysuggestions', array(array(
+    'paneltopics' => $paneltopics,
+    'otherideas' => $otherideas,
+    'suggestedguests' => $suggestedguests,
+)));
+if (!populateCustomTextArray()) {
+    $message_error = "Failed to retrieve custom text. " . $message_error;
+    RenderError($message_error);
+    exit();
+}
+$resultXML = appendCustomTextArrayToXML($resultXML);
+
+participant_header($title, false, 'Normal', 'bs5');
+$paramArray = array();
+$paramArray['readonly'] = may_I('my_suggestions_write') ? '0' : '1';
+$paramArray['error'] = $error ? '1' : '0';
+$paramArray['message'] = $message;
+RenderXSLT('my_suggestions.xsl', $paramArray, $resultXML);
+participant_footer();
 ?>
