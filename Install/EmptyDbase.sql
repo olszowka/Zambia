@@ -1140,7 +1140,10 @@ INSERT INTO `CustomText` (customtextid, page, tag, textcontents, active, html_bl
     (16,'General Interests','roles_checkboxes_label','Roles I\'m willing to take on:',0,0),
     (17,'General Interests','stuff_id_like_to_run','Workshops or presentations I''d like to run:',0,0),
     (18,'General Interests','people_want_on_sess_label','People with whom I\'d like to be on a session: (Leave blank for none)',0,0),
-    (19,'General Interests','people_dont_want_label','People with whom I\'d rather not be on a session: (Leave blank for none)',0,0);
+    (19,'General Interests','people_dont_want_label','People with whom I\'d rather not be on a session: (Leave blank for none)',0,0),
+    (20,'My Suggestions','paneltopics_label','Program Topic Ideas:',0,0),
+    (21,'My Suggestions','otherideas_label','Other Programming Ideas:',0,0),
+    (22,'My Suggestions','suggestedguests_label','Suggested Guests (please provide addresses and other contact information if possible):',0,0);
 
 INSERT INTO `LanguageStatuses`
     (languagestatusid, languagestatusname, display_order)
