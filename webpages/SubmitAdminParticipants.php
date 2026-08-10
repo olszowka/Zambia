@@ -351,6 +351,9 @@ function perform_search() {
     $searchString = is_null($searchString) ? "" : $searchString;
     $tagsArr = getArrayOfInts("tags", array());
     $tagSearchType = getString("tagSearchType");
+    if ($tagSearchType === null) {
+        $tagSearchType = 'tagmatchany'; // default if no radio checked
+    }
     if ($searchString == "" && count($tagsArr) == 0) {
         exit();
     }
