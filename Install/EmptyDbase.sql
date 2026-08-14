@@ -1085,6 +1085,22 @@ CREATE TABLE `ParticipantSurveyAnswers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Participant Survey Info.';
 
 --
+-- Table structure for table `ParticipantSurveyResponses`
+--
+
+DROP TABLE IF EXISTS `ParticipantSurveyResponses`;
+CREATE TABLE `ParticipantSurveyResponses` (
+    `badgeid` VARCHAR(15) NOT NULL,
+    `answers` JSON NOT NULL,
+    `lastupdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `updatedby` VARCHAR(15) NOT NULL,
+    PRIMARY KEY (`badgeid`),
+    KEY `updatedby` (`updatedby`),
+    CONSTRAINT `participantsurveyresponses_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+    CONSTRAINT `participantsurveyresponses_ibfk_2` FOREIGN KEY (`updatedby`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='One row per participant: JSON mirror of ParticipantSurveyAnswers, keyed by SurveyQuestionConfig.shortname.';
+
+--
 -- Table structure for table `TrackCompatibility`
 --
 
@@ -1211,7 +1227,11 @@ INSERT INTO `PatchLog`
     ('67_session_links_cleanup.sql'),
     ('68_custom_text_new_columns.sql'),
     ('69_my_interests_new_custom_text.sql'),
-    ('72_configure_permissions.sql');
+    ('70_remove_room_times.sql'),
+    ('71_name_for_sorting.sql'),
+    ('72_configure_permissions.sql'),
+    ('73_another_permissions_cleanup.sql'),
+    ('74_survey_responses_json.sql');
 
 INSERT INTO `PermissionAtoms`
     (permatomid, permatomtag, permatomname, elementid, page, notes, display_order)

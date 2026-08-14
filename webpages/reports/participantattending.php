@@ -3,11 +3,13 @@
 // Created by Peter Olszowka on 2022-11-04
 $report = [];
 $report['name'] = 'Participant Attending';
-$report['description'] = 'How each participant is attending (assumes survey question 1 is about hybrid attendance type)';
+$report['description'] = 'How each participant is attending (Assumes there is a survey question with a name of "AttendanceType")';
 $report['categories'] = array(
     'Participant Info Reports' => 500
 );
 $report['columns'] = array(
+    array(),
+    array(),
     array(),
     array(),
     array()
@@ -15,10 +17,12 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, P.pubsname, PSA1.value
+        P.badgeid, P.pubsname, CD.firstname, CD.lastname,
+        JSON_VALUE(PSR.answers, '$.AttendanceType.value') AS attendancetype
     FROM
                   Participants P
-        LEFT JOIN ParticipantSurveyAnswers PSA1 ON PSA1.participantid = P.badgeid AND PSA1.questionid = 1
+             JOIN CongoDump CD USING (badgeid)
+        LEFT JOIN ParticipantSurveyResponses PSR ON PSR.badgeid = P.badgeid
     WHERE
         EXISTS ( SELECT *
                     FROM
@@ -44,7 +48,9 @@ $report['xsl'] =<<<'EOD'
                         <tr style="height:2.6rem">
                             <th class="report">Badge Id</th>
                             <th class="report">Publication Name</th>
-                            <th class="report">Participation Type</th>
+                            <th class="report">First Name</th>
+                            <th class="report">Last Name</th>
+                            <th class="report">Attendance Type</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
@@ -60,7 +66,9 @@ $report['xsl'] =<<<'EOD'
         <tr>
             <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
             <td class="report"><xsl:value-of select="@pubsname" /></td>
-            <td class="report"><xsl:value-of select="@value" /></td>
+            <td class="report"><xsl:value-of select="@firstname" /></td>
+            <td class="report"><xsl:value-of select="@lastname" /></td>
+            <td class="report"><xsl:value-of select="@attendancetype" /></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

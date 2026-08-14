@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2015-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
     require_once('db_functions.php');
     function retrieveKonOpasData() {
         $results = array();
@@ -90,18 +90,16 @@ EOD;
             }
             $program[] = $programRow;
             }
-            // P.badgeid, P.pubsname, COALESCE(P.htmlbio, P.bio, '') AS bio, IFNULL(P.approvedphotofilename, 'default.png') AS photo
-            // P.badgeid, P.pubsname, IFNULL(P.bio, '') AS bio, P.approvedphotofilename AS photo,
         $query = <<<EOD
 SELECT
         P.badgeid, P.pubsname, COALESCE(P.htmlbio, P.bio, '') AS bio, P.approvedphotofilename AS photo,
-        PSA1.value AS website, PSA2.value AS facebook, PSA3.value AS twitter, PSA4.value AS instagram
+        JSON_VALUE(PSR.answers, '$.website.value') AS website,
+        JSON_VALUE(PSR.answers, '$.facebook.value') AS facebook,
+        JSON_VALUE(PSR.answers, '$.twitter.value') AS twitter,
+        JSON_VALUE(PSR.answers, '$.instagram.value') AS instagram
     FROM
                   Participants P
-        LEFT JOIN ParticipantSurveyAnswers PSA1 on P.badgeid = PSA1.participantid AND PSA1.questionid = 11
-        LEFT JOIN ParticipantSurveyAnswers PSA2 on P.badgeid = PSA2.participantid AND PSA2.questionid = 12
-        LEFT JOIN ParticipantSurveyAnswers PSA3 on P.badgeid = PSA3.participantid AND PSA3.questionid = 13
-        LEFT JOIN ParticipantSurveyAnswers PSA4 on P.badgeid = PSA4.participantid AND PSA4.questionid = 14
+        LEFT JOIN ParticipantSurveyResponses PSR USING (badgeid)
     WHERE
         P.badgeid IN (
             SELECT POS.badgeid FROM
@@ -121,18 +119,18 @@ EOD;
                 "bio" => mb_ereg_replace('/[\x00-\x1F\x7F]/','',$row["bio"])
                 );
             $links = array();
-//            if ($row["website"]) {
-//                $links["website"] = trim($row["website"]); // trim is safe for UTF-8, but not other mb encodings
-//            }
-//            if ($row["facebook"]) {
-//                $links["facebook"] = trim($row["facebook"]);
-//            }
-//            if ($row["twitter"]) {
-//                $links["twitter"] = trim($row["twitter"]);
-//            }
-//            if ($row["instagram"]) {
-//                $links["instagram"] = trim($row["instagram"]);
-//            }
+            if ($row["website"]) {
+                $links["website"] = trim($row["website"]); // trim is safe for UTF-8, but not other mb encodings
+            }
+            if ($row["facebook"]) {
+                $links["facebook"] = trim($row["facebook"]);
+            }
+            if ($row["twitter"]) {
+                $links["twitter"] = trim($row["twitter"]);
+            }
+            if ($row["instagram"]) {
+                $links["instagram"] = trim($row["instagram"]);
+            }
             if ($row["photo"]) {
                 $links["img"] = ROOT_URL . $photoPublicDirectory . "/" . $row["photo"];
             }

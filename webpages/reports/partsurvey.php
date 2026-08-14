@@ -1,60 +1,38 @@
 <?php
-// Copyright (c) 2018-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant Survey Responses by Question';
-$report['description'] = 'Show survey responses by question for each participant.';
+$report['description'] = 'Show survey responses by particpant for each question.';
 $report['categories'] = array(
     'Participant Info Reports' => 705,
 );
-$report['columns'] = array(
-    array("orderable" => false),
-    array("orderable" => false),
-    array("orderable" => false),
-    array("orderable" => false),
-    array("orderable" => false)
-);
 $report['queries'] = [];
 $report['queries']['questions'] =<<<'EOD'
-SELECT questionid, shortname, prompt, typename, SUM(AnswerFound) AS Answered
-	FROM (
-	SELECT d.display_order, d.questionid, d.shortname, d.prompt, t.shortname as typename,
-	CASE WHEN TRIM(IFNULL(a.value, "")) = "" THEN 0 ELSE 1 END AS AnswerFound
-	FROM SurveyQuestionConfig d
-	JOIN SurveyQuestionTypes t USING (typeid)
-	LEFT OUTER JOIN ParticipantSurveyAnswers a ON (a.questionid = d.questionid)
-) A
-GROUP BY questionid, shortname, prompt, shortname
-ORDER BY display_order ASC;
+SELECT
+        SQC.shortname, SQT.shortname as typename
+    FROM
+             SurveyQuestionConfig SQC
+        JOIN SurveyQuestionTypes SQT USING (typeid)
+    ORDER BY
+        SQC.display_order;
 EOD;
-$report['queries']['options'] =<<<'EOD'
-SELECT questionid, ordinal, optionshort, SUM(AnswerFound) AS Answered
-FROM (
-	SELECT d.questionid, o.ordinal, o.value as optionshort,
-		CASE WHEN TRIM(IFNULL(a.value, "")) = "" THEN 0 ELSE 1 END AS AnswerFound
-	FROM SurveyQuestionConfig d
-	JOIN SurveyQuestionOptionConfig o ON (d.questionid = o.questionid)
-	LEFT OUTER JOIN ParticipantSurveyAnswers a ON
-		(a.questionid = d.questionid AND a.value = o.value)
-) A
-GROUP BY questionid, ordinal, optionshort
-ORDER BY questionid, ordinal ASC;
+$report['queries']['participants'] =<<<'EOD'
+SELECT
+        P.badgeid, P.pubsname, CD.firstname, CD.lastname
+    FROM
+             Participants P
+        JOIN CongoDump CD USING (badgeid);
 EOD;
 $report['queries']['answers'] =<<<'EOD'
-SELECT questionid, answer, othertext, participantid, badgename,
-    CASE
-        WHEN IFNULL(lastname, '') = '' THEN firstname
-        WHEN IFNULL(firstname, '') = '' THEN lastname
-        ELSE CONCAT(lastname, ', ', firstname)
-    END AS FullName
-FROM (
-	SELECT d.questionid, a.value as answer, a.othertext, a.participantid, c.badgename, c.lastname, c.firstname,
-		CASE WHEN TRIM(IFNULL(a.value, "")) = "" THEN 0 ELSE 1 END AS AnswerFound
-	FROM SurveyQuestionConfig d
-	LEFT OUTER JOIN ParticipantSurveyAnswers a ON (a.questionid = d.questionid)
-    JOIN CongoDump c ON (c.badgeid = a.participantid)
-) A
-WHERE AnswerFound = 1
-ORDER BY questionid ASC, badgename ASC;
+SELECT
+        PSR.badgeid, SQC.shortname,
+        JSON_UNQUOTE(JSON_EXTRACT(PSR.answers, CONCAT('$.', SQC.shortname, '.value'))) AS value,
+        JSON_UNQUOTE(JSON_EXTRACT(PSR.answers, CONCAT('$.', SQC.shortname, '.othertext'))) AS othertext
+    FROM
+                   SurveyQuestionConfig SQC
+        CROSS JOIN ParticipantSurveyResponses PSR
+    WHERE
+        SQC.display_only = 0;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -64,12 +42,15 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="/doc/query[@queryName='questions']/row">
-                <table id="reportTable" class="report">
+                <table class="report">
                     <thead>
                         <tr style="height:2.6rem">
                             <th class="report">Question</th>
                             <th class="report">Count</th>
-                            <th class="report">Question/Respondent</th>
+                            <th class="report">Badge ID</th>
+                            <th class="report">Pubs Name</th>
+                            <th class="report">First Name</th>
+                            <th class="report">Last Name</th>
                             <th class="report">Answer</th>
                             <th class="report">Other Text</th>
                         </tr>
@@ -83,43 +64,31 @@ $report['xsl'] =<<<'EOD'
         </xsl:choose>
     </xsl:template>
     <xsl:template match="/doc/query[@queryName='questions']/row">
+        <xsl:variable name="shortname" select="@shortname" />
         <tr>
-            <td class="report"><xsl:value-of select="@shortname" /></td>
-            <td class="report"><xsl:value-of select="@Answered" /></td>
-            <td class="report"><xsl:value-of select="@typename" /></td>
+            <td class="report"><xsl:value-of select="$shortname" /></td>
+            <td class="report"><xsl:value-of select="count(/doc/query[@queryName='answers']/row[@shortname=$shortname]/@value)" /></td>
+            <td class="report" ><xsl:value-of select="@typename" /></td>
+            <td class="report" colspan="5">&#160;</td>
         </tr>
-        <xsl:choose>
-            <xsl:when test="contains(',hor-radio,vert-radio,single-pulldown,monthnum,monthabv,', concat(',',@typename,','))">
-                <xsl:variable name="questionido" select="@questionid" />
-                <xsl:apply-templates select="/doc/query[@queryName='options']/row[@questionid = $questionido]" />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:variable name="questionida" select="@questionid" />
-                <xsl:apply-templates select="/doc/query[@queryName='answers']/row[@questionid = $questionida]" />
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    <xsl:template match="/doc/query[@queryName='options']/row">
-        <tr>
-            <td class="report">&#160;</td>
-            <td class="report"><xsl:value-of select="@Answered" /></td>
-            <td class="report"><xsl:value-of select="@optionshort" /></td>
-        </tr>
-        <xsl:variable name="questionidoa" select="@questionid" />
-        <xsl:apply-templates select="/doc/query[@queryName='answers']/row[@questionid = $questionidoa]" >
-            <xsl:with-param name="answer" select="@optionshort" />
-        </xsl:apply-templates>
+        <xsl:apply-templates select="/doc/query[@queryName='answers']/row[@shortname = $shortname]" />
     </xsl:template>
     <xsl:template match="/doc/query[@queryName='answers']/row">
-        <xsl:param name="answer"/>
-        <xsl:if test="@answer = $answer or $answer=''">
+        <xsl:if test="@value">
+            <xsl:variable name="badgeid" select="@badgeid" />
             <tr>
                 <td class="report" colspan="2">&#160;</td>
-                <td class="report"><xsl:value-of select="@badgename" /> (<xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@participantid"/></xsl:call-template>) <xsl:value-of select="@FullName" /></td>
-                <td class="report"><xsl:value-of select="@answer" /></td>
+                <xsl:apply-templates select="/doc/query[@queryName='participants']/row[@badgeid = $badgeid]" />
+                <td class="report"><xsl:value-of select="@value" /></td>
                 <td class="report"><xsl:value-of select="@othertext" /></td>
             </tr>
         </xsl:if>
+    </xsl:template>
+    <xsl:template match="/doc/query[@queryName='participants']/row">
+        <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
+        <td class="report"><xsl:value-of select="@pubsname" /></td>
+        <td class="report"><xsl:value-of select="@firstname" /></td>
+        <td class="report"><xsl:value-of select="@lastname" /></td>
     </xsl:template>
 </xsl:stylesheet>
 EOD;

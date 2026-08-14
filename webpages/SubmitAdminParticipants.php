@@ -352,7 +352,7 @@ function perform_search() {
     $tagsArr = getArrayOfInts("tags", array());
     $tagSearchType = getString("tagSearchType");
     if ($tagSearchType === null) {
-        $tagSearchType = 'tagmatchany'; // default if no radio checked
+        $tagSearchType = 'tagmatchany'; //default to this if user didn't check anything
     }
     if ($searchString == "" && count($tagsArr) == 0) {
         exit();
@@ -363,20 +363,13 @@ SELECT
         P.badgeid, P.pubsname, P.name_for_sorting, P.interested, P.bio, P.htmlbio,
         P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
         CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-        CD.postcountry, RT.message AS regmessage, IFNULL(A.answercount, 0) AS answercount,
+        CD.postcountry, RT.message AS regmessage, IFNULL(JSON_LENGTH(PSR.answers), 0) AS answercount,
         P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
         IFNULL(P.photouploadstatus, 0) AS photouploadstatus, R.statustext, D.reasontext, ? AS foo
     FROM
                   Participants P
              JOIN CongoDump CD USING (badgeid)
-        LEFT JOIN (
-                SELECT
-                        participantid, COUNT(*) AS answercount
-                    FROM
-                        ParticipantSurveyAnswers
-                    GROUP BY
-                        participantid
-                ) A ON P.badgeid = A.participantid
+        LEFT JOIN ParticipantSurveyResponses PSR USING (badgeid)
         LEFT JOIN PhotoDenialReasons D USING (photodenialreasonid)
         LEFT JOIN PhotoUploadStatus R USING (photouploadstatus)
         LEFT JOIN RegTypes RT USING (regtype)

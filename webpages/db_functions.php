@@ -1187,4 +1187,61 @@ function survey_programmed() {
            return $questions > 0;
     return false;
 }
+
+/**
+ * Function sync_participant_survey_answers_from_json()
+ *  ParticipantSurveyResponses (JSON, keyed by SurveyQuestionConfig.shortname) is the authoritative source
+ *  for a participant's survey answers. This rebuilds that same participant's rows in the deprecated
+ *  row-per-question ParticipantSurveyAnswers table to match, so installations with override reports that
+ *  still read it directly keep seeing current data. Call after any write to ParticipantSurveyResponses.
+ *  No other code should read or write ParticipantSurveyAnswers going forward.
+ *  badgeid of the participant whose answers changed
+ *  updatedby = badgeid of the user who made the change
+ */
+function sync_participant_survey_answers_from_json($badgeid, $updatedby) {
+    $query = "SELECT answers FROM ParticipantSurveyResponses WHERE badgeid = ?;";
+    $result = mysqli_query_with_prepare_and_exit_on_error($query, 's', array($badgeid));
+    $row = mysqli_fetch_assoc($result);
+    $answers = $row ? json_decode($row['answers'], true) : array();
+
+    $questionIdByShortname = array();
+    $result = mysqli_query_exit_on_error("SELECT questionid, shortname FROM SurveyQuestionConfig;");
+    while ($row = mysqli_fetch_assoc($result)) {
+        $questionIdByShortname[$row['shortname']] = $row['questionid'];
+    }
+
+    $upsertSql = <<<EOD
+INSERT INTO ParticipantSurveyAnswers(participantid, questionid, privacy_setting, value, othertext, updatedby)
+VALUES (?, ?, ?, ?, ?, ?)
+ON DUPLICATE KEY UPDATE
+    privacy_setting = ?,
+    value = ?,
+    othertext = ?,
+    updatedby = ?;
+EOD;
+    $keepQuestionIds = array();
+    foreach ($answers as $shortname => $answer) {
+        if (!isset($questionIdByShortname[$shortname])) {
+            continue; // question has since been removed from SurveyQuestionConfig
+        }
+        $questionid = $questionIdByShortname[$shortname];
+        $keepQuestionIds[] = $questionid;
+        $privacy = (int)($answer['privacy_setting'] ?? 0);
+        $value = $answer['value'] ?? null;
+        $othertext = $answer['othertext'] ?? null;
+        mysql_cmd_with_prepare(
+            $upsertSql,
+            'siisssisss',
+            array($badgeid, $questionid, $privacy, $value, $othertext, $updatedby, $privacy, $value, $othertext, $updatedby)
+        );
+    }
+
+    if (count($keepQuestionIds) === 0) {
+        mysql_cmd_with_prepare("DELETE FROM ParticipantSurveyAnswers WHERE participantid = ?;", 's', array($badgeid));
+        return;
+    }
+    $placeholders = implode(',', array_fill(0, count($keepQuestionIds), '?'));
+    $delsql = "DELETE FROM ParticipantSurveyAnswers WHERE participantid = ? AND questionid NOT IN ($placeholders);";
+    mysql_cmd_with_prepare($delsql, 's' . str_repeat('i', count($keepQuestionIds)), array_merge(array($badgeid), $keepQuestionIds));
+}
 ?>
