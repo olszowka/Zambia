@@ -10,30 +10,32 @@
 * fix initialization of tceEditor when cell value null
 * ensure column width fits column name
 * improve error handling and fix to edit columns names which are sql reserved words
-* On Rooms table remove open and close time fields and generally improve working with this table
-* Fix headers when users has incorrect permissions
+* On Rooms table remove open and close time fields and generally improve working with this table (Issue 134)
+* Fix headers when user has incorrect permissions
 * Security improvements
 
 #### Other
 
 * On Admin Participants page, radio will default if unchecked rather than throw error
 * On Edit Custom Text page, the block level mechanism now works
-* On profile page, can save when badgeid is non-numeric (PR 126)
+* On My Profile page, can save when badgeid is non-numeric (PR 126)
 * Fix all sessions search within brainstorm
 * On Admin Participants page, fix bug editing permisison roles and participant tags
 * Don't allow editing of email address if integration with ConTroll enabled (for ConTroll security reasons)
-* On Edit/Create Session page, fix escaping of 2nd title and 2nd description labels.
-* Add missing constants to db_name_sample and move one there.
+* On Edit/Create Session page, fix escaping of 2nd title and 2nd description labels
+* Add missing constants to db_name_sample and move one there
+* On My Profile page, fix scenario when user edits data, saves, reverts edit, and saves again (Issue 114)
+* On My Availability page, validate open ended text fields fit within db fields upon save. (Issue 89)
 
 ### New Features
 
-* New administration page to edit permissions
+* New administration page to edit permissions (Issue 101)
   * Includes new permission atom for this page
-* New report for printing back of badge schedule labels (PR 145)
-* In password recovery process, trim whitespace around badgeid and email before comparing
-* Email send results page has normal header and menu
+* New report for printing back of badge schedule labels (Issue 144 / PR 145)
+* In password recovery process, trim whitespace around badgeid and email before comparing (Issue 132)
+* Email send results page has normal header and menu (Issue 140)
 * Enhanced permission analysis report
-* Overhaul report engine to segregate deployment-specific report edits
+* Overhaul report engine to segregate deployment-specific report edits (Issue 124)
 * On Maintain Room Schedule page, clean up layout and allow for direct editing of start time and duration
 * Convert some reports to filter by permrolename to make them more flexible for non-core permission configurations
 * Modify back-to-back conflict report to respect STANDARD_BLOCK_LENGTH configuration
