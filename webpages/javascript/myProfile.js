@@ -1,4 +1,4 @@
-//  Copyright (c) 2015-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function MyProfile() {
     var anyDirty = false;
@@ -249,9 +249,31 @@ function MyProfile() {
         });
     };
 
+    this.syncControlDefaults = () => {
+        // After a successful save, resync each control's default* properties to its
+        // current value, so later dirty-checking compares against the last-saved
+        // state instead of the value the page originally loaded with. Without this,
+        // reverting a field back to its page-load value looks "unchanged" and gets
+        // dropped from the next save's postdata.
+        $(".mycontrol").each(function () {
+            var $elem = $(this);
+            var type = $elem.attr("type");
+            if (type === "checkbox" || type === "radio") {
+                this.defaultChecked = this.checked;
+            } else if ($elem.prop("tagName") === "SELECT") {
+                $elem.find("option").each(function () {
+                    this.defaultSelected = this.selected;
+                });
+            } else {
+                this.defaultValue = this.value;
+            }
+        });
+    };
+
     this.showUpdateResults = (data, textStatus, jqXHR) => {
         //ajax success callback function
         $resultBoxDiv.html(data).css("visibility", "visible");
+        this.syncControlDefaults();
         $password.val("");
         $cpassword.val("");
         anyDirty = false;
