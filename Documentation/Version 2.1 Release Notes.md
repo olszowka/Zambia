@@ -42,6 +42,7 @@
 * Modify back-to-back conflict report to respect STANDARD_BLOCK_LENGTH configuration
 * On Administer Participants age, show participant's schedule on bottom
 * Implement name-for-sorting field
+* Improve error handling when working with participant photos
 
 ### Invisible code cleanup
 

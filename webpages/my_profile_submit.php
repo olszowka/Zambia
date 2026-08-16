@@ -335,27 +335,38 @@ function uploadphoto($badgeid) {
         $resizedimage = imagecreatetruecolor($newwidth, $newheight);
         imagecopyresampled($resizedimage, $originalimage, 0, 0, 0, 0, $newwidth, $newheight, $up_width, $up_height);
         if ($ext == 'png')
-            $result = imagepng($resizedimage, $dest);
+            $result = @imagepng($resizedimage, $dest);
         else
-            $result = imagejpeg($resizedimage, $dest);
+            $result = @imagejpeg($resizedimage, $dest);
         imagedestroy($resizedimage);
+        if ($result === false) {
+            $lastError = error_get_last();
+            error_log("Failed to save uploaded photo to $dest: " . ($lastError['message'] ?? 'unknown error'));
+            RenderErrorAjax("Unable to save uploaded photo. Please try again or contact the convention if the problem persists.");
+            exit();
+        }
     }
     else {
         if ($image_size > $max_size) {
             RenderErrorAjax("Image is too large, maximim size = $max_size");
             exit();
         }
-        $fd = fopen($dest, 'wb');
+        $fd = @fopen($dest, 'wb');
         if ($fd === false) {
-            RenderErrorAjax("Error with uploaded image, unable to create file");
+            $lastError = error_get_last();
+            error_log("Failed to open destination file $dest for uploaded photo: " . ($lastError['message'] ?? 'unknown error'));
+            RenderErrorAjax("Unable to save uploaded photo. Please try again or contact the convention if the problem persists.");
             exit();
         }
         $len = fwrite($fd, $image, $image_size);
+        fclose($fd);
         if ($len != $image_size) {
-            RenderErrorAjax("Error with uploaded image, unable to save");
+            $lastError = error_get_last();
+            error_log("Failed to write uploaded photo to $dest (wrote " . var_export($len, true) . " of $image_size bytes): " . ($lastError['message'] ?? 'unknown error'));
+            @unlink($dest);
+            RenderErrorAjax("Unable to save uploaded photo. Please try again or contact the convention if the problem persists.");
             exit();
         }
-        fclose($fd);
     }
 
     $sql = <<<EOD
@@ -439,10 +450,9 @@ function deleteuploadedphoto($badgeid) {
     }
 
     $fname = $dest . "/" . PHOTO_UPLOAD_DIRECTORY . "/" . $row["uploadedphotofilename"];
-    try {
-        unlink($fname);
-    } catch (Exception $e) {
-        error_log("Caught: " . $e->getMessage());
+    if (!@unlink($fname)) {
+        $lastError = error_get_last();
+        error_log("Failed to delete uploaded photo $fname: " . ($lastError['message'] ?? 'unknown error'));
         $json_return["message"] = "Error deleting photo";
         $do_update = false;
     }
@@ -500,10 +510,9 @@ function deleteapprovedphoto($badgeid) {
         exit();
     }
     $fname = $dest . "/" . PHOTO_PUBLIC_DIRECTORY . "/" . $row["approvedphotofilename"];
-    try {
-        unlink($fname);
-    } catch (Exception $e) {
-        error_log("Caught: " . $e->getMessage());
+    if (!@unlink($fname)) {
+        $lastError = error_get_last();
+        error_log("Failed to delete approved photo $fname: " . ($lastError['message'] ?? 'unknown error'));
         $json_return["message"] = "Error deleting approved photo";
         $do_update = false;
     }
