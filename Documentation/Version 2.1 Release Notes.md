@@ -26,6 +26,7 @@
 * Add missing constants to db_name_sample and move one there
 * On My Profile page, fix scenario when user edits data, saves, reverts edit, and saves again (Issue 114)
 * On My Availability page, validate open ended text fields fit within db fields upon save. (Issue 89)
+* Schema creation script EmptyDbase.sql was missing necessary data for table PhotoUploadReasons
 
 ### New Features
 
