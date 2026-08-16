@@ -1233,6 +1233,19 @@ INSERT INTO `PatchLog`
     ('73_another_permissions_cleanup.sql'),
     ('74_survey_responses_json.sql');
 
+## bit 0 = uploaded photo available
+## bit 1 = uploaded photo denied
+## bit 2 = approved photo available
+INSERT INTO PhotoUploadStatus (photouploadstatus, statustext)
+    VALUES (0, 'No photo uploaded'),
+    (1, 'Photo waiting for approval'),
+    (2, 'Denied - see denial reason'),
+    (3, 'Denied photo replaced, waiting for approval'),
+    (4, 'Photo approved'),
+    (5, 'Updated photo waiting for approval'),
+    (6, 'Updated photo denied and deleted, existing photo still available'),
+    (7, 'Updated photo denied, existing photo still available');
+
 INSERT INTO `PermissionAtoms`
     (permatomid, permatomtag, permatomname, elementid, page, notes, display_order)
     VALUES
