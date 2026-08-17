@@ -56,6 +56,8 @@ See [Report Customization.md](Report%20Customization.md)
 * Migrate several pages to XSLT
 * Migrate Bootstrap 5 to 5.3.8
 * Migrate Bootstrap 4 to 4.6.2
+* Configure Permissions react-app build tooling: bump vite to 8.2.1 (removing now-unnecessary direct esbuild
+dependency), bump @vitejs/plugin-react to 5.2.0 for compatibility with vite 8, bump postcss to 8.5.26 (PR's 160 and 161)
 
 ## Application Notes
 
