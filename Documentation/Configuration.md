@@ -10,6 +10,12 @@
 
 "Phases" represent chunks of time when participants ability to do something is enabled.  One or more phases may be active simultaneously.  The "Administer Phases" page just lets you control which phases are currently active.
 
+### Configure Permissions
+
+There are 4 configuration tables which interact to define what any user is permitted to do at any particular time(phase).  These tables are `PermissionRoles`, `Phases`, `Permissions`, plus `PermissionAtoms` which is not
+configurable, but is used by the other tables.  This page, with several tabs, allows you to edit these tables while maintaining the proper data integrity and interaction between them.  This section is the most intricate
+of the configuration GUI and should be used only by skilled administrators.
+
 ### Report Menus
 
 "Build Report Menus" menu item
