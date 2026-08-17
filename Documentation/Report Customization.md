@@ -83,3 +83,12 @@ SELECT
         SCH.starttime, R.roomname;
 EOD;
 ```
+
+## Migration
+
+If a convention has customized reports in the original `reports` directory, those customizations will still work
+as before.  Still, moving those modified files to the `reportsConOverrides` directory and restoring the core file
+to the `reports` directory will simplify change tracking while giving the same results.  If the customization is
+to name, description, and/or category as shown above, putting only that customization in the file in
+`reportsConOverrides` will allow the convention to take advantage of any edits to the implementation of the
+report in the core.

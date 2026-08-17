@@ -26,8 +26,10 @@
 * Add missing constants to db_name_sample and move one there
 * On My Profile page, fix scenario when user edits data, saves, reverts edit, and saves again (Issue 114)
 * On My Availability page, validate open ended text fields fit within db fields upon save. (Issue 89)
-* Schema creation script EmptyDbase.sql was missing necessary data for table PhotoUploadReasons
-
+* Schema creation script EmptyDbase.sql was missing necessary data for table PhotoUploadStatus
+* Fix broken key on permission table which allowed redundant permission configuration
+* Fix Admin Phases page which incorrectly disabled phases by incorrectly identifying the "post con"
+phase
 ### New Features
 
 * New administration page to edit permissions (Issue 101)
@@ -44,6 +46,7 @@ See [Report Customization.md](Report%20Customization.md)
 * On Administer Participants age, show participant's schedule on bottom
 * Implement name-for-sorting field
 * Improve error handling when working with participant photos
+* Change storage of participant survey responses to json to simplify coding reports to use this data.  The previous mechanism using multiple rows per participant in the table `ParticipantSurveyAnswers` is still functional, but is deprecated and that table will go away some time around mid 2027.  Please update any con-specific reports to use the table `ParticipantSurveyResponses`.
 
 ### Invisible code cleanup
 
