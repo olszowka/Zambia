@@ -33,15 +33,15 @@ triggered by the `REPORT_SYSTEM_OVERRIDE_SUBDIR` configuration constant.
 ### Hiding a report
 
 It is common for a convention to want to hide a report it doesn't use to simplify the report menus.
-To implement this, just add the following code in a file of the report name in the `webpages/reports/` directory.
+To implement this, just add the following code in a file of the report name in the `webpages/reportsConOverrides/` directory.
 ```
 <?php
 $report['categories'] = array();
 ```
 ### Putting a report in a new category
 
-Some conventions make a new category to hold its commonly used reports to make finding them convenient.
-To implement this, just add the following code in a file of the report name in the `webpages/reports/`
+Some conventions make a new category to hold their commonly used reports to make finding them convenient.
+To implement this, just add the following code in a file of the report name in the `webpages/reportsConOverrides/`
 directory.  In this case, "Boskone Central" is the new report category to appear in the menus, and "220"
 control the location of the report within that category.
 ```

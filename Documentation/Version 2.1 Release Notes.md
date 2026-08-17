@@ -36,7 +36,8 @@
 * In password recovery process, trim whitespace around badgeid and email before comparing (Issue 132)
 * Email send results page has normal header and menu (Issue 140)
 * Enhanced permission analysis report
-* Overhaul report engine to segregate deployment-specific report edits (Issue 124)
+* Overhaul report engine to segregate deployment-specific report edits (Issue 124)<br />
+See [Report Customization.md](Report%20Customization.md)
 * On Maintain Room Schedule page, clean up layout and allow for direct editing of start time and duration
 * Convert some reports to filter by permrolename to make them more flexible for non-core permission configurations
 * Modify back-to-back conflict report to respect STANDARD_BLOCK_LENGTH configuration
@@ -90,3 +91,35 @@ same server as Zambia.
 #### `REG_CONID`
 
 If Zambia is integrated with ConTroll, specifies the convention id on the ConTroll side.
+
+### Schema Patches
+
+#### 70_remove_room_times.sql
+
+Just apply this patch as normal. These schema changes are recent and haven't been seen previously. These schema
+changes support the simplification of the `Rooms` table to ease configuration of it.
+
+#### 71_name_for_sorting.sql
+
+Just apply this patch as normal. These schema changes are recent and haven't been seen previously. These schema
+changes support the new name-for-sorting property/feature.
+
+#### 72_configure_permissions.sql
+
+Just apply this patch as normal. These schema changes are recent and haven't been seen previously. These schema
+changes support the new feature to configure permissions from the application.
+
+#### 73_another_permissions_cleanup.sql
+
+Just apply this patch as normal. These schema changes are recent and haven't been seen previously. These schema
+changes support an additional key to prevent superfluous permissions configurations.
+
+#### 74_survey_responses_json.sql
+
+Just apply this patch as normal. These schema changes are recent and haven't been seen previously. These schema
+changes support the change to storing survey responses as json.
+
+#### 75_my_suggestions_custom_text.sql
+
+Just apply this patch as normal. These schema changes are recent and haven't been seen previously. These schema
+changes support the addition of new custom text entries.
