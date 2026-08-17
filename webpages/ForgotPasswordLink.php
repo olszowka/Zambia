@@ -11,7 +11,7 @@ if (RESET_PASSWORD_SELF !== true) {
     participant_header($title, true, 'Normal', 'bs5');
     echo <<<EOD
 <div class="row">
-    <div class="col-12 mt-4">
+    <div class="col-36 mt-4">
         <div class="alert alert-danger">You have reached this page in error.</div>
     </div>
 </div>
@@ -23,7 +23,7 @@ participant_header($title, true, 'Normal', 'bs5');
 if (empty($selector) || empty($validator)) {
     echo <<<EOD
 <div class="row">
-    <div class="col-12 mt-4">
+    <div class="col-36 mt-4">
         <div class="alert alert-danger">Reset password link was missing required parameters.</div>
     </div>
 </div>

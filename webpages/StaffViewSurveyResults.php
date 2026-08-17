@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2022-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-12-29 or 2021-01-20 ?
 
 global $message_error, $title, $linki, $session;
@@ -23,8 +23,21 @@ if (isLoggedIn() && may_I("Staff")) {
     $resultXML = null;
     $paramArray = array();
     if ($badgeid) {
-        $query = [];
-        $query["questions"]=<<<EOD
+        // ParticipantSurveyResponses is the source of truth; fetch this participant's JSON once and merge
+        // it (in PHP) into the question config below, instead of joining ParticipantSurveyAnswers.
+        $result = mysqli_query_with_prepare_and_exit_on_error(
+            "SELECT answers FROM ParticipantSurveyResponses WHERE badgeid = ?;", 's', array($badgeid)
+        );
+        $existingRow = mysqli_fetch_assoc($result);
+        $currentAnswers = $existingRow ? json_decode($existingRow['answers'], true) : array();
+
+        $optionAllowOtherText = array();
+        $result = mysqli_query_exit_on_error("SELECT questionid, value, allowothertext FROM SurveyQuestionOptionConfig;");
+        while ($row = mysqli_fetch_assoc($result)) {
+            $optionAllowOtherText[$row['questionid'] . "\0" . $row['value']] = $row['allowothertext'];
+        }
+
+        $questionsSql = <<<EOD
 SELECT
         SQC.questionid, SQC.shortname, SQC.description, SQC.prompt, SQC.hover, SQC.display_order, SQC.typeid, SQT.shortname as typename,
         SQC.required, SQC.publish, SQC.privacy_user, SQC.searchable, SQC.ascending, 1 AS display_only, SQC.min_value, SQC.max_value,
@@ -47,33 +60,40 @@ SELECT
             WHEN SQT.shortname = 'text' OR SQT.shortname = 'html-text' THEN
                 CASE WHEN max_value > 500 THEN 8 ELSE 4 END
             ELSE ''
-        END AS `rows`,
-        IFNULL(PSA.value, '') AS answer, IFNULL(PSA.othertext, '') AS othertext,
-        IFNULL(PSA.privacy_setting, publish) AS privacy_setting,
-        IF (IFNULL(SQOC.allowothertext, 0) > 0, 1, 0) AS allowothertext
+        END AS `rows`
     FROM
                   SurveyQuestionConfig SQC
              JOIN SurveyQuestionTypes SQT USING (typeid)
-             JOIN ParticipantSurveyAnswers PSA ON (PSA.questionid = SQC.questionid AND PSA.participantid = '$badgeid')
-        LEFT JOIN SurveyQuestionOptionConfig SQOC ON (SQC.questionid = SQOC.questionid AND PSA.value = SQOC.value)
     ORDER BY
         SQC.display_order;
 EOD;
-        $resultXML = mysql_query_XML($query);
+        $result = mysqli_query_exit_on_error($questionsSql);
+        $questionRows = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            if (!isset($currentAnswers[$row['shortname']])) {
+                continue; // no ParticipantSurveyResponses entry for this question (mirrors the old INNER JOIN)
+            }
+            $answer = $currentAnswers[$row['shortname']];
+            $row['answer'] = $answer['value'] ?? '';
+            $row['othertext'] = $answer['othertext'] ?? '';
+            $row['privacy_setting'] = $answer['privacy_setting'] ?? $row['publish'];
+            $optionKey = $row['questionid'] . "\0" . ($answer['value'] ?? '');
+            $row['allowothertext'] = (isset($optionAllowOtherText[$optionKey]) && $optionAllowOtherText[$optionKey] > 0) ? 1 : 0;
+            $questionRows[] = array_filter($row, fn($value) => $value !== null && $value !== '');
+        }
+        $resultXML = ObjecttoXML('questions', $questionRows);
         $query = <<<EOD
 SELECT
-        CD.firstname, CD.lastname, CD.badgename, P.pubsname, IFNULL(A.answercount, 0) AS answercount
+        CD.firstname, CD.lastname, CD.badgename, P.pubsname, IFNULL(ANS.answercount, 0) AS answercount
     FROM
                   Participants P
              JOIN CongoDump CD USING (badgeid)
         LEFT JOIN (
             SELECT
-                    participantid, COUNT(*) AS answercount
+                    badgeid, JSON_LENGTH(answers) AS answercount
                 FROM
-                     ParticipantSurveyAnswers
-                GROUP BY
-                    participantid 
-                  ) A ON (A.participantid = P.badgeid)
+                     ParticipantSurveyResponses
+                  ) ANS ON (ANS.badgeid = P.badgeid)
     WHERE P.badgeid = '$badgeid';
 EOD;
         $result = mysqli_query_exit_on_error($query);

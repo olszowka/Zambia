@@ -164,11 +164,11 @@
                             <xsl:when test="$bilingual">
                                 <div class="row mt-1">
                                     <div class="form-group col-md-5">
-                                        <label for="secondtitle"><xsl:value-of select="$secondtitlecaption" /></label>
+                                        <label for="secondtitle"><xsl:value-of select="$secondtitlecaption" disable-output-escaping="yes" /></label>
                                         <input type="text" class="form-control" name="secondtitle" id="secondtitle" value="{$secondtitle}" />
                                     </div>
                                     <div class="form-group col-md-6 offset-md-1">
-                                        <label for="pocketprogtext"><xsl:value-of select="$seconddescriptioncaption" /></label>
+                                        <label for="pocketprogtext"><xsl:value-of select="$seconddescriptioncaption" disable-output-escaping="yes" /></label>
                                         <textarea rows="4" cols="70" name="pocketprogtext" id="pocketprogtext" class="form-control">
                                             <xsl:value-of select="$pocketprogtext" />
                                         </textarea>

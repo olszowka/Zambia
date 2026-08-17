@@ -1,9 +1,9 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $header_section;
 $header_section = HEADER_STAFF;
 
-function staff_header($title, $bootstrapVersion = 'bs2', $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function staff_header($title, $bootstrapVersion = 'bs2', $is_data_tables = false, $reportColumns = false, $reportAdditionalOptions = false) {
     global $fullPage;
     $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     $isLoggedIn = isLoggedIn();
@@ -13,7 +13,7 @@ function staff_header($title, $bootstrapVersion = 'bs2', $is_report = false, $re
         participant_header(''); // force data consent page
         exit();
     }
-    html_header($title, $bootstrapVersion, $is_report, $reportColumns, $reportAdditionalOptions);
+    html_header($title, $bootstrapVersion, $is_data_tables, $reportColumns, $reportAdditionalOptions);
     $bodyClass = "";
     if ($fullPage && $isBs4or5) {
         $bodyClass = 'class="full-page bs4"';

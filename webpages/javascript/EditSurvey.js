@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 var configtable;
 var optiontable;
 var message = "";
@@ -100,18 +100,29 @@ var EditSurvey = function () {
             prompt = prompt.substring(3, prompt.length-4);
         }
 
-        if (curid == -99999) {
-            // new question, check for duplicate shortname (question name)
-            //console.log("looging for '" + shortname + "'");
-            var data = table.getData();//searchRows didn't work, so get entire array of data and loop over that.
-            //console.log(data);
-            for (var row in data) {
-                //console.log("checking '" + data[row].shortname + "' vs '" + shortname + "'");
-                if (data[row].shortname == shortname) {
-                    alert(shortname + " already exists, it must be unique");
-                    return;
-                }
+        // Name must begin with a letter and contain only letters, digits, or underscores -- this lets
+        // ParticipantSurveyResponses' JSON always be extracted by plain dot notation (e.g.
+        // $.shortname.value), with no path-escaping ever required. Headings are exempt from this format
+        // rule: they never produce a JSON entry (see PartSurvey.php), so dot notation is never at stake for
+        // them. Uniqueness, however, still applies to every question regardless of type, since the
+        // database's UNIQUE KEY on shortname is not type-scoped. Re-validated server-side too, since this
+        // is only a client-side convenience check.
+        if (typename !== 'heading' && !/^[A-Za-z][A-Za-z0-9_]*$/.test(shortname)) {
+            alert(shortname + " is not a valid name. Names must start with a letter and contain only letters, digits, and underscores.");
+            return;
+        }
+        //console.log("looging for '" + shortname + "'");
+        var data = table.getData();//searchRows didn't work, so get entire array of data and loop over that.
+        //console.log(data);
+        for (var row in data) {
+            //console.log("checking '" + data[row].shortname + "' vs '" + shortname + "'");
+            if (data[row].questionid != curid && data[row].shortname.toLowerCase() == shortname.toLowerCase()) {
+                alert(shortname + " already exists, it must be unique");
+                return;
             }
+        }
+
+        if (curid == -99999) {
             // ok not found, proceeed.
             curid = newid;
         }
@@ -915,6 +926,9 @@ function saveComplete(data, textStatus, jqXHR) {
 
 function saveError(xhdr, status, error) {
     message = "Save error: " + xhdr.status + ': ' + xhdr.statusText;
+    if (xhdr.responseText) {
+        message += '<br>' + xhdr.responseText;
+    }
     cleanupSave(message, 'alert alert-danger mt-4');
 }
 

@@ -150,7 +150,7 @@ function MySchedConstr() {
                     htmlbio: $htmlbioTextarea.val()
                 };
                 $.ajax({
-                    url: "SubmitMyContact.php",
+                    url: "my_profile_submit.php",
                     dataType: "html",
                     data: postdata,
                     success: myProfile.getLength,
@@ -193,7 +193,7 @@ function MySchedConstr() {
             }
         });
         $.ajax({
-            url: "SubmitMyContact.php",
+            url: "my_profile_submit.php",
             dataType: "html",
             data: postdata,
             success: myProfile.showUpdateResults,
@@ -226,7 +226,7 @@ function MySchedConstr() {
         document.getElementById("resultBoxDIV").scrollIntoView(false);
         if (htmlbioused) {
             $.ajax({
-                url: "SubmitMyContact.php",
+                url: "my_profile_submit.php",
                 dataType: "html",
                 data: ({
                     ajax_request_action: "fetch_bio"

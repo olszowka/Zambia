@@ -1,8 +1,8 @@
 <?php
-// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'New Comps Report';
-$report['description'] = 'Session counts for each participant.  Rewritten for B61 and again for B62';
+$report['description'] = 'Session counts for each participant.  Rewritten for B61 and again for B62 (Specific for Boskone)';
 $report['categories'] = array(
     'Registration Reports' => 100,
 );
@@ -65,10 +65,11 @@ SELECT
             ) AS subQ USING (badgeid)
     WHERE EXISTS (SELECT *
                     FROM
-                        UserHasPermissionRole UHPR
+                             UserHasPermissionRole UHPR
+                        JOIN PermissionRoles PR USING (permroleid)
                     WHERE
                             UHPR.badgeid = P.badgeid
-                        AND UHPR.permroleid = 4 /* Participant */
+                        AND PR.permrolename = 'Participant'
                       )
     ORDER BY
         CD.lastname, CD.firstname;

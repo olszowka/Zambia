@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2007-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2007-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 //  RenderPrecis display requires:  a query result containing rows with these fields IN THIS ORDER:
 //  $sessionid, $trackname, $typename, $title, $duration, $estatten, $progguiddesc, $persppartinfo, $starttime, $roomname, $statusname
 //  it displays the precis view of the data.
@@ -11,61 +11,62 @@ function RenderPrecis($result, $showlinks) {
         echo "<p class=\"alert alert-warning\">No matching results found.</p>";
         return;
     }
-    echo "<table class=\"table table-condensed\">\n";
+    echo "<table class=\"table table-clear table-sm\">\n";
     while (list($sessionid, $trackname, $typename, $title, $duration, $estatten, $progguiddesc, $persppartinfo, $starttime, $roomname, $statusname, $taglist)
         = mysqli_fetch_array($result, MYSQLI_NUM)) {
         echo "<tr>\n";
-        echo "  <td rowspan=\"3\" class=\"border0000\" id=\"sessidtcell\" style=\"font-weight:bold\">";
+        $rowspan = $persppartinfo ? '4' : '3';
+        echo "  <td rowspan=\"$rowspan\" id=\"sessidtcell\" style=\"font-weight:bold\">";
         if ($showlinks) {
             echo "<a href=\"StaffAssignParticipants.php?selsess=" . $sessionid . "\">" . $sessionid . "</a>";
         }
         echo "&nbsp;&nbsp;</td>\n";
         if (TRACK_TAG_USAGE !== "TAG_ONLY") {
-            echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $trackname . "</td>\n";
-            echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $typename . "</td>\n";
+            echo "  <td style=\"font-weight:bold\">" . $trackname . "</td>\n";
+            echo "  <td style=\"font-weight:bold\">" . $typename . "</td>\n";
         } else {
-            echo "  <td class=\"border0000\" colspan=\"2\" style=\"font-weight:bold\">" . $typename . "</td>\n";
+            echo "  <td colspan=\"2\" style=\"font-weight:bold\">" . $typename . "</td>\n";
         }
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">";
+        echo "  <td style=\"font-weight:bold\">";
         if ($showlinks) {
             echo "<a href=\"EditSession.php?id=" . $sessionid . "\">" . htmlspecialchars($title, ENT_NOQUOTES) . "</a>";
         } else {
             echo htmlspecialchars($title, ENT_NOQUOTES);
         }
         echo "&nbsp;&nbsp;</td>\n";
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">" . $duration . "</td>\n";
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">";
+        echo "  <td style=\"font-weight:bold\">" . $duration . "</td>\n";
+        echo "  <td style=\"font-weight:bold\">";
         if ($roomname) {
             echo $roomname;
         } else {
             echo "&nbsp;";
         }
         echo "</td>\n";
-        echo "  <td class=\"border0000\" style=\"font-weight:bold\">";
+        echo "  <td  style=\"font-weight:bold\">";
         if ($starttime) {
             echo $starttime;
         } else {
             echo "&nbsp;";
         }
         echo "</td>\n";
-        echo "    <td class=\"border0000\" style=\"font-weight:bold\">$statusname</td>\n";
+        echo "    <td style=\"font-weight:bold\">$statusname</td>\n";
         if ($showlinks) {
-            echo "    <td class=\"border0000\" style=\"font-weight:bold\"><a href=\"SessionHistory.php?selsess=$sessionid\">History</a></td>\n";
+            echo "    <td style=\"font-weight:bold\"><a href=\"SessionHistory.php?selsess=$sessionid\">History</a></td>\n";
         } else {
-            echo "<td class=\"border0000\"></td>";
+            echo "<td ></td>";
         }
         echo "</tr>\n";
         echo "<tr>";
-        echo "    <td colspan=\"2\" class=\"border0010\">" . (is_null($taglist) ? "" : htmlspecialchars($taglist, ENT_NOQUOTES)) . "</td>";
-        echo "    <td colspan=\"6\" class=\"border0010\">" . (is_null($progguiddesc) ? "" : htmlspecialchars($progguiddesc, ENT_NOQUOTES)) . "</td>";
+        echo "    <td colspan=\"2\" style=\"border-bottom: 1px solid black\">" . (is_null($taglist) ? "" : htmlspecialchars($taglist, ENT_NOQUOTES)) . "</td>";
+        echo "    <td colspan=\"6\" style=\"border-bottom: 1px solid black\">" . (is_null($progguiddesc) ? "" : htmlspecialchars($progguiddesc, ENT_NOQUOTES)) . "</td>";
         echo "</tr>\n";
         if ($persppartinfo) {
             echo "<tr><td></td>";
-            echo "<td colspan=\"2\" class=\"border0000\">Prospective Participant Info: </td>";
-            echo "<td colspan=\"6\" class=\"border0000\"><span class=\"alert\" style=\"padding: 0\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</span></td>";
+            echo "<td colspan=\"2\" >Prospective Participant Info: </td>";
+            echo "<td colspan=\"6\" ><span class=\"alert\" style=\"padding: 0\">".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</span></td>";
             echo "</tr>\n";
         }
-        echo "<tr><td colspan=\"8\" class=\"border0020\">&nbsp;</td></tr>\n";
+        echo "<tr><td colspan=\"8\" style=\"border-bottom: 2px solid black\">&nbsp;</td></tr>\n";
     }
     echo "</table>\n";
 }

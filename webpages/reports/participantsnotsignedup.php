@@ -1,12 +1,13 @@
 <?php
-// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participants signed up for sessions not coming';
-$report['description'] = 'The list of all participants who have entered interest in a session, but are currently not flagged as intending to attend.';
+$report['description'] = 'The list of all participants who have entered interest in a session, but are currently not flagged as intending to attend. ';
 $report['categories'] = array(
     'Participant Info Reports' => 120,
 );
 $report['columns'] = array(
+    null,
     null,
     null,
     null,
@@ -16,7 +17,7 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        CD.badgeid, CD.firstname, CD.lastname, CD.badgename, P.pubsname
+        CD.badgeid, CD.firstname, CD.lastname, CD.badgename, P.pubsname, P.name_for_sorting
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
@@ -32,10 +33,11 @@ SELECT
         AND EXISTS (
             SELECT *
                 FROM
-                    UserHasPermissionRole UHPR
+                         UserHasPermissionRole UHPR
+                    JOIN PermissionRoles PR USING (permroleid)
                 WHERE
                         UHPR.badgeid = P.badgeid
-                    AND UHPR.permroleid = 4 /* Participants (B61) */
+                    AND PR.permrolename = 'Participant'
             );
 EOD;
 $report['queries']['sessions'] =<<<'EOD'
@@ -50,10 +52,11 @@ SELECT
         AND EXISTS (
             SELECT *
                 FROM
-                    UserHasPermissionRole UHPR
+                         UserHasPermissionRole UHPR
+                    JOIN PermissionRoles PR USING (permroleid)
                 WHERE
                         UHPR.badgeid = P.badgeid
-                    AND UHPR.permroleid = 4 /* Participants (B61) */
+                    AND PR.permrolename = 'Participant'
             );
 EOD;
 $report['xsl'] =<<<'EOD'
@@ -69,6 +72,7 @@ $report['xsl'] =<<<'EOD'
                         <tr>
                             <th class="report" style="height:2.6rem">Badge Id</th>
                             <th class="report">Pubs Name</th>
+                            <th class="report">Name for Sorting</th>
                             <th class="report">Badge Name</th>
                             <th class="report">Last Name, First Name</th>
                             <th class="report">Signed up for sessions</th>
@@ -88,6 +92,7 @@ $report['xsl'] =<<<'EOD'
         <tr>
             <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
             <td class="report"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@name_for_sorting"/></td>
             <td class="report"><xsl:value-of select="@badgename"/></td>
             <td class="report"><xsl:value-of select="@lastname"/><xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text><xsl:value-of select="@firstname"/></td>
             <td class="report">

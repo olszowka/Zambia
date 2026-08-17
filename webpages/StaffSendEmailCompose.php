@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // This page has two completely different entry points from a user flow standpoint:
 //   1) Beginning of send email flow -- start to specify parameters
 //   2) After verify -- 'back' can change parameters -- 'send' fire off email sending code
@@ -25,9 +25,7 @@ if (empty($_POST['navigate']) || $_POST['navigate']!='send') {
 // render_send_email_engine($email,$message_warning);
 $title = "Staff Send Email";
 $timeLimitSuccess = set_time_limit(600);
-if (SMTP_QUEUEONLY === TRUE) {
-    staff_header($title, 'bs4');
-}
+staff_header($title, 'bs5');
 //if (!$timeLimitSuccess) {
 //    RenderError("Error extending time limit.");
 //    exit(0);
@@ -153,7 +151,5 @@ for ($i=0; $i<$recipient_count; $i++) {
 }
 //$log =& Swift_LogContainer::getLog();
 //echo $log->dump(true);
-if (SMTP_QUEUEONLY === TRUE) {
-    staff_footer();
-}
+staff_footer();
 ?>

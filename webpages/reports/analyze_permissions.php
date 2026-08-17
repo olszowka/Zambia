@@ -1,6 +1,13 @@
 <?php
-//	Created by Peter Olszowka on 06 June 2020
-// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+/**
+ * Created by Peter Olszowka on 06 June 2020
+ * Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+ *
+ * There is a quirk in this report that if a permission atom is associated with more than one phase
+ * for a particular permission role, that atom will be listed more than once and may appear both
+ * active and inactive.
+ */
+
 $report = [];
 $report['name'] = 'Analyze Permissions Report';
 $report['description'] = 'Show permission atoms for each permroleid';
@@ -19,19 +26,28 @@ SELECT
 EOD;
 $report['queries']['permission_atoms'] =<<<'EOD'
 SELECT
-		PA.permatomid, PA.permatomtag, PA.notes
-	FROM
-		PermissionAtoms PA
+        PA.permatomid, PA.permatomname, PA.notes
+    FROM
+        PermissionAtoms PA
     ORDER BY
         PA.permatomid;
 EOD;
 $report['queries']['permissions'] =<<<'EOD'
-SELECT DISTINCT
-		P.permatomid, P.permroleid
-	FROM
-		Permissions P
-    ORDER BY
-        P.permroleid, P.permatomid;
+SELECT
+        P.permatomid, P.permroleid, PH.current
+    FROM
+             Permissions P
+        JOIN Phases PH USING (phaseid)
+    WHERE
+        PH.implemented = 1
+UNION
+SELECT
+        P.permatomid, P.permroleid, 1 AS current
+    FROM
+        Permissions P
+    WHERE
+        P.phaseid IS NULL;
+
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -47,12 +63,13 @@ $report['xsl'] =<<<'EOD'
                             <th class="report" rowspan="2" style="width:5rem">Permission Role ID</th>
                             <th class="report" rowspan="2">Permission Role Name</th>
                             <th class="report" rowspan="2" style="width:12rem">Permission Role Notes</th>
-                            <th class="report" colspan="3">Permission Details</th>
+                            <th class="report" colspan="4">Permission Details</th>
                         </tr>
                         <tr>
                             <th class="report" style="width:5rem">Permission Atom ID</th>
-                            <th class="report">Permission Atom Tag</th>
+                            <th class="report">Permission Atom Name</th>
                             <th class="report">Permission Atom Notes</th>
+                            <th class="report" style="width:5rem">Currently Active</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="doc/query[@queryName='permission_roles']/row"/>
@@ -85,6 +102,7 @@ $report['xsl'] =<<<'EOD'
                     <td class="report"><xsl:value-of select="@notes"/></td>
                     <xsl:call-template name="permissions_inner">
                         <xsl:with-param name="permatomid" select="$permissions_rows[1]/@permatomid" />
+                        <xsl:with-param name="current" select="$permissions_rows[1]/@current" />
                     </xsl:call-template>
                 </tr>
             </xsl:when>
@@ -95,6 +113,7 @@ $report['xsl'] =<<<'EOD'
                     <td class="report" rowspan="{$rowcount}"><xsl:value-of select="@notes"/></td>
                     <xsl:call-template name="permissions_inner">
                         <xsl:with-param name="permatomid" select="$permissions_rows[1]/@permatomid" />
+                        <xsl:with-param name="current" select="$permissions_rows[1]/@current" />
                     </xsl:call-template>
                 </tr>
                 <xsl:call-template name="permissions_outer">
@@ -109,16 +128,28 @@ $report['xsl'] =<<<'EOD'
             <tr>
                 <xsl:call-template name="permissions_inner">
                     <xsl:with-param name="permatomid" select="@permatomid" />
+                    <xsl:with-param name="current" select="@current" />
                 </xsl:call-template>
             </tr>
         </xsl:for-each>
     </xsl:template>
     <xsl:template name="permissions_inner">
         <xsl:param name="permatomid" />
+        <xsl:param name="current" />
         <xsl:variable name="permission_row_inner" select="/doc/query[@queryName = 'permission_atoms']/row[@permatomid=$permatomid]" />
         <td class="report"><xsl:value-of select="$permission_row_inner/@permatomid" /></td>
-        <td class="report"><xsl:value-of select="$permission_row_inner/@permatomtag" /></td>
+        <td class="report"><xsl:value-of select="$permission_row_inner/@permatomname" /></td>
         <td class="report"><xsl:value-of select="$permission_row_inner/@notes" /></td>
+        <td class="report">
+            <xsl:choose>
+                <xsl:when test="$current = '1'">
+                    <xsl:text>Yes</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>No</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </td>
     </xsl:template>
 </xsl:stylesheet>
 EOD;

@@ -2,7 +2,7 @@
 // Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-12-29
 
-global $header_section, $message_error, $title, $linki;
+global $header_section, $message_error, $title;
 $title = 'Participant Survey';
 // This can be a participant or a staff page
 require_once('PartCommonCode.php');
@@ -10,7 +10,6 @@ require_once('StaffHeader.php');
 require_once('StaffFooter.php');
 $message = '';
 $rows = 0;
-$rows_modified = 0;
 
 // Now that title is set, get common text
 if (!populateCustomTextArray()) {
@@ -40,29 +39,26 @@ if (isLoggedIn()) {
         } else {
             $shortname_types = json_decode($priorValues['shortname_types']);
         }
-        $sql = <<<EOD
-INSERT INTO ParticipantSurveyAnswers(participantid, questionid, privacy_setting, value, othertext, updatedby)
-VALUES (?, ?, ?, ?, ?, ?)
-ON DUPLICATE KEY UPDATE
-    privacy_setting = ?,
-    value = ?,
-    othertext = ?,
-    updatedby = ?;
-EOD;
-        $delsql = <<<EOD
-DELETE FROM ParticipantSurveyAnswers WHERE participantid = ? and questionid = ?;
-EOD;
-        $parms = [];
-        $types = '';
+
+        // ParticipantSurveyResponses (one JSON blob per participant, keyed by shortname) is the source of
+        // truth. Load the participant's current answers, apply this submission's changes in PHP, write the
+        // merged result back in one shot, then mirror it into the deprecated ParticipantSurveyAnswers table.
+        $result = mysqli_query_with_prepare_and_exit_on_error(
+            "SELECT answers FROM ParticipantSurveyResponses WHERE badgeid = ?;", 's', array($edit_badgeid)
+        );
+        $existingRow = mysqli_fetch_assoc($result);
+        $answers = $existingRow ? json_decode($existingRow['answers'], true) : array();
+
         $inserted = 0;
         $updated = 0;
         $deleted = 0;
-        $errors = 0;
-        $types = 'siisssisss';
         foreach ($shortname_types as $obj) {
             if ($obj->typename != 'heading') {
                 if (!isset($_POST[$obj->id])) {
-                    $deleted += mysql_cmd_with_prepare($delsql, 'si', array($edit_badgeid, $obj->questionid));
+                    if (isset($answers[$obj->shortname])) {
+                        unset($answers[$obj->shortname]);
+                        $deleted++;
+                    }
                     continue;
                 }
                 $separator = ',';
@@ -78,7 +74,7 @@ EOD;
 
                 $privacyname = $obj->id . '-privacyuser';
                 if (isset($_POST[$privacyname])) {
-                    $privacyuser = $_POST[$privacyname];
+                    $privacyuser = (int)$_POST[$privacyname];
                 } else {
                     $privacyuser = 0;
                 }
@@ -92,28 +88,39 @@ EOD;
                         // error_log("processing " . $obj->typename );
                         //  error_log("shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id);
                         // var_dump($_POST[$obj->id]);
-                        $ans = implode($separator, $_POST[$obj->id]);
-                        $parms = array($edit_badgeid, $obj->questionid, $privacyuser, $ans, $othertext, $badgeid, $privacyuser, $ans, $othertext, $badgeid);
+                        $value = implode($separator, $_POST[$obj->id]);
                         break;
                     default:
                         //echo "processing default for " . $obj->typename . "<br/>";
                         //echo "shortname = '" . $obj->shortname . "', questionid = " . $obj->questionid . ", id = '" . $obj->id . "'<br/>";
-                        $parms = array($edit_badgeid, $obj->questionid, $privacyuser, $_POST[$obj->id], $othertext, $badgeid, $privacyuser, $_POST[$obj->id], $othertext, $badgeid);
+                        $value = $_POST[$obj->id];
                 }
-                //var_dump($parms);
-                $rows_modified = mysql_cmd_with_prepare($sql, $types, $parms);
-                //echo "status = $rows_modified<br/><br/>";
-                if ($rows_modified == 1) {
-                    $inserted = $inserted + 1;
-                } else if ($rows_modified == 2) {
-                    $updated = $updated + 1;
-                } else if ($rows_modified < 0) {
-                    echo('Error description: ' . mysqli_error($linki) . '<br/><br/>');
-                    $errors = $errors + 1;
-                    break;
+
+                $prior = $answers[$obj->shortname] ?? null;
+                if ($prior === null) {
+                    $inserted++;
+                } else if ($prior['value'] !== $value || $prior['othertext'] !== $othertext || $prior['privacy_setting'] !== $privacyuser) {
+                    $updated++;
                 }
+                $answers[$obj->shortname] = array('value' => $value, 'othertext' => $othertext, 'privacy_setting' => $privacyuser);
             }
         }
+
+        if (count($answers) === 0) {
+            mysql_cmd_with_prepare("DELETE FROM ParticipantSurveyResponses WHERE badgeid = ?;", 's', array($edit_badgeid));
+        } else {
+            $json = json_encode($answers);
+            $sql = <<<EOD
+INSERT INTO ParticipantSurveyResponses(badgeid, answers, updatedby)
+VALUES (?, ?, ?)
+ON DUPLICATE KEY UPDATE
+    answers = ?,
+    updatedby = ?;
+EOD;
+            mysql_cmd_with_prepare($sql, 'sssss', array($edit_badgeid, $json, $badgeid, $json, $badgeid));
+        }
+        sync_participant_survey_answers_from_json($edit_badgeid, $badgeid);
+
         $message = '';
         if ($inserted > 0) {
             $message = $message . $inserted . ' answers inserted, ';
@@ -133,10 +140,28 @@ EOD;
 
     // Start of display portion
 
+    // ParticipantSurveyResponses is the source of truth for this participant's answers; fetch it once and
+    // merge it (in PHP) into the per-question config below, instead of joining ParticipantSurveyAnswers.
+    $result = mysqli_query_with_prepare_and_exit_on_error(
+        "SELECT answers FROM ParticipantSurveyResponses WHERE badgeid = ?;", 's', array($edit_badgeid)
+    );
+    $existingRow = mysqli_fetch_assoc($result);
+    $currentAnswers = $existingRow ? json_decode($existingRow['answers'], true) : array();
+
     // json of current questions and question options
     $paramArray = array();
     $query = [];
-    $query['questions']=<<<EOD
+    $query["options"] = <<<EOD
+SELECT
+        questionid, display_order, ordinal, value, optionshort, optionhover, allowothertext, display_order
+    FROM
+        SurveyQuestionOptionConfig
+    ORDER BY
+        questionid, display_order;
+EOD;
+    $resultXML = mysql_query_XML($query);
+
+    $questionsSql = <<<EOD
 SELECT
         d.questionid, d.shortname, d.description, prompt, hover, d.display_order, d.typeid, t.shortname as typename,
         required, publish, privacy_user, searchable, ascending, display_only, min_value, max_value,
@@ -160,30 +185,28 @@ SELECT
                 CASE WHEN max_value > 500 THEN 8 ELSE 4 END
             ELSE ""
         END as `rows`,
-        IFNULL(a.value, "") AS answer,
-        IFNULL(a.othertext, "") AS othertext,
-        IFNULL(a.privacy_setting, publish) AS privacy_setting,
         CASE WHEN SUM(o.allowothertext) > 0 THEN 1 ELSE 0 END AS allowothertext
     FROM
                   SurveyQuestionConfig d
              JOIN SurveyQuestionTypes t USING (typeid)
-        LEFT JOIN ParticipantSurveyAnswers a ON (a.questionid = d.questionid and a.participantid = "$edit_badgeid")
         LEFT JOIN SurveyQuestionOptionConfig o ON (d.questionid = o.questionid)
     GROUP BY
-        d.questionid
+        d.questionid, d.display_order
     ORDER BY
         d.display_order ASC;
 EOD;
-
-    $query["options"] = <<<EOD
-SELECT
-        questionid, display_order, ordinal, value, optionshort, optionhover, allowothertext, display_order
-    FROM
-        SurveyQuestionOptionConfig
-    ORDER BY
-        questionid, display_order;
-EOD;
-    $resultXML = mysql_query_XML($query);
+    $result = mysqli_query_exit_on_error($questionsSql);
+    $questionRows = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $answer = $currentAnswers[$row['shortname']] ?? null;
+        $row['answer'] = $answer['value'] ?? '';
+        $row['othertext'] = $answer['othertext'] ?? '';
+        $row['privacy_setting'] = $answer['privacy_setting'] ?? $row['publish'];
+        // mysql_query_XML() omits attributes for fields that are NULL or '' -- replicate that here so the
+        // XML shape (and thus RenderSurvey.xsl's attribute-presence checks) is unaffected by this rewrite.
+        $questionRows[] = array_filter($row, fn($value) => $value !== null && $value !== '');
+    }
+    $resultXML = ObjecttoXML('questions', $questionRows, $resultXML);
 
     // get any questions that need programically create options as well as build array for the 'save'
     $sql = <<<EOD
@@ -193,7 +216,7 @@ SELECT
              SurveyQuestionConfig d
         JOIN SurveyQuestionTypes t USING (typeid)
     WHERE
-            t.shortname != "heading"
+            t.shortname != 'heading'
         AND d.display_only = 0;
 EOD;
     $result = mysqli_query_exit_on_error($sql);
@@ -240,19 +263,7 @@ EOD;
                 break;
         }
     }
-    $sql = <<<EOD
-SELECT
-        count(*) AS answers
-    FROM
-        ParticipantSurveyAnswers
-    WHERE
-        participantid = "$edit_badgeid";
-EOD;
-    $result = mysqli_query_exit_on_error($sql);
-    $rows = 0;
-    while ($row = mysqli_fetch_assoc($result)) {
-        $rows = $row['answers'];
-    }
+    $rows = count($currentAnswers);
 
     $paramArray['buttons'] = $rows == 0 ?  'save' : 'update';
     $PriorArray['getSessionID'] = session_id();

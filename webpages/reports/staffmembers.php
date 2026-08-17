@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Staff Members';
 $report['description'] = 'List Staff Members and their priviliges';
@@ -8,9 +8,9 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     null,
-    array("orderData" => 2),
+    array("orderData" => array(2, 1)),
     array("visible" => false),
-    array("orderData" => 4),
+    array("orderData" => array(4, 3)),
     array("visible" => false),
     null,
     array("orderable" => false)
@@ -29,10 +29,14 @@ SELECT
              Participants P
         JOIN UserHasPermissionRole UHPR using (badgeid)
     WHERE
-        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
-            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
-                    P.badgeid = UHPR2.badgeid
-                AND UHPR2.permroleid IN (1, 2, 3)
+        EXISTS (
+            SELECT *
+                FROM
+                         UserHasPermissionRole UHPR2
+                    JOIN PermissionRoles PR USING (permroleid)
+                WHERE
+                        P.badgeid = UHPR2.badgeid
+                    AND (LOWER(PR.permrolename) LIKE '%staff%' OR LOWER(PR.permrolename) LIKE '%admin%') 
         );
 EOD;
     if (!$result = mysqli_query_exit_on_error($prequery)) {
@@ -60,10 +64,14 @@ SELECT
              Participants P
         JOIN CongoDump CD using (badgeid)
     WHERE
-        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
-            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
-                    P.badgeid = UHPR2.badgeid
-                AND UHPR2.permroleid IN (1, 2, 3)
+        EXISTS (
+            SELECT *
+                FROM
+                         UserHasPermissionRole UHPR2
+                    JOIN PermissionRoles PR USING (permroleid)
+                WHERE
+                        P.badgeid = UHPR2.badgeid
+                    AND (LOWER(PR.permrolename) LIKE '%staff%' OR LOWER(PR.permrolename) LIKE '%admin%') 
         )
     ORDER BY
         CD.lastname, CD.firstname;
@@ -76,10 +84,14 @@ SELECT
              UserHasPermissionRole UHPR
         JOIN PermissionRoles PR using (permroleid)
     WHERE
-        EXISTS ( /* Administrator, Staff, Senior Staff for B61 */
-            SELECT * FROM UserHasPermissionRole UHPR2 WHERE
-                    UHPR.badgeid = UHPR2.badgeid
-                AND UHPR2.permroleid IN (1, 2, 3)
+        EXISTS (
+            SELECT *
+                FROM
+                         UserHasPermissionRole UHPR2
+                    JOIN PermissionRoles PR USING (permroleid)
+                WHERE
+                        UHPR.badgeid = UHPR2.badgeid
+                    AND (LOWER(PR.permrolename) LIKE '%staff%' OR LOWER(PR.permrolename) LIKE '%admin%') 
         );
 EOD;
 $report['xsl'] =<<<EOD

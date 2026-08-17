@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participant Interests';
 $report['description'] = 'What is that participant interested in? (Program Participants who are attending)';
@@ -8,8 +8,9 @@ $report['categories'] = array(
 );
 $report['columns'] = array(
     null,
-    array("orderData" => 2),
+    array("orderData" => array(2, 1)),
     array("visible" => false),
+    array(),
     array("orderable" => false),
     array("orderable" => false),
     array("orderable" => false),
@@ -19,18 +20,24 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, P.pubsname, PI.yespanels, PI.nopanels, PI.yespeople, PI.nopeople, PI.otherroles,
-        IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnameSort
+        P.badgeid, P.pubsname, P.name_for_sorting, PI.yespanels, PI.nopanels, PI.yespeople, PI.nopeople,
+        PI.otherroles, IFNULL(P.name_for_sorting,
+            IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1))
+            ) AS pubsnameSort
     FROM
              Participants P
         JOIN ParticipantInterests PI USING (badgeid)
         JOIN CongoDump CD USING (badgeid)
         JOIN UserHasPermissionRole UHPR USING (badgeid)
+        JOIN PermissionRoles PR USING (permroleid)
     WHERE
             P.interested = 1
-        AND UHPR.permroleid = 4 /* Participant (B61) */
+        AND PR.permrolename = 'Participant'
     ORDER BY
-        IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)), CD.firstname;
+        IFNULL(P.name_for_sorting,
+            IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1))
+            ),
+        CD.firstname;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -43,9 +50,10 @@ $report['xsl'] =<<<'EOD'
                 <table id="reportTable" class="report">
                     <thead>
                         <tr style="height:2.6rem">
-                            <th class="report" style="white-space: nowrap;">Badge ID</th>
-                            <th class="report" style="white-space: nowrap;">Name for Publications</th>
+                            <th class="report">Badge ID</th>
+                            <th class="report">Name for Publications</th>
                             <th></th>
+                            <th class="report">Name for Sorting</th>
                             <th class="report">"Workshops or presentations I'd like to run"</th>
                             <th class="report">"Panel types I am not interested in participating in"</th>
                             <th class="report">"People with whom I'd like to be on a session"</th>
@@ -70,8 +78,9 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                 </xsl:call-template>
             </td>
-            <td class="report" style="white-space: nowrap;"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@pubsname"/></td>
             <td class="report"><xsl:value-of select="@pubsnameSort"/></td>
+            <td class="report"><xsl:value-of select="@name_for_sorting"/></td>
             <td class="report"><xsl:value-of select="@yespanels"/></td>
             <td class="report"><xsl:value-of select="@nopanels"/></td>
             <td class="report"><xsl:value-of select="@yespeople"/></td>

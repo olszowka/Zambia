@@ -7,17 +7,17 @@
     <xsl:template match="/">
         <div class="container-xxxl">
             <div class="row">
-                <div class="col-12 mt-4">
+                <div class="col-36 mt-4">
                     <h3 class="mx-auto" style="width:23.5rem">Reset Password Confirmation</h3>
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-6 mt-4">
+                <div class="col-36 col-md-18 mt-4">
                     <div class="alert alert-success">Email sent</div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-6 mt-4">
+                <div class="col-36 col-md-18 mt-4">
                     <xsl:text>Look for an email with subject "</xsl:text>
                     <xsl:value-of select="$subject_line" />
                     <xsl:text>" sent from </xsl:text>

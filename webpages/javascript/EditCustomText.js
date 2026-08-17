@@ -41,7 +41,7 @@ var EditCustomText = function () {
             placeholder: 'Type custom content here...',
         }
 
-        if (htmlBlockLevel === '1') {
+        if (htmlBlockLevel === 1) {
             $('#htmlBlockInstructions').css('display', 'block');
             $('#notHtmlBlockInstructions').css('display', 'none');
         } else {

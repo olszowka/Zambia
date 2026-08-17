@@ -85,14 +85,6 @@ SELECT
 EOD;
     $queryArray["participantInterest"] = <<<EOD
 WITH
-    AnsweredSurvey(participantid, answercount) AS (
-        SELECT
-                participantid, COUNT(*) AS answercount
-            FROM
-                ParticipantSurveyAnswers
-            GROUP BY
-                participantid
-        ),
     R2(badgeid, sessionid) AS (
             SELECT badgeid, sessionid FROM ParticipantOnSession WHERE sessionid=$selsessionid
         UNION
@@ -104,14 +96,14 @@ WITH
 SELECT
         POS.badgeid AS posbadgeid, COALESCE(POS.moderator, 0) AS moderator, P.badgeid, P.pubsname, P.staff_notes,
         IFNULL(PSI.`rank`, 99) AS `rank`, PSI.willmoderate, PSI.comments, P.bio, PHR.roleid,
-        IF(P.interested = 1, 1, 0) AS attending, IFNULL(A.answercount, 0) AS answercount
+        IF(P.interested = 1, 1, 0) AS attending, IFNULL(JSON_LENGTH(PSR.answers), 0) AS answercount
     FROM
                   Participants P
-             JOIN R ON (P.badgeid = R.badgeid)            
-        LEFT JOIN ParticipantSessionInterest AS PSI ON R.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
-        LEFT JOIN ParticipantOnSession AS POS ON R.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
+             JOIN R USING (badgeid)
+        LEFT JOIN ParticipantSurveyResponses PSR USING (badgeid)
+        LEFT JOIN ParticipantSessionInterest AS PSI ON P.badgeid = PSI.badgeid AND R.sessionid = PSI.sessionid
+        LEFT JOIN ParticipantOnSession AS POS ON P.badgeid = POS.badgeid AND R.sessionid = POS.sessionid
         LEFT JOIN ParticipantHasRole AS PHR ON P.badgeid = PHR.badgeid and PHR.roleid = 10 /* moderator */
-        LEFT JOIN AnsweredSurvey A ON (A.participantid = P.badgeid)
     WHERE
            POS.sessionid = $selsessionid
         OR POS.sessionid IS NULL
@@ -200,13 +192,11 @@ EOD;
     }
     $otherParticipantsQuery = <<<EOD
 WITH
-    AnsweredSurvey(participantid, answercount) AS (
+    AnsweredSurvey(badgeid, answercount) AS (
         SELECT
-                participantid, COUNT(*) AS answercount
+                badgeid, JSON_LENGTH(answers) AS answercount
             FROM
-                ParticipantSurveyAnswers
-            GROUP BY
-                participantid
+                ParticipantSurveyResponses
         ),
     SessionParticipants(badgeid) AS (
         SELECT
@@ -227,9 +217,9 @@ SELECT
         IFNULL(A.answercount, 0) as answercount
     FROM
                   Participants P
-             JOIN CongoDump CD USING(badgeid)
-        LEFT JOIN SessionParticipants S ON (P.badgeid = S.badgeid)
-        LEFT JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
+             JOIN CongoDump CD USING (badgeid)
+        LEFT JOIN SessionParticipants S USING (badgeid)
+        LEFT JOIN AnsweredSurvey A USING (badgeid)
     WHERE
             P.interested = 1
         AND S.badgeid IS NULL

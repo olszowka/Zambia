@@ -129,14 +129,14 @@ participant_header($title);
     <div class="row-fluid">
         <div class="span6 input-container">
             <label for="preventconflict">Please don't schedule me for a session that conflicts with:</label>
-            <textarea class="span12" name="preventconflict" id="preventconflict" rows=3 cols=72><?php
+            <textarea class="span12" name="preventconflict" id="preventconflict" rows=3 cols=72 maxlength=255><?php
                 echo htmlspecialchars($partAvail["preventconflict"], ENT_NOQUOTES); ?></textarea>
             <div class="input-error-message">Please limit to 255 characters.</div>
         </div>
 
         <div class="span6 input-container">
             <label for="otherconstraints">Other constraints or conflicts that we should know about?</label>
-            <textarea class="span12" name="otherconstraints" id="otherconstraints" rows=3 cols=72><?php
+            <textarea class="span12" name="otherconstraints" id="otherconstraints" rows=3 cols=72 maxlength=255><?php
                 echo htmlspecialchars($partAvail["otherconstraints"], ENT_NOQUOTES); ?></textarea>
             <div class="input-error-message">Please limit to 255 characters.</div>
         </div>

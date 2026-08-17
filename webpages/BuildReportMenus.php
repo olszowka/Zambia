@@ -5,7 +5,7 @@ $title = "Build Report Menus";
 require_once('StaffCommonCode.php'); // Checks for staff permission among other things
 if (!may_I('ConfigureReports')) {
     $message_error = "You do not currently have permission to view this page.<br>\n";
-    StaffRenderErrorPage($title, $message_error, 'bs4');
+    StaffRenderErrorPage($title, $message_error, 'bs5');
     exit();
 }
 $areYouSure = getInt("areYouSure");
@@ -30,22 +30,43 @@ if ($areYouSure !== 1) {
 }
 ?>
 <?php
+require_once('report_functions.php');
+
+// Collects the .php filenames (non-recursive) directly inside $path.
+function reportFileNamesIn($path) {
+    $fileNames = array();
+    $dirHandle = opendir($path);
+    if (!$dirHandle) {
+        return $fileNames;
+    }
+    while (false !== ($fileName = readdir($dirHandle))) {
+        if ($fileName == "." || $fileName == ".." ||
+            is_dir("$path/$fileName") ||
+            !mb_ereg_match(".*\\.php$", $fileName)
+        ) {
+            continue;
+        }
+        $fileNames[$fileName] = true;
+    }
+    closedir($dirHandle);
+    return $fileNames;
+}
+
 $path = './reports';
-$dirHandle = opendir($path);
-if (!$dirHandle) {
+if (!is_dir($path)) {
     $message_error = "Directory $path not found.";
     RenderError($message_error);
     exit();
 }
+$systemOverrideDir = getReportSystemOverrideDir($reportOverrideWarning);
+$reportFileNames = reportFileNamesIn($path);
+if ($systemOverrideDir !== null) {
+    $reportFileNames += reportFileNamesIn($systemOverrideDir);
+}
+$reportFileNames += reportFileNamesIn('./reportsConOverrides');
 $allReports = array();
-while (false !== ($reportFileName = readdir($dirHandle))) {
-    if ($reportFileName == "." || $reportFileName == ".." ||
-        is_dir("./reports/$reportFileName") ||
-        !mb_ereg_match(".*\\.php$", $reportFileName)
-    ) {
-        continue;
-    }
-    include ("./reports/$reportFileName");
+foreach (array_keys($reportFileNames) as $reportFileName) {
+    requireReportDefinition($reportFileName, $systemOverrideDir);
     if (isset($report)) {
         // preserve only data needed for menu generation
         $allReports[$reportFileName] = array('name' => $report['name'], 'description' => $report['description'], 'categories' => $report['categories']);
@@ -114,6 +135,15 @@ fclose($staffReportsICIFilHand);
 $reportCount = count($allReports);
 staff_header($title, 'bs4');
 ?>
+<?php if ($reportOverrideWarning !== null) { ?>
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+            <?php echo htmlspecialchars($reportOverrideWarning); ?>
+        </div>
+    </div>
+</div>
+<?php } ?>
 <div class="row mt-3">
     <div class="col-12">
         <div class="alert alert-success" role="alert">

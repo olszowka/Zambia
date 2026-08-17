@@ -28,6 +28,7 @@
 * ParticipantSessionInterest
 * ParticipantSuggestions
 * ParticipantSurveyAnswers
+* ParticipantSurveyResponses
 * ParticipantTags
 * PatchLog*
 * PermissionAtoms*
@@ -131,6 +132,7 @@
 * SurveyQuestionOptionConfig
 * SurveyQuestionTypeDefaults
 * ParticipantSurveyAnswers
+* ParticipantSurveyResponses
 * TrackCompatibility
 * UserHasPermissionRole
 

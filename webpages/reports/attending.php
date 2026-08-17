@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2018-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Attending Query (all info)';
 $report['description'] = 'Shows who (of program participants only) has responded and if they are attending.';
@@ -11,21 +11,22 @@ $report['columns'] = array(
     null,
     null,
     null,
+    null,
     null
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        CD.firstname, CD.lastname, P.pubsname, P.badgeid, P.interested, PR.permrolename
+        CD.firstname, CD.lastname, P.pubsname, P.name_for_sorting, P.badgeid, P.interested, PR.permrolename
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
         JOIN UserHasPermissionRole UHPR USING (badgeid)
         JOIN PermissionRoles PR USING (permroleid)
     WHERE
-        UHPR.permroleid IN (4) /* Participants (B61) */
+        PR.permrolename = 'Participant'
     ORDER BY
-        P.pubsname;
+        IFNULL(P.name_for_sorting, P.pubsname);
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -40,6 +41,7 @@ $report['xsl'] =<<<'EOD'
                         <tr style="height:2.6rem">
                             <th class="report">Registration Name</th>
                             <th class="report">Pubs Name</th>
+                            <th class="report">Name for Sorting</th>
                             <th class="report">Badge Id</th>
                             <th class="report"><xsl:text disable-output-escaping="yes">Interested &amp;amp; Attending</xsl:text></th>
                             <th class="report">Permission Role</th>
@@ -59,6 +61,7 @@ $report['xsl'] =<<<'EOD'
         <tr>
             <td class="report"><xsl:value-of select="@firstname"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="@lastname"/></td>
             <td class="report"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@name_for_sorting" /></td>
             <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
             <td class="report">
                 <xsl:choose>

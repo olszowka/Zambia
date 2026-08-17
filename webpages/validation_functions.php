@@ -1,5 +1,5 @@
 <?php
-//  Copyright (c) 2009-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2009-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function validate_suggestions($paneltopics, $otherideas, $suggestedguests) {
     $retval = ""; // return "" means "passed"
@@ -252,6 +252,14 @@ function validate_participant_availability() {
             $messages .= "For the number of kids for fastrack, enter a number between 0 and 8.<BR>\n";
             $flag = false;
         }
+    }
+    if (strlen($partAvail["preventconflict"]) > 255) {
+        $messages .= "\"Please don't schedule me for a session that conflicts with\" must be 255 characters or fewer.<BR>\n";
+        $flag = false;
+    }
+    if (strlen($partAvail["otherconstraints"]) > 255) {
+        $messages .= "\"Other constraints or conflicts\" must be 255 characters or fewer.<BR>\n";
+        $flag = false;
     }
     for ($i = 1; $i <= AVAILABILITY_ROWS; $i++) {
         if (CON_NUM_DAYS > 1) {
