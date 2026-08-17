@@ -46,16 +46,18 @@
 
 ### Invisible code cleanup
 
-* Migrate to DataTables2.3.8
+* Migrate to DataTables 2.3.8
 * Retheme Bootstrap 5 to 36 columns to remove hacked partial columns and other related cleanup
 * Migrate several pages to Bootstrap 5
 * Migrate several pages to XSLT
+* Migrate Bootstrap 5 to 5.3.8
+* Migrate Bootstrap 4 to 4.6.2
 
 ## Application Notes
 
 ### db_name.php
 
-The following entries need to be added to `db_name.php`
+##### The following entries need to be added to `db_name.php`
 
 #### `NEW_ROOM_SLOTS` 
 
@@ -67,3 +69,24 @@ Default value: 5
 
 Controls whether the new name-for-sorting field appears
 Default value: TRUE
+
+#### `REPORT_SYSTEM_OVERRIDE_SUBDIR`
+
+Controls where to look for core sets of report overrides.  Set to "Standard" to apply
+a set of overrides located there which primarily hide reports no longer commonly used.
+If this constant is missing or blank, the functionality it implements is safely disabled.
+
+##### The following entries were added to the file `db_name_sample.php`, but were actually needed previously.
+
+#### `UPDATE_REG_SYSTEM`
+
+Controls whether edited user demographic data is written to ConTroll.
+
+#### `REG_DBNAME`
+
+If Zambia is integrated with ConTroll, specifies name of the ConTroll database.  It must be on the
+same server as Zambia.
+
+#### `REG_CONID`
+
+If Zambia is integrated with ConTroll, specifies the convention id on the ConTroll side.

@@ -16,12 +16,12 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
     switch ($bootstrapVersion) {
         case 'bs4':
 ?>
-    <link rel="stylesheet" href="external/bootstrap4.5.0/bootstrap.min.css" type="text/css" >
+    <link rel="stylesheet" href="external/bootstrap4.6.2/bootstrap.min.css" type="text/css" >
 <?php
             break;
         case 'bs5':
 ?>
-    <link rel="stylesheet" href="external/bootstrap5.3.3/bootstrap.min.css" type="text/css" >
+    <link rel="stylesheet" href="external/bootstrap5.3.8/bootstrap.min.css" type="text/css" >
 <?php
             break;
         case 'bs2':
