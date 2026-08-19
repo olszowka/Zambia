@@ -8,6 +8,7 @@
 
 ### Invisible code cleanup
 * View Session Counts page moved to XSL and BS5
+* Upgrade JQuery from 3.5.1 to 3.7.1
 
 ## Application Notes
 

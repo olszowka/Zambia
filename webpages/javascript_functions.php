@@ -4,13 +4,13 @@ function load_external_javascript($isDataTables = false, $isRecaptcha = false, $
     switch ($bootstrapVersion) {
         case 'bs5':
 ?>
-            <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
+            <script src="external/jquery3.7.1/jquery-3.7.1.min.js"></script>
             <script src="external/bootstrap5.3.8/bootstrap.bundle.min.js" type="text/javascript"></script>
 <?php
             break;
         case 'bs4':
 ?>
-        <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
+        <script src="external/jquery3.7.1/jquery-3.7.1.min.js"></script>
         <script src="external/bootstrap4.6.2/bootstrap.bundle.min.js" type="text/javascript"></script>
 <?php
             break;
