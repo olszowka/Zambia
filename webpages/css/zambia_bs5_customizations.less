@@ -301,3 +301,37 @@ input[type='text'].disabled {
     color: @bs4-alert-dark-text-color;
     border-color: @bs4-alert-dark-border-color
 }
+
+/* Grid Scheduler stuff */
+/* Bootstrap 5 has no icon set; this is the single bs2 glyphicon (info-sign) still used, ported over
+   rather than pulling in a whole icon library for one icon. */
+.icon-info-sign {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-top: 1px;
+    line-height: 14px;
+    vertical-align: text-top;
+    background-image: url("../external/bootstrap2.3.2/images/glyphicons-halflings.png");
+    background-position: -120px -96px;
+    background-repeat: no-repeat;
+}
+
+.control-group-horizontal select {
+    margin-right: 1.5rem;
+}
+.control-group-horizontal .controls label {
+    display: inline-block;
+    margin-right: 1.5rem;
+}
+.control-group-horizontal .controls label span {
+    vertical-align: middle;
+}
+.control-group-horizontal .controls input[type='radio'] {
+    margin-top: -2px;
+}
+.control-group-horizontal.control-group-sm .controls label {
+    margin-right: 0.75rem;
+    font-size: 0.8rem;
+}
+/* End Grid Scheduler stuff */
