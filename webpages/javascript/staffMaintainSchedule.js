@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 var staffMaintainSchedule = new StaffMaintainSchedule;
 
 function StaffMaintainSchedule() {
@@ -37,7 +37,13 @@ function StaffMaintainSchedule() {
 
     this.dragStart = function(event, ui) {
         dragParent = $(this).parent();
-        dragParent.droppable("option","disabled",true);
+        // dragParent is only droppable-initialized when the dragged item was already scheduled on the grid
+        // (its parent is a .schedulerGridContainer cell); items from the unscheduled sessions list have a
+        // plain, non-droppable parent. Calling widget methods on a non-initialized droppable throws in
+        // jQuery UI 1.9+ (silently ignored pre-1.9), so guard the call.
+        if (dragParent.is(":data(ui-droppable)")) {
+            dragParent.droppable("option","disabled",true);
+        }
         dropped = false;
         dropTarget = "";
         $(this).css("visibility", "hidden");
@@ -297,7 +303,7 @@ function StaffMaintainSchedule() {
         var editsArray = [];
         if ($(pThis).attr("scheduleid")) {
             //dropped item was previously scheduled
-            if ($("#swapModeCheck").attr("mychecked") === "true") {
+            if ($("#swapModeCheck").prop("checked")) {
                 //swap mode (prev sched); 1 of 4; not done
                 var dropDurationUnits = parseInt($(pThis).attr("endtimeunits"), 10) - parseInt($(pThis).attr("starttimeunits"), 10);
                 var targetDurationUnits = parseInt(dropTarget.attr("endtimeunits"), 10) - parseInt(dropTarget.attr("starttimeunits"), 10);
@@ -416,7 +422,7 @@ function StaffMaintainSchedule() {
             }
         } else {
             //dropped item was not previously scheduled
-            if ($("#swapModeCheck").attr("mychecked") === "true") {
+            if ($("#swapModeCheck").prop("checked")) {
                 //swap mode (not prev sched); 3 of 4; done
                 editsArray[0] = {
                     action: "delete",
@@ -636,7 +642,7 @@ function StaffMaintainSchedule() {
         }
         dropped = false;
         dropTarget = "";
-        if (dragParent) {
+        if (dragParent && dragParent.is(":data(ui-droppable)")) {
             dragParent.droppable("option", "disabled", false);
         }
         dragParent = "";
@@ -783,18 +789,6 @@ function StaffMaintainSchedule() {
             });
     };
     
-    this.onClickSwapMode = function onClickSwapMode() {
-        var $swapModeCheck = $("#swapModeCheck");
-        if ($swapModeCheck.attr("mychecked") === "true") {
-            $swapModeCheck.attr("mychecked", "false");
-            $swapModeCheck.removeClass("btn-inverse");
-        } else {
-            $swapModeCheck.attr("mychecked", "true");
-            $swapModeCheck.addClass("btn-inverse");
-        }
-        $swapModeCheck.blur();
-    };
-
     this.temp = function temp() {
         var i = 1;
     };
@@ -824,8 +818,6 @@ function StaffMaintainSchedule() {
         $("#retrieveSessionsBUT").click(staffMaintainSchedule.retrieveSessionsClick);
         //$("#resetSessionsSearchBUT").button();
         $("#resetSessionsSearchBUT").click(staffMaintainSchedule.resetSessionSearchClick);
-        //$("#swapModeCheck").button();
-        $("#swapModeCheck").click(staffMaintainSchedule.onClickSwapMode);
         $("[id^='roomidCHK']").click(staffMaintainSchedule.roomCheckClick);
         $("#tabs-rooms").find(".checkboxContainer").click(lib.toggleCheckbox);
         $("#fileCabinetIMG").droppable({

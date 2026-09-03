@@ -11,6 +11,8 @@
 * Upgrade JQuery from 3.5.1 to 3.7.1
 * Upgrade JQuery from 1.7.2 to 1.12.4
 * Upgrade JQueryUI from 1.8.16 to 1.14.2
+* Migrate Grid Scheduler page to BS5/JQ3.X
+* Migrate Session History page to BS5/JQ3.X
 
 ## Application Notes
 

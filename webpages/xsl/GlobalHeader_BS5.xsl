@@ -22,7 +22,7 @@
                         </xsl:when>
                     </xsl:choose>
                     <div class="col-md-auto px-0">
-                        <img src="images/Z_illuminated.jpg" alt="Zambia &quot;Z&quot; logo" class="d-none d-lg-block" style="width: 175px"/>
+                        <img src="images/Z_illuminated.jpg" alt="Zambia &quot;Z&quot; logo" class="d-none d-lg-block" style="height: 12.5rem"/>
                     </div>
                     <div class="col">
                         <h1 class="d-none d-md-block px-2">

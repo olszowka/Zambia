@@ -1,6 +1,6 @@
 <?php
 // Copyright (c) 2019-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false, $isJqueryUI = false) {
     global $fullPage;
     $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     require_once ("javascript_functions.php");
@@ -27,9 +27,12 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
         case 'bs2':
         default:
 ?>
-    <link rel="stylesheet" href="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.css" type="text/css">
+    <link rel="stylesheet" href="external/jqueryui1.14.2/jquery-ui-1.14.2.custom.css" type="text/css">
     <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap.css" type="text/css" >
     <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
+<?php } ?>
+<?php if ($isBs4or5 && $isJqueryUI) { ?>
+    <link rel="stylesheet" href="external/jqueryui1.14.2/jquery-ui-1.14.2.custom.css" type="text/css">
 <?php } ?>
     <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
     <link rel="stylesheet" href="external/tabulator-4.9.1/css/tabulator.min.css" type="text/css" >
@@ -75,7 +78,7 @@ if (PARTICIPANT_PHOTOS === TRUE) {
 <?php
     $isRecaptcha = $title == 'Forgot Password';
     /* "external" means 3rd party library */
-    load_external_javascript($isDataTables, $isRecaptcha, $bootstrapVersion);
+    load_external_javascript($isDataTables, $isRecaptcha, $bootstrapVersion, $isJqueryUI);
     load_internal_javascript($title, $isDataTables);
 ?>
 </head>

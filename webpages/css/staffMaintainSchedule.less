@@ -29,8 +29,12 @@ body.full-page {
 }
 
 #headerContainer {
-    padding-left: 20px;
-    padding-right: 20px;
+    /* Matches the -12px margin Bootstrap 5's .row (the header's wrapper under bs4/bs5, see
+       GlobalHeader_BS5.xsl) puts on #reg-header-container, so the header still bleeds flush to the
+       edges instead of leaving a gap. Bootstrap 2's .header-wrapper used -20px, which this used to
+       pair with. */
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 .animHelper {
@@ -279,6 +283,10 @@ td.schedulerGridSlot {
     color: black;
     line-height: normal;
     border-collapse: separate;
+    /* Bootstrap 2's base "table" rule zeroed border-spacing for every table; Bootstrap 4/5 doesn't
+       touch it, so with border-collapse:separate this fell back to the browser's ~2px default,
+       showing as gaps between the grid's rows/columns. */
+    border-spacing: 0;
 
     & > tbody > tr:first-child {
         position: sticky;
@@ -287,6 +295,9 @@ td.schedulerGridSlot {
     }
 
     th {
+        /* Browsers center <th> text by default, which Bootstrap 2 left alone; Bootstrap 4/5's reboot
+           resets it to text-align:inherit (i.e. left, same as the rest of the page), so pin it back. */
+        text-align: center;
         background-color: #c0e4ff;
         padding-left: 2px;
         padding-right: 2px;
@@ -446,4 +457,20 @@ span.newformnotetight {
 /* override JQuery UI */
 .ui-tabs .ui-tabs-panel {
     padding: 2px 4px;
+}
+#tabs .ui-tabs-nav a {
+    font-weight: normal;
+    padding: .25rem .35rem;
+}
+#tabs {
+    /* jQuery UI's .ui-widget rule sizes text at 1.1em of the page's base font-size (14px under
+       Bootstrap 2, 16px under Bootstrap 4/5); pin it back to the original 15.4px so the tab bar
+       doesn't wrap to 2 lines under the larger Bootstrap 4/5 base size. */
+    font-size: 15.4px;
+}
+#tabs label {
+    /* Bootstrap 2 pinned label/input/button/select/textarea to 14px regardless of the .ui-widget
+       font-size above; Bootstrap 4/5 has no such reset, so labels in the tab panels (e.g. "Session
+       ID") were inheriting the larger size above and wrapping. Restore the original 14px. */
+    font-size: 14px;
 }

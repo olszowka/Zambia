@@ -1,24 +1,30 @@
 <?php
 //  Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrapVersion = 'bs2') {
+function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrapVersion = 'bs2', $isJqueryUI = false) {
     switch ($bootstrapVersion) {
         case 'bs5':
 ?>
             <script src="external/jquery3.7.1/jquery-3.7.1.min.js"></script>
+<?php if ($isJqueryUI) { ?>
+            <script src="external/jqueryui1.14.2/jquery-ui-1.14.2.min.js"></script>
+<?php } ?>
             <script src="external/bootstrap5.3.8/bootstrap.bundle.min.js" type="text/javascript"></script>
 <?php
             break;
         case 'bs4':
 ?>
         <script src="external/jquery3.7.1/jquery-3.7.1.min.js"></script>
+<?php if ($isJqueryUI) { ?>
+        <script src="external/jqueryui1.14.2/jquery-ui-1.14.2.min.js"></script>
+<?php } ?>
         <script src="external/bootstrap4.6.2/bootstrap.bundle.min.js" type="text/javascript"></script>
 <?php
             break;
         case 'bs2':
         default:
 ?>
-    <script src="external/jquery1.7.2/jquery-1.7.2.min.js"></script>
-    <script src="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.min.js"></script>
+    <script src="external/jquery1.12.4/jquery-1.12.4.min.js"></script>
+    <script src="external/jqueryui1.14.2/jquery-ui-1.14.2.min.js"></script>
     <script src="external/bootstrap2.3.2/bootstrap.js" type="text/javascript"></script>
 <?php } ?>
     <script src="external/choices9.0.0/choices.min.js"></script>

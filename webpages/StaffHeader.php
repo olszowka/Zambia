@@ -3,7 +3,7 @@
 global $header_section;
 $header_section = HEADER_STAFF;
 
-function staff_header($title, $bootstrapVersion = 'bs2', $is_data_tables = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function staff_header($title, $bootstrapVersion = 'bs2', $is_data_tables = false, $reportColumns = false, $reportAdditionalOptions = false, $isJqueryUI = false) {
     global $fullPage;
     $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     $isLoggedIn = isLoggedIn();
@@ -13,7 +13,7 @@ function staff_header($title, $bootstrapVersion = 'bs2', $is_data_tables = false
         participant_header(''); // force data consent page
         exit();
     }
-    html_header($title, $bootstrapVersion, $is_data_tables, $reportColumns, $reportAdditionalOptions);
+    html_header($title, $bootstrapVersion, $is_data_tables, $reportColumns, $reportAdditionalOptions, $isJqueryUI);
     $bodyClass = "";
     if ($fullPage && $isBs4or5) {
         $bodyClass = 'class="full-page bs4"';
