@@ -17,6 +17,7 @@
 * Migrate Session Search page to BS5/JQ3.X
 * Migrate some miscellaneous error reporting pages to BS5/JQ3.X
 * Clarify error message in build report menu process.
+* Don't force to bootstrap2 when user hits a page with session expired.
 
 ## Application Notes
 

@@ -45,7 +45,6 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
                 $topSectionBehavior = 'NO_USER';
             } else {
                 $topSectionBehavior = 'SESSION_EXPIRED';
-                $bootstrapVersion = 'bs2';
             }
             break;
         case 'PASSWORD_RESET_COMPLETE':
