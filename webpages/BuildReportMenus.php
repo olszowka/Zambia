@@ -94,7 +94,7 @@ if ($reportMenuFilHand === false || $reportMenuBS4FilHand === false || $staffRep
     <div class="row mt-3">
         <div class="col-12">
             <div class="alert alert-danger" role="alert">
-                Build Reports Failed: invalid permissions, check installation of Zambia.
+                Build Reports Failed: invalid file or directory permissions, check installation of Zambia.
             </div>
         </div>
     </div>
