@@ -16,6 +16,7 @@
 * Migrate pages related to importing sessions from previous cons to BS5/JQ3.X
 * Migrate Session Search page to BS5/JQ3.X
 * Migrate some miscellaneous error reporting pages to BS5/JQ3.X
+* Clarify error message in build report menu process.
 
 ## Application Notes
 
