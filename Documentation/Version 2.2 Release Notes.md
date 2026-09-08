@@ -14,6 +14,8 @@
 * Migrate Grid Scheduler page to BS5/JQ3.X
 * Migrate Session History page to BS5/JQ3.X
 * Migrate pages related to importing sessions from previous cons to BS5/JQ3.X
+* Migrate Session Search page to BS5/JQ3.X
+* Migrate some miscellaneous error reporting pages to BS5/JQ3.X
 
 ## Application Notes
 
