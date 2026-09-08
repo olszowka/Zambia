@@ -1,7 +1,8 @@
 <?php
 // Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message_error, $title;
+global $message_error, $title, $pageBootstrapVersion;
 $title = "Reports in Category";
+$pageBootstrapVersion = 'bs5';
 require_once('StaffCommonCode.php');
 $CON_NAME = CON_NAME;
 $reportcategoryid = getString("reportcategory");

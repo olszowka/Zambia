@@ -1,7 +1,8 @@
 <?php
 // Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $title;
+global $title, $pageBootstrapVersion;
 $title = "My Suggestions";
+$pageBootstrapVersion = 'bs5';
 require('PartCommonCode.php'); // sets $badgeid from $SESSION among other things
 $paneltopics = if_null_default(getString("paneltopics"), '');
 $otherideas = if_null_default(getString("otherideas"), '');

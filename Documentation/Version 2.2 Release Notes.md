@@ -18,6 +18,7 @@
 * Migrate some miscellaneous error reporting pages to BS5/JQ3.X
 * Clarify error message in build report menu process.
 * Don't force to bootstrap2 when user hits a page with session expired.
+* Add tracking of bootstrap version so error pages are rendered with appropriate bootstrap version.
 
 ## Application Notes
 

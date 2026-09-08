@@ -2,6 +2,7 @@
 // Created by Peter Olszowka on 2022-10-01;
 // Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $title = "Declined to Invite";
+$pageBootstrapVersion = 'bs5';
 require_once('PartCommonCode.php');
 if (!populateCustomTextArray()) { // title changed above, reload custom text with the proper page title
     $message_error = "Failed to retrieve custom text. " . $message_error;

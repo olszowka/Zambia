@@ -1,7 +1,8 @@
 <?php
 // Copyright (c) 2019-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $title;
+global $title, $pageBootstrapVersion;
 $title = "Build Report Menus";
+$pageBootstrapVersion = 'bs4';
 require_once('StaffCommonCode.php'); // Checks for staff permission among other things
 if (!may_I('ConfigureReports')) {
     $message_error = "You do not currently have permission to view this page.<br>\n";

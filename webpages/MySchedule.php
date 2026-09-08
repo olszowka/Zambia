@@ -1,7 +1,8 @@
 <?php
 // Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $linki, $title;
+global $linki, $title, $pageBootstrapVersion;
 $title = "My Schedule";
+$pageBootstrapVersion = 'bs5';
 require('PartCommonCode.php'); // initialize db; check login;
 $CON_START_DATIM = CON_START_DATIM; //make it a variable so it will be substituted
 $PROGRAM_EMAIL = PROGRAM_EMAIL; //make it a variable so it will be substituted

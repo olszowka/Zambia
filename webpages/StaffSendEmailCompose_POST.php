@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Not sure if there is any need to support post/been here before
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('email_functions.php');
@@ -9,7 +9,7 @@ $title = "Send Email (Step 2 - verify)";
 if (!isset($_POST['sendto'])) { // page has not been visited before
     $message_error = "Expected POST data was missing.  This page is intended to be reached via a form.";
     $message_error .= " It will not work if you link to it directly.\n";
-    StaffRenderErrorPage($title, $message_error);
+    StaffRenderErrorPage($title, $message_error, 'bs5');
     exit(0);
 }
 $email = get_email_from_post();

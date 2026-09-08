@@ -74,7 +74,8 @@ function BrainstormRenderErrorPage($title, $message) {
 }
 
 function RenderError($message_error, $ajax = false) {
-    global $header_rendered, $header_section, $returnAjaxErrors, $title;
+    global $header_rendered, $header_section, $returnAjaxErrors, $title, $pageBootstrapVersion;
+    $bootstrapVersion = isset($pageBootstrapVersion) ? $pageBootstrapVersion : 'bs2';
     if (isset($returnAjaxErrors) && $returnAjaxErrors) {
         $ajax = true;
     }
@@ -106,10 +107,10 @@ function RenderError($message_error, $ajax = false) {
                 BrainstormRenderErrorPage($title, $message_error);
                 break;
             case HEADER_PARTICIPANT:
-                PartRenderErrorPage($title, $message_error);
+                PartRenderErrorPage($title, $message_error, $bootstrapVersion);
                 break;
             case HEADER_STAFF:
-                StaffRenderErrorPage($title, $message_error);
+                StaffRenderErrorPage($title, $message_error, $bootstrapVersion);
                 break;
         }
         exit(0);
