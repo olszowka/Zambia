@@ -1,7 +1,8 @@
 <?php
-// Copyright (c) 2011-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
-    global $badgeid, $message_error, $partAvail, $title;
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+    global $badgeid, $message_error, $partAvail, $title, $pageBootstrapVersion;
     $title = "My Availability";
+    $pageBootstrapVersion = 'bs5';
     require('PartCommonCode.php'); // initialize db; check login;
     //                                  set $badgeid from session
     require('my_sched_constr_func.php');

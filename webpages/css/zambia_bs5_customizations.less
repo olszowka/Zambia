@@ -82,8 +82,20 @@ table.compressed {
 /* End of Bootstrap 5 extensions */
 
 /* Bootstrap 4 overrides */
+/* Note: .custom-select below is a Bootstrap 4 class name (Bootstrap 5 renamed it to .form-select); it's
+   inert here but left in place since this block was carried over from zambia_bs4_customizations.less. */
 
 .custom-select {
+    height: 2rem;
+    padding-top: 3px;
+    border: 1px solid #606060;
+    border-radius: 4px;
+}
+
+/* Bootstrap 5's .form-select has the same default vertical padding (.375rem top/bottom) as Bootstrap 4's
+   .custom-select above; without this override its text gets clipped by the fixed 2rem height set by the
+   plain `select` rule in zambia_common.less. */
+.form-select {
     height: 2rem;
     padding-top: 3px;
     border: 1px solid #606060;
