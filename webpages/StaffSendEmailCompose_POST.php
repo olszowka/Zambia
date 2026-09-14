@@ -3,7 +3,8 @@
 // Not sure if there is any need to support post/been here before
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('email_functions.php');
-global $message, $link, $title;
+global $message, $link, $title, $pageBootstrapVersion;
+$pageBootstrapVersion = 'bs5';
 $subst_list = array('$BADGEID$', '$FIRSTNAME$', "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $title = "Send Email (Step 2 - verify)";
 if (!isset($_POST['sendto'])) { // page has not been visited before

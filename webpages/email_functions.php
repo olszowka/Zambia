@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2006-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2006-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // function $email=get_email_from_post()
 // reads post variable to populate email array
 // returns email array or false if an error was encountered.
@@ -55,43 +55,72 @@ function render_send_email($email, $message_warning) {
     $title = "Send Email to Participants";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title, 'bs2');
-
-    if (isset($message_warning) && strlen($message_warning) > 0) {
-        echo "<p class=\"alert\">$message_warning</p>\n";
-    }
-    echo "<h3>Step 1 -- Compose Email</h3>\n";
-    echo "<form name=\"emailform\" method=POST action=\"StaffSendEmailCompose_POST.php\">\n";
-    echo "<table>";
-    echo "    <tr><td><label for=\"sendto\">To: </label></td>\n";
-    echo "    <td><select name=\"sendto\">\n";
-    populate_select_from_table("EmailTo", $email['sendto'], "", false);
-    echo "    </select></td></tr>";
-    echo "<tr><td><label for=\"sendfrom\">From: </label></td>\n";
-    echo "    <td><select name=\"sendfrom\">\n";
-    populate_select_from_table("EmailFrom", $email['sendfrom'], "", false);
-    echo "    </select></td></tr>";
-    echo "<tr><td><label for=\"sendcc\">CC: </label></td>\n";
-    echo "    <td><select name=\"sendcc\">\n";
-    populate_select_from_table("EmailCC", $email['sendcc'], "", false);
-    echo "    </select></td></tr>";
-    echo "<tr><td><label for=\"subject\">Subject: </label></td>\n";
-    echo "    <td><input name=\"subject\" type=\"text\" size=\"40\" value=\"";
-    echo htmlspecialchars($email['subject'], ENT_NOQUOTES) . "\">\n";
-    echo "    </td></tr>";
-    echo "</table><br>\n";
-    echo "<textarea name=\"body\" cols=\"80\" rows=\"25\" style=\"width: 1000px;\">";
-    echo htmlspecialchars($email['body'], ENT_NOQUOTES) . "</textarea><br>\n";
-    echo "<button class=\"ib\" type=\"reset\" value=\"reset\">Reset</button>\n";
-    echo "<button class=\"ib\" type=\"submit\" value=\"seeit\">See it</button>\n";
-    echo "</form><br>\n";
-    echo "<p>Available substitutions:</p>\n";
-    echo "<table class=\"multcol-list\">\n";
-    echo "<tr><td>\$BADGEID\$</td><td>\$EMAILADDR\$</td></tr>\n";
-    echo "<tr><td>\$FIRSTNAME\$</td><td>\$PUBNAME\$</td></tr>\n";
-    echo "<tr><td>\$LASTNAME\$</td><td>\$BADGENAME\$</td></tr>\n";
-    echo "<tr><td>\$EVENTS_SCHEDULE\$</td><td>\$FULL_SCHEDULE\$</td></tr>\n";
-    echo "</table>\n";
+    staff_header($title, 'bs5');
+    ?>
+    <div class="container-xl">
+        <?php if (isset($message_warning) && strlen($message_warning) > 0) { ?>
+            <p class="alert alert-warning"><?php echo $message_warning; ?></p>
+        <?php } ?>
+        <h3 class="mt-4">Step 1 -- Compose Email</h3>
+        <form name="emailform" method="POST" action="StaffSendEmailCompose_POST.php">
+            <div class="row mt-3">
+                <div class="col-md-4 col-lg-3">
+                    <label class="form-label" for="sendto">To:</label>
+                </div>
+                <div class="col-md-16 col-lg-14">
+                    <select class="form-select" id="sendto" name="sendto">
+                        <?php populate_select_from_table("EmailTo", $email['sendto'], "", false); ?>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4 col-lg-3">
+                    <label class="form-label" for="sendfrom">From:</label>
+                </div>
+                <div class="col-md-16 col-lg-14">
+                    <select class="form-select" id="sendfrom" name="sendfrom">
+                        <?php populate_select_from_table("EmailFrom", $email['sendfrom'], "", false); ?>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4 col-lg-3">
+                    <label class="form-label" for="sendcc">CC:</label>
+                </div>
+                <div class="col-md-16 col-lg-14">
+                    <select class="form-select" id="sendcc" name="sendcc">
+                        <?php populate_select_from_table("EmailCC", $email['sendcc'], "", false); ?>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4 col-lg-3">
+                    <label class="form-label" for="subject">Subject:</label>
+                </div>
+                <div class="col-md-16 col-lg-14">
+                    <input class="form-control" id="subject" name="subject" type="text" size="40" value="<?php echo htmlspecialchars($email['subject'], ENT_NOQUOTES); ?>">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-16 col-lg-14">
+                    <label class="form-label" for="body">Body:</label>
+                    <textarea class="form-control" name="body" id="body" rows="25"><?php echo htmlspecialchars($email['boaalldy'], ENT_NOQUOTES); ?></textarea>
+                </div>
+            </div>
+            <div class="mt-3 mb-3">
+                <button class="btn btn-secondary" type="reset">Reset</button>
+                <button class="btn btn-primary" type="submit" value="seeit">See it</button>
+            </div>
+        </form>
+        <p>Available substitutions:</p>
+        <table class="table table-sm w-auto">
+            <tr><td>$BADGEID$</td><td>$EMAILADDR$</td></tr>
+            <tr><td>$FIRSTNAME$</td><td>$PUBNAME$</td></tr>
+            <tr><td>$LASTNAME$</td><td>$BADGENAME$</td></tr>
+            <tr><td>$EVENTS_SCHEDULE$</td><td>$FULL_SCHEDULE$</td></tr>
+        </table>
+    </div>
+    <?php
     staff_footer();
 }
 
@@ -102,27 +131,33 @@ function renderQueueEmail($goodCount, $arrayOfGood, $badCount, $arrayOfBad) {
     $title = "Results of Queueing Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title, 'bs2');
-    echo "<p>$goodCount message(s) were queued for email transmission.<br>\n";
-    echo "$badCount message(s) failed.</p>\n";
-    echo "<p>List of messages successfully queued:<br>\n";
-    echo "Badgeid, Name for Publications, Email Address<br>\n";
-    if ($arrayOfGood)
-        foreach ($arrayOfGood as $recipient) {
-            echo htmlspecialchars($recipient['badgeid']) . ", ";
-            echo htmlspecialchars($recipient['name']) . ", ";
-            echo htmlspecialchars($recipient['email']) . "<br>\n";
-        }
-    echo "</p>\n";
-    echo "<p>List of recipients which failed:<br>\n";
-    echo "Badgeid, Name for Publications, Email Address<br>\n";
-    if ($arrayOfBad)
-        foreach ($arrayOfBad as $recipient) {
-            echo htmlspecialchars($recipient['badgeid']) . ", ";
-            echo htmlspecialchars($recipient['name']) . ", ";
-            echo htmlspecialchars($recipient['email']) . "<br>\n";
-        }
-    echo "</p>\n";
+    staff_header($title, 'bs5');
+    ?>
+    <div class="container-xl">
+        <p><?php echo $goodCount; ?> message(s) were queued for email transmission.<br>
+        <?php echo $badCount; ?> message(s) failed.</p>
+        <p>List of messages successfully queued:<br>
+        Badgeid, Name for Publications, Email Address<br>
+        <?php if ($arrayOfGood) {
+            foreach ($arrayOfGood as $recipient) {
+                echo htmlspecialchars($recipient['badgeid']) . ", ";
+                echo htmlspecialchars($recipient['name']) . ", ";
+                echo htmlspecialchars($recipient['email']) . "<br>\n";
+            }
+        } ?>
+        </p>
+        <p>List of recipients which failed:<br>
+        Badgeid, Name for Publications, Email Address<br>
+        <?php if ($arrayOfBad) {
+            foreach ($arrayOfBad as $recipient) {
+                echo htmlspecialchars($recipient['badgeid']) . ", ";
+                echo htmlspecialchars($recipient['name']) . ", ";
+                echo htmlspecialchars($recipient['email']) . "<br>\n";
+            }
+        } ?>
+        </p>
+    </div>
+    <?php
     staff_footer();
 }
 
@@ -138,27 +173,38 @@ function render_verify_email($email, $email_verify, $message_warning) {
     $title = "Send Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title, 'bs2');
-
-    if (strlen($message_warning) > 0) {
-        echo "<p class=\"alert\">$message_warning</p>\n";
-    }
-    echo "<h3>Step 2 -- Verify </h3>\n";
-    echo "<form name=\"emailverifyform\" method=POST action=\"StaffSendEmailCompose.php\">\n";
-    echo "<p>Recipient List:<br>\n";
-    echo "<textarea readonly rows=\"8\" cols=\"70\" style=\"width:400px;\">";
-    echo $email_verify['recipient_list'] . "</textarea></P>\n";
-    echo "<p>Rendering of message body to first recipient:<br>\n";
-    echo "<textarea readonly rows=\"25\" cols=\"80\" style=\"width:1000px;font-family: monospace, Monospaced;\">";
-    echo $email_verify['body'] . "</textarea></p>\n";
-    echo "<input type=\"hidden\" name=\"sendto\" value=\"" . $email['sendto'] . "\">\n";
-    echo "<input type=\"hidden\" name=\"sendfrom\" value=\"" . $email['sendfrom'] . "\">\n";
-    echo "<input type=\"hidden\" name=\"sendcc\" value=\"" . $email['sendcc'] . "\">\n";
-    echo "<input type=\"hidden\" name=\"subject\" value=\"" . htmlspecialchars($email['subject']) . "\">\n";
-    echo "<input type=\"hidden\" name=\"body\" value=\"" . htmlspecialchars($email['body']) . "\">\n";
-    echo "<button class=\"ib\" type=\"submit\" name=\"navigate\" value=\"goback\">Go Back</button>\n";
-    echo "<button class=\"ib\" type=\"submit\" name=\"navigate\" value=\"send\">Send</button>\n";
-    echo "</form><br>\n";
+    staff_header($title, 'bs5');
+    ?>
+    <div class="container-xl">
+        <?php if (strlen($message_warning) > 0) { ?>
+            <p class="alert alert-warning"><?php echo $message_warning; ?></p>
+        <?php } ?>
+        <h3 class="mt-3">Step 2 -- Verify </h3>
+        <form name="emailverifyform" method="POST" action="StaffSendEmailCompose.php">
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <label class="form-label" for="recipient_list">Recipient List:</label>
+                    <textarea class="form-control" id="recipient_list" readonly rows="8"><?php echo $email_verify['recipient_list']; ?></textarea>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <label class="form-label" for="verify_body">Rendering of message body to first recipient:</label>
+                    <textarea class="form-control" id="verify_body" readonly rows="25" style="font-family: monospace, Monospaced;"><?php echo $email_verify['body']; ?></textarea>
+                </div>
+            </div>
+            <input type="hidden" name="sendto" value="<?php echo $email['sendto']; ?>">
+            <input type="hidden" name="sendfrom" value="<?php echo $email['sendfrom']; ?>">
+            <input type="hidden" name="sendcc" value="<?php echo $email['sendcc']; ?>">
+            <input type="hidden" name="subject" value="<?php echo htmlspecialchars($email['subject']); ?>">
+            <input type="hidden" name="body" value="<?php echo htmlspecialchars($email['body']); ?>">
+            <div class="mt-3 mb-3">
+                <button class="btn btn-secondary" type="submit" name="navigate" value="goback">Go Back</button>
+                <button class="btn btn-primary" type="submit" name="navigate" value="send">Send</button>
+            </div>
+        </form>
+    </div>
+    <?php
     staff_footer();
 }
 
@@ -167,12 +213,15 @@ function render_send_email_engine($email, $message_warning) {
     $title = "Pretend to actually send email.";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title, 'bs2');
-
-    if (strlen($message_warning) > 0) {
-        echo "<p class=\"message_warning\">$message_warning</p>\n";
-    }
-    echo "<h3>Step 3 -- Actually Send Email </h3>\n";
+    staff_header($title, 'bs5');
+    ?>
+    <div class="container-xl">
+        <?php if (strlen($message_warning) > 0) { ?>
+            <p class="alert alert-warning"><?php echo $message_warning; ?></p>
+        <?php } ?>
+        <h3>Step 3 -- Actually Send Email </h3>
+    </div>
+    <?php
     staff_footer();
 }
 
@@ -266,6 +315,10 @@ EOD;
 // Reads various parameters from configuration and returns a configured mailer object
 // ready to send email
 function get_swift_mailer() {
+    // Local testing only: pretends every message was sent successfully, without making any network connection.
+    if (defined('SMTP_USE_NULL_TRANSPORT') && SMTP_USE_NULL_TRANSPORT === TRUE) {
+        return new Swift_Mailer(new Swift_NullTransport());
+    }
     //Create the Transport
     if (empty(SMTP_PROTOCOL)) {
         $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT));

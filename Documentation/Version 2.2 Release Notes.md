@@ -21,6 +21,8 @@
 * Add tracking of bootstrap version so error pages are rendered with appropriate bootstrap version.
 * Migrate Login and Logout pages to BS5/JQ3.X
 * Migrate My Availability page to BS5/JQ3.X
+* Migrate Send Email to Participants pages to BS5/JQ3.X
+* Create dummy email sending mechanism for testing
 
 ## Application Notes
 
