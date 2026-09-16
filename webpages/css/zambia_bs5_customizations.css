@@ -59,6 +59,15 @@ table.compressed {
 .table.table-clear .form-check-input {
   border-color: #6c757d;
 }
+.card .form-check-input {
+  border-color: #6c757d;
+}
+/* Match the border used on form controls (see zambia_common.less) instead of Bootstrap 5's default
+   light, faint card border. */
+.card {
+  border: 1px solid #606060;
+  border-radius: 4px;
+}
 /* End of Bootstrap 5 extensions */
 /* Bootstrap 4 overrides */
 /* Note: .custom-select below is a Bootstrap 4 class name (Bootstrap 5 renamed it to .form-select); it's

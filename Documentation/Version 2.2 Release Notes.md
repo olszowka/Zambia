@@ -23,6 +23,7 @@
 * Migrate My Availability page to BS5/JQ3.X
 * Migrate Send Email to Participants pages to BS5/JQ3.X
 * Create dummy email sending mechanism for testing
+* Migrate Panel Interests page to BS5/JQ3.X
 
 ## Application Notes
 
