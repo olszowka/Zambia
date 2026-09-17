@@ -27,7 +27,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
         $title = "Data Retention Consent";
         $pageHeaderFamily = 'No_Menu';
-        $bootstrapVersion = 'bs4';
+        $bootstrapVersion = 'bs5';
         $displayDataConsentPage = true;
     }
     switch ($pageHeaderFamily) {
