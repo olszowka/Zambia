@@ -1,8 +1,7 @@
 <?php
 // Copyright (c) 2019-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false, $isJqueryUI = false) {
+function html_header($title, $bootstrapVersion, $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false, $isJqueryUI = false) {
     global $fullPage;
-    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     require_once ("javascript_functions.php");
 ?>
 <!DOCTYPE html>
@@ -24,14 +23,8 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
     <link rel="stylesheet" href="external/bootstrap5.3.8/bootstrap.min.css" type="text/css" >
 <?php
             break;
-        case 'bs2':
-        default:
-?>
-    <link rel="stylesheet" href="external/jqueryui1.14.2/jquery-ui-1.14.2.custom.css" type="text/css">
-    <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap.css" type="text/css" >
-    <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
-<?php } ?>
-<?php if ($isBs4or5 && $isJqueryUI) { ?>
+    } ?>
+<?php if ($isJqueryUI) { ?>
     <link rel="stylesheet" href="external/jqueryui1.14.2/jquery-ui-1.14.2.custom.css" type="text/css">
 <?php } ?>
     <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
@@ -39,10 +32,8 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
     <link rel="stylesheet" href="css/zambia_common.css" type="text/css" media="screen" />
 <?php if ($bootstrapVersion == 'bs4') { ?>
     <link rel="stylesheet" href="css/zambia_bs4_customizations.css" type="text/css" media="screen" />
-<?php } else if ($bootstrapVersion == 'bs5') { ?>
-    <link rel="stylesheet" href="css/zambia_bs5_customizations.css" type="text/css" media="screen" />
 <?php } else { ?>
-    <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/zambia_bs5_customizations.css" type="text/css" media="screen" />
 <?php } ?>
     <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
 <?php

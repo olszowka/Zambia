@@ -1,7 +1,7 @@
 <?php
 //	Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 
-function StaffRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
+function StaffRenderErrorPage($title, $message, $bootstrapVersion = 'bs5') {
     global $debug;
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
@@ -9,17 +9,7 @@ function StaffRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
     if (isset($debug)) {
         echo $debug . "<br>\n";
     }
-    if ($bootstrapVersion == 'bs5') {
-?>
-        <div class="row mt-3">
-            <div class="col-36">
-                <div class="alert alert-danger" role="alert">
-                    <?php echo $message; ?>
-                </div>
-            </div>
-        </div>
-<?php
-    } else if ($bootstrapVersion == 'bs4') {
+    if ($bootstrapVersion == 'bs4') {
 ?>
         <div class="row mt-3">
             <div class="col-12">
@@ -30,26 +20,24 @@ function StaffRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
         </div>
 <?php
     } else {
-        echo "<p class=\"alert alert-error\">$message</p>\n";
+?>
+        <div class="row mt-3">
+            <div class="col-36">
+                <div class="alert alert-danger" role="alert">
+                    <?php echo $message; ?>
+                </div>
+            </div>
+        </div>
+<?php
     }
     staff_footer();
 }
 
-function PartRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
+function PartRenderErrorPage($title, $message, $bootstrapVersion = 'bs5') {
     require_once('ParticipantHeader.php');
     require_once('ParticipantFooter.php');
     participant_header($title, false, 'Normal', $bootstrapVersion);
-    if ($bootstrapVersion == 'bs5') {
-?>
-        <div class="row mt-3">
-            <div class="col-36">
-                <div class="alert alert-danger" role="alert">
-                    <?php echo $message; ?>
-                </div>
-            </div>
-        </div>
-<?php
-    } else if ($bootstrapVersion == 'bs4') {
+    if ($bootstrapVersion == 'bs4') {
 ?>
         <div class="row mt-3">
             <div class="col-12">
@@ -60,7 +48,15 @@ function PartRenderErrorPage($title, $message, $bootstrapVersion = 'bs2') {
         </div>
 <?php
     } else {
-        echo "<p class=\"alert alert-error\">$message</p>\n";
+?>
+        <div class="row mt-3">
+            <div class="col-36">
+                <div class="alert alert-danger" role="alert">
+                    <?php echo $message; ?>
+                </div>
+            </div>
+        </div>
+<?php
     }
     participant_footer();
 }
@@ -75,7 +71,7 @@ function BrainstormRenderErrorPage($title, $message) {
 
 function RenderError($message_error, $ajax = false) {
     global $header_rendered, $header_section, $returnAjaxErrors, $title, $pageBootstrapVersion;
-    $bootstrapVersion = isset($pageBootstrapVersion) ? $pageBootstrapVersion : 'bs2';
+    $bootstrapVersion = isset($pageBootstrapVersion) ? $pageBootstrapVersion : 'bs5';
     if (isset($returnAjaxErrors) && $returnAjaxErrors) {
         $ajax = true;
     }

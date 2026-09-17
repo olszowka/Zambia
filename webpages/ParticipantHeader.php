@@ -3,7 +3,7 @@
 global $header_section;
 $header_section = HEADER_PARTICIPANT;
 
-function participant_header($title, $noUserRequired = false, $pageHeaderFamily = 'Normal', $bootstrapVersion = 'bs2') {
+function participant_header($title, $noUserRequired = false, $pageHeaderFamily = 'Normal', $bootstrapVersion = 'bs5') {
     // $noUserRequired is true if user not required to be logged in to access this page
     // $pageHeaderFamily is "Login", "Logout", "No_Menu", "PASSWORD_RESET_COMPLETE", "Consent", "Normal"
     //      "Login":
@@ -27,7 +27,7 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
         $title = "Data Retention Consent";
         $pageHeaderFamily = 'No_Menu';
-        $bootstrapVersion = 'bs5';
+        $bootstrapVersion = 'bs5'; // dataConsent.xsl markup is bs5-specific
         $displayDataConsentPage = true;
     }
     switch ($pageHeaderFamily) {
@@ -52,7 +52,6 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
             break;
     }
     html_header($title, $bootstrapVersion);
-    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     echo "<body>\n";
     echo "<div class=\"container-fluid\">\n";
     /**
@@ -78,54 +77,12 @@ function participant_header($title, $noUserRequired = false, $pageHeaderFamily =
         if (!isset($_SESSION['survey_exists'])) {
             $_SESSION['survey_exists'] = survey_programmed();
         }
-        if ($isBs4or5) {
-            $paramArray = array();
-            $paramArray["title"] = $title;
-            $paramArray["survey"] = $_SESSION['survey_exists'];
-            $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
-            if ($bootstrapVersion == 'bs4') {
-                $filename = 'ParticipantMenu_BS4.xsl';
-            } else {
-                $filename = 'ParticipantMenu_BS5.xsl';
-            }
-            RenderXSLT($filename, $paramArray, GeneratePermissionSetXML());
-        } else {
-?>
-        <nav id="participantNav" class="navbar navbar-inverse">
-            <div class="navbar-inner">
-                <div class="container" style="width: auto;">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="<?php if (isset($_SERVER['PATH_INFO'])) echo $_SERVER['PATH_INFO'] ?>"><?php echo $title ?></a>
-                    <div class="nav-collapse">
-                        <ul class="nav">
-                            <li><a href="welcome.php">Overview</a></li>
-                            <li><a href="my_profile.php">Profile</a></li>
-                    <?php
-                            makeMenuItem("Photo", (PARTICIPANT_PHOTOS === TRUE && may_I('photos')), "my_photo.php", false);
-                            makeMenuItem("Survey", ($_SESSION['survey_exists'] && may_I('survey')), "PartSurvey.php", false);
-                            makeMenuItem("Availability", may_I('my_availability'),"my_sched_constr.php",false);
-                            makeMenuItem("General Interests", may_I('general_interests'),"my_interests.php",false);
-                            makeMenuItem("My Suggestions", may_I('my_suggestions_write'),"my_suggestions.php",false);
-                            makeMenuItem("Search Sessions", may_I('search_panels'),"PartSearchSessions.php", false);
-                            makeMenuItem("Session Interests", may_I('my_panel_interests'),"PartPanelInterests.php",false);
-                            makeMenuItem("My Schedule", may_I('my_schedule'),"MySchedule.php",false);
-                    ?>
-                            <li class="divider-vertical"></li>
-                            <?php makeMenuItem("Suggest a Session", may_I('BrainstormSubmit'),"BrainstormWelcome.php", false); ?>
-                            <li class="divider-vertical"></li>
-                        </ul>
-                            <?php if (may_I('Staff')) {
-                                echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="StaffView" href="StaffOverview.php">Staff View</a></li></ul>';
-                            }?>
-                    </div>
-                </div>
-            </div>
-        </nav>
-<?php       } // end of bootstrap 2
+        $paramArray = array();
+        $paramArray["title"] = $title;
+        $paramArray["survey"] = $_SESSION['survey_exists'];
+        $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
+        $filename = $bootstrapVersion == 'bs4' ? 'ParticipantMenu_BS4.xsl' : 'ParticipantMenu_BS5.xsl';
+        RenderXSLT($filename, $paramArray, GeneratePermissionSetXML());
     } else { // couldn't show menu
         if ($displayDataConsentPage) {
             require('dataConsent.php');

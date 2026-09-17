@@ -1,6 +1,6 @@
 <?php
-// Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
-function commonHeader($headerVersion, $topSectionBehavior, $bootstrapVersion = 'bs2', $headerErrorMessage='') {
+// Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+function commonHeader($headerVersion, $topSectionBehavior, $bootstrapVersion = 'bs5', $headerErrorMessage='') {
     /**
      * Top section behavior
      * LOGIN:
@@ -31,17 +31,10 @@ function commonHeader($headerVersion, $topSectionBehavior, $bootstrapVersion = '
     $paramArray["USER_ID_PROMPT"] = USER_ID_PROMPT;
     $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
     $paramArray["header_error_message"] = $headerErrorMessage;
-    switch ($bootstrapVersion) {
-        case 'bs5':
-            RenderXSLT('GlobalHeader_BS5.xsl', $paramArray);
-            break;
-        case 'bs4':
-            RenderXSLT('GlobalHeader_BS4.xsl', $paramArray);
-            break;
-        case 'bs2':
-        default:
-            RenderXSLT('GlobalHeader.xsl', $paramArray);
-            break;
+    if ($bootstrapVersion == 'bs4') {
+        RenderXSLT('GlobalHeader_BS4.xsl', $paramArray);
+    } else {
+        RenderXSLT('GlobalHeader_BS5.xsl', $paramArray);
     }
     $header_rendered = true;
 }

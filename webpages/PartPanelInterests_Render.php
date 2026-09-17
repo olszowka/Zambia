@@ -6,7 +6,7 @@ function render_session_interests($session_interest_count,$message,$message_erro
     echo "<div class=\"container-xl\">\n";
     if ($showNotAttendingWarning) {
         echo "<div class=\"alert alert-warning mt-3\" role=\"alert\">\n";
-        echo "    <h4 class=\"alert-heading\">Warning!</h4>\n";
+        echo "    <h4>Warning!</h4>\n";
         echo "    <span>\n";
         echo "        You have not indicated in your profile that you will be attending " . CON_NAME . ".\n";
         echo "        You will not be able to save your panel choices until you so do.\n";

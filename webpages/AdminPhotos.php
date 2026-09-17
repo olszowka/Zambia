@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
 $title = "Administer Photos";
 require_once('StaffCommonCode.php');
@@ -87,7 +87,7 @@ if (PARTICIPANT_PHOTOS === TRUE && may_I('AdminPhotos')) {
         <div class="row mt-4">
             <div class="col-sm-5 card alert-secondary">
                 <input type="file" id="chooseFileName" name="chooseFileName" accept="image/png, image/jpeg, image/jpg" style="display: none"/>
-                <p class="card-title">
+                <p class="card-title mt-2">
                     Upload Photo: Drag/Drop file or <button type="button" class="btn btn-secondary btn-sm" id="uploadPhoto">Choose File</button>
                 </p>
                 <div class="card-body" id="photoUploadArea" style="margin-right: auto; margin-left: auto; margin-top:0;">
@@ -104,13 +104,13 @@ if (PARTICIPANT_PHOTOS === TRUE && may_I('AdminPhotos')) {
             </div>
             <div class="col-sm-1"></div>
                 <div class="col-sm-5 card alert-secondary">
-                    <p class="card-title">Approved Photo</p>
+                    <p class="card-title mt-2">Approved Photo</p>
                     <div class="card-body" style="margin-right: auto; margin-left: auto; margin-top:0;">
                         <img class="approved-image" id="approvedPhoto" style="width: 400px; height: 400px; object-fit: scale-down; margin-top:0; margin-right: auto; margin-left: auto;" />
                     </div>
                 </div>
             </div>
-        <div class="row">
+        <div class="row mt-2">
             <div class="col-sm-5">
                 <input type="hidden" name="photouploadstatus"/>
                 Photo Status:

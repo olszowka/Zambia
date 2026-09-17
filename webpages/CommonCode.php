@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 require_once('error_functions.php');
 require_once('Constants.php');
 require_once('data_functions.php');
@@ -44,19 +44,6 @@ function maketab($text, $usable, $url) {
         echo $text;                     // XXX needs to be quoted
         echo '<img class="tabborder" src="images/rightCorner.gif" alt="&nbsp;">';
         echo '</span>';
-    }
-}
-
-// used by new (bootstrap) menuing system
-function makeMenuItem($text, $usable, $url, $sep = false) {
-    //plain menu item looks like
-    //<li><a href="StaffAssignParticipants.php">Assign to a Session</a></li>
-    if ($usable) {
-
-        if ($sep) {
-            echo "<li class=\"divider-vertical\"></li>";
-        }
-        echo "<li><a href=\"$url\">$text</a></li>";
     }
 }
 

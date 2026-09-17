@@ -86,10 +86,9 @@ foreach ($allReports as $reportName => $reportData) {
     }
 }
 ksort($reportCategories, SORT_NATURAL);
-$reportMenuFilHand = fopen('ReportMenuInclude.php', 'wb');
 $reportMenuBS4FilHand = fopen('ReportMenuBS4Include.php', 'wb');
 $staffReportsICIFilHand = fopen('staffReportsInCategoryInclude.php', 'wb');
-if ($reportMenuFilHand === false || $reportMenuBS4FilHand === false || $staffReportsICIFilHand === false) {
+if ($reportMenuBS4FilHand === false || $staffReportsICIFilHand === false) {
     staff_header($title, 'bs4');
 ?>
     <div class="row mt-3">
@@ -107,7 +106,6 @@ fwrite($staffReportsICIFilHand, "<?php\n");
 fwrite($staffReportsICIFilHand, "\$reportCategories = array();\n");
 foreach ($reportCategories as $reportCategory => $reportCategoryArray) {
     $encodedReportCategory = htmlentities(urlencode($reportCategory));
-    fwrite($reportMenuFilHand, "<li><a href='staffReportsInCategory.php?reportcategory=$encodedReportCategory'>$reportCategory</a></li>\n");
     fwrite($reportMenuBS4FilHand, "<a class='dropdown-item' href='staffReportsInCategory.php?reportcategory=$encodedReportCategory'>$reportCategory</a>\n");
     fwrite($staffReportsICIFilHand, "\$reportCategories['$reportCategory'] = array(");
     asort($reportCategoryArray, SORT_NUMERIC);
@@ -130,7 +128,6 @@ foreach($allReports as $reportName => $reportArray) {
     $description = addslashes($reportArray['description']);
     fwrite($staffReportsICIFilHand, "\$reportDescriptions['$reportName'] = \"{$description}\";\n");
 }
-fclose($reportMenuFilHand);
 fclose($reportMenuBS4FilHand);
 fclose($staffReportsICIFilHand);
 $reportCount = count($allReports);
