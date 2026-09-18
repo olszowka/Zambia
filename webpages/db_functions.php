@@ -450,6 +450,24 @@ function get_name_and_email(&$name, &$email) {
     return true; //return TRUE even if didn't retrieve from db because there's nothing to be done
 }
 
+// Function get_id_with_lowest_display_order($table_name, $id_field)
+// Returns the value of $id_field from the row of $table_name with the
+// lowest display_order, or null if the table is empty or the query fails.
+//
+function get_id_with_lowest_display_order($table_name, $id_field) {
+    $query = "SELECT $id_field FROM $table_name ORDER BY display_order LIMIT 1;";
+    if (!$result = mysqli_query_with_error_handling($query)) {
+        return null;
+    }
+    if (mysqli_num_rows($result) == 0) {
+        mysqli_free_result($result);
+        return null;
+    }
+    list($id) = mysqli_fetch_array($result, MYSQLI_NUM);
+    mysqli_free_result($result);
+    return $id;
+}
+
 // Function populate_select_from_table(...)
 // Reads parameters (see below) and a specified table from the db.
 // Outputs HTML of the "<OPTION>" values for a Select control.

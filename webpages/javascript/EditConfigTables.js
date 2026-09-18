@@ -35,6 +35,9 @@ var EditConfigTable = function () {
         if (tabname.substring(0, 2) == 't-') {
             tablename = tabname.substring(2);
             FetchTable();
+            var tablesUsedForNewSessionDefaults = ['Types', 'Divisions', 'KidsCategories', 'RoomSets'];
+            document.getElementById('new-session-default-note').style.display =
+                tablesUsedForNewSessionDefaults.includes(tablename) ? '' : 'none';
         }
     }
 

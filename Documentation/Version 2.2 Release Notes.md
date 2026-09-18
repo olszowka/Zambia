@@ -4,6 +4,7 @@
 
 ### Bug Fixes
 * Bootstrap 5 version of header now supports configurable image like the Bootstrap 4 version does
+* The defaults for a newly created session did not reflect the configuration provided in EmptyDbase.sql for the Types table.  Those defaults are now based on configuration for Type, Division, Adult/Children Category (kids category), and Roomset.
 
 ### New Features
 
@@ -30,6 +31,8 @@
 * Upgrade Tabulator to 6.5.3
 
 ## Application Notes
+
+When a user creates a new session, the defaults for the values of Type, Division, Adult/Children Category (kids category), and Roomset will now be taken from the row from the top of the corresponding configuration table, i.e. with the lowest value for display_order.  Adjust your configuration accordingly.
 
 ### db_name.php
 

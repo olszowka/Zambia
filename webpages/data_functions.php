@@ -307,8 +307,8 @@ function set_session_defaults() {
     global $session;
     //$session["sessionid"] set elsewhere
     $session["track"] = 0; // prompt with "SELECT"
-    $session["type"] = 2; // default to "Panel"
-    $session["divisionid"] = 1; // default to "Don't CAre"
+    $session["type"] = get_id_with_lowest_display_order('Types', 'typeid');
+    $session["divisionid"] = get_id_with_lowest_display_order('Divisions', 'divisionid');
     $session["pubstatusid"] = 2; // default to "Public"
     $session["languagestatusid"] = 1; // default to "English"
     $session["pubno"] = "";
@@ -323,9 +323,9 @@ function set_session_defaults() {
     $session["tagdest"] = "";
     $session["duration"] = DEFAULT_DURATION; //should be specified corresponding to DURATION_IN_MINUTES preference
     $session["atten"] = "";
-    $session["kids"] = 1; // "Don't Care"
+    $session["kids"] = get_id_with_lowest_display_order('KidsCategories', 'kidscatid');
     $session["signup"] = false; // leave checkbox blank initially
-    $session["roomset"] = 1; // "Don't Care"
+    $session["roomset"] = get_id_with_lowest_display_order('RoomSets', 'roomsetid');
     $session["notesforpart"] = "";
     $session["servnotes"] = "";
     $session["status"] = 6; // default to "Edit Me"

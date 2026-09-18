@@ -702,7 +702,10 @@
             </div>
             <div class="clearboth mt-3">
                 <p>Click in the table to edit each field.</p>
-                <p>Drag slider icon to reorder the entries.</p>
+                <p>
+                    Drag slider icon to reorder the entries.
+                    <span id="new-session-default-note" style="display: none">When a user creates a new session, the value from the top row will be used as the default.</span>
+                </p>
                 <p>Click the trashcan to delete the row. Rows without trashcans are in use by the count of items shown.</p>
                 <p>Use the Add New button to add a row to the table.</p>
             </div>
