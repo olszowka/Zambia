@@ -3,6 +3,7 @@
 ## Changes since release 2.1
 
 ### Bug Fixes
+* Bootstrap 5 version of header now supports configurable image like the Bootstrap 4 version does
 
 ### New Features
 
