@@ -28,7 +28,7 @@ function html_header($title, $bootstrapVersion, $isDataTables = false, $reportCo
     <link rel="stylesheet" href="external/jqueryui1.14.2/jquery-ui-1.14.2.custom.css" type="text/css">
 <?php } ?>
     <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
-    <link rel="stylesheet" href="external/tabulator-4.9.1/css/tabulator.min.css" type="text/css" >
+    <link rel="stylesheet" href="external/tabulator-6.5.3/css/tabulator.min.css" type="text/css" >
     <link rel="stylesheet" href="css/zambia_common.css" type="text/css" media="screen" />
 <?php if ($bootstrapVersion == 'bs4') { ?>
     <link rel="stylesheet" href="css/zambia_bs4_customizations.css" type="text/css" media="screen" />

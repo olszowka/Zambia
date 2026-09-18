@@ -26,6 +26,7 @@
 * Migrate Panel Interests page to BS5/JQ3.X
 * Migrate Data Collection Consent pages to BS5/JQ3.X
 * Final elimination of BS2.X & JQ1.X
+* Upgrade Tabulator to 6.5.3
 
 ## Application Notes
 

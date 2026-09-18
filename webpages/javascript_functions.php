@@ -78,7 +78,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
             break;
         case "Edit Survey":
-            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
+            echo "<script src=\"external/tabulator-6.5.3/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditSurvey.js\"></script>\n";
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
             echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
@@ -119,7 +119,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             break;
         case "Edit Configuration Tables":
             echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
+            echo "<script src=\"external/tabulator-6.5.3/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
             break;
         case "Import Reg User":

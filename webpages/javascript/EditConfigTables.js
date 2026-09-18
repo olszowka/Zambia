@@ -5,6 +5,7 @@ var tablename = '';
 var message = "";
 var indexcol = 'display_order';
 var selectlist = null;
+var selectFields = [];
 var newid = -99;
 var fetch_json = {};
 var tableschema = null;
@@ -52,6 +53,7 @@ var EditConfigTable = function () {
     // clear table of any tab being closed
     function tabhide(tabname) {
         if (table) {
+            table.destroy(); // must destroy before dropping the reference, or the next tab's table (same div) leaks stale event listeners
             table = null;
         }
 
@@ -189,6 +191,9 @@ function addnewrow(table) {
     var rowtxt = "row = { " + indexcol + ": " + newid + ", display_order: 99999, Usage_Count: 0 };";
     //console.log(rowtxt);
     eval(rowtxt);
+    selectFields.forEach(function (field) {
+        row[field] = ''; // no selection made yet
+    });
     table.addRow(row, false);
 }
 
@@ -239,8 +244,9 @@ function opentable(tabledata) {
     //console.log(tableschema);
     columns = [];
     indexcol = 'display_order';
-    displayorder_found = false;
+    display_order = false;
     initialsort = [];
+    selectFields = [];
     columns.push({ rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30, maxWidth:30 });
     tableschema.forEach(function (column) {
         if (column.COLUMN_KEY === 'PRI') {
@@ -255,7 +261,7 @@ function opentable(tabledata) {
             display_order = true;
         } else if (fetch_json.hasOwnProperty(column.COLUMN_NAME + "_select")) {
             selectlistname = column.COLUMN_NAME + "_select";
-            editor_type = 'select';
+            editor_type = 'list';
             selectlist = [];
             editorlist = [];
             fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) {
@@ -265,11 +271,13 @@ function opentable(tabledata) {
                     value: entry.id
                 });
             });
+            selectlist[''] = ''; // newly-added rows have no selection yet; avoid the "Missing display value" warning
+            selectFields.push(column.COLUMN_NAME);
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
                 visible: true,
                 editor: editor_type,
-                editorParams: editorlist,
+                editorParams: { values: editorlist },
                 formatter: "lookup",
                 formatterParams: selectlist,
                 minWidth: Math.max(200, headerMinWidth(column.COLUMN_NAME))
@@ -291,7 +299,7 @@ function opentable(tabledata) {
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
                 minWidth: headerMinWidth(column.COLUMN_NAME),
-                editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
+                editorParams: { elementAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
             });
         }
     });
@@ -311,36 +319,37 @@ function opentable(tabledata) {
     table = new Tabulator("#table", {
         maxHeight: "400px",
         movableRows: true,
-        tooltips: false,
         history: true,
-        headerSort: false,
-        initialSort: initialsort,  
+        columnDefaults: { headerSort: false },
+        initialSort: initialsort,
         data: tabledata,
         index: indexcol,
         layout: "fitDataTable",
-        cellEdited: cellChanged,
         //autoColumns: true,
         columns: columns,
-        rowMoved: function (row) {
-            document.getElementById('message').classList.add('hidden');
-            //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
-            if (this.getHistoryUndoSize() > 0) {
-                dirty = true;
-                document.getElementById("undo").disabled = false;
-            }
-        },
-        dataChanged: function (data) {
-            //data - the updated table data
+    });
+    table.on("cellEdited", cellChanged);
+    table.on("rowMoved", function (row) {
+        document.getElementById('message').classList.add('hidden');
+        //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
+        if (this.getHistoryUndoSize() > 0) {
             dirty = true;
-            document.getElementById("submitbtn").innerHTML = "Save*";
-            if (this.getHistoryUndoSize() > 0) {
-                document.getElementById("undo").disabled = false;
-            }
-        },
+            document.getElementById("undo").disabled = false;
+        }
+    });
+    table.on("dataChanged", function (data) {
+        //data - the updated table data
+        dirty = true;
+        document.getElementById("submitbtn").innerHTML = "Save*";
+        if (this.getHistoryUndoSize() > 0) {
+            document.getElementById("undo").disabled = false;
+        }
+    });
+    table.on("tableBuilt", function () {
+        table.clearHistory();
     });
     //console.log("Setting up options in table");
     document.getElementById("submitbtn").innerHTML = "Save";
-    table.clearHistory();
 }
 
 function saveComplete(data, textStatus, jqXHR) {
