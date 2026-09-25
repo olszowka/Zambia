@@ -5,8 +5,10 @@
 ### Bug Fixes
 * Bootstrap 5 version of header now supports configurable image like the Bootstrap 4 version does
 * The defaults for a newly created session did not reflect the configuration provided in EmptyDbase.sql for the Types table.  Those defaults are now based on configuration for Type, Division, Adult/Children Category (kids category), and Roomset.
+* The report engine menu builder properly escapes characters such as apostrophies.
 
 ### New Features
+* Users with the appropriate permission can hide reports from menus using the GUI
 
 ### Invisible code cleanup
 * View Session Counts page moved to XSL and BS5/JQ3

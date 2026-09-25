@@ -33,68 +33,14 @@ if ($areYouSure !== 1) {
 <?php
 require_once('report_functions.php');
 
-// Collects the .php filenames (non-recursive) directly inside $path.
-function reportFileNamesIn($path) {
-    $fileNames = array();
-    $dirHandle = opendir($path);
-    if (!$dirHandle) {
-        return $fileNames;
-    }
-    while (false !== ($fileName = readdir($dirHandle))) {
-        if ($fileName == "." || $fileName == ".." ||
-            is_dir("$path/$fileName") ||
-            !mb_ereg_match(".*\\.php$", $fileName)
-        ) {
-            continue;
-        }
-        $fileNames[$fileName] = true;
-    }
-    closedir($dirHandle);
-    return $fileNames;
-}
-
-$path = './reports';
-if (!is_dir($path)) {
-    $message_error = "Directory $path not found.";
-    RenderError($message_error);
-    exit();
-}
-$systemOverrideDir = getReportSystemOverrideDir($reportOverrideWarning);
-$reportFileNames = reportFileNamesIn($path);
-if ($systemOverrideDir !== null) {
-    $reportFileNames += reportFileNamesIn($systemOverrideDir);
-}
-$reportFileNames += reportFileNamesIn('./reportsConOverrides');
-$allReports = array();
-foreach (array_keys($reportFileNames) as $reportFileName) {
-    requireReportDefinition($reportFileName, $systemOverrideDir);
-    if (isset($report)) {
-        // preserve only data needed for menu generation
-        $allReports[$reportFileName] = array('name' => $report['name'], 'description' => $report['description'], 'categories' => $report['categories']);
-        unset($report);
-    }
-}
-$reportCategories = array();
-foreach ($allReports as $reportName => $reportData) {
-    if (isset($reportData['categories'])) {
-        foreach ($reportData['categories'] as $category => $sortOrder) {
-            if (!isset($reportCategories[$category])) {
-                $reportCategories[$category] = array();
-            }
-            $reportCategories[$category][$reportName] = $sortOrder;
-        }
-    }
-}
-ksort($reportCategories, SORT_NATURAL);
-$reportMenuBS4FilHand = fopen('ReportMenuBS4Include.php', 'wb');
-$staffReportsICIFilHand = fopen('staffReportsInCategoryInclude.php', 'wb');
-if ($reportMenuBS4FilHand === false || $staffReportsICIFilHand === false) {
+$reportCount = rebuildReportMenus($reportOverrideWarning, $rebuildErrorMessage);
+if ($reportCount === false) {
     staff_header($title, 'bs4');
 ?>
     <div class="row mt-3">
         <div class="col-12">
             <div class="alert alert-danger" role="alert">
-                Build Reports Failed: invalid file or directory permissions, check installation of Zambia.
+                <?php echo htmlspecialchars($rebuildErrorMessage); ?>
             </div>
         </div>
     </div>
@@ -102,35 +48,6 @@ if ($reportMenuBS4FilHand === false || $staffReportsICIFilHand === false) {
     staff_footer();
     return;
 }
-fwrite($staffReportsICIFilHand, "<?php\n");
-fwrite($staffReportsICIFilHand, "\$reportCategories = array();\n");
-foreach ($reportCategories as $reportCategory => $reportCategoryArray) {
-    $encodedReportCategory = htmlentities(urlencode($reportCategory));
-    fwrite($reportMenuBS4FilHand, "<a class='dropdown-item' href='staffReportsInCategory.php?reportcategory=$encodedReportCategory'>$reportCategory</a>\n");
-    fwrite($staffReportsICIFilHand, "\$reportCategories['$reportCategory'] = array(");
-    asort($reportCategoryArray, SORT_NUMERIC);
-    $notFirst = false;
-    foreach ($reportCategoryArray as $reportName => $sortOrder) {
-        if ($notFirst) {
-            fwrite($staffReportsICIFilHand, ',');
-        }
-        fwrite($staffReportsICIFilHand, "'$reportName'");
-        $notFirst = true;
-    }
-    fwrite($staffReportsICIFilHand, ");\n");
-}
-fwrite($staffReportsICIFilHand, "\$reportNames = array();\n");
-foreach($allReports as $reportName => $reportArray) {
-    fwrite($staffReportsICIFilHand, "\$reportNames['$reportName'] = '{$reportArray['name']}';\n");
-}
-fwrite($staffReportsICIFilHand, "\$reportDescriptions = array();\n");
-foreach($allReports as $reportName => $reportArray) {
-    $description = addslashes($reportArray['description']);
-    fwrite($staffReportsICIFilHand, "\$reportDescriptions['$reportName'] = \"{$description}\";\n");
-}
-fclose($reportMenuBS4FilHand);
-fclose($staffReportsICIFilHand);
-$reportCount = count($allReports);
 staff_header($title, 'bs4');
 ?>
 <?php if ($reportOverrideWarning !== null) { ?>

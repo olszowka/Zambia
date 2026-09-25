@@ -20,9 +20,16 @@ of the configuration GUI and should be used only by skilled administrators.
 
 "Build Report Menus" menu item
 
-The files which specify the reports also specify the menu tree for the reports.  This mechanism makes it very easy
-to rearrange the report menus or rename the reports for your convenience.  The first time you deploy Zambia and after
-each time you edit any report configuration, you need to rebuild the report menus.
+The files which specify the reports also specify the menu tree for the reports.  This mechanism makes it very
+easy to rearrange the report menus or rename the reports for your convenience.  The first time you deploy
+Zambia and after each time you edit any report configuration, you need to rebuild the report menus.
+
+"Enable Report Hiding" menu item
+
+When report hiding is enabled, the pages of reports will include buttons to allow unused reports to be hidden
+from the menus.  The hiding process involves creating and/or modifying files in the ```reportsConOverrides/```
+directory, just like one would do manually.  Unhiding requires manually deleting and/or modifying the files
+created.
 
 ### Custom Text
 

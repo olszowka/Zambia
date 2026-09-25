@@ -37,6 +37,8 @@ function staff_header($title, $bootstrapVersion, $is_data_tables = false, $repor
         $paramArray = array();
         $paramArray["title"] = $title;
         $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
+        require_once('report_functions.php');
+        $paramArray["reportHidingEnabled"] = isReportHidingEnabled() ? 1 : 0;
         try {
             $reportMenuIncludeFilName = 'ReportMenuBS4Include.php';
             $reportMenuIncludeFilHand = fopen ($reportMenuIncludeFilName,  'r');

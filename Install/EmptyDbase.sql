@@ -1265,7 +1265,7 @@ INSERT INTO `PermissionAtoms`
     (14, 'SendEmail', 'Send Email', NULL, 'StaffManageParticipants', '(Staff) Access to Send email set of pages', 70),
     (15, 'postcon', 'Post Con', NULL, 'renderWelcome', '(Participant) Can view only Post Con page', 530),
     (16, 'EditSesNtsAsgnPartPg', 'Notes For Program Staff', NULL, 'StaffAssignParticipants', '(Staff) Edit notes for program staff on assign participants page ', 80),
-    (17, 'ConfigureReports', 'Report Menus', NULL, 'ConfigureReports', '(Admin) Run process to update report menus', 40),
+    (17, 'ConfigureReports', 'Report Menus', NULL, 'ConfigureReports', '(Admin) Run process to update report menus and hide reports from menus', 40),
     (18, 'ResetUserPassword', 'Reset User Password', NULL, 'AdminParticipants', '(Staff) No one needs this permission once password overhaul is implemented and system has email integration.', 90),
     (19, 'AdminPhases', 'Phase Activation', NULL, 'AdminPhases', '(Admin) Change phase of Zambia use, allowing which sections are current.', 30),
     (20, 'CreateUser', 'Create User', NULL, 'CreateUser', '(Staff) Manually create user. Must have edit for one or more roles.', 100),
@@ -1351,7 +1351,7 @@ INSERT INTO `Permissions`
     (7, 16, NULL, 1, NULL),
     (8, 16, NULL, 2, NULL),
     (9, 16, NULL, 3, NULL),
-    ## "ConfigureReports" Build Report Menus -- permatomid: 17
+    ## "ConfigureReports" Build Report Menus and Hide Reports -- perDmatomid: 17
     ## Complete: Menu and page
     (10, 17, NULL, 1, NULL),
     ## "ResetUserPassword" Edit User Password -- permatomid: 18
