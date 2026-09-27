@@ -1,0 +1,163 @@
+#grid-scheduler-root {
+  flex: 1 1 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-scheduler-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.grid-scheduler-toolbar {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  background: #fff3cd;
+  border-bottom: 1px solid #d0a000;
+  font-size: 0.85rem;
+}
+
+.grid-scheduler-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  position: relative;
+}
+
+.grid-scheduler-grid {
+  display: grid;
+  position: relative;
+  /* Shrink-to-fit around the fixed-width columns (set inline via gridTemplateColumns) rather than
+     stretching to fill .grid-scheduler-scroll -- leaves whitespace to the right when there are few
+     rooms, and overflows into .grid-scheduler-scroll's horizontal scrollbar when there are many. */
+  width: max-content;
+}
+
+.grid-scheduler-corner,
+.grid-scheduler-room-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f0f0f0;
+  border-bottom: 2px solid #888;
+  border-right: 1px solid #888;
+  padding: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Also pinned horizontally (the corner cell sits at the intersection of both stickinesses) so "Time"
+   and the axis stay in view when the room columns scroll sideways. Needs a higher z-index than
+   .grid-scheduler-room-header: both are sticky-top only with the same z-index otherwise, so as a room
+   header's (non-sticky-left) content scrolls underneath the pinned corner, same-z-index stacking falls
+   back to DOM order and the room header (rendered after the corner) would paint over it. */
+.grid-scheduler-corner {
+  left: 0;
+  z-index: 3;
+}
+
+.grid-scheduler-axis {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #fff;
+  border-right: 1px solid #888;
+}
+
+.grid-scheduler-axis-tick {
+  position: absolute;
+  left: 0;
+  right: 0;
+  font-size: 0.875rem;
+  color: #555;
+  padding-left: 4px;
+  border-top: 1px solid #999;
+  /* Overflow horizontally rather than wrap -- a wrapped day-start label collides vertically with the
+     tick below it, which is worse than spilling a few px into the next column. TIME_COLUMN_WIDTH_PX is
+     sized for the realistic worst case, so this should rarely actually trigger. */
+  white-space: nowrap;
+}
+
+.grid-scheduler-axis-tick-day-start {
+  border-top: 2px solid #444;
+  font-weight: bold;
+  color: #222;
+}
+
+.grid-scheduler-room-column {
+  position: relative;
+  border-right: 1px solid #888;
+}
+
+/* Empty-slot gridlines -- one per axis tick, so they always line up with the time axis exactly (rather
+   than a repeating background sized in px, which would drift at day-segment boundaries whose length
+   isn't a multiple of the resolution). Purely visual for now; these become real drop targets in the
+   drag-and-drop phase. Session boxes render after these in the DOM and are opaque, so they cover the
+   lines behind them without any z-index bookkeeping needed. */
+.grid-scheduler-row-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #999;
+}
+
+.grid-scheduler-row-line-day-start {
+  border-top: 2px solid #444;
+}
+
+/* Typeface/color/spacing matches the abandoned react_grid_scheduler branch's session box --
+   ReactApp/zambia-grid-scheduler/src/render_sessions/{sessionStyles.ts,SessionInner.tsx} -- except
+   padding, font-size and line-height, which were tightened afterward so a session box fits within one
+   hour of grid height (see PIXELS_PER_MINUTE in Grid.tsx). The info icon before the title is the
+   legacy "icon-info-sign" glyph (webpages/css/zambia_bs5_customizations.css), not the branch's
+   bi-info-circle-fill (unavailable here). */
+.grid-scheduler-session-box {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid #000;
+  background: #fff;
+  padding: 2px 4px;
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+.grid-scheduler-session-title-row {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.grid-scheduler-session-info-icon {
+  cursor: pointer;
+}
+
+.grid-scheduler-session-title {
+  padding-left: 4px;
+}
+
+.grid-scheduler-session-meta {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.grid-scheduler-session-id {
+  display: inline-block;
+  width: 3rem;
+  color: blue;
+}
+
+.grid-scheduler-session-type {
+  display: inline-block;
+  color: green;
+}
+
+.grid-scheduler-session-track {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
