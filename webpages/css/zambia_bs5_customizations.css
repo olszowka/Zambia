@@ -287,6 +287,39 @@ input[type='text'].disabled {
   margin-right: 0.75rem;
   font-size: 0.8rem;
 }
+/* Compact variant of .checkbox-list-container/-label-wrapper/-label/-check above -- smaller checkboxes,
+   tighter padding, and smaller label text so fewer entries wrap. Combine with the base classes rather
+   than replacing them, e.g. class="checkbox-list-container checkbox-list-container-compact". Added for
+   the grid scheduler rewrite's Sessions tab tag filter, but generic (not grid-scheduler-specific) so it
+   can be reused anywhere the plain checkbox-list styling is too roomy. The base classes above are
+   untouched -- existing uses (e.g. the Edit/Create Session page's Tags control) are unaffected. */
+.checkbox-list-container.checkbox-list-container-compact {
+  /* Compound selector (matches .checkbox-list-container.form-control's specificity) -- a lone
+     .checkbox-list-container-compact would lose the padding override to that rule regardless of
+     source order. */
+  min-width: 0;
+  padding: 2px;
+}
+.checkbox-list-label-wrapper-compact {
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+}
+.checkbox-list-label-compact {
+  /* display: flex (overriding the base class's display: block) centers the checkbox and label text on
+     each other vertically instead of relying on the checkbox's default baseline alignment. */
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  line-height: 1.15;
+  min-width: 0;
+  padding-right: 0.3rem;
+}
+.checkbox-list-check-compact {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-left: 0.3rem;
+  margin-right: 0.3rem;
+}
 /* End Grid Scheduler stuff */
 /* Session History stuff */
 .za-sessionHistory-moderator {

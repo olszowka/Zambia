@@ -12,11 +12,37 @@ function getSchedule() {
     exit();
 }
 
+function searchSessions() {
+    echo json_encode(array("sessions" => gridScheduler_searchSessions()));
+    exit();
+}
+
+function getSessionInfo() {
+    $sessionId = getInt("sessionid", null);
+    if (is_null($sessionId)) {
+        RenderErrorAjax("Internal error.");
+        exit();
+    }
+    $info = gridScheduler_getSessionInfo($sessionId);
+    if (is_null($info)) {
+        RenderErrorAjax("Session not found.");
+        exit();
+    }
+    echo json_encode($info);
+    exit();
+}
+
 if (!$ajax_request_action = $_POST["ajax_request_action"])
     exit();
 switch ($ajax_request_action) {
     case "getSchedule":
         getSchedule();
+        break;
+    case "searchSessions":
+        searchSessions();
+        break;
+    case "getSessionInfo":
+        getSessionInfo();
         break;
     default:
         RenderErrorAjax("Internal error.");

@@ -20,8 +20,230 @@
   font-size: 0.85rem;
 }
 
+.grid-scheduler-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+/* 280px matches the legacy page's #mainContentContainer left column
+   (webpages/StaffMaintainSchedule.php). */
+.grid-scheduler-left-panel {
+  flex: 0 0 280px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #888;
+  background: #fafafa;
+}
+
+.grid-scheduler-tabs {
+  flex: 0 0 40%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #888;
+}
+
+.grid-scheduler-tab-bar {
+  flex: 0 0 auto;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.grid-scheduler-tab-button {
+  flex: 1 1 auto;
+  padding: 4px 2px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.grid-scheduler-tab-button.active {
+  border-bottom-color: #2c6e2f;
+  font-weight: bold;
+}
+
+.grid-scheduler-tab-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 6px;
+  font-size: 0.85rem;
+}
+
+.grid-scheduler-sessions-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-scheduler-sessions-panel-header {
+  flex: 0 0 auto;
+  padding: 4px 6px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.grid-scheduler-sessions-panel-title {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.grid-scheduler-sessions-panel-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.grid-scheduler-file-cabinet {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.grid-scheduler-sessions-panel-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.grid-scheduler-sessions-panel-empty {
+  color: #666;
+  font-size: 0.8rem;
+  padding: 4px;
+}
+
+/* Rooms tab */
+.grid-scheduler-rooms-tab {
+  line-height: 1.3;
+}
+
+.grid-scheduler-room-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 0;
+  font-size: 1rem;
+}
+
+/* Sessions tab (search form) */
+.grid-scheduler-form-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.grid-scheduler-form-row-top {
+  align-items: flex-start;
+}
+
+/* Twice the old <select multiple>'s rendered height (32px) -- see SessionsTab.tsx. The rest of the
+   look (border, scrolling, checkbox/label spacing) comes from .checkbox-list-container/-label-wrapper/
+   -label/-check in webpages/css/zambia_bs5_customizations.css, the same classes the Edit/Create Session
+   page's Tags control uses. Needs the .checkbox-list-container.grid-scheduler-tag-checklist compound
+   selector, matching that stylesheet's own .checkbox-list-container.form-control's specificity -- a
+   single-class selector here would lose to it regardless of source order. */
+.checkbox-list-container.grid-scheduler-tag-checklist {
+  height: 64px;
+}
+
+.grid-scheduler-form-label {
+  flex: 0 0 70px;
+}
+
+/* Wide enough for "Persons Assigned:" (measured ~116px at this font) to fit on one line without
+   shrinking the typeface -- the checkbox after it just shifts right to make room, same as every other
+   .grid-scheduler-form-row. Only ~7px of slack beyond the measured text width (half of the original
+   14px) so the checkbox doesn't sit further right than it needs to. */
+.grid-scheduler-form-label-wide {
+  flex-basis: 123px;
+}
+
+.grid-scheduler-form-row select,
+.grid-scheduler-form-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Lone checkboxes (e.g. "Persons Assigned") shouldn't stretch to fill the row like text
+   inputs/selects do -- a stretched checkbox still renders at its natural small size, just centered in
+   the extra space, leaving a wide gap of blank, unclickable-looking area before it. Specificity has to
+   match/exceed the rule above (.grid-scheduler-form-row input) for this override to win. */
+.grid-scheduler-form-row input.grid-scheduler-checkbox-field {
+  flex: 0 0 auto;
+  margin-left: 3px;
+}
+
+.grid-scheduler-tagmatch {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  /* Shifted right to loosely line up under the other controls (which start after
+     .grid-scheduler-form-label's 70px + the row's 4px gap) -- not lined up exactly, since "Match Any" /
+     "Match All" need more room than that leaves in this sidebar. */
+  padding-left: 35px;
+}
+
+.grid-scheduler-tagmatch label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.grid-scheduler-form-note {
+  font-size: 0.75rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.grid-scheduler-sessions-tab-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.grid-scheduler-sessions-tab-buttons button {
+  margin: 0 2px;
+}
+
+.grid-scheduler-no-sessions-found,
+.grid-scheduler-search-error {
+  margin-top: 6px;
+  font-weight: bold;
+  color: #b00020;
+  font-size: 0.8rem;
+}
+
+/* Info tab -- matches the legacy .infolabel/.infofield/.inforow classes' intent
+   (webpages/xsl/schedulerRetrSessInfo.xsl) without depending on their actual CSS. */
+.grid-scheduler-info-tab-empty,
+.grid-scheduler-warnings-tab-empty {
+  color: #666;
+}
+
+.grid-scheduler-info-tab .infolabel {
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.grid-scheduler-info-tab .infofield,
+.grid-scheduler-info-tab .inforow {
+  margin-left: 4px;
+}
+
 .grid-scheduler-scroll {
   flex: 1 1 auto;
+  min-width: 0;
   min-height: 0;
   overflow: auto;
   position: relative;
@@ -160,4 +382,12 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+/* The "sessions to be scheduled" list reuses .grid-scheduler-session-box's look but flows in normal
+   document order (a vertical list) instead of being pixel-positioned on the grid. */
+.grid-scheduler-unscheduled-session-box {
+  position: static;
+  width: 100%;
+  margin-bottom: 4px;
 }

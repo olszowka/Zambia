@@ -68,21 +68,25 @@ export interface AxisTick {
   isSegmentStart: boolean;
 }
 
-// Used for the room columns' empty-grid lines, which represent actual schedulable granularity -- these
-// legitimately follow the grid's resolution (STANDARD_BLOCK_LENGTH / the GRID_TIME_RESOLUTION_MINUTES
-// config planned for a later phase). The bold day-boundary line always sits at the segment's
-// displayStart -- the same row as the axis's day-name label (see buildHourTicks()) -- even on a
-// hour-aligned segment where that row is a lead-in with no real schedulable time in it, so the bold
+// Used for the room columns' empty-grid lines only -- NOT the time axis (see buildHourTicks() below for
+// that). These lines represent actual schedulable granularity, so they legitimately follow grid-line
+// resolution (STANDARD_BLOCK_LENGTH / the GRID_TIME_RESOLUTION_MINUTES config planned for a later
+// phase) -- one of three distinct, similarly-named resolutions in the grid scheduler; see the "Time
+// resolutions" section of the rewrite plan. Do not conflate this with snap resolution (a page-level
+// Snap Mode control, planned for the drag-and-drop phase) or display resolution
+// (DISPLAY_RESOLUTION_MINUTES in components/Grid.tsx). The bold day-boundary line always sits at the
+// segment's displayStart -- the same row as the axis's day-name label (see buildHourTicks()) -- even on
+// an hour-aligned segment where that row is a lead-in with no real schedulable time in it, so the bold
 // line lines up across the axis and every room column. When there's no lead-in (a half-hour start),
 // displayStart and contentDisplayStart are the same row, so this doesn't add a separate tick there --
 // the first real tick just carries the isSegmentStart flag itself, as before.
-export function buildAxisTicks(displaySegments: DisplaySegment[], resolutionMinutes: number): AxisTick[] {
+export function buildGridLineTicks(displaySegments: DisplaySegment[], gridLineResolutionMinutes: number): AxisTick[] {
   const ticks: AxisTick[] = [];
   for (const segment of displaySegments) {
     if (segment.leadInMinutes > 0) {
       ticks.push({ displayOffset: segment.displayStart, label: segment.dayName, isSegmentStart: true });
     }
-    for (let t = segment.startMinutes; t < segment.endMinutes; t += resolutionMinutes) {
+    for (let t = segment.startMinutes; t < segment.endMinutes; t += gridLineResolutionMinutes) {
       ticks.push({
         displayOffset: segment.contentDisplayStart + (t - segment.startMinutes),
         label: t === segment.startMinutes ? `${segment.dayName} ${formatTimeOfDay(t)}` : formatTimeOfDay(t),
@@ -93,10 +97,10 @@ export function buildAxisTicks(displaySegments: DisplaySegment[], resolutionMinu
   return ticks;
 }
 
-// Used for the time axis column only. Unlike buildAxisTicks() above, this deliberately ignores
-// resolutionMinutes/STANDARD_BLOCK_LENGTH -- the axis always labels/lines on the hour, matching the
-// legacy getScheduleTimesArray()'s "timeTop" (hour, labeled) vs "timeBottom" (half-hour, unlabeled)
-// distinction, which is independent of STANDARD_BLOCK_LENGTH there too.
+// Used for the time axis column only. Unlike buildGridLineTicks() above, this deliberately ignores
+// grid-line resolution/STANDARD_BLOCK_LENGTH entirely -- the axis always labels/lines on the hour,
+// matching the legacy getScheduleTimesArray()'s "timeTop" (hour, labeled) vs "timeBottom" (half-hour,
+// unlabeled) distinction, which was independent of STANDARD_BLOCK_LENGTH there too.
 //
 // Day and time are never combined on one line. Each segment gets a day-name-only marker at
 // displayStart, then normal hour ticks starting at the first whole hour at/after the segment's actual

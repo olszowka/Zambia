@@ -6,9 +6,10 @@ interface SessionBoxProps {
   trackTagUsage: TrackTagUsage;
   top: number;
   height: number;
+  onInfoClick: (sessionid: number) => void;
 }
 
-export default function SessionBox({ item, trackTagUsage, top, height }: SessionBoxProps) {
+export default function SessionBox({ item, trackTagUsage, top, height, onInfoClick }: SessionBoxProps) {
   const widthPct = 100 / item.colCount;
   const leftPct = item.colIndex * widthPct;
   // Tags aren't in the read-only bootstrap payload yet (planned for the config-driven session-box
@@ -23,9 +24,10 @@ export default function SessionBox({ item, trackTagUsage, top, height }: Session
       title={item.title}
     >
       <div className="grid-scheduler-session-title-row">
-        {/* Not wired up yet (no Info tab to populate) -- see webpages/staffMaintainScheduleSubmit.php's
-            "icon-info-sign getSessionInfoP" for the eventual click target this stands in for. */}
-        <i className="icon-info-sign grid-scheduler-session-info-icon" />
+        <i
+          className="icon-info-sign grid-scheduler-session-info-icon"
+          onClick={() => onInfoClick(item.sessionid)}
+        />
         <span className="grid-scheduler-session-title">{item.title}</span>
       </div>
       <div className="grid-scheduler-session-meta">

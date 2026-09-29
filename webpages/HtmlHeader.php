@@ -64,7 +64,6 @@ if (PARTICIPANT_PHOTOS === TRUE) {
     <script type="text/javascript">
         var thisPage="<?php echo $title; ?>";
         var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
-        var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
     </script>
 <?php
     $isRecaptcha = $title == 'Forgot Password';
