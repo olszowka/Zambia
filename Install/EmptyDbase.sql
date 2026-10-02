@@ -472,7 +472,7 @@ CREATE TABLE `SurveyQuestionTypes` (
 DROP TABLE IF EXISTS `Tags`;
 CREATE TABLE `Tags` (
     `tagid` INT(11) NOT NULL AUTO_INCREMENT,
-    `tagname` VARCHAR(30) CHARACTER SET utf8 collate utf8_general_ci default NULL,
+    `tagname` VARCHAR(30) default NULL,
     `display_order` INT(11) NOT NULL default '0',
     PRIMARY KEY  (`tagid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1231,7 +1231,9 @@ INSERT INTO `PatchLog`
     ('71_name_for_sorting.sql'),
     ('72_configure_permissions.sql'),
     ('73_another_permissions_cleanup.sql'),
-    ('74_survey_responses_json.sql');
+    ('74_survey_responses_json.sql'),
+    ('75_my_suggestions_custom_text.sql'),
+    ('76_fix_mysql_collations.sql');
 
 ## bit 0 = uploaded photo available
 ## bit 1 = uploaded photo denied

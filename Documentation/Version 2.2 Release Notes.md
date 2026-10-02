@@ -6,6 +6,7 @@
 * Bootstrap 5 version of header now supports configurable image like the Bootstrap 4 version does
 * The defaults for a newly created session did not reflect the configuration provided in EmptyDbase.sql for the Types table.  Those defaults are now based on configuration for Type, Division, Adult/Children Category (kids category), and Roomset.
 * The report engine menu builder properly escapes characters such as apostrophies.
+* On MySQL 8 or later (but not MariaDB), schema patches 58-60 created some tables with a collation that doesn't match the rest of the schema, causing "Illegal mix of collations" errors, e.g. in the Admin Participants search. Patch 76 repairs them.
 
 ### New Features
 * Users with the appropriate permission can hide reports from menus using the GUI
@@ -41,3 +42,13 @@ When a user creates a new session, the defaults for the values of Type, Division
 ##### The following entries need to be added to `db_name.php`
 
 ### Schema Patches
+
+#### 76_fix_mysql_collations.sql
+
+Just apply this patch as normal. It is required on installations that ran patches 58, 59, or 60 on MySQL 8 or later,
+where those patches created `RoomHasSet`, `RegTypes`, `PhotoDenialReasons`, and `PhotoUploadStatus` with MySQL's
+default `utf8mb4_0900_ai_ci` collation instead of the `utf8mb4_general_ci` used by the rest of the schema. It
+converts those four tables to `utf8mb4_general_ci`; on MariaDB, and on installations created from `EmptyDbase.sql`,
+that part is superfluous but harmless. It also converts `Tags.tagname` (on every installation) from the older 3-byte
+`utf8` (`utf8mb3`) character set to `utf8mb4_general_ci`, matching every other text column, so tag names can contain
+any Unicode character (e.g. emoji). Existing tag names are unchanged.
