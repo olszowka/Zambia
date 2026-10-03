@@ -73,7 +73,7 @@ export interface AxisTick {
 // resolution (STANDARD_BLOCK_LENGTH / the GRID_TIME_RESOLUTION_MINUTES config planned for a later
 // phase) -- one of three distinct, similarly-named resolutions in the grid scheduler; see the "Time
 // resolutions" section of the rewrite plan. Do not conflate this with snap resolution (a page-level
-// Snap Mode control, planned for the drag-and-drop phase) or display resolution
+// Snap Mode control -- see computeDropStart() in dropTarget.ts) or display resolution
 // (DISPLAY_RESOLUTION_MINUTES in components/Grid.tsx). The bold day-boundary line always sits at the
 // segment's displayStart -- the same row as the axis's day-name label (see buildHourTicks()) -- even on
 // an hour-aligned segment where that row is a lead-in with no real schedulable time in it, so the bold

@@ -1,17 +1,40 @@
-import type { SessionSearchResult } from '../types';
+import { useDraggable } from '@dnd-kit/core';
+import type { DragSource, SessionSearchResult } from '../types';
 
 interface UnscheduledSessionBoxProps {
   session: SessionSearchResult;
   onInfoClick: (sessionid: number) => void;
+  dragDisabled: boolean;
+  animationHidden: boolean;
 }
 
 // List-item variant of the same box styling used on the grid (.grid-scheduler-session-box) -- flows in
 // normal document order instead of being pixel-positioned, via the
 // .grid-scheduler-unscheduled-session-box modifier class (see App.css).
-export default function UnscheduledSessionBox({ session, onInfoClick }: UnscheduledSessionBoxProps) {
+export default function UnscheduledSessionBox({
+  session,
+  onInfoClick,
+  dragDisabled,
+  animationHidden,
+}: UnscheduledSessionBoxProps) {
+  const dragSource: DragSource = { kind: 'unscheduled', session };
+  const { setNodeRef, listeners, attributes, isDragging } = useDraggable({
+    id: `unscheduled-${session.sessionid}`,
+    data: dragSource,
+    disabled: dragDisabled,
+  });
+
   return (
     <div
-      className="grid-scheduler-session-box grid-scheduler-unscheduled-session-box"
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      data-sessionid={session.sessionid}
+      className={
+        'grid-scheduler-session-box grid-scheduler-unscheduled-session-box' +
+        (isDragging ? ' grid-scheduler-drag-source' : '') +
+        (animationHidden ? ' grid-scheduler-animation-hidden' : '')
+      }
       title={session.title}
     >
       <div className="grid-scheduler-session-title-row">

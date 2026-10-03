@@ -1,5 +1,6 @@
+import { useDraggable } from '@dnd-kit/core';
 import type { LaidOutItem } from '../timeGrid';
-import type { TrackTagUsage } from '../types';
+import type { DragSource, TrackTagUsage } from '../types';
 
 interface SessionBoxProps {
   item: LaidOutItem;
@@ -7,11 +8,31 @@ interface SessionBoxProps {
   top: number;
   height: number;
   onInfoClick: (sessionid: number) => void;
+  dragDisabled: boolean;
+  highlighted: boolean;
+  animationHidden: boolean;
 }
 
-export default function SessionBox({ item, trackTagUsage, top, height, onInfoClick }: SessionBoxProps) {
-  const widthPct = 100 / item.colCount;
-  const leftPct = item.colIndex * widthPct;
+export default function SessionBox({
+  item,
+  trackTagUsage,
+  top,
+  height,
+  onInfoClick,
+  dragDisabled,
+  highlighted,
+  animationHidden,
+}: SessionBoxProps) {
+  // colIndex/colCount are layout-only; the drag source carries the plain schedule row.
+  const { colIndex, colCount, ...scheduleItem } = item;
+  const dragSource: DragSource = { kind: 'scheduled', item: scheduleItem };
+  const { setNodeRef, listeners, attributes, isDragging } = useDraggable({
+    id: `scheduled-${item.scheduleid}`,
+    data: dragSource,
+    disabled: dragDisabled,
+  });
+  const widthPct = 100 / colCount;
+  const leftPct = colIndex * widthPct;
   // Tags aren't in the read-only bootstrap payload yet (planned for the config-driven session-box
   // phase, along with respecting TAG_OVER_TRACK/TRACK_OVER_TAG choice of primary field) -- for now,
   // just honor TAG_ONLY/TRACK_ONLY's "hide the other field" instruction where we can.
@@ -19,7 +40,19 @@ export default function SessionBox({ item, trackTagUsage, top, height, onInfoCli
 
   return (
     <div
-      className="grid-scheduler-session-box"
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      // data-drop-kind/-scheduleid: lets dropTarget.ts's hit-testing recognize this box as a Swap Mode target.
+      data-drop-kind="session"
+      data-scheduleid={item.scheduleid}
+      data-sessionid={item.sessionid}
+      className={
+        'grid-scheduler-session-box' +
+        (isDragging ? ' grid-scheduler-drag-source' : '') +
+        (highlighted ? ' grid-scheduler-session-box-moved' : '') +
+        (animationHidden ? ' grid-scheduler-animation-hidden' : '')
+      }
       style={{ top, height, left: `${leftPct}%`, width: `${widthPct}%` }}
       title={item.title}
     >

@@ -176,13 +176,13 @@ EOD;
                     if ($badgeid != $refSession['badgeid'])
                         continue;
                     if (!$conflictThisAddition) { // Need header for this session
-                        $message .= "<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
+                        $message .= "<div class=\"alert alert-info\">Session $sessionid: " . htmlspecialchars($addSession['title'], ENT_NOQUOTES) . "\n";
                         $message .= "<ul>";
                     }
                     $conflictThisAddition = true;
                     $message .= "<li>" . htmlspecialchars($addToScheduleParticipants[$badgeid], ENT_NOQUOTES) . " ($badgeid) ";
                     $message .= "has conflict with " . htmlspecialchars($refSession['title'], ENT_NOQUOTES) . " ({$refSession['sessionid']}) in ";
-                    $message .= "{$refSession['roomname']}.</li>\n";
+                    $message .= htmlspecialchars($refSession['roomname'], ENT_NOQUOTES) . ".</li>\n";
                     // conflict!
                 }
             }
@@ -210,7 +210,7 @@ EOD;
                 if (!$availability_match) {
                     if (!$conflictThisAddition) {
                         // Need header for this session
-                        $message .= "<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
+                        $message .= "<div class=\"alert alert-info\">Session $sessionid: " . htmlspecialchars($addSession['title'], ENT_NOQUOTES) . "\n";
                         $message .= "<ul>";
                     }
                     $conflictThisAddition = true;
@@ -226,7 +226,7 @@ EOD;
                 if ($addToScheduleParticipantsAttending[$addBadgeid] != '1') {
                     if (!$conflictThisAddition) {
                         // Need header for this session
-                        $message .= "<div class=\"alert alert-info\">Session $sessionid: {$addSession['title']}\n";
+                        $message .= "<div class=\"alert alert-info\">Session $sessionid: " . htmlspecialchars($addSession['title'], ENT_NOQUOTES) . "\n";
                         $message .= "<ul>";
                     }
                     $conflictThisAddition = true;

@@ -51,36 +51,10 @@ function gridScheduler_fetchLookupList($table, $idColumn, $nameColumn) {
     return $list;
 }
 
-// Returns the current rooms/schedule state as a plain array, ready for json_encode() -- used both for
-// the initial page bootstrap and for ajax refreshes, so the two stay in sync automatically.
-function gridScheduler_buildData() {
-    $data = array();
-    $data["conStartDateTime"] = str_replace(" ", "T", CON_START_DATIM);
-    $data["conNumDays"] = CON_NUM_DAYS;
-    // Grid-line resolution: controls the empty/partially-empty schedule's row lines (derived from
-    // STANDARD_BLOCK_LENGTH today; a later phase replaces this with proper GRID_*-config derivation).
-    // This is one of three distinct, similarly-named-but-different resolutions in the grid scheduler --
-    // see the "Time resolutions" section of the rewrite plan. Do not conflate with snap resolution (a
-    // page-level Snap Mode control, planned for the drag-and-drop phase) or display resolution (fixed at
-    // 1 minute, a non-configurable constant on the client -- see DISPLAY_RESOLUTION_MINUTES in
-    // react-apps/GridScheduler/src/components/Grid.tsx).
-    $data["gridLineResolutionMinutes"] = 30; // TODO: replace with GRID_TIME_RESOLUTION_MINUTES in a later phase
-    $data["trackTagUsage"] = TRACK_TAG_USAGE;
-    $data["daySegments"] = gridScheduler_getDaySegments();
-
-    $rooms = array();
-    $query = "SELECT roomid, roomname, display_order FROM Rooms WHERE is_scheduled = 1 ORDER BY display_order;";
-    $result = mysqli_query_with_error_handling($query, true, true);
-    while ($row = mysqli_fetch_assoc($result)) {
-        $rooms[] = array(
-            "roomid" => intval($row["roomid"]),
-            "roomname" => $row["roomname"],
-            "display_order" => is_null($row["display_order"]) ? null : intval($row["display_order"]),
-        );
-    }
-    mysqli_free_result($result);
-    $data["rooms"] = $rooms;
-
+// The full current schedule, in the same shape as the bootstrap payload's "schedule" array -- also returned by
+// editSchedule after every write, so the client always ends up showing exactly what's in the database (including
+// other staff members' concurrent edits) rather than its own optimistic guess.
+function gridScheduler_fetchSchedule() {
     $schedule = array();
     $query = <<<EOD
 SELECT
@@ -111,7 +85,40 @@ EOD;
         );
     }
     mysqli_free_result($result);
-    $data["schedule"] = $schedule;
+    return $schedule;
+}
+
+// Returns the current rooms/schedule state as a plain array, ready for json_encode() -- used both for
+// the initial page bootstrap and for ajax refreshes, so the two stay in sync automatically.
+function gridScheduler_buildData() {
+    $data = array();
+    $data["conStartDateTime"] = str_replace(" ", "T", CON_START_DATIM);
+    $data["conNumDays"] = CON_NUM_DAYS;
+    // Grid-line resolution: controls the empty/partially-empty schedule's row lines (derived from
+    // STANDARD_BLOCK_LENGTH today; a later phase replaces this with proper GRID_*-config derivation).
+    // This is one of three distinct, similarly-named-but-different resolutions in the grid scheduler --
+    // see the "Time resolutions" section of the rewrite plan. Do not conflate with snap resolution (a
+    // page-level Snap Mode control in the React app) or display resolution (fixed at
+    // 1 minute, a non-configurable constant on the client -- see DISPLAY_RESOLUTION_MINUTES in
+    // react-apps/GridScheduler/src/components/Grid.tsx).
+    $data["gridLineResolutionMinutes"] = 30; // TODO: replace with GRID_TIME_RESOLUTION_MINUTES in a later phase
+    $data["trackTagUsage"] = TRACK_TAG_USAGE;
+    $data["daySegments"] = gridScheduler_getDaySegments();
+
+    $rooms = array();
+    $query = "SELECT roomid, roomname, display_order FROM Rooms WHERE is_scheduled = 1 ORDER BY display_order;";
+    $result = mysqli_query_with_error_handling($query, true, true);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $rooms[] = array(
+            "roomid" => intval($row["roomid"]),
+            "roomname" => $row["roomname"],
+            "display_order" => is_null($row["display_order"]) ? null : intval($row["display_order"]),
+        );
+    }
+    mysqli_free_result($result);
+    $data["rooms"] = $rooms;
+
+    $data["schedule"] = gridScheduler_fetchSchedule();
 
     // Lookup lists for the Sessions tab's search filters.
     $data["tracks"] = gridScheduler_fetchLookupList("Tracks", "trackid", "trackname");
@@ -280,5 +287,214 @@ function gridScheduler_getSessionInfo($sessionId) {
         "endtime" => $row["endtime"],
         "participants" => $participants,
     );
+}
+
+// Inverse of gridScheduler_timeStringToMinutes(): Schedule.starttime is a TIME measured from the start of the con,
+// so hours can legitimately exceed 23 (e.g. "49:30:00" for 1:30 AM on day 3).
+function gridScheduler_minutesToTimeString($minutes) {
+    return sprintf("%d:%02d:00", intdiv($minutes, 60), $minutes % 60);
+}
+
+// Minute-precision replacement for timeDescFromUnits() (data_functions.php), which only understands 30-minute
+// units -- used for SessionEditHistory.editdescription.
+function gridScheduler_timeDescFromMinutes($minutes) {
+    global $con_start_php_timestamp;
+    $dateTime = clone $con_start_php_timestamp;
+    $dateTime->modify("+$minutes minutes");
+    return $dateTime->format("D g:i A");
+}
+
+// Executes one INSERT/UPDATE/DELETE as a prepared statement, throwing on failure so the caller's transaction can
+// be rolled back. (mysql_cmd_with_prepare() in db_functions.php isn't usable here: on failure it renders a full
+// HTML error page rather than an ajax error, and it can't take part in a caller-managed transaction.)
+function gridScheduler_execOrThrow($query, $types, $params) {
+    global $mysqli;
+    $statement = $mysqli->prepare($query);
+    if (!$statement) {
+        throw new ErrorException("DB prepare statement failed.");
+    }
+    if (!$statement->bind_param($types, ...$params) || !$statement->execute()) {
+        $statement->close();
+        throw new ErrorException("DB execute statement failed.");
+    }
+    $statement->close();
+}
+
+function gridScheduler_fetchOneRow($query, $types, $params) {
+    $result = mysqli_query_with_prepare_and_error_handling($query, $types, $params, true, true);
+    $row = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+    return $row ?: null;
+}
+
+// Validates the edits array sent by the client for one drag-and-drop gesture. Each edit is one of:
+//   ['action' => 'insert',     'sessionid' => n, 'roomid' => n, 'startMinutes' => n]
+//   ['action' => 'reschedule', 'sessionid' => n, 'scheduleid' => n, 'roomid' => n, 'startMinutes' => n]
+//   ['action' => 'delete',     'sessionid' => n, 'scheduleid' => n]
+// Returns the normalized (int-cast) edits, or null if anything is malformed.
+function gridScheduler_normalizeEdits($edits) {
+    if (!is_array($edits) || count($edits) === 0) {
+        return null;
+    }
+    $normalized = array();
+    $sessionIdsSeen = array();
+    foreach ($edits as $edit) {
+        if (!is_array($edit) || !isset($edit["action"]) || !in_array($edit["action"], array("insert", "reschedule", "delete"), true)) {
+            return null;
+        }
+        $action = $edit["action"];
+        $required = array("sessionid");
+        if ($action !== "insert") {
+            $required[] = "scheduleid";
+        }
+        if ($action !== "delete") {
+            $required[] = "roomid";
+            $required[] = "startMinutes";
+        }
+        $normalizedEdit = array("action" => $action);
+        foreach ($required as $field) {
+            $value = isset($edit[$field]) ? filter_var($edit[$field], FILTER_VALIDATE_INT) : false;
+            if ($value === false || $value < 0) {
+                return null;
+            }
+            $normalizedEdit[$field] = $value;
+        }
+        // One gesture never touches the same session twice; check_room_sched_conflicts() also keys by sessionid.
+        if (isset($sessionIdsSeen[$normalizedEdit["sessionid"]])) {
+            return null;
+        }
+        $sessionIdsSeen[$normalizedEdit["sessionid"]] = true;
+        $normalized[] = $normalizedEdit;
+    }
+    return $normalized;
+}
+
+// Confirms the client's view of every session/room an edit touches still matches the database -- another staff
+// member may have changed the schedule since this page last refreshed. Returns an explanatory message if not,
+// or null if everything is still consistent.
+function gridScheduler_findStaleEdit($edits) {
+    foreach ($edits as $edit) {
+        if ($edit["action"] === "insert") {
+            $row = gridScheduler_fetchOneRow("SELECT COUNT(*) AS n FROM Schedule WHERE sessionid = ?;", "i", array($edit["sessionid"]));
+            if (intval($row["n"]) > 0) {
+                return "Session {$edit["sessionid"]} has already been scheduled by someone else.";
+            }
+            $row = gridScheduler_fetchOneRow("SELECT sessionid FROM Sessions WHERE sessionid = ?;", "i", array($edit["sessionid"]));
+            if (is_null($row)) {
+                return "Session {$edit["sessionid"]} no longer exists.";
+            }
+        } else {
+            $row = gridScheduler_fetchOneRow("SELECT sessionid FROM Schedule WHERE scheduleid = ?;", "i", array($edit["scheduleid"]));
+            if (is_null($row) || intval($row["sessionid"]) !== $edit["sessionid"]) {
+                return "Session {$edit["sessionid"]} was changed by someone else since this page was loaded.";
+            }
+        }
+        if ($edit["action"] !== "delete") {
+            $row = gridScheduler_fetchOneRow("SELECT roomid FROM Rooms WHERE roomid = ? AND is_scheduled = 1;", "i", array($edit["roomid"]));
+            if (is_null($row)) {
+                return "Room {$edit["roomid"]} is not available for scheduling.";
+            }
+        }
+    }
+    return null;
+}
+
+// Applies one drag-and-drop gesture's worth of schedule edits (e.g. a single reschedule, or a swap's two
+// reschedules) atomically. Ports the write half of staffMaintainScheduleSubmit.php's editSchedule(), with two
+// deliberate differences:
+//  - Participant conflicts (check_room_sched_conflicts(), SubmitMaintainRoom.php, reused as-is) are checked
+//    *before* writing: if any are found and $ignoreConflicts is false, nothing is written and the conflicts are
+//    returned so staff can confirm. The legacy version always wrote first and only reported conflicts afterward.
+//  - Every statement is a prepared statement, and all writes happen in one transaction.
+// A reschedule updates the existing Schedule row in place (the legacy version deleted and re-inserted it);
+// nothing references scheduleid, and keeping it stable lets the client track the row across the edit.
+//
+// Returns ['status' => 'applied' | 'conflicts' | 'stale', 'conflictsHtml' => string, 'message' => string,
+// 'schedule' => fresh schedule]. The fresh schedule is always included so the client can resynchronize.
+function gridScheduler_editSchedule($edits, $ignoreConflicts) {
+    global $message, $mysqli;
+
+    $staleMessage = gridScheduler_findStaleEdit($edits);
+    if (!is_null($staleMessage)) {
+        return array("status" => "stale", "conflictsHtml" => "", "message" => $staleMessage,
+            "schedule" => gridScheduler_fetchSchedule());
+    }
+
+    $addToScheduleArray = array(); // sessionid => startMinutes, for the conflict checker
+    $deleteScheduleIds = array(); // scheduleids whose current slot should be disregarded by the conflict checker
+    foreach ($edits as $edit) {
+        if ($edit["action"] !== "insert") {
+            $deleteScheduleIds[] = $edit["scheduleid"];
+        }
+        if ($edit["action"] !== "delete") {
+            $addToScheduleArray[$edit["sessionid"]] = $edit["startMinutes"];
+        }
+    }
+    // check_room_sched_conflicts() only resets the global $message on some paths; clear it so a stale value can't
+    // leak through when it returns early.
+    $message = "";
+    $noConflicts = check_room_sched_conflicts($deleteScheduleIds, $addToScheduleArray);
+    $conflictsHtml = $noConflicts ? "" : $message;
+    if (!$noConflicts && !$ignoreConflicts) {
+        return array("status" => "conflicts", "conflictsHtml" => $conflictsHtml, "message" => "",
+            "schedule" => gridScheduler_fetchSchedule());
+    }
+
+    $name = "";
+    $email = "";
+    get_name_and_email($name, $email);
+    $badgeid = $_SESSION['badgeid'];
+    $roomNames = array();
+    foreach (gridScheduler_fetchLookupList("Rooms", "roomid", "roomname") as $room) {
+        $roomNames[$room["id"]] = $room["name"];
+    }
+
+    // SessionEditHistory's primary key is (sessionid, timestamp) with one-second resolution, so two quick
+    // consecutive edits to the same session would otherwise collide and fail the whole transaction -- keep the
+    // most recent edit's row instead.
+    $historyQuery = <<<EOD
+INSERT INTO SessionEditHistory (sessionid, badgeid, name, email_address, sessioneditcode, statusid, editdescription)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE sessioneditcode = VALUES(sessioneditcode), statusid = VALUES(statusid),
+        editdescription = VALUES(editdescription);
+EOD;
+    $mysqli->begin_transaction();
+    try {
+        foreach ($edits as $edit) {
+            if ($edit["action"] === "delete") {
+                gridScheduler_execOrThrow("DELETE FROM Schedule WHERE scheduleid = ?;", "i", array($edit["scheduleid"]));
+                // status 2 is "vetted"
+                gridScheduler_execOrThrow("UPDATE Sessions SET statusid = 2 WHERE sessionid = ?;", "i", array($edit["sessionid"]));
+                // session edit code 5 is "Remove from schedule"
+                gridScheduler_execOrThrow($historyQuery, "isssiis",
+                    array($edit["sessionid"], $badgeid, $name, $email, 5, 2, null));
+                continue;
+            }
+            $startTime = gridScheduler_minutesToTimeString($edit["startMinutes"]);
+            if ($edit["action"] === "insert") {
+                gridScheduler_execOrThrow("INSERT INTO Schedule (sessionid, roomid, starttime) VALUES (?, ?, ?);", "iis",
+                    array($edit["sessionid"], $edit["roomid"], $startTime));
+                $editCode = 4; // "Add to schedule"
+            } else {
+                gridScheduler_execOrThrow("UPDATE Schedule SET roomid = ?, starttime = ? WHERE scheduleid = ?;", "isi",
+                    array($edit["roomid"], $startTime, $edit["scheduleid"]));
+                $editCode = 7; // "Rescheduled"
+            }
+            // status 3 is "scheduled"
+            gridScheduler_execOrThrow("UPDATE Sessions SET statusid = 3 WHERE sessionid = ?;", "i", array($edit["sessionid"]));
+            $description = gridScheduler_timeDescFromMinutes($edit["startMinutes"]) . " in " . $roomNames[$edit["roomid"]];
+            gridScheduler_execOrThrow($historyQuery, "isssiis",
+                array($edit["sessionid"], $badgeid, $name, $email, $editCode, 3, $description));
+        }
+        $mysqli->commit();
+    } catch (Exception $e) {
+        $errorMessage = log_mysqli_error_new("editSchedule", $e->getMessage()); // before rollback() clears $mysqli->error
+        $mysqli->rollback();
+        RenderErrorAjax($errorMessage);
+        exit();
+    }
+
+    return array("status" => "applied", "conflictsHtml" => $conflictsHtml, "message" => "",
+        "schedule" => gridScheduler_fetchSchedule());
 }
 ?>

@@ -43,7 +43,7 @@ export interface BootstrapData {
   conNumDays: number;
   // Grid-line resolution (STANDARD_BLOCK_LENGTH today) -- one of three distinct, similarly-named
   // resolutions in the grid scheduler; see the "Time resolutions" section of the rewrite plan. Do not
-  // conflate with snap resolution (a page-level Snap Mode control, planned for the drag-and-drop phase)
+  // conflate with snap resolution (the page-level Snap Mode control -- see computeDropStart() in dropTarget.ts)
   // or display resolution (DISPLAY_RESOLUTION_MINUTES in components/Grid.tsx).
   gridLineResolutionMinutes: number;
   trackTagUsage: TrackTagUsage;
@@ -91,4 +91,41 @@ export interface SessionInfoData {
   starttime: string | null;
   endtime: string | null;
   participants: SessionInfoParticipant[];
+}
+
+// Snap resolution -- one of three distinct, similarly-named resolutions in the grid scheduler; see the "Time
+// resolutions" section of the rewrite plan. A page-level UI choice (the Snap selector in the Options menu), not admin
+// config. 'grid' snaps to empty grid rows/sub-slots (grid-line resolution plus adjacent sessions' edges -- see
+// computeDropStart() in dropTarget.ts); a number snaps to that fixed N-minute boundary.
+export type SnapMode = 'grid' | 5 | 10 | 15 | 30;
+
+// What's being dragged: either a session already on the grid, or one from the "sessions to be scheduled" pool.
+export type DragSource =
+  | { kind: 'scheduled'; item: ScheduleItemData }
+  | { kind: 'unscheduled'; session: SessionSearchResult };
+
+// Where a drag would land if released right now -- resolved continuously while dragging (for the live drop-time
+// label and drop preview) and once more on release. See resolveDrop() in dropTarget.ts.
+export type DropResolution =
+  | { kind: 'place'; roomid: number; startMinutes: number }
+  | { kind: 'swap'; target: ScheduleItemData }
+  | { kind: 'cabinet' }
+  | { kind: 'pool' };
+
+// One edit sent to the editSchedule action -- see gridScheduler_normalizeEdits() in
+// webpages/gridScheduler_functions.php for the server-side counterpart.
+export type ScheduleEdit =
+  | { action: 'insert'; sessionid: number; roomid: number; startMinutes: number }
+  | { action: 'reschedule'; sessionid: number; scheduleid: number; roomid: number; startMinutes: number }
+  | { action: 'delete'; sessionid: number; scheduleid: number };
+
+export interface EditScheduleResponse {
+  // 'conflicts': nothing was written; conflictsHtml lists them, and the edit can be resent with ignoreConflicts.
+  // 'stale': nothing was written, since another user changed something this edit depended on; see message.
+  status: 'applied' | 'conflicts' | 'stale';
+  // Server-rendered by check_room_sched_conflicts() (webpages/SubmitMaintainRoom.php), with all user-entered
+  // text HTML-escaped there. Also populated on 'applied' when conflicts were overridden.
+  conflictsHtml: string;
+  message: string;
+  schedule: ScheduleItemData[];
 }

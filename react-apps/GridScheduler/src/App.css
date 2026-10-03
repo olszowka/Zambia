@@ -12,14 +12,6 @@
   min-height: 0;
 }
 
-.grid-scheduler-toolbar {
-  flex: 0 0 auto;
-  padding: 4px 8px;
-  background: #fff3cd;
-  border-bottom: 1px solid #d0a000;
-  font-size: 0.85rem;
-}
-
 .grid-scheduler-body {
   flex: 1 1 auto;
   min-height: 0;
@@ -62,6 +54,16 @@
   font-size: 0.8rem;
 }
 
+.grid-scheduler-tab-attention {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 3px;
+  border-radius: 50%;
+  background: #dc3545;
+  vertical-align: super;
+}
+
 .grid-scheduler-tab-button.active {
   border-bottom-color: #2c6e2f;
   font-weight: bold;
@@ -99,7 +101,44 @@
 .grid-scheduler-sessions-panel-header-controls {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+}
+
+.grid-scheduler-sessions-panel-header-controls .btn {
+  margin: 0 2px;
+}
+
+/* Border colors match the .form-check-input overrides in webpages/css/zambia_bs5_customizations.less
+   (#6c757d), rather than Bootstrap 5's much fainter defaults. Compound selector so it beats Bootstrap's own
+   .dropdown-menu border rule regardless of stylesheet load order. */
+.dropdown-menu.grid-scheduler-options-menu {
+  border-color: #6c757d;
+}
+
+.grid-scheduler-options-menu {
+  padding: 6px 10px;
+  min-width: 170px;
+  font-weight: normal;
+  font-size: 0.85rem;
+}
+
+.grid-scheduler-options-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 3px 0;
+  white-space: nowrap;
+}
+
+.grid-scheduler-options-row .form-check-input {
+  margin-top: 0;
+  border-color: #6c757d;
+}
+
+.grid-scheduler-options-row select {
+  width: auto;
 }
 
 .grid-scheduler-file-cabinet {
@@ -231,6 +270,40 @@
   color: #666;
 }
 
+/* Warnings tab */
+.grid-scheduler-warnings-heading {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.grid-scheduler-warnings-error {
+  font-weight: bold;
+  color: #b00020;
+  margin-bottom: 4px;
+}
+
+.grid-scheduler-warnings-messages {
+  padding-left: 16px;
+  margin-bottom: 6px;
+}
+
+.grid-scheduler-warnings-tab .alert {
+  padding: 4px 6px;
+  margin-bottom: 6px;
+}
+
+.grid-scheduler-warnings-tab .alert ul {
+  padding-left: 16px;
+  margin: 2px 0 0;
+}
+
+.grid-scheduler-warnings-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
 .grid-scheduler-info-tab .infolabel {
   font-weight: bold;
   margin-top: 6px;
@@ -316,8 +389,8 @@
 
 /* Empty-slot gridlines -- one per axis tick, so they always line up with the time axis exactly (rather
    than a repeating background sized in px, which would drift at day-segment boundaries whose length
-   isn't a multiple of the resolution). Purely visual for now; these become real drop targets in the
-   drag-and-drop phase. Session boxes render after these in the DOM and are opaque, so they cover the
+   isn't a multiple of the resolution). Purely visual -- drop targeting is computed from the pointer position
+   (dropTarget.ts), not from these elements. Session boxes render after these in the DOM and are opaque, so they cover the
    lines behind them without any z-index bookkeeping needed. */
 .grid-scheduler-row-line {
   position: absolute;
@@ -390,4 +463,96 @@
   position: static;
   width: 100%;
   margin-bottom: 4px;
+}
+
+/* Drag-and-drop */
+.grid-scheduler-session-box {
+  cursor: grab;
+  /* Lets @dnd-kit's pointer sensor handle touch drags instead of the browser scrolling. */
+  touch-action: none;
+}
+
+/* Dragging is disabled while a conflicting edit awaits Save Anyway / Cancel -- show that instead of the grab hand.
+   Only boxes themselves: the info icon keeps its own pointer cursor, since it still works. (Not applied during an
+   ordinary in-flight save, which is brief enough that a cursor change would just flicker.) */
+.grid-scheduler-awaiting-confirmation .grid-scheduler-session-box {
+  cursor: not-allowed;
+}
+
+.grid-scheduler-dragging,
+.grid-scheduler-dragging * {
+  cursor: grabbing !important;
+}
+
+/* The box being dragged stays in place, faded, while the drag overlay follows the pointer. pointer-events:
+   none keeps it out of dropTarget.ts's hit-testing, so a scheduled session can be dropped onto its own old
+   slot (or just below it) without registering as a drop onto itself. */
+.grid-scheduler-drag-source {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.grid-scheduler-drag-preview {
+  position: relative;
+}
+
+.grid-scheduler-drag-preview-box {
+  position: relative;
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Live drop-time feedback, just above the dragged box's top edge. */
+.grid-scheduler-drop-label {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 2px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #222;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Where the dragged session would land. Above the session boxes (so it's visible when landing alongside an
+   existing session) but never hit-tested. */
+.grid-scheduler-drop-preview {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  border: 2px dashed #2c6e2f;
+  background: rgba(44, 110, 47, 0.15);
+  pointer-events: none;
+}
+
+.grid-scheduler-sessions-panel-list.grid-scheduler-drop-hover {
+  background: #e3f0e3;
+  outline: 2px dashed #2c6e2f;
+  outline-offset: -2px;
+}
+
+/* A session whose room/time changed without the user's own gesture causing it -- see findUntouchedMoves() in
+   scheduleEdits.ts. Padding shrinks by the extra 2px of border so the box's text doesn't shift. */
+.grid-scheduler-session-box.grid-scheduler-session-box-moved {
+  border: 3px solid #fd7e14;
+  padding: 0 2px;
+}
+
+/* Swap Mode counterpart animation (swapAnimation.ts): the real box waits hidden at its destination while a
+   fixed-position clone flies there from its old spot. */
+.grid-scheduler-animation-hidden {
+  visibility: hidden;
+}
+
+.grid-scheduler-session-box.grid-scheduler-swap-animation {
+  position: fixed;
+  margin: 0;
+  z-index: 2000;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
