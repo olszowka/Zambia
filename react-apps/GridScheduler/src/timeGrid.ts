@@ -1,31 +1,132 @@
 import type { DaySegment, ScheduleItemData } from './types';
 
 export interface DisplaySegment extends DaySegment {
-  // A contiguous timeline with the gaps between day segments removed, used for vertical pixel
-  // positioning. displayStart is the top of the segment's day-name row; contentDisplayStart is where
-  // the segment's actual start time (startMinutes) lands, which is displayStart + leadInMinutes.
-  // leadInMinutes is 30 when the segment starts exactly on the hour -- see buildHourTicks() -- so there's
-  // still a 30-minute-tall row available to show the day name on its own, without a normal hour tick
-  // already occupying that same row. It's 0 when the segment starts on a half hour, since that first
-  // (real) half-hour row is unlabeled by an hour tick anyway and can show the day name instead.
+  // A contiguous timeline with the gaps between days removed, used for vertical pixel positioning. displayStart
+  // is the top of the segment's day-name row; contentDisplayStart is where the segment's actual start time
+  // (startMinutes) lands, which is displayStart + leadInMinutes.
+  // The day name needs a 30-minute-tall row of its own above the segment's first hour tick (see
+  // buildHourTicks()). When the segment starts at least 30 minutes before its first whole hour (e.g. :30), that
+  // first stretch of real time is unlabeled anyway and holds the day name, so leadInMinutes is 0. Otherwise
+  // leadInMinutes reserves the shortfall above the real start: 30 for an on-the-hour start, 15 for :45.
   displayStart: number;
   contentDisplayStart: number;
   displayEnd: number;
   leadInMinutes: number;
+  // The stretches of the segment that have grid rows, in order: one per configured day segment it was built
+  // from. A same-day gap between two of them (e.g. a lunch break) stays on the time axis but has no grid rows of
+  // its own -- it's a single empty row. See gridRowStart().
+  gridRanges: GridRange[];
 }
 
-export function buildDisplaySegments(daySegments: DaySegment[]): DisplaySegment[] {
+// Grid rows repeat every grid-line resolution minutes from anchor (the configured start of the day segment),
+// within [start, end). The first range of a display segment starts at the segment's start and the last ends at
+// its end, so any stretch added by coverScheduledSessions() continues that range's pattern.
+export interface GridRange {
+  anchor: number;
+  start: number;
+  end: number;
+}
+
+// See DisplaySegment.leadInMinutes.
+const DAY_NAME_ROW_MINUTES = 30;
+
+interface DaySpan extends DaySegment {
+  gridRanges: GridRange[];
+}
+
+// Builds one segment per day (fewer, if one day's is stretched over the next's) from the configured day segments:
+//  - Segments on the same day are joined: a gap between them stays on the time axis (see
+//    DisplaySegment.gridRanges).
+//  - Each scheduled session outside every day (e.g. scheduled through the Maintain Room Schedule page, or before
+//    GRID_DAY_SEGMENTS was changed) stretches the nearest day to cover it, rounded out to the half hour, so it's
+//    drawn at its real time instead of being clamped to a day's edge. A session in a gap needs no stretching.
+//  - A day stretched into the next day's takes over the overlap, and the next day starts where it ends (or
+//    disappears, if fully covered).
+export function coverScheduledSessions(daySegments: DaySegment[], schedule: ScheduleItemData[]): DaySpan[] {
+  const spans: DaySpan[] = [];
+  for (const segment of daySegments) {
+    const range = { anchor: segment.startMinutes, start: segment.startMinutes, end: segment.endMinutes };
+    const previous = spans[spans.length - 1];
+    if (previous && previous.day === segment.day) {
+      previous.endMinutes = segment.endMinutes;
+      previous.gridRanges.push(range);
+    } else {
+      spans.push({ ...segment, gridRanges: [range] });
+    }
+  }
+  if (spans.length === 0) return spans;
+  for (const item of schedule) {
+    const start = item.startMinutes;
+    const end = start + Math.max(item.durationMinutes, 1);
+    if (spans.some((span) => span.startMinutes <= start && end <= span.endMinutes)) continue;
+    let nearest = spans[0];
+    let nearestDistance = Infinity;
+    for (const span of spans) {
+      const distance = Math.max(0, span.startMinutes - end, start - span.endMinutes);
+      if (distance < nearestDistance) {
+        nearest = span;
+        nearestDistance = distance;
+      }
+    }
+    nearest.startMinutes = Math.min(nearest.startMinutes, Math.floor(start / 30) * 30);
+    nearest.endMinutes = Math.max(nearest.endMinutes, Math.ceil(end / 30) * 30);
+  }
+  const result: DaySpan[] = [];
+  for (const span of spans) {
+    const previous = result[result.length - 1];
+    if (previous && span.startMinutes < previous.endMinutes) {
+      if (span.endMinutes <= previous.endMinutes) continue;
+      span.startMinutes = previous.endMinutes;
+    }
+    // Fit the ranges to the (possibly stretched or pushed-later) span.
+    const ranges = span.gridRanges
+      .filter((range, index, all) => index === all.length - 1 || range.end > span.startMinutes)
+      .map((range) => ({ ...range }));
+    ranges[0].start = span.startMinutes;
+    ranges[ranges.length - 1].end = span.endMinutes;
+    span.gridRanges = ranges;
+    result.push(span);
+  }
+  return result;
+}
+
+export function buildDisplaySegments(daySpans: DaySpan[]): DisplaySegment[] {
   let cumulative = 0;
-  return daySegments.map((segment) => {
-    const leadInMinutes = segment.startMinutes % 60 === 0 ? 30 : 0;
+  return daySpans.map((span) => {
+    const minutesToFirstHour = (60 - (span.startMinutes % 60)) % 60;
+    const leadInMinutes = Math.max(0, DAY_NAME_ROW_MINUTES - minutesToFirstHour);
     const displayStart = cumulative;
     const contentDisplayStart = displayStart + leadInMinutes;
-    const length = segment.endMinutes - segment.startMinutes;
+    const length = span.endMinutes - span.startMinutes;
     const displayEnd = contentDisplayStart + length;
-    const displaySegment: DisplaySegment = { ...segment, displayStart, contentDisplayStart, displayEnd, leadInMinutes };
+    const displaySegment: DisplaySegment = { ...span, displayStart, contentDisplayStart, displayEnd, leadInMinutes };
     cumulative = displayEnd;
     return displaySegment;
   });
+}
+
+// The start of the grid row (at grid-line resolution) containing absoluteMinutes in the given segment: a row of
+// the grid range containing it (see GridRange), whose first and last rows may be cut short, or else the gap it
+// falls in, which is one row.
+export function gridRowStart(segment: DisplaySegment, absoluteMinutes: number, gridLineResolutionMinutes: number): number {
+  let rowStart = segment.startMinutes;
+  for (const range of segment.gridRanges) {
+    if (absoluteMinutes < range.start) break;
+    if (absoluteMinutes >= range.end) {
+      rowStart = range.end;
+      continue;
+    }
+    return Math.max(nextPatternLine(range, absoluteMinutes, gridLineResolutionMinutes) - gridLineResolutionMinutes, range.start);
+  }
+  return rowStart;
+}
+
+// The first line of the range's grid-row pattern after absoluteMinutes.
+function nextPatternLine(range: GridRange, absoluteMinutes: number, gridLineResolutionMinutes: number): number {
+  return (
+    range.anchor +
+    (Math.floor((absoluteMinutes - range.anchor) / gridLineResolutionMinutes) + 1) * gridLineResolutionMinutes
+  );
 }
 
 export function totalDisplayMinutes(displaySegments: DisplaySegment[]): number {
@@ -34,9 +135,8 @@ export function totalDisplayMinutes(displaySegments: DisplaySegment[]): number {
 }
 
 // Maps an absolute minutes-since-con-start value onto the contiguous display timeline. Values outside
-// every segment (e.g. a session that starts before FIRST_DAY_START_TIME due to the phase-1 static
-// day-segment simplification -- see gridScheduler_functions.php) are clamped to the nearest segment
-// boundary rather than dropped, so nothing silently disappears from the grid.
+// every segment are clamped to the nearest segment boundary rather than dropped, so nothing silently
+// disappears from the grid -- though coverScheduledSessions() keeps scheduled sessions from ever needing this.
 export function minutesToDisplayOffset(displaySegments: DisplaySegment[], absoluteMinutes: number): number {
   if (displaySegments.length === 0) return 0;
   for (const segment of displaySegments) {
@@ -70,8 +170,8 @@ export interface AxisTick {
 
 // Used for the room columns' empty-grid lines only -- NOT the time axis (see buildHourTicks() below for
 // that). These lines represent actual schedulable granularity, so they legitimately follow grid-line
-// resolution (STANDARD_BLOCK_LENGTH / the GRID_TIME_RESOLUTION_MINUTES config planned for a later
-// phase) -- one of three distinct, similarly-named resolutions in the grid scheduler; see the "Time
+// resolution (GRID_SPACING_MINUTES, else STANDARD_BLOCK_LENGTH), with none inside a same-day gap (see
+// DisplaySegment.gridRanges) -- one of three distinct, similarly-named resolutions in the grid scheduler; see the "Time
 // resolutions" section of the rewrite plan. Do not conflate this with snap resolution (a page-level
 // Snap Mode control -- see computeDropStart() in dropTarget.ts) or display resolution
 // (DISPLAY_RESOLUTION_MINUTES in components/Grid.tsx). The bold day-boundary line always sits at the
@@ -86,28 +186,42 @@ export function buildGridLineTicks(displaySegments: DisplaySegment[], gridLineRe
     if (segment.leadInMinutes > 0) {
       ticks.push({ displayOffset: segment.displayStart, label: segment.dayName, isSegmentStart: true });
     }
-    for (let t = segment.startMinutes; t < segment.endMinutes; t += gridLineResolutionMinutes) {
+    // Each row ends at the next grid line, the end of its grid range (the start of a gap), or the start of the
+    // next grid range (the end of a gap), whichever comes first.
+    for (let t = segment.startMinutes; t < segment.endMinutes; ) {
       ticks.push({
         displayOffset: segment.contentDisplayStart + (t - segment.startMinutes),
         label: t === segment.startMinutes ? `${segment.dayName} ${formatTimeOfDay(t)}` : formatTimeOfDay(t),
         isSegmentStart: segment.leadInMinutes === 0 && t === segment.startMinutes,
       });
+      const range = segment.gridRanges.find((r) => r.start <= t && t < r.end);
+      const nextRange = segment.gridRanges.find((r) => r.start > t);
+      const rowEnd = range
+        ? Math.min(nextPatternLine(range, t, gridLineResolutionMinutes), range.end)
+        : Infinity;
+      t = Math.min(rowEnd, nextRange ? nextRange.start : segment.endMinutes);
     }
+  }
+  // A line closing off the last day. Every other day's end is already marked by the next day's bold line, which
+  // sits at the same display offset.
+  if (displaySegments.length > 0) {
+    const last = displaySegments[displaySegments.length - 1];
+    ticks.push({ displayOffset: last.displayEnd, label: formatTimeOfDay(last.endMinutes), isSegmentStart: false });
   }
   return ticks;
 }
 
 // Used for the time axis column only. Unlike buildGridLineTicks() above, this deliberately ignores
-// grid-line resolution/STANDARD_BLOCK_LENGTH entirely -- the axis always labels/lines on the hour,
+// grid-line resolution entirely -- the axis always labels/lines on the hour,
 // matching the legacy getScheduleTimesArray()'s "timeTop" (hour, labeled) vs "timeBottom" (half-hour,
 // unlabeled) distinction, which was independent of STANDARD_BLOCK_LENGTH there too.
 //
 // Day and time are never combined on one line. Each segment gets a day-name-only marker at
 // displayStart, then normal hour ticks starting at the first whole hour at/after the segment's actual
 // start (segment.startMinutes):
-//  - half-hour start (leadInMinutes 0): the day-name marker occupies that first, otherwise-unlabeled,
+//  - e.g. a half-hour start (leadInMinutes 0): the day-name marker occupies that first, otherwise-unlabeled,
 //    half-hour row; hour ticks pick up normally at the next :00.
-//  - on-the-hour start (leadInMinutes 30): there's no spare half-hour row to reuse (the segment's own
+//  - e.g. an on-the-hour start (leadInMinutes 30): there's no spare half-hour row to reuse (the segment's own
 //    first row already wants an hour label), so buildDisplaySegments() reserved an extra 30-minute row
 //    above it for the day name, and the segment's actual start gets a normal (non-bold) hour tick right
 //    below that, at contentDisplayStart.
@@ -119,8 +233,7 @@ export function buildHourTicks(displaySegments: DisplaySegment[]): AxisTick[] {
       label: segment.dayName,
       isSegmentStart: true,
     });
-    const firstHour =
-      segment.leadInMinutes === 30 ? segment.startMinutes : Math.floor(segment.startMinutes / 60) * 60 + 60;
+    const firstHour = Math.ceil(segment.startMinutes / 60) * 60;
     for (let t = firstHour; t < segment.endMinutes; t += 60) {
       ticks.push({
         displayOffset: segment.contentDisplayStart + (t - segment.startMinutes),

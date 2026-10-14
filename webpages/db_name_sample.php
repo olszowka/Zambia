@@ -12,15 +12,29 @@ define("PROGRAM_EMAIL", "program@somewhere.net");
 define("CON_NUM_DAYS", 5); // code works for 1 - 8
 define("PHP_DEFAULT_TIMEZONE", "AMERICA/NEW_YORK"); // must be valid argument to php date_default_timezone_set()  Should correspond with DB configuration
 define("DB_DEFAULT_TIMEZONE", "US/Eastern"); // must be valid argument to set time_zone,  Should correspond with PHP configuration
-define("CON_START_DATIM", "2009-08-06 00:00:00"); // Broadly used.  Must be in mysql format: "YYYY-MM-DD HH:MM:SS" (HH:00-23) HH:MM:SS probably should be 00:00:00
+define("CON_START_DATIM", "2009-08-06 00:00:00"); // Broadly used.  Must be in mysql format: "YYYY-MM-DD HH:MM:SS" HH:MM:SS must be 00:00:00
 define("DAY_CUTOFF_HOUR", 8); // times before this hour (of 0-23) are considered previous day
 		// used for Participant Availability only
-define("FIRST_DAY_START_TIME", "17:30"); // next 5 are for grid scheduler
+define("FIRST_DAY_START_TIME", "17:30"); // next 4 are the grid scheduler's day times, unless GRID_DAY_SEGMENTS is defined
 define("OTHER_DAY_STOP_TIME", "25:00");
 define("OTHER_DAY_START_TIME", "8:30");
 define("LAST_DAY_STOP_TIME", "16:00");
-define("STANDARD_BLOCK_LENGTH", "1:30"); // "1:00" and "1:30" are only values supported
+define("STANDARD_BLOCK_LENGTH", "1:30"); // "H:MM"
         // Block includes length of panel plus time to get to next panel, e.g. 55 min plus 5 min.
+        // Used by the back-to-back conflict report, and by the grid scheduler unless GRID_SPACING_MINUTES is defined.
+        // The report counts gaps up to 30 min as back-to-back for blocks of 1:30 or more, 15 min from 1:15, else 10 min.
+// The following 3 are optional; they configure the grid scheduler.
+// define("GRID_DAY_SEGMENTS", [ // Time ranges shown on the grid, replacing the 4 day times above. In order, not overlapping.
+//     ["day" => 1, "start" => "17:30", "end" => "25:00"], // "day" counts from 1 (CON_START_DATIM's day); times are on that day,
+//     ["day" => 2, "start" => "8:30", "end" => "12:00"], // and may pass 24:00 to end after midnight.
+//     ["day" => 2, "start" => "13:00", "end" => "25:00"], // Two segments on one day leave a gap, e.g. a lunch break; grid lines restart after it.
+//     ["day" => 3, "start" => "8:30", "end" => "16:00"],
+// ]);
+// define("GRID_SPACING_MINUTES", 30); // Minutes between the grid's row lines, which the "Grid" snap mode snaps to.
+//     Defaults to STANDARD_BLOCK_LENGTH.
+// define("GRID_SESSION_BOX_FIELDS", [["title"], ["sessionid", "type"], ["tags"]]); // Lines of fields in a grid session box.
+//     Available: title, sessionid, type, track, tags, division, duration. Defaults to the above, with track instead of tags
+//     under TRACK_OVER_TAG / TRACK_ONLY. When defined, it's followed regardless of TRACK_TAG_USAGE.
 define("DURATION_IN_MINUTES", FALSE); // TRUE: in mmm; FALSE: in hh:mm
         // affects session edit/create page only, not reports
 define("DEFAULT_DURATION", "1:15"); // must correspond to DURATION_IN_MINUTES

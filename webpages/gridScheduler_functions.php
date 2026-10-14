@@ -4,20 +4,108 @@
 // Shared by GridSchedulerNew.php (initial page bootstrap) and GridSchedulerAjax.php (refresh actions) --
 // the new React-based replacement for the Grid Scheduler page (see webpages/StaffMaintainSchedule.php /
 // staffMaintainScheduleSubmit.php for the implementation being replaced).
-//
-// NOTE: gridScheduler_getDaySegments() below is a simplified, static stand-in for the legacy
-// getScheduleTimesArray() (webpages/staffMaintainScheduleSubmit.php): it derives one segment per day
-// straight from FIRST_DAY_START_TIME/OTHER_DAY_START_TIME/OTHER_DAY_STOP_TIME/LAST_DAY_STOP_TIME, and
-// does not reproduce that function's dynamic trimming to the actual earliest/latest scheduled session,
-// nor its inserted "overnight gap" rows. This is expected to be replaced by GRID_DAY_SEGMENTS-driven
-// logic in a later phase of the grid scheduler rewrite.
+
+// Grid configuration problems found in db_name.php -- GridSchedulerNew.php catches this and shows the message in
+// place of the grid, so a typo in a GRID_* constant is reported plainly rather than producing a broken grid.
+class GridSchedulerConfigException extends Exception {
+}
 
 function gridScheduler_timeStringToMinutes($timeStr) {
     sscanf($timeStr, "%d:%d", $hours, $minutes);
     return $hours * 60 + $minutes;
 }
 
+// Strict version of gridScheduler_timeStringToMinutes() for admin-entered GRID_* values: "H:MM" or "HH:MM", hours may
+// exceed 23 (e.g. "25:00" for 1:00 AM the next morning). Returns null if malformed.
+function gridScheduler_parseConfigTime($timeStr) {
+    if (!is_string($timeStr) || !preg_match('/^(\d{1,2}):([0-5]\d)$/', $timeStr, $matches)) {
+        return null;
+    }
+    return intval($matches[1]) * 60 + intval($matches[2]);
+}
+
+// Grid-line resolution: the room columns' empty-grid row lines, and the rows the Grid snap mode snaps to. This is one
+// of three distinct, similarly-named resolutions in the grid scheduler -- see the "Time resolutions" section of the
+// rewrite plan. Do not conflate with snap resolution (the page-level Snap selector in the React app) or display
+// resolution (fixed at 1 minute, a non-configurable constant on the client -- see DISPLAY_RESOLUTION_MINUTES in
+// react-apps/GridScheduler/src/components/Grid.tsx).
+// GRID_SPACING_MINUTES is optional. When it isn't defined, STANDARD_BLOCK_LENGTH ("1:30" -> 90) is used, which
+// matches the legacy grid's empty slots. STANDARD_BLOCK_LENGTH itself stays as is, since other features
+// (reports/conflictbacktoback.php) depend on it.
+function gridScheduler_getGridLineResolutionMinutes() {
+    if (defined("GRID_SPACING_MINUTES")) {
+        $resolution = GRID_SPACING_MINUTES;
+        if (is_string($resolution) && ctype_digit($resolution)) {
+            $resolution = intval($resolution);
+        }
+        if (!is_int($resolution) || $resolution < 5 || $resolution > 24 * 60) {
+            throw new GridSchedulerConfigException("GRID_SPACING_MINUTES must be a whole number of minutes from 5 to 1440.");
+        }
+        return $resolution;
+    }
+    $resolution = defined("STANDARD_BLOCK_LENGTH") ? gridScheduler_parseConfigTime(STANDARD_BLOCK_LENGTH) : null;
+    return empty($resolution) ? 30 : $resolution;
+}
+
+// The grid's displayed time ranges, in minutes since CON_START_DATIM, in order and never overlapping. Anything
+// outside them (overnight, a lunch break) isn't drawn at all. The client widens a segment if a session is scheduled
+// outside every segment, so nothing is ever drawn at the wrong time -- see coverScheduledSessions() in timeGrid.ts.
+// GRID_DAY_SEGMENTS is optional. When it isn't defined, one segment per day is derived from the legacy
+// FIRST_DAY_START_TIME / OTHER_DAY_START_TIME / OTHER_DAY_STOP_TIME / LAST_DAY_STOP_TIME constants, so existing installs
+// keep working unedited.
 function gridScheduler_getDaySegments() {
+    $segments = defined("GRID_DAY_SEGMENTS")
+        ? gridScheduler_daySegmentsFromConfig(GRID_DAY_SEGMENTS)
+        : gridScheduler_daySegmentsFromLegacyConstants();
+    foreach ($segments as &$segment) {
+        $segment["dayName"] = longDayNameFromInt($segment["day"]);
+    }
+    unset($segment);
+    return $segments;
+}
+
+function gridScheduler_daySegmentsFromConfig($config) {
+    $usage = 'GRID_DAY_SEGMENTS must be a list of segments like ["day" => 1, "start" => "17:30", "end" => "25:00"].';
+    if (!is_array($config) || count($config) === 0) {
+        throw new GridSchedulerConfigException($usage);
+    }
+    $segments = array();
+    foreach (array_values($config) as $index => $entry) {
+        $position = $index + 1;
+        if (!is_array($entry) || !isset($entry["day"], $entry["start"], $entry["end"])) {
+            throw new GridSchedulerConfigException("GRID_DAY_SEGMENTS entry $position is malformed. $usage");
+        }
+        $day = $entry["day"];
+        if (!is_int($day) || $day < 1 || $day > CON_NUM_DAYS) {
+            throw new GridSchedulerConfigException("GRID_DAY_SEGMENTS entry $position: \"day\" must be a whole number from 1 to CON_NUM_DAYS (" . CON_NUM_DAYS . ").");
+        }
+        $start = gridScheduler_parseConfigTime($entry["start"]);
+        $end = gridScheduler_parseConfigTime($entry["end"]);
+        if (is_null($start) || is_null($end)) {
+            throw new GridSchedulerConfigException("GRID_DAY_SEGMENTS entry $position: \"start\" and \"end\" must be times like \"9:00\" or \"25:00\".");
+        }
+        if ($end <= $start) {
+            throw new GridSchedulerConfigException("GRID_DAY_SEGMENTS entry $position: \"end\" must be later than \"start\". Use a time past 24:00 to end after midnight.");
+        }
+        $dayOffsetMinutes = ($day - 1) * 24 * 60;
+        $segments[] = array(
+            "day" => $day,
+            "startMinutes" => $dayOffsetMinutes + $start,
+            "endMinutes" => $dayOffsetMinutes + $end,
+        );
+        if ($index > 0 && $segments[$index]["startMinutes"] < $segments[$index - 1]["endMinutes"]) {
+            throw new GridSchedulerConfigException("GRID_DAY_SEGMENTS entry $position starts before entry " . ($position - 1) . " ends. List segments in order, without overlaps.");
+        }
+    }
+    return $segments;
+}
+
+// Unlike the legacy grid (getScheduleTimesArray() in staffMaintainScheduleSubmit.php), this doesn't trim or extend days
+// based on what's scheduled; the client's coverScheduledSessions() handles sessions outside these times instead. If a
+// day's stop time runs past the next day's start, the earlier day is cut short there so the segments don't overlap.
+// A day whose stop time isn't after its start time (e.g. CON_NUM_DAYS 1 with LAST_DAY_STOP_TIME "16:00" before
+// FIRST_DAY_START_TIME "17:30") is a configuration error, rather than a day silently left off the grid.
+function gridScheduler_daySegmentsFromLegacyConstants() {
     $segments = array();
     $firstDayStartMinutes = gridScheduler_timeStringToMinutes(FIRST_DAY_START_TIME);
     $otherDayStartMinutes = gridScheduler_timeStringToMinutes(OTHER_DAY_START_TIME);
@@ -25,16 +113,84 @@ function gridScheduler_getDaySegments() {
     $lastDayStopMinutes = gridScheduler_timeStringToMinutes(LAST_DAY_STOP_TIME);
     for ($day = 1; $day <= CON_NUM_DAYS; $day++) {
         $dayOffsetMinutes = ($day - 1) * 24 * 60;
-        $startMinutes = ($day == 1) ? $firstDayStartMinutes : $dayOffsetMinutes + $otherDayStartMinutes;
-        $endMinutes = ($day == CON_NUM_DAYS) ? $dayOffsetMinutes + $lastDayStopMinutes : $dayOffsetMinutes + $otherDayStopMinutes;
-        $segments[] = array(
-            "day" => $day,
-            "dayName" => longDayNameFromInt($day),
-            "startMinutes" => $startMinutes,
-            "endMinutes" => $endMinutes,
-        );
+        $startName = ($day == 1) ? "FIRST_DAY_START_TIME" : "OTHER_DAY_START_TIME";
+        $stopName = ($day == CON_NUM_DAYS) ? "LAST_DAY_STOP_TIME" : "OTHER_DAY_STOP_TIME";
+        $startMinutes = $dayOffsetMinutes + (($day == 1) ? $firstDayStartMinutes : $otherDayStartMinutes);
+        $endMinutes = $dayOffsetMinutes + (($day == CON_NUM_DAYS) ? $lastDayStopMinutes : $otherDayStopMinutes);
+        if ($endMinutes <= $startMinutes) {
+            throw new GridSchedulerConfigException("Day $day of the grid has no time to show: $stopName (\"" . constant($stopName)
+                . "\") must be later than $startName (\"" . constant($startName) . "\"). Use a time past 24:00 to stop after midnight.");
+        }
+        if ($day < CON_NUM_DAYS) {
+            $nextDayStartMinutes = $dayOffsetMinutes + 24 * 60 + $otherDayStartMinutes;
+            if ($nextDayStartMinutes <= $startMinutes) {
+                throw new GridSchedulerConfigException("Day $day of the grid has no time to show: $startName (\"" . constant($startName)
+                    . "\") is at or after the next day's OTHER_DAY_START_TIME (\"" . OTHER_DAY_START_TIME . "\").");
+            }
+            $endMinutes = min($endMinutes, $nextDayStartMinutes);
+        }
+        $segments[] = array("day" => $day, "startMinutes" => $startMinutes, "endMinutes" => $endMinutes);
     }
     return $segments;
+}
+
+// Which fields a session box shows (on the grid, in the "sessions to be scheduled" list, and while dragging), as a
+// list of lines, each a list of field names. The info icon always starts the first line. Every line is a single line
+// of text, clipped if too long; the box clips any lines that don't fit its height.
+const GRID_SESSION_BOX_FIELD_NAMES = array("title", "sessionid", "type", "track", "tags", "division", "duration");
+
+// GRID_SESSION_BOX_FIELDS is optional. When it isn't defined, boxes show title / session id and type / track or tags,
+// whichever TRACK_TAG_USAGE makes primary. When it is defined, it's followed as is, regardless of TRACK_TAG_USAGE.
+function gridScheduler_getSessionBoxFields() {
+    if (!defined("GRID_SESSION_BOX_FIELDS")) {
+        $tagPrimary = TRACK_TAG_USAGE === "TAG_ONLY" || TRACK_TAG_USAGE === "TAG_OVER_TRACK";
+        return array(array("title"), array("sessionid", "type"), array($tagPrimary ? "tags" : "track"));
+    }
+    $usage = 'GRID_SESSION_BOX_FIELDS must be a list of lines, each a list of field names, like [["title"], ["sessionid", "type"], ["tags"]]. '
+        . 'Available fields: ' . implode(", ", GRID_SESSION_BOX_FIELD_NAMES) . '.';
+    if (!is_array(GRID_SESSION_BOX_FIELDS) || count(GRID_SESSION_BOX_FIELDS) === 0) {
+        throw new GridSchedulerConfigException($usage);
+    }
+    $lines = array();
+    foreach (GRID_SESSION_BOX_FIELDS as $line) {
+        if (is_string($line)) {
+            $line = array($line);
+        }
+        if (!is_array($line) || count($line) === 0) {
+            throw new GridSchedulerConfigException($usage);
+        }
+        foreach ($line as $field) {
+            if (!in_array($field, GRID_SESSION_BOX_FIELD_NAMES, true)) {
+                throw new GridSchedulerConfigException("GRID_SESSION_BOX_FIELDS: unknown field \"" . (is_string($field) ? $field : gettype($field)) . "\". $usage");
+            }
+        }
+        $lines[] = array_values($line);
+    }
+    return $lines;
+}
+
+// Tag names for the given sessions (all scheduled sessions if $sessionIds is null), in Tags.display_order, keyed by
+// sessionid. Sessions without tags are omitted.
+function gridScheduler_fetchTagNames($sessionIds) {
+    $tagNames = array();
+    if (is_null($sessionIds)) {
+        $query = "SELECT SHT.sessionid, TA.tagname FROM SessionHasTag SHT JOIN Tags TA USING (tagid)"
+            . " WHERE EXISTS (SELECT * FROM Schedule SCH WHERE SCH.sessionid = SHT.sessionid)"
+            . " ORDER BY TA.display_order, TA.tagname;";
+        $result = mysqli_query_with_error_handling($query, true, true);
+    } elseif (count($sessionIds) === 0) {
+        return $tagNames;
+    } else {
+        $placeholders = implode(",", array_fill(0, count($sessionIds), "?"));
+        $query = "SELECT SHT.sessionid, TA.tagname FROM SessionHasTag SHT JOIN Tags TA USING (tagid)"
+            . " WHERE SHT.sessionid IN ($placeholders) ORDER BY TA.display_order, TA.tagname;";
+        $result = mysqli_query_with_prepare_and_exit_on_error($query, str_repeat("i", count($sessionIds)), $sessionIds);
+    }
+    while ($row = mysqli_fetch_assoc($result)) {
+        $tagNames[intval($row["sessionid"])][] = $row["tagname"];
+    }
+    mysqli_free_result($result);
+    return $tagNames;
 }
 
 // Shared by the Sessions tab's filter dropdowns (tracks/types/divisions single-select, tags multi-select)
@@ -71,39 +227,36 @@ SELECT
         SCH.roomid, SCH.starttime;
 EOD;
     $result = mysqli_query_with_error_handling($query, true, true);
+    $tagNames = gridScheduler_fetchTagNames(null);
     while ($row = mysqli_fetch_assoc($result)) {
+        $sessionId = intval($row["sessionid"]);
         $schedule[] = array(
             "scheduleid" => intval($row["scheduleid"]),
             "roomid" => intval($row["roomid"]),
-            "sessionid" => intval($row["sessionid"]),
+            "sessionid" => $sessionId,
             "title" => $row["title"],
             "startMinutes" => gridScheduler_timeStringToMinutes($row["starttime"]),
             "durationMinutes" => intval($row["durationMinutes"]),
             "trackname" => $row["trackname"],
             "typename" => $row["typename"],
             "divisionname" => $row["divisionname"],
+            "tagnames" => isset($tagNames[$sessionId]) ? $tagNames[$sessionId] : array(),
         );
     }
     mysqli_free_result($result);
     return $schedule;
 }
 
-// Returns the current rooms/schedule state as a plain array, ready for json_encode() -- used both for
-// the initial page bootstrap and for ajax refreshes, so the two stay in sync automatically.
+// Returns the page's bootstrap payload as a plain array, ready for json_encode(). Throws GridSchedulerConfigException
+// if a GRID_* constant in db_name.php is invalid.
 function gridScheduler_buildData() {
     $data = array();
     $data["conStartDateTime"] = str_replace(" ", "T", CON_START_DATIM);
     $data["conNumDays"] = CON_NUM_DAYS;
-    // Grid-line resolution: controls the empty/partially-empty schedule's row lines (derived from
-    // STANDARD_BLOCK_LENGTH today; a later phase replaces this with proper GRID_*-config derivation).
-    // This is one of three distinct, similarly-named-but-different resolutions in the grid scheduler --
-    // see the "Time resolutions" section of the rewrite plan. Do not conflate with snap resolution (a
-    // page-level Snap Mode control in the React app) or display resolution (fixed at
-    // 1 minute, a non-configurable constant on the client -- see DISPLAY_RESOLUTION_MINUTES in
-    // react-apps/GridScheduler/src/components/Grid.tsx).
-    $data["gridLineResolutionMinutes"] = 30; // TODO: replace with GRID_TIME_RESOLUTION_MINUTES in a later phase
+    $data["gridLineResolutionMinutes"] = gridScheduler_getGridLineResolutionMinutes();
     $data["trackTagUsage"] = TRACK_TAG_USAGE;
     $data["daySegments"] = gridScheduler_getDaySegments();
+    $data["sessionBoxFields"] = gridScheduler_getSessionBoxFields();
 
     $rooms = array();
     $query = "SELECT roomid, roomname, display_order FROM Rooms WHERE is_scheduled = 1 ORDER BY display_order;";
@@ -224,6 +377,11 @@ function gridScheduler_searchSessions() {
         );
     }
     mysqli_free_result($result);
+    $tagNames = gridScheduler_fetchTagNames(array_column($sessions, "sessionid"));
+    foreach ($sessions as &$session) {
+        $session["tagnames"] = isset($tagNames[$session["sessionid"]]) ? $tagNames[$session["sessionid"]] : array();
+    }
+    unset($session);
     return $sessions;
 }
 
@@ -233,14 +391,17 @@ function gridScheduler_searchSessions() {
 // such session exists.
 function gridScheduler_getSessionInfo($sessionId) {
     $conStartDatim = CON_START_DATIM;
+    // The weekday adds nothing for a one-day con.
+    $timeFormat = (CON_NUM_DAYS > 1) ? "%a %l:%i %p" : "%l:%i %p";
     $query = "SELECT S.sessionid, S.title, S.progguiddesc, S.notesforprog, TR.trackname, TY.typename, D.divisionname,"
         . " TIME_FORMAT(S.duration, '%H:%i') AS duration, SCH.roomid, R.roomname,"
-        . " DATE_FORMAT(ADDTIME(?, SCH.starttime), '%a %l:%i %p') AS starttime,"
-        . " DATE_FORMAT(ADDTIME(?, ADDTIME(SCH.starttime, S.duration)), '%a %l:%i %p') AS endtime"
+        . " DATE_FORMAT(ADDTIME(?, SCH.starttime), ?) AS starttime,"
+        . " DATE_FORMAT(ADDTIME(?, ADDTIME(SCH.starttime, S.duration)), ?) AS endtime"
         . " FROM Sessions S JOIN Tracks TR USING (trackid) JOIN Types TY USING (typeid) JOIN Divisions D USING (divisionid)"
         . " LEFT JOIN Schedule SCH USING (sessionid) LEFT JOIN Rooms R USING (roomid)"
         . " WHERE S.sessionid = ?;";
-    $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssi", array($conStartDatim, $conStartDatim, $sessionId));
+    $result = mysqli_query_with_prepare_and_exit_on_error($query, "ssssi",
+        array($conStartDatim, $timeFormat, $conStartDatim, $timeFormat, $sessionId));
     $row = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
     if (!$row) {

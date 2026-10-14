@@ -1,10 +1,11 @@
 import { useDraggable } from '@dnd-kit/core';
 import type { LaidOutItem } from '../timeGrid';
-import type { DragSource, TrackTagUsage } from '../types';
+import type { DragSource, SessionBoxField } from '../types';
+import SessionBoxContent from './SessionBoxContent';
 
 interface SessionBoxProps {
   item: LaidOutItem;
-  trackTagUsage: TrackTagUsage;
+  fields: SessionBoxField[][];
   top: number;
   height: number;
   onInfoClick: (sessionid: number) => void;
@@ -15,7 +16,7 @@ interface SessionBoxProps {
 
 export default function SessionBox({
   item,
-  trackTagUsage,
+  fields,
   top,
   height,
   onInfoClick,
@@ -33,10 +34,6 @@ export default function SessionBox({
   });
   const widthPct = 100 / colCount;
   const leftPct = colIndex * widthPct;
-  // Tags aren't in the read-only bootstrap payload yet (planned for the config-driven session-box
-  // phase, along with respecting TAG_OVER_TRACK/TRACK_OVER_TAG choice of primary field) -- for now,
-  // just honor TAG_ONLY/TRACK_ONLY's "hide the other field" instruction where we can.
-  const showTrack = trackTagUsage !== 'TAG_ONLY';
 
   return (
     <div
@@ -56,18 +53,7 @@ export default function SessionBox({
       style={{ top, height, left: `${leftPct}%`, width: `${widthPct}%` }}
       title={item.title}
     >
-      <div className="grid-scheduler-session-title-row">
-        <i
-          className="icon-info-sign grid-scheduler-session-info-icon"
-          onClick={() => onInfoClick(item.sessionid)}
-        />
-        <span className="grid-scheduler-session-title">{item.title}</span>
-      </div>
-      <div className="grid-scheduler-session-meta">
-        <span className="grid-scheduler-session-id">{item.sessionid}</span>
-        <span className="grid-scheduler-session-type">{`Type: ${item.typename}`}</span>
-      </div>
-      {showTrack && <div className="grid-scheduler-session-track">{`Track: ${item.trackname}`}</div>}
+      <SessionBoxContent session={scheduleItem} fields={fields} onInfoClick={onInfoClick} />
     </div>
   );
 }

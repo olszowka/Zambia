@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { LookupEntry, SessionSearchResult } from '../../types';
+import type { LookupEntry, SessionSearchResult, TrackTagUsage } from '../../types';
 import { searchSessions } from '../../api';
 
 interface SessionsTabProps {
@@ -7,6 +7,7 @@ interface SessionsTabProps {
   tags: LookupEntry[];
   types: LookupEntry[];
   divisions: LookupEntry[];
+  trackTagUsage: TrackTagUsage;
   // sessionids already in the "sessions to be scheduled" pool -- excluded from new search results so
   // Retrieve can be pressed repeatedly (with different filters) without duplicating list entries.
   currSessionIds: number[];
@@ -35,7 +36,15 @@ const initialFormState: SearchForm = {
   personsAssigned: false,
 };
 
-export default function SessionsTab({ tracks, tags, types, divisions, currSessionIds, onResults }: SessionsTabProps) {
+export default function SessionsTab({
+  tracks,
+  tags,
+  types,
+  divisions,
+  trackTagUsage,
+  currSessionIds,
+  onResults,
+}: SessionsTabProps) {
   const [form, setForm] = useState<SearchForm>(initialFormState);
   const [loading, setLoading] = useState(false);
   const [noResultsFound, setNoResultsFound] = useState(false);
@@ -75,19 +84,23 @@ export default function SessionsTab({ tracks, tags, types, divisions, currSessio
     setErrorMessage(null);
   }
 
-  return (
-    <div className="grid-scheduler-sessions-tab">
-      <label className="grid-scheduler-form-row">
-        <span className="grid-scheduler-form-label">Track:</span>
-        <select value={form.trackId} onChange={(e) => setForm({ ...form, trackId: Number(e.target.value) })}>
-          <option value={0}>ANY</option>
-          {tracks.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-      </label>
+  // TRACK_TAG_USAGE: the unused one of Track / Tag isn't offered at all, and when both are used, the primary one
+  // comes first.
+  const trackFilter = trackTagUsage !== 'TAG_ONLY' && (
+    <label className="grid-scheduler-form-row">
+      <span className="grid-scheduler-form-label">Track:</span>
+      <select value={form.trackId} onChange={(e) => setForm({ ...form, trackId: Number(e.target.value) })}>
+        <option value={0}>ANY</option>
+        {tracks.map((t) => (
+          <option key={t.id} value={t.id}>
+            {t.name}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+  const tagFilter = trackTagUsage !== 'TRACK_ONLY' && (
+    <>
       <div className="grid-scheduler-form-row grid-scheduler-form-row-top">
         <span className="grid-scheduler-form-label" id="tags-container-label">
           Tag:
@@ -147,6 +160,14 @@ export default function SessionsTab({ tracks, tags, types, divisions, currSessio
           Match All
         </label>
       </div>
+    </>
+  );
+  const tagFirst = trackTagUsage === 'TAG_ONLY' || trackTagUsage === 'TAG_OVER_TRACK';
+
+  return (
+    <div className="grid-scheduler-sessions-tab">
+      {tagFirst ? tagFilter : trackFilter}
+      {tagFirst ? trackFilter : tagFilter}
       <label className="grid-scheduler-form-row">
         <span className="grid-scheduler-form-label">Type:</span>
         <select value={form.typeId} onChange={(e) => setForm({ ...form, typeId: Number(e.target.value) })}>
@@ -158,17 +179,20 @@ export default function SessionsTab({ tracks, tags, types, divisions, currSessio
           ))}
         </select>
       </label>
-      <label className="grid-scheduler-form-row">
-        <span className="grid-scheduler-form-label">Division:</span>
-        <select value={form.divisionId} onChange={(e) => setForm({ ...form, divisionId: Number(e.target.value) })}>
-          <option value={0}>ANY</option>
-          {divisions.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      {/* Like the Edit/Create Session page, there's nothing to choose when the con has only one division. */}
+      {divisions.length > 1 && (
+        <label className="grid-scheduler-form-row">
+          <span className="grid-scheduler-form-label">Division:</span>
+          <select value={form.divisionId} onChange={(e) => setForm({ ...form, divisionId: Number(e.target.value) })}>
+            <option value={0}>ANY</option>
+            {divisions.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       <label className="grid-scheduler-form-row">
         <span className="grid-scheduler-form-label">Session ID:</span>
         <input value={form.sessionId} onChange={(e) => setForm({ ...form, sessionId: e.target.value })} />

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import type { BootstrapData, ScheduleItemData } from '../types';
 import {
-  buildDisplaySegments,
+  type DisplaySegment,
   buildGridLineTicks,
   buildHourTicks,
   layoutOverlaps,
@@ -15,7 +15,7 @@ import { PIXELS_PER_MINUTE, ROOM_COLUMN_WIDTH_PX } from '../layoutConstants';
 // Display resolution: how precisely a scheduled session's position/duration is rendered. This is one of
 // three distinct, similarly-named resolutions in the grid scheduler -- see the "Time resolutions"
 // section of the rewrite plan:
-//  1) grid-line resolution (STANDARD_BLOCK_LENGTH, admin-configurable) -- the empty-grid row lines,
+//  1) grid-line resolution (GRID_SPACING_MINUTES, else STANDARD_BLOCK_LENGTH; admin-configurable) -- the empty-grid row lines,
 //     gridLineResolutionMinutes below.
 //  2) snap resolution -- the page-level Snap Mode control (Grid / 5 / 10 / 15 / 30 min); where a drop lands.
 //     See computeDropStart() in dropTarget.ts.
@@ -43,6 +43,8 @@ interface GridProps {
   data: BootstrapData;
   // Kept separately from data.schedule (the bootstrap snapshot), since drag-and-drop edits change it.
   schedule: ScheduleItemData[];
+  // Built by App (it's needed for drop targeting too).
+  displaySegments: DisplaySegment[];
   visibleRoomIds: Set<number>;
   onInfoClick: (sessionid: number) => void;
   dropPreview: DropPreview | null;
@@ -56,6 +58,7 @@ interface GridProps {
 export default function Grid({
   data,
   schedule,
+  displaySegments,
   visibleRoomIds,
   onInfoClick,
   dropPreview,
@@ -74,10 +77,9 @@ export default function Grid({
     () => data.rooms.filter((room) => visibleRoomIds.has(room.roomid)),
     [data.rooms, visibleRoomIds]
   );
-  const displaySegments = useMemo(() => buildDisplaySegments(data.daySegments), [data.daySegments]);
   // The time axis always labels/lines on the hour, independent of grid-line resolution -- see
   // buildHourTicks()'s comment in timeGrid.ts. The room columns' empty-grid lines are a separate
-  // concern and do follow grid-line resolution (STANDARD_BLOCK_LENGTH today).
+  // concern and do follow grid-line resolution.
   const hourTicks = useMemo(() => buildHourTicks(displaySegments), [displaySegments]);
   const gridLineTicks = useMemo(
     () => buildGridLineTicks(displaySegments, data.gridLineResolutionMinutes),
@@ -155,7 +157,7 @@ export default function Grid({
                 <SessionBox
                   key={item.scheduleid}
                   item={item}
-                  trackTagUsage={data.trackTagUsage}
+                  fields={data.sessionBoxFields}
                   top={
                     minutesToDisplayOffset(displaySegments, roundToDisplayResolution(item.startMinutes)) *
                     PIXELS_PER_MINUTE

@@ -1,4 +1,13 @@
-import type { RoomData, LookupEntry, SessionSearchResult, SessionInfoData, SnapMode, TabKey } from '../types';
+import type {
+  RoomData,
+  LookupEntry,
+  SessionBoxField,
+  SessionSearchResult,
+  SessionInfoData,
+  SnapMode,
+  TabKey,
+  TrackTagUsage,
+} from '../types';
 import RoomsTab from './tabs/RoomsTab';
 import SessionsTab from './tabs/SessionsTab';
 import InfoTab from './tabs/InfoTab';
@@ -16,6 +25,8 @@ interface LeftPanelProps {
   tags: LookupEntry[];
   types: LookupEntry[];
   divisions: LookupEntry[];
+  trackTagUsage: TrackTagUsage;
+  sessionBoxFields: SessionBoxField[][];
   sessionsToBeScheduled: SessionSearchResult[];
   onSearchResults: (results: SessionSearchResult[]) => void;
   onClearAll: () => void;
@@ -51,6 +62,8 @@ export default function LeftPanel({
   tags,
   types,
   divisions,
+  trackTagUsage,
+  sessionBoxFields,
   sessionsToBeScheduled,
   onSearchResults,
   onClearAll,
@@ -98,6 +111,7 @@ export default function LeftPanel({
               tags={tags}
               types={types}
               divisions={divisions}
+              trackTagUsage={trackTagUsage}
               currSessionIds={sessionsToBeScheduled.map((s) => s.sessionid)}
               onResults={onSearchResults}
             />
@@ -141,6 +155,7 @@ export default function LeftPanel({
             <UnscheduledSessionBox
               key={session.sessionid}
               session={session}
+              fields={sessionBoxFields}
               onInfoClick={onInfoClick}
               dragDisabled={dragDisabled}
               animationHidden={animatingSessionId === session.sessionid}

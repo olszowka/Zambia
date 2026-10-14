@@ -20,7 +20,7 @@ import type {
   TabKey,
 } from './types';
 import { editSchedule, getSchedule, getSessionInfo } from './api';
-import { buildDisplaySegments } from './timeGrid';
+import { buildDisplaySegments, coverScheduledSessions } from './timeGrid';
 import { resolveDrop } from './dropTarget';
 import {
   applyPlanToPool,
@@ -28,6 +28,7 @@ import {
   findUntouchedMoves,
   planDrop,
   revertPlanFromPool,
+  withoutCounterpartMove,
   type EditPlan,
 } from './scheduleEdits';
 import { captureSwapCounterpart, prefersReducedMotion, runSwapAnimation, type SwapAnimationStart } from './swapAnimation';
@@ -109,10 +110,20 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
   // applied if nothing newer was requested after it -- e.g. rapid room toggles, or a save started meanwhile.
   const scheduleRequestSeqRef = useRef(0);
 
-  const displaySegments = useMemo(() => buildDisplaySegments(initialData.daySegments), [initialData.daySegments]);
+  // Rebuilt whenever the schedule changes, since a session scheduled outside the configured day segments widens them.
+  const displaySegments = useMemo(() => {
+    const roomIds = new Set(initialData.rooms.map((room) => room.roomid));
+    const gridItems = schedule.filter((item) => roomIds.has(item.roomid));
+    return buildDisplaySegments(coverScheduledSessions(initialData.daySegments, gridItems));
+  }, [initialData.daySegments, initialData.rooms, schedule]);
   const planContext = useMemo(
-    () => ({ schedule, rooms: initialData.rooms, conStartDateTime: initialData.conStartDateTime }),
-    [schedule, initialData.rooms, initialData.conStartDateTime]
+    () => ({
+      schedule,
+      rooms: initialData.rooms,
+      conStartDateTime: initialData.conStartDateTime,
+      showWeekday: initialData.conNumDays > 1,
+    }),
+    [schedule, initialData.rooms, initialData.conStartDateTime, initialData.conNumDays]
   );
 
   const dragRef = useRef<DragTracking | null>(null);
@@ -222,17 +233,11 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
   }
 
   async function performEdit(plan: EditPlan, source: DragSource, ignoreConflicts: boolean) {
-    // Snapshot the swap counterpart where it is now, before the optimistic update below moves it.
-    if (plan.counterpart && !prefersReducedMotion()) {
-      const start = captureSwapCounterpart(plan.counterpart.sessionid, plan.counterpart.destination);
-      if (start) {
-        pendingSwapAnimationRef.current = start;
-        setAnimatingSessionId(start.sessionid);
-      }
-    }
-    // Optimistic: show the result immediately, then replace it with the server's fresh schedule.
-    setSchedule(plan.optimisticSchedule);
-    setSessionsToBeScheduled((prev) => applyPlanToPool(prev, plan));
+    // Optimistic: show the result immediately (except a swap counterpart's move), then replace it with the server's
+    // fresh schedule.
+    const interimPlan = withoutCounterpartMove(plan, latestRef.current.schedule);
+    setSchedule(interimPlan.optimisticSchedule);
+    setSessionsToBeScheduled((prev) => applyPlanToPool(prev, interimPlan));
     setPendingEdit(null);
     if (plan.edits.length === 0) return; // client-side only (an unscheduled session dropped on the cabinet)
 
@@ -242,6 +247,17 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
     setSaving(true);
     try {
       const response = await editSchedule(plan.edits, ignoreConflicts);
+      if (response.status === 'applied' && plan.counterpart) {
+        // Snapshot the swap counterpart where it still is, before the server's schedule below moves it.
+        const start = prefersReducedMotion()
+          ? null
+          : captureSwapCounterpart(plan.counterpart.sessionid, plan.counterpart.destination);
+        if (start) {
+          pendingSwapAnimationRef.current = start;
+          setAnimatingSessionId(start.sessionid);
+        }
+        setSessionsToBeScheduled((prev) => applyPlanToPool(prev, plan));
+      }
       // Every session named in an edit -- the dragged one and any swap counterpart -- counts as touched.
       receiveServerSchedule(response.schedule, new Set(plan.edits.map((edit) => edit.sessionid)));
       if (response.status === 'applied') {
@@ -325,12 +341,19 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
     }
   }
 
-  // While dragging: where a release would land. While a conflicting edit awaits Save Anyway / Cancel: where it
-  // would have landed (the grid itself has reverted to the confirmed schedule by then).
+  // While dragging: where a release would land -- a placement, or the slot taken over by a swap. While a
+  // conflicting edit awaits Save Anyway / Cancel: where it would have landed (the grid itself has reverted to the
+  // confirmed schedule by then).
   const dropPreview: DropPreview | null =
     activeSource && currentDrop?.kind === 'place'
       ? { roomid: currentDrop.roomid, startMinutes: currentDrop.startMinutes, durationMinutes: sourceDuration(activeSource) }
-      : (pendingEdit?.plan.landing ?? null);
+      : activeSource && currentDrop?.kind === 'swap'
+        ? {
+            roomid: currentDrop.target.roomid,
+            startMinutes: currentDrop.target.startMinutes,
+            durationMinutes: sourceDuration(activeSource),
+          }
+        : (pendingEdit?.plan.landing ?? null);
   const dropLabel = activeSource && currentDrop ? describeDrop(planContext, activeSource, currentDrop) : null;
   const panelDragOver = currentDrop?.kind === 'cabinet' || currentDrop?.kind === 'pool' ? currentDrop.kind : null;
 
@@ -361,6 +384,8 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
             tags={initialData.tags}
             types={initialData.types}
             divisions={initialData.divisions}
+            trackTagUsage={initialData.trackTagUsage}
+            sessionBoxFields={initialData.sessionBoxFields}
             sessionsToBeScheduled={sessionsToBeScheduled}
             onSearchResults={handleSearchResults}
             onClearAll={handleClearAll}
@@ -390,6 +415,7 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
           <Grid
             data={initialData}
             schedule={schedule}
+            displaySegments={displaySegments}
             visibleRoomIds={visibleRoomIds}
             onInfoClick={handleInfoClick}
             dropPreview={dropPreview}
@@ -401,7 +427,7 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
       </div>
       <DragOverlay dropAnimation={null} style={{ pointerEvents: 'none' }}>
         {activeSource && (
-          <DragPreview source={activeSource} trackTagUsage={initialData.trackTagUsage} label={dropLabel} />
+          <DragPreview source={activeSource} fields={initialData.sessionBoxFields} label={dropLabel} />
         )}
       </DragOverlay>
     </DndContext>

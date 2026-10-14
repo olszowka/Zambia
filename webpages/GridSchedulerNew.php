@@ -11,7 +11,14 @@ require_once('gridScheduler_functions.php');
 
 staff_header($title, 'bs5');
 
-$bootstrapData = gridScheduler_buildData();
+try {
+    $bootstrapData = gridScheduler_buildData();
+} catch (GridSchedulerConfigException $e) {
+    echo "<div class=\"alert alert-danger m-3\">The Grid Scheduler can't be shown because of a configuration problem in db_name.php: ";
+    echo htmlspecialchars($e->getMessage(), ENT_QUOTES);
+    echo "</div>\n</body>\n</html>\n";
+    exit();
+}
 ?>
 <script id="grid-scheduler-data" type="application/json"><?php
     echo json_encode($bootstrapData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);

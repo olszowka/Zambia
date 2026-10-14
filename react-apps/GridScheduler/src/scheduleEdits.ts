@@ -30,13 +30,16 @@ export interface PlanContext {
   schedule: ScheduleItemData[];
   rooms: RoomData[];
   conStartDateTime: string;
+  // False for a one-day con (CON_NUM_DAYS 1), where the weekday adds nothing to the drop label or edit messages.
+  showWeekday: boolean;
 }
 
 // Optimistically-inserted rows need a scheduleid before the server assigns one; negative so they can never
 // collide with a real one. They're replaced wholesale by the server's fresh schedule once the edit is saved.
 let nextTemporaryScheduleId = -1;
 
-export function formatDayTime(conStartDateTime: string, absoluteMinutes: number): string {
+export function formatDayTime(conStartDateTime: string, absoluteMinutes: number, showWeekday: boolean): string {
+  if (!showWeekday) return formatTimeOfDay(absoluteMinutes);
   // conStartDateTime is local time ("YYYY-MM-DDTHH:MM:SS", no zone), which Date parses as local -- only the
   // calendar day is used here, so DST shifts don't matter.
   const day = new Date(conStartDateTime);
@@ -48,7 +51,7 @@ export function formatDayTime(conStartDateTime: string, absoluteMinutes: number)
 function describeSlot(ctx: PlanContext, roomid: number, startMinutes: number, durationMinutes: number): string {
   const roomname = ctx.rooms.find((room) => room.roomid === roomid)?.roomname ?? `room ${roomid}`;
   const endTime = formatTimeOfDay(startMinutes + durationMinutes);
-  return `${roomname}, ${formatDayTime(ctx.conStartDateTime, startMinutes)}–${endTime}`;
+  return `${roomname}, ${formatDayTime(ctx.conStartDateTime, startMinutes, ctx.showWeekday)}–${endTime}`;
 }
 
 function describeSession(session: { sessionid: number; title: string }): string {
@@ -63,6 +66,7 @@ function toPoolEntry(item: ScheduleItemData): SessionSearchResult {
     typename: item.typename,
     divisionname: item.divisionname,
     durationMinutes: item.durationMinutes,
+    tagnames: item.tagnames,
   };
 }
 
@@ -78,7 +82,7 @@ function moveItem(schedule: ScheduleItemData[], scheduleid: number, roomid: numb
 export function describeDrop(ctx: PlanContext, source: DragSource, drop: DropResolution): string {
   switch (drop.kind) {
     case 'place':
-      return formatDayTime(ctx.conStartDateTime, drop.startMinutes);
+      return formatDayTime(ctx.conStartDateTime, drop.startMinutes, ctx.showWeekday);
     case 'swap':
       return `Swap with ${drop.target.sessionid}`;
     case 'cabinet':
@@ -221,6 +225,23 @@ export function applyPlanToPool(pool: SessionSearchResult[], plan: EditPlan): Se
   const addIds = new Set(plan.poolAdd.map((session) => session.sessionid));
   const kept = pool.filter((session) => !plan.poolRemoveIds.includes(session.sessionid) && !addIds.has(session.sessionid));
   return [...plan.poolAdd, ...kept];
+}
+
+// Swap Mode: what to show while a plan's edits are being saved -- all of it except the counterpart's move. The
+// counterpart moves (animated) only once the server has applied the edits, so an edit that hits conflicts never
+// moves it, and Save Anyway moves it just once.
+export function withoutCounterpartMove(plan: EditPlan, schedule: ScheduleItemData[]): EditPlan {
+  const counterpart = plan.counterpart;
+  if (!counterpart) return plan;
+  const current = schedule.filter((item) => item.sessionid === counterpart.sessionid);
+  return {
+    ...plan,
+    optimisticSchedule: [
+      ...plan.optimisticSchedule.filter((item) => item.sessionid !== counterpart.sessionid),
+      ...current,
+    ],
+    poolAdd: plan.poolAdd.filter((session) => session.sessionid !== counterpart.sessionid),
+  };
 }
 
 // Undoes applyPlanToPool() when the server didn't apply the plan. Removed sessions come back at the front of the

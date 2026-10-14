@@ -1,4 +1,4 @@
-import type { DisplaySegment } from './timeGrid';
+import { gridRowStart, type DisplaySegment } from './timeGrid';
 import type { DragSource, DropResolution, ScheduleItemData, SnapMode } from './types';
 import { PIXELS_PER_MINUTE } from './layoutConstants';
 
@@ -78,7 +78,7 @@ export function computeDropStart({
   if (occupant) {
     return occupant.startMinutes;
   }
-  let start = segment.startMinutes + Math.floor((probe - segment.startMinutes) / resolution) * resolution;
+  let start = gridRowStart(segment, probe, resolution);
   for (const item of roomItems) {
     const itemEnd = item.startMinutes + item.durationMinutes;
     if (itemEnd > start && itemEnd <= probe) {
@@ -154,16 +154,24 @@ export function resolveDrop(args: ResolveDropArgs): DropResolution | null {
   }
 
   // Swap Mode off (or no swap target): place by time, whether the pointer is over empty grid or another
-  // session -- computeDropStart() handles landing alongside an existing session.
+  // session -- computeDropStart() handles landing alongside an existing session. In Swap Mode, a landing at an
+  // occupant's start time becomes a swap instead.
   const columnTop = target.columnEl.getBoundingClientRect().top;
   const located = displayOffsetToAbsolute(args.displaySegments, (args.boxTop - columnTop) / PIXELS_PER_MINUTE);
   if (!located) return null;
+  const roomItems = schedule.filter((item) => item.roomid === target.roomid && item.scheduleid !== draggedScheduleId);
   const startMinutes = computeDropStart({
     segment: located.segment,
     topMinutes: located.minutes,
     snapMode: args.snapMode,
     gridLineResolutionMinutes: args.gridLineResolutionMinutes,
-    roomItems: schedule.filter((item) => item.roomid === target.roomid && item.scheduleid !== draggedScheduleId),
+    roomItems,
   });
+  if (swapMode) {
+    // Landing exactly on an occupant's start time (e.g. Grid snap's "alongside" rule, with the pointer just off the
+    // occupant's box) swaps with it too, the same as dropping on its box.
+    const occupant = roomItems.find((item) => item.startMinutes === startMinutes);
+    if (occupant) return { kind: 'swap', target: occupant };
+  }
   return { kind: 'place', roomid: target.roomid, startMinutes };
 }

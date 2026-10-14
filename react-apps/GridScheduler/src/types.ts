@@ -21,6 +21,8 @@ export interface ScheduleItemData {
   trackname: string;
   typename: string;
   divisionname: string;
+  // In Tags.display_order.
+  tagnames: string[];
 }
 
 export interface DaySegment {
@@ -38,16 +40,24 @@ export interface LookupEntry {
   name: string;
 }
 
+// A field a session box can show -- see gridScheduler_getSessionBoxFields() in webpages/gridScheduler_functions.php,
+// which validates GRID_SESSION_BOX_FIELDS against the same list.
+export type SessionBoxField = 'title' | 'sessionid' | 'type' | 'track' | 'tags' | 'division' | 'duration';
+
 export interface BootstrapData {
   conStartDateTime: string;
   conNumDays: number;
-  // Grid-line resolution (STANDARD_BLOCK_LENGTH today) -- one of three distinct, similarly-named
+  // Grid-line resolution (GRID_SPACING_MINUTES, else STANDARD_BLOCK_LENGTH) -- one of three distinct, similarly-named
   // resolutions in the grid scheduler; see the "Time resolutions" section of the rewrite plan. Do not
   // conflate with snap resolution (the page-level Snap Mode control -- see computeDropStart() in dropTarget.ts)
   // or display resolution (DISPLAY_RESOLUTION_MINUTES in components/Grid.tsx).
   gridLineResolutionMinutes: number;
   trackTagUsage: TrackTagUsage;
+  // As configured (GRID_DAY_SEGMENTS or the legacy day-time constants). The grid widens them to cover any session
+  // scheduled outside them -- see coverScheduledSessions() in timeGrid.ts.
   daySegments: DaySegment[];
+  // Lines of fields: GRID_SESSION_BOX_FIELDS as configured, or the server's trackTagUsage-based default.
+  sessionBoxFields: SessionBoxField[][];
   rooms: RoomData[];
   schedule: ScheduleItemData[];
   tracks: LookupEntry[];
@@ -66,6 +76,7 @@ export interface SessionSearchResult {
   typename: string;
   divisionname: string;
   durationMinutes: number;
+  tagnames: string[];
 }
 
 export interface SessionInfoParticipant {
