@@ -73,7 +73,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<link rel=\"stylesheet\" href=\"javascript/ConfigurePermissions/dist/bundle.css\" type=\"text/css\">\n";
             echo "<script type=\"module\" src=\"javascript/ConfigurePermissions/dist/bundle.js\"></script>\n";
             break;
-        case "Grid Scheduler (New)":
+        case "Grid Scheduler":
             echo "<link rel=\"stylesheet\" href=\"javascript/GridScheduler/dist/bundle.css\" type=\"text/css\">\n";
             echo "<script type=\"module\" src=\"javascript/GridScheduler/dist/bundle.js\"></script>\n";
             break;
@@ -138,7 +138,6 @@ function load_internal_javascript($title, $isDataTables = false) {
             }
     }
 ?>
-<script src="javascript/staffMaintainSchedule.js"></script>
 <script src="javascript/partPanelInterests.js"></script>
 <?php
 }

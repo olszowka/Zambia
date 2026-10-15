@@ -10,7 +10,7 @@ import {
   totalDisplayMinutes,
 } from '../timeGrid';
 import SessionBox from './SessionBox';
-import { PIXELS_PER_MINUTE, ROOM_COLUMN_WIDTH_PX } from '../layoutConstants';
+import { PIXELS_PER_MINUTE, ROOM_COLUMN_WIDTH_PX, TIME_COLUMN_WIDTH_PX } from '../layoutConstants';
 
 // Display resolution: how precisely a scheduled session's position/duration is rendered. This is one of
 // three distinct, similarly-named resolutions in the grid scheduler -- see the "Time resolutions"
@@ -27,10 +27,6 @@ const DISPLAY_RESOLUTION_MINUTES = 1;
 function roundToDisplayResolution(minutes: number): number {
   return Math.round(minutes / DISPLAY_RESOLUTION_MINUTES) * DISPLAY_RESOLUTION_MINUTES;
 }
-// Wide enough for the longest day name alone ("Wednesday", ~80px at the axis's font-size -- day and
-// time are never on the same line, see buildHourTicks()) to fit on one line -- too narrow and it wraps
-// to two lines and collides with the tick below it.
-const TIME_COLUMN_WIDTH_PX = 90;
 
 // Where the session being dragged would land, drawn as an outline in its target room column.
 export interface DropPreview {

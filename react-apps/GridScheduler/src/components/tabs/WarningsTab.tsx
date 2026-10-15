@@ -1,5 +1,5 @@
 // The outcome of the most recent schedule edit -- replaced on every edit, like the legacy page's
-// editScheduleCallback() (webpages/javascript/staffMaintainSchedule.js).
+// editScheduleCallback() (the deleted webpages/javascript/staffMaintainSchedule.js).
 export interface EditOutcome {
   kind: 'applied' | 'error';
   messages: string[];

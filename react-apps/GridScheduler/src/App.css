@@ -19,8 +19,7 @@
   flex-direction: row;
 }
 
-/* 280px matches the legacy page's #mainContentContainer left column
-   (webpages/StaffMaintainSchedule.php). */
+/* 280px matches the legacy (pre-React) Grid Scheduler's left column. */
 .grid-scheduler-left-panel {
   flex: 0 0 280px;
   min-width: 0;
@@ -263,8 +262,7 @@
   font-size: 0.8rem;
 }
 
-/* Info tab -- matches the legacy .infolabel/.infofield/.inforow classes' intent
-   (webpages/xsl/schedulerRetrSessInfo.xsl) without depending on their actual CSS. */
+/* Info tab */
 .grid-scheduler-info-tab-empty,
 .grid-scheduler-warnings-tab-empty {
   color: #666;
@@ -302,6 +300,37 @@
   justify-content: center;
   gap: 6px;
   margin-top: 6px;
+}
+
+/* .infolabel/.infofield/.inforow keep the look of the legacy page's Info tab (ported from its now-deleted
+   staffMaintainSchedule.css); the font-weight/margin rules after them are this app's own adjustments. */
+.grid-scheduler-info-tab .infofield,
+.grid-scheduler-info-tab .inforow,
+.grid-scheduler-info-tab .infolabel {
+  font-family: verdana, arial, sans-serif;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.grid-scheduler-info-tab .infolabel {
+  color: #00b0d0;
+  font-style: italic;
+  padding: 1px 0;
+}
+
+.grid-scheduler-info-tab span.infolabel,
+.grid-scheduler-info-tab .infofield {
+  display: inline-block;
+}
+
+.grid-scheduler-info-tab .infofield,
+.grid-scheduler-info-tab .inforow {
+  color: black;
+}
+
+.grid-scheduler-info-tab .inforow {
+  display: block;
+  padding-bottom: 1px;
 }
 
 .grid-scheduler-info-tab .infolabel {

@@ -1,11 +1,11 @@
 <?php
 // Copyright (c) 2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 
-// Shared by GridSchedulerNew.php (initial page bootstrap) and GridSchedulerAjax.php (refresh actions) --
-// the new React-based replacement for the Grid Scheduler page (see webpages/StaffMaintainSchedule.php /
-// staffMaintainScheduleSubmit.php for the implementation being replaced).
+// Shared by StaffMaintainSchedule.php (initial page bootstrap) and GridSchedulerAjax.php (refresh actions) --
+// the server side of the React-based Grid Scheduler (react-apps/GridScheduler). It replaced the legacy
+// server-rendered implementation (StaffMaintainSchedule_FNC.php / staffMaintainScheduleSubmit.php, since deleted).
 
-// Grid configuration problems found in db_name.php -- GridSchedulerNew.php catches this and shows the message in
+// Grid configuration problems found in db_name.php -- StaffMaintainSchedule.php catches this and shows the message in
 // place of the grid, so a typo in a GRID_* constant is reported plainly rather than producing a broken grid.
 class GridSchedulerConfigException extends Exception {
 }
@@ -100,11 +100,12 @@ function gridScheduler_daySegmentsFromConfig($config) {
     return $segments;
 }
 
-// Unlike the legacy grid (getScheduleTimesArray() in staffMaintainScheduleSubmit.php), this doesn't trim or extend days
-// based on what's scheduled; the client's coverScheduledSessions() handles sessions outside these times instead. If a
-// day's stop time runs past the next day's start, the earlier day is cut short there so the segments don't overlap.
-// A day whose stop time isn't after its start time (e.g. CON_NUM_DAYS 1 with LAST_DAY_STOP_TIME "16:00" before
-// FIRST_DAY_START_TIME "17:30") is a configuration error, rather than a day silently left off the grid.
+// Unlike the legacy grid (getScheduleTimesArray() in the deleted staffMaintainScheduleSubmit.php), this doesn't trim
+// or extend days based on what's scheduled; the client's coverScheduledSessions() handles sessions outside these
+// times instead. If a day's stop time runs past the next day's start, the earlier day is cut short there so the
+// segments don't overlap. A day whose stop time isn't after its start time (e.g. CON_NUM_DAYS 1 with
+// LAST_DAY_STOP_TIME "16:00" before FIRST_DAY_START_TIME "17:30") is a configuration error, rather than a day
+// silently left off the grid.
 function gridScheduler_daySegmentsFromLegacyConstants() {
     $segments = array();
     $firstDayStartMinutes = gridScheduler_timeStringToMinutes(FIRST_DAY_START_TIME);
@@ -282,7 +283,7 @@ function gridScheduler_buildData() {
     return $data;
 }
 
-// Ports webpages/staffMaintainScheduleSubmit.php's retrieveSessions() to JSON output with bound
+// Ports the legacy staffMaintainScheduleSubmit.php's retrieveSessions() to JSON output with bound
 // parameters instead of directly-interpolated SQL (the legacy version int-casts ids via
 // getInt()/getArrayOfInts() but still string-builds the query by hand). Every filter is optional; only
 // unscheduled sessions in a schedulable status are ever considered.
@@ -385,7 +386,7 @@ function gridScheduler_searchSessions() {
     return $sessions;
 }
 
-// Ports webpages/staffMaintainScheduleSubmit.php's retrieveSessionInfo() to JSON output with bound
+// Ports the legacy staffMaintainScheduleSubmit.php's retrieveSessionInfo() to JSON output with bound
 // parameters -- the legacy version reads $_POST["sessionid"] straight into the query with no int-cast at
 // all, a real (if login-gated) SQL injection hole this rewrite does not carry forward. Returns null if no
 // such session exists.

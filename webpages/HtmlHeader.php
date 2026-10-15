@@ -35,7 +35,6 @@ function html_header($title, $bootstrapVersion, $isDataTables = false, $reportCo
 <?php } else { ?>
     <link rel="stylesheet" href="css/zambia_bs5_customizations.css" type="text/css" media="screen" />
 <?php } ?>
-    <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
 <?php
     if (defined('CON_THEME') && CON_THEME !== "") {
 ?>

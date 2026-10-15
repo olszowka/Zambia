@@ -12,3 +12,9 @@ export const PIXELS_PER_MINUTE = 0.984;
 // the session box width used by the abandoned react_grid_scheduler branch's schedulableSessionStyle
 // (ReactApp/zambia-grid-scheduler/src/render_sessions/sessionStyles.ts).
 export const ROOM_COLUMN_WIDTH_PX = 260;
+
+// The sticky time axis column at the grid's left edge. Wide enough for the longest day name alone ("Wednesday",
+// ~80px at the axis's font-size -- day and time are never on the same line, see buildHourTicks()) to fit on one
+// line -- too narrow and it wraps to two lines and collides with the tick below it. Also offsets the left edge
+// auto-scroll band (App.tsx's autoScrollOptionsFor()), since the axis covers the grid's leftmost pixels.
+export const TIME_COLUMN_WIDTH_PX = 90;

@@ -18,7 +18,6 @@ function staff_header($title, $bootstrapVersion, $is_data_tables = false, $repor
     if ($fullPage) {
 ?>
 <body <?php echo $bodyClass; ?>>
-    <div id="myhelper"></div><!-- used for drag-and-drop operations -->
     <div id="headerContainer">
 <?php
     commonHeader('Staff', $topSectionBehavior, $bootstrapVersion);

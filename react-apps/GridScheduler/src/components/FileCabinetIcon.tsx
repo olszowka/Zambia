@@ -6,7 +6,7 @@ interface FileCabinetIconProps {
   dragOver: boolean;
 }
 
-// Swaps between the open/closed cabinet images on hover, matching webpages/StaffMaintainSchedule.php's
+// Swaps between the open/closed cabinet images on hover, matching the legacy (pre-React) Grid Scheduler's
 // fileCabinetIMG / staffMaintainSchedule.js's fileCabinetSwap(). Dropping a session here removes it from the
 // schedule (or just from the pool, if it wasn't scheduled) -- see planDrop() in scheduleEdits.ts.
 export default function FileCabinetIcon({ dragOver }: FileCabinetIconProps) {

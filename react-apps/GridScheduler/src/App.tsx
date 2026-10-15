@@ -33,6 +33,7 @@ import {
 } from './scheduleEdits';
 import { captureSwapCounterpart, prefersReducedMotion, runSwapAnimation, type SwapAnimationStart } from './swapAnimation';
 import Grid, { type DropPreview } from './components/Grid';
+import { TIME_COLUMN_WIDTH_PX } from './layoutConstants';
 import LeftPanel from './components/LeftPanel';
 import DragPreview from './components/DragPreview';
 import type { EditOutcome } from './components/tabs/WarningsTab';
@@ -60,9 +61,26 @@ interface PendingEdit {
 // the pointer is horizontally inside that container. So without this, dragging a pool session over the grid at the
 // height of the pool's top or bottom edge scrolled the pool. Scrolling the pool mid-drag is never useful anyway:
 // the whole list is a single drop target ("return to list").
-const AUTO_SCROLL_OPTIONS = {
-  threshold: { x: 0.08, y: 0.08 },
-  canScroll: (element: Element) => element.classList.contains('grid-scheduler-scroll'),
+const canAutoScroll = (element: Element) => element.classList.contains('grid-scheduler-scroll');
+
+// @dnd-kit's edge band is a fraction of the scroll container's size, measured from each edge, and its scroll speed
+// rises from 0 at the band's inner edge. A plain 8% left band (~90-100px on a typical window) lies almost entirely
+// under the sticky time axis, so over the leftmost room column the speed is at or below 1px per tick. Chrome
+// accumulates such fractional scrolls, but Safari drops them, so there the grid stopped short of its left end.
+// Widening the horizontal band by the axis width puts the 8% band beyond the axis, over the room columns. The right
+// band widens the same way (@dnd-kit has a single x threshold), which is harmless.
+const AUTO_SCROLL_BAND_FRACTION = 0.08;
+function autoScrollOptionsFor(scrollContainerWidth: number) {
+  const roomAreaWidth = Math.max(scrollContainerWidth - TIME_COLUMN_WIDTH_PX, 1);
+  const bandWidth = TIME_COLUMN_WIDTH_PX + AUTO_SCROLL_BAND_FRACTION * roomAreaWidth;
+  return {
+    threshold: { x: Math.min(bandWidth / Math.max(scrollContainerWidth, 1), 0.45), y: AUTO_SCROLL_BAND_FRACTION },
+    canScroll: canAutoScroll,
+  };
+}
+const DEFAULT_AUTO_SCROLL_OPTIONS = {
+  threshold: { x: AUTO_SCROLL_BAND_FRACTION, y: AUTO_SCROLL_BAND_FRACTION },
+  canScroll: canAutoScroll,
 };
 
 function dropKey(drop: DropResolution | null): string {
@@ -90,6 +108,7 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
   const [sessionInfoLoading, setSessionInfoLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>('rooms');
   const [swapMode, setSwapMode] = useState(false);
+  const [autoScrollOptions, setAutoScrollOptions] = useState(DEFAULT_AUTO_SCROLL_OPTIONS);
   const [snapMode, setSnapMode] = useState<SnapMode>('grid');
   const [saving, setSaving] = useState(false);
   const [lastOutcome, setLastOutcome] = useState<EditOutcome | null>(null);
@@ -194,6 +213,9 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
     dropRef.current = null;
     setCurrentDrop(null);
     setActiveSource(source);
+    // Measured per drag rather than tracked, since the window rarely resizes mid-drag.
+    const scrollContainer = document.querySelector('.grid-scheduler-scroll');
+    if (scrollContainer) setAutoScrollOptions(autoScrollOptionsFor(scrollContainer.clientWidth));
   }
 
   function endDrag() {
@@ -363,7 +385,7 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
       // Only used to tell @dnd-kit's auto-scroller which container the pointer is over (see Grid.tsx's
       // droppable); drop targets themselves are resolved by dropTarget.ts.
       collisionDetection={pointerWithin}
-      autoScroll={AUTO_SCROLL_OPTIONS}
+      autoScroll={autoScrollOptions}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragCancel={endDrag}
