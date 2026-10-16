@@ -7,13 +7,26 @@ interface OptionsMenuProps {
   onSwapModeChange: (swapMode: boolean) => void;
   snapMode: SnapMode;
   onSnapModeChange: (snapMode: SnapMode) => void;
+  // False when DEFAULT_DURATION is missing or longer than the grid spacing, so no session could ever qualify; the
+  // option is left out then.
+  gridSimplificationAvailable: boolean;
+  gridSimplification: boolean;
+  onGridSimplificationChange: (gridSimplification: boolean) => void;
 }
 
-// Page-level scheduling options (Swap Mode, Snap), in a dropdown next to the pool's Clear All button. Styled with
+// Page-level scheduling options (Swap Mode, Snap, Grid Simplification), in a dropdown next to the pool's Clear All button. Styled with
 // Bootstrap's dropdown classes but opened/closed by React state rather than Bootstrap's JS, so it doesn't depend
 // on bootstrap.bundle being loaded or on Bootstrap's auto-close treating clicks on the controls inside as "outside".
 // Stays open while its controls are used; closes on a click elsewhere or Escape.
-export default function OptionsMenu({ swapMode, onSwapModeChange, snapMode, onSnapModeChange }: OptionsMenuProps) {
+export default function OptionsMenu({
+  swapMode,
+  onSwapModeChange,
+  snapMode,
+  onSnapModeChange,
+  gridSimplificationAvailable,
+  gridSimplification,
+  onGridSimplificationChange,
+}: OptionsMenuProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -68,6 +81,17 @@ export default function OptionsMenu({ swapMode, onSwapModeChange, snapMode, onSn
               ))}
             </select>
           </label>
+          {gridSimplificationAvailable && (
+            <label className="grid-scheduler-options-row">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                checked={gridSimplification}
+                onChange={(e) => onGridSimplificationChange(e.target.checked)}
+              />
+              Grid Simplification
+            </label>
+          )}
         </div>
       )}
     </div>

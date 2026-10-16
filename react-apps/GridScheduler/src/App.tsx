@@ -20,7 +20,8 @@ import type {
   TabKey,
 } from './types';
 import { editSchedule, getSchedule, getSessionInfo } from './api';
-import { buildDisplaySegments, coverScheduledSessions } from './timeGrid';
+import { buildDisplaySegments, coverScheduledSessions, gridSimplificationAvailable } from './timeGrid';
+import { loadPreferences, savePreferences } from './preferences';
 import { resolveDrop } from './dropTarget';
 import {
   applyPlanToPool,
@@ -100,16 +101,30 @@ function sourceDuration(source: DragSource): number {
 }
 
 export default function App({ initialData }: { initialData: BootstrapData }) {
-  // Starts empty -- no room columns shown until staff explicitly check them in the Rooms tab.
-  const [visibleRoomIds, setVisibleRoomIds] = useState<Set<number>>(() => new Set());
+  // Swap Mode, Snap, Grid Simplification and the Rooms tab's checkboxes are remembered per user (preferences.ts).
+  // With nothing saved, no room columns are shown until staff check them in the Rooms tab.
+  const [savedPreferences] = useState(() =>
+    loadPreferences(initialData.badgeid, initialData.rooms.map((room) => room.roomid))
+  );
+  const [visibleRoomIds, setVisibleRoomIds] = useState<Set<number>>(() => new Set(savedPreferences.visibleRoomIds));
   const [schedule, setSchedule] = useState<ScheduleItemData[]>(initialData.schedule);
   const [sessionsToBeScheduled, setSessionsToBeScheduled] = useState<SessionSearchResult[]>([]);
   const [sessionInfo, setSessionInfo] = useState<SessionInfoData | null>(null);
   const [sessionInfoLoading, setSessionInfoLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>('rooms');
-  const [swapMode, setSwapMode] = useState(false);
+  const [swapMode, setSwapMode] = useState(savedPreferences.swapMode);
   const [autoScrollOptions, setAutoScrollOptions] = useState(DEFAULT_AUTO_SCROLL_OPTIONS);
-  const [snapMode, setSnapMode] = useState<SnapMode>('grid');
+  const [snapMode, setSnapMode] = useState<SnapMode>(savedPreferences.snapMode);
+  const [gridSimplification, setGridSimplification] = useState(savedPreferences.gridSimplification);
+
+  useEffect(() => {
+    savePreferences(initialData.badgeid, {
+      swapMode,
+      snapMode,
+      gridSimplification,
+      visibleRoomIds: [...visibleRoomIds],
+    });
+  }, [initialData.badgeid, swapMode, snapMode, gridSimplification, visibleRoomIds]);
   const [saving, setSaving] = useState(false);
   const [lastOutcome, setLastOutcome] = useState<EditOutcome | null>(null);
   const [pendingEdit, setPendingEdit] = useState<PendingEdit | null>(null);
@@ -433,6 +448,12 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
             onSwapModeChange={setSwapMode}
             snapMode={snapMode}
             onSnapModeChange={setSnapMode}
+            gridSimplificationAvailable={gridSimplificationAvailable(
+              initialData.defaultDurationMinutes,
+              initialData.gridLineResolutionMinutes
+            )}
+            gridSimplification={gridSimplification}
+            onGridSimplificationChange={setGridSimplification}
           />
           <Grid
             data={initialData}
@@ -444,6 +465,7 @@ export default function App({ initialData }: { initialData: BootstrapData }) {
             dragDisabled={dragDisabled}
             movedSessionIds={movedSessionIds}
             animatingSessionId={animatingSessionId}
+            gridSimplification={gridSimplification}
           />
         </div>
       </div>

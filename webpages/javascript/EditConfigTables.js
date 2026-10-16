@@ -213,9 +213,11 @@ function headerMinWidth(title) {
         headerMeasureCanvas = document.createElement("canvas");
     }
     var context = headerMeasureCanvas.getContext("2d");
-    context.font = "14px Arial";
+    // Measure in the font the header is actually drawn in (bold, the page's font family), which is noticeably wider
+    // than plain Arial for long names.
+    context.font = "bold 14px " + getComputedStyle(document.body).fontFamily;
     var textWidth = context.measureText(title).width;
-    return Math.ceil(textWidth) + 25; // account for header cell padding
+    return Math.ceil(textWidth) + 15; // header cell padding (8px) and border (1px), plus a little room to spare
 }
 
 // Rooms has many text columns; the normal width formula makes the table wider

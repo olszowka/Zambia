@@ -92,3 +92,20 @@ line to be the tags.  More or fewer lines may be specified. The fields you may c
 sessionid, type, track, tags, division,` and `duration.` Regardless of configuration, the upper left
 corner of the session box will always display the info icon which, when clicked, triggers the "Info" tab
 to display a large amount of information regarding the session.
+
+## Grid Simplification
+
+When a room is mostly scheduled in step with the grid, the gap between a session's end and the next grid
+line can make the grid harder to read. The _Grid Simplification_ option in the page's _Options_ menu (off
+when the page loads) draws such a session as if it lasted until the next grid line. The part of the box past
+the session's real end is shaded, and the schedule itself is unchanged. A session is drawn this way only when
+all of the following hold:
+* The room's `allow_grid_simplification` is 1 (Rooms table, editable in the _Configuration Table Editor_).
+* The session's type's `allow_grid_simplification` is 1 (Types table, likewise).
+* The session's duration is exactly `DEFAULT_DURATION`.
+* `DEFAULT_DURATION` is no longer than the grid spacing. Otherwise the option isn't offered at all.
+* The session starts on a grid line (not inside a gap between segments of a day).
+* No other session in the room overlaps the session or the time after it, up to the next grid line.
+
+Both `allow_grid_simplification` columns default to 0, so the option has no effect until an administrator turns it
+on for some rooms and types (added by schema patch `77_grid_simplification.sql`).

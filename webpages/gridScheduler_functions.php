@@ -47,6 +47,21 @@ function gridScheduler_getGridLineResolutionMinutes() {
     return empty($resolution) ? 30 : $resolution;
 }
 
+// DEFAULT_DURATION (the duration a new session starts with, in DURATION_IN_MINUTES's format) in minutes, or null if
+// it's missing or doesn't parse. Grid Simplification only applies to sessions of exactly this duration -- see
+// simplifiedEndMinutes() in react-apps/GridScheduler/src/timeGrid.ts.
+function gridScheduler_getDefaultDurationMinutes() {
+    if (!defined("DEFAULT_DURATION")) {
+        return null;
+    }
+    $duration = parse_duration_for_db(DEFAULT_DURATION);
+    if ($duration === false) {
+        return null;
+    }
+    sscanf($duration, "%d:%d", $hours, $minutes);
+    return $hours * 60 + $minutes;
+}
+
 // The grid's displayed time ranges, in minutes since CON_START_DATIM, in order and never overlapping. Anything
 // outside them (overnight, a lunch break) isn't drawn at all. The client widens a segment if a session is scheduled
 // outside every segment, so nothing is ever drawn at the wrong time -- see coverScheduledSessions() in timeGrid.ts.
@@ -217,7 +232,7 @@ function gridScheduler_fetchSchedule() {
 SELECT
         SCH.scheduleid, SCH.roomid, SCH.starttime, S.sessionid, S.title,
         TIME_TO_SEC(S.duration) / 60 AS durationMinutes,
-        TR.trackname, TY.typename, D.divisionname
+        TR.trackname, TY.typename, TY.allow_grid_simplification, D.divisionname
     FROM
              Schedule SCH
         JOIN Sessions S USING (sessionid)
@@ -240,6 +255,7 @@ EOD;
             "durationMinutes" => intval($row["durationMinutes"]),
             "trackname" => $row["trackname"],
             "typename" => $row["typename"],
+            "typeGridSimplification" => $row["allow_grid_simplification"] == 1,
             "divisionname" => $row["divisionname"],
             "tagnames" => isset($tagNames[$sessionId]) ? $tagNames[$sessionId] : array(),
         );
@@ -252,21 +268,24 @@ EOD;
 // if a GRID_* constant in db_name.php is invalid.
 function gridScheduler_buildData() {
     $data = array();
+    $data["badgeid"] = $_SESSION['badgeid'];
     $data["conStartDateTime"] = str_replace(" ", "T", CON_START_DATIM);
     $data["conNumDays"] = CON_NUM_DAYS;
     $data["gridLineResolutionMinutes"] = gridScheduler_getGridLineResolutionMinutes();
     $data["trackTagUsage"] = TRACK_TAG_USAGE;
     $data["daySegments"] = gridScheduler_getDaySegments();
     $data["sessionBoxFields"] = gridScheduler_getSessionBoxFields();
+    $data["defaultDurationMinutes"] = gridScheduler_getDefaultDurationMinutes();
 
     $rooms = array();
-    $query = "SELECT roomid, roomname, display_order FROM Rooms WHERE is_scheduled = 1 ORDER BY display_order;";
+    $query = "SELECT roomid, roomname, display_order, allow_grid_simplification FROM Rooms WHERE is_scheduled = 1 ORDER BY display_order;";
     $result = mysqli_query_with_error_handling($query, true, true);
     while ($row = mysqli_fetch_assoc($result)) {
         $rooms[] = array(
             "roomid" => intval($row["roomid"]),
             "roomname" => $row["roomname"],
             "display_order" => is_null($row["display_order"]) ? null : intval($row["display_order"]),
+            "gridSimplification" => $row["allow_grid_simplification"] == 1,
         );
     }
     mysqli_free_result($result);
@@ -355,7 +374,7 @@ function gridScheduler_searchSessions() {
         $where .= " AND EXISTS (SELECT * FROM ParticipantOnSession WHERE sessionid = S.sessionid)";
     }
 
-    $query = "SELECT S.sessionid, S.title, TR.trackname, TY.typename, D.divisionname,"
+    $query = "SELECT S.sessionid, S.title, TR.trackname, TY.typename, TY.allow_grid_simplification, D.divisionname,"
         . " TIME_TO_SEC(S.duration) / 60 AS durationMinutes"
         . " FROM Sessions S JOIN Tracks TR USING (trackid) JOIN Types TY USING (typeid) JOIN Divisions D USING (divisionid)"
         . " WHERE $where ORDER BY TR.trackname, S.sessionid;";
@@ -373,6 +392,7 @@ function gridScheduler_searchSessions() {
             "title" => $row["title"],
             "trackname" => $row["trackname"],
             "typename" => $row["typename"],
+            "typeGridSimplification" => $row["allow_grid_simplification"] == 1,
             "divisionname" => $row["divisionname"],
             "durationMinutes" => intval($row["durationMinutes"]),
         );

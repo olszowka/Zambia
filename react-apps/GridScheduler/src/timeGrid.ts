@@ -129,6 +129,55 @@ function nextPatternLine(range: GridRange, absoluteMinutes: number, gridLineReso
   );
 }
 
+// Grid Simplification is possible at all only when a default-duration session fits in one grid row.
+export function gridSimplificationAvailable(
+  defaultDurationMinutes: number | null,
+  gridLineResolutionMinutes: number
+): defaultDurationMinutes is number {
+  return defaultDurationMinutes !== null && defaultDurationMinutes > 0 && defaultDurationMinutes <= gridLineResolutionMinutes;
+}
+
+// Grid Simplification (a page-level option): in a room mostly scheduled in step with the grid, a session is drawn as
+// if it lasted until the next grid line, hiding the gap after it. Display only -- dropping still works from real
+// times. Returns, by scheduleid, the end time to draw for each of the room's sessions that qualify:
+//  - the room and the session's type both allow it (Rooms/Types.allow_grid_simplification);
+//  - the session is exactly the default duration (DEFAULT_DURATION), which is no longer than a grid row;
+//  - it starts on a grid line inside a grid range (not in a same-day gap -- see DisplaySegment.gridRanges);
+//  - it ends before the end of that grid row (the next grid line, or the end of the range if that's sooner);
+//  - nothing else in the room overlaps it or the rest of its row.
+export function simplifiedEnds(
+  roomItems: ScheduleItemData[],
+  roomAllows: boolean,
+  displaySegments: DisplaySegment[],
+  gridLineResolutionMinutes: number,
+  defaultDurationMinutes: number | null
+): Map<number, number> {
+  const ends = new Map<number, number>();
+  if (!roomAllows || !gridSimplificationAvailable(defaultDurationMinutes, gridLineResolutionMinutes)) return ends;
+  for (const item of roomItems) {
+    if (!item.typeGridSimplification || item.durationMinutes !== defaultDurationMinutes) continue;
+    const start = item.startMinutes;
+    const segment = displaySegments.find((s) => s.startMinutes <= start && start < s.endMinutes);
+    const range = segment?.gridRanges.find((r) => r.start <= start && start < r.end);
+    if (!range) continue;
+    const offset = start - range.anchor;
+    const onGridLine =
+      start === range.start ||
+      ((offset % gridLineResolutionMinutes) + gridLineResolutionMinutes) % gridLineResolutionMinutes === 0;
+    if (!onGridLine) continue;
+    const rowEnd = Math.min(nextPatternLine(range, start, gridLineResolutionMinutes), range.end);
+    if (start + item.durationMinutes >= rowEnd) continue;
+    const blocked = roomItems.some(
+      (other) =>
+        other.scheduleid !== item.scheduleid &&
+        other.startMinutes < rowEnd &&
+        start < other.startMinutes + Math.max(other.durationMinutes, 1)
+    );
+    if (!blocked) ends.set(item.scheduleid, rowEnd);
+  }
+  return ends;
+}
+
 export function totalDisplayMinutes(displaySegments: DisplaySegment[]): number {
   if (displaySegments.length === 0) return 0;
   return displaySegments[displaySegments.length - 1].displayEnd;

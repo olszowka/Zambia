@@ -6,6 +6,8 @@ export interface RoomData {
   roomid: number;
   roomname: string;
   display_order: number | null;
+  // Rooms.allow_grid_simplification: whether Grid Simplification may apply in this room (see simplifiedEnds() in timeGrid.ts).
+  gridSimplification: boolean;
 }
 
 export interface ScheduleItemData {
@@ -20,6 +22,9 @@ export interface ScheduleItemData {
   durationMinutes: number;
   trackname: string;
   typename: string;
+  // Types.allow_grid_simplification for the session's type: whether Grid Simplification may apply to it (see
+  // simplifiedEnds() in timeGrid.ts).
+  typeGridSimplification: boolean;
   divisionname: string;
   // In Tags.display_order.
   tagnames: string[];
@@ -45,6 +50,8 @@ export interface LookupEntry {
 export type SessionBoxField = 'title' | 'sessionid' | 'type' | 'track' | 'tags' | 'division' | 'duration';
 
 export interface BootstrapData {
+  // The logged-in user's -- keys their saved page options (preferences.ts).
+  badgeid: string;
   conStartDateTime: string;
   conNumDays: number;
   // Grid-line resolution (GRID_SPACING_MINUTES, else STANDARD_BLOCK_LENGTH) -- one of three distinct, similarly-named
@@ -58,6 +65,9 @@ export interface BootstrapData {
   daySegments: DaySegment[];
   // Lines of fields: GRID_SESSION_BOX_FIELDS as configured, or the server's trackTagUsage-based default.
   sessionBoxFields: SessionBoxField[][];
+  // DEFAULT_DURATION in minutes, or null if it's missing or doesn't parse. Grid Simplification only applies to
+  // sessions of exactly this duration, and only when it's no longer than gridLineResolutionMinutes.
+  defaultDurationMinutes: number | null;
   rooms: RoomData[];
   schedule: ScheduleItemData[];
   tracks: LookupEntry[];
@@ -74,6 +84,8 @@ export interface SessionSearchResult {
   title: string;
   trackname: string;
   typename: string;
+  // See ScheduleItemData.typeGridSimplification.
+  typeGridSimplification: boolean;
   divisionname: string;
   durationMinutes: number;
   tagnames: string[];

@@ -64,6 +64,7 @@ function toPoolEntry(item: ScheduleItemData): SessionSearchResult {
     title: item.title,
     trackname: item.trackname,
     typename: item.typename,
+    typeGridSimplification: item.typeGridSimplification,
     divisionname: item.divisionname,
     durationMinutes: item.durationMinutes,
     tagnames: item.tagnames,

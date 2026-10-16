@@ -45,6 +45,9 @@ interface LeftPanelProps {
   onSwapModeChange: (swapMode: boolean) => void;
   snapMode: SnapMode;
   onSnapModeChange: (snapMode: SnapMode) => void;
+  gridSimplificationAvailable: boolean;
+  gridSimplification: boolean;
+  onGridSimplificationChange: (gridSimplification: boolean) => void;
 }
 
 const TABS: { key: TabKey; label: string }[] = [
@@ -80,6 +83,9 @@ export default function LeftPanel({
   onSwapModeChange,
   snapMode,
   onSnapModeChange,
+  gridSimplificationAvailable,
+  gridSimplification,
+  onGridSimplificationChange,
 }: LeftPanelProps) {
   return (
     <div className="grid-scheduler-left-panel">
@@ -129,6 +135,9 @@ export default function LeftPanel({
               onSwapModeChange={onSwapModeChange}
               snapMode={snapMode}
               onSnapModeChange={onSnapModeChange}
+              gridSimplificationAvailable={gridSimplificationAvailable}
+              gridSimplification={gridSimplification}
+              onGridSimplificationChange={onGridSimplificationChange}
             />
             <button
               type="button"

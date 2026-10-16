@@ -23,6 +23,8 @@
   * Interruptions in grid timing can be configured (typically used for meal breaks)
   * Distinct start and/or end times can be configured for each day
   * There is no limit to the number of overlapping sessions which can be rendered, but when more than 2 are scheduled, the details of them are not readable on the grid.
+  * Optional "Grid Simplification" display draws a default-duration session as if it ran to the next grid line, for rooms and session types configured to allow it
+  * Page options (Swap Mode, Snap, Grid Simplification) and which rooms are shown are remembered per user in the browser
 * To accommodate relaxing the constraint that the configuration constant `STANDARD_BLOCK_LENGTH` must be "1:00" or "1:30", the _back to back conflict_ report was adjusted.  It now uses slightly different time thresholds to determine a conflict.  
 
 ### Invisible code cleanup
@@ -85,3 +87,10 @@ that part is superfluous but harmless. It also converts `Tags.tagname` (on every
 from the older 3-byte `utf8` (`utf8mb3`) character set to `utf8mb4_general_ci`, matching every
 other text column, so tag names can contain any Unicode character (e.g. emoji). Existing tag
 names are unchanged.
+
+#### 77_grid_simplification.sql
+
+Just apply this patch as normal. It adds a `allow_grid_simplification` column to the `Rooms` and `Types`
+tables, used by the Grid Scheduler's new Grid Simplification option. Both default to 0 (not allowed);
+set them to 1 in the _Configuration Table Editor_ for the rooms and session types where you want it.
+See [Grid Scheduler Configuration](Grid%20Scheduler%20Configuration.md).

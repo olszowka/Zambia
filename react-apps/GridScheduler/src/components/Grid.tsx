@@ -7,6 +7,7 @@ import {
   buildHourTicks,
   layoutOverlaps,
   minutesToDisplayOffset,
+  simplifiedEnds,
   totalDisplayMinutes,
 } from '../timeGrid';
 import SessionBox from './SessionBox';
@@ -49,6 +50,8 @@ interface GridProps {
   movedSessionIds: Set<number>;
   // A swap counterpart mid-animation -- its real box is hidden until the flying clone arrives (swapAnimation.ts).
   animatingSessionId: number | null;
+  // The Grid Simplification option (Options menu) -- see simplifiedEnds() in timeGrid.ts.
+  gridSimplification: boolean;
 }
 
 export default function Grid({
@@ -61,6 +64,7 @@ export default function Grid({
   dragDisabled,
   movedSessionIds,
   animatingSessionId,
+  gridSimplification,
 }: GridProps) {
   // The whole grid is registered as a single @dnd-kit droppable purely so its auto-scroll kicks in: @dnd-kit
   // auto-scrolls the scrollable ancestors of whatever droppable the pointer is over (falling back to the
@@ -131,7 +135,17 @@ export default function Grid({
           ))}
         </div>
         {visibleRooms.map((room) => {
-          const items = layoutOverlaps(itemsByRoom.get(room.roomid) ?? []);
+          const roomItems = itemsByRoom.get(room.roomid) ?? [];
+          const items = layoutOverlaps(roomItems);
+          const drawnEnds = gridSimplification
+            ? simplifiedEnds(
+                roomItems,
+                room.gridSimplification,
+                displaySegments,
+                data.gridLineResolutionMinutes,
+                data.defaultDurationMinutes
+              )
+            : null;
           return (
             <div
               className="grid-scheduler-room-column"
@@ -149,22 +163,31 @@ export default function Grid({
                   style={{ top: tick.displayOffset * PIXELS_PER_MINUTE }}
                 />
               ))}
-              {items.map((item) => (
-                <SessionBox
-                  key={item.scheduleid}
-                  item={item}
-                  fields={data.sessionBoxFields}
-                  top={
-                    minutesToDisplayOffset(displaySegments, roundToDisplayResolution(item.startMinutes)) *
-                    PIXELS_PER_MINUTE
-                  }
-                  height={roundToDisplayResolution(item.durationMinutes) * PIXELS_PER_MINUTE}
-                  onInfoClick={onInfoClick}
-                  dragDisabled={dragDisabled}
-                  highlighted={movedSessionIds.has(item.sessionid)}
-                  animationHidden={animatingSessionId === item.sessionid}
-                />
-              ))}
+              {items.map((item) => {
+                const height = roundToDisplayResolution(item.durationMinutes) * PIXELS_PER_MINUTE;
+                const drawnEnd = drawnEnds?.get(item.scheduleid);
+                return (
+                  <SessionBox
+                    key={item.scheduleid}
+                    item={item}
+                    fields={data.sessionBoxFields}
+                    top={
+                      minutesToDisplayOffset(displaySegments, roundToDisplayResolution(item.startMinutes)) *
+                      PIXELS_PER_MINUTE
+                    }
+                    height={
+                      drawnEnd === undefined
+                        ? height
+                        : roundToDisplayResolution(drawnEnd - item.startMinutes) * PIXELS_PER_MINUTE
+                    }
+                    realHeight={drawnEnd === undefined ? null : height}
+                    onInfoClick={onInfoClick}
+                    dragDisabled={dragDisabled}
+                    highlighted={movedSessionIds.has(item.sessionid)}
+                    animationHidden={animatingSessionId === item.sessionid}
+                  />
+                );
+              })}
               {dropPreview && dropPreview.roomid === room.roomid && (
                 <div
                   className="grid-scheduler-drop-preview"

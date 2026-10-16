@@ -572,6 +572,18 @@
   padding: 0 2px;
 }
 
+/* Grid Simplification (see simplifiedEnds() in timeGrid.ts): the box runs on to the next grid line, and the part
+   past the session's real end is shaded. --grid-scheduler-real-height is set by SessionBox.tsx and measured from the
+   box's outer top edge, hence background-origin: border-box. */
+.grid-scheduler-session-box.grid-scheduler-session-box-simplified {
+  background-origin: border-box;
+  background-image: linear-gradient(
+    to bottom,
+    transparent var(--grid-scheduler-real-height),
+    #e2e5e9 var(--grid-scheduler-real-height)
+  );
+}
+
 /* Swap Mode counterpart animation (swapAnimation.ts): the real box waits hidden at its destination while a
    fixed-position clone flies there from its old spot. */
 .grid-scheduler-animation-hidden {

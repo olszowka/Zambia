@@ -410,6 +410,7 @@ CREATE TABLE `Rooms` (
     `floor` VARCHAR(50) DEFAULT NULL,
     `notes` TEXT,
     `is_scheduled` TINYINT(1) NOT NULL DEFAULT '0',
+    `allow_grid_simplification` TINYINT(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`roomid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -516,6 +517,7 @@ CREATE TABLE `Types` (
     `typename` VARCHAR(50) DEFAULT NULL,
     `display_order` INT(11) DEFAULT NULL,
     `selfselect` TINYINT(1) DEFAULT NULL,
+    `allow_grid_simplification` TINYINT(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`typeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1233,7 +1235,8 @@ INSERT INTO `PatchLog`
     ('73_another_permissions_cleanup.sql'),
     ('74_survey_responses_json.sql'),
     ('75_my_suggestions_custom_text.sql'),
-    ('76_fix_mysql_collations.sql');
+    ('76_fix_mysql_collations.sql'),
+    ('77_grid_simplification.sql');
 
 ## bit 0 = uploaded photo available
 ## bit 1 = uploaded photo denied
