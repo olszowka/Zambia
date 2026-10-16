@@ -109,7 +109,7 @@ function chooseParticipant(badgeid, override) {
     }
 
     if (mce_running) {
-        tinymce.remove();
+        window.tinymce?.remove();
         mce_running = false;
     }
     curbadgeid = badgeid;
@@ -255,11 +255,12 @@ function chooseParticipant(badgeid, override) {
 
 function startTinymce() {
     if (mce_running)
-        tinymce.remove();
+        window.tinymce?.remove();
 
-    tinymce.init({
+    window.tinymce?.init({
         selector: 'textarea#htmlbio',
-        plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
+        license_key: 'gpl',
+        plugins: 'table wordcount fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
         browser_spellcheck: true,
         contextmenu: false,
         height: 400,
@@ -684,7 +685,7 @@ function checkDirty() {
 
 
 function updatePlainText() {
-    tinymce.triggerSave();
+    window.tinymce?.triggerSave();
     var tempDivElement = document.createElement("div");
     tempDivElement.innerHTML = htmlbioElem.value;
     bioElem.value = tempDivElement.textContent || tempDivElement.innerText || "";
@@ -799,7 +800,7 @@ function updateBUTTON() {
     if (bioDirty) {
         postdata.bio = bioElem.value;
         if (htmlbioused) {
-            tinymce.triggerSave();
+            window.tinymce?.triggerSave();
             postdata.htmlbio = htmlbioElem.value;
         }
     }

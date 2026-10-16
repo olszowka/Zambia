@@ -118,4 +118,8 @@ define("REPORT_SYSTEM_OVERRIDE_SUBDIR", "");
 // Name of a subdirectory of reportsSystemOverrides/ holding system-level report overrides/additions
 // (e.g. "zambia"), applied on top of reports/ and overridden in turn by reportsConOverrides/.
 // Leave "" to disable this override layer.
+define("TINYMCE_URL", "");
+// Leave "" to load the TinyMCE editor from its default version-pinned CDN (jsDelivr). Set to the URL of
+// tinymce.min.js to load it from elsewhere, e.g. a self-hosted copy for offline installs or strict CSP:
+// define("TINYMCE_URL", "external/tinymce/js/tinymce/tinymce.min.js");
 ?>

@@ -28,10 +28,14 @@ These libraries are included in the repo and should just work if you leave as is
   * JQuery 3.7.1
   * JQueryUI 1.14.2
   * Tabulator 6.5.3
-  * TinyMCE 6.7.1
 * Server Side  
   * Swift mailer 5.4.8
   * Guzzle 7.8.1
+
+## CDN-based Dependencies
+These libraries have licenses which preclude them being distributed with Zambia, so they are loaded from a CDN
+* Client Side
+  * TinyMCE 8.10.0
 
 ## Integrations
 Other software which can work with Zambia

@@ -109,7 +109,7 @@ function MyProfile() {
     };
 
     this.updatePlainText = () => {
-        tinymce.triggerSave();
+        window.tinymce?.triggerSave();
         var tempDivElement = document.createElement("div");
         tempDivElement.innerHTML = $htmlbioTextarea.val();
         $bioTextarea.val(tempDivElement.textContent || tempDivElement.innerText || "");
@@ -150,9 +150,10 @@ function MyProfile() {
         maxBioLen = $bioTextarea.data("maxLength");
         $htmlbioTextarea = $("#htmlbioTXTA");
         if ($htmlbioTextarea.length > 0) {
-            tinymce.init({
+            window.tinymce?.init({
                 selector: 'textarea#htmlbioTXTA',
-                plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
+                license_key: 'gpl',
+                plugins: 'table wordcount fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
                 browser_spellcheck: true,
                 contextmenu: false,
                 height: 400,

@@ -30,6 +30,20 @@ function load_external_javascript($isDataTables = false, $isRecaptcha = false, $
 <?php }
 }
 
+/**
+ * TinyMCE (GPL since v7) is loaded from a version-pinned CDN rather than distributed with Zambia.
+ * An installation may define TINYMCE_URL in db_name.php to load it from elsewhere (e.g. a self-hosted copy).
+ * The SRI hash covers only tinymce.min.js; plugins/skins it loads are pinned by the versioned URL path.
+ */
+function tinymce_script_tag() {
+    if (defined('TINYMCE_URL') && TINYMCE_URL !== '') {
+        return "<script src=\"" . htmlspecialchars(TINYMCE_URL) . "\"></script>\n";
+    }
+    return "<script src=\"https://cdn.jsdelivr.net/npm/tinymce@8.10.0/tinymce.min.js\" "
+        . "integrity=\"sha384-3pPvcZXivf5neWCEl4OuvTIleT8Q1bA2hphqFEVWNXaxIWVBUJda+xujUu2WWWuz\" "
+        . "crossorigin=\"anonymous\"></script>\n";
+}
+
 function load_internal_javascript($title, $isDataTables = false) {
     ?>
     <script src="javascript/main.js"></script>
@@ -78,28 +92,28 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script type=\"module\" src=\"javascript/GridScheduler/dist/bundle.js\"></script>\n";
             break;
         case "Edit Custom Text":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
             break;
         case "Edit Survey":
             echo "<script src=\"external/tabulator-6.5.3/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditSurvey.js\"></script>\n";
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             break;
         case "Participant Survey":
             echo "<script src=\"javascript/PartSurvey.js\"></script>\n";
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
         case "Preview Survey":
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             break;
         case "Session Search Results":
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;
         case "Administer Participants":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
             break;
         case "Administer Photos":
@@ -107,7 +121,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/AdminPhotos.js\"></script>\n";
             break;
         case "My Profile":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             echo "<script src=\"javascript/myProfile.js\"></script>";
             break;
         case "My Photo":
@@ -115,14 +129,14 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/myPhoto.js\"></script>";
             break;
         case "Edit Session":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
         case "Create New Session":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
             break;
         case "Edit Configuration Tables":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             echo "<script src=\"external/tabulator-6.5.3/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
             break;

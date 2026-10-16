@@ -48,10 +48,15 @@
 * Migrate Data Collection Consent pages to BS5/JQ3.X
 * Final elimination of BS2.X & JQ1.X
 * Upgrade Tabulator to 6.5.3
+* Upgrade TinyMCE to 8.10.0
+  * Unfortunately, this involves a licensing change to TinyMCE is no longer distributed alongside Zambia
 
 ## Application Notes
 
 When a user creates a new session, the defaults for the values of Type, Division, Adult/Children Category (kids category), and Roomset will now be taken from the row from the top of the corresponding configuration table, i.e. with the lowest value for display_order.  Adjust your configuration accordingly.
+
+Zambia now loads TinyMCE from the jsdelivr CDN.  If this is a privacy or other concern for you, you can
+download and host TinyMCE yourself and configure Zambia to use that version.  See [Installation.](../Install/INSTALL.md)
 
 ### db_name.php
 

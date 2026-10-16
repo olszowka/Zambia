@@ -107,14 +107,14 @@ function discardChanges() {
 
 function savetceEdit(display) {
     if (curcell) {
-        tinyMCE.triggerSave();
+        window.tinyMCE?.triggerSave();
         newval = txtel.value;
         newval = newval.replace(/<\/p>[ \r\n]*<p>/gi, "\n");
         newval = newval.replace(/<br *\/*>/gi, "\n");
         newval = newval.replace(/^<p> */i, "");
         newval = newval.replace(/ *<\/p> *$/i, "");
         curcell.setValue(newval);
-        tinyMCE.remove();
+        window.tinyMCE?.remove();
         curcell = null;
         if (display) {
             document.getElementById("tceedit-div").style.display = "none";
@@ -145,7 +145,7 @@ function tceEditor(e, cell) {
 
     el = document.getElementById("tceedit-div");
     el.style.display = "block";
-    tinyMCE.init({
+    window.tinyMCE?.init({
         setup: function (editor) {
             editor.ui.registry.addButton('customSaveButton', {
                 icon: 'save',
@@ -156,6 +156,7 @@ function tceEditor(e, cell) {
             })
         },
         selector: 'textarea#tceedit-textarea',
+        license_key: 'gpl',
         plugins: 'fullscreen searchreplace charmap nonbreaking visualchars',
         browser_spellcheck: true,
         contextmenu: false,

@@ -23,8 +23,9 @@ var EditSurvey = function () {
         //console.log("editor_init: tinyMCE.init('input#prompt')");
         hoverdirty = false;
         promptdirty = false;
-        tinyMCE.init({
+        window.tinyMCE?.init({
             selector: 'input#prompt',
+            license_key: 'gpl',
             plugins: 'fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
             browser_spellcheck: true,
             contextmenu: false,
@@ -48,9 +49,10 @@ var EditSurvey = function () {
         });
 
         //console.log("editor_init: tinyMCE.init('textarea#hover')");
-        tinyMCE.init({
+        window.tinyMCE?.init({
             selector: 'textarea#hover',
-            plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+            license_key: 'gpl',
+            plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
             browser_spellcheck: true,
             contextmenu: false,
             height: 200,
@@ -77,7 +79,7 @@ var EditSurvey = function () {
 
     function addupdaterow(table, opttable) {
         // update table itself for future save
-        tinyMCE.triggerSave();
+        window.tinyMCE?.triggerSave();
 
         var shortname = document.getElementById("shortname").value;
         var description = document.getElementById("description").value;
@@ -160,7 +162,7 @@ var EditSurvey = function () {
         document.getElementById("general-question-div").style.display = "none";
         document.getElementById("preview").innerHTML = "";
         //console.log("addupdaterow: tinyMCE.remove");
-        tinyMCE.remove();
+        window.tinyMCE?.remove();
         previewmce = false;
         table.clearHistory();
         if (opttable) {
@@ -177,7 +179,7 @@ var EditSurvey = function () {
     }
 
     this.processNewQuestion = function () {
-        tinyMCE.remove();
+        window.tinyMCE?.remove();
         previewmce = false;
         //console.log("addnewquestion: tinyMCE.remove");
         curid = -99999;
@@ -298,7 +300,7 @@ var EditSurvey = function () {
         var name = row.getCell("shortname").getValue();
         in_editconfig = true;
         //console.log("editconfig: tinyMCE.remove()");
-        tinyMCE.remove();
+        window.tinyMCE?.remove();
         previewmce = false;
 
         document.getElementById("message").style.display = 'none';
@@ -1084,9 +1086,10 @@ function RefreshComplete(data, textStatus, jqXHR) {
 
         if (previewmce == false) {
             //console.log("RefreshComplete: tinyMCE.init(textarea#" + fieldname + '-input)');
-            tinyMCE.init({
+            window.tinyMCE?.init({
                 selector: 'textarea#' + fieldname + '-input',
-                plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+                license_key: 'gpl',
+                plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
                 browser_spellcheck: true,
                 contextmenu: false,
                 height: 200,
@@ -1122,7 +1125,7 @@ function RefreshPreview() {
     //console.trace();
     if (previewmce) {
         fieldname = '#' + document.getElementById("shortname").value.replace(/ /g, '_') + '-input';
-        tinyMCE.remove(fieldname);
+        window.tinyMCE?.remove(fieldname);
         previewmce = false;
     }
     var questionid = document.getElementById("questionid").value
@@ -1133,7 +1136,7 @@ function RefreshPreview() {
     if (prompt.substring(0, 3) == '<p>') {
         prompt = prompt.substring(3, prompt.length - 4);
     }
-    tinyMCE.triggerSave();
+    window.tinyMCE?.triggerSave();
     var hover = document.getElementById("hover").value;
     var surveyData = [{
         questionid: questionid,

@@ -1,4 +1,4 @@
-//  Copyright (c) 2022-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 //  Created by Peter Olszowka on 2022-10-05
 var myProfile = new MySchedConstr;
 
@@ -86,9 +86,10 @@ function MySchedConstr() {
         maxBioLen = $bioTextarea.data("maxLength");
         $htmlbioTextarea = $("#htmlbioTXTA");
         if ($htmlbioTextarea) {
-            tinymce.init({
+            window.tinymce?.init({
                 selector: 'textarea#htmlbioTXTA',
-                plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
+                license_key: 'gpl',
+                plugins: 'table wordcount fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
                 browser_spellcheck: true,
                 contextmenu: false,
                 height: 400,
@@ -142,7 +143,7 @@ function MySchedConstr() {
     this.updateBUTN = function updateBUTN() {
         $("#submitBTN").button('loading');
         if (htmlbioused && bio_updated == false) {
-            tinymce.triggerSave();
+            window.tinymce?.triggerSave();
 
             if ($htmlbioTextarea.val().length > maxBioLen) {
                 var postdata = {

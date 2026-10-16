@@ -207,7 +207,46 @@ scripts directory.  You'll want to run them or something similar.
 
 More documentation, particularly about configuration, can be found on the [wiki](https://github.com/olszowka/Zambia/wiki).
 
-## 13 - Reaching me
+## 13 - CDN
+
+Zambia loads TinyMCE 8.10.0 (the rich text editor used for bios, session descriptions, custom text, surveys, etc.)
+from the jsdelivr CDN to avoid licensing concerns.  If you need, you can override this in db_name.php to load from
+another CDN or your own hosted copy.
+
+The default URL is pinned to an exact version and protected with a Subresource Integrity hash, so what's loaded
+can't change unless Zambia is updated.  If the CDN can't be reached, Zambia still works; the affected fields just
+appear as plain text boxes instead of rich text editors.
+
+**Privacy.**  Loading a file from a CDN means each user's browser contacts that CDN, which therefore sees the user's
+IP address.  Under the EU and UK GDPR an IP address is personal data, and sending it to a third party without telling
+users has been found unlawful (e.g. a 2022 German court ruling on embedding Google Fonts).  TinyMCE is only loaded on
+pages for logged-in users, and jsDelivr is operated from within the EU, so the risk is low; but if your convention is
+subject to GDPR (or to the privacy laws of Canada, Australia, New Zealand, etc.), you should either mention jsDelivr
+in your privacy notice or host TinyMCE yourself.  This is not legal advice; consult your own privacy advisor if in
+doubt.
+
+**Hosting TinyMCE yourself.**  To avoid any third-party requests (or for an installation without internet access, or
+with a strict Content Security Policy):
+ 1. Download the TinyMCE community edition zip for the same version Zambia uses (currently 8.10.0) from
+    `https://download.tiny.cloud/tinymce/community/tinymce_8.10.0.zip`, or get it from the
+    [TinyMCE download page](https://www.tiny.cloud/get-tiny/).
+ 2. Unzip it into `webpages/external/`.  This creates `webpages/external/tinymce/js/tinymce/tinymce.min.js`.
+ 3. In `db_name.php`, set `TINYMCE_URL` to that file's URL, relative to `webpages/`, e.g.:
+
+        define("TINYMCE_URL", "external/tinymce/js/tinymce/tinymce.min.js");
+
+Notes on self-hosting:
+ - TinyMCE is licensed under the GPL (version 2 or later).  By serving your own copy you are distributing it, so
+   keep its `license.md` file with it.
+ - Your copy isn't checked against the integrity hash, and it isn't updated when you update Zambia.  When a Zambia
+   release changes the TinyMCE version (see the version in `tinymce_script_tag()` in `webpages/javascript_functions.php`),
+   replace your copy to match.
+ - Your copy isn't tracked by git, so a redeploy step that deletes untracked files (`git clean -fdx`,
+   `rsync --delete`, a fresh checkout, etc.) will remove it.
+
+Leave `TINYMCE_URL` set to `""` (or don't define it) to use the default CDN.
+
+## 14 - Reaching me
 
 I can be reached via github.
 

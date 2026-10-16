@@ -8,7 +8,7 @@ var EditCustomText = function () {
     var currentHtmlBlockLevel = '0';
 
     function UpdatePage(customTextID, initialText, initialActive, htmlBlockLevel) {
-        tinyMCE.remove();
+        window.tinyMCE?.remove();
 
         if (currentCustomTextID < 0 && customTextID >= 0) {
             $("#customtextid option[value='-1']").remove();
@@ -26,7 +26,8 @@ var EditCustomText = function () {
 
         const tinyMceInitObject = {
             selector: 'textarea#textcontents',
-            plugins: 'table wordcount fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+            license_key: 'gpl',
+            plugins: 'table wordcount fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
             browser_spellcheck: true,
             contextmenu: false,
             height: 400,
@@ -50,14 +51,14 @@ var EditCustomText = function () {
             tinyMceInitObject.forced_root_block = ' ';
         }
 
-        tinyMCE.init(tinyMceInitObject);
+        window.tinyMCE?.init(tinyMceInitObject);
     }
 
 
     function UpdateSelected() {
         const $customtextid = $('#customtextid');
         if (currentCustomTextID >= 0) {
-            tinyMCE.triggerSave();
+            window.tinyMCE?.triggerSave();
             
             const newText = document.getElementById('textcontents').value; // Jquery returned Undefined for this, using document. method
             if (newText !== initialCustomText) {
@@ -82,7 +83,7 @@ var EditCustomText = function () {
 
     this.savePage = function () {
         if (currentCustomTextID >= 0) {
-            tinyMCE.triggerSave();
+            window.tinyMCE?.triggerSave();
             const $active = $('#active');
             if ($active.prop('checked')) {
                 $active.val(1);
