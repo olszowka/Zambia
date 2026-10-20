@@ -277,6 +277,6 @@
         </xsl:if>
     </xsl:template>
     <xsl:template match="doc/query[@queryName='otherParticipants']/row">
-        <option value="{@badgeid}"><xsl:value-of select="@displayName" /><xsl:text> - </xsl:text><xsl:value-of select="@badgeid" /></option>
+        <option value="{@badgeid}"><xsl:value-of select="@label" /></option>
     </xsl:template>
 </xsl:stylesheet>

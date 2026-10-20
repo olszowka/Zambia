@@ -21,6 +21,8 @@ function filter_participants() {
     $andor = $matchall == "true" ? ' AND ' : ' OR ';
     $qcte = survey_filter_prepare_filter($filterlist, $andor);
     $query = survey_filter_build_cte($qcte);
+    $displayNameSql = participant_display_name_sql();
+    $sortKeySql = participant_sort_key_sql();
 
     if ($source == "invite") {
         $query .= <<<EOD
@@ -35,7 +37,9 @@ SELECT DISTINCT
             WHEN P.pubsname != "" THEN P.pubsname
             WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
             ELSE CD.firstname
-        END, ' (', CD.badgename, ') - ', P.badgeid) AS name
+        END, ' (', CD.badgename, ') - ', P.badgeid) AS name,
+    $displayNameSql AS displayName,
+    $sortKeySql AS sortKey
 FROM
     Participants P
     JOIN CongoDump CD USING(badgeid)
@@ -50,7 +54,9 @@ EOD;
         $query .= survey_filter_build_where($qcte, $andor);
         $query .= <<<EOD
 ORDER BY
-    IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+    sortKey,
+    CD.firstname,
+    displayName
 EOD;
     }
     if ($source == 'assign') {
@@ -74,6 +80,8 @@ SELECT
         WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
         ELSE CD.firstname
     END, ' (', CD.badgename, ') - ', P.badgeid) AS name,
+    $displayNameSql AS displayName,
+    $sortKeySql AS sortKey,
     IFNULL(A.answercount, 0) as answercount
 FROM Participants P
 JOIN CongoDump CD USING(badgeid)
@@ -95,7 +103,9 @@ EOD;
         $query .= survey_filter_build_where($qcte, $andor);
         $query .= <<<EOD
 ORDER BY
-    IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+    sortKey,
+    CD.firstname,
+    displayName
 EOD;
     }
     //error_log("\nquery: $query\n\n");
@@ -112,18 +122,8 @@ EOD;
     }
     while ($row = mysqli_fetch_assoc($result)) {
         $participants[] =  $row;
-        $pubsname = $row["pubsname"];
-        if (mb_ereg_match("\w", $pubsname)) {
-            $pattern = "(.*)(\b" . preg_quote($row["lastname"]) . "\b)(.*)";
-            if (mb_ereg($pattern, $pubsname, $regexArr)) {
-                $sortableName = $regexArr[2] . ($regexArr[3] ? $regexArr[3] : "") . ", " . $regexArr[1];
-            } else {
-                $sortableName = $pubsname;
-            }
-        } else {
-            $sortableName = $pubsname;
-        }
-        $select .= '<option value="' . $row["badgeid"] . '">' . $sortableName . ' - ' . $row["badgeid"] . "</option>\n";
+        $label = participant_dropdown_label($row["pubsname"], $row["firstname"], $row["lastname"], $row["badgeid"]);
+        $select .= '<option value="' . htmlspecialchars($row["badgeid"]) . '">' . htmlspecialchars($label) . "</option>\n";
     }
     $select .= "</select>\n";
     mysqli_free_result($result);

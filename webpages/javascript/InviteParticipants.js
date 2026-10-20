@@ -1,5 +1,5 @@
 //  Created by Peter Olszowka on 2019-11-19;
-//  Copyright (c) 2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2019-2026 The Peter Olszowka. All rights reserved. See copyright document for more details.
 
 var participantSelectChoices = null;
 var filterlist = [];
@@ -11,6 +11,7 @@ var InviteParticipants = function() {
         if (participantSelect) {
             participantSelectChoices = new Choices(participantSelect, {
                 searchResultLimit: 9999,
+                shouldSort: false,
                 searchPlaceholderValue: "Type here to search list."
             });
         }
@@ -117,6 +118,7 @@ function filterComplete(data, textStatus, jqXHR) {
             participantSelectChoices = null;
             participantSelectChoices = new Choices(participantSelect, {
                 searchResultLimit: 9999,
+                shouldSort: false,
                 searchPlaceholderValue: "Type here to search list."
             });
         }
