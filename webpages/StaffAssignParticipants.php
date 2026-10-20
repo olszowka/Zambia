@@ -198,6 +198,8 @@ EOD;
             $resultXML = ObjecttoXML('years', $options, $resultXML);
         }
     }
+    $displayNameSql = participant_display_name_sql();
+    $sortKeySql = participant_sort_key_sql();
     $otherParticipantsQuery = <<<EOD
 WITH
     AnsweredSurvey(participantid, answercount) AS (
@@ -224,15 +226,8 @@ SELECT
             ELSE CD.firstname
             END,
             ' (', CD.badgename, ') - ', P.badgeid) AS name,
-        CASE
-            WHEN IFNULL(P.pubsname, '') != '' THEN P.pubsname
-            ELSE CONCAT_WS(' ', NULLIF(CD.firstname, ''), NULLIF(CD.lastname, ''))
-            END AS displayName,
-        CASE
-            WHEN IFNULL(P.name_for_sorting, '') != '' THEN P.name_for_sorting
-            WHEN IFNULL(P.pubsname, '') = '' OR (CD.lastname != '' AND INSTR(P.pubsname, CD.lastname) > 0) THEN CD.lastname
-            ELSE SUBSTRING_INDEX(TRIM(P.pubsname), ' ', -1)
-            END AS sortKey,
+        $displayNameSql AS displayName,
+        $sortKeySql AS sortKey,
         IFNULL(A.answercount, 0) as answercount
     FROM
                   Participants P
@@ -259,7 +254,8 @@ EOD;
         $rowNode = $resultXML->createElement("row");
         $rowNode = $queryNode->appendChild($rowNode);
         $rowNode->setAttribute("badgeid", $row["badgeid"]);
-        $rowNode->setAttribute("displayName", $row["displayName"]);
+        $rowNode->setAttribute("label",
+            participant_dropdown_label($row["pubsname"], $row["firstname"], $row["lastname"], $row["badgeid"]));
         $SurveysAnswered += $row['answercount'];
     }
 

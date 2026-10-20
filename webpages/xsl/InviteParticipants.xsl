@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<!-- Copyright (c) 2011-2019 Peter Olszowka. All rights reserved. See copyright document for more details.-->
+<!-- Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
   <xsl:import href="renderSurveySearch.xsl"/>
   <xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -38,7 +38,7 @@
                 <xsl:attribute name="value">
                   <xsl:value-of select="@badgeid"/>
                 </xsl:attribute>
-                <xsl:value-of select="@name"/>
+                <xsl:value-of select="@label"/>
               </option>
             </xsl:for-each>
           </select>
