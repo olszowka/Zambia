@@ -257,31 +257,9 @@ function startTinymce() {
     if (mce_running)
         window.tinymce?.remove();
 
-    window.tinymce?.init({
-        selector: 'textarea#htmlbio',
-        license_key: 'gpl',
-        plugins: 'table wordcount fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
-        browser_spellcheck: true,
-        contextmenu: false,
-        height: 400,
-        min_height: 200,
-        menubar: false,
-        toolbar: [
-            'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
-            'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
-        ],
-        toolbar_mode: 'wrap',
-        content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-        placeholder: 'Type custom content here...',
-        setup: function (ed) {
-            ed.on('change', function (e) {
-                bioDirty = true;
-                textChange();
-            });
-        },
-        init_instance_callback: function (editor) {
-            $(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
-        }
+    initHtmlBioEditor('textarea#htmlbio', function () {
+        bioDirty = true;
+        textChange();
     });
     mce_running = true;
 }

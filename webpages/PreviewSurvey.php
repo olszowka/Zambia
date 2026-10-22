@@ -66,6 +66,10 @@ $(document).ready(function(){
     window.tinyMCE?.init({
             selector: "textarea#" + fieldname,
             license_key: 'gpl',
+            invalid_styles: 'color background-color font-family text-align text-decoration',
+            formats: {
+                underline: { inline: 'u', exact: true }
+            },
             plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
             browser_spellcheck: true,
             contextmenu: false,
@@ -75,8 +79,8 @@ $(document).ready(function(){
             maxlength: maxlength,
             menubar: false,
             toolbar: [
-                'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-                'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+                'undo redo searchreplace | blocks | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                'outdent indent | numlist bullist | link'
             ],
             toolbar_mode: 'floating',
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',

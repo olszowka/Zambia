@@ -664,7 +664,11 @@
             <div id="tceedit-div" style="display: none">
                 <div class="row mt-4">
                     <div class="col col-lg-22 col-xl-18 col-xxl-15">
-                        <textarea id="tceedit-textarea"></textarea>
+                        <textarea id="tceedit-textarea" class="form-control font-monospace" rows="16"
+                                  spellcheck="false"></textarea>
+                        <button class="btn btn-primary btn-sm mt-2" id="tceedit-save" type="button"
+                                onclick="savetceEdit(true)">Save to Table
+                        </button>
                     </div>
                 </div>
             </div>

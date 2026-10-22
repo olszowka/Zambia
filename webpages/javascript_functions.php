@@ -105,6 +105,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/PartSurvey.js\"></script>\n";
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
             echo tinymce_script_tag();
+            break;
         case "Preview Survey":
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
             echo tinymce_script_tag();
@@ -114,6 +115,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             break;
         case "Administer Participants":
             echo tinymce_script_tag();
+            echo "<script src=\"javascript/htmlBioEditor.js\"></script>\n";
             echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
             break;
         case "Administer Photos":
@@ -122,6 +124,7 @@ function load_internal_javascript($title, $isDataTables = false) {
             break;
         case "My Profile":
             echo tinymce_script_tag();
+            echo "<script src=\"javascript/htmlBioEditor.js\"></script>\n";
             echo "<script src=\"javascript/myProfile.js\"></script>";
             break;
         case "My Photo":
@@ -129,14 +132,11 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/myPhoto.js\"></script>";
             break;
         case "Edit Session":
-            echo tinymce_script_tag();
-            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
         case "Create New Session":
             echo tinymce_script_tag();
             echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
             break;
         case "Edit Configuration Tables":
-            echo tinymce_script_tag();
             echo "<script src=\"external/tabulator-6.5.3/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
             break;

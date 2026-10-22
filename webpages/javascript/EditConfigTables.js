@@ -107,14 +107,7 @@ function discardChanges() {
 
 function savetceEdit(display) {
     if (curcell) {
-        window.tinyMCE?.triggerSave();
-        newval = txtel.value;
-        newval = newval.replace(/<\/p>[ \r\n]*<p>/gi, "\n");
-        newval = newval.replace(/<br *\/*>/gi, "\n");
-        newval = newval.replace(/^<p> */i, "");
-        newval = newval.replace(/ *<\/p> *$/i, "");
-        curcell.setValue(newval);
-        window.tinyMCE?.remove();
+        curcell.setValue(document.getElementById("tceedit-textarea").value);
         curcell = null;
         if (display) {
             document.getElementById("tceedit-div").style.display = "none";
@@ -134,42 +127,15 @@ function savetceEdit(display) {
 }
 
 function tceEditor(e, cell) {
-    txtel = document.getElementById("tceedit-textarea");
     if (cell !== curcell) {
         savetceEdit(false);
     }
-    cellname = cell.getField();        
     // initialize the starting value from the current value of the cell
     curcell = cell;
-    txtel.value = (cell.getValue() || "").replace(/\n/g, "<br/>");
-
-    el = document.getElementById("tceedit-div");
-    el.style.display = "block";
-    window.tinyMCE?.init({
-        setup: function (editor) {
-            editor.ui.registry.addButton('customSaveButton', {
-                icon: 'save',
-                tooltip: 'Save contents back to table',
-                onAction: function () {
-                    savetceEdit(true);
-                }
-            })
-        },
-        selector: 'textarea#tceedit-textarea',
-        license_key: 'gpl',
-        plugins: 'fullscreen searchreplace charmap nonbreaking visualchars',
-        browser_spellcheck: true,
-        contextmenu: false,
-        height: 400,
-        min_height: 200,
-        menubar: false,
-        toolbar: [
-            ' customSaveButton | undo redo | searchreplace |visualchars nonbreaking charmap | fullscreen'
-        ],
-        toolbar_mode: 'wrap',
-        content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-        placeholder: 'Type custom content here...'
-    });
+    var txtel = document.getElementById("tceedit-textarea");
+    txtel.value = cell.getValue() || "";
+    document.getElementById("tceedit-div").style.display = "block";
+    txtel.focus();
     document.getElementById("add-row").disabled = true;
     document.getElementById("resetbtn").disabled = true;
     document.getElementById("submitbtn").disabled = true; 

@@ -25,8 +25,19 @@
   * There is no limit to the number of overlapping sessions which can be rendered, but when more than 2 are scheduled, the details of them are not readable on the grid.
   * Optional "Grid Simplification" display draws a default-duration session as if it ran to the next grid line, for rooms and session types configured to allow it
   * Page options (Swap Mode, Snap, Grid Simplification) and which rooms are shown are remembered per user in the browser
-* To accommodate relaxing the constraint that the configuration constant `STANDARD_BLOCK_LENGTH` must be "1:00" or "1:30", the _back to back conflict_ report was adjusted.  It now uses slightly different time thresholds to determine a conflict.  
-
+* To accommodate relaxing the constraint that the configuration constant `STANDARD_BLOCK_LENGTH` must be "1:00" or "1:30", the _back to back conflict_ report was adjusted.  It now uses slightly different time thresholds to determine a conflict.
+* Change TinyMCE configuration to substantially reduce what HTML and style capabilities are available.  Most of these disallowed capabilities will be removed if HTML or rich text is pasted into the field.
+  * All locations in Zambia
+    * No font colors
+    * No font families
+    * No background colors
+    * No text alignment
+    * Use`<u>,` not `style="text-decoration:underline"` for underline
+  * Surveys and Custom Text allow some capabilities the others do not:
+    * numbered lists
+    * bullet lists
+    * headings (`<h1>, <h2>` etc.)
+ 
 ### Invisible code cleanup
 * View Session Counts page moved to XSL and BS5/JQ3
 * Upgrade JQuery from 3.5.1 to 3.7.1
@@ -50,13 +61,18 @@
 * Upgrade Tabulator to 6.5.3
 * Upgrade TinyMCE to 8.10.0
   * Unfortunately, this involves a licensing change to TinyMCE is no longer distributed alongside Zambia
+* Remove TinyMCE from 1 page where it wasn't needed and clean up code associated with it
 
 ## Application Notes
 
-When a user creates a new session, the defaults for the values of Type, Division, Adult/Children Category (kids category), and Roomset will now be taken from the row from the top of the corresponding configuration table, i.e. with the lowest value for display_order.  Adjust your configuration accordingly.
+1) When a user creates a new session, the defaults for the values of Type, Division, Adult/Children Category (kids category), and Roomset will now be taken from the row from the top of the corresponding configuration table, i.e. with the lowest value for display_order.  Adjust your configuration accordingly.
 
-Zambia now loads TinyMCE from the jsdelivr CDN.  If this is a privacy or other concern for you, you can
+1) Zambia now loads TinyMCE from the jsdelivr CDN.  If this is a privacy or other concern for you, you can
 download and host TinyMCE yourself and configure Zambia to use that version.  See [Installation.](../Install/INSTALL.md)
+
+1) Custom Text now uses`<u>`for underline and not`style="text-decoration:underline".` If you have the latter in a custom-text entry in your database, it will be removed the next time you edit it in Zambia.  Just use the TinyMCE tool to restore the underline to the desired text.
+
+1) Participant bios and Session descriptions previously created or edited with an earlier version of Zambia may still contain the HTML capabilities no longer allowed by the TinyMCE confiugration.  If they are edited now, these capabilities will be removed, but if not they will remain.  If the use of these capabilities will break any downstream systems, you must arrange to remove them.
 
 ### db_name.php
 

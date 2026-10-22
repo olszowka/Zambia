@@ -10,6 +10,10 @@ function initializeSessionEdit() {
     window.tinymce?.init({
         selector: 'textarea#progguidhtml',
         license_key: 'gpl',
+        invalid_styles: 'color background-color font-family text-align text-decoration',
+        formats: {
+            underline: { inline: 'u', exact: true }
+        },
         plugins: 'table wordcount fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
         browser_spellcheck: true,
         contextmenu: false,
@@ -17,8 +21,8 @@ function initializeSessionEdit() {
         min_height: 200,
         menubar: false,
         toolbar: [
-            'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
-            'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
+            'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | link| preview fullscreen ',
+            'searchreplace | outdent indent'
         ],
         toolbar_mode: 'wrap',
         content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',

@@ -26,6 +26,10 @@ var EditSurvey = function () {
         window.tinyMCE?.init({
             selector: 'input#prompt',
             license_key: 'gpl',
+            invalid_styles: 'color background-color font-family text-align text-decoration',
+            formats: {
+                underline: { inline: 'u', exact: true }
+            },
             plugins: 'fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
             browser_spellcheck: true,
             contextmenu: false,
@@ -35,7 +39,7 @@ var EditSurvey = function () {
             maxlength: 512,
             menubar: false,
             toolbar: [
-                'undo redo searchreplace | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link code | preview fullscreen'
+                'undo redo searchreplace | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | link code | preview fullscreen'
             ],
             toolbar_mode: 'floating',
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -52,6 +56,10 @@ var EditSurvey = function () {
         window.tinyMCE?.init({
             selector: 'textarea#hover',
             license_key: 'gpl',
+            invalid_styles: 'color background-color font-family text-align text-decoration',
+            formats: {
+                underline: { inline: 'u', exact: true }
+            },
             plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
             browser_spellcheck: true,
             contextmenu: false,
@@ -61,8 +69,8 @@ var EditSurvey = function () {
             maxlength: 8192,
             menubar: false,
             toolbar: [
-                'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-                'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+                'undo redo searchreplace | blocks | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                'outdent indent | numlist bullist | link'
             ],
             toolbar_mode: 'floating',
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -1089,6 +1097,10 @@ function RefreshComplete(data, textStatus, jqXHR) {
             window.tinyMCE?.init({
                 selector: 'textarea#' + fieldname + '-input',
                 license_key: 'gpl',
+                invalid_styles: 'color background-color font-family text-align text-decoration',
+                formats: {
+                    underline: { inline: 'u', exact: true }
+                },
                 plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
                 browser_spellcheck: true,
                 contextmenu: false,
@@ -1098,8 +1110,8 @@ function RefreshComplete(data, textStatus, jqXHR) {
                 maxlength: maxlength,
                 menubar: false,
                 toolbar: [
-                    'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-                    'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+                    'undo redo searchreplace | blocks | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                    'outdent indent | numlist bullist | link'
                 ],
                 toolbar_mode: 'floating',
                 content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
