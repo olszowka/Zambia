@@ -1,6 +1,6 @@
 <?php
 // Created by Peter Olszowka on 2020-04-21;
-// Copyright (c) 2020-2024 The Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2026 The Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Submit Reset Password";
 require ('PartCommonCode.php');
@@ -80,8 +80,8 @@ EOD;
 if (empty($password) || $password !== $cpassword) {
     participant_header($title, true, 'Normal', 'bs5');
     $controlParams = array(
-        "selector" => $selector,
-        "validator" => $validator,
+        "selector" => $controlParams['selector'],
+        "validator" => $controlParams['validator'],
         "badgeid" => $badgeid
     );
     $controlArray = generateControlString($controlParams);
@@ -106,6 +106,7 @@ if (empty($password) || $password !== $cpassword) {
     );
     RenderXSLT('ForgotPasswordResetForm.xsl', $params);
     participant_footer();
+    exit;
 }
 $badgeidSQL = mysqli_real_escape_string($linki, $badgeid);
 $query = <<<EOD
