@@ -62,6 +62,7 @@
 * Upgrade TinyMCE to 8.10.0
   * Unfortunately, this involves a licensing change to TinyMCE is no longer distributed alongside Zambia
 * Remove TinyMCE from 1 page where it wasn't needed and clean up code associated with it
+* Update vite from 8.2.1 to 8.3.4; update some related dependencies; and rebuild two react apps.
 
 ## Application Notes
 
