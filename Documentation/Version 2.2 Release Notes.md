@@ -4,6 +4,7 @@
 
 ### Bug Fixes
 * On MySQL 8 or later (but not MariaDB), schema patches 58-60 created some tables with a collation that doesn't match the rest of the schema, causing "Illegal mix of collations" errors, e.g. in the Admin Participants search. Patch 76 repairs them.
+* Fix password reset when new passwords are blank or don't match
 
 ### Schema Patches
 
