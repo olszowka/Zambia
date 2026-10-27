@@ -37,6 +37,7 @@
     * numbered lists
     * bullet lists
     * headings (`<h1>, <h2>` etc.)
+* Improve display and sorting of participants on Assign Participants and Invite Participants pages by utilizing name_for_sorting field
  
 ### Invisible code cleanup
 * View Session Counts page moved to XSL and BS5/JQ3
