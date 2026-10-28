@@ -14,7 +14,7 @@ import InfoTab from './tabs/InfoTab';
 import WarningsTab from './tabs/WarningsTab';
 import UnscheduledSessionBox from './UnscheduledSessionBox';
 import FileCabinetIcon from './FileCabinetIcon';
-import OptionsMenu from './OptionsMenu';
+import { SNAP_MODES } from '../dropTarget';
 import type { WarningsTabProps } from './tabs/WarningsTab';
 
 interface LeftPanelProps {
@@ -129,16 +129,53 @@ export default function LeftPanel({
       <div className="grid-scheduler-sessions-panel">
         <div className="grid-scheduler-sessions-panel-header">
           <div className="grid-scheduler-sessions-panel-title">Sessions to be scheduled</div>
+          {/* Page-level scheduling options, always visible so the current selections can be seen at a glance.
+              The file cabinet sits on the bottom row, next to the pool list, to keep drags onto it short. */}
           <div className="grid-scheduler-sessions-panel-header-controls">
-            <OptionsMenu
-              swapMode={swapMode}
-              onSwapModeChange={onSwapModeChange}
-              snapMode={snapMode}
-              onSnapModeChange={onSnapModeChange}
-              gridSimplificationAvailable={gridSimplificationAvailable}
-              gridSimplification={gridSimplification}
-              onGridSimplificationChange={onGridSimplificationChange}
+            <input
+              type="checkbox"
+              className="btn-check"
+              id="grid-scheduler-swap-mode"
+              autoComplete="off"
+              checked={swapMode}
+              onChange={(e) => onSwapModeChange(e.target.checked)}
             />
+            <label className="btn btn-outline-secondary btn-sm" htmlFor="grid-scheduler-swap-mode">
+              Swap Mode
+            </label>
+            {/* Left out when DEFAULT_DURATION is missing or longer than the grid spacing, since no session could
+                ever qualify. */}
+            {gridSimplificationAvailable && (
+              <>
+                <input
+                  type="checkbox"
+                  className="btn-check"
+                  id="grid-scheduler-grid-simplification"
+                  autoComplete="off"
+                  checked={gridSimplification}
+                  onChange={(e) => onGridSimplificationChange(e.target.checked)}
+                />
+                <label className="btn btn-outline-secondary btn-sm" htmlFor="grid-scheduler-grid-simplification">
+                  Grid Simplification
+                </label>
+              </>
+            )}
+          </div>
+          <div className="grid-scheduler-sessions-panel-header-controls">
+            <label className="grid-scheduler-snap-control">
+              Snap:
+              <select
+                className="form-select form-select-sm"
+                value={String(snapMode)}
+                onChange={(e) => onSnapModeChange(e.target.value === 'grid' ? 'grid' : (Number(e.target.value) as SnapMode))}
+              >
+                {SNAP_MODES.map((mode) => (
+                  <option key={mode.value} value={String(mode.value)}>
+                    {mode.label}
+                  </option>
+                ))}
+              </select>
+            </label>
             <button
               type="button"
               className="btn btn-secondary btn-sm"

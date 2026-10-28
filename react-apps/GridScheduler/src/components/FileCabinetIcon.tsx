@@ -18,8 +18,8 @@ export default function FileCabinetIcon({ dragOver }: FileCabinetIconProps) {
       id="fileCabinetIMG"
       data-drop-kind="cabinet"
       className="grid-scheduler-file-cabinet"
-      height={65}
-      width={49}
+      height={40}
+      width={30}
       src={open ? 'images/FileCabinetOpen.png' : 'images/FileCabinetClosed.png'}
       onMouseOver={() => setHover(true)}
       onMouseOut={() => setHover(false)}

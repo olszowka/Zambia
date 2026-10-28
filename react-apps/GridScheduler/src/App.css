@@ -104,39 +104,24 @@
   gap: 6px;
 }
 
+.grid-scheduler-sessions-panel-header-controls + .grid-scheduler-sessions-panel-header-controls {
+  margin-top: 4px;
+}
+
 .grid-scheduler-sessions-panel-header-controls .btn {
   margin: 0 2px;
 }
 
-/* Border colors match the .form-check-input overrides in webpages/css/zambia_bs5_customizations.less
-   (#6c757d), rather than Bootstrap 5's much fainter defaults. Compound selector so it beats Bootstrap's own
-   .dropdown-menu border rule regardless of stylesheet load order. */
-.dropdown-menu.grid-scheduler-options-menu {
-  border-color: #6c757d;
-}
-
-.grid-scheduler-options-menu {
-  padding: 6px 10px;
-  min-width: 170px;
-  font-weight: normal;
-  font-size: 0.85rem;
-}
-
-.grid-scheduler-options-row {
+.grid-scheduler-snap-control {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   margin: 0;
-  padding: 3px 0;
+  font-weight: normal;
   white-space: nowrap;
 }
 
-.grid-scheduler-options-row .form-check-input {
-  margin-top: 0;
-  border-color: #6c757d;
-}
-
-.grid-scheduler-options-row select {
+.grid-scheduler-snap-control select {
   width: auto;
 }
 
@@ -585,9 +570,12 @@
 }
 
 /* Swap Mode counterpart animation (swapAnimation.ts): the real box waits hidden at its destination while a
-   fixed-position clone flies there from its old spot. */
+   fixed-position clone flies there from its old spot. Hidden with opacity rather than visibility: Safari, on
+   visibility: hidden -> visible, repainted the box's text but not its border. pointer-events: none keeps it out
+   of dropTarget.ts's hit-testing meanwhile, as visibility: hidden did. */
 .grid-scheduler-animation-hidden {
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .grid-scheduler-session-box.grid-scheduler-swap-animation {
