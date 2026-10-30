@@ -2,6 +2,28 @@
 // Copyright (c) 2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report['categories']['Boskone Central'] = 260;
 $report['columns'][] = array("orderable" => false);
+$report['queries']['participants'] =<<<'EOD'
+SELECT
+        P.badgeid, P.pubsname, P.name_for_sorting, PI.yespanels, PI.nopanels, PI.yespeople, PI.nopeople,
+        PI.otherroles, P.bio,
+        IFNULL(P.name_for_sorting,
+            IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1))
+            ) AS pubsnameSort
+    FROM
+             Participants P
+        JOIN ParticipantInterests PI USING (badgeid)
+        JOIN CongoDump CD USING (badgeid)
+        JOIN UserHasPermissionRole UHPR USING (badgeid)
+        JOIN PermissionRoles PR USING (permroleid)
+    WHERE
+            P.interested = 1
+        AND PR.permrolename = 'Participant'
+    ORDER BY
+        IFNULL(P.name_for_sorting,
+            IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1))
+            ),
+        CD.firstname;
+EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
