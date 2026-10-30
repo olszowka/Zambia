@@ -1,9 +1,12 @@
 <?php
 // Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message_error, $title;
+global $message_error, $title, $pageBootstrapVersion;
 $title = "Reports in Category";
+$pageBootstrapVersion = 'bs5';
 require_once('StaffCommonCode.php');
+require_once('report_functions.php');
 $CON_NAME = CON_NAME;
+$reportHidingEnabled = isReportHidingEnabled();
 $reportcategoryid = getString("reportcategory");
 if ($reportcategoryid === null)
     $reportcategoryid = "";
@@ -24,30 +27,32 @@ if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     exit();
 }
 staff_header($title, 'bs5');
-?>
-<div class="container-lg">
-    <div class="row mt-2">
-        <div class=" col-md-27">
-            <div class="list-group" id="reports-list">
-<?php
+$xml = new DomDocument('1.0', 'UTF-8');
+$doc = $xml -> createElement('doc');
+$doc = $xml -> appendChild($doc);
+$queryNode = $xml -> createElement('query');
+$queryNode = $doc -> appendChild($queryNode);
+$queryNode -> setAttribute('queryName', 'reports');
 if ($reportcategoryid === "") {
     foreach ($reportNames as $reportFileName => $reportName) {
-        echo "<div class='list-group-item flex-column align-items-start'>\n<h5><a  href='generateReport.php?reportName=$reportFileName'>$reportName</a></h5>\n";
-        echo "<div>{$reportDescriptions[$reportFileName]}</div>";
-        echo "</div>";
+        $row = $xml -> createElement('row');
+        $row = $queryNode -> appendChild($row);
+        $row -> setAttribute('reportfilename', $reportFileName);
+        $row -> setAttribute('reportname', $reportName);
+        $row -> setAttribute('reportdescription', $reportDescriptions[$reportFileName]);
     }
 } else {
     foreach ($reportCategories[$reportcategoryid] as $reportFileName) {
-        echo "<div class='list-group-item flex-column align-items-start'>\n<h5><a href='generateReport.php?reportName=$reportFileName'>$reportNames[$reportFileName]</a></h5>\n";
-        echo "<div>{$reportDescriptions[$reportFileName]}</div>";
-        echo "</div>";
+        $row = $xml -> createElement('row');
+        $row = $queryNode -> appendChild($row);
+        $row -> setAttribute('reportfilename', $reportFileName);
+        $row -> setAttribute('reportname', $reportNames[$reportFileName]);
+        $row -> setAttribute('reportdescription', $reportDescriptions[$reportFileName]);
     }
 }
-?>
-            </div>
-        </div>
-    </div>
-</div>
-<?php
+$paramArray = array();
+$paramArray["reportcategoryid"] = $reportcategoryid;
+$paramArray["reporthidingenabled"] = $reportHidingEnabled;
+RenderXSLT('staffReportsInCategory.xsl', $paramArray, $xml);
 staff_footer();
 ?>

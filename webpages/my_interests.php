@@ -1,8 +1,12 @@
 <?php
-// Copyright (c) 2005-2025 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $header_section, $message_error, $title;
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $header_section, $message_error, $title, $pageBootstrapVersion;
 $title = "General Interests";
 // This can be a participant or a staff page
+// Note: requiring StaffHeader.php below unconditionally sets $header_section to HEADER_STAFF, so
+// RenderError() always dispatches to StaffRenderErrorPage() in this file, even before the
+// participant/staff branch below is decided - use bs4 (staff_header's version) as the default.
+$pageBootstrapVersion = 'bs4';
 require('PartCommonCode.php'); // initialize db; check login;
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');

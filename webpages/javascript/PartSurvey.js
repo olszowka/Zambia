@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 var PartSurvey = function () {
 
     this.initialize = function () {
@@ -10,9 +10,14 @@ var PartSurvey = function () {
             fieldname = this.getAttribute("id");
             height = this.getAttribute("rows") * 50;
             maxlength = this.getAttribute("maxlength");
-            tinyMCE.init({
+            window.tinyMCE?.init({
                 selector: "textarea#" + fieldname,
-                plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+                license_key: 'gpl',
+                invalid_styles: 'color background-color font-family text-align text-decoration',
+                formats: {
+                    underline: { inline: 'u', exact: true }
+                },
+                plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
                 browser_spellcheck: true,
                 contextmenu: false,
                 height: height,
@@ -21,8 +26,8 @@ var PartSurvey = function () {
                 maxlength: maxlength,
                 menubar: false,
                 toolbar: [
-                    'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-                    'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+                    'undo redo searchreplace | blocks | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                    'outdent indent | numlist bullist | link'
                 ],
                 toolbar_mode: 'floating',
                 content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -51,7 +56,7 @@ var PartSurvey = function () {
 var partSurvey = new PartSurvey();
 
 function UpdateSurvey() {
-    tinyMCE.triggerSave();
+    window.tinyMCE?.triggerSave();
     var i;
     $('[data-multidisplay="yes"]').each(function () {
         //console.log("saving " + this.getAttribute("id"));

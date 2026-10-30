@@ -1,102 +1,120 @@
 <?php
-// Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $title;
-$title="Session History";
+$title = "Session History";
 require_once('StaffCommonCode.php');
 
-staff_header($title, 'bs2');
+staff_header($title, 'bs5');
 
 $queryArray = array();
-if (isset($_POST["selsess"])) {
-        $selsessionid=filter_var($_POST["selsess"], FILTER_VALIDATE_INT);
-		}
-    elseif (isset($_GET["selsess"])) {
-        $selsessionid=filter_var($_GET["selsess"], FILTER_VALIDATE_INT);
-        }
-    else {
-        $selsessionid=0; // room was not yet selected.
-        }
-$queryArray["chooseSession"]=<<<EOD
+$selsessionid = getInt('selsess', 0);
+$queryArray["chooseSession"] = <<<EOD
 SELECT
-		T.trackname, S.sessionid, S.title
-	FROM
-			 Sessions S
-		JOIN Tracks T USING (trackid)
-		JOIN SessionStatuses SS USING (statusid)
-	WHERE
-		SS.may_be_scheduled = 1
-	ORDER BY
-		T.trackname, S.sessionid, S.title;
+        T.trackname, S.sessionid, S.title
+    FROM
+             Sessions S
+        JOIN Tracks T USING (trackid)
+        JOIN SessionStatuses SS USING (statusid)
+    WHERE
+        SS.may_be_scheduled = 1
+    ORDER BY
+        T.trackname, S.sessionid, S.title;
 EOD;
+if (($resultXML=mysql_query_XML($queryArray)) === false) {
+    $message="Error querying database. Unable to continue.<br>";
+    echo "<p class\"alert alert-error\">$message</p>\n";
+    staff_footer();
+    exit();
+}
 if ($selsessionid != 0) {
-	$queryArray["title"]=<<<EOD
-SELECT title FROM Sessions WHERE sessionid = $selsessionid;
+    $querySQLArr = array();
+    $queryParamTypesArr = array();
+    $queryParamsArr = array();
+
+    $querySQLArr["title"] = <<<EOD
+SELECT title FROM Sessions WHERE sessionid = ?;
 EOD;
-	$queryArray["timestamps"]=<<<EOD
-(SELECT createdts AS timestamp FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid)
-	UNION
-(SELECT inactivatedts AS timestamp FROM ParticipantOnSessionHistory WHERE sessionid = $selsessionid)
-	UNION
-(SELECT timestamp FROM SessionEditHistory WHERE sessionid = $selsessionid)
+    $queryParamTypesArr["title"] = "i";
+    $queryParamsArr["title"] = array($selsessionid);
+
+    $querySQLArr["timestamps"]=<<<EOD
+(SELECT createdts AS timestamp FROM ParticipantOnSessionHistory WHERE sessionid = ?)
+    UNION
+(SELECT inactivatedts AS timestamp FROM ParticipantOnSessionHistory WHERE sessionid = ?)
+    UNION
+(SELECT timestamp FROM SessionEditHistory WHERE sessionid = ?)
 ORDER BY timestamp DESC;
 EOD;
-	$queryArray["currentAssignments"]=<<<EOD
+    $queryParamTypesArr["timestamps"] = "iii";
+    $queryParamsArr["timestamps"] = array($selsessionid, $selsessionid, $selsessionid);
+
+    $querySQLArr["currentAssignments"] = <<<EOD
 SELECT
-		COALESCE(POS.moderator, 0) AS moderator,
-		P.badgeid,
-		P.pubsname
-	FROM
-			 ParticipantOnSession POS
-		JOIN Participants P USING (badgeid)
-	WHERE
-		POS.sessionid=$selsessionid
-	ORDER BY
-		moderator DESC;
+        COALESCE(POS.moderator, 0) AS moderator,
+        P.badgeid,
+        P.pubsname
+    FROM
+             ParticipantOnSession POS
+        JOIN Participants P USING (badgeid)
+    WHERE
+        POS.sessionid = ?
+    ORDER BY
+        moderator DESC;
 EOD;
-	$queryArray["participantedits"]=<<<EOD
+    $queryParamTypesArr["currentAssignments"] = "i";
+    $queryParamsArr["currentAssignments"] = array($selsessionid);
+
+    $querySQLArr["participantedits"] = <<<EOD
 SELECT
-		POSH.badgeid,
-		COALESCE(POSH.moderator, 0) AS moderator,
-		POSH.createdbybadgeid,
-		POSH.createdts,
-		DATE_FORMAT(POSH.createdts, "%c/%e/%y %l:%i %p") AS createdtsformat,
-		POSH.inactivatedbybadgeid,
-		POSH.inactivatedts,
-		DATE_FORMAT(POSH.inactivatedts, "%c/%e/%y %l:%i %p") AS inactivatedtsformat,
-		PartOS.pubsname,
-		PartCR.pubsname AS crpubsname,
-		PartInact.pubsname AS inactpubsname
-	FROM
-				  ParticipantOnSessionHistory POSH
-			 JOIN Participants PartOS ON PartOS.badgeid = POSH.badgeid
-			 JOIN Participants PartCR ON PartCR.badgeid = POSH.createdbybadgeid
-		LEFT JOIN Participants PartInact ON PartInact.badgeid = POSH.inactivatedbybadgeid
-	WHERE
-		POSH.sessionid=$selsessionid;
+        POSH.badgeid,
+        COALESCE(POSH.moderator, 0) AS moderator,
+        POSH.createdbybadgeid,
+        POSH.createdts,
+        DATE_FORMAT(POSH.createdts, "%c/%e/%y %l:%i %p") AS createdtsformat,
+        POSH.inactivatedbybadgeid,
+        POSH.inactivatedts,
+        DATE_FORMAT(POSH.inactivatedts, "%c/%e/%y %l:%i %p") AS inactivatedtsformat,
+        PartOS.pubsname,
+        PartCR.pubsname AS crpubsname,
+        PartInact.pubsname AS inactpubsname
+    FROM
+                  ParticipantOnSessionHistory POSH
+             JOIN Participants PartOS ON PartOS.badgeid = POSH.badgeid
+             JOIN Participants PartCR ON PartCR.badgeid = POSH.createdbybadgeid
+        LEFT JOIN Participants PartInact ON PartInact.badgeid = POSH.inactivatedbybadgeid
+    WHERE
+        POSH.sessionid = ?;
 EOD;
-	$queryArray["sessionedits"]=<<<EOD
+    $queryParamTypesArr["participantedits"] = "i";
+    $queryParamsArr["participantedits"] = array($selsessionid);
+
+    $querySQLArr["sessionedits"] = <<<EOD
 SELECT
-		SEH.badgeid,
-		SEH.name,
-		SEH.editdescription,
-		SEH.timestamp,
-		DATE_FORMAT(SEH.timestamp, "%c/%e/%y %l:%i %p") AS tsformat,
-		SEC.description AS codedescription,
-		SS.statusname
-	FROM
-			 SessionEditHistory SEH
-		JOIN SessionEditCodes SEC USING (sessioneditcode)
-		JOIN SessionStatuses SS USING (statusid)
-	WHERE
-		SEH.sessionid=$selsessionid;
+        SEH.badgeid,
+        SEH.name,
+        SEH.editdescription,
+        SEH.timestamp,
+        DATE_FORMAT(SEH.timestamp, "%c/%e/%y %l:%i %p") AS tsformat,
+        SEC.description AS codedescription,
+        SS.statusname
+    FROM
+             SessionEditHistory SEH
+        JOIN SessionEditCodes SEC USING (sessioneditcode)
+        JOIN SessionStatuses SS USING (statusid)
+    WHERE
+        SEH.sessionid = ?;
 EOD;
-	}
-if (($resultXML=mysql_query_XML($queryArray))===false) {
-	$message="Error querying database. Unable to continue.<br>";
-	echo "<p class\"alert alert-error\">$message</p>\n";
-	staff_footer();
-	exit();
-	}
+    $queryParamTypesArr["sessionedits"] = "i";
+    $queryParamsArr["sessionedits"] = array($selsessionid);
+
+    if (!$detailXML = mysql_prepare_query_XML($querySQLArr, $queryParamTypesArr, $queryParamsArr)) {
+        exit(); // Should have exited already
+    }
+    $docNode = $resultXML->getElementsByTagName("doc")->item(0);
+    foreach ($detailXML->getElementsByTagName("doc")->item(0)->childNodes as $queryNode) {
+        $docNode->appendChild($resultXML->importNode($queryNode, true));
+    }
+}
 $parametersNode = $resultXML->createElement("parameters");
 $docNode = $resultXML->getElementsByTagName("doc")->item(0);
 $parametersNode = $docNode->appendChild($parametersNode);

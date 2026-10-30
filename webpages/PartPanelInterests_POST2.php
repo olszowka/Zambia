@@ -1,35 +1,35 @@
 <?php
-// Copyright (c) 2011-2017 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
     //This file should be requested from post on "session interests(ranks)" form
+    global $session_interests, $session_interest_index, $title, $message, $pageBootstrapVersion;
+    $title = "Panel Interests";
+    $pageBootstrapVersion = 'bs5';
     require ('PartCommonCode.php'); // initialize db; check login; set $badgeid
     require ('PartPanelInterests_FNC.php');
     require ('PartPanelInterests_Render.php');
-    global $session_interests, $session_interest_index, $title, $message;
-    $title = "Panel Interests";
     $error = false;
     if (!may_I('my_panel_interests')) {
         $message = "You do not currently have permission to view this page.<br />\n";
         RenderError($message);
         exit();
-        }
+    }
     if (!isset($_POST["submitranks"])) { //That should be "save" button on "session interests" form.
         $message = "This page was reached from an unexpected place.<br />\n";
         RenderError($message);
         exit();
-        }
+    }
     $session_interest_count = get_session_interests_from_post();
     if (validate_session_interests($session_interest_count)===false) {
-            $error = true;
-            $message_error = $message;
-            $message = "";
-			$pageIsDirty = True;
-            }
-        else {
-			update_session_interests_in_db($badgeid, $session_interest_count);
-            $message_error = "";
-    		$session_interest_count = get_session_interests_from_db($badgeid); // Returns count; Will render its own errors
-			$pageIsDirty = False;
-            }
+        $error = true;
+        $message_error = $message;
+        $message = "";
+        $pageIsDirty = True;
+    } else {
+        update_session_interests_in_db($badgeid, $session_interest_count);
+        $message_error = "";
+        $session_interest_count = get_session_interests_from_db($badgeid); // Returns count; Will render its own errors
+        $pageIsDirty = False;
+    }
     get_si_session_info_from_db($session_interest_count); // Will render its own errors 
     render_session_interests($session_interest_count, $message, $message_error, $pageIsDirty, false); // includes footer
 ?>

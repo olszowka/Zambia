@@ -307,8 +307,8 @@ function set_session_defaults() {
     global $session;
     //$session["sessionid"] set elsewhere
     $session["track"] = 0; // prompt with "SELECT"
-    $session["type"] = 2; // default to "Panel"
-    $session["divisionid"] = 1; // default to "Don't CAre"
+    $session["type"] = get_id_with_lowest_display_order('Types', 'typeid');
+    $session["divisionid"] = get_id_with_lowest_display_order('Divisions', 'divisionid');
     $session["pubstatusid"] = 2; // default to "Public"
     $session["languagestatusid"] = 1; // default to "English"
     $session["pubno"] = "";
@@ -323,9 +323,9 @@ function set_session_defaults() {
     $session["tagdest"] = "";
     $session["duration"] = DEFAULT_DURATION; //should be specified corresponding to DURATION_IN_MINUTES preference
     $session["atten"] = "";
-    $session["kids"] = 1; // "Don't Care"
+    $session["kids"] = get_id_with_lowest_display_order('KidsCategories', 'kidscatid');
     $session["signup"] = false; // leave checkbox blank initially
-    $session["roomset"] = 1; // "Don't Care"
+    $session["roomset"] = get_id_with_lowest_display_order('RoomSets', 'roomsetid');
     $session["notesforpart"] = "";
     $session["servnotes"] = "";
     $session["status"] = 6; // default to "Edit Me"
@@ -766,6 +766,79 @@ function getConStartDate() {
 function getConEndDate() {
     return DateTimeImmutable::createFromFormat('Y-m-d H:i:s', CON_START_DATIM)->
         add(new DateInterval('P'.(CON_NUM_DAYS - 1).'D'))->format('l, F j, Y');
+}
+
+/**
+ * function participant_display_name_sql()
+ * returns SQL expression for name to show in participant dropdowns: pubsname, or firstname lastname if no pubsname
+ * expects Participants aliased as P and CongoDump aliased as CD
+ */
+function participant_display_name_sql() {
+    return <<<EOD
+CASE
+            WHEN IFNULL(P.pubsname, '') != '' THEN P.pubsname
+            ELSE CONCAT_WS(' ', NULLIF(CD.firstname, ''), NULLIF(CD.lastname, ''))
+            END
+EOD;
+}
+
+/**
+ * function participant_sort_key_sql()
+ * returns SQL expression for primary sort key of participant dropdowns:
+ * name_for_sorting if populated, else lastname if no pubsname or pubsname contains lastname,
+ * else last word of pubsname
+ * expects Participants aliased as P and CongoDump aliased as CD
+ */
+function participant_sort_key_sql() {
+    return <<<EOD
+CASE
+            WHEN IFNULL(P.name_for_sorting, '') != '' THEN P.name_for_sorting
+            WHEN IFNULL(P.pubsname, '') = '' OR (IFNULL(CD.lastname, '') != '' AND INSTR(P.pubsname, CD.lastname) > 0) THEN CD.lastname
+            ELSE SUBSTRING_INDEX(TRIM(P.pubsname), ' ', -1)
+            END
+EOD;
+}
+
+/**
+ * function name_to_tokens($name)
+ * returns array of lowercase words in $name with accents removed, apostrophes and similar dropped,
+ * and other punctuation (including hyphens) treated as word separators
+ */
+function name_to_tokens($name) {
+    $name = $name ?? '';
+    if (class_exists('Normalizer')) {
+        $name = preg_replace('/\p{Mn}+/u', '', Normalizer::normalize($name, Normalizer::FORM_D));
+    } else {
+        $transliterated = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $name);
+        if ($transliterated !== false) {
+            $name = $transliterated;
+        }
+    }
+    $name = mb_strtolower($name);
+    $name = preg_replace('/[\'"`^~\x{2018}\x{2019}]/u', '', $name);
+    $name = preg_replace('/[^\p{L}\p{N}]+/u', ' ', $name);
+    return preg_split('/ /', trim($name), -1, PREG_SPLIT_NO_EMPTY);
+}
+
+/**
+ * function participant_dropdown_label($pubsname, $firstname, $lastname, $badgeid)
+ * returns label for participant dropdowns: display name - badgeid, with firstname lastname added in parentheses
+ * when pubsname is substantially different, i.e. shares no word with lastname (or firstname if no lastname)
+ */
+function participant_dropdown_label($pubsname, $firstname, $lastname, $badgeid) {
+    $pubsname = trim($pubsname ?? '');
+    $realName = trim(($firstname ?? '') . ' ' . ($lastname ?? ''));
+    if ($pubsname === '') {
+        return "$realName - $badgeid";
+    }
+    $compareTokens = name_to_tokens($lastname);
+    if (count($compareTokens) === 0) {
+        $compareTokens = name_to_tokens($firstname);
+    }
+    if (count($compareTokens) === 0 || count(array_intersect($compareTokens, name_to_tokens($pubsname))) > 0) {
+        return "$pubsname - $badgeid";
+    }
+    return "$pubsname ($realName) - $badgeid";
 }
 
 ?>

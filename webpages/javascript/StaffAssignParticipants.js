@@ -1,5 +1,5 @@
 //  Created by Peter Olszowka on 2015-11-21;
-//  Copyright (c) 2015-2019 The Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2026 The Peter Olszowka. All rights reserved. See copyright document for more details.
 var participantSelectChoices = null;
 
 var StaffAssignParticipants = function() {
@@ -74,6 +74,7 @@ var StaffAssignParticipants = function() {
         if ($participantSelect) {
              participantSelectChoices = new Choices($participantSelect, {
                 searchResultLimit: 9999,
+                shouldSort: false,
                 searchPlaceholderValue: "Type here to search list."
             });
             if ($biographyButton) {
@@ -206,6 +207,7 @@ function filterComplete(data, textStatus, jqXHR) {
             participantSelect = document.getElementById('partDropdown');
             participantSelectChoices = new Choices(participantSelect, {
                 searchResultLimit: 9999,
+                shouldSort: false,
                 searchPlaceholderValue: "Type here to search list."
             });
         }

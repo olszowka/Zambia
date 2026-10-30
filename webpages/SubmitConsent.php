@@ -1,8 +1,9 @@
 <?php
 // Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $linki, $title;
+global $linki, $title, $pageBootstrapVersion;
 require('PartCommonCode.php');
 $title = "Submit Consent";
+$pageBootstrapVersion = 'bs5';
 $consent = getString('consent');
 // If consent is not granted, log out the user
 if ($consent == 0) {

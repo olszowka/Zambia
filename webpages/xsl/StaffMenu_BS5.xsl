@@ -9,6 +9,7 @@
     <xsl:param name="reportMenuList" select="''"/>
     <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
     <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
+    <xsl:param name="reportHidingEnabled" select="'0'"/>
     <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
     <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
     <xsl:variable name="ConfigurePermissions" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigurePermissions']"/>
@@ -143,6 +144,14 @@
                                 </xsl:if>
                                 <xsl:if test="$ConfigureReports">
                                     <a class="dropdown-item" href="BuildReportMenus.php">Build Report Menus</a>
+                                    <xsl:choose>
+                                        <xsl:when test="$reportHidingEnabled = '1'">
+                                            <a class="dropdown-item" href="ToggleReportHiding.php">Disable Report Hiding</a>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <a class="dropdown-item" href="ToggleReportHiding.php">Enable Report Hiding</a>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                 </xsl:if>
                                 <xsl:if test="$Administrator">
                                     <a class="dropdown-item" href="EditCustomText.php">Edit Custom Text</a>

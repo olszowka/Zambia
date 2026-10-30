@@ -2,9 +2,11 @@
 // Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // File created by Syd Weinstein on 2020-12-29
 
-global $header_section, $message_error, $title;
+global $header_section, $message_error, $title, $pageBootstrapVersion;
 $title = 'Participant Survey';
 // This can be a participant or a staff page
+// Both the participant and staff header calls below use bs4, so a single default suffices.
+$pageBootstrapVersion = 'bs4';
 require_once('PartCommonCode.php');
 require_once('StaffHeader.php');
 require_once('StaffFooter.php');

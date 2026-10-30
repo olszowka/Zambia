@@ -23,8 +23,13 @@ var EditSurvey = function () {
         //console.log("editor_init: tinyMCE.init('input#prompt')");
         hoverdirty = false;
         promptdirty = false;
-        tinyMCE.init({
+        window.tinyMCE?.init({
             selector: 'input#prompt',
+            license_key: 'gpl',
+            invalid_styles: 'color background-color font-family text-align text-decoration',
+            formats: {
+                underline: { inline: 'u', exact: true }
+            },
             plugins: 'fullscreen link preview searchreplace autolink charmap nonbreaking visualchars ',
             browser_spellcheck: true,
             contextmenu: false,
@@ -34,7 +39,7 @@ var EditSurvey = function () {
             maxlength: 512,
             menubar: false,
             toolbar: [
-                'undo redo searchreplace | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link code | preview fullscreen'
+                'undo redo searchreplace | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | link code | preview fullscreen'
             ],
             toolbar_mode: 'floating',
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -48,9 +53,14 @@ var EditSurvey = function () {
         });
 
         //console.log("editor_init: tinyMCE.init('textarea#hover')");
-        tinyMCE.init({
+        window.tinyMCE?.init({
             selector: 'textarea#hover',
-            plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+            license_key: 'gpl',
+            invalid_styles: 'color background-color font-family text-align text-decoration',
+            formats: {
+                underline: { inline: 'u', exact: true }
+            },
+            plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
             browser_spellcheck: true,
             contextmenu: false,
             height: 200,
@@ -59,8 +69,8 @@ var EditSurvey = function () {
             maxlength: 8192,
             menubar: false,
             toolbar: [
-                'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-                'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+                'undo redo searchreplace | blocks | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                'outdent indent | numlist bullist | link'
             ],
             toolbar_mode: 'floating',
             content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -77,7 +87,7 @@ var EditSurvey = function () {
 
     function addupdaterow(table, opttable) {
         // update table itself for future save
-        tinyMCE.triggerSave();
+        window.tinyMCE?.triggerSave();
 
         var shortname = document.getElementById("shortname").value;
         var description = document.getElementById("description").value;
@@ -160,7 +170,7 @@ var EditSurvey = function () {
         document.getElementById("general-question-div").style.display = "none";
         document.getElementById("preview").innerHTML = "";
         //console.log("addupdaterow: tinyMCE.remove");
-        tinyMCE.remove();
+        window.tinyMCE?.remove();
         previewmce = false;
         table.clearHistory();
         if (opttable) {
@@ -177,7 +187,7 @@ var EditSurvey = function () {
     }
 
     this.processNewQuestion = function () {
-        tinyMCE.remove();
+        window.tinyMCE?.remove();
         previewmce = false;
         //console.log("addnewquestion: tinyMCE.remove");
         curid = -99999;
@@ -276,6 +286,9 @@ var EditSurvey = function () {
         document.getElementById("value_range").style.display = "none";
         document.getElementById("general-question-div").style.display = "block";
         document.getElementById("message").style.display = 'none';
+        if (optiontable) {
+            optiontable.destroy(); // must destroy before dropping the reference, or the next question's table (same div) leaks stale event listeners
+        }
         optiontable = null;
         questionoptions = [];
         edit_typechange(false);
@@ -295,7 +308,7 @@ var EditSurvey = function () {
         var name = row.getCell("shortname").getValue();
         in_editconfig = true;
         //console.log("editconfig: tinyMCE.remove()");
-        tinyMCE.remove();
+        window.tinyMCE?.remove();
         previewmce = false;
 
         document.getElementById("message").style.display = 'none';
@@ -407,6 +420,9 @@ var EditSurvey = function () {
             options = atob(options);
         if (options.length > 3)
             questionoptions = JSON.parse(options);
+        if (optiontable) {
+            optiontable.destroy(); // must destroy before dropping the reference, or the next question's table (same div) leaks stale event listeners
+        }
         optiontable = null;
 
         // now show the block
@@ -514,16 +530,14 @@ var EditSurvey = function () {
             optiontable = new Tabulator("#option-table", {
                 maxHeight: "250px",
                 movableRows: true,
-                tooltips: false,
-                headerSort: false,
                 history: true,
+                columnDefaults: { headerSort: false },
                 data: questionoptions,
                 index: "ordinal",
                 initialSort: [
                     { column: "display_order", dir: "asc" } //sort by this first
                 ],
                 layout: "fitDataTable",
-                cellEdited: optionCellChanged,
                 columns: [
                     { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
                     { title: "ID", field: "questionid", visible: false },
@@ -532,20 +546,20 @@ var EditSurvey = function () {
                     {
                         title: "Value", field: "value", width: 120,
                         editor: "input",
-                        editorParams: { editorAttributes: { maxlength: 512 } },
+                        editorParams: { elementAttributes: { maxlength: 512 } },
                     },
                     {
                         title: "Label", field: "optionshort", width: 200,
                         editor: "input",
-                        editorParams: { editorAttributes: { maxlength: 64 } },
+                        editorParams: { elementAttributes: { maxlength: 64 } },
                     },
                     {
                         title: "Hover Text", field: "optionhover", width: 300,
-                        editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
+                        editor: "input", editorParams: { elementAttributes: { maxlength: 512 } }
                     },
                     {
                         title: "Other", field: "allowothertext", formatter: "tickCross",
-                        editor: "select", editorParams: {
+                        editor: "list", editorParams: {
                             values: { 1: "Yes", 0: "No" },
                         }
                     },
@@ -556,25 +570,26 @@ var EditSurvey = function () {
                         },
                     },
                 ],
-                rowMoved: function (row) {
-                    document.getElementById("message").style.display = 'none';
-                    //console.log("Option Row: " + row.getData().optionshort + " has been moved, now row #" + row.getPosition());
-                    if (this.getHistoryUndoSize() > 0) {
-                        document.getElementById("optundo").disabled = false;
-                    }
-                },
-                dataChanged: function (data) {
-                    //data - the updated table data
-                    if (this.getHistoryUndoSize() > 0) {
-                        optionsdirty = true;
-                        document.getElementById("optundo").disabled = false;
-                    }
-                    el = document.getElementById("add-row");
-                    buttontext = el.innerHTML;
-                    if (buttontext.substring(buttontext.length - 1) != '*') {
-                        el.innerHTML = buttontext + '*';
-                    }
-                },
+            });
+            optiontable.on("cellEdited", optionCellChanged);
+            optiontable.on("rowMoved", function (row) {
+                document.getElementById("message").style.display = 'none';
+                //console.log("Option Row: " + row.getData().optionshort + " has been moved, now row #" + row.getPosition());
+                if (this.getHistoryUndoSize() > 0) {
+                    document.getElementById("optundo").disabled = false;
+                }
+            });
+            optiontable.on("dataChanged", function (data) {
+                //data - the updated table data
+                if (this.getHistoryUndoSize() > 0) {
+                    optionsdirty = true;
+                    document.getElementById("optundo").disabled = false;
+                }
+                el = document.getElementById("add-row");
+                buttontext = el.innerHTML;
+                if (buttontext.substring(buttontext.length - 1) != '*') {
+                    el.innerHTML = buttontext + '*';
+                }
             });
         }
     }
@@ -596,16 +611,27 @@ var EditSurvey = function () {
         configtable = new Tabulator("#surveyconfig", {
         maxHeight: "250px",
         movableRows: true,
-        tooltips: false,
         history: true,
-        headerSort: false,
+        columnDefaults: {
+            headerSort: false,
+            tooltip: function (e, cell) {
+                switch (cell.getField()) {
+                    case "shortname":
+                        return cell.getData().description;
+                    case "hover":
+                        return cell.getData().hover;
+                    case "prompt":
+                        return cell.getData().prompt;
+                }
+                return false;
+            },
+        },
         initialSort: [
             { column: "display_order", dir: "asc" } //sort by this first
         ],
         data: survey,
         index: "questionid",
         layout: "fitDataTable",
-        cellEdited: surveyCellChanged,
         columns: [
             { rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30 },
             { title: "ID", field: "questionid", visible: false },
@@ -622,50 +648,50 @@ var EditSurvey = function () {
             },
             {
                 title: "Prompt", field: "prompt", width: 180,
-                editor: "input", editorParams: { editorAttributes: { maxlength: 512 } }
+                editor: "input", editorParams: { elementAttributes: { maxlength: 512 } }
             },
             {
                 title: "Hover Text", field: "hover", width: 180,
-                editor: "input", editorParams: { editorAttributes: { maxlength: 8192 } }
+                editor: "input", editorParams: { elementAttributes: { maxlength: 8192 } }
             },
             { title: "Type", field: "typename", width: 140 },
             { title: "Type-ID", field: "typeid", visible: false },
             {
                 title: "Display Only", field: "display_only", formatter: "tickCross",
-                editor: "select", editorParams: {
+                editor: "list", editorParams: {
                     values: { 1: "Yes", 0: "No" },
                 }
             },
             {
                 title: "Required", field: "required", formatter: "tickCross",
-                editor: "select", editorParams: {
+                editor: "list", editorParams: {
                     values: { 1: "Yes", 0: "No" },
                 }
             },
             {
                 title: "Publish", field: "publish", formatter: "tickCross",
-                editor: "select", editorParams: {
+                editor: "list", editorParams: {
                     values: { 1: "Yes", 0: "No" },
                 }
             },
             {
                 title: "Privacy", field: "privacy_user", formatter: "tickCross",
-                editor: "select", editorParams: {
+                editor: "list", editorParams: {
                     values: { 1: "Yes", 0: "No" },
                 }
             },
             {
                 title: "Searchable", field: "searchable", formatter: "tickCross",
-                editor: "select", editorParams: {
+                editor: "list", editorParams: {
                     values: { 1: "Yes", 0: "No" },
                 }
-            },  
+            },
             {
                 title: "Asc/Desc", field: "ascending",
                 formatter: "lookup", formatterParams: {
                     1: "Ascending", 0: "Descending", "": "N/A"
                 },
-                editor: "select", editorParams: {
+                editor: "list", editorParams: {
                     values: { 1: "Ascending", 0: "Descending" },
                 }
             },
@@ -679,25 +705,16 @@ var EditSurvey = function () {
                 },
             },
         ],
-        rowMoved: function (row) {
+    });
+        configtable.on("cellEdited", surveyCellChanged);
+        configtable.on("rowMoved", function (row) {
             document.getElementById("message").style.display = 'none';
             //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
             if (this.getHistoryUndoSize() > 0) {
                 document.getElementById("undo").disabled = false;
             }
-        },
-        tooltips: function (cell) {
-            switch (cell.getField()) {
-                case "shortname":
-                    return cell.getData().description;
-                case "hover":
-                    return cell.getData().hover;
-                case "prompt":
-                    return cell.getData().prompt;
-            }
-            return false;
-        },
-        dataChanged: function (data) {
+        });
+        configtable.on("dataChanged", function (data) {
             //data - the updated table data
             document.getElementById("submitbtn").innerHTML = "Save*";
             document.getElementById("previewbtn").style.display = "none";
@@ -705,8 +722,7 @@ var EditSurvey = function () {
                 questionsdirty = true;
                 document.getElementById("undo").disabled = false;
             }
-        },
-    });
+        });
         var addnewrowbut = document.getElementById("add-row");
         addnewrowbut.addEventListener('click', function () { addupdaterow(configtable, optiontable); });
         var addnewbut = document.getElementById("add-question");
@@ -715,15 +731,17 @@ var EditSurvey = function () {
         addoptbut.addEventListener('click', function () { addnewoption(optiontable); });
        document.getElementById("typename").onchange = function () { edit_typechange(true); };
        //console.log("Setting up options in table");
-        for (option in survey_options) {
-            //console.log("question: " + option + " = ");
-            //console.log(survey_options[option]);
-            //console.log(atob(survey_options[option]));
-            configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
-       };
-       document.getElementById("submitbtn").innerHTML = "Save";
-       document.getElementById("previewbtn").style.display = "block";
-       configtable.clearHistory();
+       configtable.on("tableBuilt", function () {
+           for (option in survey_options) {
+               //console.log("question: " + option + " = ");
+               //console.log(survey_options[option]);
+               //console.log(atob(survey_options[option]));
+               configtable.updateOrAddData([{ questionid: option, options: survey_options[option] }]);
+           };
+           document.getElementById("submitbtn").innerHTML = "Save";
+           document.getElementById("previewbtn").style.display = "block";
+           configtable.clearHistory();
+       });
    };
 
 };
@@ -1076,9 +1094,14 @@ function RefreshComplete(data, textStatus, jqXHR) {
 
         if (previewmce == false) {
             //console.log("RefreshComplete: tinyMCE.init(textarea#" + fieldname + '-input)');
-            tinyMCE.init({
+            window.tinyMCE?.init({
                 selector: 'textarea#' + fieldname + '-input',
-                plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap hr nonbreaking visualchars code ',
+                license_key: 'gpl',
+                invalid_styles: 'color background-color font-family text-align text-decoration',
+                formats: {
+                    underline: { inline: 'u', exact: true }
+                },
+                plugins: 'fullscreen lists advlist link preview searchreplace autolink charmap nonbreaking visualchars code ',
                 browser_spellcheck: true,
                 contextmenu: false,
                 height: 200,
@@ -1087,8 +1110,8 @@ function RefreshComplete(data, textStatus, jqXHR) {
                 maxlength: maxlength,
                 menubar: false,
                 toolbar: [
-                    'undo redo searchreplace | styleselect | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
-                    'alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor | link'
+                    'undo redo searchreplace | blocks | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | preview fullscreen ',
+                    'outdent indent | numlist bullist | link'
                 ],
                 toolbar_mode: 'floating',
                 content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -1114,7 +1137,7 @@ function RefreshPreview() {
     //console.trace();
     if (previewmce) {
         fieldname = '#' + document.getElementById("shortname").value.replace(/ /g, '_') + '-input';
-        tinyMCE.remove(fieldname);
+        window.tinyMCE?.remove(fieldname);
         previewmce = false;
     }
     var questionid = document.getElementById("questionid").value
@@ -1125,7 +1148,7 @@ function RefreshPreview() {
     if (prompt.substring(0, 3) == '<p>') {
         prompt = prompt.substring(3, prompt.length - 4);
     }
-    tinyMCE.triggerSave();
+    window.tinyMCE?.triggerSave();
     var hover = document.getElementById("hover").value;
     var surveyData = [{
         questionid: questionid,

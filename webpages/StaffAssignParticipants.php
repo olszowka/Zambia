@@ -190,6 +190,8 @@ EOD;
             $resultXML = ObjecttoXML('years', $options, $resultXML);
         }
     }
+    $displayNameSql = participant_display_name_sql();
+    $sortKeySql = participant_sort_key_sql();
     $otherParticipantsQuery = <<<EOD
 WITH
     AnsweredSurvey(badgeid, answercount) AS (
@@ -214,6 +216,8 @@ SELECT
             ELSE CD.firstname
             END,
             ' (', CD.badgename, ') - ', P.badgeid) AS name,
+        $displayNameSql AS displayName,
+        $sortKeySql AS sortKey,
         IFNULL(A.answercount, 0) as answercount
     FROM
                   Participants P
@@ -224,9 +228,10 @@ SELECT
             P.interested = 1
         AND S.badgeid IS NULL
 ORDER BY
-    IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),
-    CD.firstname;
-EOD;     
+    sortKey,
+    CD.firstname,
+    displayName;
+EOD;
     $otherParticipantsResult = mysqli_query_exit_on_error($otherParticipantsQuery);
 
     $docNode = $resultXML->getElementsByTagName("doc")->item(0);
@@ -234,27 +239,13 @@ EOD;
     $queryNode = $resultXML->createElement("query");
     $queryNode = $docNode->appendChild($queryNode);
     $queryNode->setAttribute("queryName", "otherParticipants");
-    $regexArr = array();
     $SurveysAnswered = 0;
     while ($row = mysqli_fetch_assoc($otherParticipantsResult)) {
         $rowNode = $resultXML->createElement("row");
         $rowNode = $queryNode->appendChild($rowNode);
-        $badgeid = $row["badgeid"];
-        $rowNode->setAttribute("badgeid", $badgeid);
-        $pubsname = is_null($row["pubsname"]) ? '' : $row["pubsname"];
-        $lastname = is_null($row["lastname"]) ? '' : $row["lastname"];
-        if (mb_ereg_match("\w", $pubsname)) {
-            $pattern = "(.*)(\b" . preg_quote($lastname) . "\b)(.*)";
-            if (mb_ereg($pattern, $pubsname, $regexArr)) {
-                $sortableName = $regexArr[2] . ($regexArr[3] ? $regexArr[3] : "") . ", " . $regexArr[1];
-            } else {
-                $sortableName = $pubsname;
-            }
-        } else {
-            $sortableName = $pubsname;
-        }
-        $rowNode->setAttribute("sortableName", $sortableName);
-        $rowNode->setAttribute("sortableNameLc", mb_convert_case($sortableName, MB_CASE_LOWER));
+        $rowNode->setAttribute("badgeid", $row["badgeid"]);
+        $rowNode->setAttribute("label",
+            participant_dropdown_label($row["pubsname"], $row["firstname"], $row["lastname"], $row["badgeid"]));
         $SurveysAnswered += $row['answercount'];
     }
 

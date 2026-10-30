@@ -6,7 +6,8 @@
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
-global $title, $message, $link;
+global $title, $message, $link, $pageBootstrapVersion;
+$pageBootstrapVersion = 'bs5';
 if (!(isLoggedIn() && may_I("SendEmail"))) {
     exit(0);
 }
@@ -30,6 +31,10 @@ staff_header($title, 'bs5');
 //    RenderError("Error extending time limit.");
 //    exit(0);
 //}
+?>
+<div class="container-xl">
+    <h3 class="mt-3">Results</h3>
+<?php
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $email = get_email_from_post();
 
@@ -151,5 +156,8 @@ for ($i=0; $i<$recipient_count; $i++) {
 }
 //$log =& Swift_LogContainer::getLog();
 //echo $log->dump(true);
+?>
+</div>
+<?php
 staff_footer();
 ?>

@@ -1,4 +1,4 @@
-//	Copyright (c) 2011-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+//	Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 document.addEventListener( "DOMContentLoaded", function () {
     //this function is run whenever any page finishes loading if JQuery has been loaded
     //debugger;
@@ -15,9 +15,6 @@ document.addEventListener( "DOMContentLoaded", function () {
             break;
         case "My Photo":
             myPhoto.initialize();
-            break;
-        case "Grid Scheduler":
-            staffMaintainSchedule.initialize();
             break;
         case "Session Search Results":
             partSearchSessionsSubmit.initialize();

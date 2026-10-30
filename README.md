@@ -21,16 +21,21 @@ participants, and rooms.
 ## Built In Dependencies
 These libraries are included in the repo and should just work if you leave as is
 * Client Side
-  * Bootstrap 2.3.2 / 4.6.2 / 5.3.8
+  * Bootstrap 4.6.2 / 5.3.8
   * Choices 9.0.0
+  * Croppie 2.6.5
   * DataTables 2.3.8
-  * JQuery 1.7.2 / 3.5.1
-  * JQueryUI 1.8.16
-  * Tabulator 4.9.1
-  * TinyMCE 6.7.1
+  * JQuery 3.7.1
+  * JQueryUI 1.14.2
+  * Tabulator 6.5.3
 * Server Side  
   * Swift mailer 5.4.8
   * Guzzle 7.8.1
+
+## CDN-based Dependencies
+These libraries have licenses which preclude them being distributed with Zambia, so they are loaded from a CDN
+* Client Side
+  * TinyMCE 8.10.0
 
 ## Integrations
 Other software which can work with Zambia

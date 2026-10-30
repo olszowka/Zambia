@@ -1,11 +1,12 @@
 <?php
-// Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2009-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 //This file should be requested from post on "add" form
+global $session_interests, $session_interest_index, $title, $message, $pageBootstrapVersion;
+$title = "Panel Interests";
+$pageBootstrapVersion = 'bs5';
 require('PartCommonCode.php'); // initialize db; check login; set $badgeid
 require('PartPanelInterests_FNC.php');
 require('PartPanelInterests_Render.php');
-global $session_interests, $session_interest_index, $title, $message;
-$title = "Panel Interests";
 $error = false;
 if (!may_I('my_panel_interests')) {
     $message = "You do not currently have permission to view this page.<br />\n";

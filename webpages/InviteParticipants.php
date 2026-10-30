@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $linki, $title;
 $title = "Invite Participants";
 require_once('StaffCommonCode.php');
@@ -9,6 +9,8 @@ $alerttype = "success";
 $submittype = "";
 if(may_I("Staff")) {
     $query = [];
+    $displayNameSql = participant_display_name_sql();
+    $sortKeySql = participant_sort_key_sql();
     $query['participants'] = <<<EOD
 SELECT
         CD.lastname,
@@ -21,14 +23,18 @@ SELECT
                 WHEN P.pubsname != "" THEN P.pubsname
                 WHEN CD.lastname != "" THEN CONCAT(CD.lastname, ", ", CD.firstname)
                 ELSE CD.firstname
-            END, ' (', CD.badgename, ') - ', P.badgeid) AS name
+            END, ' (', CD.badgename, ') - ', P.badgeid) AS name,
+        $displayNameSql AS displayName,
+        $sortKeySql AS sortKey
     FROM
              Participants P
         JOIN CongoDump CD USING(badgeid)
     WHERE
         P.interested=1
     ORDER BY
-        IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+        sortKey,
+        CD.firstname,
+        displayName;
 EOD;
 
     $query['sessions'] = <<<EOD
@@ -72,6 +78,11 @@ ORDER by o.questionid, o.display_order
 EOD;
     }
     $resultXML = mysql_query_XML($query);
+    $xpath = new DOMXPath($resultXML);
+    foreach ($xpath->query("/doc/query[@queryName='participants']/row") as $rowNode) {
+        $rowNode->setAttribute("label", participant_dropdown_label($rowNode->getAttribute("pubsname"),
+            $rowNode->getAttribute("firstname"), $rowNode->getAttribute("lastname"), $rowNode->getAttribute("badgeid")));
+    }
 
     if ($SurveyUsed) {
         // get any questions that need programically create options

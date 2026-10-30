@@ -5,6 +5,7 @@ var tablename = '';
 var message = "";
 var indexcol = 'display_order';
 var selectlist = null;
+var selectFields = [];
 var newid = -99;
 var fetch_json = {};
 var tableschema = null;
@@ -34,6 +35,9 @@ var EditConfigTable = function () {
         if (tabname.substring(0, 2) == 't-') {
             tablename = tabname.substring(2);
             FetchTable();
+            var tablesUsedForNewSessionDefaults = ['Types', 'Divisions', 'KidsCategories', 'RoomSets'];
+            document.getElementById('new-session-default-note').style.display =
+                tablesUsedForNewSessionDefaults.includes(tablename) ? '' : 'none';
         }
     }
 
@@ -52,6 +56,7 @@ var EditConfigTable = function () {
     // clear table of any tab being closed
     function tabhide(tabname) {
         if (table) {
+            table.destroy(); // must destroy before dropping the reference, or the next tab's table (same div) leaks stale event listeners
             table = null;
         }
 
@@ -102,14 +107,7 @@ function discardChanges() {
 
 function savetceEdit(display) {
     if (curcell) {
-        tinyMCE.triggerSave();
-        newval = txtel.value;
-        newval = newval.replace(/<\/p>[ \r\n]*<p>/gi, "\n");
-        newval = newval.replace(/<br *\/*>/gi, "\n");
-        newval = newval.replace(/^<p> */i, "");
-        newval = newval.replace(/ *<\/p> *$/i, "");
-        curcell.setValue(newval);
-        tinyMCE.remove();
+        curcell.setValue(document.getElementById("tceedit-textarea").value);
         curcell = null;
         if (display) {
             document.getElementById("tceedit-div").style.display = "none";
@@ -129,41 +127,15 @@ function savetceEdit(display) {
 }
 
 function tceEditor(e, cell) {
-    txtel = document.getElementById("tceedit-textarea");
     if (cell !== curcell) {
         savetceEdit(false);
     }
-    cellname = cell.getField();        
     // initialize the starting value from the current value of the cell
     curcell = cell;
-    txtel.value = (cell.getValue() || "").replace(/\n/g, "<br/>");
-
-    el = document.getElementById("tceedit-div");
-    el.style.display = "block";
-    tinyMCE.init({
-        setup: function (editor) {
-            editor.ui.registry.addButton('customSaveButton', {
-                icon: 'save',
-                tooltip: 'Save contents back to table',
-                onAction: function () {
-                    savetceEdit(true);
-                }
-            })
-        },
-        selector: 'textarea#tceedit-textarea',
-        plugins: 'fullscreen searchreplace charmap nonbreaking visualchars',
-        browser_spellcheck: true,
-        contextmenu: false,
-        height: 400,
-        min_height: 200,
-        menubar: false,
-        toolbar: [
-            ' customSaveButton | undo redo | searchreplace |visualchars nonbreaking charmap | fullscreen'
-        ],
-        toolbar_mode: 'wrap',
-        content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-        placeholder: 'Type custom content here...'
-    });
+    var txtel = document.getElementById("tceedit-textarea");
+    txtel.value = cell.getValue() || "";
+    document.getElementById("tceedit-div").style.display = "block";
+    txtel.focus();
     document.getElementById("add-row").disabled = true;
     document.getElementById("resetbtn").disabled = true;
     document.getElementById("submitbtn").disabled = true; 
@@ -189,6 +161,9 @@ function addnewrow(table) {
     var rowtxt = "row = { " + indexcol + ": " + newid + ", display_order: 99999, Usage_Count: 0 };";
     //console.log(rowtxt);
     eval(rowtxt);
+    selectFields.forEach(function (field) {
+        row[field] = ''; // no selection made yet
+    });
     table.addRow(row, false);
 }
 
@@ -205,9 +180,11 @@ function headerMinWidth(title) {
         headerMeasureCanvas = document.createElement("canvas");
     }
     var context = headerMeasureCanvas.getContext("2d");
-    context.font = "14px Arial";
+    // Measure in the font the header is actually drawn in (bold, the page's font family), which is noticeably wider
+    // than plain Arial for long names.
+    context.font = "bold 14px " + getComputedStyle(document.body).fontFamily;
     var textWidth = context.measureText(title).width;
-    return Math.ceil(textWidth) + 25; // account for header cell padding
+    return Math.ceil(textWidth) + 15; // header cell padding (8px) and border (1px), plus a little room to spare
 }
 
 // Rooms has many text columns; the normal width formula makes the table wider
@@ -239,8 +216,9 @@ function opentable(tabledata) {
     //console.log(tableschema);
     columns = [];
     indexcol = 'display_order';
-    displayorder_found = false;
+    display_order = false;
     initialsort = [];
+    selectFields = [];
     columns.push({ rowHandle: true, formatter: "handle", frozen: true, width: 30, minWidth: 30, maxWidth:30 });
     tableschema.forEach(function (column) {
         if (column.COLUMN_KEY === 'PRI') {
@@ -255,7 +233,7 @@ function opentable(tabledata) {
             display_order = true;
         } else if (fetch_json.hasOwnProperty(column.COLUMN_NAME + "_select")) {
             selectlistname = column.COLUMN_NAME + "_select";
-            editor_type = 'select';
+            editor_type = 'list';
             selectlist = [];
             editorlist = [];
             fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) {
@@ -265,11 +243,13 @@ function opentable(tabledata) {
                     value: entry.id
                 });
             });
+            selectlist[''] = ''; // newly-added rows have no selection yet; avoid the "Missing display value" warning
+            selectFields.push(column.COLUMN_NAME);
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME,
                 visible: true,
                 editor: editor_type,
-                editorParams: editorlist,
+                editorParams: { values: editorlist },
                 formatter: "lookup",
                 formatterParams: selectlist,
                 minWidth: Math.max(200, headerMinWidth(column.COLUMN_NAME))
@@ -291,7 +271,7 @@ function opentable(tabledata) {
             columns.push({
                 title: column.COLUMN_NAME, field: column.COLUMN_NAME, editor: "input", width: width,
                 minWidth: headerMinWidth(column.COLUMN_NAME),
-                editorParams: { editorAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
+                editorParams: { elementAttributes: { maxlength: column.CHARACTER_MAXIMUM_LENGTH } },
             });
         }
     });
@@ -311,36 +291,37 @@ function opentable(tabledata) {
     table = new Tabulator("#table", {
         maxHeight: "400px",
         movableRows: true,
-        tooltips: false,
         history: true,
-        headerSort: false,
-        initialSort: initialsort,  
+        columnDefaults: { headerSort: false },
+        initialSort: initialsort,
         data: tabledata,
         index: indexcol,
         layout: "fitDataTable",
-        cellEdited: cellChanged,
         //autoColumns: true,
         columns: columns,
-        rowMoved: function (row) {
-            document.getElementById('message').classList.add('hidden');
-            //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
-            if (this.getHistoryUndoSize() > 0) {
-                dirty = true;
-                document.getElementById("undo").disabled = false;
-            }
-        },
-        dataChanged: function (data) {
-            //data - the updated table data
+    });
+    table.on("cellEdited", cellChanged);
+    table.on("rowMoved", function (row) {
+        document.getElementById('message').classList.add('hidden');
+        //console.log("Question Row: " + row.getData().shortname + " has been moved to #" + row.getPosition());
+        if (this.getHistoryUndoSize() > 0) {
             dirty = true;
-            document.getElementById("submitbtn").innerHTML = "Save*";
-            if (this.getHistoryUndoSize() > 0) {
-                document.getElementById("undo").disabled = false;
-            }
-        },
+            document.getElementById("undo").disabled = false;
+        }
+    });
+    table.on("dataChanged", function (data) {
+        //data - the updated table data
+        dirty = true;
+        document.getElementById("submitbtn").innerHTML = "Save*";
+        if (this.getHistoryUndoSize() > 0) {
+            document.getElementById("undo").disabled = false;
+        }
+    });
+    table.on("tableBuilt", function () {
+        table.clearHistory();
     });
     //console.log("Setting up options in table");
     document.getElementById("submitbtn").innerHTML = "Save";
-    table.clearHistory();
 }
 
 function saveComplete(data, textStatus, jqXHR) {

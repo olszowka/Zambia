@@ -1,26 +1,26 @@
 <?php
 //  Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrapVersion = 'bs2') {
+function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrapVersion = 'bs5', $isJqueryUI = false) {
     switch ($bootstrapVersion) {
         case 'bs5':
 ?>
-            <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
+            <script src="external/jquery3.7.1/jquery-3.7.1.min.js"></script>
+<?php if ($isJqueryUI) { ?>
+            <script src="external/jqueryui1.14.2/jquery-ui-1.14.2.min.js"></script>
+<?php } ?>
             <script src="external/bootstrap5.3.8/bootstrap.bundle.min.js" type="text/javascript"></script>
 <?php
             break;
         case 'bs4':
 ?>
-        <script src="external/jquery3.5.1/jquery-3.5.1.min.js"></script>
+        <script src="external/jquery3.7.1/jquery-3.7.1.min.js"></script>
+<?php if ($isJqueryUI) { ?>
+        <script src="external/jqueryui1.14.2/jquery-ui-1.14.2.min.js"></script>
+<?php } ?>
         <script src="external/bootstrap4.6.2/bootstrap.bundle.min.js" type="text/javascript"></script>
 <?php
             break;
-        case 'bs2':
-        default:
-?>
-    <script src="external/jquery1.7.2/jquery-1.7.2.min.js"></script>
-    <script src="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.min.js"></script>
-    <script src="external/bootstrap2.3.2/bootstrap.js" type="text/javascript"></script>
-<?php } ?>
+    } ?>
     <script src="external/choices9.0.0/choices.min.js"></script>
 <?php if ($isDataTables) { ?>
     <script src="external/dataTables2.3.8/dataTables.js"></script>
@@ -28,6 +28,20 @@ function load_external_javascript($isDataTables = false, $isRecaptcha = false, $
     if ($isRecaptcha) { ?>
     <script async defer id="recaptcha-script" src="https://www.google.com/recaptcha/api.js"></script>
 <?php }
+}
+
+/**
+ * TinyMCE (GPL since v7) is loaded from a version-pinned CDN rather than distributed with Zambia.
+ * An installation may define TINYMCE_URL in db_name.php to load it from elsewhere (e.g. a self-hosted copy).
+ * The SRI hash covers only tinymce.min.js; plugins/skins it loads are pinned by the versioned URL path.
+ */
+function tinymce_script_tag() {
+    if (defined('TINYMCE_URL') && TINYMCE_URL !== '') {
+        return "<script src=\"" . htmlspecialchars(TINYMCE_URL) . "\"></script>\n";
+    }
+    return "<script src=\"https://cdn.jsdelivr.net/npm/tinymce@8.10.0/tinymce.min.js\" "
+        . "integrity=\"sha384-3pPvcZXivf5neWCEl4OuvTIleT8Q1bA2hphqFEVWNXaxIWVBUJda+xujUu2WWWuz\" "
+        . "crossorigin=\"anonymous\"></script>\n";
 }
 
 function load_internal_javascript($title, $isDataTables = false) {
@@ -73,29 +87,35 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<link rel=\"stylesheet\" href=\"javascript/ConfigurePermissions/dist/bundle.css\" type=\"text/css\">\n";
             echo "<script type=\"module\" src=\"javascript/ConfigurePermissions/dist/bundle.js\"></script>\n";
             break;
+        case "Grid Scheduler":
+            echo "<link rel=\"stylesheet\" href=\"javascript/GridScheduler/dist/bundle.css\" type=\"text/css\">\n";
+            echo "<script type=\"module\" src=\"javascript/GridScheduler/dist/bundle.js\"></script>\n";
+            break;
         case "Edit Custom Text":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             echo "<script src=\"javascript/EditCustomText.js\"></script>\n";
             break;
         case "Edit Survey":
-            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
+            echo "<script src=\"external/tabulator-6.5.3/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditSurvey.js\"></script>\n";
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             break;
         case "Participant Survey":
             echo "<script src=\"javascript/PartSurvey.js\"></script>\n";
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
+            break;
         case "Preview Survey":
             echo "<script src=\"javascript/RenderSurvey.js\"></script>\n";
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             break;
         case "Session Search Results":
             echo "<script src=\"javascript/PartSearchSessionsSubmit.js\"></script>\n";
             break;
         case "Administer Participants":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
+            echo "<script src=\"javascript/htmlBioEditor.js\"></script>\n";
             echo "<script src=\"javascript/AdminParticipants.js\"></script>\n";
             break;
         case "Administer Photos":
@@ -103,7 +123,8 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/AdminPhotos.js\"></script>\n";
             break;
         case "My Profile":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
+            echo "<script src=\"javascript/htmlBioEditor.js\"></script>\n";
             echo "<script src=\"javascript/myProfile.js\"></script>";
             break;
         case "My Photo":
@@ -111,15 +132,12 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"javascript/myPhoto.js\"></script>";
             break;
         case "Edit Session":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
         case "Create New Session":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
+            echo tinymce_script_tag();
             echo "<script src=\"javascript/editCreateSession.js\"></script>\n";
             break;
         case "Edit Configuration Tables":
-            echo "<script src=\"external/tinymce-6.7.1/js/tinymce/tinymce.min.js\"></script>\n";
-            echo "<script src=\"external/tabulator-4.9.1/js/tabulator.js\"></script>\n";
+            echo "<script src=\"external/tabulator-6.5.3/js/tabulator.js\"></script>\n";
             echo "<script src=\"javascript/EditConfigTables.js\"></script>\n";
             break;
         case "Import Reg User":
@@ -134,7 +152,6 @@ function load_internal_javascript($title, $isDataTables = false) {
             }
     }
 ?>
-<script src="javascript/staffMaintainSchedule.js"></script>
 <script src="javascript/partPanelInterests.js"></script>
 <?php
 }

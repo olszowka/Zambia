@@ -1,6 +1,7 @@
 <?php
 // Copyright (c) 2005-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message_error, $message2, $congoinfo, $title;
+global $message_error, $message2, $congoinfo, $title, $pageBootstrapVersion;
+$pageBootstrapVersion = 'bs4';
 require('PartCommonCode.php');
 if ($participant_array = retrieveFullParticipant($badgeid)) {
     require('renderWelcome.php');

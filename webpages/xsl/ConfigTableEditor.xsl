@@ -664,7 +664,11 @@
             <div id="tceedit-div" style="display: none">
                 <div class="row mt-4">
                     <div class="col col-lg-22 col-xl-18 col-xxl-15">
-                        <textarea id="tceedit-textarea"></textarea>
+                        <textarea id="tceedit-textarea" class="form-control font-monospace" rows="16"
+                                  spellcheck="false"></textarea>
+                        <button class="btn btn-primary btn-sm mt-2" id="tceedit-save" type="button"
+                                onclick="savetceEdit(true)">Save to Table
+                        </button>
                     </div>
                 </div>
             </div>
@@ -702,7 +706,10 @@
             </div>
             <div class="clearboth mt-3">
                 <p>Click in the table to edit each field.</p>
-                <p>Drag slider icon to reorder the entries.</p>
+                <p>
+                    Drag slider icon to reorder the entries.
+                    <span id="new-session-default-note" style="display: none">When a user creates a new session, the value from the top row will be used as the default.</span>
+                </p>
                 <p>Click the trashcan to delete the row. Rows without trashcans are in use by the count of items shown.</p>
                 <p>Use the Add New button to add a row to the table.</p>
             </div>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
     Created by Peter Olszowka on 2015-10-16;
-    Copyright (c) 2011-2024 The Peter Olszowka. All rights reserved. See copyright document for more details.
+    Copyright (c) 2011-2026 The Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <!--<xsl:import href="renderSurveySearch.xsl"/>-->
@@ -108,9 +108,7 @@
                     <div id="partDropdown-div">
                         <select id="partDropdown" name="asgnpart">
                             <option value="" selected="selected">Assign Participant</option>
-                            <xsl:apply-templates select="doc/query[@queryName='otherParticipants']/row" >
-                                <xsl:sort select="@sortableNameLc" />
-                            </xsl:apply-templates>
+                            <xsl:apply-templates select="doc/query[@queryName='otherParticipants']/row" />
                         </select>
                     </div>
                 </div>
@@ -279,6 +277,6 @@
         </xsl:if>
     </xsl:template>
     <xsl:template match="doc/query[@queryName='otherParticipants']/row">
-        <option value="{@badgeid}"><xsl:value-of select="@sortableName" /><xsl:text> - </xsl:text><xsl:value-of select="@badgeid" /></option>
+        <option value="{@badgeid}"><xsl:value-of select="@label" /></option>
     </xsl:template>
 </xsl:stylesheet>

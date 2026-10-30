@@ -1,8 +1,7 @@
 <?php
 // Copyright (c) 2019-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function html_header($title, $bootstrapVersion, $isDataTables = false, $reportColumns = false, $reportAdditionalOptions = false, $isJqueryUI = false) {
     global $fullPage;
-    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     require_once ("javascript_functions.php");
 ?>
 <!DOCTYPE html>
@@ -24,24 +23,18 @@ function html_header($title, $bootstrapVersion = 'bs2', $isDataTables = false, $
     <link rel="stylesheet" href="external/bootstrap5.3.8/bootstrap.min.css" type="text/css" >
 <?php
             break;
-        case 'bs2':
-        default:
-?>
-    <link rel="stylesheet" href="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.css" type="text/css">
-    <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap.css" type="text/css" >
-    <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
+    } ?>
+<?php if ($isJqueryUI) { ?>
+    <link rel="stylesheet" href="external/jqueryui1.14.2/jquery-ui-1.14.2.custom.css" type="text/css">
 <?php } ?>
     <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
-    <link rel="stylesheet" href="external/tabulator-4.9.1/css/tabulator.min.css" type="text/css" >
+    <link rel="stylesheet" href="external/tabulator-6.5.3/css/tabulator.min.css" type="text/css" >
     <link rel="stylesheet" href="css/zambia_common.css" type="text/css" media="screen" />
 <?php if ($bootstrapVersion == 'bs4') { ?>
     <link rel="stylesheet" href="css/zambia_bs4_customizations.css" type="text/css" media="screen" />
-<?php } else if ($bootstrapVersion == 'bs5') { ?>
-    <link rel="stylesheet" href="css/zambia_bs5_customizations.css" type="text/css" media="screen" />
 <?php } else { ?>
-    <link rel="stylesheet" href="css/zambia.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/zambia_bs5_customizations.css" type="text/css" media="screen" />
 <?php } ?>
-    <link rel="stylesheet" href="css/staffMaintainSchedule.css" type="text/css" media="screen" />
 <?php
     if (defined('CON_THEME') && CON_THEME !== "") {
 ?>
@@ -70,12 +63,11 @@ if (PARTICIPANT_PHOTOS === TRUE) {
     <script type="text/javascript">
         var thisPage="<?php echo $title; ?>";
         var conStartDateTime = new Date("<?php echo CON_START_DATIM; ?>".replace(/-/g,"/"));
-        var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
     </script>
 <?php
     $isRecaptcha = $title == 'Forgot Password';
     /* "external" means 3rd party library */
-    load_external_javascript($isDataTables, $isRecaptcha, $bootstrapVersion);
+    load_external_javascript($isDataTables, $isRecaptcha, $bootstrapVersion, $isJqueryUI);
     load_internal_javascript($title, $isDataTables);
 ?>
 </head>
