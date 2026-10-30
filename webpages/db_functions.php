@@ -799,7 +799,7 @@ function retrieve_session_from_db($sessionid) {
 SELECT
         sessionid, trackid, typeid, divisionid, pubstatusid, languagestatusid, pubsno,
         title, secondtitle, pocketprogtext, IFNULL(progguiddesc, progguidhtml) AS progguiddesc,
-        IFNULL(progguidhtml,progguiddesc) AS progguidhtml,
+        CASE WHEN IFNULL(progguidhtml, '') = '' THEN progguiddesc ELSE progguidhtml END AS progguidhtml,
         persppartinfo, duration, estatten, kidscatid, signupreq, roomsetid, notesforpart,
         servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink, recordinglink
     FROM
