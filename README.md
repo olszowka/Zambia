@@ -26,7 +26,6 @@ These libraries are included in the repo and should just work if you leave as is
   * Croppie 2.6.5
   * DataTables 2.3.8
   * JQuery 3.7.1
-  * JQueryUI 1.14.2
   * Tabulator 6.5.3
 * Server Side  
   * Swift mailer 5.4.8
