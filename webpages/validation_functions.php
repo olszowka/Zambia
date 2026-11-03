@@ -168,6 +168,14 @@ function validate_session() {
         $messages .= "Please select a room set.<br>\n";
         $flag = false;
     }
+    if (parse_duration_for_db($session['duration']) === false) {
+        if (DURATION_IN_MINUTES === TRUE) {
+            $messages .= "Duration must be a whole number of minutes between 1 and 3000.<br>\n";
+        } else {
+            $messages .= "Duration must be in the form h:mm (e.g. 1:00 or 0:30).<br>\n";
+        }
+        $flag = false;
+    }
     if (!($sstatus[$session["status"]]['validate'])) {
 //don't validate further those not marked with 'validate' such as "dropped" or "cancelled"
         return ($flag);
