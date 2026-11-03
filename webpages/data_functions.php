@@ -442,6 +442,10 @@ function parse_duration_for_db($editduration) {
         }
         return sprintf('%02d:%02d:00', intdiv((int)$min, 60), $min % 60);
     }
+    $editduration = trim((string)$editduration);
+    if (str_starts_with($editduration, ':')) {
+        $editduration = '0' . $editduration; // treat ":30" as "0:30"
+    }
     if (sscanf($editduration, "%d:%d", $hours, $minutes) !== 2 || $hours < 0 || $minutes < 0 || $minutes > 59 || ($hours == 0 && $minutes == 0)) {
         return false;
     }

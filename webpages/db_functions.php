@@ -767,11 +767,7 @@ function filter_session() {
         $session2["clink"] = "";
     }
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
-    if (DURATION_IN_MINUTES === TRUE) {
-        $session2["duration"] = conv_min2hrsmin($session["duration"]);
-    } else {
-        $session2["duration"] = mysqli_real_escape_string($linki, $session["duration"]);
-    }
+    $session2["duration"] = parse_duration_for_db($session["duration"]); // already checked by validate_session()
     $session2["estatten"] = empty($session["atten"]) ? "NULL" : strval(filter_var($session["atten"], FILTER_SANITIZE_NUMBER_INT));
     $session2["kidscatid"] = filter_var($session["kids"], FILTER_SANITIZE_NUMBER_INT);
     $session2["signupreq"] = empty($session["signup"]) ? "0" : "1";
@@ -819,7 +815,8 @@ SELECT
         title, secondtitle, pocketprogtext, IFNULL(progguiddesc, progguidhtml) AS progguiddesc,
         CASE WHEN IFNULL(progguidhtml, '') = '' THEN progguiddesc ELSE progguidhtml END AS progguidhtml,
         persppartinfo, duration, estatten, kidscatid, signupreq, roomsetid, notesforpart,
-        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink, recordinglink
+        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink, recordinglink,
+        panelistlink, captionlink
     FROM
         Sessions
     WHERE
