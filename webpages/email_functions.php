@@ -104,7 +104,7 @@ function render_send_email($email, $message_warning) {
             <div class="row mt-3">
                 <div class="col-md-16 col-lg-14">
                     <label class="form-label" for="body">Body:</label>
-                    <textarea class="form-control" name="body" id="body" rows="25"><?php echo htmlspecialchars($email['boaalldy'], ENT_NOQUOTES); ?></textarea>
+                    <textarea class="form-control" name="body" id="body" rows="25"><?php echo htmlspecialchars($email['body'], ENT_NOQUOTES); ?></textarea>
                 </div>
             </div>
             <div class="mt-3 mb-3">

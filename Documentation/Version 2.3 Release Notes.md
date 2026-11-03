@@ -10,6 +10,7 @@
   with a database error (e.g. "Incorrect time value: ':30'"). When durations are entered as h:mm, a value with the
   hour left blank such as ":30" is now accepted as 0:30.
 * Fix small issues not visible to the user with `EditCustomText.php`.
+* Fix mangled variable name in `email_functions.php`.
 
 ### New Features
 * 
