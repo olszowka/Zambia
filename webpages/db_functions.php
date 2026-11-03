@@ -819,7 +819,8 @@ SELECT
         title, secondtitle, pocketprogtext, IFNULL(progguiddesc, progguidhtml) AS progguiddesc,
         CASE WHEN IFNULL(progguidhtml, '') = '' THEN progguiddesc ELSE progguidhtml END AS progguidhtml,
         persppartinfo, duration, estatten, kidscatid, signupreq, roomsetid, notesforpart,
-        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink, recordinglink
+        servicenotes, statusid, notesforprog, warnings, invitedguest, ts, meetinglink, recordinglink,
+        panelistlink, captionlink
     FROM
         Sessions
     WHERE
