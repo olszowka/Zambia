@@ -109,7 +109,7 @@ function chooseParticipant(badgeid, override) {
     }
 
     if (mce_running) {
-        tinymce.remove();
+        window.tinymce?.remove();
         mce_running = false;
     }
     curbadgeid = badgeid;
@@ -255,32 +255,11 @@ function chooseParticipant(badgeid, override) {
 
 function startTinymce() {
     if (mce_running)
-        tinymce.remove();
+        window.tinymce?.remove();
 
-    tinymce.init({
-        selector: 'textarea#htmlbio',
-        plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
-        browser_spellcheck: true,
-        contextmenu: false,
-        height: 400,
-        min_height: 200,
-        menubar: false,
-        toolbar: [
-            'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
-            'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
-        ],
-        toolbar_mode: 'wrap',
-        content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-        placeholder: 'Type custom content here...',
-        setup: function (ed) {
-            ed.on('change', function (e) {
-                bioDirty = true;
-                textChange();
-            });
-        },
-        init_instance_callback: function (editor) {
-            $(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
-        }
+    initHtmlBioEditor('textarea#htmlbio', function () {
+        bioDirty = true;
+        textChange();
     });
     mce_running = true;
 }
@@ -684,7 +663,7 @@ function checkDirty() {
 
 
 function updatePlainText() {
-    tinymce.triggerSave();
+    window.tinymce?.triggerSave();
     var tempDivElement = document.createElement("div");
     tempDivElement.innerHTML = htmlbioElem.value;
     bioElem.value = tempDivElement.textContent || tempDivElement.innerText || "";
@@ -799,7 +778,7 @@ function updateBUTTON() {
     if (bioDirty) {
         postdata.bio = bioElem.value;
         if (htmlbioused) {
-            tinymce.triggerSave();
+            window.tinymce?.triggerSave();
             postdata.htmlbio = htmlbioElem.value;
         }
     }

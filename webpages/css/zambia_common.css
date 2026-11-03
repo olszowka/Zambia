@@ -121,6 +121,29 @@ header p {
   margin-left: 0.4rem;
 }
 /* End Header Stuff */
+/* Full-page mode ($fullPage = true, used by the Grid Scheduler): the page is exactly the viewport's height, with the
+   header and staff menu at their natural size and the page's own content filling the rest. */
+html.full-page,
+body.full-page {
+  width: 100%;
+  height: 100%;
+}
+body.full-page {
+  display: flex;
+  flex-direction: column;
+}
+body.full-page #headerContainer {
+  flex: 0 0 auto;
+  /* Matches the -12px margin Bootstrap 5's .row (the header's wrapper, see GlobalHeader_BS5.xsl) puts on
+           #reg-header-container, so the header still bleeds flush to the edges instead of leaving a gap. */
+  padding-left: 12px;
+  padding-right: 12px;
+}
+body.full-page #staffNav {
+  flex: 0 0 auto;
+  margin-left: 0;
+  margin-right: 0;
+}
 body:not(.full-page) {
   background-image: url('../images/light_honeycomb.png');
   background-repeat: repeat;

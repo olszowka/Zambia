@@ -1,3 +1,4 @@
+// Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 var panelInterests = new PanelInterests;
 
 function PanelInterests() {
@@ -11,6 +12,8 @@ function PanelInterests() {
 
     this.pageDirty = false;
     this.timeoutID = null;
+    this.addButDirtyModal = null;
+    this.autosaveModal = null;
 
     function checkDirty(event) {
         if (panelInterests.pageDirty)
@@ -28,7 +31,7 @@ function PanelInterests() {
 
     function dismissAutosaveWarn() {
         panelInterests.setDirty(true); // short timeout
-        $("#autosaveMOD").modal("hide");
+        panelInterests.autosaveModal.hide();
     }
 
     function doAutosave() {
@@ -38,16 +41,18 @@ function PanelInterests() {
 
     function initialize() {
         // on page load, i.e. $(document).ready()
-        $("div.controls-row :checkbox").on("click", panelInterests.checkDirty);
-        $("div.controls-row input[type='text']").on("keyup", panelInterests.checkDirty);
-        $("div.controls-row textarea").on("keyup", panelInterests.checkDirty);
+        panelInterests.addButDirtyModal = bootstrap.Modal.getOrCreateInstance(document.getElementById("addButDirtyMOD"));
+        panelInterests.autosaveModal = bootstrap.Modal.getOrCreateInstance(document.getElementById("autosaveMOD"));
+        $("div.interest-edit-row :checkbox").on("click", panelInterests.checkDirty);
+        $("div.interest-edit-row input[type='text']").on("keyup", panelInterests.checkDirty);
+        $("div.interest-edit-row textarea").on("keyup", panelInterests.checkDirty);
         if ($("#pageIsDirty").val() == "true")
             panelInterests.setDirty(true); // short timeout
     }
 
     function onClickAdd() {
         if (panelInterests.pageDirty)
-            $("#addButDirtyMOD").modal("show");
+            panelInterests.addButDirtyModal.show();
         else
             $("#addFRM").get(0).submit();
     }
@@ -62,7 +67,7 @@ function PanelInterests() {
     }
 
     function showAutosaveDialog() {
-        $("#autosaveMOD").modal("show");
+        panelInterests.autosaveModal.show();
     }
 
 }

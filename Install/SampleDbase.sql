@@ -118,22 +118,22 @@ INSERT INTO `Tracks`
     (4, 'Events', 40, 0);
 
 INSERT INTO `Types`
-    (typeid, typename, display_order, selfselect)
+    (typeid, typename, display_order, selfselect, allow_grid_simplification)
     VALUES
-      (1, 'Panel', 10, 1),
-      (2, 'Autographing', 20, 0),
-      (3, 'Concert', 30, 0),
-      (4, 'Discussion Group', 40, 0),
-      (5, 'Dramatic Performance', 50, 0),
-      (6, 'Interview', 60, 0),
-      (7, 'Kaffeeklatsch', 70, 0),
-      (8, 'LARP', 80, 0),
-      (9, 'Lecture', 90, 0),
-      (10, 'Open Filk', 100, 0),
-      (11, 'Open Gaming', 110, 0),
-      (12, 'Projected Media', 120, 0),
-      (13, 'Reading', 130, 0),
-      (14, 'Scheduled Game', 140, 0),
-      (15, 'Tabletop RPG', 150, 0),
-      (16, 'Workshop', 160, 0),
-      (17, 'Room Turn', 170, 0);
+      (1, 'Panel', 10, 1, 0),
+      (2, 'Autographing', 20, 0, 0),
+      (3, 'Concert', 30, 0, 0),
+      (4, 'Discussion Group', 40, 0, 0),
+      (5, 'Dramatic Performance', 50, 0, 0),
+      (6, 'Interview', 60, 0, 0),
+      (7, 'Kaffeeklatsch', 70, 0, 0),
+      (8, 'LARP', 80, 0, 0),
+      (9, 'Lecture', 90, 0, 0),
+      (10, 'Open Filk', 100, 0, 0),
+      (11, 'Open Gaming', 110, 0, 0),
+      (12, 'Projected Media', 120, 0, 0),
+      (13, 'Reading', 130, 0, 0),
+      (14, 'Scheduled Game', 140, 0, 0),
+      (15, 'Tabletop RPG', 150, 0, 0),
+      (16, 'Workshop', 160, 0, 0),
+      (17, 'Room Turn', 170, 0, 0);

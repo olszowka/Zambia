@@ -1,8 +1,9 @@
 <?php
-// Copyright (c) 2005-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $linki, $title, $message2;
+// Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $linki, $title, $message2, $pageBootstrapVersion;
 require('PartCommonCode.php');
 $title = "Welcome";
+$pageBootstrapVersion = 'bs4';
 $interested = getString('interested');
 $password = getString('password');
 $cpassword = getString('cpassword');

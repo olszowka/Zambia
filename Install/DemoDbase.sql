@@ -58,12 +58,15 @@ INSERT INTO `UserHasPermissionRole`
     ('9', 5);
 
 INSERT INTO `Rooms`
-    (roomid, roomname, display_order, height, dimensions, area, `function`, floor, notes, is_scheduled)
+    (roomid, roomname, display_order, height, dimensions, area, `function`, floor, notes, is_scheduled, allow_grid_simplification)
     VALUES
-    (1,'Alcott', 10,'8 ft 5in','23 x 34','654','Panels','1 East',NULL, 1),
-    (2,'Brandeis', 20,'8 ft 6in','13 x 35','446','Panels','1 East',NULL, 1),
-    (3,'Cabot', 30,'8 ft 6in','19 x 29','515','Panels','1 East',NULL, 1),
-    (4,'Delaware', 40,'8 ft 6in','19 x 29','515','Green Room','1 East',NULL, 0);
+    (1,'Alcott', 10,'8 ft 5in','23 x 34','654','Panels','1 East',NULL, 1, 1),
+    (2,'Brandeis', 20,'8 ft 6in','13 x 35','446','Panels','1 East',NULL, 1, 1),
+    (3,'Cabot', 30,'8 ft 6in','19 x 29','515','Panels','1 East',NULL, 1, 1),
+    (4,'Delaware', 40,'8 ft 6in','19 x 29','515','Green Room','1 East',NULL, 0, 1);
+
+-- The Types rows come from SampleDbase.sql, which leaves Grid Simplification off.
+UPDATE `Types` SET allow_grid_simplification = 1;
 
 INSERT INTO `RoomHasSet`
     (roomhassetid, roomid, roomsetid, capacity)
@@ -269,7 +272,7 @@ INSERT INTO SurveyQuestionConfig
     (1, 'Pronouns', 'Sample survey stuff', 'What are your pronouns?',
         'Provide as much or as little detail as you are comfortable with.', 10, 60, 0, 1, 0, 0, 1, 0, 0, 8192),
     (2, 'Availability+Preferences', '', '',
-        '<p>Use the <a title="Availability" href="my_sched_constr.php" target="_blank" rel="noopener">Availability</a> section of this survey to share when you will be available to participate on Program.</p><p>Use the <a title="General Interests" href="my_interests.php" target="_blank" rel="noopener">General Interests</a> section of this survey to share your interest in an author reading or autographing session and our Saturday Book Launch party as well as preferences regarding panel topics and fellow panelists, including panelists you''d prefer to avoid presenting alongside. (All names submitted will be kept <span style="text-decoration: underline;">strictly confidential</span> within the programming team.) Submit a proposed Program item to us using the <a href="https://forms.gle/" target="_blank">Program Item Suggestion</a> form.  The Program team will review each idea and will add any approved idea to the Programming database as potential Program items.</p>',
+        '<p>Use the <a title="Availability" href="my_sched_constr.php" target="_blank" rel="noopener">Availability</a> section of this survey to share when you will be available to participate on Program.</p><p>Use the <a title="General Interests" href="my_interests.php" target="_blank" rel="noopener">General Interests</a> section of this survey to share your interest in an author reading or autographing session and our Saturday Book Launch party as well as preferences regarding panel topics and fellow panelists, including panelists you''d prefer to avoid presenting alongside. (All names submitted will be kept <u>strictly confidential</u> within the programming team.) Submit a proposed Program item to us using the <a href="https://forms.gle/" target="_blank">Program Item Suggestion</a> form.  The Program team will review each idea and will add any approved idea to the Programming database as potential Program items.</p>',
         50, 5, 1, 0, 0, 0, 1, 1, 0, 8192),
     (3, 'Accessibility', '', 'Please list any accessibility needs you have.', '', 20, 70, 0, 0, 0, 0, 1, 0, 0, 8192),
     (4, 'Marginalized', '',

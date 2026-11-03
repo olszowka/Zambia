@@ -10,13 +10,26 @@
 
 "Phases" represent chunks of time when participants ability to do something is enabled.  One or more phases may be active simultaneously.  The "Administer Phases" page just lets you control which phases are currently active.
 
+### Configure Permissions
+
+There are 4 configuration tables which interact to define what any user is permitted to do at any particular time(phase).  These tables are `PermissionRoles`, `Phases`, `Permissions`, plus `PermissionAtoms` which is not
+configurable, but is used by the other tables.  This page, with several tabs, allows you to edit these tables while maintaining the proper data integrity and interaction between them.  This section is the most intricate
+of the configuration GUI and should be used only by skilled administrators.
+
 ### Report Menus
 
 "Build Report Menus" menu item
 
-The files which specify the reports also specify the menu tree for the reports.  This mechanism makes it very easy
-to rearrange the report menus or rename the reports for your convenience.  The first time you deploy Zambia and after
-each time you edit any report configuration, you need to rebuild the report menus.
+The files which specify the reports also specify the menu tree for the reports.  This mechanism makes it very
+easy to rearrange the report menus or rename the reports for your convenience.  The first time you deploy
+Zambia and after each time you edit any report configuration, you need to rebuild the report menus.
+
+"Enable Report Hiding" menu item
+
+When report hiding is enabled, the pages of reports will include buttons to allow unused reports to be hidden
+from the menus.  The hiding process involves creating and/or modifying files in the ```reportsConOverrides/```
+directory, just like one would do manually.  Unhiding requires manually deleting and/or modifying the files
+created.
 
 ### Custom Text
 
@@ -31,17 +44,28 @@ the bottom of the page tells you which is the case for the current entry you are
 
 "Edit Survey" menu item
 
-The survey allows Zambia staff to ask participants any questions which are not found on other pages.  There is
-a mechanism for providing the text of the question and then the format or options of the answer, i.e. the
-choices for a multi-choice question.  It is possible to add additional questions after participants have
-started filling out the survey. It is also possible close down changing responses to particular questions at some
-point. However, both of these mechanisms can be confusing for participants, so it will be essential to communicate
-clearly.
+The survey allows Zambia staff to ask participants any questions which are not found on other pages.  There
+is a mechanism for providing the text of the question and then the format or options of the answer, i.e.
+the choices for a multi-choice question.  It is possible to add additional questions after participants
+have started filling out the survey. It is also possible close down changing responses to particular
+questions at some point. However, both of these mechanisms can be confusing for participants, so it will
+be essential to communicate clearly.
 
 ### Configuration Tables
 
 "Edit Configuration Tables" menu item
 
-This mechanism provides the most extensive configuration and customization of Zambia of all these mechanisms.  There
-are 21 configuration tables which may be edited using this tool.  The purpose of each table is described within
-the tool.
+This mechanism provides the most extensive configuration and customization of Zambia of all these
+mechanisms.  There are 21 configuration tables which may be edited using this tool.  The purpose of
+each table is described within the tool.
+
+## Configuration file: db_name.php
+
+There is a file called `db_name.php` which is used alongside the configuration mechanisms in the GUI
+which mostly control configuration data stored in the database.  This file is not intended to be edited
+once Zambia use has begun and user data has been stored, but some fields may be safely edited under
+these circumstances.
+
+The file consists of the set of php constant definitions.  Most of these constants are adequately described
+by the comments in the file.  The exception is the collection of constants used to configure the grid
+scheduler which is documented in the file [Grid Scheduler Configuration](Grid Scheduler Configuration.md).

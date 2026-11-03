@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2022 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2022-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // Created by Peter Olszowka 2022-10-08
 $report = [];
 $report['name'] = 'Panel ideas from participant survey';
@@ -11,19 +11,23 @@ $report['columns'] = array(
     array(),
     array("width" => "13em"),
     array("width" => "11em"),
+    array(),
+    array(),
+    array(),
 );
 $report['queries'] = [];
 $report['queries']['ideas'] =<<<'EOD'
 SELECT
-        PSA.value, P.pubsname, PSA.lastupdate
-	FROM
-	         Participants P
-	    JOIN ParticipantSurveyAnswers PSA ON P.badgeid = PSA.participantid
+        JSON_VALUE(PSR.answers, '$.ideas.value') AS ideas, PSR.lastupdate, P.badgeid, P.pubsname, CD.firstname,
+        CD.lastname
+    FROM
+             Participants P
+        JOIN CongoDump CD USING (badgeid)
+        JOIN ParticipantSurveyResponses PSR USING (badgeid)
     WHERE
-            PSA.questionid = 7
-        AND IFNULL(PSA.value, '') != ''
+        IFNULL(JSON_VALUE(PSR.answers, '$.ideas.value'), '') != ''
     ORDER BY
-        PSA.lastupdate;
+        lastupdate;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -36,8 +40,11 @@ $report['xsl'] =<<<'EOD'
                 <table id="reportTable" class="report">
                     <thead>
                         <tr style="height:2.6rem">
-                            <th class="report">Idea</th>
-                            <th class="report">Participant Name</th>
+                            <th class="report">Ideas</th>
+                            <th class="report">Badge ID</th>
+                            <th class="report">Pubs Name</th>
+                            <th class="report">First Name</th>
+                            <th class="report">Last Name</th>
                             <th class="report">Date Updated</th>
                         </tr>
                     </thead>
@@ -52,8 +59,11 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="/doc/query[@queryName='ideas']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@value"/></td>
+            <td class="report"><xsl:value-of select="@ideas"/></td>
+            <td class="report"><xsl:value-of select="@badgeid"/></td>
             <td class="report"><xsl:value-of select="@pubsname"/></td>
+            <td class="report"><xsl:value-of select="@firstname"/></td>
+            <td class="report"><xsl:value-of select="@lastname"/></td>
             <td class="report"><xsl:value-of select="@lastupdate"/></td>
         </tr>
     </xsl:template>

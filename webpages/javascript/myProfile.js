@@ -1,4 +1,4 @@
-//  Copyright (c) 2015-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+//  Copyright (c) 2015-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 
 function MyProfile() {
     var anyDirty = false;
@@ -109,7 +109,7 @@ function MyProfile() {
     };
 
     this.updatePlainText = () => {
-        tinymce.triggerSave();
+        window.tinymce?.triggerSave();
         var tempDivElement = document.createElement("div");
         tempDivElement.innerHTML = $htmlbioTextarea.val();
         $bioTextarea.val(tempDivElement.textContent || tempDivElement.innerText || "");
@@ -150,29 +150,8 @@ function MyProfile() {
         maxBioLen = $bioTextarea.data("maxLength");
         $htmlbioTextarea = $("#htmlbioTXTA");
         if ($htmlbioTextarea.length > 0) {
-            tinymce.init({
-                selector: 'textarea#htmlbioTXTA',
-                plugins: 'table wordcount fullscreen advlist link preview searchreplace autolink charmap hr nonbreaking visualchars ',
-                browser_spellcheck: true,
-                contextmenu: false,
-                height: 400,
-                min_height: 200,
-                menubar: false,
-                toolbar: [
-                    'undo redo | bold italic underline strikethrough removeformat | visualchars nonbreaking charmap hr | forecolor backcolor | link| preview fullscreen ',
-                    'searchreplace | alignleft aligncenter alignright alignjustify | outdent indent'
-                ],
-                toolbar_mode: 'wrap',
-                content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-                placeholder: 'Type custom content here...',
-                setup: function (ed) {
-                    ed.on('change', function (e) {
-                        myProfile.bioChange();
-                    });
-                },
-                init_instance_callback: function (editor) {
-                    $(editor.getContainer()).find('button.tox-statusbar__wordcount').click();  // if you use jQuery
-                }
+            initHtmlBioEditor('textarea#htmlbioTXTA', function () {
+                myProfile.bioChange();
             });
             htmlbioused = true;
         }
@@ -249,9 +228,31 @@ function MyProfile() {
         });
     };
 
+    this.syncControlDefaults = () => {
+        // After a successful save, resync each control's default* properties to its
+        // current value, so later dirty-checking compares against the last-saved
+        // state instead of the value the page originally loaded with. Without this,
+        // reverting a field back to its page-load value looks "unchanged" and gets
+        // dropped from the next save's postdata.
+        $(".mycontrol").each(function () {
+            var $elem = $(this);
+            var type = $elem.attr("type");
+            if (type === "checkbox" || type === "radio") {
+                this.defaultChecked = this.checked;
+            } else if ($elem.prop("tagName") === "SELECT") {
+                $elem.find("option").each(function () {
+                    this.defaultSelected = this.selected;
+                });
+            } else {
+                this.defaultValue = this.value;
+            }
+        });
+    };
+
     this.showUpdateResults = (data, textStatus, jqXHR) => {
         //ajax success callback function
         $resultBoxDiv.html(data).css("visibility", "visible");
+        this.syncControlDefaults();
         $password.val("");
         $cpassword.val("");
         anyDirty = false;

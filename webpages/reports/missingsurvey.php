@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2021-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Interested Participants missing Survey Responses';
 $report['description'] = 'List all interested participants who did not respond to the survey.';
@@ -8,15 +8,15 @@ $report['categories'] = array(
 );
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
-SELECT CD.badgeid, P.pubsname
-FROM CongoDump CD
-JOIN Participants P ON (P.badgeid = CD.badgeid)
-LEFT OUTER JOIN (
-SELECT participantid, count(*) as answercount
-FROM ParticipantSurveyAnswers
-GROUP BY participantid
-) a ON (a.participantid = CD.badgeid)
-WHERE answercount IS NULL AND IFNULL(P.interested, 0) = 1;
+SELECT
+        CD.badgeid, CD.firstname, CD.lastname, P.pubsname
+    FROM
+                  CongoDump CD
+             JOIN Participants P USING (badgeid)
+        LEFT JOIN ParticipantSurveyResponses PSR USING (badgeid)
+    WHERE
+            IFNULL(JSON_LENGTH(PSR.answers), 0) = 0
+        AND P.interested = 1;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -29,7 +29,9 @@ $report['xsl'] =<<<'EOD'
                 <table class="report">
                     <tr>
                         <th class="report">Badge ID</th>
-                        <th class="report">No Survey Response</th>
+                        <th class="report">Name for Publications</th>
+                        <th class="report">First Name</th>
+                        <th class="report">Last Name</th>
                     </tr>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
                 </table>
@@ -49,6 +51,8 @@ $report['xsl'] =<<<'EOD'
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
             </td>
+            <td class="report"><xsl:value-of select="@firstname" /></td>
+            <td class="report"><xsl:value-of select="@lastname" /></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

@@ -1,11 +1,12 @@
 <?php
-//	Copyright (c) 2011-2022 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $title;
+//	Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
+global $title, $pageBootstrapVersion;
+$pageBootstrapVersion = 'bs5';
 require_once('PartCommonCode.php');
 
 $title="Login";
 
-participant_header($title, false, 'Login');
+participant_header($title, false, 'Login', 'bs5');
 
 if (SHOW_BRAINSTORM_LOGIN_HINT === TRUE) {
 ?>

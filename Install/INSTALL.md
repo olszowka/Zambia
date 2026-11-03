@@ -139,12 +139,56 @@ reset their own passwords, do the following to configure reCAPTCHA.
    - `RECAPTCHA_SITE_KEY`
    - `RECAPTCHA_SERVER_KEY`
 
-## 9 - Build Report Menus
+## 9 - Build Report Menus and Report Hiding
 
 The files which specify the reports also specify the menu tree for the reports.  This mechanism makes it very easy
 to rearrange the report menues or rename the reports for your convenience.  The first time you deploy Zambia and
-aftereach time you edit any report configuration, you need to rebuild the report menus.  Zambia users with
-administrative privileges will have a menu item under "Admin" called "Build Report Menus" to do this.
+after each time you edit any report configuration, you need to rebuild the report menus.  Zambia users with
+administrative privileges will have a menu item under "Admin" called "Build Report Menus" to do this. Those same
+users can also temporarily hide an individual report from one report category, or from all of them, via
+"Hide from this category" / "Hide from all categories" buttons on the report category pages; hiding a report
+rebuilds the report menus automatically.
+
+Both of these write files, so beyond database permissions, the **file/directory permissions on disk** must let the
+web server process (the OS user Apache/PHP runs as -- typically `www-data` on Debian/Ubuntu, `apache` on
+RHEL/CentOS, or `_www` on macOS) write to:
+
+ - `webpages/ReportMenuBS4Include.php` and `webpages/staffReportsInCategoryInclude.php` -- "Build Report Menus"
+   (re)creates these two files, always under these same two names.
+ - `webpages/reportsConOverrides/` -- hiding a report creates (the first time that particular report is hidden)
+   or edits (thereafter) one file per hidden report in this directory. Because new reports can be hidden for the
+   first time at any point, this directory needs to stay writable on an ongoing basis, not just for an initial
+   setup step. If it doesn't exist or isn't writable, Zambia refuses to turn report hiding on and tells you so,
+   rather than letting individual hide attempts fail silently later.
+
+The simplest setup is to make the whole `webpages/` directory writable by the web server user, e.g.:
+
+    sudo chgrp -R www-data webpages
+    sudo chmod -R g+w webpages
+
+If you'd rather not leave all of `webpages/` writable, you can restrict write access to just the two report-menu
+files plus `reportsConOverrides/`:
+
+    # with webpages/ still writable by the web server user, create the two files once and run
+    # "Build Report Menus" (or just touch them) so they exist:
+    touch webpages/ReportMenuBS4Include.php webpages/staffReportsInCategoryInclude.php
+    sudo chgrp www-data webpages/ReportMenuBS4Include.php webpages/staffReportsInCategoryInclude.php
+    sudo chmod g+w webpages/ReportMenuBS4Include.php webpages/staffReportsInCategoryInclude.php
+
+    # then revoke write access to webpages/ itself
+    sudo chmod g-w webpages
+
+Two caveats with the restricted approach:
+ - Any later redeploy step that deletes these gitignored generated files (`git clean -fdx`, `rsync --delete`, a
+   fresh checkout, etc.) will remove them along with everything else not in git, and "Build Report Menus" will then
+   fail until `webpages/` is made writable again (even temporarily) so the files can be recreated.
+ - It only helps for `webpages/` itself; `reportsConOverrides/` can't be similarly locked down, since which
+   report-specific files exist there isn't known in advance.
+
+Whichever approach you use, if permissions are wrong, "Build Report Menus" fails with an explicit "Build Reports
+Failed: invalid file or directory permissions" message rather than partially succeeding, so this is easy to detect
+after the fact -- but it's worth setting up correctly during install so the first deploy (step 9) and any later
+report changes just work.
 
 ## 10 - Configuration from the Zambia administrative UI
 
@@ -159,14 +203,53 @@ If you are changing php and html files, I suggest you fork Zambia on github and 
 If you care about dbase content, see `backup_mysql` and `clean_backups` in the 
 scripts directory.  You'll want to run them or something similar.   
 
-## 12 - Reaching us
+## 12 - Wiki
+
+More documentation, particularly about configuration, can be found on the [wiki](https://github.com/olszowka/Zambia/wiki).
+
+## 13 - CDN
+
+Zambia loads TinyMCE 8.10.0 (the rich text editor used for bios, session descriptions, custom text, surveys, etc.)
+from the jsdelivr CDN to avoid licensing concerns.  If you need, you can override this in db_name.php to load from
+another CDN or your own hosted copy.
+
+The default URL is pinned to an exact version and protected with a Subresource Integrity hash, so what's loaded
+can't change unless Zambia is updated.  If the CDN can't be reached, Zambia still works; the affected fields just
+appear as plain text boxes instead of rich text editors.
+
+**Privacy.**  Loading a file from a CDN means each user's browser contacts that CDN, which therefore sees the user's
+IP address.  Under the EU and UK GDPR an IP address is personal data, and sending it to a third party without telling
+users has been found unlawful (e.g. a 2022 German court ruling on embedding Google Fonts).  TinyMCE is only loaded on
+pages for logged-in users, and jsDelivr is operated from within the EU, so the risk is low; but if your convention is
+subject to GDPR (or to the privacy laws of Canada, Australia, New Zealand, etc.), you should either mention jsDelivr
+in your privacy notice or host TinyMCE yourself.  This is not legal advice; consult your own privacy advisor if in
+doubt.
+
+**Hosting TinyMCE yourself.**  To avoid any third-party requests (or for an installation without internet access, or
+with a strict Content Security Policy):
+ 1. Download the TinyMCE community edition zip for the same version Zambia uses (currently 8.10.0) from
+    `https://download.tiny.cloud/tinymce/community/tinymce_8.10.0.zip`, or get it from the
+    [TinyMCE download page](https://www.tiny.cloud/get-tiny/).
+ 2. Unzip it into `webpages/external/`.  This creates `webpages/external/tinymce/js/tinymce/tinymce.min.js`.
+ 3. In `db_name.php`, set `TINYMCE_URL` to that file's URL, relative to `webpages/`, e.g.:
+
+        define("TINYMCE_URL", "external/tinymce/js/tinymce/tinymce.min.js");
+
+Notes on self-hosting:
+ - TinyMCE is licensed under the GPL (version 2 or later).  By serving your own copy you are distributing it, so
+   keep its `license.md` file with it.
+ - Your copy isn't checked against the integrity hash, and it isn't updated when you update Zambia.  When a Zambia
+   release changes the TinyMCE version (see the version in `tinymce_script_tag()` in `webpages/javascript_functions.php`),
+   replace your copy to match.
+ - Your copy isn't tracked by git, so a redeploy step that deletes untracked files (`git clean -fdx`,
+   `rsync --delete`, a fresh checkout, etc.) will remove it.
+
+Leave `TINYMCE_URL` set to `""` (or don't define it) to use the default CDN.
+
+## 14 - Reaching me
 
 I can be reached via github.
 
    Have Fun!
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- PeterO
-
-## 13 - Wiki
-
-More documentation, particularly about configuration, can be found on the [wiki](https://github.com/olszowka/Zambia/wiki).

@@ -2,8 +2,9 @@
 // Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 //
 // This file is required directly from ParticipantHeader.php or StaffHeader.php if consent is required and not given
-global $message, $message_error, $message2, $participant_array, $title;
+global $message, $message_error, $message2, $participant_array, $title, $pageBootstrapVersion;
 $title = "Data Retention Consent";
+$pageBootstrapVersion = 'bs5';
 // Now that title is set, get common text
 if (!populateCustomTextArray()) {
     $message_error = "Failed to retrieve custom text. " . $message_error;

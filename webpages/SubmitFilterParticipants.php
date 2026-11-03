@@ -45,7 +45,7 @@ FROM
     JOIN CongoDump CD USING(badgeid)
 
 EOD;
-        $query .= survey_filter_build_join($qcte);
+        $query .= survey_filter_build_join($qcte, $andor);
         $query .= <<<EOD
 WHERE
     P.interested=1
@@ -64,10 +64,7 @@ EOD;
         $query .= $query == '' ? "WITH " : ", ";
 
         $query .= <<<EOD
-AnsweredSurvey(participantid, answercount) AS (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-), SessionParticipants(badgeid) AS (
+SessionParticipants(badgeid) AS (
     SELECT badgeid
     FROM ParticipantSessionInterest
     WHERE sessionid = $selsessionid
@@ -89,7 +86,7 @@ SELECT
 FROM Participants P
 JOIN CongoDump CD USING(badgeid)
 EOD;
-        $query .= survey_filter_build_join_subquery($qcte);
+        $query .= survey_filter_build_join_subquery($qcte, $andor);
         $query .= <<<EOD
 LEFT OUTER JOIN (
  SELECT badgeid
@@ -97,9 +94,9 @@ LEFT OUTER JOIN (
     WHERE sessionid = $selsessionid
 ) S ON (P.badgeid = S.badgeid)
 LEFT OUTER JOIN (
-    SELECT participantid, COUNT(*) AS answercount
-    FROM ParticipantSurveyAnswers
-) A ON (P.badgeid = A.participantid)
+    SELECT badgeid, JSON_LENGTH(answers) AS answercount
+    FROM ParticipantSurveyResponses
+) A ON (P.badgeid = A.badgeid)
 WHERE P.interested = 1 AND S.badgeid IS NULL
 
 EOD;

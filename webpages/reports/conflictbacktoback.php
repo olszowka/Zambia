@@ -1,15 +1,21 @@
 <?php
 // Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-if (STANDARD_BLOCK_LENGTH === '1:30') {
-    $durationDesc = '35';
-    $durationQuery = '00:36:00';
-} else if (STANDARD_BLOCK_LENGTH === '1:00') {
-    $durationDesc = '15';
-    $durationQuery = '00:16:00';
-} else {
+// The largest gap between a participant's sessions that counts as back-to-back depends on the standard block length:
+// 30 minutes for blocks of 1:30 or longer, 15 for 1:15 up to 1:30, and 10 for anything shorter.
+if (!defined('STANDARD_BLOCK_LENGTH') || !preg_match('/^(\d{1,2}):([0-5]\d)$/', STANDARD_BLOCK_LENGTH, $matches)) {
     echo "Unexpected value of \"STANDARD_BLOCK_LENGTH constant.\" Exiting.";
     exit(1);
 }
+$blockLengthMinutes = intval($matches[1]) * 60 + intval($matches[2]);
+if ($blockLengthMinutes >= 90) {
+    $maxGapMinutes = 30;
+} else if ($blockLengthMinutes >= 75) {
+    $maxGapMinutes = 15;
+} else {
+    $maxGapMinutes = 10;
+}
+$durationDesc = strval($maxGapMinutes);
+$durationQuery = sprintf('00:%02d:00', $maxGapMinutes + 1);
 $report = [];
 $report['name'] = 'Conflict Report - Back-to-back Sessions';
 $report['description'] = "Show all cases where a participant is scheduled for two sessions with $durationDesc minutes or fewer between sessions. (Also includes actual overlaps)";

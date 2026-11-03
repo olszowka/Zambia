@@ -11,9 +11,9 @@
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
         <xsl:variable name="consent" select="/doc/customText/@consent" />
-        <div class="container">
+        <div class="container-lg">
             <div class="mt-2">
-                <h3 class="mb-2">
+                <h3 class="mb-3">
                     <xsl:text>Consent for collection and usage of your data entered into Zambia for </xsl:text>
                     <xsl:value-of select="$conName"/>
                 </h3>
@@ -37,8 +37,8 @@
                         </p>
                     </xsl:otherwise>
                 </xsl:choose>
-                <form class="form-inline" name="consentform" method="POST" action="SubmitConsent.php">
-                    <div id="update_section" class="form-group pr-2">
+                <form class="d-flex flex-wrap align-items-center" name="consentform" method="POST" action="SubmitConsent.php">
+                    <div id="update_section" class="pe-2 mb-2">
                         <label for="consent">
                             <xsl:text>I, </xsl:text>
                             <xsl:value-of select="$firstName"/>
@@ -47,13 +47,13 @@
                             <xsl:text>, grant consent for data collection of my personal data: </xsl:text>
                         </label>
                     </div>
-                    <div class="form-group pr-4">
+                    <div class="pe-4 mb-2">
                         <select id="consent" name="consent">
                             <option value="0" selected="selected">No</option>
                             <option value="1">Yes</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <button class="btn btn-primary" type="submit" name="submit" >Update</button>
                     </div>
                 </form>

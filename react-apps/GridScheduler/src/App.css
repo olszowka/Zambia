@@ -1,0 +1,587 @@
+#grid-scheduler-root {
+  flex: 1 1 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-scheduler-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.grid-scheduler-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+/* 280px matches the legacy (pre-React) Grid Scheduler's left column. */
+.grid-scheduler-left-panel {
+  flex: 0 0 280px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #888;
+  background: #fafafa;
+}
+
+.grid-scheduler-tabs {
+  flex: 0 0 40%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #888;
+}
+
+.grid-scheduler-tab-bar {
+  flex: 0 0 auto;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.grid-scheduler-tab-button {
+  flex: 1 1 auto;
+  padding: 4px 2px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.grid-scheduler-tab-attention {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 3px;
+  border-radius: 50%;
+  background: #dc3545;
+  vertical-align: super;
+}
+
+.grid-scheduler-tab-button.active {
+  border-bottom-color: #2c6e2f;
+  font-weight: bold;
+}
+
+.grid-scheduler-tab-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 6px;
+  font-size: 0.85rem;
+}
+
+.grid-scheduler-sessions-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-scheduler-sessions-panel-header {
+  flex: 0 0 auto;
+  padding: 4px 6px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.grid-scheduler-sessions-panel-title {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.grid-scheduler-sessions-panel-header-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.grid-scheduler-sessions-panel-header-controls + .grid-scheduler-sessions-panel-header-controls {
+  margin-top: 4px;
+}
+
+.grid-scheduler-sessions-panel-header-controls .btn {
+  margin: 0 2px;
+}
+
+.grid-scheduler-snap-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.grid-scheduler-snap-control select {
+  width: auto;
+}
+
+.grid-scheduler-file-cabinet {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.grid-scheduler-sessions-panel-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.grid-scheduler-sessions-panel-empty {
+  color: #666;
+  font-size: 0.8rem;
+  padding: 4px;
+}
+
+/* Rooms tab */
+.grid-scheduler-rooms-tab {
+  line-height: 1.3;
+}
+
+.grid-scheduler-room-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 0;
+  font-size: 1rem;
+}
+
+/* Sessions tab (search form) */
+.grid-scheduler-form-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.grid-scheduler-form-row-top {
+  align-items: flex-start;
+}
+
+/* Twice the old <select multiple>'s rendered height (32px) -- see SessionsTab.tsx. The rest of the
+   look (border, scrolling, checkbox/label spacing) comes from .checkbox-list-container/-label-wrapper/
+   -label/-check in webpages/css/zambia_bs5_customizations.css, the same classes the Edit/Create Session
+   page's Tags control uses. Needs the .checkbox-list-container.grid-scheduler-tag-checklist compound
+   selector, matching that stylesheet's own .checkbox-list-container.form-control's specificity -- a
+   single-class selector here would lose to it regardless of source order. */
+.checkbox-list-container.grid-scheduler-tag-checklist {
+  height: 64px;
+}
+
+.grid-scheduler-form-label {
+  flex: 0 0 70px;
+}
+
+/* Wide enough for "Persons Assigned:" (measured ~116px at this font) to fit on one line without
+   shrinking the typeface -- the checkbox after it just shifts right to make room, same as every other
+   .grid-scheduler-form-row. Only ~7px of slack beyond the measured text width (half of the original
+   14px) so the checkbox doesn't sit further right than it needs to. */
+.grid-scheduler-form-label-wide {
+  flex-basis: 123px;
+}
+
+.grid-scheduler-form-row select,
+.grid-scheduler-form-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Lone checkboxes (e.g. "Persons Assigned") shouldn't stretch to fill the row like text
+   inputs/selects do -- a stretched checkbox still renders at its natural small size, just centered in
+   the extra space, leaving a wide gap of blank, unclickable-looking area before it. Specificity has to
+   match/exceed the rule above (.grid-scheduler-form-row input) for this override to win. */
+.grid-scheduler-form-row input.grid-scheduler-checkbox-field {
+  flex: 0 0 auto;
+  margin-left: 3px;
+}
+
+.grid-scheduler-tagmatch {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  /* Shifted right to loosely line up under the other controls (which start after
+     .grid-scheduler-form-label's 70px + the row's 4px gap) -- not lined up exactly, since "Match Any" /
+     "Match All" need more room than that leaves in this sidebar. */
+  padding-left: 35px;
+}
+
+.grid-scheduler-tagmatch label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.grid-scheduler-form-note {
+  font-size: 0.75rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.grid-scheduler-sessions-tab-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.grid-scheduler-sessions-tab-buttons button {
+  margin: 0 2px;
+}
+
+.grid-scheduler-no-sessions-found,
+.grid-scheduler-search-error {
+  margin-top: 6px;
+  font-weight: bold;
+  color: #b00020;
+  font-size: 0.8rem;
+}
+
+/* Info tab */
+.grid-scheduler-info-tab-empty,
+.grid-scheduler-warnings-tab-empty {
+  color: #666;
+}
+
+/* Warnings tab */
+.grid-scheduler-warnings-heading {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.grid-scheduler-warnings-error {
+  font-weight: bold;
+  color: #b00020;
+  margin-bottom: 4px;
+}
+
+.grid-scheduler-warnings-messages {
+  padding-left: 16px;
+  margin-bottom: 6px;
+}
+
+.grid-scheduler-warnings-tab .alert {
+  padding: 4px 6px;
+  margin-bottom: 6px;
+}
+
+.grid-scheduler-warnings-tab .alert ul {
+  padding-left: 16px;
+  margin: 2px 0 0;
+}
+
+.grid-scheduler-warnings-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* .infolabel/.infofield/.inforow keep the look of the legacy page's Info tab (ported from its now-deleted
+   staffMaintainSchedule.css); the font-weight/margin rules after them are this app's own adjustments. */
+.grid-scheduler-info-tab .infofield,
+.grid-scheduler-info-tab .inforow,
+.grid-scheduler-info-tab .infolabel {
+  font-family: verdana, arial, sans-serif;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.grid-scheduler-info-tab .infolabel {
+  color: #00b0d0;
+  font-style: italic;
+  padding: 1px 0;
+}
+
+.grid-scheduler-info-tab span.infolabel,
+.grid-scheduler-info-tab .infofield {
+  display: inline-block;
+}
+
+.grid-scheduler-info-tab .infofield,
+.grid-scheduler-info-tab .inforow {
+  color: black;
+}
+
+.grid-scheduler-info-tab .inforow {
+  display: block;
+  padding-bottom: 1px;
+}
+
+.grid-scheduler-info-tab .infolabel {
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.grid-scheduler-info-tab .infofield,
+.grid-scheduler-info-tab .inforow {
+  margin-left: 4px;
+}
+
+.grid-scheduler-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  position: relative;
+}
+
+.grid-scheduler-grid {
+  display: grid;
+  position: relative;
+  /* Shrink-to-fit around the fixed-width columns (set inline via gridTemplateColumns) rather than
+     stretching to fill .grid-scheduler-scroll -- leaves whitespace to the right when there are few
+     rooms, and overflows into .grid-scheduler-scroll's horizontal scrollbar when there are many. */
+  width: max-content;
+}
+
+.grid-scheduler-corner,
+.grid-scheduler-room-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f0f0f0;
+  border-bottom: 2px solid #888;
+  border-right: 1px solid #888;
+  padding: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Also pinned horizontally (the corner cell sits at the intersection of both stickinesses) so "Time"
+   and the axis stay in view when the room columns scroll sideways. Needs a higher z-index than
+   .grid-scheduler-room-header: both are sticky-top only with the same z-index otherwise, so as a room
+   header's (non-sticky-left) content scrolls underneath the pinned corner, same-z-index stacking falls
+   back to DOM order and the room header (rendered after the corner) would paint over it. */
+.grid-scheduler-corner {
+  left: 0;
+  z-index: 3;
+}
+
+.grid-scheduler-axis {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #fff;
+  border-right: 1px solid #888;
+}
+
+.grid-scheduler-axis-tick {
+  position: absolute;
+  left: 0;
+  right: 0;
+  font-size: 0.875rem;
+  color: #555;
+  padding-left: 4px;
+  border-top: 1px solid #999;
+  /* Overflow horizontally rather than wrap -- a wrapped day-start label collides vertically with the
+     tick below it, which is worse than spilling a few px into the next column. TIME_COLUMN_WIDTH_PX is
+     sized for the realistic worst case, so this should rarely actually trigger. */
+  white-space: nowrap;
+}
+
+.grid-scheduler-axis-tick-day-start {
+  border-top: 2px solid #444;
+  font-weight: bold;
+  color: #222;
+}
+
+.grid-scheduler-room-column {
+  position: relative;
+  border-right: 1px solid #888;
+}
+
+/* Empty-slot gridlines -- one per axis tick, so they always line up with the time axis exactly (rather
+   than a repeating background sized in px, which would drift at day-segment boundaries whose length
+   isn't a multiple of the resolution). Purely visual -- drop targeting is computed from the pointer position
+   (dropTarget.ts), not from these elements. Session boxes render after these in the DOM and are opaque, so they cover the
+   lines behind them without any z-index bookkeeping needed. */
+.grid-scheduler-row-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #999;
+}
+
+.grid-scheduler-row-line-day-start {
+  border-top: 2px solid #444;
+}
+
+/* Typeface/color/spacing matches the abandoned react_grid_scheduler branch's session box --
+   ReactApp/zambia-grid-scheduler/src/render_sessions/{sessionStyles.ts,SessionInner.tsx} -- except
+   padding, font-size and line-height, which were tightened afterward so a session box fits within one
+   hour of grid height (see PIXELS_PER_MINUTE in Grid.tsx). The info icon before the title is the
+   legacy "icon-info-sign" glyph (webpages/css/zambia_bs5_customizations.css), not the branch's
+   bi-info-circle-fill (unavailable here). */
+.grid-scheduler-session-box {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid #000;
+  background: #fff;
+  padding: 2px 4px;
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+/* One line of a session box's configured fields (GRID_SESSION_BOX_FIELDS -- see SessionBoxContent.tsx). */
+.grid-scheduler-session-line {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.grid-scheduler-session-info-icon {
+  cursor: pointer;
+}
+
+.grid-scheduler-session-info-icon + .grid-scheduler-session-field {
+  padding-left: 4px;
+}
+
+/* Space between fields sharing a line. The session id needs none, since it has a fixed width. */
+.grid-scheduler-session-field + .grid-scheduler-session-field {
+  margin-left: 0.5em;
+}
+
+.grid-scheduler-session-id + .grid-scheduler-session-field {
+  margin-left: 0;
+}
+
+.grid-scheduler-session-id {
+  display: inline-block;
+  width: 3rem;
+  color: blue;
+}
+
+.grid-scheduler-session-type {
+  display: inline-block;
+  color: green;
+}
+
+/* The "sessions to be scheduled" list reuses .grid-scheduler-session-box's look but flows in normal
+   document order (a vertical list) instead of being pixel-positioned on the grid. With no duration-based height,
+   it's always exactly 3 lines tall (line-height 1.3, plus padding and border), clipping any further lines. */
+.grid-scheduler-unscheduled-session-box {
+  position: static;
+  width: 100%;
+  height: calc(3 * 1.3em + 2 * 2px + 2 * 1px);
+  margin-bottom: 4px;
+}
+
+/* Drag-and-drop */
+.grid-scheduler-session-box {
+  cursor: grab;
+  /* Lets @dnd-kit's pointer sensor handle touch drags instead of the browser scrolling. */
+  touch-action: none;
+}
+
+/* Dragging is disabled while a conflicting edit awaits Save Anyway / Cancel -- show that instead of the grab hand.
+   Only boxes themselves: the info icon keeps its own pointer cursor, since it still works. (Not applied during an
+   ordinary in-flight save, which is brief enough that a cursor change would just flicker.) */
+.grid-scheduler-awaiting-confirmation .grid-scheduler-session-box {
+  cursor: not-allowed;
+}
+
+.grid-scheduler-dragging,
+.grid-scheduler-dragging * {
+  cursor: grabbing !important;
+}
+
+/* The box being dragged stays in place, faded, while the drag overlay follows the pointer. pointer-events:
+   none keeps it out of dropTarget.ts's hit-testing, so a scheduled session can be dropped onto its own old
+   slot (or just below it) without registering as a drop onto itself. */
+.grid-scheduler-drag-source {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.grid-scheduler-drag-preview {
+  position: relative;
+}
+
+.grid-scheduler-drag-preview-box {
+  position: relative;
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Live drop-time feedback, just above the dragged box's top edge. */
+.grid-scheduler-drop-label {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 2px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #222;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Where the dragged session would land. Above the session boxes (so it's visible when landing alongside an
+   existing session) but never hit-tested. */
+.grid-scheduler-drop-preview {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  border: 2px dashed #2c6e2f;
+  background: rgba(44, 110, 47, 0.15);
+  pointer-events: none;
+}
+
+.grid-scheduler-sessions-panel-list.grid-scheduler-drop-hover {
+  background: #e3f0e3;
+  outline: 2px dashed #2c6e2f;
+  outline-offset: -2px;
+}
+
+/* A session whose room/time changed without the user's own gesture causing it -- see findUntouchedMoves() in
+   scheduleEdits.ts. Padding shrinks by the extra 2px of border so the box's text doesn't shift. */
+.grid-scheduler-session-box.grid-scheduler-session-box-moved {
+  border: 3px solid #fd7e14;
+  padding: 0 2px;
+}
+
+/* Grid Simplification (see simplifiedEnds() in timeGrid.ts): the box runs on to the next grid line, and the part
+   past the session's real end is shaded. --grid-scheduler-real-height is set by SessionBox.tsx and measured from the
+   box's outer top edge, hence background-origin: border-box. */
+.grid-scheduler-session-box.grid-scheduler-session-box-simplified {
+  background-origin: border-box;
+  background-image: linear-gradient(
+    to bottom,
+    transparent var(--grid-scheduler-real-height),
+    #e2e5e9 var(--grid-scheduler-real-height)
+  );
+}
+
+/* Swap Mode counterpart animation (swapAnimation.ts): the real box waits hidden at its destination while a
+   fixed-position clone flies there from its old spot. Hidden with opacity rather than visibility: Safari, on
+   visibility: hidden -> visible, repainted the box's text but not its border. pointer-events: none keeps it out
+   of dropTarget.ts's hit-testing meanwhile, as visibility: hidden did. */
+.grid-scheduler-animation-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.grid-scheduler-session-box.grid-scheduler-swap-animation {
+  position: fixed;
+  margin: 0;
+  z-index: 2000;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}

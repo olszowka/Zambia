@@ -1,7 +1,7 @@
 <?php
 // Created by Peter Olszowka on 2020-04-19;
-// Copyright (c) 2020-2024 The Peter Olszowka. All rights reserved. See copyright document for more details.
-global $linki, $title;
+// Copyright (c) 2020-2026 The Peter Olszowka. All rights reserved. See copyright document for more details.
+global $title;
 $title = "Send Reset Password Link";
 require ('PartCommonCode.php');
 require_once('email_functions.php');
@@ -76,32 +76,29 @@ $subjectLine = "Zambia Password Reset for $conName";
 $fromAddress = PASSWORD_RESET_FROM_EMAIL;
 $responseParams = array("subject_line" => $subjectLine, "from_address" => $fromAddress);
 
-$badgeid = mysqli_real_escape_string($linki, $badgeid);
-$emailSQL = mysqli_real_escape_string($linki, $email);
+$badgeid = trim($badgeid);
+$emailSQL = trim($email);
 $query = <<<EOD
 SELECT P.pubsname, CD.badgename, CD.firstname, CD.lastname
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
     WHERE
-            P.badgeid = '$badgeid'
-        AND CD.email = '$emailSQL';
+            P.badgeid = ?
+        AND CD.email = ?;
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
+if (!$result = mysqli_query_with_prepare_and_exit_on_error($query, 'ss', array($badgeid, $email))) {
     exit;
 }
-$ipaddressSQL = mysqli_real_escape_string($linki, $userIP);
 $selector = bin2hex(random_bytes(8));
 if (mysqli_num_rows($result) !== 1) {
     // record a non-valid request to help track issues
     $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
     (badgeidentered, email, ipaddress, cancelled, selector)
-    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', 2, '$selector');
+    VALUES (?, ?, ?, 2, ?);
 EOD;
-    if (!$result = mysqli_query_exit_on_error($query)) {
-        exit;
-    }
+    mysql_cmd_with_prepare($query, 'ssss', array($badgeid, $emailSQL, $userIP, $selector));
     // don't tell user anything went wrong -- just give regular response.
     RenderXSLT('ForgotPasswordResponse.xsl', $responseParams);
     participant_footer();
@@ -125,19 +122,15 @@ $tokenSQL = hash('sha256', $token);
 $query = <<<EOD
 UPDATE ParticipantPasswordResetRequests
     SET cancelled = 1
-    WHERE badgeidentered = '$badgeid';
+    WHERE badgeidentered = ?;
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
-    exit;
-}
+mysql_cmd_with_prepare($query, 's', array($badgeid));
 $query = <<<EOD
 INSERT INTO ParticipantPasswordResetRequests
     (badgeidentered, email, ipaddress, expirationdatetime, selector, token)
-    VALUES ('$badgeid', '$emailSQL', '$ipaddressSQL', '$expirationSQL', '$selector', '$tokenSQL');
+    VALUES (?, ?, ?, ?, ?, ?);
 EOD;
-if (!$result = mysqli_query_exit_on_error($query)) {
-    exit;
-}
+mysql_cmd_with_prepare($query, 'ssssss', array($badgeid, $emailSQL, $userIP, $expirationSQL, $selector, $tokenSQL));
 
 $mailer = get_swift_mailer();
 

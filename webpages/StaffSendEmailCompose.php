@@ -1,12 +1,13 @@
 <?php
-// Copyright (c) 2011-2024 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2011-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 // This page has two completely different entry points from a user flow standpoint:
 //   1) Beginning of send email flow -- start to specify parameters
 //   2) After verify -- 'back' can change parameters -- 'send' fire off email sending code
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
-global $title, $message, $link;
+global $title, $message, $link, $pageBootstrapVersion;
+$pageBootstrapVersion = 'bs5';
 if (!(isLoggedIn() && may_I("SendEmail"))) {
     exit(0);
 }
@@ -25,13 +26,15 @@ if (empty($_POST['navigate']) || $_POST['navigate']!='send') {
 // render_send_email_engine($email,$message_warning);
 $title = "Staff Send Email";
 $timeLimitSuccess = set_time_limit(600);
-if (SMTP_QUEUEONLY === TRUE) {
-    staff_header($title, 'bs4');
-}
+staff_header($title, 'bs5');
 //if (!$timeLimitSuccess) {
 //    RenderError("Error extending time limit.");
 //    exit(0);
 //}
+?>
+<div class="container-xl">
+    <h3 class="mt-3">Results</h3>
+<?php
 $subst_list = array("\$BADGEID\$", "\$FIRSTNAME\$", "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $email = get_email_from_post();
 
@@ -153,7 +156,8 @@ for ($i=0; $i<$recipient_count; $i++) {
 }
 //$log =& Swift_LogContainer::getLog();
 //echo $log->dump(true);
-if (SMTP_QUEUEONLY === TRUE) {
-    staff_footer();
-}
+?>
+</div>
+<?php
+staff_footer();
 ?>

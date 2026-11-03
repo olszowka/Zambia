@@ -59,9 +59,29 @@ table.compressed {
 .table.table-clear .form-check-input {
   border-color: #6c757d;
 }
+.card .form-check-input {
+  border-color: #6c757d;
+}
+/* Match the border used on form controls (see zambia_common.less) instead of Bootstrap 5's default
+   light, faint card border. */
+.card {
+  border: 1px solid #606060;
+  border-radius: 4px;
+}
 /* End of Bootstrap 5 extensions */
 /* Bootstrap 4 overrides */
+/* Note: .custom-select below is a Bootstrap 4 class name (Bootstrap 5 renamed it to .form-select); it's
+   inert here but left in place since this block was carried over from zambia_bs4_customizations.less. */
 .custom-select {
+  height: 2rem;
+  padding-top: 3px;
+  border: 1px solid #606060;
+  border-radius: 4px;
+}
+/* Bootstrap 5's .form-select has the same default vertical padding (.375rem top/bottom) as Bootstrap 4's
+   .custom-select above; without this override its text gets clipped by the fixed 2rem height set by the
+   plain `select` rule in zambia_common.less. */
+.form-select {
   height: 2rem;
   padding-top: 3px;
   border: 1px solid #606060;
@@ -236,3 +256,68 @@ input[type='text'].disabled {
   color: #1b1e21;
   border-color: #c6c8ca;
 }
+/* Grid Scheduler stuff */
+/* Bootstrap 5 has no icon set; this is the single glyphicon (info-sign) still used, ported over from the old
+   Bootstrap 2 icon sprite rather than pulling in a whole icon library for one icon. */
+.icon-info-sign {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../images/glyphicons-halflings.png");
+  background-position: -120px -96px;
+  background-repeat: no-repeat;
+}
+/* Compact variant of .checkbox-list-container/-label-wrapper/-label/-check above -- smaller checkboxes,
+   tighter padding, and smaller label text so fewer entries wrap. Combine with the base classes rather
+   than replacing them, e.g. class="checkbox-list-container checkbox-list-container-compact". Added for
+   the grid scheduler rewrite's Sessions tab tag filter, but generic (not grid-scheduler-specific) so it
+   can be reused anywhere the plain checkbox-list styling is too roomy. The base classes above are
+   untouched -- existing uses (e.g. the Edit/Create Session page's Tags control) are unaffected. */
+.checkbox-list-container.checkbox-list-container-compact {
+  /* Compound selector (matches .checkbox-list-container.form-control's specificity) -- a lone
+     .checkbox-list-container-compact would lose the padding override to that rule regardless of
+     source order. */
+  min-width: 0;
+  padding: 2px;
+}
+.checkbox-list-label-wrapper-compact {
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+}
+.checkbox-list-label-compact {
+  /* display: flex (overriding the base class's display: block) centers the checkbox and label text on
+     each other vertically instead of relying on the checkbox's default baseline alignment. */
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  line-height: 1.15;
+  min-width: 0;
+  padding-right: 0.3rem;
+}
+.checkbox-list-check-compact {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-left: 0.3rem;
+  margin-right: 0.3rem;
+}
+/* End Grid Scheduler stuff */
+/* Session History stuff */
+.za-sessionHistory-moderator {
+  text-decoration: underline;
+  font-style: italic;
+}
+.za-sessionHistory-editBanner {
+  background-color: #b5b5b5;
+  border: 1px solid #808080;
+  border-radius: 3px;
+  padding: 3px 4px;
+  color: white;
+  margin-bottom: 3px;
+}
+.za-sessionHistory-editBanner [class*='col-'] {
+  min-height: 0;
+}
+/* End Session History stuff */

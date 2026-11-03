@@ -3,9 +3,8 @@
 global $header_section;
 $header_section = HEADER_STAFF;
 
-function staff_header($title, $bootstrapVersion = 'bs2', $is_data_tables = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function staff_header($title, $bootstrapVersion, $is_data_tables = false, $reportColumns = false, $reportAdditionalOptions = false, $isJqueryUI = false) {
     global $fullPage;
-    $isBs4or5 = $bootstrapVersion == 'bs4' || $bootstrapVersion == 'bs5';
     $isLoggedIn = isLoggedIn();
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
         require_once('ParticipantHeader.php');
@@ -13,20 +12,12 @@ function staff_header($title, $bootstrapVersion = 'bs2', $is_data_tables = false
         participant_header(''); // force data consent page
         exit();
     }
-    html_header($title, $bootstrapVersion, $is_data_tables, $reportColumns, $reportAdditionalOptions);
-    $bodyClass = "";
-    if ($fullPage && $isBs4or5) {
-        $bodyClass = 'class="full-page bs4"';
-    } else if ($fullPage) {
-        $bodyClass = 'class="full-page"';
-    } else if ($isBs4or5) {
-        $bodyClass = 'class="bs4"';
-    }
+    html_header($title, $bootstrapVersion, $is_data_tables, $reportColumns, $reportAdditionalOptions, $isJqueryUI);
+    $bodyClass = $fullPage ? 'class="full-page bs4"' : 'class="bs4"';
     $topSectionBehavior = $isLoggedIn ? 'NORMAL' : 'SESSION_EXPIRED';
     if ($fullPage) {
 ?>
 <body <?php echo $bodyClass; ?>>
-    <div id="myhelper"></div><!-- used for drag-and-drop operations -->
     <div id="headerContainer">
 <?php
     commonHeader('Staff', $topSectionBehavior, $bootstrapVersion);
@@ -45,8 +36,10 @@ function staff_header($title, $bootstrapVersion = 'bs2', $is_data_tables = false
         $paramArray = array();
         $paramArray["title"] = $title;
         $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
+        require_once('report_functions.php');
+        $paramArray["reportHidingEnabled"] = isReportHidingEnabled() ? 1 : 0;
         try {
-            $reportMenuIncludeFilName = $isBs4or5 ? 'ReportMenuBS4Include.php' : 'ReportMenuInclude.php';
+            $reportMenuIncludeFilName = 'ReportMenuBS4Include.php';
             $reportMenuIncludeFilHand = fopen ($reportMenuIncludeFilName,  'r');
             if ($reportMenuIncludeFilHand === false) {
                 $paramArray["reportMenuList"] = '';
@@ -58,17 +51,7 @@ function staff_header($title, $bootstrapVersion = 'bs2', $is_data_tables = false
         }
         $xmlDoc = GeneratePermissionSetXML();
         // echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $xmlDoc->saveXML(), "i"));
-        switch ($bootstrapVersion) {
-            case 'bs5':
-                $filename = 'StaffMenu_BS5.xsl';
-                break;
-            case 'bs4':
-                $filename = 'StaffMenu_BS4.xsl';
-                break;
-            case 'bs2':
-            default:
-            $filename = 'StaffMenu.xsl';
-        }
+        $filename = $bootstrapVersion == 'bs4' ? 'StaffMenu_BS4.xsl' : 'StaffMenu_BS5.xsl';
         RenderXSLT($filename, $paramArray, $xmlDoc);
     } else {
         staff_footer();

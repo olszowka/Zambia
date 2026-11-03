@@ -410,6 +410,7 @@ CREATE TABLE `Rooms` (
     `floor` VARCHAR(50) DEFAULT NULL,
     `notes` TEXT,
     `is_scheduled` TINYINT(1) NOT NULL DEFAULT '0',
+    `allow_grid_simplification` TINYINT(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`roomid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -472,7 +473,7 @@ CREATE TABLE `SurveyQuestionTypes` (
 DROP TABLE IF EXISTS `Tags`;
 CREATE TABLE `Tags` (
     `tagid` INT(11) NOT NULL AUTO_INCREMENT,
-    `tagname` VARCHAR(30) CHARACTER SET utf8 collate utf8_general_ci default NULL,
+    `tagname` VARCHAR(30) default NULL,
     `display_order` INT(11) NOT NULL default '0',
     PRIMARY KEY  (`tagid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -516,6 +517,7 @@ CREATE TABLE `Types` (
     `typename` VARCHAR(50) DEFAULT NULL,
     `display_order` INT(11) DEFAULT NULL,
     `selfselect` TINYINT(1) DEFAULT NULL,
+    `allow_grid_simplification` TINYINT(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`typeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1085,6 +1087,22 @@ CREATE TABLE `ParticipantSurveyAnswers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Participant Survey Info.';
 
 --
+-- Table structure for table `ParticipantSurveyResponses`
+--
+
+DROP TABLE IF EXISTS `ParticipantSurveyResponses`;
+CREATE TABLE `ParticipantSurveyResponses` (
+    `badgeid` VARCHAR(15) NOT NULL,
+    `answers` JSON NOT NULL,
+    `lastupdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `updatedby` VARCHAR(15) NOT NULL,
+    PRIMARY KEY (`badgeid`),
+    KEY `updatedby` (`updatedby`),
+    CONSTRAINT `participantsurveyresponses_ibfk_1` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`),
+    CONSTRAINT `participantsurveyresponses_ibfk_2` FOREIGN KEY (`updatedby`) REFERENCES `Participants` (`badgeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='One row per participant: JSON mirror of ParticipantSurveyAnswers, keyed by SurveyQuestionConfig.shortname.';
+
+--
 -- Table structure for table `TrackCompatibility`
 --
 
@@ -1211,7 +1229,27 @@ INSERT INTO `PatchLog`
     ('67_session_links_cleanup.sql'),
     ('68_custom_text_new_columns.sql'),
     ('69_my_interests_new_custom_text.sql'),
-    ('72_configure_permissions.sql');
+    ('70_remove_room_times.sql'),
+    ('71_name_for_sorting.sql'),
+    ('72_configure_permissions.sql'),
+    ('73_another_permissions_cleanup.sql'),
+    ('74_survey_responses_json.sql'),
+    ('75_my_suggestions_custom_text.sql'),
+    ('76_fix_mysql_collations.sql'),
+    ('77_grid_simplification.sql');
+
+## bit 0 = uploaded photo available
+## bit 1 = uploaded photo denied
+## bit 2 = approved photo available
+INSERT INTO PhotoUploadStatus (photouploadstatus, statustext)
+    VALUES (0, 'No photo uploaded'),
+    (1, 'Photo waiting for approval'),
+    (2, 'Denied - see denial reason'),
+    (3, 'Denied photo replaced, waiting for approval'),
+    (4, 'Photo approved'),
+    (5, 'Updated photo waiting for approval'),
+    (6, 'Updated photo denied and deleted, existing photo still available'),
+    (7, 'Updated photo denied, existing photo still available');
 
 INSERT INTO `PermissionAtoms`
     (permatomid, permatomtag, permatomname, elementid, page, notes, display_order)
@@ -1232,7 +1270,7 @@ INSERT INTO `PermissionAtoms`
     (14, 'SendEmail', 'Send Email', NULL, 'StaffManageParticipants', '(Staff) Access to Send email set of pages', 70),
     (15, 'postcon', 'Post Con', NULL, 'renderWelcome', '(Participant) Can view only Post Con page', 530),
     (16, 'EditSesNtsAsgnPartPg', 'Notes For Program Staff', NULL, 'StaffAssignParticipants', '(Staff) Edit notes for program staff on assign participants page ', 80),
-    (17, 'ConfigureReports', 'Report Menus', NULL, 'ConfigureReports', '(Admin) Run process to update report menus', 40),
+    (17, 'ConfigureReports', 'Report Menus', NULL, 'ConfigureReports', '(Admin) Run process to update report menus and hide reports from menus', 40),
     (18, 'ResetUserPassword', 'Reset User Password', NULL, 'AdminParticipants', '(Staff) No one needs this permission once password overhaul is implemented and system has email integration.', 90),
     (19, 'AdminPhases', 'Phase Activation', NULL, 'AdminPhases', '(Admin) Change phase of Zambia use, allowing which sections are current.', 30),
     (20, 'CreateUser', 'Create User', NULL, 'CreateUser', '(Staff) Manually create user. Must have edit for one or more roles.', 100),
@@ -1318,7 +1356,7 @@ INSERT INTO `Permissions`
     (7, 16, NULL, 1, NULL),
     (8, 16, NULL, 2, NULL),
     (9, 16, NULL, 3, NULL),
-    ## "ConfigureReports" Build Report Menus -- permatomid: 17
+    ## "ConfigureReports" Build Report Menus and Hide Reports -- perDmatomid: 17
     ## Complete: Menu and page
     (10, 17, NULL, 1, NULL),
     ## "ResetUserPassword" Edit User Password -- permatomid: 18

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	PartSearchSessions.xsl
-	Created by Peter Olszowka on 2020-08-22.
-	Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+    PartSearchSessions.xsl
+    Created by Peter Olszowka on 2020-08-22.
+    Copyright (c) 2020-2023 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output encoding="UTF-8" indent="yes" method="xml"/>
@@ -12,19 +12,17 @@
     <xsl:variable name="interested" select="/doc/query[@queryName='interested']/row/@interested = '1'"/>
 
     <xsl:template match="/">
-        <div class="container-fluid">
+        <div class="container-lg">
             <xsl:if test="not($interested)">
-                <div class="row">
-                    <div class="alert alert-block" style="margin:15px 0;">
-                        <h4>Warning!</h4>
-                        <span>
-                            You have not indicated in your profile that you will be attending <xsl:value-of select="$conName"/>.
-                            You will not be able to save your panel choices until you so do.
-                        </span>
+                <div class="alert alert-warning mt-3">
+                    <h4>Warning!</h4>
+                    <div>
+                        You have not indicated in your profile that you will be attending <xsl:value-of select="$conName"/>.
+                        You will not be able to save your panel choices until you so do.
                     </div>
                 </div>
             </xsl:if>
-            <form class="container mt-2 mb-4" method="POST" action="PartSearchSessionsSubmit.php">
+            <form class="mt-2 mb-4" method="POST" action="PartSearchSessionsSubmit.php">
                 <div class="row mb-3">
                     <xsl:choose>
                         <xsl:when test="$showTrack">

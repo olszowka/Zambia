@@ -1,7 +1,8 @@
 <?php
 // Copyright (c) 2018-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message_error, $title, $report;
+global $message_error, $title, $report, $pageBootstrapVersion;
 $title = "Run Report";
+$pageBootstrapVersion = 'bs5';
 require_once('StaffCommonCode.php');
 $reportName = getString("reportName");
 if ($reportName == '') {

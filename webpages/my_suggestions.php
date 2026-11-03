@@ -1,7 +1,8 @@
 <?php
 // Copyright (c) 2005-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $title;
+global $title, $pageBootstrapVersion;
 $title = "My Suggestions";
+$pageBootstrapVersion = 'bs5';
 require('PartCommonCode.php'); // set $badgeid from session
 
 $querySQLArr = array();

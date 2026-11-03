@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
@@ -11,6 +11,33 @@ function update_survey() {
     //error_log("string loaded: " . getString("survey"));
     $questions = json_decode(base64_decode(getString("survey")));
     //var_error_log($questions);
+
+    // Validate names (shortname) before making any DB changes: each must begin with a letter and contain
+    // only letters, digits, or underscores, and all must be unique. This is what lets
+    // ParticipantSurveyResponses' JSON always be extracted by plain dot notation (e.g. $.shortname.value),
+    // with no path-escaping ever required. Headings are exempt from the format rule: they never produce a
+    // JSON entry (see PartSurvey.php), so dot notation is never at stake for them. Uniqueness still applies
+    // to every question regardless of type, since the database's UNIQUE KEY on shortname is not
+    // type-scoped. The client checks this too, but that's only a convenience -- this is the actual
+    // enforcement.
+    $seenShortnames = array();
+    foreach ($questions as $quest) {
+        $shortname = property_exists($quest, "shortname") ? $quest->shortname : "";
+        $typename = property_exists($quest, "typename") ? $quest->typename : "";
+        if ($typename != "heading" && !preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $shortname)) {
+            $message_error = "\"$shortname\" is not a valid name. Names must start with a letter and contain only letters, digits, and underscores.";
+            RenderErrorAjax($message_error);
+            exit();
+        }
+        $key = mb_strtolower($shortname);
+        if (isset($seenShortnames[$key])) {
+            $message_error = "\"$shortname\" is used more than once. Names must be unique.";
+            RenderErrorAjax($message_error);
+            exit();
+        }
+        $seenShortnames[$key] = true;
+    }
+
     // reset display order to match new order and find which rows to delete
     $idsFound = "";
     $display_order = 10;

@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2023 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2023-2026 Peter Olszowka. All rights reserved. See copyright document for more details.
 function render_query_result_as_csv($result) {
     global $report;
     while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
@@ -30,7 +30,7 @@ function render_query_result_as_csv($result) {
 function echo_if_zero_rows_and_exit($result) {
     global $title;
     if (mysqli_num_rows($result) == 0) {
-        staff_header($title, 'bs2');
+        staff_header($title, 'bs5');
         $message = "Report returned no records.";
         echo "<p>" . $message . "\n";
         staff_footer();
