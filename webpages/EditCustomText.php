@@ -8,6 +8,7 @@ $message = "";
 $rows = 0;
 $textcontents = 'hidden-empty';
 $selected = '';
+$active = '';
 
 staff_header($title, 'bs5');
 if (isLoggedIn() && may_I('Administrator')) {
@@ -71,7 +72,7 @@ EOD;
     $resultXML = mysql_result_to_XML('custom_text', $result);
 
     mysqli_data_seek($result, 0);
-    $priorArray = array();
+    $PriorArray = array();
     $html_block_level = -1;
     while ($row = mysqli_fetch_assoc($result)) {
         $customTextRow = array();
