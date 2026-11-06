@@ -34,11 +34,7 @@ EOD;
             }
         $query = <<<EOD
 SELECT
-        S.sessionid AS id, TR.trackname, TY.typename, R.roomname AS loc, SQ.tags,
-        CASE
-            WHEN TRIM(IFNULL(S.secondtitle, '')) = '' THEN S.title
-            ELSE S.secondtitle
-            END AS `title`,
+        S.sessionid AS id, TR.trackname, TY.typename, R.roomname AS loc, SQ.tags, S.title,
         CASE
             WHEN TRIM(IFNULL(S.pocketprogtext, '')) = '' THEN S.progguidhtml
             ELSE S.pocketprogtext

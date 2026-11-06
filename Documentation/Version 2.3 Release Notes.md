@@ -11,6 +11,7 @@
   hour left blank such as ":30" is now accepted as 0:30.
 * Fix small issues not visible to the user with `EditCustomText.php`.
 * Fix mangled variable name in `email_functions.php`.
+* Core KonOpas/ConClár extract shouldn't use 2nd title.
 
 ### New Features
 * 
