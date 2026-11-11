@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <!-- Created by Peter Olszowka on 2020-04-19;
-     Copyright (c) 2020-2024 Peter Olszowka. All rights reserved. See copyright document for more details. -->
+     Copyright (c) 2020-2026 Peter Olszowka. All rights reserved. See copyright document for more details. -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
     <xsl:param name="error_message" select="''" />
@@ -24,7 +24,7 @@
             <form method="POST" action="ForgotPasswordSubmit.php">
                 <div class="row">
                     <div class="col-36 my-4">
-                        <p>Enter your <xsl:value-of select="$USER_ID_PROMPT" /> and email address.  Then a link to initialize or reset your password will be emailed to you.</p>
+                        <p>Enter the <xsl:value-of select="$USER_ID_PROMPT" /> you were assigned and email address.  Then a link to initialize or reset your password will be emailed to you.</p>
                     </div>
                 </div>
                 <div class="row">
