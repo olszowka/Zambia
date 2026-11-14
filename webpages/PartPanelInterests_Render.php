@@ -25,20 +25,8 @@ function render_session_interests($session_interest_count,$message,$message_erro
     if ($pageIsDirty) {
         echo "<input type=\"hidden\" id=\"pageIsDirty\" value=\"true\" />\n";
     }
-    // "Add" Section
-    echo "<form id=\"addFRM\" name=\"addform\" method=\"POST\" action=\"PartPanelInterests_POST.php\" class=\"row g-2 align-items-end mt-3\">\n";
-    echo "  <div class=\"col-auto\">\n";
-    echo "    <label class=\"form-label\" for=\"addsessionid\">Add Session ID to my List:</label>\n";
-    echo "    <input type=\"text\" class=\"form-control\" id=\"addsessionid\" name=\"addsessionid\" size=\"10\" style=\"width: 8em\" $disabled/>\n";
-    echo "  </div>\n";
-    echo "  <input type=\"hidden\" name=\"add\" />\n";
-    echo "  <div class=\"col-auto\">\n";
-    echo "    <button class=\"btn btn-primary\" type=\"button\" onclick=\"panelInterests.onClickAdd();\" $disabled>Add</button>\n";
-    echo "  </div>\n";
-    echo "</form>\n";
-    echo "<hr />\n";
     // "Update Ranks" Section
-    echo "<form id=\"sessionFRM\" name=\"sessionform\" method=\"POST\" action=\"PartPanelInterests_POST2.php\">\n";
+    echo "<form id=\"sessionFRM\" name=\"sessionform\" method=\"POST\" action=\"PartPanelInterests_POST2.php\" class=\"mt-4\">\n";
     echo "<input type=\"hidden\" name=\"submitranks\" value=\"1\" />\n";
     echo "<div class=\"d-flex justify-content-end mb-2\"><button class=\"btn btn-primary\" type=\"submit\" $disabled>Save</button></div>\n";
     echo "<p>Please use the following scale when ranking your interest in the sessions you have chosen:</p>\n";
@@ -100,6 +88,18 @@ function render_session_interests($session_interest_count,$message,$message_erro
     }
     echo "<div class=\"d-flex justify-content-end mb-3\"><button class=\"btn btn-primary\" type=\"submit\" $disabled>Save</button></div>\n";
     echo "<input type=\"hidden\" id=\"autosaveHID\" name=\"autosave\" value=\"0\" />\n";
+    echo "</form>\n";
+    // "Add" Section
+    echo "<hr />\n";
+    echo "<form id=\"addFRM\" name=\"addform\" method=\"POST\" action=\"PartPanelInterests_POST.php\" class=\"row g-2 align-items-end mt-3\">\n";
+    echo "  <div class=\"col-auto\">\n";
+    echo "    <label class=\"form-label\" for=\"addsessionid\">Add Session ID to my List:</label>\n";
+    echo "    <input type=\"text\" class=\"form-control\" id=\"addsessionid\" name=\"addsessionid\" size=\"10\" style=\"width: 8em\" $disabled/>\n";
+    echo "  </div>\n";
+    echo "  <input type=\"hidden\" name=\"add\" />\n";
+    echo "  <div class=\"col-auto\">\n";
+    echo "    <button class=\"btn btn-primary\" type=\"button\" onclick=\"panelInterests.onClickAdd();\" $disabled>Add</button>\n";
+    echo "  </div>\n";
     echo "</form>\n";
     echo "<div class=\"modal\" id=\"addButDirtyMOD\" data-bs-backdrop=\"static\" tabindex=\"-1\" role=\"dialog\">\n";
     echo "  <div class=\"modal-dialog\" role=\"document\">\n";
