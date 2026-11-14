@@ -13,7 +13,7 @@
 * Fix mangled variable name in `email_functions.php`.
 
 ### New Features
-* 
+* On Panel Interests page, add session portion moved to bottom of page
  
 ### Invisible code cleanup
 * 
