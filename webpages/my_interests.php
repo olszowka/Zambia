@@ -128,11 +128,6 @@ $queryParamsArr['participantroles'] = array($edit_badgeid);
 if (!$resultXML = mysql_prepare_query_XML($querySQLArr, $queryParamTypesArr, $queryParamsArr)) {
     exit(); // Should have exited already
 }
-if (!populateCustomTextArray()) {
-    $message_error = "Failed to retrieve custom text. " . $message_error;
-    RenderError($message_error);
-    exit();
-}
 $resultXML = appendCustomTextArrayToXML($resultXML);
 
 echo(mb_ereg_replace("<(query|row)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i"));

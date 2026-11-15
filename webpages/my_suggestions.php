@@ -23,11 +23,6 @@ $queryParamsArr['mysuggestions'] = array($badgeid);
 if (!$resultXML = mysql_prepare_query_XML($querySQLArr, $queryParamTypesArr, $queryParamsArr)) {
     exit(); // Should have exited already
 }
-if (!populateCustomTextArray()) {
-    $message_error = "Failed to retrieve custom text. " . $message_error;
-    RenderError($message_error);
-    exit();
-}
 $resultXML = appendCustomTextArrayToXML($resultXML);
 
 participant_header($title, false, 'Normal', 'bs5');

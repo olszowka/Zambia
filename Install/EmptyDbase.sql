@@ -1161,7 +1161,8 @@ INSERT INTO `CustomText` (customtextid, page, tag, textcontents, active, html_bl
     (19,'General Interests','people_dont_want_label','People with whom I\'d rather not be on a session: (Leave blank for none)',0,0),
     (20,'My Suggestions','paneltopics_label','Program Topic Ideas:',0,0),
     (21,'My Suggestions','otherideas_label','Other Programming Ideas:',0,0),
-    (22,'My Suggestions','suggestedguests_label','Suggested Guests (please provide addresses and other contact information if possible):',0,0);
+    (22,'My Suggestions','suggestedguests_label','Suggested Guests (please provide addresses and other contact information if possible):',0,0),
+    (23,'Panel Interests','ranking_scale','<p>Please use the following scale when ranking your interest in the sessions you have chosen:</p>\n<p><strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I''d like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong></p>\n<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</p>',0,1);
 
 INSERT INTO `LanguageStatuses`
     (languagestatusid, languagestatusname, display_order)
@@ -1236,7 +1237,8 @@ INSERT INTO `PatchLog`
     ('74_survey_responses_json.sql'),
     ('75_my_suggestions_custom_text.sql'),
     ('76_fix_mysql_collations.sql'),
-    ('77_grid_simplification.sql');
+    ('77_grid_simplification.sql'),
+    ('79_panel_interests_custom_text.sql');
 
 ## bit 0 = uploaded photo available
 ## bit 1 = uploaded photo denied

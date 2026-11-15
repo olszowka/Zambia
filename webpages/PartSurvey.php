@@ -13,13 +13,6 @@ require_once('StaffFooter.php');
 $message = '';
 $rows = 0;
 
-// Now that title is set, get common text
-if (!populateCustomTextArray()) {
-    $message_error = 'Failed to retrieve custom text. ' . $message_error;
-    RenderError($message_error);
-    exit();
-}
-
 $edit_badgeid = getInt('edit_badgeid');
 if ($edit_badgeid === false) {
     $edit_badgeid = $badgeid;
