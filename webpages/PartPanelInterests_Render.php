@@ -29,9 +29,15 @@ function render_session_interests($session_interest_count,$message,$message_erro
     echo "<form id=\"sessionFRM\" name=\"sessionform\" method=\"POST\" action=\"PartPanelInterests_POST2.php\" class=\"mt-4\">\n";
     echo "<input type=\"hidden\" name=\"submitranks\" value=\"1\" />\n";
     echo "<div class=\"d-flex justify-content-end mb-2\"><button class=\"btn btn-primary\" type=\"submit\" $disabled>Save</button></div>\n";
-    echo "<p>Please use the following scale when ranking your interest in the sessions you have chosen:</p>\n";
-    echo "<p><strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I'd like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong></p>\n";
-    echo "<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</p>\n";
+    // CustomText 'ranking_scale' replaces the default ranking instructions when present and active
+    $rankingScale = fetchCustomText('ranking_scale');
+    if ($rankingScale !== '') {
+        echo $rankingScale . "\n";
+    } else {
+        echo "<p>Please use the following scale when ranking your interest in the sessions you have chosen:</p>\n";
+        echo "<p><strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I'd like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong></p>\n";
+        echo "<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</p>\n";
+    }
     echo "<h4>List of Sessions in Which I'm Interested in Participating:</h4>\n";
     $j = 1; //use $j so that skipped sessions don't skip numbering
     for ($i = 1; $i <= $session_interest_count; $i++) {

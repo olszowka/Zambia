@@ -308,10 +308,16 @@ function rollback_mysqli($exit_on_error = false, $ajax = false) {
 }
 
 function populateCustomTextArray() {
+    // Remembers the page title it last loaded so that repeat calls with an unchanged $title are no-ops.
+    // Callers need to call this again only when $title has changed since CommonCode.php loaded.
     global $customTextArray, $title;
+    static $loadedTitle = null;
+    if ($loadedTitle === $title) {
+        return true;
+    }
     $customTextArray = array();
-    $query = "SELECT tag, textcontents FROM CustomText WHERE active = 1 AND page = '$title';";
-    if (!$result = mysqli_query_with_error_handling($query)) {
+    $query = "SELECT tag, textcontents FROM CustomText WHERE active = 1 AND page = ?;";
+    if (!$result = mysqli_query_with_prepare_and_error_handling($query, 's', array($title))) {
         return false;
     }
     if (mysqli_num_rows($result) > 0) {
@@ -323,6 +329,7 @@ function populateCustomTextArray() {
         }
     }
     mysqli_free_result($result);
+    $loadedTitle = $title;
     return true;
 }
 

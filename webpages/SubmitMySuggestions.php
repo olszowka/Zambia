@@ -33,11 +33,6 @@ $resultXML = ObjecttoXML('mysuggestions', array(array(
     'otherideas' => $otherideas,
     'suggestedguests' => $suggestedguests,
 )));
-if (!populateCustomTextArray()) {
-    $message_error = "Failed to retrieve custom text. " . $message_error;
-    RenderError($message_error);
-    exit();
-}
 $resultXML = appendCustomTextArrayToXML($resultXML);
 
 participant_header($title, false, 'Normal', 'bs5');
