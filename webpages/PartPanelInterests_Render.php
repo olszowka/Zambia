@@ -39,6 +39,11 @@ function render_session_interests($session_interest_count,$message,$message_erro
         echo "<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</p>\n";
     }
     echo "<h4>List of Sessions in Which I'm Interested in Participating:</h4>\n";
+    // CustomText 'comments_label' replaces the default comments label when present and active
+    $commentsLabel = fetchCustomText('comments_label');
+    if ($commentsLabel === '') {
+        $commentsLabel = "Use this space to convince us why you would be fabulous on this session:";
+    }
     $j = 1; //use $j so that skipped sessions don't skip numbering
     for ($i = 1; $i <= $session_interest_count; $i++) {
         if (!$session_interests[$i]['title']) continue;
@@ -73,7 +78,7 @@ function render_session_interests($session_interest_count,$message,$message_erro
         echo "      </div>\n";
         echo "      <div class=\"row mt-2 interest-edit-row\">\n";
         echo "        <div class=\"col-36\">\n";
-        echo "            <label class=\"form-label\" for=\"commentsTXTA_$j\">Use this space to convince us why you would be fabulous on this session:</label>\n";
+        echo "            <label class=\"form-label\" for=\"commentsTXTA_$j\">$commentsLabel</label>\n";
         $s_i_c = is_null($session_interests[$i]['comments']) ? "" : htmlspecialchars( $session_interests[$i]['comments'],ENT_COMPAT);
         echo "            <textarea id=\"commentsTXTA_$j\" class=\"form-control\" rows=\"3\" cols=\"80\" name=\"comments$j\" $disabled>$s_i_c</textarea>\n";
         echo "        </div>\n";

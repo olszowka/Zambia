@@ -1162,7 +1162,8 @@ INSERT INTO `CustomText` (customtextid, page, tag, textcontents, active, html_bl
     (20,'My Suggestions','paneltopics_label','Program Topic Ideas:',0,0),
     (21,'My Suggestions','otherideas_label','Other Programming Ideas:',0,0),
     (22,'My Suggestions','suggestedguests_label','Suggested Guests (please provide addresses and other contact information if possible):',0,0),
-    (23,'Panel Interests','ranking_scale','<p>Please use the following scale when ranking your interest in the sessions you have chosen:</p>\n<p><strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I''d like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong></p>\n<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</p>',0,1);
+    (23,'Panel Interests','ranking_scale','<p>Please use the following scale when ranking your interest in the sessions you have chosen:</p>\n<p><strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I''d like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong></p>\n<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</p>',0,1),
+    (24,'Panel Interests','comments_label','Use this space to convince us why you would be fabulous on this session:',0,0);
 
 INSERT INTO `LanguageStatuses`
     (languagestatusid, languagestatusname, display_order)
