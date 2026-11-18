@@ -9,11 +9,11 @@
     <xsl:param name="programEmail" select="''"/>
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
-        <xsl:variable name="declined_particpant" select="/doc/customText/@declined_particpant" />
+        <xsl:variable name="declined_participant" select="/doc/customText/@declined_participant" />
         <div class="container mt-2">
             <xsl:choose>
-                <xsl:when test="string-length($declined_particpant) > 0">
-                    <xsl:value-of select="$declined_particpant" disable-output-escaping="yes"/>
+                <xsl:when test="string-length($declined_participant) > 0">
+                    <xsl:value-of select="$declined_participant" disable-output-escaping="yes"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <h3 class="mb-2">

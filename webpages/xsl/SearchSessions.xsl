@@ -129,7 +129,7 @@
     <xsl:template match="/doc/query[@queryName='tags']/row">
         <div class="checkbox-list-label-wrapper">
             <label class="checkbox-list-label">
-                <input type="checkbox" name="tagdest[]" id="tag_{@tagid}" class="checkbox-list-check mycontrol tag-check" value="{@tagid}" />
+                <input type="checkbox" name="tags[]" id="tag_{@tagid}" class="checkbox-list-check mycontrol tag-check" value="{@tagid}" />
                 <xsl:value-of select="@tagname" />
             </label>
         </div>
